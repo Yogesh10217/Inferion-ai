@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    container_name: llm-inference-engine
+    ports:
+      - "8002:8002"
+    environment:
+      APP_ENV: development
+      APP_PORT: 8002
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      LOG_LEVEL: INFO
+    restart: unless-stopped

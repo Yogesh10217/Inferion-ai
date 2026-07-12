@@ -1,3 +1,6 @@
+from typing import Iterator
+from unittest.mock import patch
+
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -45,3 +48,20 @@ def test_chat_completion_streaming_route_returns_sse_events() -> None:
     text = response.text
     assert "data:" in text
     assert "[DONE]" in text
+
+
+def test_chat_completion_route_uses_mocked_openai_provider() -> None:
+    with patch("app.services.inference_service.DefaultInferenceService.complete") as mocked_complete:
+        mocked_complete.return_value = type(
+            "Response",
+            (),
+            {"text": "mocked", "model": "gpt-4o-mini", "provider": "openai"},
+        )()
+        payload = {
+            "model": "gpt-4o-mini",
+            "messages": [{"role": "user", "content": "Hello"}],
+            "stream": False,
+        }
+        response = client.post("/v1/chat/completions", json=payload)
+        assert response.status_code == 200
+        assert response.json()["choices"][0]["message"]["content"] == "mocked"

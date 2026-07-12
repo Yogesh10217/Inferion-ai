@@ -11,7 +11,10 @@ def test_health_endpoint() -> None:
     assert response.json() == {"status": "ok"}
 
 
-def test_models_endpoint() -> None:
-    response = client.get("/v1/models")
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
+def test_ready_and_live_endpoints() -> None:
+    ready = client.get("/v1/ready")
+    live = client.get("/v1/live")
+    assert ready.status_code == 200
+    assert live.status_code == 200
+    assert ready.json()["status"] == "ready"
+    assert live.json()["status"] == "alive"

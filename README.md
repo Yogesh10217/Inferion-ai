@@ -136,6 +136,22 @@ llm-inference-engine/
 
 ---
 
+## ✅ What is implemented in this repository
+
+The current repository contains a working FastAPI scaffold for an OpenAI-compatible inference gateway:
+
+- a runnable app factory in [app/main.py](app/main.py)
+- health, readiness, liveness, model listing, and chat completion routes
+- request/response schemas powered by Pydantic
+- provider abstractions for OpenAI and Ollama-style backends
+- a thread-safe in-memory model registry
+- centralized logging and structured exception handling
+- a pytest suite covering schemas, registry, providers, service flow, and routes
+
+Additional documentation is available in [ARCHITECTURE.md](ARCHITECTURE.md) and [API.md](API.md).
+
+---
+
 ## 🔌 OpenAI-Compatible API
 
 This engine implements the OpenAI API specification — any code using OpenAI can switch to this engine by changing the `base_url`:
@@ -210,33 +226,32 @@ response = client.chat.completions.create(
 ## ⚡ Quick Start
 
 ### Prerequisites
-- Python 3.11+, Node.js 20+, Docker + Docker Compose
+- Python 3.10+ (tested with 3.10 locally)
+- Docker + Docker Compose (optional, for containerised runs)
 - (Optional) Ollama installed locally for local model serving
 
 ```bash
 git clone https://github.com/OnHighEngineer/llm-inference-engine.git
 cd llm-inference-engine
 
-# Start infrastructure (Temporal, Redis)
-docker-compose up -d
+python -m pip install -r requirements.txt
+cp .env.example .env
 
-# Backend
-cd backend
-uv sync
-cp .env.example .env   # Add OPENAI_API_KEY, GEMINI_API_KEY
-uv run uvicorn app.main:app --reload --port 8002
-# Temporal worker (separate terminal)
-uv run python temporal/worker.py
+# Run the FastAPI application
+uvicorn app.main:create_app --host 0.0.0.0 --port 8002
 
-# Frontend
-cd frontend && npm install && npm run dev
-# Open http://localhost:5173
-
-# Test the API
+# In another terminal, test the API
+curl http://localhost:8002/v1/health
 curl http://localhost:8002/v1/models
 curl -X POST http://localhost:8002/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello!"}]}'
+```
+
+### Run tests
+
+```bash
+pytest -q
 ```
 
 ---
