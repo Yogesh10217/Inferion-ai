@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+.eggs/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# uv
+.uv/
+uv.lock
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Node / Frontend
+node_modules/
+dist/
+.parcel-cache/
+.vite/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporal
+# (No generated files to ignore, but temporal server data if running locally)
+
+# Docker
+*.log
