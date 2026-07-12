@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -18,8 +18,8 @@ class ChatMessage(BaseModel):
     )
 
 
-class ChatCompletionRequest(BaseModel):
-    """OpenAI-compatible chat completion request model."""
+class InferenceRequest(BaseModel):
+    """Normalized internal inference request model used by providers and services."""
 
     model: str = Field(
         ...,
@@ -52,3 +52,29 @@ class ChatCompletionRequest(BaseModel):
         default=False,
         description="Whether to stream the response as server-sent events.",
     )
+    stop: str | list[str] | None = Field(
+        default=None,
+        description="Optional stop sequence(s) for generation.",
+    )
+    frequency_penalty: float | None = Field(
+        default=None,
+        ge=-2.0,
+        le=2.0,
+        description="Penalty for repeated tokens.",
+    )
+    presence_penalty: float | None = Field(
+        default=None,
+        ge=-2.0,
+        le=2.0,
+        description="Penalty for repeated topics.",
+    )
+    metadata: dict[str, Any] | None = Field(
+        default=None,
+        description="Optional provider-specific metadata.",
+    )
+
+
+class ChatCompletionRequest(InferenceRequest):
+    """OpenAI-compatible chat completion request model."""
+
+    pass

@@ -36,6 +36,16 @@ class ProviderUnavailableException(AppException):
         super().__init__(502, "provider_unavailable", message)
 
 
+class ProviderNotFoundException(AppException):
+    def __init__(self, message: str = "Provider not found"):
+        super().__init__(404, "provider_not_found", message)
+
+
+class RoutingException(AppException):
+    def __init__(self, message: str = "Routing failed"):
+        super().__init__(500, "routing_failed", message)
+
+
 class InvalidRequestException(AppException):
     def __init__(self, message: str = "Invalid request"):
         super().__init__(400, "invalid_request", message)

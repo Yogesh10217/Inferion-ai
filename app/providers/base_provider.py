@@ -4,10 +4,13 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, AsyncIterator
 
+from app.schemas.inference_response import InferenceResponse
+from app.schemas.request import InferenceRequest
+
 
 @dataclass(slots=True)
 class ProviderResponse:
-    """Standardized response object returned by providers."""
+    """Backward-compatible response object returned by providers."""
 
     text: str
     model: str
@@ -32,12 +35,12 @@ class BaseProvider(ABC):
     name: str = "base"
 
     @abstractmethod
-    async def generate(self, *, model: str, prompt: str, **kwargs: Any) -> ProviderResponse:
-        """Generate a completion from the provider."""
+    async def generate(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> InferenceResponse:
+        """Generate a completion from the provider and return a normalized response."""
         raise NotImplementedError
 
     @abstractmethod
-    async def stream(self, *, model: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
+    async def stream(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[str]:
         """Stream text chunks from the provider."""
         raise NotImplementedError
 
