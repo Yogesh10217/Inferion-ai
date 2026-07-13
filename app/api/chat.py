@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 
 from app.schemas.request import ChatCompletionRequest
@@ -8,8 +8,10 @@ from app.services.inference_service import InferenceService, build_inference_ser
 router = APIRouter(tags=["chat"])
 
 
-def get_inference_service() -> InferenceService:
+def get_inference_service(request: Request) -> InferenceService:
     """Dependency injection provider for the inference service."""
+    if hasattr(request.app.state, "container"):
+        return request.app.state.container.inference_service
     return build_inference_service()
 
 

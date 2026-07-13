@@ -1,5 +1,6 @@
 import time
 import uuid
+from contextlib import asynccontextmanager
 from typing import Callable
 
 from fastapi import FastAPI, Request
@@ -11,6 +12,8 @@ from app.api.chat import router as chat_router
 from app.api.health import router as health_router
 from app.api.models import router as models_router
 from app.core.config import get_settings
+from app.core.container import ServiceContainer
+from app.core.initializer import InfrastructureInitializer
 from app.core.exceptions import AppException, AppExceptionHandler, InferenceException
 from app.core.logger import log_request_event, setup_logging
 
@@ -62,10 +65,24 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             return JSONResponse(status_code=500, content=InferenceException().to_payload())
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager that handles startup initialization and graceful shutdown."""
+    if hasattr(app.state, "container"):
+        container = app.state.container
+        initializer = InfrastructureInitializer(container)
+        await initializer.initialize()
+    yield
+    if hasattr(app.state, "container"):
+        app.state.container.logger.info("Shutting down the application and releasing resources...")
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     settings = get_settings()
-    setup_logging(settings.log_level)
+
+    # Create service container to manage application state
+    container = ServiceContainer(settings)
 
     app = FastAPI(
         title=settings.app_name,
@@ -74,7 +91,9 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",
+        lifespan=lifespan,
     )
+    app.state.container = container
 
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
     app.add_middleware(LoggingMiddleware)
