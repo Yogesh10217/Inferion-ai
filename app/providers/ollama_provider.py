@@ -5,7 +5,7 @@ from typing import Any, AsyncIterator
 
 from datetime import datetime, timezone
 
-from app.providers.base_provider import BaseProvider, ProviderModel, ProviderResponse
+from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import ChatMessage, InferenceRequest
 
@@ -67,12 +67,7 @@ class OllamaProvider(BaseProvider):
         """Return True until a real network validation is implemented."""
         return True
 
-    @staticmethod
-    def _extract_prompt(request: InferenceRequest) -> str:
-        if not request.messages:
-            return ""
-        last_message = request.messages[-1]
-        return last_message.content
+
 
     async def list_models(self) -> list[ProviderModel]:
         """Return a small set of example Ollama model metadata."""

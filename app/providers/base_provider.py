@@ -8,14 +8,7 @@ from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import InferenceRequest
 
 
-@dataclass(slots=True)
-class ProviderResponse:
-    """Backward-compatible response object returned by providers."""
 
-    text: str
-    model: str
-    provider: str
-    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(slots=True)
@@ -33,6 +26,13 @@ class BaseProvider(ABC):
     """Abstract contract for inference providers."""
 
     name: str = "base"
+
+    @staticmethod
+    def _extract_prompt(request: InferenceRequest) -> str:
+        """Extract the user prompt from the request messages."""
+        if not request.messages:
+            return ""
+        return request.messages[-1].content
 
     @abstractmethod
     async def generate(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> InferenceResponse:

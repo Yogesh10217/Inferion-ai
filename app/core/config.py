@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     )
 
     app_name: str = Field(default="LLM Inference Engine", alias="APP_NAME")
+    app_version: str = Field(default="0.1.0", alias="APP_VERSION")
     environment: str = Field(default="development", alias="ENVIRONMENT")
     debug: bool = Field(default=False, alias="DEBUG")
     api_prefix: str = Field(default="/v1", alias="API_PREFIX")

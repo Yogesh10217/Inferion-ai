@@ -18,9 +18,16 @@ def get_inference_service(request: Request) -> InferenceService:
 @router.post("/chat/completions", response_model=ChatCompletionResponse)
 async def create_chat_completion(
     payload: ChatCompletionRequest,
+    request: Request,
     service: InferenceService = Depends(get_inference_service),
 ) -> ChatCompletionResponse | StreamingResponse:
     """Create a chat completion response or stream it when requested."""
+    request.state.model = payload.model
+    if hasattr(request.app.state, "container"):
+        model_meta = request.app.state.container.registry.get_model(payload.model)
+        if model_meta:
+            request.state.provider = model_meta.provider
+
     if payload.stream:
         async def event_stream():
             async for chunk in service.stream_completion(model_id=payload.model, prompt=payload.messages[-1].content):
@@ -33,6 +40,9 @@ async def create_chat_completion(
         )
 
     response = await service.complete(model_id=payload.model, prompt=payload.messages[-1].content)
+    request.state.provider = response.provider
+    request.state.model = response.model
+
     return ChatCompletionResponse(
         id="chatcmpl-placeholder",
         object="chat.completion",

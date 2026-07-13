@@ -46,9 +46,7 @@ class RoutingException(AppException):
         super().__init__(500, "routing_failed", message)
 
 
-class InvalidRequestException(AppException):
-    def __init__(self, message: str = "Invalid request"):
-        super().__init__(400, "invalid_request", message)
+
 
 
 class InferenceException(AppException):
@@ -61,14 +59,20 @@ class NotFoundError(AppException):
         super().__init__(404, "not_found", message)
 
 
-class ValidationError(AppException):
+class ConfigurationException(AppException):
+    def __init__(self, message: str = "Configuration error"):
+        super().__init__(500, "configuration_error", message)
+
+
+class ValidationException(AppException):
     def __init__(self, message: str = "Validation failed"):
         super().__init__(400, "validation_error", message)
 
 
-class ProviderUnavailableError(AppException):
-    def __init__(self, message: str = "Provider unavailable"):
-        super().__init__(502, "provider_unavailable", message)
+# Aliases for backward compatibility
+ValidationError = ValidationException
+ProviderUnavailableError = ProviderUnavailableException
+
 
 
 class AppExceptionHandler:
@@ -77,3 +81,46 @@ class AppExceptionHandler:
     @staticmethod
     async def handle(request: Request, exc: AppException) -> JSONResponse:
         return JSONResponse(status_code=exc.status_code, content=exc.to_payload())
+
+
+def register_exception_handlers(app: Any) -> None:
+    """Register centralized exception handlers for the FastAPI application."""
+    from fastapi.exceptions import RequestValidationError
+    import logging
+
+    logger = logging.getLogger("app")
+
+    @app.exception_handler(AppException)
+    async def app_exception_handler(request: Request, exc: AppException) -> JSONResponse:
+        logger.error(f"Application exception: {exc.message} (code: {exc.code})")
+        return JSONResponse(status_code=exc.status_code, content=exc.to_payload())
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+        logger.error(f"Request validation exception: {exc.errors()}")
+        return JSONResponse(
+            status_code=422,
+            content={
+                "error": {
+                    "code": "validation_error",
+                    "message": "Validation failed",
+                    "details": exc.errors(),
+                },
+                "detail": exc.errors(),  # Keep backward compatibility
+            },
+        )
+
+    @app.exception_handler(Exception)
+    async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+        logger.exception(f"Unhandled system exception: {exc}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": {
+                    "code": "internal_error",
+                    "message": "An unexpected error occurred",
+                    "details": {},
+                }
+            },
+        )
+

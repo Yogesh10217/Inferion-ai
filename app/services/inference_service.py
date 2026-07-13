@@ -117,7 +117,6 @@ class DefaultInferenceService(InferenceService):
 def build_inference_service(
     registry: ModelRegistry | None = None,
     provider: BaseProvider | None = None,
-    provider_name: str = "openai",
     request_router: RequestRouter | None = None,
     response_adapter: OpenAIResponseAdapter | None = None,
 ) -> InferenceService:

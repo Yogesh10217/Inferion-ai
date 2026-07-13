@@ -43,11 +43,13 @@ def get_logger(name: str = "app") -> logging.Logger:
 
 def log_request_event(
     *,
+    method: str = "UNKNOWN",
     endpoint: str,
     latency_ms: float,
     provider: str | None,
     model: str | None,
     status_code: int,
+    client_ip: str | None = None,
     request_id: str | None = None,
     level: str = "INFO",
     extra: dict | None = None,
@@ -56,12 +58,14 @@ def log_request_event(
     logger = get_logger()
     payload = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "request_id": request_id or str(uuid.uuid4()),
+        "method": method,
         "endpoint": endpoint,
-        "latency_ms": round(latency_ms, 3),
         "provider": provider,
         "model": model,
+        "latency_ms": round(latency_ms, 3),
         "status_code": status_code,
-        "request_id": request_id or str(uuid.uuid4()),
+        "client_ip": client_ip,
     }
     if extra:
         payload.update(extra)

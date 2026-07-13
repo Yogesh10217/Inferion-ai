@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import logging
 from typing import Any
 
@@ -10,6 +11,8 @@ from app.registry.model_registry import InMemoryModelRegistry, ModelRegistry
 from app.routing.model_strategy import ModelBasedRoutingStrategy
 from app.routing.request_router import RequestRouter
 from app.services.inference_service import DefaultInferenceService, InferenceService
+from app.services.metrics_service import MetricsService
+from app.services.health_service import HealthService
 
 
 class ServiceContainer:
@@ -26,6 +29,9 @@ class ServiceContainer:
         # Initialize logging
         setup_logging(self.settings.log_level)
         self.logger = get_logger("app")
+
+        # Initialize startup time
+        self.startup_time = datetime.now(timezone.utc)
 
         # Initialize provider factory
         self.provider_factory = ProviderFactory()
@@ -46,3 +52,16 @@ class ServiceContainer:
             provider=None,
             request_router=self.request_router,
         )
+
+        # Initialize metrics service
+        self.metrics_service = MetricsService()
+
+        # Initialize health service
+        self.health_service = HealthService(
+            provider_factory=self.provider_factory,
+            registry=self.registry,
+            metrics_service=self.metrics_service,
+            startup_time=self.startup_time,
+            app_version=self.settings.app_version,
+        )
+

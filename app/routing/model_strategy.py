@@ -1,8 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from app.routing.routing_strategy import RoutingStrategy
+
+if TYPE_CHECKING:
+    from app.registry.model_metadata import ModelMetadata
+    from app.routing.request_router import RoutingRequest
 
 
 class ModelBasedRoutingStrategy(RoutingStrategy):
@@ -13,7 +17,7 @@ class ModelBasedRoutingStrategy(RoutingStrategy):
     without changing the router interface.
     """
 
-    async def determine_provider_name(self, *, model: Any, request: Any) -> str:
+    async def determine_provider_name(self, *, model: ModelMetadata | None, request: RoutingRequest | None = None) -> str:
         if model is None:
             return "openai"
 
