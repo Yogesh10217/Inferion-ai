@@ -32,5 +32,6 @@ async def test_provider_stream_is_async_iterable() -> None:
     provider = OpenAIProvider()
     stream = [chunk async for chunk in provider.stream(model="gpt-4o-mini", prompt="Hello")]
 
-    assert stream[-1].startswith("data: [DONE]")
-    assert any("chat.completion.chunk" in chunk for chunk in stream[:-1])
+    assert all(isinstance(chunk, InferenceResponse) for chunk in stream)
+    assert stream[-1].finish_reason == "stop"
+    assert any("Hello" in chunk.text for chunk in stream)

@@ -1,9 +1,11 @@
+import json
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 
 from app.schemas.request import ChatCompletionRequest
 from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage
 from app.services.inference_service import InferenceService, build_inference_service
+from app.adapters.openai_response_adapter import OpenAIResponseAdapter, format_sse_event
 
 router = APIRouter(tags=["chat"])
 
@@ -30,8 +32,16 @@ async def create_chat_completion(
 
     if payload.stream:
         async def event_stream():
-            async for chunk in service.stream_completion(model_id=payload.model, prompt=payload.messages[-1].content):
-                yield chunk.encode("utf-8")
+            try:
+                async for chunk in service.stream(payload):
+                    request.state.provider = chunk.provider
+                    request.state.model = chunk.model
+                    chunk_dict = OpenAIResponseAdapter.to_chat_completion_chunk(chunk)
+                    yield format_sse_event(data=json.dumps(chunk_dict, ensure_ascii=False))
+            except Exception as exc:
+                raise exc
+
+            yield format_sse_event(data="[DONE]")
 
         return StreamingResponse(
             event_stream(),

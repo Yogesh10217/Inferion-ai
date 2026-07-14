@@ -40,8 +40,8 @@ class BaseProvider(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def stream(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[str]:
-        """Stream text chunks from the provider."""
+    async def stream(self, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[InferenceResponse]:
+        """Stream normalized InferenceResponse chunks from the provider."""
         raise NotImplementedError
 
     @abstractmethod

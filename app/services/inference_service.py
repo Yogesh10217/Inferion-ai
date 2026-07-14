@@ -6,13 +6,14 @@ from abc import ABC, abstractmethod
 from typing import Any, AsyncIterator
 
 from app.adapters.openai_response_adapter import OpenAIResponseAdapter
-from app.core.exceptions import NotFoundError, ProviderUnavailableError, ValidationError
+from app.core.exceptions import AppException, NotFoundError, ProviderUnavailableError, ValidationError
 from app.providers.base_provider import BaseProvider
 from app.registry.model_registry import InMemoryModelRegistry, ModelRegistry
 from app.routing.request_router import RequestRouter, RoutingRequest
 from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import ChatMessage, InferenceRequest
 from app.schemas.response import ChatCompletionResponse
+from app.services.streaming_manager import StreamingManager
 
 
 class InferenceService(ABC):
@@ -28,15 +29,21 @@ class InferenceService(ABC):
         """Stream a completion for the given model and prompt."""
         raise NotImplementedError
 
+    @abstractmethod
+    async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
+        """Stream a completion returning InferenceResponse chunks."""
+        raise NotImplementedError
+
 
 class DefaultInferenceService(InferenceService):
     """Concrete inference service with provider selection and validation logic."""
 
-    def __init__(self, registry: ModelRegistry, provider: BaseProvider | None = None, request_router: RequestRouter | None = None, response_adapter: OpenAIResponseAdapter | None = None) -> None:
+    def __init__(self, registry: ModelRegistry, provider: BaseProvider | None = None, request_router: RequestRouter | None = None, response_adapter: OpenAIResponseAdapter | None = None, streaming_manager: StreamingManager | None = None) -> None:
         self._registry = registry
         self._provider = provider
         self._request_router = request_router
         self._response_adapter = response_adapter or OpenAIResponseAdapter()
+        self._streaming_manager = streaming_manager or StreamingManager()
 
     async def complete(self, *, model_id: str, prompt: str, **kwargs: Any) -> InferenceResponse:
         self._validate_request(model_id=model_id, prompt=prompt)
@@ -58,28 +65,46 @@ class DefaultInferenceService(InferenceService):
 
         async def event_stream() -> AsyncIterator[str]:
             try:
-                async for token in provider.stream(request=request):
+                async for chunk in self.stream(request=request):
                     payload = {
-                        "id": f"chatcmpl-{model_id}",
+                        "id": chunk.id,
                         "object": "chat.completion.chunk",
-                        "created": int(time.time()),
-                        "model": model_id,
+                        "created": int(chunk.created.timestamp()),
+                        "model": chunk.model,
                         "choices": [
                             {
                                 "index": 0,
-                                "delta": {"content": token},
-                                "finish_reason": None,
+                                "delta": {"content": chunk.text} if chunk.text else {},
+                                "finish_reason": chunk.finish_reason or None,
                             }
                         ],
                     }
                     yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
-            except Exception as exc:  # pragma: no cover - defensive boundary
+            except Exception as exc:
+                if isinstance(exc, AppException):
+                    raise exc
                 raise ProviderUnavailableError(f"Provider failed for model '{model_id}'") from exc
 
             yield "data: [DONE]\n\n"
 
         async for chunk in event_stream():
             yield chunk
+
+    async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
+        self._validate_request(model_id=request.model, prompt=self._extract_prompt_from_request(request))
+        provider = await self._resolve_provider(model_id=request.model)
+        try:
+            async for chunk in self._streaming_manager.stream(provider=provider, request=request):
+                yield chunk
+        except Exception as exc:
+            if isinstance(exc, AppException):
+                raise exc
+            raise ProviderUnavailableError(f"Provider failed for model '{request.model}'") from exc
+
+    def _extract_prompt_from_request(self, request: InferenceRequest) -> str:
+        if not request.messages:
+            return ""
+        return request.messages[-1].content
 
     def _validate_request(self, *, model_id: str, prompt: str) -> None:
         if not model_id or not prompt:
@@ -119,6 +144,7 @@ def build_inference_service(
     provider: BaseProvider | None = None,
     request_router: RequestRouter | None = None,
     response_adapter: OpenAIResponseAdapter | None = None,
+    streaming_manager: StreamingManager | None = None,
 ) -> InferenceService:
     """Create a service instance using dependency injection-friendly defaults."""
     if registry is None:
@@ -130,6 +156,10 @@ def build_inference_service(
             registry=registry,
             strategy=ModelBasedRoutingStrategy(),
         )
-    if provider is not None:
-        return DefaultInferenceService(registry=registry, provider=provider, request_router=request_router, response_adapter=response_adapter)
-    return DefaultInferenceService(registry=registry, provider=None, request_router=request_router, response_adapter=response_adapter)
+    return DefaultInferenceService(
+        registry=registry,
+        provider=provider,
+        request_router=request_router,
+        response_adapter=response_adapter,
+        streaming_manager=streaming_manager,
+    )

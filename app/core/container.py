@@ -13,6 +13,7 @@ from app.routing.request_router import RequestRouter
 from app.services.inference_service import DefaultInferenceService, InferenceService
 from app.services.metrics_service import MetricsService
 from app.services.health_service import HealthService
+from app.services.streaming_manager import StreamingManager
 
 
 class ServiceContainer:
@@ -46,11 +47,15 @@ class ServiceContainer:
             provider_factory=self.provider_factory,
         )
 
+        # Initialize streaming manager
+        self.streaming_manager = StreamingManager()
+
         # Initialize default inference service
         self.inference_service = DefaultInferenceService(
             registry=self.registry,
             provider=None,
             request_router=self.request_router,
+            streaming_manager=self.streaming_manager,
         )
 
         # Initialize metrics service
