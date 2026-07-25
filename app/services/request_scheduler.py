@@ -74,10 +74,12 @@ class RequestScheduler:
         self,
         router: RequestRouter,
         metrics: MetricsService,
+        batch_collector: Any = None,
         config: Optional[SchedulerConfig] = None,
     ) -> None:
         self._router = router
         self._metrics = metrics
+        self._batch_collector = batch_collector
         self._config = config or SchedulerConfig()
         self._queue = RequestQueue(max_size=self._config.max_queue_size)
         self._worker_task: Optional[asyncio.Task] = None
@@ -108,6 +110,8 @@ class RequestScheduler:
                 await self._worker_task
             except asyncio.CancelledError:
                 pass
+        if self._batch_collector:
+            await self._batch_collector.shutdown()
         self._queue.shutdown()
 
     async def generate(self, request: InferenceRequest) -> InferenceResponse:
@@ -160,16 +164,19 @@ class RequestScheduler:
             if entry.cancellation_state.is_set():
                 continue
                 
-            # Dispatch the request without awaiting it here so we don't block the queue
-            # In a full batching system, this would gather multiple entries.
             asyncio.create_task(self._process_entry(entry))
 
     async def _process_entry(self, entry: QueueEntry) -> None:
-        """Process a single queue entry by resolving the provider and executing."""
+        """Process a single queue entry by delegating to the batch collector or executing directly."""
         try:
             if entry.cancellation_state.is_set():
                 return
                 
+            if self._batch_collector:
+                await self._batch_collector.add_entry(entry)
+                return
+                
+            # Fallback direct execution if no batching layer
             provider = await self._router.route(RoutingRequest(model_id=entry.request.model))
             
             if entry.is_streaming:

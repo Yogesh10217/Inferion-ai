@@ -17,6 +17,14 @@ class MetricsService:
         self._scheduled_count = 0
         self._total_wait_time_ms = 0.0
 
+        # Batching metrics
+        self._active_batches = 0
+        self._total_batches_dispatched = 0
+        self._total_requests_batched = 0
+        self._largest_observed_batch = 0
+        self._total_dispatch_delay_ms = 0.0
+        self._single_request_fallbacks = 0
+
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
         with self._lock:
@@ -38,6 +46,31 @@ class MetricsService:
             self._scheduled_count += 1
             self._total_wait_time_ms += wait_time_ms
 
+    def record_active_batch_added(self) -> None:
+        """Record a new active batch created."""
+        with self._lock:
+            self._active_batches += 1
+
+    def record_active_batch_removed(self) -> None:
+        """Record an active batch removed/dispatched."""
+        with self._lock:
+            if self._active_batches > 0:
+                self._active_batches -= 1
+
+    def record_batch_dispatch(self, batch_size: int, delay_ms: float) -> None:
+        """Record batch execution metrics."""
+        with self._lock:
+            self._total_batches_dispatched += 1
+            self._total_requests_batched += batch_size
+            self._total_dispatch_delay_ms += delay_ms
+            if batch_size > self._largest_observed_batch:
+                self._largest_observed_batch = batch_size
+
+    def record_single_request_fallback(self) -> None:
+        """Record when a request could not be batched."""
+        with self._lock:
+            self._single_request_fallbacks += 1
+
     def get_queue_depth(self) -> int:
         """Get current scheduler queue depth."""
         with self._lock:
@@ -49,6 +82,18 @@ class MetricsService:
             if self._scheduled_count == 0:
                 return 0.0
             return self._total_wait_time_ms / self._scheduled_count
+
+    def get_average_requests_per_batch(self) -> float:
+        with self._lock:
+            if self._total_batches_dispatched == 0:
+                return 0.0
+            return self._total_requests_batched / self._total_batches_dispatched
+
+    def get_average_dispatch_delay(self) -> float:
+        with self._lock:
+            if self._total_batches_dispatched == 0:
+                return 0.0
+            return self._total_dispatch_delay_ms / self._total_batches_dispatched
 
     def get_scheduler_throughput(self) -> int:
         """Get total number of requests processed by scheduler."""
@@ -82,4 +127,9 @@ class MetricsService:
                 "queue_depth": self._queue_depth,
                 "average_wait_time_ms": self.get_average_wait_time(),
                 "scheduler_throughput": self._scheduled_count,
+                "active_batches": self._active_batches,
+                "average_requests_per_batch": self.get_average_requests_per_batch(),
+                "largest_observed_batch": self._largest_observed_batch,
+                "average_dispatch_delay_ms": self.get_average_dispatch_delay(),
+                "single_request_fallbacks": self._single_request_fallbacks,
             }

@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
     ollama_base_url: str = Field(default="http://localhost:11434", alias="OLLAMA_BASE_URL")
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"], alias="CORS_ORIGINS")
+    
+    # Batching Config
+    batch_enabled: bool = Field(default=True, alias="BATCH_ENABLED")
+    batch_max_size: int = Field(default=10, alias="BATCH_MAX_SIZE")
+    batch_max_wait_ms: int = Field(default=50, alias="BATCH_MAX_WAIT_MS")
+    batch_max_queue_tokens: int = Field(default=10000, alias="BATCH_MAX_QUEUE_TOKENS")
 
     @field_validator("cors_origins", mode="before")
     @classmethod

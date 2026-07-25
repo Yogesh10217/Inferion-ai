@@ -49,10 +49,32 @@ class ServiceContainer:
         # Initialize metrics service (needed by scheduler and health)
         self.metrics_service = MetricsService()
 
+        # Initialize batching
+        from app.services.batching.batch_config import BatchConfig
+        from app.services.batching.batch_policy import BatchPolicy
+        from app.services.batching.batch_executor import BatchExecutor
+        from app.services.batching.batch_collector import BatchCollector
+
+        self.batch_config = BatchConfig(
+            enabled=self.settings.batch_enabled,
+            max_batch_size=self.settings.batch_max_size,
+            max_batch_wait_ms=self.settings.batch_max_wait_ms,
+            max_queue_tokens=self.settings.batch_max_queue_tokens,
+        )
+        self.batch_policy = BatchPolicy(config=self.batch_config)
+        self.batch_executor = BatchExecutor(router=self.request_router, metrics=self.metrics_service)
+        self.batch_collector = BatchCollector(
+            policy=self.batch_policy,
+            executor=self.batch_executor,
+            router=self.request_router,
+            metrics=self.metrics_service,
+        )
+
         # Initialize request scheduler
         self.request_scheduler = RequestScheduler(
             router=self.request_router,
             metrics=self.metrics_service,
+            batch_collector=self.batch_collector,
         )
 
         # Initialize streaming manager
