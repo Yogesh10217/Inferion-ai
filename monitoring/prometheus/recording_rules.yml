@@ -1,0 +1,23 @@
+groups:
+  - name: llm_engine_recording_rules
+    rules:
+      - record: record:llm_engine_inference_api_request_rate_1m
+        expr: rate(llm_engine_inference_api_requests_total[1m])
+
+      - record: record:llm_engine_inference_cache_hit_ratio
+        expr: >
+          sum(rate(llm_engine_inference_cache_lookups_total{result="hit"}[1m])) 
+          / 
+          sum(rate(llm_engine_inference_cache_lookups_total[1m]))
+
+      - record: record:llm_engine_inference_avg_provider_latency_1m
+        expr: >
+          sum by (provider_id, instance_id) (rate(llm_engine_inference_provider_latency_seconds_sum[1m]))
+          /
+          sum by (provider_id, instance_id) (rate(llm_engine_inference_provider_latency_seconds_count[1m]))
+
+      - record: record:llm_engine_inference_avg_queue_latency_1m
+        expr: >
+          sum(rate(llm_engine_inference_scheduler_wait_duration_seconds_sum[1m]))
+          /
+          sum(rate(llm_engine_inference_scheduler_wait_duration_seconds_count[1m]))

@@ -30,6 +30,26 @@ The system is split into modular layers:
 - **Streaming Manager**: Intermediary between InferenceService and providers for streaming lifecycle management.
 - **Registry and Routing Layer**: Manages local models registry and resolves provider mappings.
 
+## Observability Stack
+
+The Inference Engine includes a full Prometheus and Grafana observability stack with pre-provisioned dashboards for the internal metrics.
+
+Start the full stack using docker compose:
+```bash
+docker compose up -d
+```
+
+### Accessing the Monitoring Tools
+- **Grafana**: `http://localhost:3000` (Default credentials: admin/admin)
+- **Prometheus**: `http://localhost:9090`
+- **Application Metrics Endpoint**: `http://localhost:8002/metrics`
+
+The Grafana instance automatically provisions a folder called "LLM Inference Engine" containing pre-built dashboards for System Overview, Provider Latency, Batching metrics, Cache hits/misses, Scheduler queues, and more.
+
+## Documentation
+
+Full architectural documentation can be found in `ARCHITECTURE.md` and `ARCHITECTURE_OVERVIEW.md`.
+
 For full architectural blueprints, diagrams, and deployment patterns, refer to the [docs/](docs/) directory.
 
 ---

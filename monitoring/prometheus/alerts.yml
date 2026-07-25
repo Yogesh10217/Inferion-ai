@@ -1,0 +1,92 @@
+groups:
+  - name: llm_engine_alerts
+    rules:
+      - alert: ScrapeFailed
+        expr: up{job="llm_engine"} == 0
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus scrape failed"
+          description: "Prometheus failed to scrape the LLM engine metrics endpoint for 15s."
+
+      - alert: HighRequestLatency
+        expr: histogram_quantile(0.95, sum(rate(llm_engine_inference_api_request_duration_seconds_bucket[1m])) by (le)) > 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API request latency"
+          description: "95th percentile request latency is above 5s."
+
+      - alert: HighProviderLatency
+        expr: histogram_quantile(0.95, sum(rate(llm_engine_inference_provider_latency_seconds_bucket[1m])) by (le, provider_id)) > 10
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Provider Latency"
+          description: "Provider latency for {{ $labels.provider_id }} is above 10s."
+
+      - alert: QueueDepthHigh
+        expr: llm_engine_inference_scheduler_queue_depth > 50
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High scheduler queue depth"
+          description: "Scheduler queue depth is > 50."
+
+      - alert: SchedulerBacklogSustained
+        expr: llm_engine_inference_scheduler_queue_depth > 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sustained scheduler backlog"
+          description: "Scheduler queue has been non-empty (>10) for over 5 minutes."
+
+      - alert: LowCacheHitRatio
+        expr: record:llm_engine_inference_cache_hit_ratio < 0.2 and rate(llm_engine_inference_api_requests_total[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low Cache Hit Ratio"
+          description: "Cache hit ratio is below 20% for 5 minutes."
+
+      - alert: CacheLatencyHigh
+        expr: histogram_quantile(0.95, sum(rate(llm_engine_inference_cache_lookup_latency_seconds_bucket[1m])) by (le)) > 0.05
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Cache Lookup Latency"
+          description: "95th percentile cache lookup latency is > 50ms."
+
+      - alert: ProviderUnhealthy
+        expr: llm_engine_inference_provider_active_instances == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "No healthy providers"
+          description: "Provider {{ $labels.provider_id }} has no active/healthy instances."
+
+      - alert: ConsecutiveProviderFailures
+        expr: rate(llm_engine_inference_provider_failures_total[1m]) > 0.1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Consecutive provider failures"
+          description: "High rate of provider failures for {{ $labels.provider_id }}."
+
+      - alert: HighErrorRate
+        expr: (rate(llm_engine_inference_api_errors_total[1m]) / rate(llm_engine_inference_api_requests_total[1m])) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Error Rate"
+          description: "API error rate is > 10%."

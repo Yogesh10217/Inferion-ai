@@ -50,35 +50,49 @@ services:
   #   networks:
   #     - inference-network
 
-  # prometheus:
-  #   image: prom/prometheus:v2.51.1
-  #   container_name: llm-inference-engine-prometheus
-  #   restart: unless-stopped
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prometheus-storage:/prometheus
-  #   networks:
-  #     - inference-network
+  prometheus:
+    image: prom/prometheus:v2.51.1
+    container_name: llm-inference-engine-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./monitoring/prometheus/recording_rules.yml:/etc/prometheus/recording_rules.yml:ro
+      - prometheus-storage:/prometheus
+    networks:
+      - inference-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-  # grafana:
-  #   image: grafana/grafana:10.4.1
-  #   container_name: llm-inference-engine-grafana
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - grafana-storage:/var/lib/grafana
-  #   networks:
-  #     - inference-network
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: llm-inference-engine-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - inference-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   ollama-storage:
     name: llm-inference-engine-ollama-storage
   # redis-storage:
-  # prometheus-storage:
-  # grafana-storage:
+  prometheus-storage:
+  grafana-storage:
 
 networks:
   inference-network:

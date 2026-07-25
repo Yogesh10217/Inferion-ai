@@ -1,0 +1,53 @@
+{
+  "title": "Streaming",
+  "uid": "streaming",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Placeholder for Streaming (Requires additional MetricsService instrumentation in future)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "up",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "provider",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(llm_engine_inference_provider_requests_total, provider_id)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*"
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(llm_engine_inference_provider_requests_total{provider_id=~\"$provider\"}, instance_id)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*"
+      }
+    ]
+  }
+}

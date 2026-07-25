@@ -1,0 +1,141 @@
+{
+  "title": "System Overview",
+  "uid": "system-overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total Requests (Rate)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "rate(llm_engine_inference_api_requests_total[1m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Error Rate",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "rate(llm_engine_inference_api_errors_total[1m]) / rate(llm_engine_inference_api_requests_total[1m])",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Active Requests",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "llm_engine_inference_active_requests",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Uptime",
+      "type": "stat",
+      "gridPos": {
+        "x": 8,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "llm_engine_inference_uptime_seconds",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Build / Version",
+      "type": "stat",
+      "gridPos": {
+        "x": 16,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "llm_engine_inference_app_info",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        }
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "provider",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(llm_engine_inference_provider_requests_total, provider_id)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*"
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(llm_engine_inference_provider_requests_total{provider_id=~\"$provider\"}, instance_id)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*"
+      }
+    ]
+  }
+}
