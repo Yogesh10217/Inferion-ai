@@ -13,6 +13,9 @@ from app.services.metrics_service import MetricsService
 from app.services.health_service import HealthService
 from app.services.streaming_manager import StreamingManager
 from app.services.request_scheduler import RequestScheduler
+from app.observability.prometheus_registry import PrometheusRegistry
+from app.observability.metrics_mapper import MetricsMapper
+from app.observability.prometheus_exporter import PrometheusExporter
 
 
 class ServiceContainer:
@@ -151,4 +154,21 @@ class ServiceContainer:
             startup_time=self.startup_time,
             app_version=self.settings.app_version,
         )
+
+        # Observability / Prometheus
+        if self.settings.prometheus_enabled:
+            self.prometheus_registry = PrometheusRegistry(
+                namespace=self.settings.prometheus_namespace,
+                subsystem=self.settings.prometheus_subsystem,
+            )
+            self.metrics_mapper = MetricsMapper(
+                registry=self.prometheus_registry,
+                metrics_service=self.metrics_service,
+                version=self.settings.app_version,
+            )
+            self.prometheus_exporter = PrometheusExporter(self.metrics_mapper)
+        else:
+            self.prometheus_registry = None
+            self.metrics_mapper = None
+            self.prometheus_exporter = None
 

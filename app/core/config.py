@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     cache_ttl_seconds: int = Field(default=3600, alias="CACHE_TTL_SECONDS")
     redis_url: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
 
+    # Observability Configuration
+    prometheus_enabled: bool = Field(default=True, alias="PROMETHEUS_ENABLED")
+    prometheus_namespace: str = Field(default="llm_engine", alias="PROMETHEUS_NAMESPACE")
+    prometheus_subsystem: str = Field(default="inference", alias="PROMETHEUS_SUBSYSTEM")
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object, info: ValidationInfo) -> list[str]:

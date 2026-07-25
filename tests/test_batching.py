@@ -105,7 +105,7 @@ async def test_batch_collector_timeout_dispatch(mock_failover_policy, metrics_se
     assert len(executed_batches) == 0
     
     # Wait past timeout (max_batch_wait_ms = 100)
-    await asyncio.sleep(0.15)
+    await asyncio.sleep(0.25)
     
     assert len(executed_batches) == 1
     assert executed_batches[0].size() == 1

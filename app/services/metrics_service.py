@@ -33,11 +33,20 @@ class MetricsService:
         self._cache_lookup_latency_ms = 0.0
         self._cache_write_latency_ms = 0.0
 
+        # Event buffers for Histograms
+        self._recent_request_latencies: list[float] = []
+        self._recent_scheduler_wait_times: list[float] = []
+        self._recent_batch_dispatch_delays: list[float] = []
+        self._recent_cache_lookup_latencies: list[float] = []
+        self._recent_cache_write_latencies: list[float] = []
+        self._recent_provider_latencies: list[tuple[str, str, float]] = []
+
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
         with self._lock:
             self._request_count += 1
             self._total_latency += latency_ms
+            self._recent_request_latencies.append(latency_ms)
             if is_error:
                 self._error_count += 1
 
@@ -53,6 +62,7 @@ class MetricsService:
                 self._queue_depth -= 1
             self._scheduled_count += 1
             self._total_wait_time_ms += wait_time_ms
+            self._recent_scheduler_wait_times.append(wait_time_ms)
 
     def record_active_batch_added(self) -> None:
         """Record a new active batch created."""
@@ -71,6 +81,7 @@ class MetricsService:
             self._total_batches_dispatched += 1
             self._total_requests_batched += batch_size
             self._total_dispatch_delay_ms += delay_ms
+            self._recent_batch_dispatch_delays.append(delay_ms)
             if batch_size > self._largest_observed_batch:
                 self._largest_observed_batch = batch_size
 
@@ -144,10 +155,12 @@ class MetricsService:
     def record_cache_lookup_latency(self, latency_ms: float) -> None:
         with self._lock:
             self._cache_lookup_latency_ms += latency_ms
+            self._recent_cache_lookup_latencies.append(latency_ms)
 
     def record_cache_write_latency(self, latency_ms: float) -> None:
         with self._lock:
             self._cache_write_latency_ms += latency_ms
+            self._recent_cache_write_latencies.append(latency_ms)
 
     def get_cache_hit_ratio(self) -> float:
         with self._lock:
@@ -214,3 +227,26 @@ class MetricsService:
             
         with self._lock:
             self._provider_failovers[provider_id] = self._provider_failovers.get(provider_id, 0) + 1
+
+    def record_provider_latency(self, provider_id: str, instance_id: str, latency_ms: float) -> None:
+        with self._lock:
+            self._recent_provider_latencies.append((provider_id, instance_id, latency_ms))
+
+    def drain_histograms(self) -> dict[str, list[Any]]:
+        """Returns buffered latency events and clears the buffers. Used by Prometheus exporter."""
+        with self._lock:
+            data = {
+                "request_latencies": self._recent_request_latencies,
+                "scheduler_wait_times": self._recent_scheduler_wait_times,
+                "batch_dispatch_delays": self._recent_batch_dispatch_delays,
+                "cache_lookup_latencies": self._recent_cache_lookup_latencies,
+                "cache_write_latencies": self._recent_cache_write_latencies,
+                "provider_latencies": self._recent_provider_latencies,
+            }
+            self._recent_request_latencies = []
+            self._recent_scheduler_wait_times = []
+            self._recent_batch_dispatch_delays = []
+            self._recent_cache_lookup_latencies = []
+            self._recent_cache_write_latencies = []
+            self._recent_provider_latencies = []
+            return data
