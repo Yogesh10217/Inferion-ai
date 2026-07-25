@@ -37,6 +37,12 @@ class Settings(BaseSettings):
     provider_recovery_time_s: float = Field(default=30.0, alias="PROVIDER_RECOVERY_TIME_S")
     default_provider_weight: int = Field(default=1, alias="DEFAULT_PROVIDER_WEIGHT")
 
+    # Caching Configuration
+    cache_enabled: bool = Field(default=True, alias="CACHE_ENABLED")
+    cache_backend: str = Field(default="memory", alias="CACHE_BACKEND")  # 'memory' or 'redis'
+    cache_ttl_seconds: int = Field(default=3600, alias="CACHE_TTL_SECONDS")
+    redis_url: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object, info: ValidationInfo) -> list[str]:

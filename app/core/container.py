@@ -77,6 +77,29 @@ class ServiceContainer:
         
         self.failover_policy = FailoverPolicy(load_balancer=self.load_balancer)
 
+        # Initialize Cache
+        from app.cache.cache_manager import CacheManager
+        from app.cache.cache_policy import CachePolicy
+        from app.cache.memory_backend import MemoryCacheBackend
+        from app.cache.redis_backend import RedisCacheBackend
+
+        if self.settings.cache_backend.lower() == "redis":
+            cache_backend = RedisCacheBackend(redis_url=self.settings.redis_url)
+        else:
+            cache_backend = MemoryCacheBackend()
+
+        self.cache_policy = CachePolicy(
+            ttl_seconds=self.settings.cache_ttl_seconds,
+            no_cache=not self.settings.cache_enabled
+        )
+
+        self.cache_manager = CacheManager(
+            backend=cache_backend,
+            policy=self.cache_policy,
+            metrics=self.metrics_service,
+            enabled=self.settings.cache_enabled
+        )
+
         # Initialize batching
         from app.services.batching.batch_config import BatchConfig
         from app.services.batching.batch_policy import BatchPolicy
@@ -92,7 +115,8 @@ class ServiceContainer:
         self.batch_policy = BatchPolicy(config=self.batch_config)
         self.batch_executor = BatchExecutor(
             failover_policy=self.failover_policy, 
-            metrics=self.metrics_service
+            metrics=self.metrics_service,
+            cache_manager=self.cache_manager
         )
         self.batch_collector = BatchCollector(
             policy=self.batch_policy,

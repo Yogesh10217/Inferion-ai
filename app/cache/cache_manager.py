@@ -1,0 +1,89 @@
+import time
+from typing import Any, Optional
+
+from app.cache.cache_backend import BaseCacheBackend
+from app.cache.cache_key import CacheKeyBuilder
+from app.cache.cache_policy import CachePolicy
+from app.cache.serializer import CacheSerializer
+from app.core.logger import get_logger
+from app.services.batching.batch_entry import QueueEntry
+from app.services.metrics_service import MetricsService
+
+logger = get_logger("app.cache.manager")
+
+
+class CacheManager:
+    """Orchestrates caching logic using policies, keys, serializers, and backends."""
+
+    def __init__(
+        self,
+        backend: BaseCacheBackend,
+        policy: CachePolicy,
+        metrics: MetricsService,
+        enabled: bool = True,
+    ):
+        self._backend = backend
+        self._policy = policy
+        self._metrics = metrics
+        self.enabled = enabled
+
+    async def lookup(self, entry: QueueEntry) -> Optional[Any]:
+        """Look up a request in the cache."""
+        if not self.enabled or not self._policy.is_request_cacheable(entry):
+            return None
+
+        key = CacheKeyBuilder.generate_key(
+            provider_id=entry.decision.provider_id,
+            model_id=entry.decision.model_id,
+            request=entry.request,
+        )
+
+        start_time = time.monotonic()
+        try:
+            raw_value = await self._backend.get(key)
+        except Exception as exc:
+            logger.warning(f"Cache get failed for key {key}: {exc}")
+            raw_value = None
+            
+        latency_ms = (time.monotonic() - start_time) * 1000.0
+        self._metrics.record_cache_lookup_latency(latency_ms)
+
+        if raw_value is not None:
+            self._metrics.record_cache_hit()
+            try:
+                # Deserialize using CacheSerializer
+                return CacheSerializer.deserialize(raw_value)
+            except Exception as exc:
+                logger.error(f"Failed to deserialize cache value for key {key}: {exc}")
+                # We could delete the bad entry here, but it's optional
+                return None
+        else:
+            self._metrics.record_cache_miss()
+            return None
+
+    async def store(self, entry: QueueEntry, response: Any) -> None:
+        """Store a successful response in the cache."""
+        if not self.enabled or not self._policy.is_response_cacheable(entry, response):
+            return
+
+        key = CacheKeyBuilder.generate_key(
+            provider_id=entry.decision.provider_id,
+            model_id=entry.decision.model_id,
+            request=entry.request,
+        )
+
+        try:
+            raw_value = CacheSerializer.serialize(response)
+        except Exception as exc:
+            logger.error(f"Failed to serialize response for cache key {key}: {exc}")
+            return
+
+        start_time = time.monotonic()
+        try:
+            await self._backend.set(key, raw_value, self._policy.ttl_seconds)
+            self._metrics.record_cache_write()
+        except Exception as exc:
+            logger.warning(f"Cache set failed for key {key}: {exc}")
+
+        latency_ms = (time.monotonic() - start_time) * 1000.0
+        self._metrics.record_cache_write_latency(latency_ms)

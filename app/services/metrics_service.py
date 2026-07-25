@@ -25,6 +25,14 @@ class MetricsService:
         self._total_dispatch_delay_ms = 0.0
         self._single_request_fallbacks = 0
 
+        # Cache metrics
+        self._cache_hits = 0
+        self._cache_misses = 0
+        self._cache_writes = 0
+        self._cache_evictions = 0
+        self._cache_lookup_latency_ms = 0.0
+        self._cache_write_latency_ms = 0.0
+
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
         with self._lock:
@@ -117,6 +125,37 @@ class MetricsService:
                 return 0.0
             return self._total_latency / self._request_count
 
+    def record_cache_hit(self) -> None:
+        with self._lock:
+            self._cache_hits += 1
+
+    def record_cache_miss(self) -> None:
+        with self._lock:
+            self._cache_misses += 1
+
+    def record_cache_write(self) -> None:
+        with self._lock:
+            self._cache_writes += 1
+
+    def record_cache_eviction(self) -> None:
+        with self._lock:
+            self._cache_evictions += 1
+
+    def record_cache_lookup_latency(self, latency_ms: float) -> None:
+        with self._lock:
+            self._cache_lookup_latency_ms += latency_ms
+
+    def record_cache_write_latency(self, latency_ms: float) -> None:
+        with self._lock:
+            self._cache_write_latency_ms += latency_ms
+
+    def get_cache_hit_ratio(self) -> float:
+        with self._lock:
+            total_lookups = self._cache_hits + self._cache_misses
+            if total_lookups == 0:
+                return 0.0
+            return self._cache_hits / total_lookups
+
     def get_metrics_summary(self) -> dict[str, Any]:
         """Return a dictionary summarizing the current metrics."""
         with self._lock:
@@ -132,6 +171,13 @@ class MetricsService:
                 "largest_observed_batch": self._largest_observed_batch,
                 "average_dispatch_delay_ms": self.get_average_dispatch_delay(),
                 "single_request_fallbacks": self._single_request_fallbacks,
+                "cache_hits": self._cache_hits,
+                "cache_misses": self._cache_misses,
+                "cache_writes": self._cache_writes,
+                "cache_evictions": self._cache_evictions,
+                "cache_hit_ratio": self.get_cache_hit_ratio(),
+                "average_cache_lookup_latency_ms": self._cache_lookup_latency_ms / (self._cache_hits + self._cache_misses) if (self._cache_hits + self._cache_misses) > 0 else 0.0,
+                "average_cache_write_latency_ms": self._cache_write_latency_ms / self._cache_writes if self._cache_writes > 0 else 0.0,
                 "load_balancer_decisions": getattr(self, "_load_balancer_decisions", 0),
                 "requests_per_provider": getattr(self, "_requests_per_provider", {}).copy(),
                 "requests_per_instance": getattr(self, "_requests_per_instance", {}).copy(),
