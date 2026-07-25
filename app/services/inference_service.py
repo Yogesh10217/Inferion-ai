@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import time
 from abc import ABC, abstractmethod
 from typing import Any, AsyncIterator
 
@@ -12,7 +11,6 @@ from app.registry.model_registry import InMemoryModelRegistry, ModelRegistry
 from app.routing.request_router import RequestRouter, RoutingRequest
 from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import ChatMessage, InferenceRequest
-from app.schemas.response import ChatCompletionResponse
 from app.services.streaming_manager import StreamingManager
 
 

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from threading import RLock
 from typing import Any
 
-from app.registry.model_metadata import ModelMetadata, ModelStatus, RegisteredModel
+from app.registry.model_metadata import ModelMetadata
 from app.registry.repository import ModelRegistry
 
 

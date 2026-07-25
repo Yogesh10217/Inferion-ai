@@ -1,11 +1,11 @@
 # ⚡ LLM Inference Engine — High-Performance LLM Serving Platform
 
-> A production-grade inference engine for serving large language models at scale — with **multi-model routing**, **thread-safe model registry**, and **robust observability and health logging** compatible with OpenAI specifications.
+> A production-grade inference engine for serving large language models at scale — with **multi-model routing**, **thread-safe model registry**, **SSE streaming**, and **robust observability** compatible with the OpenAI API specification.
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-async-green)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-brightgreen?logo=github)](https://github.com/OnHighEngineer/llm-inference-engine/actions)
 
 ---
 
@@ -27,30 +27,65 @@ The system is split into modular layers:
 - **API/Transport Layer**: Handles HTTP serialization, CORS, and request routing.
 - **Observability Middleware**: Measures latencies, manages request ID correlation headers, and outputs JSON log statements.
 - **Service Layer**: Manages business flow orchestrations (Inference orchestration, Health aggregation).
+- **Streaming Manager**: Intermediary between InferenceService and providers for streaming lifecycle management.
 - **Registry and Routing Layer**: Manages local models registry and resolves provider mappings.
 
-For full architectural blueprints, diagrams, and deployment patterns, refer to:
-- [Architecture Guide](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/architecture.md)
-- [API Spec](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/api.md)
-- [Provider Abstractions](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/providers.md)
-- [Routing Design](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/routing.md)
-- [Model Registry Design](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/registry.md)
-- [Observability Middleware](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/middleware.md)
-- [Application Startup](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/startup.md)
-- [System Sequence Diagrams](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/docs/sequence_diagrams.md)
+For full architectural blueprints, diagrams, and deployment patterns, refer to the [docs/](docs/) directory.
 
 ---
 
-## ✅ What is implemented in this repository
+## ⚡ Quick Start
 
-The current repository contains a fully verified, production-ready backend implementation:
+### Prerequisites
+- Python 3.10+
+- (Optional) [Ollama](https://ollama.com) installed locally for local model serving
+- (Optional) Docker & Docker Compose for containerized deployment
 
-- **App Initialization**: Decoupled initialization lifespan and [InfrastructureInitializer](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/app/core/initializer.py#L10) in [main.py](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/app/main.py).
-- **Dependency Injection**: [ServiceContainer](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/app/core/container.py#L17) managing all singleton services without global state.
-- **Metrics Tracking**: Thread-safe [MetricsService](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/app/services/metrics_service.py#L6) tracking requests, latencies, and error rates.
-- **Aggregated Health Routing**: [HealthService](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/app/services/health_service.py#L18) reporting detailed engine state on `/health`, `/ready`, and `/live`.
-- **Pure Transport Middleware**: [ObservationMiddleware](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/app/core/middleware.py#L14) handling correlation IDs (`X-Request-ID`) and structured logging.
-- **Centralized Exception Handlers**: Standardized JSON responses for custom `AppException` types and validation errors, masking tracebacks.
+### Local Development
+
+```bash
+# Clone the repository
+git clone https://github.com/OnHighEngineer/llm-inference-engine.git
+cd llm-inference-engine
+
+# Setup environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+make install
+# Or manually:
+# pip install -r requirements.txt
+
+# Copy and configure environment variables
+cp .env.example .env
+# Edit .env to add your OPENAI_API_KEY if desired
+
+# Run the FastAPI application
+make run
+# Or manually:
+# uvicorn app.main:app --host 0.0.0.0 --port 8002
+```
+
+### Docker Deployment
+
+```bash
+# Build and start all services (app + Ollama)
+make compose-up
+# Or manually:
+# docker compose up -d --build
+
+# Stop all services
+make compose-down
+
+# Build Docker image only
+make docker
+```
+
+The `docker-compose.yml` includes:
+- **app**: The inference engine on port `8002`
+- **ollama**: Local Ollama server on port `11434`
+- Commented placeholders for Redis, Prometheus, and Grafana (ready for Phase 2)
 
 ---
 
@@ -67,53 +102,124 @@ client = OpenAI(
     api_key="your-api-key",
 )
 
+# Non-streaming request
 response = client.chat.completions.create(
-    model="llama3.1",   # Route to local Ollama model
+    model="gpt-4o-mini",
     messages=[{"role": "user", "content": "Hello!"}],
+)
+print(response.choices[0].message.content)
+```
+
+### Streaming Example (SSE)
+
+```python
+# Streaming request — tokens arrive in real-time via Server-Sent Events
+stream = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Explain quantum computing"}],
     stream=True,
 )
+
+for chunk in stream:
+    delta = chunk.choices[0].delta
+    if delta.content:
+        print(delta.content, end="", flush=True)
+```
+
+### curl Examples
+
+```bash
+# Health check
+curl http://localhost:8002/v1/health
+
+# List models
+curl http://localhost:8002/v1/models
+
+# Non-streaming chat completion
+curl -X POST http://localhost:8002/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello!"}]}'
+
+# Streaming chat completion
+curl -N -X POST http://localhost:8002/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello!"}], "stream": true}'
 ```
 
 ---
 
-## ⚡ Quick Start
+## ⚙️ Environment Variables
 
-### Prerequisites
-- Python 3.10+
-- (Optional) Ollama installed locally for local model serving
+| Variable | Default | Description |
+|---|---|---|
+| `APP_NAME` | `LLM Inference Engine` | Application display name |
+| `APP_VERSION` | `0.1.0` | Semantic version |
+| `ENVIRONMENT` | `development` | Runtime environment |
+| `DEBUG` | `false` | Enable debug mode |
+| `HOST` | `0.0.0.0` | Server bind host |
+| `PORT` | `8002` | Server bind port |
+| `LOG_LEVEL` | `INFO` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
+| `API_PREFIX` | `/v1` | API route prefix |
+| `OPENAI_API_KEY` | *(empty)* | OpenAI API key (leave empty for simulated responses) |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server endpoint |
+| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated allowed origins |
+| `DEFAULT_PROVIDER` | `openai` | Default provider for routing |
+| `DEFAULT_MODEL` | `gpt-4o-mini` | Default model for inference |
+
+See [.env.example](.env.example) for a ready-to-use template.
+
+---
+
+## 🧪 Testing
 
 ```bash
-# Clone the repository
-git clone https://github.com/OnHighEngineer/llm-inference-engine.git
-cd llm-inference-engine
+# Run all tests
+make test
 
-# Setup environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-python -m pip install -r requirements.txt
-cp .env.example .env
+# Run with verbose output
+pytest -v
 
-# Run the FastAPI application
-uvicorn app.main:app --host 0.0.0.0 --port 8002
-
-# Test endpoints
-curl http://localhost:8002/v1/health
-curl http://localhost:8002/v1/models
-curl -X POST http://localhost:8002/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello!"}]}'
+# Run with coverage
+pytest --cov=app --cov-report=term-missing
 ```
 
-### Run Tests
+---
+
+## 🛠️ Developer Experience
+
+### Makefile Commands
+
+| Command | Description |
+|---|---|
+| `make install` | Install all dependencies (runtime + dev) |
+| `make run` | Start FastAPI dev server with auto-reload |
+| `make test` | Run pytest test suite |
+| `make lint` | Run Ruff linter |
+| `make format` | Format code with Black + Ruff auto-fix |
+| `make docker` | Build local Docker image |
+| `make compose-up` | Start services via Docker Compose |
+| `make compose-down` | Stop Docker Compose services |
+| `make clean` | Remove cache files and build artifacts |
+
+### Pre-commit Hooks
+
 ```bash
-python -m pytest
+# Install pre-commit hooks (one-time setup)
+pip install pre-commit
+pre-commit install
+
+# Hooks run automatically on git commit:
+# - Ruff (linting + auto-fix)
+# - Black (formatting)
+# - trailing-whitespace fixer
+# - end-of-file fixer
 ```
 
 ---
 
 ## 📜 Roadmap & Future Enhancements
 
-See [ROADMAP.md](file:///c:/Users/Yogesh E/OneDrive/Desktop/Manjus/llm-inference-engine/ROADMAP.md) for details on future development phases including real HTTP integrations, persistent PostgreSQL/Redis model registries, and semantic vector caching.
+See [ROADMAP.md](ROADMAP.md) for details on future development phases including real HTTP integrations, persistent PostgreSQL/Redis model registries, and semantic vector caching.
 
 ---
 

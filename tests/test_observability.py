@@ -11,7 +11,6 @@ from app.services.health_service import HealthService
 from app.providers.provider_factory import ProviderFactory
 from app.registry.model_registry import InMemoryModelRegistry
 from app.core.exceptions import (
-    AppException,
     ModelNotFoundException,
     ProviderNotFoundException,
     RoutingException,

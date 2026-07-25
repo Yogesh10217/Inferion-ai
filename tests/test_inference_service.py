@@ -2,7 +2,8 @@ import pytest
 
 from app.core.exceptions import NotFoundError, ProviderUnavailableError, ValidationError
 from app.providers.openai_provider import OpenAIProvider
-from app.registry.model_registry import InMemoryModelRegistry, RegisteredModel
+from app.registry.model_registry import InMemoryModelRegistry
+from app.registry.model_metadata import RegisteredModel
 from app.services.inference_service import DefaultInferenceService
 
 

@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-import logging
-from typing import Any
 
 from app.core.config import Settings, get_settings
 from app.core.logger import get_logger, setup_logging
 from app.providers.provider_factory import ProviderFactory
-from app.registry.model_registry import InMemoryModelRegistry, ModelRegistry
+from app.registry.model_registry import InMemoryModelRegistry
 from app.routing.model_strategy import ModelBasedRoutingStrategy
 from app.routing.request_router import RequestRouter
-from app.services.inference_service import DefaultInferenceService, InferenceService
+from app.services.inference_service import DefaultInferenceService
 from app.services.metrics_service import MetricsService
 from app.services.health_service import HealthService
 from app.services.streaming_manager import StreamingManager

@@ -8,7 +8,6 @@ from app.main import app
 from app.providers.openai_provider import OpenAIProvider
 from app.providers.ollama_provider import OllamaProvider
 from app.schemas.request import InferenceRequest, ChatMessage
-from app.schemas.inference_response import InferenceResponse
 from app.core.exceptions import ProviderUnavailableException
 
 client = TestClient(app)

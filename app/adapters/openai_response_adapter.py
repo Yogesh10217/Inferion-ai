@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import json
 import time
 from typing import Any
 
-from app.schemas.inference_response import InferenceResponse, Usage
+from app.schemas.inference_response import InferenceResponse
 from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage as OpenAIUsage
 
 
