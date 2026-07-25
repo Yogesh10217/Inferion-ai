@@ -26,12 +26,20 @@ async def test_ollama_provider_generate_can_be_mocked() -> None:
     assert response.text == "ollama-mock"
 
 
+from app.services.request_scheduler import RequestScheduler
+from app.services.metrics_service import MetricsService
+
 @pytest.mark.asyncio
 async def test_inference_service_uses_mock_provider() -> None:
     registry = InMemoryModelRegistry()
     provider = AsyncMock()
     provider.generate.return_value = type("Response", (), {"text": "mocked", "model": "gpt-4o-mini", "provider": "openai"})()
-    service = DefaultInferenceService(registry=registry, provider=provider)
+    
+    router = AsyncMock()
+    router.route.return_value = provider
+    scheduler = RequestScheduler(router=router, metrics=MetricsService())
+    
+    service = DefaultInferenceService(registry=registry, request_router=router, request_scheduler=scheduler)
 
     response = await service.complete(model_id="gpt-4o-mini", prompt="Hello")
     assert response.text == "mocked"

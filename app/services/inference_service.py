@@ -11,6 +11,7 @@ from app.registry.model_registry import InMemoryModelRegistry, ModelRegistry
 from app.routing.request_router import RequestRouter, RoutingRequest
 from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import ChatMessage, InferenceRequest
+from app.services.request_scheduler import RequestScheduler
 from app.services.streaming_manager import StreamingManager
 
 
@@ -36,21 +37,32 @@ class InferenceService(ABC):
 class DefaultInferenceService(InferenceService):
     """Concrete inference service with provider selection and validation logic."""
 
-    def __init__(self, registry: ModelRegistry, provider: BaseProvider | None = None, request_router: RequestRouter | None = None, response_adapter: OpenAIResponseAdapter | None = None, streaming_manager: StreamingManager | None = None) -> None:
+    def __init__(
+        self, 
+        registry: ModelRegistry, 
+        provider: BaseProvider | None = None, 
+        request_router: RequestRouter | None = None, 
+        response_adapter: OpenAIResponseAdapter | None = None, 
+        streaming_manager: StreamingManager | None = None,
+        request_scheduler: RequestScheduler | None = None,
+    ) -> None:
         self._registry = registry
         self._provider = provider
         self._request_router = request_router
         self._response_adapter = response_adapter or OpenAIResponseAdapter()
         self._streaming_manager = streaming_manager or StreamingManager()
+        self._request_scheduler = request_scheduler
 
     async def complete(self, *, model_id: str, prompt: str, **kwargs: Any) -> InferenceResponse:
         self._validate_request(model_id=model_id, prompt=prompt)
 
-        provider = await self._resolve_provider(model_id=model_id)
         request = self._build_request(model_id=model_id, prompt=prompt, **kwargs)
 
+        if self._request_scheduler is None:
+            raise RuntimeError("RequestScheduler not configured")
+
         try:
-            response = await provider.generate(request=request)
+            response = await self._request_scheduler.generate(request=request)
         except Exception as exc:  # pragma: no cover - defensive boundary
             raise ProviderUnavailableError(f"Provider failed for model '{model_id}'") from exc
 
@@ -58,7 +70,6 @@ class DefaultInferenceService(InferenceService):
 
     async def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
         self._validate_request(model_id=model_id, prompt=prompt)
-        provider = await self._resolve_provider(model_id=model_id)
         request = self._build_request(model_id=model_id, prompt=prompt, **kwargs)
 
         async def event_stream() -> AsyncIterator[str]:
@@ -90,9 +101,8 @@ class DefaultInferenceService(InferenceService):
 
     async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
         self._validate_request(model_id=request.model, prompt=self._extract_prompt_from_request(request))
-        provider = await self._resolve_provider(model_id=request.model)
         try:
-            async for chunk in self._streaming_manager.stream(provider=provider, request=request):
+            async for chunk in self._streaming_manager.stream(request=request):
                 yield chunk
         except Exception as exc:
             if isinstance(exc, AppException):
@@ -143,6 +153,7 @@ def build_inference_service(
     request_router: RequestRouter | None = None,
     response_adapter: OpenAIResponseAdapter | None = None,
     streaming_manager: StreamingManager | None = None,
+    request_scheduler: RequestScheduler | None = None,
 ) -> InferenceService:
     """Create a service instance using dependency injection-friendly defaults."""
     if registry is None:
@@ -160,4 +171,5 @@ def build_inference_service(
         request_router=request_router,
         response_adapter=response_adapter,
         streaming_manager=streaming_manager,
+        request_scheduler=request_scheduler,
     )

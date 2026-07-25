@@ -12,6 +12,7 @@ from app.services.inference_service import DefaultInferenceService
 from app.services.metrics_service import MetricsService
 from app.services.health_service import HealthService
 from app.services.streaming_manager import StreamingManager
+from app.services.request_scheduler import RequestScheduler
 
 
 class ServiceContainer:
@@ -45,8 +46,17 @@ class ServiceContainer:
             provider_factory=self.provider_factory,
         )
 
+        # Initialize metrics service (needed by scheduler and health)
+        self.metrics_service = MetricsService()
+
+        # Initialize request scheduler
+        self.request_scheduler = RequestScheduler(
+            router=self.request_router,
+            metrics=self.metrics_service,
+        )
+
         # Initialize streaming manager
-        self.streaming_manager = StreamingManager()
+        self.streaming_manager = StreamingManager(scheduler=self.request_scheduler)
 
         # Initialize default inference service
         self.inference_service = DefaultInferenceService(
@@ -54,10 +64,8 @@ class ServiceContainer:
             provider=None,
             request_router=self.request_router,
             streaming_manager=self.streaming_manager,
+            request_scheduler=self.request_scheduler,
         )
-
-        # Initialize metrics service
-        self.metrics_service = MetricsService()
 
         # Initialize health service
         self.health_service = HealthService(

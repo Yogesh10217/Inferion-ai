@@ -11,6 +11,11 @@ class MetricsService:
         self._request_count = 0
         self._error_count = 0
         self._total_latency = 0.0
+        
+        # Scheduler metrics
+        self._queue_depth = 0
+        self._scheduled_count = 0
+        self._total_wait_time_ms = 0.0
 
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
@@ -19,6 +24,36 @@ class MetricsService:
             self._total_latency += latency_ms
             if is_error:
                 self._error_count += 1
+
+    def record_enqueue(self) -> None:
+        """Record a request entering the scheduler queue."""
+        with self._lock:
+            self._queue_depth += 1
+
+    def record_dequeue(self, wait_time_ms: float) -> None:
+        """Record a request leaving the scheduler queue."""
+        with self._lock:
+            if self._queue_depth > 0:
+                self._queue_depth -= 1
+            self._scheduled_count += 1
+            self._total_wait_time_ms += wait_time_ms
+
+    def get_queue_depth(self) -> int:
+        """Get current scheduler queue depth."""
+        with self._lock:
+            return self._queue_depth
+
+    def get_average_wait_time(self) -> float:
+        """Get average time requests spent waiting in queue."""
+        with self._lock:
+            if self._scheduled_count == 0:
+                return 0.0
+            return self._total_wait_time_ms / self._scheduled_count
+
+    def get_scheduler_throughput(self) -> int:
+        """Get total number of requests processed by scheduler."""
+        with self._lock:
+            return self._scheduled_count
 
     def get_request_count(self) -> int:
         """Get the total request count."""
@@ -44,4 +79,7 @@ class MetricsService:
                 "request_count": self._request_count,
                 "error_count": self._error_count,
                 "average_latency_ms": self.get_average_latency(),
+                "queue_depth": self._queue_depth,
+                "average_wait_time_ms": self.get_average_wait_time(),
+                "scheduler_throughput": self._scheduled_count,
             }

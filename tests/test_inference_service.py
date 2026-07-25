@@ -7,10 +7,19 @@ from app.registry.model_metadata import RegisteredModel
 from app.services.inference_service import DefaultInferenceService
 
 
+from app.routing.request_router import RequestRouter
+from app.routing.model_strategy import ModelBasedRoutingStrategy
+from app.services.metrics_service import MetricsService
+from app.services.request_scheduler import RequestScheduler
+from app.providers.provider_factory import ProviderFactory
+
 @pytest.mark.asyncio
 async def test_complete_returns_standardized_response_for_known_model() -> None:
     registry = InMemoryModelRegistry()
-    service = DefaultInferenceService(registry=registry, provider=OpenAIProvider())
+    provider_factory = ProviderFactory()
+    router = RequestRouter(registry=registry, strategy=ModelBasedRoutingStrategy(), provider_factory=provider_factory)
+    scheduler = RequestScheduler(router=router, metrics=MetricsService())
+    service = DefaultInferenceService(registry=registry, request_router=router, request_scheduler=scheduler)
 
     response = await service.complete(model_id="gpt-4o-mini", prompt="Hello")
 

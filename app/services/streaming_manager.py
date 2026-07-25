@@ -1,16 +1,21 @@
 from __future__ import annotations
 
-from typing import AsyncIterator
+from typing import AsyncIterator, Optional
 
-from app.providers.base_provider import BaseProvider
 from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import InferenceRequest
-
+from app.services.request_scheduler import RequestScheduler
 
 class StreamingManager:
-    """Intermediary between InferenceService and providers to manage streaming logic."""
+    """Intermediary between InferenceService and the scheduling layer for stream management."""
 
-    async def stream(self, provider: BaseProvider, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
-        """Delegate streaming to the provider and yield normalized InferenceResponse chunks."""
-        async for chunk in provider.stream(request=request):
+    def __init__(self, scheduler: Optional[RequestScheduler] = None) -> None:
+        self._scheduler = scheduler
+
+    async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
+        """Delegate streaming to the scheduler and yield normalized InferenceResponse chunks."""
+        if self._scheduler is None:
+            raise RuntimeError("RequestScheduler not configured")
+        
+        async for chunk in self._scheduler.stream(request=request):
             yield chunk

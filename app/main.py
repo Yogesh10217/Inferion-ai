@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI):
     yield
     if hasattr(app.state, "container"):
         app.state.container.logger.info("Shutting down the application and releasing resources...")
+        await app.state.container.request_scheduler.shutdown()
 
 
 def create_app() -> FastAPI:
