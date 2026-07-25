@@ -13,12 +13,25 @@ from app.services.metrics_service import MetricsService
 from app.services.request_scheduler import RequestScheduler
 from app.providers.provider_factory import ProviderFactory
 
+class DirectExecuteBatchCollector:
+    def __init__(self, provider):
+        self.provider = provider
+        
+    async def add_entry(self, entry):
+        res = await self.provider.generate(request=entry.request)
+        entry.result_future.set_result(res)
+
 @pytest.mark.asyncio
 async def test_complete_returns_standardized_response_for_known_model() -> None:
     registry = InMemoryModelRegistry()
     provider_factory = ProviderFactory()
-    router = RequestRouter(registry=registry, strategy=ModelBasedRoutingStrategy(), provider_factory=provider_factory)
-    scheduler = RequestScheduler(router=router, metrics=MetricsService())
+    
+    # We will pass a mocked routing strategy just to use our provider directly
+    router = RequestRouter(registry=registry, strategy=ModelBasedRoutingStrategy())
+    provider = provider_factory.get_provider("openai")
+    
+    collector = DirectExecuteBatchCollector(provider)
+    scheduler = RequestScheduler(router=router, metrics=MetricsService(), batch_collector=collector)
     service = DefaultInferenceService(registry=registry, request_router=router, request_scheduler=scheduler)
 
     response = await service.complete(model_id="gpt-4o-mini", prompt="Hello")

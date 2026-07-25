@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
-from app.core.exceptions import ModelNotFoundException, ProviderNotFoundException, RoutingException
-from app.providers.base_provider import BaseProvider
-from app.providers.provider_factory import ProviderFactory
+from app.core.exceptions import ModelNotFoundException, RoutingException
 from app.registry.model_registry import ModelRegistry
 from app.routing.routing_strategy import RoutingStrategy
 
@@ -18,15 +16,23 @@ class RoutingRequest:
     metadata: dict[str, Any] | None = None
 
 
+@dataclass(slots=True)
+class RoutingDecision:
+    """The result of a routing decision."""
+    
+    provider_id: str
+    model_id: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+
 class RequestRouter:
-    """Routes a request to an appropriate provider using a pluggable strategy.
+    """Routes a request to an abstract provider name using a pluggable strategy.
 
     The router is responsible only for routing decisions:
     - validate that the requested model exists
     - resolve model metadata from the registry
     - delegate provider selection to the strategy
-    - ask the provider factory for the Provider instance
-    - return the provider to the caller
+    - return a RoutingDecision
     """
 
     def __init__(
@@ -34,14 +40,12 @@ class RequestRouter:
         *,
         registry: ModelRegistry,
         strategy: RoutingStrategy,
-        provider_factory: ProviderFactory | None = None,
     ) -> None:
         self._registry = registry
         self._strategy = strategy
-        self._provider_factory = provider_factory or ProviderFactory()
 
-    async def route(self, request: RoutingRequest) -> BaseProvider:
-        """Resolve the provider for the given routing request."""
+    async def route(self, request: RoutingRequest) -> RoutingDecision:
+        """Resolve the routing decision for the given request."""
         if not request.model_id:
             raise RoutingException("Model identifier is required")
 
@@ -57,12 +61,8 @@ class RequestRouter:
         if not provider_name:
             raise RoutingException("Routing strategy did not return a provider name")
 
-        if not self._provider_factory.provider_exists(provider_name):
-            raise ProviderNotFoundException(f"Provider '{provider_name}' was not found")
-
-        try:
-            provider = self._provider_factory.get_provider(provider_name)
-        except Exception as exc:  # pragma: no cover - defensive boundary
-            raise ProviderNotFoundException(f"Provider '{provider_name}' could not be instantiated") from exc
-
-        return provider
+        return RoutingDecision(
+            provider_id=provider_name,
+            model_id=request.model_id,
+            metadata=model.metadata or {},
+        )

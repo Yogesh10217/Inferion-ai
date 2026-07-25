@@ -1,12 +1,24 @@
 import asyncio
-import time
 from unittest.mock import AsyncMock
 
 import pytest
 
+from app.routing.request_router import RoutingDecision
 from app.schemas.request import InferenceRequest
 from app.services.request_scheduler import RequestScheduler
 from app.services.metrics_service import MetricsService
+
+
+class DirectExecuteBatchCollector:
+    def __init__(self, router):
+        self.router = router
+        
+    async def add_entry(self, entry):
+        res = await self.router.mock_provider.generate(request=entry.request)
+        entry.result_future.set_result(res)
+        
+    async def shutdown(self):
+        pass
 
 
 @pytest.fixture
@@ -14,7 +26,8 @@ def mock_router():
     router = AsyncMock()
     provider = AsyncMock()
     provider.generate.return_value = type("Response", (), {"text": "mocked", "model": "test-model"})()
-    router.route.return_value = provider
+    router.route.return_value = RoutingDecision(provider_id="mock-provider", model_id="test-model")
+    router.mock_provider = provider
     return router
 
 
@@ -25,7 +38,8 @@ def metrics_service():
 
 @pytest.mark.asyncio
 async def test_scheduler_fifo_ordering(mock_router, metrics_service):
-    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service)
+    collector = DirectExecuteBatchCollector(mock_router)
+    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service, batch_collector=collector)
     
     # We want to trace the order of executions
     execution_order = []
@@ -37,7 +51,7 @@ async def test_scheduler_fifo_ordering(mock_router, metrics_service):
         execution_order.append(req.messages[0].content)
         return type("Response", (), {"text": f"mocked {req.messages[0].content}", "model": "test-model"})()
         
-    mock_router.route.return_value.generate.side_effect = mock_generate
+    mock_router.mock_provider.generate.side_effect = mock_generate
     
     # Queue up 3 requests
     req1 = InferenceRequest(model="test-model", messages=[{"role": "user", "content": "1"}])
@@ -56,7 +70,8 @@ async def test_scheduler_fifo_ordering(mock_router, metrics_service):
 
 @pytest.mark.asyncio
 async def test_scheduler_queue_metrics(mock_router, metrics_service):
-    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service)
+    collector = DirectExecuteBatchCollector(mock_router)
+    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service, batch_collector=collector)
     
     # Pause execution to let queue grow
     pause_event = asyncio.Event()
@@ -64,7 +79,7 @@ async def test_scheduler_queue_metrics(mock_router, metrics_service):
         await pause_event.wait()
         return type("Response", (), {"text": "mocked", "model": "test-model"})()
         
-    mock_router.route.return_value.generate.side_effect = mock_generate
+    mock_router.mock_provider.generate.side_effect = mock_generate
     
     req1 = InferenceRequest(model="test-model", messages=[{"role": "user", "content": "1"}])
     req2 = InferenceRequest(model="test-model", messages=[{"role": "user", "content": "2"}])
@@ -91,14 +106,15 @@ async def test_scheduler_queue_metrics(mock_router, metrics_service):
 
 @pytest.mark.asyncio
 async def test_scheduler_cancellation(mock_router, metrics_service):
-    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service)
+    collector = DirectExecuteBatchCollector(mock_router)
+    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service, batch_collector=collector)
     
     pause_event = asyncio.Event()
     async def mock_generate(*args, **kwargs):
         await pause_event.wait()
         return type("Response", (), {"text": "mocked", "model": "test-model"})()
         
-    mock_router.route.return_value.generate.side_effect = mock_generate
+    mock_router.mock_provider.generate.side_effect = mock_generate
     
     req1 = InferenceRequest(model="test-model", messages=[{"role": "user", "content": "1"}])
     task1 = asyncio.create_task(scheduler.generate(req1))
@@ -122,7 +138,7 @@ async def test_scheduler_cancellation(mock_router, metrics_service):
 
 @pytest.mark.asyncio
 async def test_scheduler_shutdown(mock_router, metrics_service):
-    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service)
+    scheduler = RequestScheduler(router=mock_router, metrics=metrics_service, batch_collector=DirectExecuteBatchCollector(mock_router))
     
     req1 = InferenceRequest(model="test-model", messages=[{"role": "user", "content": "1"}])
     task1 = asyncio.create_task(scheduler.generate(req1))

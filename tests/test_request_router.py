@@ -14,12 +14,12 @@ async def test_request_router_routes_known_model_to_provider() -> None:
     router = RequestRouter(
         registry=registry,
         strategy=ModelBasedRoutingStrategy(),
-        provider_factory=ProviderFactory(),
     )
 
-    provider = await router.route(RoutingRequest(model_id="gpt-4o-mini"))
+    decision = await router.route(RoutingRequest(model_id="gpt-4o-mini"))
 
-    assert isinstance(provider, OpenAIProvider)
+    assert decision.provider_id == "openai"
+    assert decision.model_id == "gpt-4o-mini"
 
 
 @pytest.mark.asyncio
@@ -28,7 +28,6 @@ async def test_request_router_raises_for_unknown_model() -> None:
     router = RequestRouter(
         registry=registry,
         strategy=ModelBasedRoutingStrategy(),
-        provider_factory=ProviderFactory(),
     )
 
     with pytest.raises(ModelNotFoundException):
@@ -45,11 +44,13 @@ async def test_request_router_raises_when_provider_missing() -> None:
     router = RequestRouter(
         registry=registry,
         strategy=MissingProviderStrategy(),
-        provider_factory=ProviderFactory(),
     )
 
-    with pytest.raises(ProviderNotFoundException):
-        await router.route(RoutingRequest(model_id="gpt-4o-mini"))
+    # ProviderNotFoundException was raised when factory was inside Router.
+    # Now it just returns the missing provider id, and LoadBalancer throws ProviderUnavailableException.
+    # Let's verify it just returns the provider id.
+    decision = await router.route(RoutingRequest(model_id="gpt-4o-mini"))
+    assert decision.provider_id == "missing-provider"
 
 
 @pytest.mark.asyncio
@@ -62,9 +63,8 @@ async def test_request_router_accepts_custom_strategy() -> None:
     router = RequestRouter(
         registry=registry,
         strategy=CustomStrategy(),
-        provider_factory=ProviderFactory(),
     )
 
-    provider = await router.route(RoutingRequest(model_id="gpt-4o-mini"))
+    decision = await router.route(RoutingRequest(model_id="gpt-4o-mini"))
 
-    assert provider.name == "ollama"
+    assert decision.provider_id == "ollama"

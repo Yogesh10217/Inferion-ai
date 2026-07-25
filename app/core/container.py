@@ -43,11 +43,39 @@ class ServiceContainer:
         self.request_router = RequestRouter(
             registry=self.registry,
             strategy=ModelBasedRoutingStrategy(),
-            provider_factory=self.provider_factory,
         )
 
-        # Initialize metrics service (needed by scheduler and health)
+        # Initialize metrics service (needed by scheduler, health, batching, load balancing)
         self.metrics_service = MetricsService()
+
+        # Initialize Provider Pool and Load Balancer
+        from app.routing.provider_pool import ProviderPool, ProviderInstance
+        from app.routing.load_balancer import LoadBalancer
+        from app.routing.load_balancing_policy import get_policy, LoadBalancingStrategy
+        from app.routing.failover_policy import FailoverPolicy
+
+        self.provider_pool = ProviderPool()
+        
+        # Populate ProviderPool with backward-compatible defaults from ProviderFactory
+        for provider_name in self.provider_factory.list_providers():
+            try:
+                base_provider = self.provider_factory.get_provider(provider_name)
+                # Create a default instance for the provider
+                instance = ProviderInstance(
+                    provider_id=provider_name,
+                    instance_id=f"{provider_name}-default",
+                    provider=base_provider,
+                    base_url=getattr(base_provider, 'base_url', None)
+                )
+                self.provider_pool.register_instance(instance)
+            except Exception as exc:
+                self.logger.warning(f"Failed to auto-register instance for {provider_name}: {exc}")
+
+        policy_enum = LoadBalancingStrategy(self.settings.load_balancing_policy)
+        self.load_balancing_policy = get_policy(policy_enum)
+        self.load_balancer = LoadBalancer(pool=self.provider_pool, policy=self.load_balancing_policy)
+        
+        self.failover_policy = FailoverPolicy(load_balancer=self.load_balancer)
 
         # Initialize batching
         from app.services.batching.batch_config import BatchConfig
@@ -62,11 +90,13 @@ class ServiceContainer:
             max_queue_tokens=self.settings.batch_max_queue_tokens,
         )
         self.batch_policy = BatchPolicy(config=self.batch_config)
-        self.batch_executor = BatchExecutor(router=self.request_router, metrics=self.metrics_service)
+        self.batch_executor = BatchExecutor(
+            failover_policy=self.failover_policy, 
+            metrics=self.metrics_service
+        )
         self.batch_collector = BatchCollector(
             policy=self.batch_policy,
             executor=self.batch_executor,
-            router=self.request_router,
             metrics=self.metrics_service,
         )
 

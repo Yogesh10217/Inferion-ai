@@ -30,6 +30,13 @@ class Settings(BaseSettings):
     batch_max_wait_ms: int = Field(default=50, alias="BATCH_MAX_WAIT_MS")
     batch_max_queue_tokens: int = Field(default=10000, alias="BATCH_MAX_QUEUE_TOKENS")
 
+    # Load Balancing Configuration
+    load_balancing_policy: str = Field(default="round_robin", alias="LOAD_BALANCING_POLICY")
+    provider_health_check_interval_s: float = Field(default=10.0, alias="PROVIDER_HEALTH_CHECK_INTERVAL_S")
+    provider_failure_threshold: int = Field(default=3, alias="PROVIDER_FAILURE_THRESHOLD")
+    provider_recovery_time_s: float = Field(default=30.0, alias="PROVIDER_RECOVERY_TIME_S")
+    default_provider_weight: int = Field(default=1, alias="DEFAULT_PROVIDER_WEIGHT")
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object, info: ValidationInfo) -> list[str]:

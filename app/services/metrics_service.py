@@ -132,4 +132,39 @@ class MetricsService:
                 "largest_observed_batch": self._largest_observed_batch,
                 "average_dispatch_delay_ms": self.get_average_dispatch_delay(),
                 "single_request_fallbacks": self._single_request_fallbacks,
+                "load_balancer_decisions": getattr(self, "_load_balancer_decisions", 0),
+                "requests_per_provider": getattr(self, "_requests_per_provider", {}).copy(),
+                "requests_per_instance": getattr(self, "_requests_per_instance", {}).copy(),
+                "provider_failures": getattr(self, "_provider_failures", {}).copy(),
+                "provider_failovers": getattr(self, "_provider_failovers", {}).copy(),
             }
+
+    # --- Load Balancing Metrics ---
+    
+    def record_load_balancer_decision(self, provider_id: str, instance_id: str) -> None:
+        if not hasattr(self, "_load_balancer_decisions"):
+            self._load_balancer_decisions = 0
+            self._requests_per_provider = {}
+            self._requests_per_instance = {}
+            self._provider_failures = {}
+            self._provider_failovers = {}
+            
+        with self._lock:
+            self._load_balancer_decisions += 1
+            self._requests_per_provider[provider_id] = self._requests_per_provider.get(provider_id, 0) + 1
+            self._requests_per_instance[instance_id] = self._requests_per_instance.get(instance_id, 0) + 1
+        
+    def record_provider_failure(self, provider_id: str, instance_id: str) -> None:
+        if not hasattr(self, "_provider_failures"):
+            self._provider_failures = {}
+            
+        key = f"{provider_id}::{instance_id}"
+        with self._lock:
+            self._provider_failures[key] = self._provider_failures.get(key, 0) + 1
+        
+    def record_failover(self, provider_id: str) -> None:
+        if not hasattr(self, "_provider_failovers"):
+            self._provider_failovers = {}
+            
+        with self._lock:
+            self._provider_failovers[provider_id] = self._provider_failovers.get(provider_id, 0) + 1

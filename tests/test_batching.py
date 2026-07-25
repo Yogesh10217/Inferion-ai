@@ -4,6 +4,8 @@ from unittest.mock import AsyncMock
 
 import pytest
 
+from app.routing.request_router import RoutingDecision
+from app.routing.provider_pool import ProviderInstance
 from app.schemas.request import InferenceRequest
 from app.services.batching.batch_config import BatchConfig
 from app.services.batching.batch_policy import BatchPolicy
@@ -14,13 +16,21 @@ from app.services.request_scheduler import QueueEntry
 
 
 @pytest.fixture
-def mock_router():
-    router = AsyncMock()
+def mock_failover_policy():
+    policy = AsyncMock()
+    # execute_with_failover takes (provider_id, execute_fn)
+    # We will simulate calling execute_fn immediately with a mock instance
     provider = AsyncMock()
     provider.generate.return_value = type("Response", (), {"text": "mocked", "model": "test-model"})()
     provider.name = "mock-provider"
-    router.route.return_value = provider
-    return router
+    
+    mock_instance = ProviderInstance(provider_id="mock-provider", instance_id="mock-inst", provider=provider)
+    
+    async def mock_execute_with_failover(provider_id, execute_fn):
+        return await execute_fn(mock_instance)
+        
+    policy.execute_with_failover.side_effect = mock_execute_with_failover
+    return policy
 
 
 @pytest.fixture
@@ -34,9 +44,9 @@ def batch_config():
 
 
 @pytest.mark.asyncio
-async def test_batch_collector_groups_by_batch_key(mock_router, metrics_service, batch_config):
+async def test_batch_collector_groups_by_batch_key(mock_failover_policy, metrics_service, batch_config):
     policy = BatchPolicy(config=batch_config)
-    executor = BatchExecutor(router=mock_router, metrics=metrics_service)
+    executor = BatchExecutor(failover_policy=mock_failover_policy, metrics=metrics_service)
     
     # Mock the execute_batch to track the batches executed
     executed_batches = []
@@ -47,13 +57,14 @@ async def test_batch_collector_groups_by_batch_key(mock_router, metrics_service,
             
     executor.execute_batch = AsyncMock(side_effect=mock_execute)
     
-    collector = BatchCollector(policy=policy, executor=executor, router=mock_router, metrics=metrics_service)
+    collector = BatchCollector(policy=policy, executor=executor, metrics=metrics_service)
     
     req1 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "1"}])
     req2 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "2"}])
     
-    entry1 = QueueEntry(request=req1, is_streaming=False)
-    entry2 = QueueEntry(request=req2, is_streaming=False)
+    decision = RoutingDecision(provider_id="mock-provider", model_id="model-1")
+    entry1 = QueueEntry(request=req1, decision=decision, is_streaming=False)
+    entry2 = QueueEntry(request=req2, decision=decision, is_streaming=False)
     
     # Send requests. max_batch_size is 2, so the second one should trigger dispatch
     await collector.add_entry(entry1)
@@ -70,9 +81,9 @@ async def test_batch_collector_groups_by_batch_key(mock_router, metrics_service,
 
 
 @pytest.mark.asyncio
-async def test_batch_collector_timeout_dispatch(mock_router, metrics_service, batch_config):
+async def test_batch_collector_timeout_dispatch(mock_failover_policy, metrics_service, batch_config):
     policy = BatchPolicy(config=batch_config)
-    executor = BatchExecutor(router=mock_router, metrics=metrics_service)
+    executor = BatchExecutor(failover_policy=mock_failover_policy, metrics=metrics_service)
     
     executed_batches = []
     async def mock_execute(batch):
@@ -81,10 +92,11 @@ async def test_batch_collector_timeout_dispatch(mock_router, metrics_service, ba
             entry.result_future.set_result(type("Response", (), {"text": "mocked"})())
             
     executor.execute_batch = AsyncMock(side_effect=mock_execute)
-    collector = BatchCollector(policy=policy, executor=executor, router=mock_router, metrics=metrics_service)
+    collector = BatchCollector(policy=policy, executor=executor, metrics=metrics_service)
     
     req1 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "1"}])
-    entry1 = QueueEntry(request=req1, is_streaming=False)
+    decision = RoutingDecision(provider_id="mock-provider", model_id="model-1")
+    entry1 = QueueEntry(request=req1, decision=decision, is_streaming=False)
     
     await collector.add_entry(entry1)
     
@@ -102,26 +114,25 @@ async def test_batch_collector_timeout_dispatch(mock_router, metrics_service, ba
 
 
 @pytest.mark.asyncio
-async def test_batch_collector_respects_policy_batchability(mock_router, metrics_service, batch_config):
+async def test_batch_collector_respects_policy_batchability(mock_failover_policy, metrics_service, batch_config):
     policy = BatchPolicy(config=batch_config)
-    executor = BatchExecutor(router=mock_router, metrics=metrics_service)
+    executor = BatchExecutor(failover_policy=mock_failover_policy, metrics=metrics_service)
     
     executed_batches = []
     async def mock_execute(batch):
         executed_batches.append(batch)
         for entry in batch.entries:
-            # We don't need to resolve the streams here, just check grouping
             pass
             
     executor.execute_batch = AsyncMock(side_effect=mock_execute)
-    collector = BatchCollector(policy=policy, executor=executor, router=mock_router, metrics=metrics_service)
+    collector = BatchCollector(policy=policy, executor=executor, metrics=metrics_service)
     
-    # Streaming requests should not be batched together according to our policy
     req1 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "1"}], stream=True)
     req2 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "2"}], stream=True)
     
-    entry1 = QueueEntry(request=req1, is_streaming=True)
-    entry2 = QueueEntry(request=req2, is_streaming=True)
+    decision = RoutingDecision(provider_id="mock-provider", model_id="model-1")
+    entry1 = QueueEntry(request=req1, decision=decision, is_streaming=True)
+    entry2 = QueueEntry(request=req2, decision=decision, is_streaming=True)
     
     await collector.add_entry(entry1)
     await collector.add_entry(entry2)
@@ -137,8 +148,8 @@ async def test_batch_collector_respects_policy_batchability(mock_router, metrics
 
 
 @pytest.mark.asyncio
-async def test_batch_executor_sequencing(mock_router, metrics_service):
-    executor = BatchExecutor(router=mock_router, metrics=metrics_service)
+async def test_batch_executor_sequencing(mock_failover_policy, metrics_service):
+    executor = BatchExecutor(failover_policy=mock_failover_policy, metrics=metrics_service)
     
     execution_order = []
     async def mock_generate(*args, **kwargs):
@@ -146,7 +157,14 @@ async def test_batch_executor_sequencing(mock_router, metrics_service):
         execution_order.append(req.messages[0].content)
         return type("Response", (), {"text": "mocked", "model": req.model})()
         
-    mock_router.route.return_value.generate.side_effect = mock_generate
+    # Inject custom mock_generate into the provider instance yielded by mock_failover_policy
+    async def custom_execute_with_failover(provider_id, execute_fn):
+        provider = AsyncMock()
+        provider.generate.side_effect = mock_generate
+        mock_instance = ProviderInstance(provider_id="mock-provider", instance_id="mock-inst", provider=provider)
+        return await execute_fn(mock_instance)
+        
+    mock_failover_policy.execute_with_failover.side_effect = custom_execute_with_failover
     
     from app.services.batching.batch_entry import Batch, BatchKey
     batch = Batch(key=BatchKey(provider_id="mock-provider", model_id="model-1", stream=False))
@@ -154,8 +172,9 @@ async def test_batch_executor_sequencing(mock_router, metrics_service):
     req1 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "A"}])
     req2 = InferenceRequest(model="model-1", messages=[{"role": "user", "content": "B"}])
     
-    entry1 = QueueEntry(request=req1, is_streaming=False)
-    entry2 = QueueEntry(request=req2, is_streaming=False)
+    decision = RoutingDecision(provider_id="mock-provider", model_id="model-1")
+    entry1 = QueueEntry(request=req1, decision=decision, is_streaming=False)
+    entry2 = QueueEntry(request=req2, decision=decision, is_streaming=False)
     
     batch.add_entry(entry1)
     batch.add_entry(entry2)
@@ -165,3 +184,4 @@ async def test_batch_executor_sequencing(mock_router, metrics_service):
     assert execution_order == ["A", "B"]
     assert entry1.result_future.done()
     assert entry2.result_future.done()
+

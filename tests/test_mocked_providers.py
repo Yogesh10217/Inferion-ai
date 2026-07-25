@@ -29,15 +29,26 @@ async def test_ollama_provider_generate_can_be_mocked() -> None:
 from app.services.request_scheduler import RequestScheduler
 from app.services.metrics_service import MetricsService
 
+class DirectExecuteBatchCollector:
+    def __init__(self, provider):
+        self.provider = provider
+        
+    async def add_entry(self, entry):
+        res = await self.provider.generate(request=entry.request)
+        entry.result_future.set_result(res)
+
 @pytest.mark.asyncio
 async def test_inference_service_uses_mock_provider() -> None:
     registry = InMemoryModelRegistry()
     provider = AsyncMock()
     provider.generate.return_value = type("Response", (), {"text": "mocked", "model": "gpt-4o-mini", "provider": "openai"})()
     
+    from app.routing.request_router import RoutingDecision
     router = AsyncMock()
-    router.route.return_value = provider
-    scheduler = RequestScheduler(router=router, metrics=MetricsService())
+    router.route.return_value = RoutingDecision(provider_id="mock", model_id="gpt-4o-mini")
+    
+    collector = DirectExecuteBatchCollector(provider)
+    scheduler = RequestScheduler(router=router, metrics=MetricsService(), batch_collector=collector)
     
     service = DefaultInferenceService(registry=registry, request_router=router, request_scheduler=scheduler)
 

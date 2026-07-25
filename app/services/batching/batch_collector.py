@@ -2,7 +2,6 @@ import asyncio
 from typing import Dict, Optional
 
 from app.core.logger import get_logger
-from app.routing.request_router import RequestRouter, RoutingRequest
 from app.services.batching.batch_entry import Batch, BatchKey
 from app.services.batching.batch_executor import BatchExecutor
 from app.services.batching.batch_policy import BatchPolicy
@@ -18,12 +17,10 @@ class BatchCollector:
         self,
         policy: BatchPolicy,
         executor: BatchExecutor,
-        router: RequestRouter,
         metrics: MetricsService,
     ) -> None:
         self._policy = policy
         self._executor = executor
-        self._router = router
         self._metrics = metrics
         self._buckets: Dict[BatchKey, Batch] = {}
         self._lock = asyncio.Lock()
@@ -64,8 +61,7 @@ class BatchCollector:
         # If not batchable, dispatch as a single-item batch immediately
         if not self._policy.is_batchable(entry):
             try:
-                provider = await self._router.route(RoutingRequest(model_id=entry.request.model))
-                key = self._policy.get_batch_key(entry, provider.name)
+                key = self._policy.get_batch_key(entry, entry.decision.provider_id)
             except Exception as exc:
                 self._fail_entry(entry, exc)
                 return
@@ -76,10 +72,9 @@ class BatchCollector:
             self._dispatch(batch)
             return
 
-        # Resolve provider for the entry to determine the batch key
+        # Use the routing decision already attached to the entry
         try:
-            provider = await self._router.route(RoutingRequest(model_id=entry.request.model))
-            key = self._policy.get_batch_key(entry, provider.name)
+            key = self._policy.get_batch_key(entry, entry.decision.provider_id)
         except Exception as exc:
             self._fail_entry(entry, exc)
             return

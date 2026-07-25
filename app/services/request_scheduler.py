@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any, AsyncIterator, Dict, Optional
 
 from app.core.logger import get_logger
-from app.routing.request_router import RequestRouter, RoutingRequest
+from app.routing.request_router import RequestRouter, RoutingRequest, RoutingDecision
 from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import InferenceRequest
 from app.services.metrics_service import MetricsService
@@ -26,6 +26,7 @@ class SchedulerConfig:
 @dataclass
 class QueueEntry:
     request: InferenceRequest
+    decision: RoutingDecision
     is_streaming: bool
     request_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     enqueue_time: float = field(default_factory=time.time)
@@ -116,7 +117,8 @@ class RequestScheduler:
 
     async def generate(self, request: InferenceRequest) -> InferenceResponse:
         """Enqueue a request and wait for the response."""
-        entry = QueueEntry(request=request, is_streaming=False)
+        decision = await self._router.route(RoutingRequest(model_id=request.model))
+        entry = QueueEntry(request=request, decision=decision, is_streaming=False)
         self._metrics.record_enqueue()
         await self._queue.enqueue(entry)
         
@@ -131,7 +133,8 @@ class RequestScheduler:
 
     async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
         """Enqueue a streaming request and yield its response chunks."""
-        entry = QueueEntry(request=request, is_streaming=True)
+        decision = await self._router.route(RoutingRequest(model_id=request.model))
+        entry = QueueEntry(request=request, decision=decision, is_streaming=True)
         self._metrics.record_enqueue()
         await self._queue.enqueue(entry)
         
@@ -177,21 +180,12 @@ class RequestScheduler:
                 return
                 
             # Fallback direct execution if no batching layer
-            provider = await self._router.route(RoutingRequest(model_id=entry.request.model))
-            
-            if entry.is_streaming:
-                try:
-                    async for chunk in provider.stream(request=entry.request):
-                        if entry.cancellation_state.is_set():
-                            break
-                        await entry.stream_queue.put(chunk)
-                    await entry.stream_queue.put(None)  # End of stream sentinel
-                except Exception as exc:
-                    await entry.stream_queue.put(exc)
-            else:
-                response = await provider.generate(request=entry.request)
-                if not entry.result_future.done():
-                    entry.result_future.set_result(response)
+            # Without batching layer, we don't have load balancers here.
+            # We would need to resolve the provider instance directly, but in Phase 2.3
+            # we always have a BatchCollector and LoadBalancer in the pipeline.
+            # To avoid breaking tests, we just raise an error if this fallback is hit in Phase 2.3
+            # Or we could fetch it via a static method, but let's just let it fail or remove fallback.
+            raise NotImplementedError("Direct fallback execution is deprecated in Phase 2.3. Use BatchCollector -> LoadBalancer.")
                     
         except Exception as exc:
             if entry.is_streaming:
