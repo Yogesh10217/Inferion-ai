@@ -117,6 +117,37 @@ A comprehensive suite for platform operators to manage, audit, and monitor the e
 
 ---
 
+## 📡 Event Platform & Webhooks (Phase 3.6)
+
+A production-grade event-driven subsystem for internal event publishing and external webhook delivery decoupled from core inference execution.
+
+### Architecture & Features
+- **Abstract EventBus (`IEventBus`)**: Decoupled pub/sub interface allowing seamless backend substitution (Redis, Kafka, NATS, In-Memory).
+- **Standardized Event Envelope**: All events use a unified schema containing `event_id`, `event_type`, `version` (schema version), `timestamp`, `organization_id`, `workspace_id`, `actor`, `source`, `correlation_id`, `request_id`, `payload`, and `metadata`.
+- **Subscriber Isolation**: Async error boundaries ensure delivery failures to one webhook endpoint never impact other subscribers.
+- **Staged Execution Pipeline**: Staged lifecycle `Publish -> Persist -> Queue Delivery -> Delivery Attempt -> Retry -> Dead-Letter`.
+- **HMAC-SHA256 Security & Secret Rotation**: Webhooks signed with `HMAC-SHA256`. Supports dual-secret verification (`secret` & `secondary_secret`) for smooth secret rotation and configurable replay protection tolerance windows (`X-Timestamp`).
+- **Retry Policy**: Exponential backoff with configurable initial/max intervals, retryable status codes (`[408, 429, 500, 502, 503, 504]`), and randomized jitter.
+- **Dead-Letter Queue & Replay**: Failed deliveries beyond max retries route to DLQ. Replaying creates a new `WebhookDelivery` record while preserving original events and audit trails.
+
+### Event Types (19 Total)
+- **Inference**: `inference.completed`, `inference.failed`, `streaming.started`, `streaming.finished`
+- **Tenancy**: `organization.created`, `organization.suspended`, `workspace.created`
+- **Auth**: `user.created`, `user.disabled`, `api_key.created`, `api_key.revoked`
+- **Billing**: `subscription.changed`, `budget.warning`, `budget.exceeded`, `invoice.generated`
+- **System**: `provider.healthy`, `provider.unhealthy`, `system.startup`, `system.shutdown`
+
+### Admin Webhook Endpoints
+- `GET /v1/webhooks` - List webhook endpoints
+- `POST /v1/webhooks` - Register new webhook endpoint
+- `PATCH /v1/webhooks/{id}` - Update endpoint or secret
+- `DELETE /v1/webhooks/{id}` - Delete endpoint
+- `GET /v1/webhooks/deliveries` - Query delivery history
+- `GET /v1/webhooks/events` - Query event log
+- `POST /v1/webhooks/replay/{delivery_id}` - Replay failed delivery
+
+---
+
 ## ⚡ Quick Start
 
 ### Prerequisites

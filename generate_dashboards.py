@@ -113,4 +113,17 @@ streaming_panels = [
 with open(f"{OUT_DIR}/streaming.json", "w") as f:
     json.dump(wrap_dashboard("Streaming", streaming_panels), f, indent=2)
 
+# 7. Webhooks & Events Dashboard
+webhook_panels = [
+    create_panel(1, "Events Published (Rate)", "sum(rate(llm_engine_inference_events_total[1m])) by (event_type)", x=0, y=0, w=12),
+    create_panel(2, "Webhook Delivery Success Rate", "sum(rate(llm_engine_inference_webhook_deliveries_total[1m])) - sum(rate(llm_engine_inference_webhook_failures_total[1m]))", x=12, y=0, w=12),
+    create_panel(3, "Webhook Retries", "rate(llm_engine_inference_webhook_retries_total[1m])", x=0, y=8, w=12),
+    create_panel(4, "Dead-Letter Queue Size", "llm_engine_inference_dead_letter_total", type="stat", x=12, y=8, w=12),
+    create_panel(5, "Webhook Failures", "rate(llm_engine_inference_webhook_failures_total[1m])", x=0, y=16, w=12),
+    create_panel(6, "Total Webhook Deliveries", "rate(llm_engine_inference_webhook_deliveries_total[1m])", x=12, y=16, w=12),
+]
+with open(f"{OUT_DIR}/webhooks.json", "w") as f:
+    json.dump(wrap_dashboard("Webhooks and Events", webhook_panels), f, indent=2)
+
 print("Dashboards generated successfully.")
+

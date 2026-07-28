@@ -26,6 +26,9 @@ from app.api.plans import router as plans_router
 from app.api.subscriptions import router as subscriptions_router
 from app.api.budgets import router as budgets_router
 from app.api.billing import router as billing_router
+from app.api.webhooks import router as webhooks_router
+from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
+from app.core.database import async_session_maker
 
 
 @asynccontextmanager
@@ -35,10 +38,40 @@ async def lifespan(app: FastAPI):
         container = app.state.container
         initializer = InfrastructureInitializer(container)
         await initializer.initialize()
+
+        # Initialize Event Platform components
+        if not hasattr(container, "event_bus"):
+            container.event_bus = InMemoryEventBus()
+            container.event_publisher = EventPublisher(container.event_bus, container.metrics_service)
+            container.event_dispatcher = EventDispatcher(
+                event_bus=container.event_bus,
+                session_factory=async_session_maker,
+                metrics_service=container.metrics_service,
+            )
+            container.event_dispatcher.start()
+
+        # Emit system.startup event
+        await container.event_publisher.publish(
+            EventRegistry.SYSTEM_STARTUP,
+            payload={"app_name": container.settings.app_name, "version": container.settings.app_version},
+        )
+
     yield
+
     if hasattr(app.state, "container"):
-        app.state.container.logger.info("Shutting down the application and releasing resources...")
-        await app.state.container.request_scheduler.shutdown()
+        container = app.state.container
+        container.logger.info("Shutting down the application and releasing resources...")
+        
+        # Emit system.shutdown event
+        if hasattr(container, "event_publisher"):
+            await container.event_publisher.publish(
+                EventRegistry.SYSTEM_SHUTDOWN,
+                payload={"app_name": container.settings.app_name},
+            )
+        if hasattr(container, "event_dispatcher"):
+            container.event_dispatcher.stop()
+
+        await container.request_scheduler.shutdown()
 
 
 def create_app() -> FastAPI:
@@ -92,6 +125,9 @@ def create_app() -> FastAPI:
         app.include_router(subscriptions_router, prefix=settings.api_prefix)
         app.include_router(budgets_router, prefix=settings.api_prefix)
         app.include_router(billing_router, prefix=settings.api_prefix)
+        
+        # Webhooks
+        app.include_router(webhooks_router, prefix=settings.api_prefix)
         
     if settings.prometheus_enabled:
         app.include_router(metrics_router)

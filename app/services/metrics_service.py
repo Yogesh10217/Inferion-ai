@@ -60,6 +60,18 @@ class MetricsService:
         self._active_subscriptions: dict[str, int] = {}  # plan_id -> count
         self._provider_costs: dict[str, float] = {}  # provider_id -> cost
 
+        # Event & Webhook Metrics
+        self._events_by_type: dict[str, int] = {}
+        self._total_events_published = 0
+        self._webhook_deliveries_total = 0
+        self._webhook_success_count = 0
+        self._webhook_failure_count = 0
+        self._webhook_retries_total = 0
+        self._webhook_replays_total = 0
+        self._dead_letter_events_total = 0
+        self._dead_letter_queue_size = 0
+        self._recent_webhook_latencies: list[float] = []
+
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
         with self._lock:
@@ -359,4 +371,63 @@ class MetricsService:
                 "invoice_generation_count": self._invoice_generation_count,
                 "active_subscriptions": self._active_subscriptions.copy(),
                 "provider_costs": self._provider_costs.copy(),
+            }
+
+    # --- Event & Webhook Metrics ---
+
+    def record_event_published(self, event_type: str) -> None:
+        with self._lock:
+            self._total_events_published += 1
+            self._events_by_type[event_type] = self._events_by_type.get(event_type, 0) + 1
+
+    def record_webhook_delivery(self, latency_ms: float, success: bool) -> None:
+        with self._lock:
+            self._webhook_deliveries_total += 1
+            self._recent_webhook_latencies.append(latency_ms)
+            if success:
+                self._webhook_success_count += 1
+            else:
+                self._webhook_failure_count += 1
+
+    def record_webhook_retry(self) -> None:
+        with self._lock:
+            self._webhook_retries_total += 1
+
+    def record_webhook_replay(self) -> None:
+        with self._lock:
+            self._webhook_replays_total += 1
+
+    def record_dead_letter_event(self) -> None:
+        with self._lock:
+            self._dead_letter_events_total += 1
+            self._dead_letter_queue_size += 1
+
+    def set_dead_letter_queue_size(self, size: int) -> None:
+        with self._lock:
+            self._dead_letter_queue_size = size
+
+    def get_event_summary(self) -> dict[str, Any]:
+        with self._lock:
+            success_rate = (
+                (self._webhook_success_count / self._webhook_deliveries_total)
+                if self._webhook_deliveries_total > 0
+                else 0.0
+            )
+            avg_retries = (
+                (self._webhook_retries_total / self._webhook_deliveries_total)
+                if self._webhook_deliveries_total > 0
+                else 0.0
+            )
+            return {
+                "total_events_published": self._total_events_published,
+                "events_by_type": self._events_by_type.copy(),
+                "webhook_deliveries_total": self._webhook_deliveries_total,
+                "webhook_success_count": self._webhook_success_count,
+                "webhook_failure_count": self._webhook_failure_count,
+                "webhook_success_rate": success_rate,
+                "webhook_retries_total": self._webhook_retries_total,
+                "webhook_replays_total": self._webhook_replays_total,
+                "average_retries": avg_retries,
+                "dead_letter_events_total": self._dead_letter_events_total,
+                "dead_letter_queue_size": self._dead_letter_queue_size,
             }

@@ -38,6 +38,12 @@ class MetricsMapper:
 
         self._last_provider_requests = {}
         self._last_provider_failures = {}
+
+        # Event & Webhook tracking
+        self._last_webhook_deliveries = 0
+        self._last_webhook_failures = 0
+        self._last_webhook_retries = 0
+        self._last_events_by_type: dict[str, int] = {}
         self._last_provider_failovers = {}
 
         # Limit & Quota Tracking
@@ -214,6 +220,33 @@ class MetricsMapper:
             self.registry.invoice_generation_seconds.observe(duration / 1000.0)
 
         self.registry.concurrent_requests.set(limits_summary.get("concurrent_requests", 0))
+
+        # --- Event & Webhook Metrics ---
+        if hasattr(self.metrics, "get_event_summary"):
+            event_summary = self.metrics.get_event_summary()
+            
+            for ev_type, count in event_summary.get("events_by_type", {}).items():
+                last_count = self._last_events_by_type.get(ev_type, 0)
+                if count > last_count:
+                    self.registry.events_total.labels(event_type=ev_type).inc(count - last_count)
+                    self._last_events_by_type[ev_type] = count
+
+            deliv_count = event_summary.get("webhook_deliveries_total", 0)
+            if deliv_count > self._last_webhook_deliveries:
+                self.registry.webhook_deliveries_total.inc(deliv_count - self._last_webhook_deliveries)
+                self._last_webhook_deliveries = deliv_count
+
+            fail_count = event_summary.get("webhook_failure_count", 0)
+            if fail_count > self._last_webhook_failures:
+                self.registry.webhook_failures_total.inc(fail_count - self._last_webhook_failures)
+                self._last_webhook_failures = fail_count
+
+            retry_count = event_summary.get("webhook_retries_total", 0)
+            if retry_count > self._last_webhook_retries:
+                self.registry.webhook_retries_total.inc(retry_count - self._last_webhook_retries)
+                self._last_webhook_retries = retry_count
+
+            self.registry.dead_letter_total.set(event_summary.get("dead_letter_queue_size", 0))
 
         # --- Admin System Stats ---
         # Fetching stats from SystemAdminService would ideally happen here, but since MetricsMapper

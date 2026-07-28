@@ -353,4 +353,43 @@ class PrometheusRegistry:
             subsystem=subsystem,
         )
 
+        # --- Event & Webhook Metrics ---
+        self.events_total = Counter(
+            "events_total",
+            "Total number of events published",
+            ["event_type"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.webhook_deliveries_total = Counter(
+            "webhook_deliveries_total",
+            "Total number of webhook delivery attempts",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.webhook_failures_total = Counter(
+            "webhook_failures_total",
+            "Total number of failed webhook delivery attempts",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.webhook_retries_total = Counter(
+            "webhook_retries_total",
+            "Total number of webhook delivery retries",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.dead_letter_total = Gauge(
+            "dead_letter_total",
+            "Current number of events in dead-letter queue",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+
+
 
