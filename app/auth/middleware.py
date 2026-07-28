@@ -108,7 +108,12 @@ class AuthorizationMiddleware(BaseHTTPMiddleware):
         # Fetch user permissions and attach to state
         try:
             async with async_session_maker() as session:
-                permissions = await RBACService.get_user_permissions(session, user_id)
+                user_id = request.state.user_id
+                org_id = getattr(request.state, "organization_id", None)
+                ws_id = getattr(request.state, "workspace_id", None)
+
+                # Look up permissions
+                permissions = await RBACService.get_user_permissions(session, user_id, organization_id=org_id, workspace_id=ws_id)
                 request.state.permissions = permissions
         except Exception:
             # Safe fallback if DB is unreachable

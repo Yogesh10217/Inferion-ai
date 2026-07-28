@@ -10,6 +10,7 @@ from app.core.database import engine, Base
 from app.auth.models import User, Role, Permission
 from app.auth.permissions import SystemPermissions, SystemRoles
 from app.auth.password_service import PasswordService
+from app.tenant.models import Organization, Membership
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
@@ -60,6 +61,14 @@ async def bootstrap(admin_username: str, admin_email: str, admin_password: str):
             
         await session.flush()
         
+        # Create personal org for admin if it doesn't exist
+        result = await session.execute(select(Organization).where(Organization.slug == "admin-org"))
+        org = result.scalar_one_or_none()
+        if not org:
+            org = Organization(name="Admin Organization", slug="admin-org")
+            session.add(org)
+            await session.flush()
+        
         # Create admin user
         result = await session.execute(select(User).where(User.username == admin_username))
         admin = result.scalar_one_or_none()
@@ -69,11 +78,22 @@ async def bootstrap(admin_username: str, admin_email: str, admin_password: str):
                 email=admin_email,
                 password_hash=PasswordService.get_password_hash(admin_password),
                 is_admin=True,
-                is_active=True
+                is_active=True,
+                default_organization_id=org.id
             )
             admin.roles.append(role_objs[SystemRoles.ADMIN])
             session.add(admin)
-            print(f"Created admin user: {admin_username}")
+            await session.flush()
+            
+            # Add membership
+            mem = Membership(
+                organization_id=org.id,
+                user_id=admin.id,
+                role_id=role_objs[SystemRoles.ADMIN].id,
+                status="active"
+            )
+            session.add(mem)
+            print(f"Created admin user: {admin_username} in organization: {org.name}")
         else:
             print(f"Admin user {admin_username} already exists.")
             

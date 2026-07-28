@@ -54,21 +54,27 @@ For full architectural blueprints, diagrams, and deployment patterns, refer to t
 
 ---
 
-## 🔒 Authentication & Authorization (Phase 3.1)
+## 🔒 Authentication & Authorization (Phase 3.1 & 3.2)
 
-The engine now supports a full RBAC-based authentication system:
+The engine now supports a full RBAC-based multi-tenant authentication system:
 
 - **Optional Auth**: Set `AUTH_ENABLED=false` (default) for local dev without auth, or `AUTH_ENABLED=true` for production.
 - **Database Backend**: Uses async SQLAlchemy (defaults to SQLite, compatible with PostgreSQL).
 - **JWT & API Keys**: Support for JWT Bearer Tokens (with refresh tokens) and revocable API Keys (`sk_...`).
-- **Dynamic RBAC**: Built-in Admin, Developer, and Viewer roles with database-backed permissions.
-- **Admin Bootstrapping**: Create the initial admin user using the CLI bootstrap script:
+- **First-class Multi-Tenancy**: Users belong to Organizations. Resources (like API keys) are strictly isolated.
+- **Workspaces**: Optional subdivisions within an organization for more granular resource management.
+- **Dynamic RBAC**: Built-in roles (Admin, Developer, Viewer) scoped at both the Organization and Workspace levels.
+- **Admin Bootstrapping**: Create the initial admin user and default organization using the CLI bootstrap script:
   ```bash
   python app/cli/bootstrap.py --username admin --email admin@example.com --password <your_admin_password>
   ```
 
+### Tenant Resolution
+When authenticating via JWT (e.g., UI), the active tenant is resolved via the `X-Organization-Id` and `X-Workspace-Id` headers.
+API Keys are strongly bound to a specific Organization (and optionally a Workspace) upon creation, completely overriding any headers provided by the client to ensure security.
+
 ### API Key Management
-Once authenticated (e.g. via `/v1/auth/login`), users can generate their own API keys via `POST /v1/auth/api-keys`. These keys can be passed as a standard Bearer token (`Authorization: Bearer sk_...`).
+Once authenticated (e.g. via `/v1/auth/login` passing `X-Organization-Id`), users can generate their own API keys via `POST /v1/auth/api-keys`. These keys can be passed as a standard Bearer token (`Authorization: Bearer sk_...`).
 
 ---
 

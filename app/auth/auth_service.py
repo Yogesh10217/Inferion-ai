@@ -15,15 +15,23 @@ class AuthService:
     @staticmethod
     async def log_audit_event(
         db: AsyncSession,
-        event_type: str,
-        user_id: Optional[str] = None,
+        action: str,
+        organization_id: str,
+        actor_id: Optional[str] = None,
+        workspace_id: Optional[str] = None,
+        resource_type: Optional[str] = None,
+        resource_id: Optional[str] = None,
         ip_address: Optional[str] = None,
         details: Optional[str] = None,
     ) -> None:
         """Log an audit event to the database."""
         event = AuditEvent(
-            event_type=event_type,
-            user_id=user_id,
+            action=action,
+            organization_id=organization_id,
+            actor_id=actor_id,
+            workspace_id=workspace_id,
+            resource_type=resource_type,
+            resource_id=resource_id,
             ip_address=ip_address,
             details=details,
         )
@@ -45,15 +53,24 @@ class AuthService:
             )
             raise InvalidCredentialsException()
 
-        if not user.is_active:
-            raise UserInactiveException()
+        # If user has no default_organization_id, we can't fully login unless we do it without org
+        # But we must log the audit event.
+        # We will use the user's default org for the session if available, else require selection later.
+        org_id = user.default_organization_id
+        if not org_id:
+             # Find first available org for audit log
+             from app.tenant.models import Membership
+             stmt_mem = select(Membership).where(Membership.user_id == user.id)
+             res_mem = await db.execute(stmt_mem)
+             mem = res_mem.scalars().first()
+             org_id = mem.organization_id if mem else "SYSTEM"
 
-        await AuthService.log_audit_event(db, "login", user_id=user.id, ip_address=ip_address)
+        await AuthService.log_audit_event(db, "login", organization_id=org_id, actor_id=user.id, ip_address=ip_address)
         return user
 
     @staticmethod
-    async def create_user_session(db: AsyncSession, user: User) -> Session:
-        """Create a new session (refresh token) for the user."""
+    async def create_user_session(db: AsyncSession, user: User, organization_id: str) -> Session:
+        """Create a new session (refresh token) for the user within an organization context."""
         token_data = {"sub": user.id}
         refresh_token = JWTService.create_refresh_token(token_data)
         
@@ -63,6 +80,7 @@ class AuthService:
         
         session = Session(
             user_id=user.id,
+            organization_id=organization_id,
             refresh_token_hash=refresh_token_hash,
             expires_at=datetime.now(timezone.utc)
             # In a real app we'd calculate expires_at properly based on the refresh token expiry

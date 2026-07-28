@@ -63,8 +63,18 @@ async def login(
     ip_address = request.client.host if request.client else None
     user = await AuthService.authenticate_user(db, form_data.username, form_data.password, ip_address)
     
+    org_id = user.default_organization_id
+    if not org_id:
+        from app.tenant.models import Membership
+        stmt_mem = select(Membership).where(Membership.user_id == user.id)
+        res_mem = await db.execute(stmt_mem)
+        mem = res_mem.scalars().first()
+        if not mem:
+            raise HTTPException(status_code=403, detail="User does not belong to any organization")
+        org_id = mem.organization_id
+
     access_token = JWTService.create_access_token(data={"sub": user.id})
-    session = await AuthService.create_user_session(db, user)
+    session = await AuthService.create_user_session(db, user, organization_id=org_id)
     
     return Token(
         access_token=access_token,
@@ -102,9 +112,10 @@ async def logout(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session)
 ):
-    # In a full implementation, we'd revoke the refresh token in the Session DB model here
+    # Assuming we revoke via session. For now just audit log.
+    org_id = getattr(request.state, "organization_id", "SYSTEM")
     ip_address = request.client.host if request.client else None
-    await AuthService.log_audit_event(db, "logout", user_id=current_user.id, ip_address=ip_address)
+    await AuthService.log_audit_event(db, "logout", organization_id=org_id, actor_id=current_user.id, ip_address=ip_address)
     return {"detail": "Successfully logged out"}
 
 
@@ -120,9 +131,16 @@ async def create_api_key(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session)
 ):
+    org_id = getattr(request.state, "organization_id", None)
+    ws_id = getattr(request.state, "workspace_id", None)
+    if not org_id:
+        raise HTTPException(status_code=403, detail="Organization context required to create API key")
+
     raw_key, prefix, hashed_key = APIKeyService.generate_api_key()
     api_key = APIKey(
         user_id=current_user.id,
+        organization_id=org_id,
+        workspace_id=ws_id,
         name=key_data.name,
         prefix=prefix,
         hashed_key=hashed_key,
@@ -130,7 +148,15 @@ async def create_api_key(
     db.add(api_key)
     
     ip_address = request.client.host if request.client else None
-    await AuthService.log_audit_event(db, "api_key_created", user_id=current_user.id, ip_address=ip_address, details=f"Key name: {key_data.name}")
+    await AuthService.log_audit_event(
+        db, "api_key_created", 
+        organization_id=org_id, 
+        workspace_id=ws_id,
+        actor_id=current_user.id, 
+        resource_type="APIKey",
+        ip_address=ip_address, 
+        details=f"Key name: {key_data.name}"
+    )
     
     await db.commit()
     await db.refresh(api_key)
@@ -167,7 +193,15 @@ async def revoke_api_key(
     api_key.revoked_at = datetime.now(timezone.utc)
     
     ip_address = request.client.host if request.client else None
-    await AuthService.log_audit_event(db, "api_key_revoked", user_id=current_user.id, ip_address=ip_address, details=f"Key ID: {key_id}")
+    await AuthService.log_audit_event(
+        db, "api_key_revoked", 
+        organization_id=api_key.organization_id, 
+        workspace_id=api_key.workspace_id,
+        actor_id=current_user.id, 
+        resource_type="APIKey",
+        resource_id=api_key.id,
+        ip_address=ip_address
+    )
     
     await db.commit()
     return {"detail": "API Key revoked"}

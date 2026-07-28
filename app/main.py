@@ -13,8 +13,11 @@ from app.core.initializer import InfrastructureInitializer
 from app.core.exceptions import register_exception_handlers
 from app.core.middleware import ObservationMiddleware
 from app.auth.middleware import AuthenticationMiddleware, AuthorizationMiddleware
+from app.tenant.middleware import TenantMiddleware
 from app.api.auth import router as auth_router
 from app.api.admin import router as admin_router
+from app.api.organizations import router as org_router
+from app.api.workspaces import router as ws_router
 
 
 @asynccontextmanager
@@ -52,6 +55,7 @@ def create_app() -> FastAPI:
     
     # Auth Middlewares
     app.add_middleware(AuthorizationMiddleware)
+    app.add_middleware(TenantMiddleware)
     app.add_middleware(AuthenticationMiddleware)
     
     # Observability
@@ -67,6 +71,8 @@ def create_app() -> FastAPI:
     if settings.auth_enabled:
         app.include_router(auth_router, prefix=settings.api_prefix)
         app.include_router(admin_router, prefix=settings.api_prefix)
+        app.include_router(org_router, prefix=settings.api_prefix)
+        app.include_router(ws_router, prefix=settings.api_prefix)
         
     if settings.prometheus_enabled:
         app.include_router(metrics_router)

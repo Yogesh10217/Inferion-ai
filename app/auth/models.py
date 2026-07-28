@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 import uuid
 from typing import List, Optional
 
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Integer
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
 from app.core.database import Base
@@ -21,6 +21,7 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
+    default_organization_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
@@ -69,6 +70,8 @@ class APIKey(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    workspace_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     hashed_key: Mapped[str] = mapped_column(String, nullable=False)
     prefix: Mapped[str] = mapped_column(String, nullable=False, index=True)
@@ -87,8 +90,9 @@ class APIKeyUsage(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     api_key_id: Mapped[str] = mapped_column(ForeignKey("api_keys.id", ondelete="CASCADE"), nullable=False, index=True)
     endpoint: Mapped[str] = mapped_column(String, nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
-    status_code: Mapped[int] = mapped_column(Column("status_code", type_=String, nullable=True)) # or int, keeping simple
+    status_code: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    latency_ms: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)
 
     api_key: Mapped["APIKey"] = relationship(back_populates="usages")
 
@@ -98,6 +102,7 @@ class Session(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
     refresh_token_hash: Mapped[str] = mapped_column(String, nullable=False, unique=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
@@ -110,8 +115,12 @@ class AuditEvent(Base):
     __tablename__ = "audit_events"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    event_type: Mapped[str] = mapped_column(String, index=True, nullable=False)
-    user_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
+    action: Mapped[str] = mapped_column(String, index=True, nullable=False)
+    actor_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    workspace_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
+    resource_type: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    resource_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     ip_address: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     details: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)
