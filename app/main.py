@@ -12,6 +12,9 @@ from app.core.container import ServiceContainer
 from app.core.initializer import InfrastructureInitializer
 from app.core.exceptions import register_exception_handlers
 from app.core.middleware import ObservationMiddleware
+from app.auth.middleware import AuthenticationMiddleware, AuthorizationMiddleware
+from app.api.auth import router as auth_router
+from app.api.admin import router as admin_router
 
 
 @asynccontextmanager
@@ -46,6 +49,12 @@ def create_app() -> FastAPI:
     app.state.container = container
 
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+    
+    # Auth Middlewares
+    app.add_middleware(AuthorizationMiddleware)
+    app.add_middleware(AuthenticationMiddleware)
+    
+    # Observability
     app.add_middleware(ObservationMiddleware)
     
     # Register exception handlers
@@ -55,6 +64,10 @@ def create_app() -> FastAPI:
     app.include_router(models_router, prefix=settings.api_prefix)
     app.include_router(chat_router, prefix=settings.api_prefix)
     
+    if settings.auth_enabled:
+        app.include_router(auth_router, prefix=settings.api_prefix)
+        app.include_router(admin_router, prefix=settings.api_prefix)
+        
     if settings.prometheus_enabled:
         app.include_router(metrics_router)
 

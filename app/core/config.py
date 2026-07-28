@@ -48,6 +48,17 @@ class Settings(BaseSettings):
     prometheus_namespace: str = Field(default="llm_engine", alias="PROMETHEUS_NAMESPACE")
     prometheus_subsystem: str = Field(default="inference", alias="PROMETHEUS_SUBSYSTEM")
 
+    # Authentication & Database Configuration
+    auth_enabled: bool = Field(default=False, alias="AUTH_ENABLED")
+    database_url: str = Field(default="sqlite+aiosqlite:///./data/engine.db", alias="DATABASE_URL")
+    jwt_secret: str = Field(default="super-secret-key-change-in-production", alias="JWT_SECRET")
+    jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
+    access_token_expire_minutes: int = Field(default=30, alias="ACCESS_TOKEN_EXPIRE_MINUTES")
+    refresh_token_expire_days: int = Field(default=7, alias="REFRESH_TOKEN_EXPIRE_DAYS")
+    api_key_length: int = Field(default=32, alias="API_KEY_LENGTH")
+    allow_anonymous: bool = Field(default=False, alias="ALLOW_ANONYMOUS")
+
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object, info: ValidationInfo) -> list[str]:
