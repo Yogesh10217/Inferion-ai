@@ -21,8 +21,6 @@ from app.core.exceptions import (
     AppExceptionHandler,
 )
 
-client = TestClient(app)
-
 
 def test_metrics_service_direct() -> None:
     metrics = MetricsService()
@@ -68,37 +66,41 @@ async def test_health_service_direct() -> None:
     assert "provider_health" in health_status
 
 
-def test_health_endpoints_detailed() -> None:
-    for endpoint, status_val in [("/v1/health", "ok"), ("/v1/ready", "ready"), ("/v1/live", "alive")]:
-        response = client.get(endpoint)
+@pytest.mark.asyncio
+async def test_health_endpoints_detailed(get_client) -> None:
+    async with get_client() as client:
+        for endpoint, status_val in [("/v1/health", "ok"), ("/v1/ready", "ready"), ("/v1/live", "alive")]:
+            response = await client.get(endpoint)
+            assert response.status_code == 200
+            data = response.json()
+            assert data["status"] == status_val
+            assert "overall_status" in data
+            assert "application_version" in data
+            assert "uptime" in data
+            assert "startup_timestamp" in data
+            assert "registered_providers" in data
+            assert "registered_models" in data
+            assert "provider_health" in data
+            assert data["application_state"] == "healthy"
+            assert "request_count" in data
+            assert "memory_usage" in data
+
+
+@pytest.mark.asyncio
+async def test_request_id_generation_and_headers(get_client) -> None:
+    async with get_client() as client:
+        # Test generated Request ID
+        response = await client.get("/v1/health")
         assert response.status_code == 200
-        data = response.json()
-        assert data["status"] == status_val
-        assert "overall_status" in data
-        assert "application_version" in data
-        assert "uptime" in data
-        assert "startup_timestamp" in data
-        assert "registered_providers" in data
-        assert "registered_models" in data
-        assert "provider_health" in data
-        assert data["application_state"] == "healthy"
-        assert "request_count" in data
-        assert "memory_usage" in data
-
-
-def test_request_id_generation_and_headers() -> None:
-    # Test generated Request ID
-    response = client.get("/v1/health")
-    assert response.status_code == 200
-    assert "X-Request-ID" in response.headers
-    req_id_1 = response.headers["X-Request-ID"]
-    assert len(req_id_1) > 0
-
-    # Test custom Request ID
-    custom_id = "test-req-id-12345"
-    response2 = client.get("/v1/health", headers={"x-request-id": custom_id})
-    assert response2.status_code == 200
-    assert response2.headers["X-Request-ID"] == custom_id
+        assert "X-Request-ID" in response.headers
+        req_id_1 = response.headers["X-Request-ID"]
+        assert len(req_id_1) > 0
+    
+        # Test custom Request ID
+        custom_id = "test-req-id-12345"
+        response2 = await client.get("/v1/health", headers={"x-request-id": custom_id})
+        assert response2.status_code == 200
+        assert response2.headers["X-Request-ID"] == custom_id
 
 
 @pytest.mark.anyio

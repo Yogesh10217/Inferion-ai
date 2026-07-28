@@ -8,25 +8,25 @@ from app.observability.prometheus_registry import PrometheusRegistry
 from app.observability.metrics_mapper import MetricsMapper
 from app.observability.prometheus_exporter import PrometheusExporter
 
-client = TestClient(app)
-
-def test_metrics_endpoint_exists_and_format():
+@pytest.mark.asyncio
+async def test_metrics_endpoint_exists_and_format(get_client):
     # Make a request to trigger metrics endpoint
-    response = client.get("/metrics")
-    assert response.status_code == 200
-    
-    # Must have the correct prometheus text content type
-    assert "text/plain" in response.headers["content-type"]
-    assert "version=" in response.headers["content-type"]
+    async with get_client() as client:
+        response = await client.get("/metrics")
+        assert response.status_code == 200
+        
+        # Must have the correct prometheus text content type
+        assert "text/plain" in response.headers["content-type"]
+        assert "version=" in response.headers["content-type"]
 
-    # Verify we can parse the output as valid Prometheus text format
-    content = response.text
-    families = list(text_string_to_metric_families(content))
-    
-    # Ensure our namespace metrics are present
-    metric_names = [f.name for f in families]
-    assert "llm_engine_inference_uptime_seconds" in metric_names
-    assert "llm_engine_inference_api_requests" in metric_names
+        # Verify we can parse the output as valid Prometheus text format
+        content = response.text
+        families = list(text_string_to_metric_families(content))
+        
+        # Ensure our namespace metrics are present
+        metric_names = [f.name for f in families]
+        assert "llm_engine_inference_uptime_seconds" in metric_names
+        assert "llm_engine_inference_api_requests" in metric_names
 
 def test_metrics_mapper_updates_counters_and_gauges():
     metrics = MetricsService()

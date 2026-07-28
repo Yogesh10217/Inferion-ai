@@ -4,13 +4,12 @@ from unittest.mock import AsyncMock, patch, MagicMock
 from fastapi.testclient import TestClient
 import httpx
 
-from app.main import app
 from app.providers.openai_provider import OpenAIProvider
 from app.providers.ollama_provider import OllamaProvider
 from app.schemas.request import InferenceRequest, ChatMessage
+from app.schemas.response import ChatCompletionResponse
+from app.main import app
 from app.core.exceptions import ProviderUnavailableException
-
-client = TestClient(app)
 
 
 class MockStreamContext:
@@ -58,14 +57,15 @@ def create_mock_client(status_code: int = 200, content_lines: list[str] | None =
 
 
 @pytest.mark.asyncio
-async def test_streaming_endpoint_returns_openai_sse_format() -> None:
+async def test_streaming_endpoint_returns_openai_sse_format(get_client, admin_token_headers: dict) -> None:
     payload = {
         "model": "gpt-4o-mini",
         "messages": [{"role": "user", "content": "Hello world"}],
         "stream": True,
     }
-    response = client.post("/v1/chat/completions", json=payload)
-    assert response.status_code == 200
+    async with get_client() as client:
+        response = await client.post("/v1/chat/completions", json=payload, headers=admin_token_headers)
+        assert response.status_code == 200
     assert "text/event-stream" in response.headers["content-type"].lower()
     
     lines = response.text.split("\n")

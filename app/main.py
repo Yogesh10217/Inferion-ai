@@ -15,7 +15,7 @@ from app.core.middleware import ObservationMiddleware
 from app.auth.middleware import AuthenticationMiddleware, AuthorizationMiddleware
 from app.tenant.middleware import TenantMiddleware
 from app.api.auth import router as auth_router
-from app.api.admin import router as admin_router
+from app.api.admin_router import admin_router
 from app.api.organizations import router as org_router
 from app.api.workspaces import router as ws_router
 from app.api.quotas import router as quotas_router
@@ -77,6 +77,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router, prefix=settings.api_prefix)
     app.include_router(models_router, prefix=settings.api_prefix)
     app.include_router(chat_router, prefix=settings.api_prefix)
+    app.include_router(admin_router, prefix=settings.api_prefix)
     
     if settings.auth_enabled:
         app.include_router(auth_router, prefix=settings.api_prefix)

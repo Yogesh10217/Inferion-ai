@@ -20,14 +20,14 @@ from app.auth.rbac import RBACService
 settings = get_settings()
 
 PUBLIC_PATHS = [
-    re.compile(r"^/health/?"),
-    re.compile(r"^/live/?"),
-    re.compile(r"^/ready/?"),
+    re.compile(r"^(?:/v1)?/health/?"),
+    re.compile(r"^(?:/v1)?/live/?"),
+    re.compile(r"^(?:/v1)?/ready/?"),
     re.compile(r"^/metrics/?"),
-    re.compile(r"^/docs/?"),
-    re.compile(r"^/openapi.json"),
-    re.compile(r"^/redoc/?"),
-    re.compile(r"^/auth/login/?"),
+    re.compile(r"^(?:/v1)?/docs/?"),
+    re.compile(r"^(?:/v1)?/openapi.json"),
+    re.compile(r"^(?:/v1)?/redoc/?"),
+    re.compile(r"^(?:/v1)?/auth/login/?"),
 ]
 
 

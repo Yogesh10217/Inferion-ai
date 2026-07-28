@@ -37,6 +37,8 @@ async def test_initializer_runs_successfully() -> None:
         mock_provider.health_check.assert_awaited()
         mock_provider.list_models.assert_awaited()
 
+        await container.request_scheduler.shutdown()
+
 
 @pytest.mark.asyncio
 async def test_lifespan_flow() -> None:

@@ -21,11 +21,10 @@ def anyio_backend():
     return "asyncio"
 
 @pytest.fixture
-def get_client():
+def get_client(event_loop):
     from httpx import AsyncClient, ASGITransport
-    from app.main import app
+    from app.main import create_app
     from app.core.database import init_db, async_session_maker
-    import asyncio
     
     async def setup_db():
         await init_db()
@@ -36,7 +35,7 @@ def get_client():
             from app.tenant.models import Organization, Membership
             
             role = Role(id="admin", name="Admin", description="Admin Role")
-            user = User(id="admin_user_id", username="admin", email="admin@test.com", password_hash="hash")
+            user = User(id="admin_user_id", username="admin", email="admin@test.com", password_hash="hash", is_admin=True)
             # Create a user with explicit ID to avoid conflict with defaults
             org = Organization(id="test_org_id", name="Test Org", slug="test-org")
             membership = Membership(user_id="admin_user_id", organization_id="test_org_id", role_id="admin", status="active")
@@ -46,12 +45,11 @@ def get_client():
                 await session.commit()
             except IntegrityError:
                 await session.rollback()
+                
+    event_loop.run_until_complete(setup_db())
             
-    # Initialize the in-memory database tables
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(setup_db())
-    
     def _get_client():
+        app = create_app()
         transport = ASGITransport(app=app)
         return AsyncClient(transport=transport, base_url="http://testserver")
     return _get_client

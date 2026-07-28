@@ -16,10 +16,14 @@ class MetricsMapper:
         # Store last observed counts to calculate deltas for Prometheus Counters
         self._last_api_requests = 0
         self._last_api_errors = 0
+        self._last_scheduler_processed = 0
         self._last_active_batches = 0
         self._last_tokens_consumed = 0
         self._last_quota_violations = 0
         self._last_redis_fallbacks = 0
+        self._last_batches_dispatched = 0
+        self._last_requests_batched = 0
+        self._last_single_fallbacks = 0
         
         # Billing state tracking
         self._last_budget_violations = 0
@@ -210,3 +214,9 @@ class MetricsMapper:
             self.registry.invoice_generation_seconds.observe(duration / 1000.0)
 
         self.registry.concurrent_requests.set(limits_summary.get("concurrent_requests", 0))
+
+        # --- Admin System Stats ---
+        # Fetching stats from SystemAdminService would ideally happen here, but since MetricsMapper
+        # is synchronous and decoupled from DB session, we will expose an endpoint to trigger stat 
+        # collection, or rely on an async background task to update the metrics periodically.
+        # Alternatively, the admin endpoints themselves will increment the counters when actions happen.

@@ -94,6 +94,29 @@ A robust, hierarchical system manages API abuse and tracks usage seamlessly with
 
 ---
 
+## 💰 Billing, Subscriptions & Budgets (Phase 3.4)
+
+A fully integrated billing ecosystem converts metered usage into structured invoices while preventing overspend.
+
+- **Subscriptions**: Organizations can subscribe to predefined `SubscriptionPlan`s, seamlessly inheriting quota overrides.
+- **Cost Calculation**: Independent pricing rules (per-provider, per-model, input vs output) accurately evaluate costs.
+- **Invoicing**: Automatic generation of `Invoice`s and line items (via `InvoiceLineItem`) spanning custom billing cycles.
+- **Budgets**: Prevent runaway costs by establishing `warning`, `critical`, and `hard_limit` thresholds evaluated strictly at runtime by a `BudgetMiddleware`.
+
+---
+
+## 🏢 Enterprise Administration Platform (Phase 3.5)
+
+A comprehensive suite for platform operators to manage, audit, and monitor the entire LLM ecosystem.
+
+- **Centralized Management**: Dedicated `/v1/admin/*` endpoints strictly protected by a global `platform_admin` role.
+- **Organization Lifecycle**: Support for suspending or archiving rogue or churned organizations instantly.
+- **Audit Logging**: Immutable, queryable `AuditEvent`s capturing all control-plane modifications (e.g. role grants, API key rotations).
+- **System Health**: Endpoints to introspect internal cache stats, active batch dimensions, database pings, and backend availability.
+- **Reporting Jobs**: Framework for asynchronous execution and compilation of high-level usage CSV/JSON exports.
+
+---
+
 ## ⚡ Quick Start
 
 ### Prerequisites

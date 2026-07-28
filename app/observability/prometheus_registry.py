@@ -320,3 +320,37 @@ class PrometheusRegistry:
             buckets=(0.1, 0.5, 1.0, 5.0, 10.0, 30.0, 60.0, float("inf")),
         )
 
+        # --- Admin Metrics ---
+        self.admin_users_total = Gauge(
+            "admin_users_total",
+            "Total number of active and disabled users",
+            ["status"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.admin_orgs_total = Gauge(
+            "admin_orgs_total",
+            "Total number of active and suspended organizations",
+            ["status"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.admin_reports_total = Gauge(
+            "admin_reports_total",
+            "Total number of generated reports",
+            ["status"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.admin_audit_queries_total = Counter(
+            "admin_audit_queries_total",
+            "Total number of audit queries executed",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+
+

@@ -28,6 +28,11 @@ from app.billing.pricing_service import PricingService
 from app.billing.plan_service import PlanService, SubscriptionService
 from app.billing.budget_service import BudgetService
 from app.billing.invoice_service import InvoiceService
+from app.admin import (
+    OrganizationAdminService, WorkspaceAdminService, UserAdminService,
+    APIKeyAdminService, SubscriptionAdminService, AuditAdminService,
+    ReportAdminService, HealthAdminService, SystemAdminService
+)
 
 
 class ServiceContainer:
@@ -169,6 +174,17 @@ class ServiceContainer:
         self.subscription_service = SubscriptionService(session_factory=async_session_maker)
         self.budget_service = BudgetService(session_factory=async_session_maker, metrics_service=self.metrics_service)
         self.invoice_service = InvoiceService(session_factory=async_session_maker, pricing_service=self.pricing_service, metrics=self.metrics_service)
+        
+        # Admin Services
+        self.organization_admin_service = OrganizationAdminService(async_session_maker)
+        self.workspace_admin_service = WorkspaceAdminService(async_session_maker)
+        self.user_admin_service = UserAdminService(async_session_maker)
+        self.api_key_admin_service = APIKeyAdminService(async_session_maker)
+        self.subscription_admin_service = SubscriptionAdminService(async_session_maker)
+        self.audit_admin_service = AuditAdminService(async_session_maker)
+        self.report_admin_service = ReportAdminService(async_session_maker)
+        self.health_admin_service = HealthAdminService(async_session_maker)
+        self.system_admin_service = SystemAdminService(async_session_maker)
 
         # Initialize default inference service
         self.inference_service = DefaultInferenceService(
