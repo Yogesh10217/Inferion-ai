@@ -41,6 +41,15 @@ class MetricsService:
         self._recent_cache_write_latencies: list[float] = []
         self._recent_provider_latencies: list[tuple[str, str, float]] = []
 
+        # Rate Limiting & Quota Metrics
+        self._rate_limit_requests = 0
+        self._rate_limit_rejections = 0
+        self._quota_violations = 0
+        self._tokens_consumed = 0
+        self._concurrent_requests = 0
+        self._redis_fallback_events = 0
+        self._backend_selections: dict[str, int] = {"memory": 0, "redis": 0}
+
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
         with self._lock:
@@ -250,3 +259,46 @@ class MetricsService:
             self._recent_cache_write_latencies = []
             self._recent_provider_latencies = []
             return data
+
+    # --- Limits & Quotas Metrics ---
+    
+    def record_rate_limit_check(self, allowed: bool) -> None:
+        with self._lock:
+            self._rate_limit_requests += 1
+            if not allowed:
+                self._rate_limit_rejections += 1
+
+    def record_quota_violation(self) -> None:
+        with self._lock:
+            self._quota_violations += 1
+
+    def record_token_consumption(self, total_tokens: int) -> None:
+        with self._lock:
+            self._tokens_consumed += total_tokens
+
+    def set_concurrent_requests(self, count: int) -> None:
+        with self._lock:
+            self._concurrent_requests = count
+
+    def record_redis_fallback(self) -> None:
+        with self._lock:
+            self._redis_fallback_events += 1
+
+    def record_backend_selection(self, backend: str) -> None:
+        with self._lock:
+            if backend in self._backend_selections:
+                self._backend_selections[backend] += 1
+            else:
+                self._backend_selections[backend] = 1
+
+    def get_limits_summary(self) -> dict[str, Any]:
+        with self._lock:
+            return {
+                "rate_limit_requests": self._rate_limit_requests,
+                "rate_limit_rejections": self._rate_limit_rejections,
+                "quota_violations": self._quota_violations,
+                "tokens_consumed": self._tokens_consumed,
+                "concurrent_requests": self._concurrent_requests,
+                "redis_fallback_events": self._redis_fallback_events,
+                "backend_selections": self._backend_selections.copy(),
+            }

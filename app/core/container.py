@@ -16,6 +16,13 @@ from app.services.request_scheduler import RequestScheduler
 from app.observability.prometheus_registry import PrometheusRegistry
 from app.observability.metrics_mapper import MetricsMapper
 from app.observability.prometheus_exporter import PrometheusExporter
+from app.core.database import async_session_maker
+
+from app.limits.memory_backend import MemoryCounterBackend
+from app.limits.redis_backend import RedisCounterBackend
+from app.limits.rate_limit_service import RateLimitService
+from app.limits.quota_service import QuotaService
+from app.limits.usage_service import UsageService
 
 
 class ServiceContainer:
@@ -137,6 +144,20 @@ class ServiceContainer:
         # Initialize streaming manager
         self.streaming_manager = StreamingManager(scheduler=self.request_scheduler)
 
+        # Initialize limits services
+        if self.settings.rate_limit_backend.lower() == "redis":
+            self.counter_backend = RedisCounterBackend(redis_url=self.settings.redis_url, metrics=self.metrics_service)
+        else:
+            self.counter_backend = MemoryCounterBackend()
+
+        self.rate_limit_service = RateLimitService(
+            backend=self.counter_backend,
+            metrics=self.metrics_service,
+            default_strategy=self.settings.default_rate_limit_strategy
+        )
+        self.quota_service = QuotaService(session_factory=async_session_maker, metrics=self.metrics_service)
+        self.usage_service = UsageService(session_factory=async_session_maker, metrics=self.metrics_service)
+
         # Initialize default inference service
         self.inference_service = DefaultInferenceService(
             registry=self.registry,
@@ -144,6 +165,7 @@ class ServiceContainer:
             request_router=self.request_router,
             streaming_manager=self.streaming_manager,
             request_scheduler=self.request_scheduler,
+            usage_emitter=self.usage_service,
         )
 
         # Initialize health service

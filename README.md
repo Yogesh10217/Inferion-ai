@@ -78,6 +78,19 @@ Once authenticated (e.g. via `/v1/auth/login` passing `X-Organization-Id`), user
 
 ---
 
+## 🚦 Quotas, Rate Limiting & Usage (Phase 3.3)
+
+A robust, hierarchical system manages API abuse and tracks usage seamlessly without impacting core inference paths.
+
+- **Rate Limiting**: Configurable limits (sliding window, token bucket, fixed window) to prevent immediate traffic spikes.
+- **Quota Policies**: Configurable limits (requests per day, tokens per day) mapped strictly to Organizations, Workspaces, API Keys, and Users.
+- **Hierarchical Evaluation**: Limits are evaluated top-down: `Organization → Workspace → API Key → User`. The request stops immediately at the first violation.
+- **Concurrency Control**: Prevents resource starvation by issuing decaying "leases" for currently executing requests.
+- **Multi-Backend**: Uses Redis (Lua scripts) for high-performance atomic increments, with a local Memory fallback circuit-breaker when Redis is down.
+- **Async Usage Collection**: Usage events (token counts, durations, status codes) are emitted asynchronously avoiding latency overhead in the critical path.
+
+---
+
 ## ⚡ Quick Start
 
 ### Prerequisites
@@ -212,6 +225,9 @@ curl -N -X POST http://localhost:8002/v1/chat/completions \
 | `AUTH_ENABLED` | `false` | Enable/disable authentication |
 | `DATABASE_URL` | `sqlite+aiosqlite:///./data/engine.db` | DB connection string |
 | `JWT_SECRET` | *(string)* | Secret for JWT signing |
+| `RATE_LIMITING_ENABLED` | `true` | Enable rate limiting & quotas |
+| `RATE_LIMIT_BACKEND` | `redis` | Backend to use (`redis` or `memory`) |
+| `REDIS_URL` | `redis://localhost:6379/0` | Redis connection URL |
 
 See [.env.example](.env.example) for a ready-to-use template.
 

@@ -30,6 +30,13 @@ class MetricsMapper:
         self._last_provider_failures = {}
         self._last_provider_failovers = {}
 
+        # Limit & Quota Tracking
+        self._last_rate_limit_requests = 0
+        self._last_rate_limit_rejections = 0
+        self._last_quota_violations = 0
+        self._last_tokens_consumed = 0
+        self._last_redis_fallbacks = 0
+
     def synchronize(self) -> None:
         """Fetch current metrics from MetricsService and push to PrometheusRegistry."""
         summary = self.metrics.get_metrics_summary()
@@ -141,3 +148,28 @@ class MetricsMapper:
 
         for prov_id, inst_id, lat in events.get("provider_latencies", []):
             self.registry.provider_latency_seconds.labels(provider_id=prov_id, instance_id=inst_id).observe(lat / 1000.0)
+
+        # --- Rate Limiting & Quotas ---
+        limits_summary = self.metrics.get_limits_summary()
+        
+        current_rl_reqs = limits_summary.get("rate_limit_requests", 0)
+        self.registry.rate_limit_requests_total.inc(current_rl_reqs - self._last_rate_limit_requests)
+        self._last_rate_limit_requests = current_rl_reqs
+
+        current_rl_rejs = limits_summary.get("rate_limit_rejections", 0)
+        self.registry.rate_limit_rejections_total.inc(current_rl_rejs - self._last_rate_limit_rejections)
+        self._last_rate_limit_rejections = current_rl_rejs
+
+        current_quota_viols = limits_summary.get("quota_violations", 0)
+        self.registry.quota_violations_total.inc(current_quota_viols - self._last_quota_violations)
+        self._last_quota_violations = current_quota_viols
+
+        current_tokens = limits_summary.get("tokens_consumed", 0)
+        self.registry.tokens_consumed_total.inc(current_tokens - self._last_tokens_consumed)
+        self._last_tokens_consumed = current_tokens
+
+        current_fallbacks = limits_summary.get("redis_fallback_events", 0)
+        self.registry.redis_fallbacks_total.inc(current_fallbacks - self._last_redis_fallbacks)
+        self._last_redis_fallbacks = current_fallbacks
+
+        self.registry.concurrent_requests.set(limits_summary.get("concurrent_requests", 0))

@@ -213,3 +213,56 @@ class PrometheusRegistry:
             subsystem=subsystem,
             buckets=(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, float("inf")),
         )
+
+        # --- Rate Limiting & Quotas Metrics ---
+        self.rate_limit_requests_total = Counter(
+            "rate_limit_requests_total",
+            "Total rate limit checks",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.rate_limit_rejections_total = Counter(
+            "rate_limit_rejections_total",
+            "Total rate limit rejections (429s)",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.quota_remaining = Gauge(
+            "quota_remaining",
+            "Remaining quota units for a given scope",
+            ["scope_id", "quota_type"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.tokens_consumed_total = Counter(
+            "tokens_consumed_total",
+            "Total tokens consumed",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.concurrent_requests = Gauge(
+            "concurrent_requests",
+            "Currently active concurrent requests evaluated by rate limiter",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.quota_violations_total = Counter(
+            "quota_violations_total",
+            "Total quota violations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.redis_fallbacks_total = Counter(
+            "redis_fallbacks_total",
+            "Total times rate limiter fell back to memory backend",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+

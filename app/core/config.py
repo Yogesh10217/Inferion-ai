@@ -58,6 +58,14 @@ class Settings(BaseSettings):
     api_key_length: int = Field(default=32, alias="API_KEY_LENGTH")
     allow_anonymous: bool = Field(default=False, alias="ALLOW_ANONYMOUS")
 
+    # Rate Limiting & Quotas Configuration
+    rate_limiting_enabled: bool = Field(default=True, alias="RATE_LIMITING_ENABLED")
+    rate_limit_backend: str = Field(default="memory", alias="RATE_LIMIT_BACKEND")  # 'memory' or 'redis'
+    default_rate_limit_strategy: str = Field(default="sliding_window", alias="DEFAULT_RATE_LIMIT_STRATEGY")
+    default_requests_per_minute: int = Field(default=60, alias="DEFAULT_REQUESTS_PER_MINUTE")
+    default_tokens_per_day: int = Field(default=100000, alias="DEFAULT_TOKENS_PER_DAY")
+    default_concurrent_requests: int = Field(default=5, alias="DEFAULT_CONCURRENT_REQUESTS")
+
 
     @field_validator("cors_origins", mode="before")
     @classmethod

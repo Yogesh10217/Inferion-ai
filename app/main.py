@@ -18,6 +18,9 @@ from app.api.auth import router as auth_router
 from app.api.admin import router as admin_router
 from app.api.organizations import router as org_router
 from app.api.workspaces import router as ws_router
+from app.api.quotas import router as quotas_router
+from app.api.usage import router as usage_router
+from app.limits.middleware import RateLimitMiddleware
 
 
 @asynccontextmanager
@@ -54,6 +57,7 @@ def create_app() -> FastAPI:
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
     
     # Auth Middlewares
+    app.add_middleware(RateLimitMiddleware, rate_limit_service=container.rate_limit_service, quota_service=container.quota_service)
     app.add_middleware(AuthorizationMiddleware)
     app.add_middleware(TenantMiddleware)
     app.add_middleware(AuthenticationMiddleware)
@@ -73,6 +77,8 @@ def create_app() -> FastAPI:
         app.include_router(admin_router, prefix=settings.api_prefix)
         app.include_router(org_router, prefix=settings.api_prefix)
         app.include_router(ws_router, prefix=settings.api_prefix)
+        app.include_router(quotas_router, prefix=settings.api_prefix)
+        app.include_router(usage_router, prefix=settings.api_prefix)
         
     if settings.prometheus_enabled:
         app.include_router(metrics_router)

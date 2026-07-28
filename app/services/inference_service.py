@@ -13,6 +13,8 @@ from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import ChatMessage, InferenceRequest
 from app.services.request_scheduler import RequestScheduler
 from app.services.streaming_manager import StreamingManager
+from app.limits.events import UsageEventEmitter, UsageEvent
+import time
 
 
 class InferenceService(ABC):
@@ -45,6 +47,7 @@ class DefaultInferenceService(InferenceService):
         response_adapter: OpenAIResponseAdapter | None = None, 
         streaming_manager: StreamingManager | None = None,
         request_scheduler: RequestScheduler | None = None,
+        usage_emitter: UsageEventEmitter | None = None,
     ) -> None:
         self._registry = registry
         self._provider = provider
@@ -52,6 +55,7 @@ class DefaultInferenceService(InferenceService):
         self._response_adapter = response_adapter or OpenAIResponseAdapter()
         self._streaming_manager = streaming_manager or StreamingManager()
         self._request_scheduler = request_scheduler
+        self._usage_emitter = usage_emitter
 
     async def complete(self, *, model_id: str, prompt: str, **kwargs: Any) -> InferenceResponse:
         self._validate_request(model_id=model_id, prompt=prompt)
@@ -61,9 +65,41 @@ class DefaultInferenceService(InferenceService):
         if self._request_scheduler is None:
             raise RuntimeError("RequestScheduler not configured")
 
+        start_time = time.time()
         try:
             response = await self._request_scheduler.generate(request=request)
+            duration_ms = int((time.time() - start_time) * 1000)
+            
+            if self._usage_emitter:
+                self._usage_emitter.emit(UsageEvent(
+                    organization_id=kwargs.get("organization_id", "default"),
+                    workspace_id=kwargs.get("workspace_id"),
+                    user_id=kwargs.get("user_id"),
+                    api_key_id=kwargs.get("api_key_id"),
+                    provider=response.model.split('/')[0] if '/' in response.model else "unknown",
+                    model=response.model,
+                    request_tokens=response.usage.prompt_tokens if response.usage else 0,
+                    response_tokens=response.usage.completion_tokens if response.usage else 0,
+                    status_code="200",
+                    is_streaming=False,
+                    is_cached=False,  # Can extract from response if metadata supports it
+                    duration_ms=duration_ms
+                ))
+                
         except Exception as exc:  # pragma: no cover - defensive boundary
+            duration_ms = int((time.time() - start_time) * 1000)
+            if self._usage_emitter:
+                self._usage_emitter.emit(UsageEvent(
+                    organization_id=kwargs.get("organization_id", "default"),
+                    workspace_id=kwargs.get("workspace_id"),
+                    user_id=kwargs.get("user_id"),
+                    api_key_id=kwargs.get("api_key_id"),
+                    provider="unknown",
+                    model=model_id,
+                    status_code="500",
+                    error_type=type(exc).__name__,
+                    duration_ms=duration_ms
+                ))
             raise ProviderUnavailableError(f"Provider failed for model '{model_id}'") from exc
 
         return response
@@ -154,6 +190,7 @@ def build_inference_service(
     response_adapter: OpenAIResponseAdapter | None = None,
     streaming_manager: StreamingManager | None = None,
     request_scheduler: RequestScheduler | None = None,
+    usage_emitter: UsageEventEmitter | None = None,
 ) -> InferenceService:
     """Create a service instance using dependency injection-friendly defaults."""
     if registry is None:
@@ -172,4 +209,5 @@ def build_inference_service(
         response_adapter=response_adapter,
         streaming_manager=streaming_manager,
         request_scheduler=request_scheduler,
+        usage_emitter=usage_emitter,
     )
