@@ -23,6 +23,12 @@ async_session_maker = async_sessionmaker(
 
 Base = declarative_base()
 
+# Import all models to ensure they are registered with Base
+import app.auth.models
+import app.tenant.models
+import app.limits.models
+import app.billing.models
+
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     """

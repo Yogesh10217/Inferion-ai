@@ -50,6 +50,16 @@ class MetricsService:
         self._redis_fallback_events = 0
         self._backend_selections: dict[str, int] = {"memory": 0, "redis": 0}
 
+        # Billing Metrics
+        self._monthly_cost = 0.0
+        self._mrr = 0.0
+        self._budget_violations = 0
+        self._budget_warnings = 0
+        self._invoice_generation_count = 0
+        self._recent_invoice_durations: list[float] = []
+        self._active_subscriptions: dict[str, int] = {}  # plan_id -> count
+        self._provider_costs: dict[str, float] = {}  # provider_id -> cost
+
     def record_request(self, latency_ms: float, is_error: bool = False) -> None:
         """Record a single request's latency and error status."""
         with self._lock:
@@ -301,4 +311,52 @@ class MetricsService:
                 "concurrent_requests": self._concurrent_requests,
                 "redis_fallback_events": self._redis_fallback_events,
                 "backend_selections": self._backend_selections.copy(),
+            }
+
+    # --- Billing & Subscription Metrics ---
+
+    def record_cost_incurred(self, provider_id: str, cost: float) -> None:
+        with self._lock:
+            self._monthly_cost += cost
+            self._provider_costs[provider_id] = self._provider_costs.get(provider_id, 0.0) + cost
+
+    def record_budget_warning(self) -> None:
+        with self._lock:
+            self._budget_warnings += 1
+
+    def record_budget_violation(self) -> None:
+        with self._lock:
+            self._budget_violations += 1
+
+    def record_invoice_generation(self, duration_ms: float) -> None:
+        with self._lock:
+            self._invoice_generation_count += 1
+            self._recent_invoice_durations.append(duration_ms)
+
+    def set_active_subscriptions(self, plan_counts: dict[str, int]) -> None:
+        with self._lock:
+            self._active_subscriptions = plan_counts.copy()
+
+    def set_mrr(self, mrr: float) -> None:
+        with self._lock:
+            self._mrr = mrr
+
+    def drain_billing_histograms(self) -> dict[str, list[float]]:
+        with self._lock:
+            data = {
+                "invoice_durations": self._recent_invoice_durations,
+            }
+            self._recent_invoice_durations = []
+            return data
+
+    def get_billing_summary(self) -> dict[str, Any]:
+        with self._lock:
+            return {
+                "monthly_cost": self._monthly_cost,
+                "mrr": self._mrr,
+                "budget_violations": self._budget_violations,
+                "budget_warnings": self._budget_warnings,
+                "invoice_generation_count": self._invoice_generation_count,
+                "active_subscriptions": self._active_subscriptions.copy(),
+                "provider_costs": self._provider_costs.copy(),
             }

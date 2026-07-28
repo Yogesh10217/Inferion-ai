@@ -1,4 +1,11 @@
 import pytest
+import os
+if os.path.exists("./test.db"):
+    os.remove("./test.db")
+
+os.environ["AUTH_ENABLED"] = "true"
+os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
+
 from httpx import AsyncClient, ASGITransport
 from typing import AsyncGenerator
 from typing import Dict
@@ -7,32 +14,65 @@ from unittest.mock import patch, MagicMock
 # Assuming FastAPI app can be imported
 from app.main import app
 
+import pytest_asyncio
+
 @pytest.fixture(scope="session")
 def anyio_backend():
     return "asyncio"
 
 @pytest.fixture
-async def client() -> AsyncGenerator[AsyncClient, None]:
-    # Use ASGITransport to mock requests to the FastAPI app
-    # We will mock the DB dependencies inside the tests or endpoints if they aren't configured
-    # For now, let's just provide the client
-    # Note: If the real DB isn't running, this might still fail on real requests
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://testserver") as ac:
-        yield ac
+def get_client():
+    from httpx import AsyncClient, ASGITransport
+    from app.main import app
+    from app.core.database import init_db, async_session_maker
+    import asyncio
+    
+    async def setup_db():
+        await init_db()
+        # Seed test user and org
+        from sqlalchemy.exc import IntegrityError
+        async with async_session_maker() as session:
+            from app.auth.models import User, Role
+            from app.tenant.models import Organization, Membership
+            
+            role = Role(id="admin", name="Admin", description="Admin Role")
+            user = User(id="admin_user_id", username="admin", email="admin@test.com", password_hash="hash")
+            # Create a user with explicit ID to avoid conflict with defaults
+            org = Organization(id="test_org_id", name="Test Org", slug="test-org")
+            membership = Membership(user_id="admin_user_id", organization_id="test_org_id", role_id="admin", status="active")
+            
+            try:
+                session.add_all([role, user, org, membership])
+                await session.commit()
+            except IntegrityError:
+                await session.rollback()
+            
+    # Initialize the in-memory database tables
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(setup_db())
+    
+    def _get_client():
+        transport = ASGITransport(app=app)
+        return AsyncClient(transport=transport, base_url="http://testserver")
+    return _get_client
 
 @pytest.fixture
 def admin_token_headers() -> Dict[str, str]:
-    # Mock JWT token for admin
-    return {"Authorization": "Bearer mock_admin_token"}
+    from app.auth.jwt_service import JWTService
+    token = JWTService.create_access_token({"sub": "admin_user_id"})
+    return {"Authorization": f"Bearer {token}", "X-Organization-Id": "test_org_id"}
 
 @pytest.fixture
 def user1_token_headers() -> Dict[str, str]:
-    return {"Authorization": "Bearer mock_user1_token"}
+    from app.auth.jwt_service import JWTService
+    token = JWTService.create_access_token({"sub": "user1_id"})
+    return {"Authorization": f"Bearer {token}", "X-Organization-Id": "test_org_id"}
 
 @pytest.fixture
 def user2_token_headers() -> Dict[str, str]:
-    return {"Authorization": "Bearer mock_user2_token"}
+    from app.auth.jwt_service import JWTService
+    token = JWTService.create_access_token({"sub": "user2_id"})
+    return {"Authorization": f"Bearer {token}", "X-Organization-Id": "test_org_id"}
 
 @pytest.fixture
 def test_organization() -> dict:

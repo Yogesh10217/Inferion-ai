@@ -21,6 +21,11 @@ from app.api.workspaces import router as ws_router
 from app.api.quotas import router as quotas_router
 from app.api.usage import router as usage_router
 from app.limits.middleware import RateLimitMiddleware
+from app.billing.middleware import BudgetMiddleware
+from app.api.plans import router as plans_router
+from app.api.subscriptions import router as subscriptions_router
+from app.api.budgets import router as budgets_router
+from app.api.billing import router as billing_router
 
 
 @asynccontextmanager
@@ -57,6 +62,7 @@ def create_app() -> FastAPI:
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
     
     # Auth Middlewares
+    app.add_middleware(BudgetMiddleware, budget_service=container.budget_service)
     app.add_middleware(RateLimitMiddleware, rate_limit_service=container.rate_limit_service, quota_service=container.quota_service)
     app.add_middleware(AuthorizationMiddleware)
     app.add_middleware(TenantMiddleware)
@@ -79,6 +85,12 @@ def create_app() -> FastAPI:
         app.include_router(ws_router, prefix=settings.api_prefix)
         app.include_router(quotas_router, prefix=settings.api_prefix)
         app.include_router(usage_router, prefix=settings.api_prefix)
+        
+        # Billing
+        app.include_router(plans_router, prefix=settings.api_prefix)
+        app.include_router(subscriptions_router, prefix=settings.api_prefix)
+        app.include_router(budgets_router, prefix=settings.api_prefix)
+        app.include_router(billing_router, prefix=settings.api_prefix)
         
     if settings.prometheus_enabled:
         app.include_router(metrics_router)

@@ -266,3 +266,57 @@ class PrometheusRegistry:
             subsystem=subsystem,
         )
 
+        # --- Billing & Subscription Metrics ---
+        self.billing_cost_total = Counter(
+            "billing_cost_total",
+            "Total accumulated cost in currency",
+            ["provider_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.budget_exceeded_total = Counter(
+            "budget_exceeded_total",
+            "Total number of hard budget violations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.budget_warnings_total = Counter(
+            "budget_warnings_total",
+            "Total number of budget warning thresholds crossed",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.invoice_generation_total = Counter(
+            "invoice_generation_total",
+            "Total number of invoices generated",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.subscription_plan_total = Gauge(
+            "subscription_plan_total",
+            "Number of organizations on each subscription plan",
+            ["plan_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.monthly_recurring_revenue = Gauge(
+            "monthly_recurring_revenue",
+            "Current MRR calculated from active subscriptions",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.invoice_generation_seconds = Histogram(
+            "invoice_generation_seconds",
+            "Histogram of invoice generation duration",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+            buckets=(0.1, 0.5, 1.0, 5.0, 10.0, 30.0, 60.0, float("inf")),
+        )
+

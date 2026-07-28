@@ -24,6 +24,11 @@ from app.limits.rate_limit_service import RateLimitService
 from app.limits.quota_service import QuotaService
 from app.limits.usage_service import UsageService
 
+from app.billing.pricing_service import PricingService
+from app.billing.plan_service import PlanService, SubscriptionService
+from app.billing.budget_service import BudgetService
+from app.billing.invoice_service import InvoiceService
+
 
 class ServiceContainer:
     """Dependency injection container for LLM Inference Engine services.
@@ -157,6 +162,13 @@ class ServiceContainer:
         )
         self.quota_service = QuotaService(session_factory=async_session_maker, metrics=self.metrics_service)
         self.usage_service = UsageService(session_factory=async_session_maker, metrics=self.metrics_service)
+
+        # Initialize billing & subscription services
+        self.pricing_service = PricingService(session_factory=async_session_maker)
+        self.plan_service = PlanService(session_factory=async_session_maker)
+        self.subscription_service = SubscriptionService(session_factory=async_session_maker)
+        self.budget_service = BudgetService(session_factory=async_session_maker, metrics_service=self.metrics_service)
+        self.invoice_service = InvoiceService(session_factory=async_session_maker, pricing_service=self.pricing_service, metrics=self.metrics_service)
 
         # Initialize default inference service
         self.inference_service = DefaultInferenceService(

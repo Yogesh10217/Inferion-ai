@@ -16,10 +16,16 @@ class MetricsMapper:
         # Store last observed counts to calculate deltas for Prometheus Counters
         self._last_api_requests = 0
         self._last_api_errors = 0
-        self._last_scheduler_processed = 0
-        self._last_batches_dispatched = 0
-        self._last_requests_batched = 0
-        self._last_single_fallbacks = 0
+        self._last_active_batches = 0
+        self._last_tokens_consumed = 0
+        self._last_quota_violations = 0
+        self._last_redis_fallbacks = 0
+        
+        # Billing state tracking
+        self._last_budget_violations = 0
+        self._last_budget_warnings = 0
+        self._last_invoice_count = 0
+        self._last_provider_costs: dict[str, float] = {}
         
         self._last_cache_writes = 0
         self._last_cache_evictions = 0
@@ -168,8 +174,39 @@ class MetricsMapper:
         self.registry.tokens_consumed_total.inc(current_tokens - self._last_tokens_consumed)
         self._last_tokens_consumed = current_tokens
 
-        current_fallbacks = limits_summary.get("redis_fallback_events", 0)
-        self.registry.redis_fallbacks_total.inc(current_fallbacks - self._last_redis_fallbacks)
-        self._last_redis_fallbacks = current_fallbacks
+        if limits_summary.get("redis_fallback_events", 0) > self._last_redis_fallbacks:
+            self.registry.redis_fallbacks_total.inc(limits_summary.get("redis_fallback_events", 0) - self._last_redis_fallbacks)
+            self._last_redis_fallbacks = limits_summary.get("redis_fallback_events", 0)
+
+        # Sync Billing Metrics
+        billing_summary = self.metrics.get_billing_summary()
+        
+        if billing_summary["budget_violations"] > self._last_budget_violations:
+            self.registry.budget_exceeded_total.inc(billing_summary["budget_violations"] - self._last_budget_violations)
+            self._last_budget_violations = billing_summary["budget_violations"]
+
+        if billing_summary["budget_warnings"] > self._last_budget_warnings:
+            self.registry.budget_warnings_total.inc(billing_summary["budget_warnings"] - self._last_budget_warnings)
+            self._last_budget_warnings = billing_summary["budget_warnings"]
+            
+        if billing_summary["invoice_generation_count"] > self._last_invoice_count:
+            self.registry.invoice_generation_total.inc(billing_summary["invoice_generation_count"] - self._last_invoice_count)
+            self._last_invoice_count = billing_summary["invoice_generation_count"]
+            
+        self.registry.monthly_recurring_revenue.set(billing_summary["mrr"])
+        
+        for plan_id, count in billing_summary["active_subscriptions"].items():
+            self.registry.subscription_plan_total.labels(plan_id=plan_id).set(count)
+            
+        for provider, cost in billing_summary["provider_costs"].items():
+            last_cost = self._last_provider_costs.get(provider, 0.0)
+            if cost > last_cost:
+                self.registry.billing_cost_total.labels(provider_id=provider).inc(cost - last_cost)
+                self._last_provider_costs[provider] = cost
+
+        # Drain and sync billing histograms
+        billing_histograms = self.metrics.drain_billing_histograms()
+        for duration in billing_histograms["invoice_durations"]:
+            self.registry.invoice_generation_seconds.observe(duration / 1000.0)
 
         self.registry.concurrent_requests.set(limits_summary.get("concurrent_requests", 0))

@@ -23,12 +23,15 @@ Most developers just call OpenAI's API — this project shows you how inference 
 
 ## 🏗️ Architecture Overview
 
-The system is split into modular layers:
-- **API/Transport Layer**: Handles HTTP serialization, CORS, and request routing.
-- **Observability Middleware**: Measures latencies, manages request ID correlation headers, and outputs JSON log statements.
-- **Service Layer**: Manages business flow orchestrations (Inference orchestration, Health aggregation).
-- **Streaming Manager**: Intermediary between InferenceService and providers for streaming lifecycle management.
-- **Registry and Routing Layer**: Manages local models registry and resolves provider mappings.
+The project consists of several core subsystems that work together to provide a robust, multi-tenant inference platform:
+
+- **Tenant Isolation**: A multi-tenant architecture with robust `TenantMiddleware` separating Organizations, Workspaces, Memberships, and Roles. Supports scoped API keys and context propagation down to the lowest service layer.
+- **Quotas & Rate Limiting**: Extensible, multi-level limits (User, API Key, Workspace, Organization) backed by Redis algorithms (Fixed Window, Token Bucket, Sliding Window Log) ensuring reliable throughput. Usage tracking is detached from inference paths via high-performance, async `UsageEventEmitter`.
+- **Billing & Subscriptions**: Subscription plans referencing reusable pricing models and quota policies. `CostCalculator` translates usage directly to structured invoices, while `BudgetMiddleware` enforces soft and hard organizational spend limits dynamically with customizable alert thresholds.
+- **Routing & Failover**: An intelligent `RequestRouter` dynamically distributes traffic across multiple LLM providers based on custom load balancing strategies and robust fallback/failover mechanics. 
+- **Batching & Scheduling**: Advanced `RequestScheduler` aggregates asynchronous incoming queries into grouped workloads optimized for the provider's capabilities.
+- **Cache**: Fast exact-match caching reduces latency and prevents redundant queries.
+- **Streaming**: Full SSE implementation supporting real-time token stream delivery for supported models.
 
 ## Observability Stack
 
