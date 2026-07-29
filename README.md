@@ -346,3 +346,13 @@ See [ROADMAP.md](ROADMAP.md) for details on future development phases including 
 ## 📜 License
 
 MIT — see [LICENSE](LICENSE)
+
+## Plugin Framework (Phase 4.0)
+
+The LLM Inference Engine now supports an extensible AI Gateway via a production-grade plugin framework. Plugins extend the platform without modifying the core source code. See pp/plugins/examples for reference plugins.
+
+### Plugin Lifecycle
+Plugins support the following states: Install, Initialize, Enable, Disable, Uninstall.
+
+### Permission Model
+Capability-based permissions (e.g., events.publish) are enforced through a secure PluginContext injected into every plugin.

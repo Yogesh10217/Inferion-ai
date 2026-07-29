@@ -1,0 +1,163 @@
+{
+  "title": "Plugins",
+  "uid": "plugins",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total Plugins",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "llm_engine_inference_plugins_total",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Enabled Plugins",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "llm_engine_inference_plugin_enabled_total",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Plugin Invocations (Rate)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(llm_engine_inference_plugin_invocations_total[1m])) by (plugin_id)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Plugin Failures",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(llm_engine_inference_plugin_failures_total[1m])) by (plugin_id)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Plugin Timeouts",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(llm_engine_inference_plugin_timeouts_total[1m])) by (plugin_id)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Plugin Execution Latency (95th)",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(llm_engine_inference_plugin_execution_seconds_bucket[1m])) by (le, plugin_id))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "provider",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(llm_engine_inference_provider_requests_total, provider_id)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*"
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(llm_engine_inference_provider_requests_total{provider_id=~\"$provider\"}, instance_id)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*"
+      }
+    ]
+  }
+}

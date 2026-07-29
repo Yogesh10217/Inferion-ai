@@ -56,6 +56,12 @@ async def lifespan(app: FastAPI):
             payload={"app_name": container.settings.app_name, "version": container.settings.app_version},
         )
 
+        # Initialize plugins
+        from app.plugins import PluginManager
+        container.plugin_manager = PluginManager()
+        await container.plugin_manager.initialize()
+        await container.plugin_manager.load_plugins()
+
     yield
 
     if hasattr(app.state, "container"):
@@ -128,6 +134,10 @@ def create_app() -> FastAPI:
         
         # Webhooks
         app.include_router(webhooks_router, prefix=settings.api_prefix)
+        
+        # Plugins
+        from app.plugins.plugin_api import router as plugins_router
+        app.include_router(plugins_router, prefix=settings.api_prefix)
         
     if settings.prometheus_enabled:
         app.include_router(metrics_router)

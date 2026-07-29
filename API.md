@@ -87,3 +87,15 @@ Response:
 ## Streaming
 
 Set `stream: true` to receive a Server-Sent Events stream with `text/event-stream`.
+
+## Plugin Admin API
+
+- GET /v1/plugins: List plugins
+- GET /v1/plugins/{id}: Get plugin details
+- POST /v1/plugins/install: Install plugin
+- PATCH /v1/plugins/{id}/enable: Enable plugin
+- PATCH /v1/plugins/{id}/disable: Disable plugin
+- DELETE /v1/plugins/{id}: Uninstall plugin
+- POST /v1/plugins/{id}/reload: Reload plugin
+- POST /v1/plugins/{id}/restart: Restart plugin
+- GET /v1/plugins/{id}/health: Check plugin health

@@ -125,5 +125,16 @@ webhook_panels = [
 with open(f"{OUT_DIR}/webhooks.json", "w") as f:
     json.dump(wrap_dashboard("Webhooks and Events", webhook_panels), f, indent=2)
 
-print("Dashboards generated successfully.")
+# 8. Plugins Dashboard
+plugin_panels = [
+    create_panel(1, "Total Plugins", "llm_engine_inference_plugins_total", type="stat", x=0, y=0, w=12),
+    create_panel(2, "Enabled Plugins", "llm_engine_inference_plugin_enabled_total", type="stat", x=12, y=0, w=12),
+    create_panel(3, "Plugin Invocations (Rate)", "sum(rate(llm_engine_inference_plugin_invocations_total[1m])) by (plugin_id)", x=0, y=8, w=12),
+    create_panel(4, "Plugin Failures", "sum(rate(llm_engine_inference_plugin_failures_total[1m])) by (plugin_id)", x=12, y=8, w=12),
+    create_panel(5, "Plugin Timeouts", "sum(rate(llm_engine_inference_plugin_timeouts_total[1m])) by (plugin_id)", x=0, y=16, w=12),
+    create_panel(6, "Plugin Execution Latency (95th)", "histogram_quantile(0.95, sum(rate(llm_engine_inference_plugin_execution_seconds_bucket[1m])) by (le, plugin_id))", x=12, y=16, w=12, format="s"),
+]
+with open(f"{OUT_DIR}/plugins.json", "w") as f:
+    json.dump(wrap_dashboard("Plugins", plugin_panels), f, indent=2)
 
+print("Dashboards generated successfully.")

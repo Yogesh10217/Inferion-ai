@@ -1,0 +1,1423 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LLM Inference Engine",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "description": "Return a basic health status for the service.",
+        "operationId": "health_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health V1 Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Ready",
+        "description": "Return readiness information for the service.",
+        "operationId": "ready_v1_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Ready V1 Ready Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/live": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Live",
+        "description": "Return liveness information for the service.",
+        "operationId": "live_v1_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Live V1 Live Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/models": {
+      "get": {
+        "tags": [
+          "models"
+        ],
+        "summary": "List Models",
+        "description": "List available models in an OpenAI-compatible format.",
+        "operationId": "list_models_v1_models_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/chat/completions": {
+      "post": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Create Chat Completion",
+        "description": "Create a chat completion response or stream it when requested.",
+        "operationId": "create_chat_completion_v1_chat_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/system": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Get System Stats",
+        "description": "Retrieve overarching platform statistics.",
+        "operationId": "get_system_stats_v1_admin_system_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/health": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Get Admin Health",
+        "description": "Retrieve comprehensive system health (DB, Redis, Providers).",
+        "operationId": "get_admin_health_v1_admin_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/users": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Users",
+        "operationId": "list_users_v1_admin_users_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/users/{user_id}": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Update User",
+        "operationId": "update_user_v1_admin_users__user_id__patch",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/organizations": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Organizations",
+        "operationId": "list_organizations_v1_admin_organizations_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/organizations/{org_id}": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Update Organization",
+        "operationId": "update_organization_v1_admin_organizations__org_id__patch",
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Org Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/workspaces": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Workspaces",
+        "operationId": "list_workspaces_v1_admin_workspaces_get",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/workspaces/{workspace_id}": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Update Workspace",
+        "operationId": "update_workspace_v1_admin_workspaces__workspace_id__patch",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Workspace Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true,
+                "title": "Update Data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/api-keys": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Api Keys",
+        "operationId": "list_api_keys_v1_admin_api_keys_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/api-keys/{api_key_id}": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Update Api Key",
+        "operationId": "update_api_key_v1_admin_api_keys__api_key_id__patch",
+        "parameters": [
+          {
+            "name": "api_key_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Api Key Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/APIKeyUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/subscriptions": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Subscriptions",
+        "operationId": "list_subscriptions_v1_admin_subscriptions_get",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/audit": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Search Audit Events",
+        "operationId": "search_audit_events_v1_admin_audit_get",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "actor_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Actor Id"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Severity"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/reports": {
+      "post": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Create Report",
+        "description": "Asynchronously generate a report.",
+        "operationId": "create_report_v1_admin_reports_post",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Reports",
+        "operationId": "list_reports_v1_admin_reports_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "summary": "Get Metrics",
+        "description": "Expose Prometheus-compatible metrics.",
+        "operationId": "get_metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "APIKeyUpdate": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "grace_period_days": {
+            "type": "integer",
+            "title": "Grace Period Days",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "APIKeyUpdate"
+      },
+      "ChatCompletionChoiceMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "The role of the generated message.",
+            "default": "assistant"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "The content of the generated message."
+          }
+        },
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "title": "ChatCompletionChoiceMessage",
+        "description": "Message payload contained in a chat completion choice."
+      },
+      "ChatCompletionRequest": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "The model to use for the completion.",
+            "examples": [
+              "gpt-4o-mini"
+            ]
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Messages",
+            "description": "A list of messages comprising the conversation so far."
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature",
+            "description": "Sampling temperature between 0 and 2."
+          },
+          "top_p": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top P",
+            "description": "Nucleus sampling probability threshold between 0 and 1."
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "Maximum number of tokens to generate."
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "description": "Whether to stream the response as server-sent events.",
+            "default": false
+          },
+          "stop": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop",
+            "description": "Optional stop sequence(s) for generation."
+          },
+          "frequency_penalty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2.0,
+                "minimum": -2.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency Penalty",
+            "description": "Penalty for repeated tokens."
+          },
+          "presence_penalty": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2.0,
+                "minimum": -2.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Presence Penalty",
+            "description": "Penalty for repeated topics."
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata",
+            "description": "Optional provider-specific metadata."
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "title": "ChatCompletionRequest",
+        "description": "OpenAI-compatible chat completion request model."
+      },
+      "ChatCompletionResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Unique identifier for the completion."
+          },
+          "object": {
+            "type": "string",
+            "title": "Object",
+            "description": "The object type.",
+            "default": "chat.completion"
+          },
+          "created": {
+            "type": "integer",
+            "title": "Created",
+            "description": "Unix timestamp of the completion creation time."
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "The model used to generate the completion."
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            },
+            "type": "array",
+            "title": "Choices",
+            "description": "The list of completion choices."
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Token usage statistics for the request."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created",
+          "model",
+          "choices"
+        ],
+        "title": "ChatCompletionResponse",
+        "description": "OpenAI-compatible chat completion response model."
+      },
+      "ChatMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "title": "Role",
+            "description": "The role of the message author.",
+            "examples": [
+              "user"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "The content of the message.",
+            "examples": [
+              "Hello"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ChatMessage",
+        "description": "A single chat message in the OpenAI-style request payload."
+      },
+      "Choice": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Index",
+            "description": "The index of the choice."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ChatCompletionChoiceMessage",
+            "description": "The generated message."
+          },
+          "finish_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finish Reason",
+            "description": "The reason the generation stopped."
+          }
+        },
+        "type": "object",
+        "required": [
+          "index",
+          "message"
+        ],
+        "title": "Choice",
+        "description": "A single completion choice in an OpenAI-compatible response."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ModelInfo": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The model identifier."
+          },
+          "object": {
+            "type": "string",
+            "title": "Object",
+            "description": "The object type.",
+            "default": "model"
+          },
+          "created": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created",
+            "description": "Unix timestamp of model creation."
+          },
+          "owned_by": {
+            "type": "string",
+            "title": "Owned By",
+            "description": "The owner of the model.",
+            "default": "system"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "ModelInfo",
+        "description": "A single entry in the OpenAI-compatible models list response."
+      },
+      "ModelListResponse": {
+        "properties": {
+          "object": {
+            "type": "string",
+            "title": "Object",
+            "description": "The object type.",
+            "default": "list"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ModelInfo"
+            },
+            "type": "array",
+            "title": "Data",
+            "description": "A list of model objects."
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "ModelListResponse",
+        "description": "OpenAI-compatible models list response."
+      },
+      "OrganizationUpdate": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "OrganizationUpdate"
+      },
+      "Usage": {
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Prompt Tokens"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Completion Tokens"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total Tokens"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens"
+        ],
+        "title": "Usage",
+        "description": "Token usage statistics for a completion response."
+      },
+      "UserUpdate": {
+        "properties": {
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_active"
+        ],
+        "title": "UserUpdate"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

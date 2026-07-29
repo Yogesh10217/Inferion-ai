@@ -391,5 +391,68 @@ class PrometheusRegistry:
             subsystem=subsystem,
         )
 
-
-
+        # --- Plugin Metrics ---
+        self.plugins_total = Gauge(
+            "plugins_total",
+            "Total number of installed plugins",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.plugin_enabled_total = Gauge(
+            "plugin_enabled_total",
+            "Total number of enabled plugins",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.plugin_failures_total = Counter(
+            "plugin_failures_total",
+            "Total number of plugin execution failures",
+            ["plugin_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.plugin_invocations_total = Counter(
+            "plugin_invocations_total",
+            "Total number of plugin invocations",
+            ["plugin_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.plugin_timeouts_total = Counter(
+            "plugin_timeouts_total",
+            "Total number of plugin timeouts",
+            ["plugin_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.plugin_permission_denials_total = Counter(
+            "plugin_permission_denials_total",
+            "Total number of plugin permission denials",
+            ["plugin_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.plugin_execution_seconds = Histogram(
+            "plugin_execution_seconds",
+            "Histogram of plugin execution duration",
+            ["plugin_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+            buckets=(0.01, 0.05, 0.1, 0.5, 1.0, 5.0, float("inf")),
+        )
+        self.plugin_load_seconds = Histogram(
+            "plugin_load_seconds",
+            "Histogram of plugin load times",
+            ["plugin_id"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+            buckets=(0.1, 0.5, 1.0, 5.0, 10.0, float("inf")),
+        )
