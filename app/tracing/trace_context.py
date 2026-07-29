@@ -1,0 +1,2 @@
+class TraceContext:
+    pass
