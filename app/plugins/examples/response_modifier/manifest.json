@@ -1,0 +1,11 @@
+{
+  "id": "response_modifier",
+  "name": "Response Modifier Plugin",
+  "version": "1.0.0",
+  "description": "Attaches gateway signature to response headers or body",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:ResponseModifierPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": []
+}

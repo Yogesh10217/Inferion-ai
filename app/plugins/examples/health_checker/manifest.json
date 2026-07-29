@@ -1,0 +1,11 @@
+{
+  "id": "health_checker",
+  "name": "Health Checker Plugin",
+  "version": "1.0.0",
+  "description": "Monitors system health hooks",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:HealthCheckerPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": []
+}

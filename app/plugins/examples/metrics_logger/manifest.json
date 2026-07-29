@@ -1,0 +1,11 @@
+{
+  "id": "metrics_logger",
+  "name": "Metrics Logger Plugin",
+  "version": "1.0.0",
+  "description": "Logs inference metrics on completion",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:MetricsLoggerPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": []
+}

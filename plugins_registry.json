@@ -1,0 +1,58 @@
+{
+  "audit_logger": {
+    "plugin_id": "audit_logger",
+    "version": "1.0.0",
+    "enabled": false,
+    "dependencies": {},
+    "installed_at": 1785337686.8992162,
+    "health_status": "healthy"
+  },
+  "event_listener": {
+    "plugin_id": "event_listener",
+    "version": "1.0.0",
+    "enabled": false,
+    "dependencies": {},
+    "installed_at": 1785337686.901436,
+    "health_status": "healthy"
+  },
+  "health_checker": {
+    "plugin_id": "health_checker",
+    "version": "1.0.0",
+    "enabled": false,
+    "dependencies": {},
+    "installed_at": 1785337686.9038692,
+    "health_status": "healthy"
+  },
+  "metrics_logger": {
+    "plugin_id": "metrics_logger",
+    "version": "1.0.0",
+    "enabled": false,
+    "dependencies": {},
+    "installed_at": 1785337686.9099598,
+    "health_status": "healthy"
+  },
+  "request_logger": {
+    "plugin_id": "request_logger",
+    "version": "1.0.0",
+    "enabled": false,
+    "dependencies": {},
+    "installed_at": 1785337686.9169092,
+    "health_status": "healthy"
+  },
+  "response_modifier": {
+    "plugin_id": "response_modifier",
+    "version": "1.0.0",
+    "enabled": true,
+    "dependencies": {},
+    "installed_at": 1785337686.919906,
+    "health_status": "healthy"
+  },
+  "hello_world": {
+    "plugin_id": "hello_world",
+    "version": "1.0.0",
+    "enabled": false,
+    "dependencies": {},
+    "installed_at": 1785337686.9069433,
+    "health_status": "healthy"
+  }
+}

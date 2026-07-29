@@ -1,0 +1,11 @@
+{
+  "id": "request_logger",
+  "name": "Request Logger Plugin",
+  "version": "1.0.0",
+  "description": "Logs details of incoming inference requests",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:RequestLoggerPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": []
+}

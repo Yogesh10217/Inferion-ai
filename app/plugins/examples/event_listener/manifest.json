@@ -1,0 +1,16 @@
+{
+  "id": "event_listener",
+  "name": "Event Listener Plugin",
+  "version": "1.0.0",
+  "description": "Listens for engine events and publishes telemetry",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:EventListenerPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": [
+    {
+      "action": "events.publish",
+      "resource": "*"
+    }
+  ]
+}

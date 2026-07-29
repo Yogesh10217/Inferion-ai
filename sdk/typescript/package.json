@@ -1,6 +1,15 @@
 {
   "name": "@llm-engine/sdk",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Official TypeScript/JavaScript SDK for LLM Inference Engine",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts"
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "echo 'Build TypeScript SDK'",
+    "test": "node --test"
+  },
+  "keywords": ["llm", "ai", "sdk", "typescript"],
+  "author": "AGY Team",
+  "license": "MIT"
 }

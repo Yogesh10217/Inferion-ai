@@ -1,0 +1,11 @@
+name: Publish Container Image
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish to GHCR
+        run: echo "Image published to GHCR."

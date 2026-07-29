@@ -1,0 +1,8 @@
+LLM Inference Engine Gateway has been successfully deployed!
+
+Get the application URL:
+{{- if .Values.ingress.enabled }}
+http://{{ (index .Values.ingress.hosts 0).host }}
+{{- else }}
+kubectl port-forward svc/{{ include "llm-engine.fullname" . }}-gateway 8080:80
+{{- end }}

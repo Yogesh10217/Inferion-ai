@@ -1,0 +1,11 @@
+{
+  "id": "hello_world",
+  "name": "Hello World Plugin",
+  "version": "1.0.0",
+  "description": "Basic reference plugin demonstrating lifecycle hooks",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:HelloWorldPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": []
+}

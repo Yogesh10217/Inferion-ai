@@ -1,0 +1,11 @@
+{
+  "id": "audit_logger",
+  "name": "Audit Logger Plugin",
+  "version": "1.0.0",
+  "description": "Records audit logs for billing and provider events",
+  "author": "AGY Team",
+  "license": "MIT",
+  "entrypoint": "plugin.py:AuditLoggerPlugin",
+  "minimum_engine_version": "1.0.0",
+  "permissions": []
+}
