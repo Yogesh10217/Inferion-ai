@@ -29,6 +29,8 @@ import app.tenant.models
 import app.limits.models
 import app.billing.models
 import app.admin.models
+import app.events.event_models
+import app.knowledge.models
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:

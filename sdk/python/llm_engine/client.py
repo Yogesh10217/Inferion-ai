@@ -1,3 +1,4 @@
+from .knowledge import KnowledgeClient, AsyncKnowledgeClient
 import httpx
 from typing import List, Dict, Any, Optional, AsyncGenerator
 from .auth import AuthProvider, APIKeyAuth, BearerAuth
@@ -27,6 +28,7 @@ class LLMEngineClient:
             headers.update(APIKeyAuth(api_key).get_headers())
 
         self.client = httpx.Client(base_url=self.base_url, headers=headers, timeout=self.timeout)
+        self.knowledge = KnowledgeClient(self.client)
 
     def health(self) -> dict:
         res = self.client.get("/health")
@@ -70,6 +72,7 @@ class AsyncLLMEngineClient:
             headers.update(APIKeyAuth(api_key).get_headers())
 
         self.client = httpx.AsyncClient(base_url=self.base_url, headers=headers, timeout=self.timeout)
+        self.knowledge = AsyncKnowledgeClient(self.client)
 
     async def health(self) -> dict:
         res = await self.client.get("/health")

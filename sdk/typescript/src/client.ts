@@ -1,3 +1,4 @@
+import { KnowledgeClient } from './knowledge.js';
 import { ChatCompletionRequest, ChatCompletionResponse } from './models.js';
 import { APIKeyAuth } from './auth.js';
 import { AuthenticationError, RateLimitError, SDKError } from './errors.js';
@@ -10,6 +11,7 @@ export interface ClientConfig {
 }
 
 export class LLMEngineClient {
+  public knowledge: KnowledgeClient;
   private baseUrl: string;
   private headers: Record<string, string>;
 
@@ -20,6 +22,7 @@ export class LLMEngineClient {
     if (config.organizationId) {
       this.headers['X-Organization-ID'] = config.organizationId;
     }
+    this.knowledge = new KnowledgeClient(fetch, this.baseUrl, this.headers);
     if (config.apiKey) {
       Object.assign(this.headers, new APIKeyAuth(config.apiKey).getHeaders());
     }

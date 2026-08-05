@@ -8,6 +8,7 @@ from .exceptions import (
     APIError,
 )
 from .models import ChatCompletionRequest, ChatCompletionResponse, ModelInfo
+from .knowledge import KnowledgeClient
 
 __all__ = [
     "LLMEngineClient",
@@ -22,4 +23,5 @@ __all__ = [
     "ChatCompletionRequest",
     "ChatCompletionResponse",
     "ModelInfo",
+    "KnowledgeClient",
 ]

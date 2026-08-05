@@ -17,6 +17,7 @@ type Config struct {
 }
 
 type Client struct {
+	Knowledge *KnowledgeClient
 	baseURL string
 	apiKey  string
 	orgID   string
@@ -30,11 +31,14 @@ func NewClient(cfg Config) *Client {
 	if cfg.Timeout == 0 {
 		cfg.Timeout = 30 * time.Second
 	}
-	return &Client{
+	c := &Client{
 		baseURL: cfg.BaseURL,
 		apiKey:  cfg.APIKey,
 		orgID:   cfg.OrganizationID,
 		hc:      &http.Client{Timeout: cfg.Timeout},
+	}
+	c.Knowledge = &KnowledgeClient{client: c}
+	return c,
 	}
 }
 

@@ -25,6 +25,11 @@ async def create_chat_completion(
 ) -> ChatCompletionResponse | StreamingResponse:
     """Create a chat completion response or stream it when requested."""
     request.state.model = payload.model
+    # TODO: Integrate Knowledge/Retrieval before inference here
+    # Example:
+    # context = retrieval_service.search(payload.messages[-1].content)
+    # payload = context_builder.inject(payload, context)
+
     if hasattr(request.app.state, "container"):
         model_meta = request.app.state.container.registry.get_model(payload.model)
         if model_meta:
