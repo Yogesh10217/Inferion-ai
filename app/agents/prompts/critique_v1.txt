@@ -1,0 +1,10 @@
+Evaluate the candidate response against the user request and provide quality feedback.
+
+Request:
+{request}
+
+Candidate Response:
+{response}
+
+Critique:
+Provide a constructive quality rating (1-10) and improvement points.

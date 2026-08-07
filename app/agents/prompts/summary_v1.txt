@@ -1,0 +1,4 @@
+Summarize the following conversation and tool execution log into a concise context for long-term memory:
+
+History:
+{history}

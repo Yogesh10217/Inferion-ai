@@ -1,0 +1,14 @@
+Analyze the execution trajectory and reflect on potential errors, tool misuses, or missing information.
+
+Goal:
+{goal}
+
+Execution Steps & Observations:
+{history}
+
+Identify:
+1. Were any tools misused or produced errors?
+2. Is the answer complete and accurate?
+3. What changes or retries are recommended?
+
+Return valid JSON with keys: "is_valid" (boolean), "critique" (string), "retry_recommended" (boolean), "revised_plan" (list of steps if retry recommended).
