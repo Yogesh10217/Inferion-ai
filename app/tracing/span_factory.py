@@ -68,3 +68,87 @@ class SpanFactory:
         span = cls._tracer().start_span(f"background_task.{job_name}")
         span.set_attribute(TraceAttributes.COMPONENT, "background_job")
         return span
+
+    @classmethod
+    def create_workflow_start_span(cls, workflow_id: str, run_id: str) -> Span:
+        span = cls._tracer().start_span("workflow.start")
+        span.set_attribute(TraceAttributes.COMPONENT, "workflow")
+        span.set_attribute("workflow.id", workflow_id)
+        span.set_attribute("workflow.run_id", run_id)
+        return span
+
+    @classmethod
+    def create_workflow_node_span(cls, workflow_id: str, run_id: str, node_id: str, node_type: str) -> Span:
+        span = cls._tracer().start_span("workflow.node")
+        span.set_attribute(TraceAttributes.COMPONENT, "workflow")
+        span.set_attribute("workflow.id", workflow_id)
+        span.set_attribute("workflow.run_id", run_id)
+        span.set_attribute("workflow.node_id", node_id)
+        span.set_attribute("workflow.node_type", node_type)
+        return span
+
+    @classmethod
+    def create_workflow_approval_span(cls, workflow_id: str, run_id: str, node_id: str) -> Span:
+        span = cls._tracer().start_span("workflow.approval")
+        span.set_attribute(TraceAttributes.COMPONENT, "workflow")
+        span.set_attribute("workflow.id", workflow_id)
+        span.set_attribute("workflow.run_id", run_id)
+        span.set_attribute("workflow.node_id", node_id)
+        return span
+
+    @classmethod
+    def create_memory_store_span(cls, memory_id: str, memory_type: str) -> Span:
+        span = cls._tracer().start_span("memory.store")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.id", memory_id)
+        span.set_attribute("memory.type", memory_type)
+        return span
+
+    @classmethod
+    def create_memory_retrieve_span(cls, query: str) -> Span:
+        span = cls._tracer().start_span("memory.retrieve")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.query", query)
+        return span
+
+    @classmethod
+    def create_memory_search_span(cls, query: str) -> Span:
+        span = cls._tracer().start_span("memory.search")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.query", query)
+        return span
+
+    @classmethod
+    def create_memory_compress_span(cls, session_id: str) -> Span:
+        span = cls._tracer().start_span("memory.compress")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.session_id", session_id)
+        return span
+
+    @classmethod
+    def create_memory_summarize_span(cls, text_len: int) -> Span:
+        span = cls._tracer().start_span("memory.summarize")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.text_length", text_len)
+        return span
+
+    @classmethod
+    def create_memory_embed_span(cls, text: str) -> Span:
+        span = cls._tracer().start_span("memory.embed")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.text", text)
+        return span
+
+    @classmethod
+    def create_memory_archive_span(cls, memory_id: str) -> Span:
+        span = cls._tracer().start_span("memory.archive")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.id", memory_id)
+        return span
+
+    @classmethod
+    def create_memory_expire_span(cls, count: int) -> Span:
+        span = cls._tracer().start_span("memory.expire")
+        span.set_attribute(TraceAttributes.COMPONENT, "memory")
+        span.set_attribute("memory.count", count)
+        return span

@@ -28,6 +28,8 @@ from app.api.budgets import router as budgets_router
 from app.api.billing import router as billing_router
 from app.api.webhooks import router as webhooks_router
 from app.api.v1.agents import router as agents_router
+from app.api.v1.workflows import router as workflows_router
+from app.api.v1.memory import router as memory_router
 from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
 from app.core.database import async_session_maker
 
@@ -118,7 +120,9 @@ def create_app() -> FastAPI:
     app.include_router(models_router, prefix=settings.api_prefix)
     app.include_router(chat_router, prefix=settings.api_prefix)
     app.include_router(admin_router, prefix=settings.api_prefix)
-    app.include_router(agents_router, prefix=settings.api_prefix)
+    app.include_router(agents_router)
+    app.include_router(workflows_router)
+    app.include_router(memory_router)
     
     if settings.auth_enabled:
         app.include_router(auth_router, prefix=settings.api_prefix)

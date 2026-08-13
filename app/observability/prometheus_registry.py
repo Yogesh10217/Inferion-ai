@@ -456,3 +456,151 @@ class PrometheusRegistry:
             subsystem=subsystem,
             buckets=(0.1, 0.5, 1.0, 5.0, 10.0, float("inf")),
         )
+
+        # --- Workflow Metrics ---
+        self.workflow_runs_total = Counter(
+            "workflow_runs_total",
+            "Total number of workflow runs initiated",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.workflow_failures_total = Counter(
+            "workflow_failures_total",
+            "Total number of failed workflow runs",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.workflow_pauses_total = Counter(
+            "workflow_pauses_total",
+            "Total number of paused workflow runs",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.workflow_resumes_total = Counter(
+            "workflow_resumes_total",
+            "Total number of resumed workflow runs",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.workflow_approval_requests_total = Counter(
+            "workflow_approval_requests_total",
+            "Total number of human approval requests created",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.workflow_node_executions_total = Counter(
+            "workflow_node_executions_total",
+            "Total number of workflow node executions",
+            ["node_type"],
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.workflow_duration_seconds = Histogram(
+            "workflow_duration_seconds",
+            "Histogram of workflow run execution duration",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+            buckets=(0.1, 0.5, 1.0, 5.0, 10.0, 30.0, 60.0, 300.0, float("inf")),
+        )
+
+        # --- Memory Metrics ---
+        self.memory_reads_total = Counter(
+            "memory_reads_total",
+            "Total number of memory read operations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_writes_total = Counter(
+            "memory_writes_total",
+            "Total number of memory write operations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_searches_total = Counter(
+            "memory_searches_total",
+            "Total number of memory search queries",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_compressions_total = Counter(
+            "memory_compressions_total",
+            "Total number of memory compression operations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_summaries_total = Counter(
+            "memory_summaries_total",
+            "Total number of memory summary operations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_expirations_total = Counter(
+            "memory_expirations_total",
+            "Total number of memory record expirations",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_embeddings_total = Counter(
+            "memory_embeddings_total",
+            "Total number of memory embeddings generated",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_vector_search_total = Counter(
+            "memory_vector_search_total",
+            "Total number of memory vector searches",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_cache_hits_total = Counter(
+            "memory_cache_hits_total",
+            "Total number of memory cache hits",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_cache_misses_total = Counter(
+            "memory_cache_misses_total",
+            "Total number of memory cache misses",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_storage_bytes = Gauge(
+            "memory_storage_bytes",
+            "Total memory storage usage in bytes",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+        )
+        self.memory_retrieval_latency_seconds = Histogram(
+            "memory_retrieval_latency_seconds",
+            "Histogram of memory retrieval latency",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+            buckets=(0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0, float("inf")),
+        )
+        self.memory_compression_latency_seconds = Histogram(
+            "memory_compression_latency_seconds",
+            "Histogram of memory compression latency",
+            registry=self.registry,
+            namespace=namespace,
+            subsystem=subsystem,
+            buckets=(0.01, 0.05, 0.1, 0.5, 1.0, 5.0, float("inf")),
+        )

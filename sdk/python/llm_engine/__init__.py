@@ -9,6 +9,8 @@ from .exceptions import (
 )
 from .models import ChatCompletionRequest, ChatCompletionResponse, ModelInfo
 from .knowledge import KnowledgeClient
+from .workflows import WorkflowClient
+from .memory import MemoryClient
 
 __all__ = [
     "LLMEngineClient",
@@ -24,4 +26,6 @@ __all__ = [
     "ChatCompletionResponse",
     "ModelInfo",
     "KnowledgeClient",
+    "WorkflowClient",
+    "MemoryClient",
 ]

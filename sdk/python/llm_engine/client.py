@@ -1,5 +1,7 @@
 from .knowledge import KnowledgeClient, AsyncKnowledgeClient
 from .agents import AgentsClient
+from .workflows import WorkflowClient
+from .memory import MemoryClient
 import httpx
 from typing import List, Dict, Any, Optional, AsyncGenerator
 from .auth import AuthProvider, APIKeyAuth, BearerAuth
@@ -31,6 +33,8 @@ class LLMEngineClient:
         self.client = httpx.Client(base_url=self.base_url, headers=headers, timeout=self.timeout)
         self.knowledge = KnowledgeClient(self.client)
         self.agents = AgentsClient(self.client, self.base_url)
+        self.workflows = WorkflowClient(self.client, self.base_url)
+        self.memory = MemoryClient(self.client, self.base_url)
 
     def health(self) -> dict:
         res = self.client.get("/health")
