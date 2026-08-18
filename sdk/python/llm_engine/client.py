@@ -2,6 +2,7 @@ from .knowledge import KnowledgeClient, AsyncKnowledgeClient
 from .agents import AgentsClient
 from .workflows import WorkflowClient
 from .memory import MemoryClient
+from .tools import ToolsClient
 import httpx
 from typing import List, Dict, Any, Optional, AsyncGenerator
 from .auth import AuthProvider, APIKeyAuth, BearerAuth
@@ -35,6 +36,7 @@ class LLMEngineClient:
         self.agents = AgentsClient(self.client, self.base_url)
         self.workflows = WorkflowClient(self.client, self.base_url)
         self.memory = MemoryClient(self.client, self.base_url)
+        self.tools = ToolsClient(self.base_url, api_key)
 
     def health(self) -> dict:
         res = self.client.get("/health")
