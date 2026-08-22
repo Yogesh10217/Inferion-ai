@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-engine-scheduler
+  namespace: llm-engine
+  labels:
+    app: llm-engine
+    tier: scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm-engine
+      tier: scheduler
+  template:
+    metadata:
+      labels:
+        app: llm-engine
+        tier: scheduler
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: scheduler
+          image: llm-inference-engine:latest
+          command: ["python", "-m", "app.jobs.job_scheduler"]
+          envFrom:
+            - configMapRef:
+                name: llm-engine-config
+            - secretRef:
+                name: llm-engine-secrets
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

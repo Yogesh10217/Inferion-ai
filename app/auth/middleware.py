@@ -28,9 +28,17 @@ PUBLIC_PATHS = [
     re.compile(r"^(?:/v1)?/openapi.json"),
     re.compile(r"^(?:/v1)?/redoc/?"),
     re.compile(r"^(?:/v1)?/auth/login/?"),
-    re.compile(r"^(?:/v1)?/observability/.*"),
-    re.compile(r"^(?:/v1)?/operations/.*"),
+    re.compile(r"^(?:/v1)?/observability(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/operations(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/security(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/governance(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/jobs(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/reliability(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/control-plane(?:/.*)?$"),
 ]
+
+
+
 
 
 

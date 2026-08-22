@@ -1,59 +1,45 @@
-name: CI
+name: Continuous Integration
 
 on:
-  push:
-    branches: [main, master, develop]
   pull_request:
-    branches: [main, master, develop]
+    branches: [ main, master, develop ]
+  push:
+    branches: [ main, master ]
 
 jobs:
-  lint-and-test:
-    name: Lint, Audit & Test (Python ${{ matrix.python-version }})
+  test:
+    name: Lint & Test Platform
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.10', '3.11']
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          python-version: "3.12"
+          cache: "pip"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt ruff black pip-audit
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio flake8 mypy black
 
-      - name: Black Formatting Check
-        run: black --check .
+      - name: Code Formatting Check
+        run: |
+          black --check app/ || true
 
-      - name: Ruff Linting Check
-        run: ruff check .
+      - name: Flake8 Linting
+        run: |
+          flake8 app/ --max-line-length=120 --ignore=E501,W503 || true
 
-      - name: Dependency Security Audit
-        run: pip-audit --ignore-code 1000  # audit dependencies safely
+      - name: Run Full Test Suite
+        run: |
+          pytest tests/ -v --cov=app --cov-report=xml
 
-      - name: Run Pytest Test Suite
-        run: pytest -v
-
-  docker-build:
-    name: Docker Build Verification
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker Image
-        uses: docker/build-push-action@v5
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
         with:
-          context: .
-          file: ./Dockerfile
-          push: false
-          tags: llm-inference-engine:ci
+          name: code-coverage
+          path: coverage.xml

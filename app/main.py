@@ -36,6 +36,12 @@ from app.api.v1.planning import router as planning_router
 from app.api.v1.autonomy import router as autonomy_router
 from app.api.v1.workers import router as workers_router
 from app.api.v1.observability import router as observability_router
+from app.api.v1.security import router as security_router
+from app.api.v1.governance import router as governance_router
+from app.api.v1.jobs import router as jobs_router
+from app.api.v1.reliability import router as reliability_router
+from app.api.v1.control_plane import router as control_plane_router
+
 
 from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
 from app.core.database import async_session_maker
@@ -136,6 +142,13 @@ def create_app() -> FastAPI:
     app.include_router(autonomy_router)
     app.include_router(workers_router)
     app.include_router(observability_router)
+    app.include_router(security_router)
+    app.include_router(governance_router)
+    app.include_router(jobs_router)
+    app.include_router(reliability_router)
+    app.include_router(control_plane_router)
+
+
 
     
     if settings.auth_enabled:

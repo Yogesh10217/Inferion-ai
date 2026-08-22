@@ -1,0 +1,149 @@
+"""Centralized Platform Resource Inventory & Registry."""
+
+import logging
+from enum import Enum
+from typing import Dict, Any, Optional, List
+from datetime import datetime, timezone
+import uuid
+from pydantic import BaseModel, Field
+
+from app.control_plane.exceptions import ResourceNotFoundException
+
+logger = logging.getLogger(__name__)
+
+
+class ResourceType(str, Enum):
+    MODEL = "MODEL"
+    PROVIDER = "PROVIDER"
+    KNOWLEDGE_BASE = "KNOWLEDGE_BASE"
+    DOCUMENT = "DOCUMENT"
+    AGENT = "AGENT"
+    AGENT_TEAM = "AGENT_TEAM"
+    WORKFLOW = "WORKFLOW"
+    TOOL = "TOOL"
+    MCP_SERVER = "MCP_SERVER"
+    MEMORY = "MEMORY"
+    PLAN = "PLAN"
+    AUTONOMOUS_EXECUTION = "AUTONOMOUS_EXECUTION"
+    DIGITAL_WORKER = "DIGITAL_WORKER"
+    API_KEY = "API_KEY"
+    SECRET_REFERENCE = "SECRET_REFERENCE"
+    FEATURE_FLAG = "FEATURE_FLAG"
+
+
+class PlatformResource(BaseModel):
+    """Universal platform resource entry."""
+
+    resource_id: str
+    resource_type: ResourceType
+    name: str
+    tenant_id: str = "global"
+    organization_id: Optional[str] = None
+    workspace_id: Optional[str] = None
+    owner_id: str = "system"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    status: str = "ACTIVE"
+    version: str = "1.0.0"
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ResourceRegistry:
+    """Central registry keeping inventory of all assets across all 16 platform subsystems."""
+
+    def __init__(self) -> None:
+        self._resources: Dict[str, PlatformResource] = {}
+        self._type_index: Dict[ResourceType, List[str]] = {t: [] for t in ResourceType}
+
+    def register_resource(
+        self,
+        resource_id: str,
+        resource_type: ResourceType,
+        name: str,
+        tenant_id: str = "global",
+        organization_id: Optional[str] = None,
+        workspace_id: Optional[str] = None,
+        owner_id: str = "system",
+        status: str = "ACTIVE",
+        version: str = "1.0.0",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> PlatformResource:
+        """Register or update a managed platform resource."""
+        res = PlatformResource(
+            resource_id=resource_id,
+            resource_type=resource_type,
+            name=name,
+            tenant_id=tenant_id,
+            organization_id=organization_id,
+            workspace_id=workspace_id,
+            owner_id=owner_id,
+            status=status,
+            version=version,
+            metadata=metadata or {},
+        )
+        self._resources[resource_id] = res
+
+        if resource_id not in self._type_index[resource_type]:
+            self._type_index[resource_type].append(resource_id)
+
+        logger.info(f"[RESOURCE REGISTRY] Registered resource '{name}' (ID: {resource_id}, Type: {resource_type.value})")
+        return res
+
+    def unregister_resource(self, resource_id: str) -> bool:
+        """Remove a resource from the registry."""
+        if resource_id not in self._resources:
+            raise ResourceNotFoundException(resource_id)
+
+        res = self._resources[resource_id]
+        if resource_id in self._type_index[res.resource_type]:
+            self._type_index[res.resource_type].remove(resource_id)
+        del self._resources[resource_id]
+
+        logger.info(f"[RESOURCE REGISTRY] Unregistered resource '{resource_id}'")
+        return True
+
+    def get_resource(self, resource_id: str) -> PlatformResource:
+        """Get resource by ID."""
+        res = self._resources.get(resource_id)
+        if not res:
+            raise ResourceNotFoundException(resource_id)
+        return res
+
+    def list_resources(
+        self,
+        tenant_id: Optional[str] = None,
+        organization_id: Optional[str] = None,
+        workspace_id: Optional[str] = None,
+        resource_type: Optional[ResourceType] = None,
+    ) -> List[PlatformResource]:
+        """List resources matching scope filters."""
+        res_list = list(self._resources.values())
+        if tenant_id:
+            res_list = [r for r in res_list if r.tenant_id == tenant_id]
+        if organization_id:
+            res_list = [r for r in res_list if r.organization_id == organization_id]
+        if workspace_id:
+            res_list = [r for r in res_list if r.workspace_id == workspace_id]
+        if resource_type:
+            res_list = [r for r in res_list if r.resource_type == resource_type]
+        return res_list
+
+    def search_resources(self, query: str, tenant_id: Optional[str] = None) -> List[PlatformResource]:
+        """Search resources by name or ID snippet."""
+        q_norm = query.lower()
+        res_list = self.list_resources(tenant_id=tenant_id)
+        return [r for r in res_list if q_norm in r.name.lower() or q_norm in r.resource_id.lower()]
+
+    def get_resource_owner(self, resource_id: str) -> str:
+        """Get owner ID of resource."""
+        return self.get_resource(resource_id).owner_id
+
+    def get_resource_usage(self, resource_id: str) -> Dict[str, Any]:
+        """Get resource usage metadata."""
+        res = self.get_resource(resource_id)
+        return {
+            "resource_id": resource_id,
+            "status": res.status,
+            "version": res.version,
+            "usage_count": res.metadata.get("usage_count", 0),
+        }

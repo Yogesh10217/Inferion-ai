@@ -7,6 +7,10 @@ from .teams import TeamsClient
 from .planning import PlanningClient
 from .autonomy import AutonomyClient, WorkersClient
 from .observability import ObservabilityClient
+from .reliability import SecurityClient, GovernanceClient, JobsClient, ReliabilityClient
+from .control_plane import ControlPlaneClient
+
+
 import httpx
 
 from typing import List, Dict, Any, Optional, AsyncGenerator
@@ -47,6 +51,7 @@ class LLMEngineClient:
         self.autonomy = AutonomyClient(self.base_url, api_key)
         self.workers = WorkersClient(self.base_url, api_key)
         self.observability = ObservabilityClient(self.client, self.base_url)
+        self.control_plane = ControlPlaneClient(self.base_url, api_key)
 
 
     def health(self) -> dict:

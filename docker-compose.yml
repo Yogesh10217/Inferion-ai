@@ -11,42 +11,90 @@ services:
       - HOST=${HOST:-0.0.0.0}
       - PORT=${PORT:-8002}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
-      - DEFAULT_PROVIDER=${DEFAULT_PROVIDER:-openai}
-      - DEFAULT_MODEL=${DEFAULT_MODEL:-gpt-4o-mini}
+      - AUTH_ENABLED=${AUTH_ENABLED:-true}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@db:5432/llm_engine}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
     depends_on:
-      ollama:
-        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - inference-network
 
-  ollama:
-    image: ollama/ollama:0.1.48
-    container_name: llm-inference-engine-ollama
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: llm-inference-engine-worker
+    command: ["python", "-m", "app.jobs.job_worker"]
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@db:5432/llm_engine}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - inference-network
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: llm-inference-engine-scheduler
+    command: ["python", "-m", "app.jobs.job_scheduler"]
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@db:5432/llm_engine}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - inference-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: llm-inference-engine-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=llm_engine
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-storage:/var/lib/postgresql/data
+    networks:
+      - inference-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: llm-inference-engine-redis
     restart: unless-stopped
     ports:
-      - "11434:11434"
+      - "6379:6379"
     volumes:
-      - ollama-storage:/root/.ollama
+      - redis-storage:/data
     networks:
       - inference-network
-
-  # -------------------------------------------------------------
-  # Future Placeholders (Production Add-ons / Observability)
-  # Uncomment the sections below when moving to Phase 2.
-  # -------------------------------------------------------------
-  
-  # redis:
-  #   image: redis:7.2.4-alpine
-  #   container_name: llm-inference-engine-cache
-  #   restart: unless-stopped
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - redis-storage:/data
-  #   networks:
-  #     - inference-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   prometheus:
     image: prom/prometheus:v2.51.1
@@ -86,9 +134,8 @@ services:
       retries: 3
 
 volumes:
-  ollama-storage:
-    name: llm-inference-engine-ollama-storage
-  # redis-storage:
+  postgres-storage:
+  redis-storage:
   prometheus-storage:
   grafana-storage:
 

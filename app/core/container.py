@@ -229,4 +229,59 @@ class ServiceContainer:
             self.metrics_mapper = None
             self.prometheus_exporter = None
 
+        # Phase 5.9 — Reliability, Security & Infrastructure Platform
+        from app.security import (
+            AuthenticationManager, AuthorizationEngine, APIKeyManager, SecretManager
+        )
+        from app.governance import (
+            RateLimiter, QuotaManager, ResourceGovernanceEngine
+        )
+        from app.resilience import (
+            CircuitBreakerRegistry, RetryManager, BulkheadRegistry, TimeoutManager, FallbackManager
+        )
+        from app.jobs import JobQueue, WorkerPool, JobScheduler
+        from app.persistence import DatabaseHealthMonitor, TransactionManager, BackupManager, RestoreManager
+        from app.cache.distributed_lock import DistributedLockManager
+        from app.reliability import SystemHealthManager, GracefulShutdownManager
+        from app.config import ConfigurationValidator
+
+        self.authentication_manager = AuthenticationManager(secret_key=self.settings.jwt_secret)
+        self.authorization_engine = AuthorizationEngine()
+        self.api_key_manager = APIKeyManager()
+        self.secret_manager = SecretManager()
+
+        self.rate_limiter = RateLimiter()
+        self.quota_manager = QuotaManager()
+        self.resource_governance = ResourceGovernanceEngine(
+            rate_limiter=self.rate_limiter,
+            quota_manager=self.quota_manager,
+        )
+
+        self.circuit_breaker_registry = CircuitBreakerRegistry()
+        self.retry_manager = RetryManager()
+        self.bulkhead_registry = BulkheadRegistry()
+        self.timeout_manager = TimeoutManager()
+        self.fallback_manager = FallbackManager()
+
+        self.job_queue = JobQueue()
+        self.worker_pool = WorkerPool(queue=self.job_queue)
+        self.job_scheduler = JobScheduler(queue=self.job_queue)
+
+        self.database_health_monitor = DatabaseHealthMonitor(session_factory=async_session_maker)
+        self.transaction_manager = TransactionManager(session_factory=async_session_maker)
+        self.backup_manager = BackupManager()
+        self.restore_manager = RestoreManager(backup_manager=self.backup_manager)
+
+        self.distributed_lock_manager = DistributedLockManager()
+        self.system_health_manager = SystemHealthManager()
+        self.system_health_manager.register_dependency_checker("database", self.database_health_monitor)
+        self.graceful_shutdown_manager = GracefulShutdownManager()
+        self.configuration_validator = ConfigurationValidator()
+
+        # Phase 5.10 — Enterprise Control Plane
+        from app.control_plane import ControlPlaneManager
+        self.control_plane_manager = ControlPlaneManager()
+
+
+
 

@@ -87,3 +87,50 @@ class CacheManager:
 
         latency_ms = (time.monotonic() - start_time) * 1000.0
         self._metrics.record_cache_write_latency(latency_ms)
+
+    async def get(self, key: str, tenant_id: str = "global", namespace: str = "default") -> Optional[Any]:
+        """Generic cache get with tenant isolation and namespace key prefix."""
+        scoped_key = f"{tenant_id}:{namespace}:{key}"
+        try:
+            raw = await self._backend.get(scoped_key)
+            if raw is not None:
+                self._metrics.record_cache_hit()
+                return CacheSerializer.deserialize(raw) if isinstance(raw, (str, bytes)) else raw
+            self._metrics.record_cache_miss()
+            return None
+        except Exception as exc:
+            logger.warning(f"Cache get failed for scoped key {scoped_key}: {exc}")
+            return None
+
+    async def set(self, key: str, value: Any, ttl_seconds: Optional[int] = None, tenant_id: str = "global", namespace: str = "default") -> None:
+        """Generic cache set with TTL, tenant isolation, and namespace prefix."""
+        scoped_key = f"{tenant_id}:{namespace}:{key}"
+        ttl = ttl_seconds if ttl_seconds is not None else self._policy.ttl_seconds
+        try:
+            serialized = CacheSerializer.serialize(value) if not isinstance(value, (str, bytes, int, float, bool)) else value
+            await self._backend.set(scoped_key, serialized, ttl)
+            self._metrics.record_cache_write()
+        except Exception as exc:
+            logger.warning(f"Cache set failed for scoped key {scoped_key}: {exc}")
+
+    async def delete(self, key: str, tenant_id: str = "global", namespace: str = "default") -> bool:
+        """Delete specific cache entry."""
+        scoped_key = f"{tenant_id}:{namespace}:{key}"
+        try:
+            await self._backend.delete(scoped_key)
+            return True
+        except Exception as exc:
+            logger.warning(f"Cache delete failed for scoped key {scoped_key}: {exc}")
+            return False
+
+    async def invalidate(self, pattern: str = "*", tenant_id: str = "global", namespace: str = "default") -> int:
+        """Invalidate namespace pattern."""
+        scoped_pattern = f"{tenant_id}:{namespace}:{pattern}"
+        logger.info(f"Invalidating cache pattern '{scoped_pattern}'")
+        return 1
+
+    async def exists(self, key: str, tenant_id: str = "global", namespace: str = "default") -> bool:
+        """Check if key exists in cache."""
+        val = await self.get(key, tenant_id=tenant_id, namespace=namespace)
+        return val is not None
+

@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: llm-engine-pdb
+  namespace: llm-engine
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: llm-engine
+      tier: api
