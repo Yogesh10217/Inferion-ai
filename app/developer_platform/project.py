@@ -1,59 +1,54 @@
-"""Developer Project domain entity & lifecycle management."""
+"""Developer Project & Membership Management Subsystem."""
 
-import logging
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set
 from datetime import datetime, timezone
+from enum import Enum
 import uuid
+import logging
+from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
-from app.developer_platform.exceptions import ProjectNotFoundException, InvalidProjectLifecycleTransition
+from app.developer_platform.exceptions import ProjectNotFoundException
 
 logger = logging.getLogger(__name__)
 
 
-class ProjectLifecycle(str, Enum):
+def _now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+class ProjectStatus(str, Enum):
     CREATED = "CREATED"
-    DEVELOPMENT = "DEVELOPMENT"
-    TESTING = "TESTING"
-    STAGED = "STAGED"
-    PUBLISHED = "PUBLISHED"
-    DEPRECATED = "DEPRECATED"
+    CONFIGURED = "CONFIGURED"
+    ACTIVE = "ACTIVE"
     ARCHIVED = "ARCHIVED"
+    DELETED = "DELETED"
 
 
-VALID_PROJECT_TRANSITIONS = {
-    ProjectLifecycle.CREATED: {ProjectLifecycle.DEVELOPMENT, ProjectLifecycle.ARCHIVED},
-    ProjectLifecycle.DEVELOPMENT: {ProjectLifecycle.TESTING, ProjectLifecycle.ARCHIVED},
-    ProjectLifecycle.TESTING: {ProjectLifecycle.DEVELOPMENT, ProjectLifecycle.STAGED, ProjectLifecycle.ARCHIVED},
-    ProjectLifecycle.STAGED: {ProjectLifecycle.TESTING, ProjectLifecycle.PUBLISHED, ProjectLifecycle.ARCHIVED},
-    ProjectLifecycle.PUBLISHED: {ProjectLifecycle.DEPRECATED, ProjectLifecycle.ARCHIVED},
-    ProjectLifecycle.DEPRECATED: {ProjectLifecycle.ARCHIVED},
-    ProjectLifecycle.ARCHIVED: set(),
-}
+ProjectLifecycle = ProjectStatus
+
+
+
+class ProjectMember(BaseModel):
+    member_id: str = Field(default_factory=lambda: f"pmem_{uuid.uuid4().hex[:10]}")
+    user_id: str
+    role: str = "DEVELOPER"
+    added_at: datetime = Field(default_factory=_now)
 
 
 class DeveloperProject(BaseModel):
-    """Developer project entity container."""
-
-    project_id: str = Field(default_factory=lambda: f"proj_{uuid.uuid4().hex[:10]}")
-    tenant_id: str = "global"
-    organization_id: str
-    workspace_id: str
-    developer_id: str
+    project_id: str = Field(default_factory=lambda: f"dproj_{uuid.uuid4().hex[:10]}")
     name: str
     description: str = ""
-    version: str = "0.1.0"
-    lifecycle: ProjectLifecycle = ProjectLifecycle.CREATED
-    repository_url: Optional[str] = None
-    runtime_config: Dict[str, Any] = Field(default_factory=dict)
-    associated_extension_ids: Set[str] = Field(default_factory=set)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    status: ProjectStatus = ProjectStatus.ACTIVE
+    tenant_id: str = "global"
+    members: List[ProjectMember] = Field(default_factory=list)
+    repository_ids: List[str] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=_now)
+    updated_at: datetime = Field(default_factory=_now)
 
 
 class ProjectManager:
-    """Manages developer projects, lifecycle state transitions, environment scoping, and extension associations."""
+    """Manages developer projects and membership roles."""
 
     def __init__(self) -> None:
         self._projects: Dict[str, DeveloperProject] = {}
@@ -61,66 +56,28 @@ class ProjectManager:
     def create_project(
         self,
         name: str,
-        organization_id: str,
-        workspace_id: str,
-        developer_id: str,
-        tenant_id: str = "global",
         description: str = "",
+        tenant_id: str = "global",
+        organization_id: str = "org_default",
+        workspace_id: str = "ws_default",
+        developer_id: str = "dev_default",
         repository_url: Optional[str] = None,
-        runtime_config: Optional[Dict[str, Any]] = None,
     ) -> DeveloperProject:
-        """Create a new developer project."""
-        proj = DeveloperProject(
-            name=name,
-            organization_id=organization_id,
-            workspace_id=workspace_id,
-            developer_id=developer_id,
-            tenant_id=tenant_id,
-            description=description,
-            repository_url=repository_url,
-            runtime_config=runtime_config or {},
-        )
+        proj = DeveloperProject(name=name, description=description, tenant_id=tenant_id)
         self._projects[proj.project_id] = proj
-        logger.info(f"[PROJECT MANAGER] Created project '{name}' (ID: {proj.project_id}, Dev: {developer_id})")
+        logger.info(f"[PROJECT MANAGER] Created project '{proj.project_id}' ('{name}') for tenant '{tenant_id}'")
         return proj
+
 
     def get_project(self, project_id: str) -> DeveloperProject:
         proj = self._projects.get(project_id)
-        if not proj:
+        if not proj or proj.status == ProjectStatus.DELETED:
             raise ProjectNotFoundException(project_id)
         return proj
 
-    def transition_lifecycle(self, project_id: str, target_state: ProjectLifecycle) -> DeveloperProject:
-        """Transition project to target lifecycle state with validation."""
-        proj = self.get_project(project_id)
-        current = proj.lifecycle
-
-        if current != target_state and target_state not in VALID_PROJECT_TRANSITIONS.get(current, set()):
-            raise InvalidProjectLifecycleTransition(current.value, target_state.value)
-
-        proj.lifecycle = target_state
-        proj.updated_at = datetime.now(timezone.utc)
-        logger.info(f"[PROJECT MANAGER] Project '{project_id}' transitioned {current.value} -> {target_state.value}")
-        return proj
-
-    def associate_extension(self, project_id: str, extension_id: str) -> DeveloperProject:
-        """Associate extension ID with project."""
-        proj = self.get_project(project_id)
-        proj.associated_extension_ids.add(extension_id)
-        proj.updated_at = datetime.now(timezone.utc)
-        return proj
-
-    def list_projects(
-        self,
-        tenant_id: Optional[str] = None,
-        organization_id: Optional[str] = None,
-        developer_id: Optional[str] = None,
-    ) -> List[DeveloperProject]:
-        res = list(self._projects.values())
+    def list_projects(self, tenant_id: Optional[str] = None, developer_id: Optional[str] = None) -> List[DeveloperProject]:
+        res = [p for p in self._projects.values() if p.status != ProjectStatus.DELETED]
         if tenant_id:
-            res = [p for p in res if p.tenant_id == tenant_id]
-        if organization_id:
-            res = [p for p in res if p.organization_id == organization_id]
-        if developer_id:
-            res = [p for p in res if p.developer_id == developer_id]
+            res = [r for r in res if r.tenant_id == tenant_id]
         return res
+

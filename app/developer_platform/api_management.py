@@ -1,105 +1,59 @@
-"""Developer API Management integrating Key Generation, Scopes, Quotas, and Analytics."""
+"""Enterprise API Management & Product Catalog Subsystem."""
 
+from datetime import datetime, timezone
+from enum import Enum
+import uuid
 import logging
 from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 from pydantic import BaseModel, Field
-
-from app.security.api_keys import APIKeyManager, APIKey
-from app.governance.rate_limiter import RateLimiter
-from app.governance.quota_manager import QuotaManager
-
 
 logger = logging.getLogger(__name__)
 
 
-class DeveloperAPIEndpoint(BaseModel):
-    """Registered developer API endpoint."""
+def _now() -> datetime:
+    return datetime.now(timezone.utc)
 
-    endpoint_id: str = Field(default_factory=lambda: f"ep_{uuid.uuid4().hex[:8]}")
+
+class APILifecycleState(str, Enum):
+    DRAFT = "DRAFT"
+    REVIEW = "REVIEW"
+    APPROVED = "APPROVED"
+    PUBLISHED = "PUBLISHED"
+    DEPRECATED = "DEPRECATED"
+    RETIRED = "RETIRED"
+
+
+class APIEndpoint(BaseModel):
+    endpoint_id: str = Field(default_factory=lambda: f"aep_{uuid.uuid4().hex[:10]}")
     path: str
     method: str = "GET"
-    version: str = "v1"
-    required_scopes: List[str] = Field(default_factory=list)
-    is_deprecated: bool = False
-    sunset_date: Optional[datetime] = None
+    summary: str = ""
 
 
-class DeveloperAPIManager:
-    """Manages developer API keys, scope restrictions, endpoint registries, deprecation, and quotas."""
+class APIService(BaseModel):
+    service_id: str = Field(default_factory=lambda: f"apis_{uuid.uuid4().hex[:10]}")
+    name: str
+    version: str = "1.0.0"
+    status: APILifecycleState = APILifecycleState.PUBLISHED
+    tenant_id: str = "global"
+    endpoints: List[APIEndpoint] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=_now)
 
-    def __init__(
-        self,
-        api_key_manager: Optional[APIKeyManager] = None,
-        rate_limiter: Optional[RateLimiter] = None,
-        quota_manager: Optional[QuotaManager] = None,
-    ) -> None:
-        self.api_key_manager = api_key_manager or APIKeyManager()
-        self.rate_limiter = rate_limiter or RateLimiter()
-        self.quota_manager = quota_manager or QuotaManager()
-        self._endpoints: Dict[str, DeveloperAPIEndpoint] = {}
 
-    def issue_developer_key(
-        self,
-        developer_id: str,
-        name: str,
-        tenant_id: str = "global",
-        scopes: Optional[List[str]] = None,
-        expires_in_days: Optional[int] = 365,
-    ) -> Dict[str, Any]:
-        """Issue a cryptographically secure developer API key."""
-        raw_key, api_key_obj = self.api_key_manager.create_api_key(
-            name=f"dev:{developer_id}:{name}",
-            tenant_id=tenant_id,
-            scopes=scopes or ["read", "write", "extensions:manage"],
-            expires_in_days=expires_in_days,
-        )
-        logger.info(f"[DEVELOPER API MANAGER] Issued API key '{api_key_obj.key_id}' for dev '{developer_id}'")
-        return {
-            "key_id": api_key_obj.key_id,
-            "raw_key": raw_key,  # Only returned once!
-            "prefix": api_key_obj.prefix,
-            "scopes": api_key_obj.scopes,
-            "expires_at": api_key_obj.expires_at.isoformat() if api_key_obj.expires_at else None,
-        }
+class APIManagementEngine:
+    """Manages enterprise API services, products, and lifecycle state transitions."""
 
-    def rotate_developer_key(self, key_id: str) -> Dict[str, Any]:
-        """Rotate developer key, revoking old key and issuing new one."""
-        old_key = self.api_key_manager.get_api_key(key_id)
-        if not old_key:
-            raise RuntimeError(f"API key '{key_id}' not found")
+    def __init__(self) -> None:
+        self._services: Dict[str, APIService] = {}
 
-        self.api_key_manager.revoke_api_key(key_id, reason="Developer key rotation")
-        raw_key, new_key = self.api_key_manager.create_api_key(
-            name=old_key.name,
-            tenant_id=old_key.tenant_id,
-            scopes=old_key.scopes,
-        )
-        logger.info(f"[DEVELOPER API MANAGER] Rotated key '{key_id}' -> '{new_key.key_id}'")
-        return {
-            "key_id": new_key.key_id,
-            "raw_key": raw_key,
-            "scopes": new_key.scopes,
-        }
+    def register_api_service(self, name: str, version: str = "1.0.0", tenant_id: str = "global") -> APIService:
+        svc = APIService(name=name, version=version, tenant_id=tenant_id)
+        self._services[svc.service_id] = svc
+        logger.info(f"[API MANAGEMENT] Registered API service '{svc.service_id}' ('{name}' v{version})")
+        return svc
 
-    def register_endpoint(
-        self,
-        path: str,
-        method: str = "GET",
-        version: str = "v1",
-        scopes: Optional[List[str]] = None,
-    ) -> DeveloperAPIEndpoint:
-        """Register developer API endpoint."""
-        ep = DeveloperAPIEndpoint(path=path, method=method, version=version, required_scopes=scopes or [])
-        self._endpoints[ep.endpoint_id] = ep
-        return ep
-
-    def deprecate_endpoint(self, endpoint_id: str, sunset_date: Optional[datetime] = None) -> DeveloperAPIEndpoint:
-        """Deprecate developer API endpoint."""
-        ep = self._endpoints.get(endpoint_id)
-        if not ep:
-            raise RuntimeError(f"Endpoint '{endpoint_id}' not found")
-        ep.is_deprecated = True
-        ep.sunset_date = sunset_date or datetime.now(timezone.utc)
-        return ep
+    def update_status(self, service_id: str, new_status: APILifecycleState) -> APIService:
+        svc = self._services[service_id]
+        svc.status = new_status
+        logger.info(f"[API MANAGEMENT] API service '{service_id}' status updated -> {new_status.value}")
+        return svc

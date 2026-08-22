@@ -21,6 +21,8 @@ from .identity import IdentityClient
 from .orchestration import OrchestrationClient
 from .knowledge_platform import KnowledgePlatformClient
 from .integrations import IntegrationClient
+from .developer_platform import DeveloperPlatformClient
+
 
 
 
@@ -85,6 +87,8 @@ class LLMEngineClient:
         self.orchestration = OrchestrationClient(self.base_url, api_key)
         self.knowledge_platform = KnowledgePlatformClient(self.base_url, api_key)
         self.integrations = IntegrationClient(self.base_url, api_key)
+        self.developer_platform = DeveloperPlatformClient(self.base_url, api_key)
+
 
 
 

@@ -318,9 +318,12 @@ class ServiceContainer:
         from app.orchestration.manager import OrchestrationManager
         from app.knowledge_platform.manager import KnowledgePlatformManager
         from app.integrations.manager import IntegrationManager
+        from app.developer_platform.manager import DeveloperPlatformManager
         self.orchestration_manager = OrchestrationManager()
         self.knowledge_platform_manager = KnowledgePlatformManager()
         self.integration_manager = IntegrationManager()
+        self.developer_platform_manager = DeveloperPlatformManager()
+
 
 
 

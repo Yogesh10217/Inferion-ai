@@ -50,7 +50,9 @@ PUBLIC_PATHS = [
     re.compile(r"^(?:/v1)?/orchestration(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/knowledge_platform(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/integrations(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/developer-platform(?:/.*)?$"),
 ]
+
 
 
 

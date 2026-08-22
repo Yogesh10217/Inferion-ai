@@ -1,27 +1,16 @@
-"""Unit tests for Developer Projects & Lifecycle state transitions."""
+"""Unit tests for ProjectManager."""
 
 import pytest
-from app.developer_platform.project import ProjectManager, ProjectLifecycle
-from app.developer_platform.exceptions import InvalidProjectLifecycleTransition
+from app.developer_platform.project import ProjectManager, ProjectStatus
 
 
-def test_project_lifecycle_transitions():
-    mgr = ProjectManager()
-    proj = mgr.create_project(
-        name="Customer Portal Extension",
-        organization_id="org_1",
-        workspace_id="ws_1",
-        developer_id="dev_1",
-    )
-    assert proj.lifecycle == ProjectLifecycle.CREATED
+def test_project_creation_and_listing():
+    pm = ProjectManager()
+    proj = pm.create_project("Inference Service", description="LLM inference project", tenant_id="t_proj")
 
-    # Valid transitions CREATED -> DEVELOPMENT -> TESTING -> STAGED -> PUBLISHED
-    mgr.transition_lifecycle(proj.project_id, ProjectLifecycle.DEVELOPMENT)
-    mgr.transition_lifecycle(proj.project_id, ProjectLifecycle.TESTING)
-    mgr.transition_lifecycle(proj.project_id, ProjectLifecycle.STAGED)
-    p_pub = mgr.transition_lifecycle(proj.project_id, ProjectLifecycle.PUBLISHED)
-    assert p_pub.lifecycle == ProjectLifecycle.PUBLISHED
+    assert proj.name == "Inference Service"
+    assert proj.status == ProjectStatus.ACTIVE
 
-    # Invalid transition PUBLISHED -> DEVELOPMENT raises error
-    with pytest.raises(InvalidProjectLifecycleTransition):
-        mgr.transition_lifecycle(proj.project_id, ProjectLifecycle.DEVELOPMENT)
+    items = pm.list_projects(tenant_id="t_proj")
+    assert len(items) == 1
+    assert items[0].project_id == proj.project_id
