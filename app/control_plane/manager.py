@@ -96,7 +96,22 @@ class ControlPlaneManager:
         from app.operations.manager import OperationsManager
         self.operations_manager = OperationsManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.15 Operations Manager")
+        # Phase 5.16 Governance Platform Manager
+        from app.governance_platform.governance_manager import GovernancePlatformManager
+        self.governance_manager = GovernancePlatformManager()
+
+        # Phase 5.17 Identity Security Manager
+        from app.identity.manager import IdentitySecurityManager
+        self.identity_security_manager = IdentitySecurityManager()
+
+        # Phase 5.18 Orchestration Manager
+        from app.orchestration.manager import OrchestrationManager
+        self.orchestration_manager = OrchestrationManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.18 Orchestration Manager")
+
+
+
 
 
 

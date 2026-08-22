@@ -16,6 +16,12 @@ from .data_fabric import DataFabricClient
 from .mlops import MLOpsClient
 from .finops import FinOpsClient
 from .operations import OperationsClient
+from .governance import GovernanceClient as GovernancePlatformClient
+from .identity import IdentityClient
+from .orchestration import OrchestrationClient
+
+
+
 
 
 
@@ -68,9 +74,15 @@ class LLMEngineClient:
         self.extensions = ExtensionsClient(self.base_url, api_key)
         self.marketplace = MarketplaceClient(self.base_url, api_key)
         self.data_fabric = DataFabricClient(self.base_url, api_key)
-        self.mlops = MLOpsClient(self.base_url, api_key)
         self.finops = FinOpsClient(self.base_url, api_key)
         self.operations = OperationsClient(self.base_url, api_key)
+        self.governance_platform = GovernancePlatformClient(self.base_url, api_key)
+        self.identity_platform = IdentityClient(self.base_url, api_key)
+        self.orchestration = OrchestrationClient(self.base_url, api_key)
+
+
+
+
 
 
 

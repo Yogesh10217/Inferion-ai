@@ -48,6 +48,12 @@ from app.api.v1.data_fabric import router as data_fabric_router
 from app.api.v1.mlops import router as mlops_router
 from app.api.v1.finops import router as finops_router
 from app.api.v1.operations import router as operations_router
+from app.api.v1.governance_platform import router as governance_platform_router
+from app.api.v1.identity import router as identity_router
+from app.api.v1.orchestration import router as orchestration_router
+
+
+
 
 
 
@@ -166,6 +172,12 @@ def create_app() -> FastAPI:
     app.include_router(mlops_router)
     app.include_router(finops_router)
     app.include_router(operations_router)
+    app.include_router(governance_platform_router)
+    app.include_router(identity_router)
+    app.include_router(orchestration_router)
+
+
+
 
 
 
