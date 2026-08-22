@@ -12,6 +12,8 @@ from .control_plane import ControlPlaneClient
 from .developers import DevelopersClient
 from .extensions import ExtensionsClient
 from .marketplace import MarketplaceClient
+from .data_fabric import DataFabricClient
+
 
 
 
@@ -59,6 +61,8 @@ class LLMEngineClient:
         self.developers = DevelopersClient(self.base_url, api_key)
         self.extensions = ExtensionsClient(self.base_url, api_key)
         self.marketplace = MarketplaceClient(self.base_url, api_key)
+        self.data_fabric = DataFabricClient(self.base_url, api_key)
+
 
 
 

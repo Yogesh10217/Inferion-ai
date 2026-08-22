@@ -39,7 +39,12 @@ PUBLIC_PATHS = [
     re.compile(r"^(?:/v1)?/events(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/extensions(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/marketplace(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/data-sources(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/data-sync(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/data-catalog(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/data-governance(?:/.*)?$"),
 ]
+
 
 
 

@@ -80,7 +80,12 @@ class ControlPlaneManager:
         self.extension_manager = ExtensionManager()
         self.marketplace_manager = MarketplaceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.11 Extensibility Managers")
+        # Phase 5.12 Data Fabric Manager
+        from app.data_fabric.manager import DataFabricManager
+        self.data_fabric_manager = DataFabricManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.12 Data Fabric Manager")
+
 
 
     def get_summary(self) -> Dict[str, Any]:

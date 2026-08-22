@@ -44,6 +44,8 @@ from app.api.v1.control_plane import router as control_plane_router
 from app.api.v1.developers import router as developers_router
 from app.api.v1.extensions import router as extensions_router
 from app.api.v1.marketplace import router as marketplace_router
+from app.api.v1.data_fabric import router as data_fabric_router
+
 
 
 
@@ -154,6 +156,8 @@ def create_app() -> FastAPI:
     app.include_router(developers_router)
     app.include_router(extensions_router)
     app.include_router(marketplace_router)
+    app.include_router(data_fabric_router)
+
 
 
 

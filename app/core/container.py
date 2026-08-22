@@ -291,6 +291,11 @@ class ServiceContainer:
         self.extension_manager = ExtensionManager()
         self.marketplace_manager = MarketplaceManager()
 
+        # Phase 5.12 — Data Fabric Platform
+        from app.data_fabric.manager import DataFabricManager
+        self.data_fabric_manager = DataFabricManager()
+
+
 
 
 
