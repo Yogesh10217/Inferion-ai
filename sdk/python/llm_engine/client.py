@@ -4,6 +4,8 @@ from .workflows import WorkflowClient
 from .memory import MemoryClient
 from .tools import ToolsClient
 from .teams import TeamsClient
+from .planning import PlanningClient
+from .autonomy import AutonomyClient, WorkersClient
 import httpx
 from typing import List, Dict, Any, Optional, AsyncGenerator
 from .auth import AuthProvider, APIKeyAuth, BearerAuth
@@ -39,6 +41,9 @@ class LLMEngineClient:
         self.memory = MemoryClient(self.client, self.base_url)
         self.tools = ToolsClient(self.base_url, api_key)
         self.teams = TeamsClient(self.base_url, api_key)
+        self.planning = PlanningClient(self.base_url, api_key)
+        self.autonomy = AutonomyClient(self.base_url, api_key)
+        self.workers = WorkersClient(self.base_url, api_key)
 
     def health(self) -> dict:
         res = self.client.get("/health")
