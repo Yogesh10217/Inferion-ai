@@ -14,9 +14,10 @@ logger = logging.getLogger(__name__)
 # Patterns for sensitive tokens, keys, credentials
 SECRET_PATTERNS = [
     re.compile(r"(?i)(api[_-]?key|secret|password|bearer|jwt|access[_-]?token)=['\"]?([a-zA-Z0-9_\-\.]{8,})['\"]?"),
-    re.compile(r"sk-[a-zA-Z0-9]{20,}"),
+    re.compile(r"sk-[a-zA-Z0-9_\-]{20,}"),
     re.compile(r"eyJ[a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9_\-\.]+"),
 ]
+
 
 
 class SecretProvider(ABC):

@@ -88,7 +88,17 @@ class ControlPlaneManager:
         from app.mlops.manager import MLOpsManager
         self.mlops_manager = MLOpsManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.13 MLOps Manager")
+        # Phase 5.14 FinOps Manager
+        from app.finops.manager import FinOpsManager
+        self.finops_manager = FinOpsManager()
+
+        # Phase 5.15 Operations Manager
+        from app.operations.manager import OperationsManager
+        self.operations_manager = OperationsManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.15 Operations Manager")
+
+
 
 
 

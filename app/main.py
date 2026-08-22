@@ -46,6 +46,10 @@ from app.api.v1.extensions import router as extensions_router
 from app.api.v1.marketplace import router as marketplace_router
 from app.api.v1.data_fabric import router as data_fabric_router
 from app.api.v1.mlops import router as mlops_router
+from app.api.v1.finops import router as finops_router
+from app.api.v1.operations import router as operations_router
+
+
 
 
 
@@ -160,6 +164,10 @@ def create_app() -> FastAPI:
     app.include_router(marketplace_router)
     app.include_router(data_fabric_router)
     app.include_router(mlops_router)
+    app.include_router(finops_router)
+    app.include_router(operations_router)
+
+
 
 
 

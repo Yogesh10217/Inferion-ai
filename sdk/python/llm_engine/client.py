@@ -14,6 +14,10 @@ from .extensions import ExtensionsClient
 from .marketplace import MarketplaceClient
 from .data_fabric import DataFabricClient
 from .mlops import MLOpsClient
+from .finops import FinOpsClient
+from .operations import OperationsClient
+
+
 
 
 
@@ -65,6 +69,10 @@ class LLMEngineClient:
         self.marketplace = MarketplaceClient(self.base_url, api_key)
         self.data_fabric = DataFabricClient(self.base_url, api_key)
         self.mlops = MLOpsClient(self.base_url, api_key)
+        self.finops = FinOpsClient(self.base_url, api_key)
+        self.operations = OperationsClient(self.base_url, api_key)
+
+
 
 
 

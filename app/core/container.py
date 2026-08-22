@@ -299,6 +299,16 @@ class ServiceContainer:
         from app.mlops.manager import MLOpsManager
         self.mlops_manager = MLOpsManager()
 
+        # Phase 5.14 — FinOps Platform
+        from app.finops.manager import FinOpsManager
+        self.finops_manager = FinOpsManager()
+
+        # Phase 5.15 — Operations Platform
+        from app.operations.manager import OperationsManager
+        self.operations_manager = OperationsManager()
+
+
+
 
 
 

@@ -44,7 +44,11 @@ PUBLIC_PATHS = [
     re.compile(r"^(?:/v1)?/data-catalog(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/data-governance(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/mlops(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/finops(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/operations(?:/.*)?$"),
 ]
+
+
 
 
 
