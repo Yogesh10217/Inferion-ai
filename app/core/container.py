@@ -295,6 +295,11 @@ class ServiceContainer:
         from app.data_fabric.manager import DataFabricManager
         self.data_fabric_manager = DataFabricManager()
 
+        # Phase 5.13 — MLOps Platform
+        from app.mlops.manager import MLOpsManager
+        self.mlops_manager = MLOpsManager()
+
+
 
 
 

@@ -13,6 +13,8 @@ from .developers import DevelopersClient
 from .extensions import ExtensionsClient
 from .marketplace import MarketplaceClient
 from .data_fabric import DataFabricClient
+from .mlops import MLOpsClient
+
 
 
 
@@ -62,6 +64,8 @@ class LLMEngineClient:
         self.extensions = ExtensionsClient(self.base_url, api_key)
         self.marketplace = MarketplaceClient(self.base_url, api_key)
         self.data_fabric = DataFabricClient(self.base_url, api_key)
+        self.mlops = MLOpsClient(self.base_url, api_key)
+
 
 
 

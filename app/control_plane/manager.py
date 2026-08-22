@@ -84,7 +84,12 @@ class ControlPlaneManager:
         from app.data_fabric.manager import DataFabricManager
         self.data_fabric_manager = DataFabricManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.12 Data Fabric Manager")
+        # Phase 5.13 MLOps Manager
+        from app.mlops.manager import MLOpsManager
+        self.mlops_manager = MLOpsManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.13 MLOps Manager")
+
 
 
 
