@@ -19,6 +19,8 @@ from .operations import OperationsClient
 from .governance import GovernanceClient as GovernancePlatformClient
 from .identity import IdentityClient
 from .orchestration import OrchestrationClient
+from .knowledge_platform import KnowledgePlatformClient
+
 
 
 
@@ -79,6 +81,8 @@ class LLMEngineClient:
         self.governance_platform = GovernancePlatformClient(self.base_url, api_key)
         self.identity_platform = IdentityClient(self.base_url, api_key)
         self.orchestration = OrchestrationClient(self.base_url, api_key)
+        self.knowledge_platform = KnowledgePlatformClient(self.base_url, api_key)
+
 
 
 

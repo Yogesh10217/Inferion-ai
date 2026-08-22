@@ -106,7 +106,10 @@ class ControlPlaneManager:
 
         # Phase 5.18 Orchestration Manager
         from app.orchestration.manager import OrchestrationManager
+        from app.knowledge_platform.manager import KnowledgePlatformManager
         self.orchestration_manager = OrchestrationManager()
+        self.knowledge_platform_manager = KnowledgePlatformManager()
+
 
         logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.18 Orchestration Manager")
 

@@ -51,6 +51,8 @@ from app.api.v1.operations import router as operations_router
 from app.api.v1.governance_platform import router as governance_platform_router
 from app.api.v1.identity import router as identity_router
 from app.api.v1.orchestration import router as orchestration_router
+from app.api.v1.knowledge_platform import router as knowledge_platform_router
+
 
 
 
@@ -175,6 +177,8 @@ def create_app() -> FastAPI:
     app.include_router(governance_platform_router)
     app.include_router(identity_router)
     app.include_router(orchestration_router)
+    app.include_router(knowledge_platform_router)
+
 
 
 

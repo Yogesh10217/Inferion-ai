@@ -315,14 +315,10 @@ class ServiceContainer:
         from app.identity.manager import IdentitySecurityManager
         self.identity_security_manager = IdentitySecurityManager()
 
-        # Phase 5.18 — Enterprise Orchestration Platform
         from app.orchestration.manager import OrchestrationManager
+        from app.knowledge_platform.manager import KnowledgePlatformManager
         self.orchestration_manager = OrchestrationManager()
-
-
-
-
-
+        self.knowledge_platform_manager = KnowledgePlatformManager()
 
 
 
