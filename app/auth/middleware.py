@@ -35,7 +35,12 @@ PUBLIC_PATHS = [
     re.compile(r"^(?:/v1)?/jobs(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/reliability(?:/.*)?$"),
     re.compile(r"^(?:/v1)?/control-plane(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/developers(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/events(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/extensions(?:/.*)?$"),
+    re.compile(r"^(?:/v1)?/marketplace(?:/.*)?$"),
 ]
+
 
 
 

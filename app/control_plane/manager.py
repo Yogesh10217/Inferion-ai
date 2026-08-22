@@ -71,7 +71,17 @@ class ControlPlaneManager:
         self.change_history = ChangeHistoryTracker()
         self.metrics_collector = ControlPlaneMetricsCollector()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all 18 platform control subsystems")
+        # Phase 5.11 Extensibility Managers
+        from app.developer_platform.manager import DeveloperPlatformManager
+        from app.extensions.manager import ExtensionManager
+        from app.marketplace.manager import MarketplaceManager
+
+        self.developer_platform_manager = DeveloperPlatformManager()
+        self.extension_manager = ExtensionManager()
+        self.marketplace_manager = MarketplaceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.11 Extensibility Managers")
+
 
     def get_summary(self) -> Dict[str, Any]:
         """Aggregate master control plane status summary."""

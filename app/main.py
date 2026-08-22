@@ -41,6 +41,10 @@ from app.api.v1.governance import router as governance_router
 from app.api.v1.jobs import router as jobs_router
 from app.api.v1.reliability import router as reliability_router
 from app.api.v1.control_plane import router as control_plane_router
+from app.api.v1.developers import router as developers_router
+from app.api.v1.extensions import router as extensions_router
+from app.api.v1.marketplace import router as marketplace_router
+
 
 
 from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
@@ -147,6 +151,10 @@ def create_app() -> FastAPI:
     app.include_router(jobs_router)
     app.include_router(reliability_router)
     app.include_router(control_plane_router)
+    app.include_router(developers_router)
+    app.include_router(extensions_router)
+    app.include_router(marketplace_router)
+
 
 
 

@@ -9,6 +9,10 @@ from .autonomy import AutonomyClient, WorkersClient
 from .observability import ObservabilityClient
 from .reliability import SecurityClient, GovernanceClient, JobsClient, ReliabilityClient
 from .control_plane import ControlPlaneClient
+from .developers import DevelopersClient
+from .extensions import ExtensionsClient
+from .marketplace import MarketplaceClient
+
 
 
 import httpx
@@ -52,6 +56,10 @@ class LLMEngineClient:
         self.workers = WorkersClient(self.base_url, api_key)
         self.observability = ObservabilityClient(self.client, self.base_url)
         self.control_plane = ControlPlaneClient(self.base_url, api_key)
+        self.developers = DevelopersClient(self.base_url, api_key)
+        self.extensions = ExtensionsClient(self.base_url, api_key)
+        self.marketplace = MarketplaceClient(self.base_url, api_key)
+
 
 
     def health(self) -> dict:

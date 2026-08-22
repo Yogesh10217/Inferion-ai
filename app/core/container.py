@@ -282,6 +282,16 @@ class ServiceContainer:
         from app.control_plane import ControlPlaneManager
         self.control_plane_manager = ControlPlaneManager()
 
+        # Phase 5.11 — Developer Platform & Marketplace
+        from app.developer_platform.manager import DeveloperPlatformManager
+        from app.extensions.manager import ExtensionManager
+        from app.marketplace.manager import MarketplaceManager
+
+        self.developer_platform_manager = DeveloperPlatformManager()
+        self.extension_manager = ExtensionManager()
+        self.marketplace_manager = MarketplaceManager()
+
+
 
 
 
