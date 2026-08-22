@@ -6,7 +6,9 @@ from .tools import ToolsClient
 from .teams import TeamsClient
 from .planning import PlanningClient
 from .autonomy import AutonomyClient, WorkersClient
+from .observability import ObservabilityClient
 import httpx
+
 from typing import List, Dict, Any, Optional, AsyncGenerator
 from .auth import AuthProvider, APIKeyAuth, BearerAuth
 from .exceptions import APIError, AuthenticationError, RateLimitError, TimeoutError
@@ -44,6 +46,8 @@ class LLMEngineClient:
         self.planning = PlanningClient(self.base_url, api_key)
         self.autonomy = AutonomyClient(self.base_url, api_key)
         self.workers = WorkersClient(self.base_url, api_key)
+        self.observability = ObservabilityClient(self.client, self.base_url)
+
 
     def health(self) -> dict:
         res = self.client.get("/health")

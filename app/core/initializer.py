@@ -15,7 +15,15 @@ class InfrastructureInitializer:
 
     async def initialize(self) -> None:
         """Run all startup initialization tasks."""
+        logger.info("Seeding default pricing rules and plans...")
+        try:
+            await self._container.pricing_service.seed_default_rules()
+            await self._container.plan_service.seed_default_plans()
+        except Exception as e:
+            logger.warning(f"Seeding default plans/rules warning: {e}")
+
         logger.info("Initializing providers...")
+
         factory = self._container.provider_factory
 
         # Perform provider health checks

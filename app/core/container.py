@@ -205,6 +205,13 @@ class ServiceContainer:
             app_version=self.settings.app_version,
         )
 
+        # Observability Platform Manager (Phase 5.8)
+        from app.observability.manager import ObservabilityManager
+        self.observability_manager = ObservabilityManager(
+            pricing_service=self.pricing_service,
+            session_factory=async_session_maker,
+        )
+
         # Observability / Prometheus
         if self.settings.prometheus_enabled:
             self.prometheus_registry = PrometheusRegistry(
@@ -221,4 +228,5 @@ class ServiceContainer:
             self.prometheus_registry = None
             self.metrics_mapper = None
             self.prometheus_exporter = None
+
 

@@ -1,12 +1,22 @@
-import pytest
 import os
-if os.path.exists("./test.db"):
-    os.remove("./test.db")
-
 os.environ["AUTH_ENABLED"] = "true"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
 
+try:
+    from app.core.config import get_settings
+    get_settings.cache_clear()
+except Exception:
+    pass
+
+import pytest
+if os.path.exists("./test.db"):
+    try:
+        os.remove("./test.db")
+    except Exception:
+        pass
+
 from httpx import AsyncClient, ASGITransport
+
 from typing import AsyncGenerator
 from typing import Dict
 from unittest.mock import patch, MagicMock
@@ -47,6 +57,10 @@ def get_client(event_loop):
             org = Organization(id="test_org_id", name="Test Org", slug="test-org")
             membership = Membership(user_id="admin_user_id", organization_id="test_org_id", role_id="admin", status="active")
             
+            from app.billing.plan_service import PlanService
+            from app.billing.pricing_service import PricingService
+            await PlanService(async_session_maker).seed_default_plans()
+            await PricingService(async_session_maker).seed_default_rules()
             try:
                 session.add_all([role, user, org, membership])
                 await session.commit()

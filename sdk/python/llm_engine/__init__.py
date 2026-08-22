@@ -11,6 +11,7 @@ from .models import ChatCompletionRequest, ChatCompletionResponse, ModelInfo
 from .knowledge import KnowledgeClient
 from .workflows import WorkflowClient
 from .memory import MemoryClient
+from .observability import ObservabilityClient
 
 __all__ = [
     "LLMEngineClient",
@@ -28,4 +29,6 @@ __all__ = [
     "KnowledgeClient",
     "WorkflowClient",
     "MemoryClient",
+    "ObservabilityClient",
 ]
+

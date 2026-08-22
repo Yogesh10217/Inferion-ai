@@ -31,6 +31,8 @@ import app.billing.models
 import app.admin.models
 import app.events.event_models
 import app.knowledge.models
+import app.observability.models
+
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:

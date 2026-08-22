@@ -35,6 +35,8 @@ from app.api.v1.teams import router as teams_router
 from app.api.v1.planning import router as planning_router
 from app.api.v1.autonomy import router as autonomy_router
 from app.api.v1.workers import router as workers_router
+from app.api.v1.observability import router as observability_router
+
 from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
 from app.core.database import async_session_maker
 
@@ -133,6 +135,8 @@ def create_app() -> FastAPI:
     app.include_router(planning_router)
     app.include_router(autonomy_router)
     app.include_router(workers_router)
+    app.include_router(observability_router)
+
     
     if settings.auth_enabled:
         app.include_router(auth_router, prefix=settings.api_prefix)
