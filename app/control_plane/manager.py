@@ -126,7 +126,12 @@ class ControlPlaneManager:
         from app.intelligence_platform.manager import EnterpriseIntelligenceManager
         self.intelligence_manager = EnterpriseIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.24 Enterprise Intelligence Manager")
+        # Phase 5.25 Enterprise AI Data Governance Manager
+        from app.data_governance.manager import DataGovernanceManager
+        self.data_governance_manager = DataGovernanceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.25 Data Governance Manager")
+
 
 
 

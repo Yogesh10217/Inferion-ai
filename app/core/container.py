@@ -336,6 +336,11 @@ class ServiceContainer:
         from app.intelligence_platform.manager import EnterpriseIntelligenceManager
         self.intelligence_manager = EnterpriseIntelligenceManager()
 
+        # Phase 5.25 Enterprise AI Data Governance Manager
+        from app.data_governance.manager import DataGovernanceManager
+        self.data_governance_manager = DataGovernanceManager()
+
+
 
 
 

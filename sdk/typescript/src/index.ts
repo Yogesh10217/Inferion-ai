@@ -7,3 +7,5 @@ export * from './observability.js';
 export * from './applications.js';
 export * from './platform-operations.js';
 export * from './intelligence.js';
+export * from './data-governance.js';
+
