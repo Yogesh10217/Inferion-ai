@@ -15,6 +15,13 @@ class InfrastructureInitializer:
 
     async def initialize(self) -> None:
         """Run all startup initialization tasks."""
+        logger.info("Initializing database...")
+        try:
+            from app.core.database import init_db
+            await init_db()
+        except Exception as e:
+            logger.warning(f"Database initialization warning: {e}")
+
         logger.info("Seeding default pricing rules and plans...")
         try:
             await self._container.pricing_service.seed_default_rules()

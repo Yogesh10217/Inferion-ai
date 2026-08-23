@@ -12,6 +12,7 @@ from .knowledge import KnowledgeClient
 from .workflows import WorkflowClient
 from .memory import MemoryClient
 from .observability import ObservabilityClient
+from .applications import ApplicationPlatformClient
 
 __all__ = [
     "LLMEngineClient",
@@ -30,5 +31,7 @@ __all__ = [
     "WorkflowClient",
     "MemoryClient",
     "ObservabilityClient",
+    "ApplicationPlatformClient",
 ]
+
 

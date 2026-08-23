@@ -4,4 +4,6 @@ export * from './errors.js';
 export * from './auth.js';
 export * from './knowledge.js';
 export * from './observability.js';
+export * from './applications.js';
+
 

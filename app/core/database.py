@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -9,6 +10,12 @@ from app.core.config import get_settings
 logger = logging.getLogger("app")
 
 settings = get_settings()
+
+if settings.database_url.startswith("sqlite"):
+    db_path = settings.database_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
+    dir_name = os.path.dirname(db_path)
+    if dir_name:
+        os.makedirs(dir_name, exist_ok=True)
 
 engine = create_async_engine(
     settings.database_url,
@@ -54,11 +61,12 @@ async def init_db() -> None:
     """
     if settings.database_url.startswith("sqlite"):
         # Make sure the data directory exists
-        import os
-        db_path = settings.database_url.replace("sqlite+aiosqlite:///", "")
-        if db_path.startswith("./"):
-            os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        db_path = settings.database_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
+        dir_name = os.path.dirname(db_path)
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
             
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created.")
+

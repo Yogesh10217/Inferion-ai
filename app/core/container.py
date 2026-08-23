@@ -324,6 +324,11 @@ class ServiceContainer:
         self.integration_manager = IntegrationManager()
         self.developer_platform_manager = DeveloperPlatformManager()
 
+        # Phase 5.22 Application Platform Manager
+        from app.application_platform.manager import ApplicationPlatformManager
+        self.application_platform_manager = ApplicationPlatformManager()
+
+
 
 
 

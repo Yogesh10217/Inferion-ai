@@ -54,6 +54,8 @@ from app.api.v1.orchestration import router as orchestration_router
 from app.api.v1.knowledge_platform import router as knowledge_platform_router
 from app.api.v1.integrations import router as integrations_router
 from app.api.v1.developer_platform import router as developer_platform_router
+from app.api.v1.application_platform import router as application_platform_router
+
 
 
 
@@ -100,7 +102,6 @@ async def lifespan(app: FastAPI):
         from app.plugins import PluginManager
         container.plugin_manager = PluginManager()
         await container.plugin_manager.initialize()
-        await container.plugin_manager.load_plugins()
 
     yield
 
@@ -184,6 +185,8 @@ def create_app() -> FastAPI:
     app.include_router(knowledge_platform_router)
     app.include_router(integrations_router)
     app.include_router(developer_platform_router)
+    app.include_router(application_platform_router)
+
 
 
 
