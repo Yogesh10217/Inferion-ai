@@ -39,6 +39,11 @@ class RiskSeverity(str, Enum):
     CRITICAL = "CRITICAL"
 
 
+# Alias for backward compatibility across platform modules
+RiskLevel = RiskSeverity
+
+
+
 class RiskStatus(str, Enum):
     IDENTIFIED = "IDENTIFIED"
     ASSESSED = "ASSESSED"

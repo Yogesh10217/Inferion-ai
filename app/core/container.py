@@ -328,6 +328,11 @@ class ServiceContainer:
         from app.application_platform.manager import ApplicationPlatformManager
         self.application_platform_manager = ApplicationPlatformManager()
 
+        # Phase 5.23 Platform Operations Manager
+        from app.platform_operations.manager import PlatformOperationsManager
+        self.platform_operations_manager = PlatformOperationsManager()
+
+
 
 
 

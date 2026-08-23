@@ -118,7 +118,12 @@ class ControlPlaneManager:
         from app.application_platform.manager import ApplicationPlatformManager
         self.application_platform_manager = ApplicationPlatformManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.22 Application Platform Manager")
+        # Phase 5.23 Platform Operations Manager
+        from app.platform_operations.manager import PlatformOperationsManager
+        self.platform_operations_manager = PlatformOperationsManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.23 Platform Operations Manager")
+
 
 
 

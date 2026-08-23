@@ -5,5 +5,4 @@ export * from './auth.js';
 export * from './knowledge.js';
 export * from './observability.js';
 export * from './applications.js';
-
-
+export * from './platform-operations.js';
