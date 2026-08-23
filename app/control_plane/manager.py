@@ -142,7 +142,12 @@ class ControlPlaneManager:
         from app.portfolio_platform.manager import PortfolioPlatformManager
         self.portfolio_platform_manager = PortfolioPlatformManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.28 Portfolio Platform Manager")
+        # Phase 5.29 Enterprise AI Decision Intelligence Manager
+        from app.decision_intelligence.manager import DecisionIntelligenceManager
+        self.decision_intelligence_manager = DecisionIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.29 Decision Intelligence Manager")
+
 
 
 

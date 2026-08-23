@@ -21,6 +21,8 @@ type Client struct {
 	Architecture *ArchitectureClient
 	Compliance   *ComplianceClient
 	Portfolio    *PortfolioClient
+	Decisions    *DecisionsClient
+
 
 
 	baseURL      string
@@ -46,6 +48,8 @@ func NewClient(cfg Config) *Client {
 	c.Architecture = &ArchitectureClient{client: c}
 	c.Compliance = &ComplianceClient{client: c}
 	c.Portfolio = &PortfolioClient{client: c}
+	c.Decisions = &DecisionsClient{client: c}
+
 
 
 	return c

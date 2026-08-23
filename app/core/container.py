@@ -352,6 +352,11 @@ class ServiceContainer:
         from app.portfolio_platform.manager import PortfolioPlatformManager
         self.portfolio_platform_manager = PortfolioPlatformManager()
 
+        # Phase 5.29 Enterprise AI Decision Intelligence Manager
+        from app.decision_intelligence.manager import DecisionIntelligenceManager
+        self.decision_intelligence_manager = DecisionIntelligenceManager()
+
+
 
 
 

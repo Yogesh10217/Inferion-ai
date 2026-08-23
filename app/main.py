@@ -61,6 +61,8 @@ from app.api.v1.data_governance import router as data_governance_router
 from app.api.v1.architecture import router as architecture_router
 from app.api.v1.compliance import router as compliance_router
 from app.api.v1.portfolio import router as portfolio_router
+from app.api.v1.decisions import router as decisions_router
+
 
 
 
@@ -204,6 +206,8 @@ def create_app() -> FastAPI:
     app.include_router(architecture_router)
     app.include_router(compliance_router)
     app.include_router(portfolio_router)
+    app.include_router(decisions_router)
+
 
 
 
