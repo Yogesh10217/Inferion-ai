@@ -20,6 +20,8 @@ type Client struct {
 	Knowledge    *KnowledgeClient
 	Architecture *ArchitectureClient
 	Compliance   *ComplianceClient
+	Portfolio    *PortfolioClient
+
 
 	baseURL      string
 	apiKey       string
@@ -43,6 +45,8 @@ func NewClient(cfg Config) *Client {
 	c.Knowledge = &KnowledgeClient{client: c}
 	c.Architecture = &ArchitectureClient{client: c}
 	c.Compliance = &ComplianceClient{client: c}
+	c.Portfolio = &PortfolioClient{client: c}
+
 
 	return c
 }

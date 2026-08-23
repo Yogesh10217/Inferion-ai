@@ -138,7 +138,12 @@ class ControlPlaneManager:
         from app.compliance_platform.manager import CompliancePlatformManager
         self.compliance_platform_manager = CompliancePlatformManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.27 Compliance Platform Manager")
+        # Phase 5.28 Enterprise AI Portfolio Platform Manager
+        from app.portfolio_platform.manager import PortfolioPlatformManager
+        self.portfolio_platform_manager = PortfolioPlatformManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.28 Portfolio Platform Manager")
+
 
 
 

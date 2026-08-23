@@ -28,6 +28,8 @@ from .intelligence import IntelligenceClient
 from .data_governance import DataGovernanceClient
 from .architecture import ArchitectureClient
 from .compliance import ComplianceClient
+from .portfolio import PortfolioClient
+
 
 
 
@@ -105,6 +107,8 @@ class LLMEngineClient:
         self.data_governance = DataGovernanceClient(self.client)
         self.architecture = ArchitectureClient(self)
         self.compliance = ComplianceClient(self)
+        self.portfolio = PortfolioClient(self)
+
 
 
 

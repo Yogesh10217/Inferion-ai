@@ -348,6 +348,11 @@ class ServiceContainer:
         from app.compliance_platform.manager import CompliancePlatformManager
         self.compliance_platform_manager = CompliancePlatformManager()
 
+        # Phase 5.28 Enterprise AI Portfolio Platform Manager
+        from app.portfolio_platform.manager import PortfolioPlatformManager
+        self.portfolio_platform_manager = PortfolioPlatformManager()
+
+
 
 
 
