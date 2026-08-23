@@ -17,11 +17,14 @@ type Config struct {
 }
 
 type Client struct {
-	Knowledge *KnowledgeClient
-	baseURL string
-	apiKey  string
-	orgID   string
-	hc      *http.Client
+	Knowledge    *KnowledgeClient
+	Architecture *ArchitectureClient
+	Compliance   *ComplianceClient
+
+	baseURL      string
+	apiKey       string
+	orgID        string
+	hc           *http.Client
 }
 
 func NewClient(cfg Config) *Client {
@@ -38,9 +41,12 @@ func NewClient(cfg Config) *Client {
 		hc:      &http.Client{Timeout: cfg.Timeout},
 	}
 	c.Knowledge = &KnowledgeClient{client: c}
-	return c,
-	}
+	c.Architecture = &ArchitectureClient{client: c}
+	c.Compliance = &ComplianceClient{client: c}
+
+	return c
 }
+
 
 func (c *Client) Health(ctx context.Context) (map[string]interface{}, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", c.baseURL+"/health", nil)

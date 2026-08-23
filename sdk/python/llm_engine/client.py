@@ -26,6 +26,10 @@ from .applications import ApplicationPlatformClient
 from .platform_operations import PlatformOperationsClient
 from .intelligence import IntelligenceClient
 from .data_governance import DataGovernanceClient
+from .architecture import ArchitectureClient
+from .compliance import ComplianceClient
+
+
 
 
 
@@ -99,6 +103,11 @@ class LLMEngineClient:
         self.platform_operations = PlatformOperationsClient(self.client)
         self.intelligence = IntelligenceClient(self.client)
         self.data_governance = DataGovernanceClient(self.client)
+        self.architecture = ArchitectureClient(self)
+        self.compliance = ComplianceClient(self)
+
+
+
 
 
 

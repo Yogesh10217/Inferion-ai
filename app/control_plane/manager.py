@@ -130,7 +130,17 @@ class ControlPlaneManager:
         from app.data_governance.manager import DataGovernanceManager
         self.data_governance_manager = DataGovernanceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.25 Data Governance Manager")
+        # Phase 5.26 Enterprise AI Architecture Platform Manager
+        from app.architecture_platform.manager import ArchitecturePlatformManager
+        self.architecture_platform_manager = ArchitecturePlatformManager()
+
+        # Phase 5.27 Enterprise AI Compliance Platform Manager
+        from app.compliance_platform.manager import CompliancePlatformManager
+        self.compliance_platform_manager = CompliancePlatformManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.27 Compliance Platform Manager")
+
+
 
 
 

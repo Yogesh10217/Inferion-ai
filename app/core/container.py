@@ -340,6 +340,16 @@ class ServiceContainer:
         from app.data_governance.manager import DataGovernanceManager
         self.data_governance_manager = DataGovernanceManager()
 
+        # Phase 5.26 Enterprise AI Architecture Platform Manager
+        from app.architecture_platform.manager import ArchitecturePlatformManager
+        self.architecture_platform_manager = ArchitecturePlatformManager()
+
+        # Phase 5.27 Enterprise AI Compliance Platform Manager
+        from app.compliance_platform.manager import CompliancePlatformManager
+        self.compliance_platform_manager = CompliancePlatformManager()
+
+
+
 
 
 

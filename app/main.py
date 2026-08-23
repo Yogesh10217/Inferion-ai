@@ -58,6 +58,10 @@ from app.api.v1.application_platform import router as application_platform_route
 from app.api.v1.platform_operations import router as platform_operations_router
 from app.api.v1.intelligence import router as intelligence_router
 from app.api.v1.data_governance import router as data_governance_router
+from app.api.v1.architecture import router as architecture_router
+from app.api.v1.compliance import router as compliance_router
+
+
 
 
 
@@ -195,6 +199,10 @@ def create_app() -> FastAPI:
     app.include_router(platform_operations_router)
     app.include_router(intelligence_router)
     app.include_router(data_governance_router)
+    app.include_router(architecture_router)
+    app.include_router(compliance_router)
+
+
 
 
 
