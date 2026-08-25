@@ -115,6 +115,9 @@ class LLMEngineClient:
         self.reliability = ReliabilityClient(self)
         from .security import SecurityClient
         self.security = SecurityClient(self)
+        from .ai_lifecycle import AILifecycleClient
+        self.ai_lifecycle = AILifecycleClient(self)
+
 
 
 

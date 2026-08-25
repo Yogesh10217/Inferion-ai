@@ -154,7 +154,12 @@ class ControlPlaneManager:
         from app.security_intelligence.manager import SecurityIntelligenceManager
         self.security_intelligence_manager = SecurityIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.32 Security Intelligence Manager")
+        # Phase 5.33 Enterprise AI Lifecycle Platform Manager
+        from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
+        self.ai_lifecycle_platform_manager = AILifecyclePlatformManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.33 AI Lifecycle Platform Manager")
+
 
 
 

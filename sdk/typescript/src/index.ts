@@ -14,6 +14,8 @@ export * from './portfolio.js';
 export * from './decisions.js';
 export * from './reliability.js';
 export * from './security.js';
+export * from './ai_lifecycle.js';
+
 
 
 

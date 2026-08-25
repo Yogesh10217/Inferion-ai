@@ -364,6 +364,11 @@ class ServiceContainer:
         from app.security_intelligence.manager import SecurityIntelligenceManager
         self.security_intelligence_manager = SecurityIntelligenceManager()
 
+        # Phase 5.33 Enterprise AI Lifecycle Platform Manager
+        from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
+        self.ai_lifecycle_platform_manager = AILifecyclePlatformManager()
+
+
 
 
         # Phase 5.30 Shared Platform Contract Utilities
