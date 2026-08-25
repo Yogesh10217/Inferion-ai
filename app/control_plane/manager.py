@@ -150,7 +150,12 @@ class ControlPlaneManager:
         from app.reliability_platform.manager import ReliabilityPlatformManager
         self.reliability_platform_manager = ReliabilityPlatformManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.31 Reliability Platform Manager")
+        # Phase 5.32 Enterprise AI Security Intelligence Manager
+        from app.security_intelligence.manager import SecurityIntelligenceManager
+        self.security_intelligence_manager = SecurityIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.32 Security Intelligence Manager")
+
 
 
 

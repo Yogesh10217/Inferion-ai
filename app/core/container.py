@@ -360,6 +360,11 @@ class ServiceContainer:
         from app.reliability_platform.manager import ReliabilityPlatformManager
         self.reliability_platform_manager = ReliabilityPlatformManager()
 
+        # Phase 5.32 Enterprise AI Security Intelligence Manager
+        from app.security_intelligence.manager import SecurityIntelligenceManager
+        self.security_intelligence_manager = SecurityIntelligenceManager()
+
+
 
         # Phase 5.30 Shared Platform Contract Utilities
         from app.platform_contracts.fingerprinting import FingerprintGenerator

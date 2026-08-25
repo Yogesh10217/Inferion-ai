@@ -113,6 +113,9 @@ class LLMEngineClient:
         self.decisions = DecisionsClient(self)
         from .reliability import ReliabilityClient
         self.reliability = ReliabilityClient(self)
+        from .security import SecurityClient
+        self.security = SecurityClient(self)
+
 
 
 
