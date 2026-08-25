@@ -111,6 +111,9 @@ class LLMEngineClient:
         self.compliance = ComplianceClient(self)
         self.portfolio = PortfolioClient(self)
         self.decisions = DecisionsClient(self)
+        from .reliability import ReliabilityClient
+        self.reliability = ReliabilityClient(self)
+
 
 
 

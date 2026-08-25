@@ -1,33 +1,27 @@
+// Package llmengine provides the Go SDK for Enterprise AI Reliability Platform (Phase 5.31).
 package llmengine
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
-	"net/http"
 )
 
 type ReliabilityClient struct {
-	BaseURL string
-	HTTPClient *http.Client
+	client *Client
 }
 
-func NewReliabilityClient(baseURL string) *ReliabilityClient {
-	return &ReliabilityClient{
-		BaseURL: baseURL,
-		HTTPClient: &http.Client{},
-	}
+type ReliabilityService struct {
+	ServiceID string `json:"service_id"`
+	TenantID  string `json:"tenant_id"`
+	Name      string `json:"name"`
+	Tier      string `json:"tier"`
+	Status    string `json:"status"`
 }
 
-func (c *ReliabilityClient) GetHealth() (map[string]interface{}, error) {
-	resp, err := c.HTTPClient.Get(fmt.Sprintf("%s/v1/reliability/health", c.BaseURL))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var result map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
-	}
-	return result, nil
+func (c *ReliabilityClient) RegisterService(ctx context.Context, tenantID, name, tier string) (*ReliabilityService, error) {
+	path := fmt.Sprintf("/v1/reliability/services?tenant_id=%s", tenantID)
+	req := map[string]string{"name": name, "tier": tier}
+	var res ReliabilityService
+	err := c.client.post(ctx, path, req, &res)
+	return &res, err
 }

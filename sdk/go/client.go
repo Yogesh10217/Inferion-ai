@@ -22,6 +22,8 @@ type Client struct {
 	Compliance   *ComplianceClient
 	Portfolio    *PortfolioClient
 	Decisions    *DecisionsClient
+	Reliability  *ReliabilityClient
+
 
 
 

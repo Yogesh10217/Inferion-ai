@@ -356,6 +356,27 @@ class ServiceContainer:
         from app.decision_intelligence.manager import DecisionIntelligenceManager
         self.decision_intelligence_manager = DecisionIntelligenceManager()
 
+        # Phase 5.31 Enterprise AI Reliability Platform Manager
+        from app.reliability_platform.manager import ReliabilityPlatformManager
+        self.reliability_platform_manager = ReliabilityPlatformManager()
+
+
+        # Phase 5.30 Shared Platform Contract Utilities
+        from app.platform_contracts.fingerprinting import FingerprintGenerator
+        from app.platform_contracts.tenant import TenantAccessGuard
+        from app.platform_contracts.idempotency import IdempotencyManager
+        from app.platform_contracts.redaction import SensitiveDataSanitizer
+        from app.platform_contracts.snapshots import SnapshotFactory
+        from app.platform_contracts.adapters import PlatformContractAdapter
+
+        self.fingerprint_generator = FingerprintGenerator()
+        self.tenant_access_guard = TenantAccessGuard()
+        self.idempotency_manager = IdempotencyManager()
+        self.sensitive_data_sanitizer = SensitiveDataSanitizer()
+        self.snapshot_factory = SnapshotFactory()
+        self.contract_adapter = PlatformContractAdapter()
+
+
 
 
 

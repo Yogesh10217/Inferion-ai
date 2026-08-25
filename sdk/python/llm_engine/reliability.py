@@ -1,81 +1,64 @@
-"""Python SDK Client for Security, Governance, Jobs, and Reliability."""
+"""Python SDK Client for Enterprise AI Reliability Platform (Phase 5.31)."""
 
-from typing import Dict, Any, List, Optional
-import httpx
+from typing import Dict, Any, Optional, List
 
 
 class SecurityClient:
-    """Python SDK client for API Keys & Identity."""
+    """SDK client for Security endpoints."""
 
-    def __init__(self, base_url: str = "http://localhost:8002", timeout: float = 10.0) -> None:
-        self.base_url = base_url.rstrip("/")
-        self.client = httpx.Client(base_url=self.base_url, timeout=timeout)
-
-    def create_api_key(self, name: str, tenant_id: str = "global", scopes: Optional[List[str]] = None) -> Dict[str, Any]:
-        resp = self.client.post("/v1/security/api-keys", json={"name": name, "tenant_id": tenant_id, "scopes": scopes or ["read", "write"]})
-        resp.raise_for_status()
-        return resp.json()
-
-    def list_api_keys(self, tenant_id: str = "global") -> Dict[str, Any]:
-        resp = self.client.get("/v1/security/api-keys", params={"tenant_id": tenant_id})
-        resp.raise_for_status()
-        return resp.json()
-
-    def revoke_api_key(self, key_id: str) -> Dict[str, Any]:
-        resp = self.client.delete(f"/v1/security/api-keys/{key_id}")
-        resp.raise_for_status()
-        return resp.json()
+    def __init__(self, client: Any = None, base_url: str = "") -> None:
+        self.client = client
+        self.base_url = base_url
 
 
 class GovernanceClient:
-    """Python SDK client for Quotas & Usage."""
+    """SDK client for Governance endpoints."""
 
-    def __init__(self, base_url: str = "http://localhost:8002", timeout: float = 10.0) -> None:
-        self.base_url = base_url.rstrip("/")
-        self.client = httpx.Client(base_url=self.base_url, timeout=timeout)
-
-    def get_usage(self, tenant_id: str = "global") -> Dict[str, Any]:
-        resp = self.client.get("/v1/governance/usage", params={"tenant_id": tenant_id})
-        resp.raise_for_status()
-        return resp.json()
-
-    def get_quotas(self, tenant_id: str = "global") -> Dict[str, Any]:
-        resp = self.client.get("/v1/governance/quotas", params={"tenant_id": tenant_id})
-        resp.raise_for_status()
-        return resp.json()
+    def __init__(self, client: Any = None, base_url: str = "") -> None:
+        self.client = client
+        self.base_url = base_url
 
 
 class JobsClient:
-    """Python SDK client for Distributed Jobs."""
+    """SDK client for Jobs endpoints."""
 
-    def __init__(self, base_url: str = "http://localhost:8002", timeout: float = 10.0) -> None:
-        self.base_url = base_url.rstrip("/")
-        self.client = httpx.Client(base_url=self.base_url, timeout=timeout)
-
-    def enqueue_job(self, name: str, handler_name: str, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        resp = self.client.post("/v1/jobs", json={"name": name, "handler_name": handler_name, "payload": payload or {}})
-        resp.raise_for_status()
-        return resp.json()
-
-    def get_job(self, job_id: str) -> Dict[str, Any]:
-        resp = self.client.get(f"/v1/jobs/{job_id}")
-        resp.raise_for_status()
-        return resp.json()
+    def __init__(self, client: Any = None, base_url: str = "") -> None:
+        self.client = client
+        self.base_url = base_url
 
 
 class ReliabilityClient:
-    """Python SDK client for Health & Resilience metrics."""
+    """SDK client for interacting with Enterprise AI Reliability Platform API."""
 
-    def __init__(self, base_url: str = "http://localhost:8002", timeout: float = 10.0) -> None:
-        self.base_url = base_url.rstrip("/")
-        self.client = httpx.Client(base_url=self.base_url, timeout=timeout)
+    def __init__(self, base_client: Any) -> None:
+        self._client = base_client
 
-    def get_health(self) -> Dict[str, Any]:
-        resp = self.client.get("/v1/reliability/health")
-        resp.raise_for_status()
-        return resp.json()
+    def register_service(self, tenant_id: str, name: str, tier: str = "TIER_1_HIGH") -> Dict[str, Any]:
+        return self._client.post(f"/v1/reliability/services?tenant_id={tenant_id}", json={"name": name, "tier": tier})
 
-    def get_circuit_breakers(self) -> Dict[str, Any]:
-        resp = self.client.get("/v1/reliability/circuit-breakers")
-        resp.raise_for_status()
-        return resp.json()
+    def create_slo(self, tenant_id: str, service_id: str, name: str, target_percentage: float = 99.9) -> Dict[str, Any]:
+        return self._client.post(
+            f"/v1/reliability/slos?tenant_id={tenant_id}",
+            json={"service_id": service_id, "name": name, "target_percentage": target_percentage},
+        )
+
+    def create_incident(self, tenant_id: str, service_id: str, title: str, severity: str = "SEV_1_HIGH") -> Dict[str, Any]:
+        return self._client.post(
+            f"/v1/reliability/incidents?tenant_id={tenant_id}",
+            json={"service_id": service_id, "title": title, "severity": severity},
+        )
+
+    def plan_remediation(self, tenant_id: str, incident_id: str, idempotency_key: str, action_name: str = "RESTART_POD", is_high_risk: bool = False) -> Dict[str, Any]:
+        return self._client.post(
+            f"/v1/reliability/remediations/plan?tenant_id={tenant_id}",
+            json={"incident_id": incident_id, "idempotency_key": idempotency_key, "action_name": action_name, "is_high_risk": is_high_risk},
+        )
+
+    def create_postmortem(self, tenant_id: str, incident_id: str, summary: str, root_cause: str) -> Dict[str, Any]:
+        return self._client.post(
+            f"/v1/reliability/postmortems?tenant_id={tenant_id}",
+            json={"incident_id": incident_id, "summary": summary, "root_cause": root_cause},
+        )
+
+    def get_analytics_report(self, tenant_id: str) -> Dict[str, Any]:
+        return self._client.get(f"/v1/reliability/analytics/report?tenant_id={tenant_id}")

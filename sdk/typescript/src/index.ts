@@ -12,6 +12,8 @@ export * from './architecture.js';
 export * from './compliance.js';
 export * from './portfolio.js';
 export * from './decisions.js';
+export * from './reliability.js';
+
 
 
 
