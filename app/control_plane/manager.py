@@ -158,7 +158,12 @@ class ControlPlaneManager:
         from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
         self.ai_lifecycle_platform_manager = AILifecyclePlatformManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.33 AI Lifecycle Platform Manager")
+        # Phase 5.34 Enterprise AI Event Intelligence Manager
+        from app.event_intelligence.manager import EventIntelligenceManager
+        self.event_intelligence_manager = EventIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.34 Event Intelligence Manager")
+
 
 
 

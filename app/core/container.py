@@ -368,6 +368,11 @@ class ServiceContainer:
         from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
         self.ai_lifecycle_platform_manager = AILifecyclePlatformManager()
 
+        # Phase 5.34 Enterprise AI Event Intelligence Manager
+        from app.event_intelligence.manager import EventIntelligenceManager
+        self.event_intelligence_manager = EventIntelligenceManager()
+
+
 
 
 

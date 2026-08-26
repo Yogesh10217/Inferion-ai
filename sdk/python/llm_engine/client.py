@@ -117,6 +117,9 @@ class LLMEngineClient:
         self.security = SecurityClient(self)
         from .ai_lifecycle import AILifecycleClient
         self.ai_lifecycle = AILifecycleClient(self)
+        from .events import EventsClient
+        self.events = EventsClient(self)
+
 
 
 

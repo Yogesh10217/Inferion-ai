@@ -25,6 +25,8 @@ type Client struct {
 	Reliability  *ReliabilityClient
 	Security     *SecurityClient
 	AILifecycle  *AILifecycleClient
+	Events       *EventsClient
+
 
 
 
