@@ -391,6 +391,10 @@ class ServiceContainer:
         self.snapshot_factory = SnapshotFactory()
         self.contract_adapter = PlatformContractAdapter()
 
+        from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
+        self.knowledge_intelligence_manager = KnowledgeIntelligenceManager()
+
+
 
 
 

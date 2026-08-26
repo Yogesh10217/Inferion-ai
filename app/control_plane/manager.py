@@ -162,7 +162,12 @@ class ControlPlaneManager:
         from app.event_intelligence.manager import EventIntelligenceManager
         self.event_intelligence_manager = EventIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.34 Event Intelligence Manager")
+        # Phase 5.35 Enterprise AI Knowledge Intelligence Manager
+        from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
+        self.knowledge_intelligence_manager = KnowledgeIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.35 Knowledge Intelligence Manager")
+
 
 
 

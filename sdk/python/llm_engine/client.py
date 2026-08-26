@@ -119,6 +119,9 @@ class LLMEngineClient:
         self.ai_lifecycle = AILifecycleClient(self)
         from .events import EventsClient
         self.events = EventsClient(self)
+        from .knowledge_intelligence import KnowledgeIntelligenceClient
+        self.knowledge = KnowledgeIntelligenceClient(self)
+
 
 
 

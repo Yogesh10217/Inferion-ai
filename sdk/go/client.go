@@ -26,6 +26,8 @@ type Client struct {
 	Security     *SecurityClient
 	AILifecycle  *AILifecycleClient
 	Events       *EventsClient
+	Knowledge    *KnowledgeClient
+
 
 
 

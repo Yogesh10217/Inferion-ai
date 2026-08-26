@@ -65,6 +65,8 @@ from app.api.v1.decisions import router as decisions_router
 from app.api.v1.security_intelligence import router as security_intelligence_router
 from app.api.v1.ai_lifecycle import router as ai_lifecycle_router
 from app.api.v1.event_intelligence import router as event_intelligence_router
+from app.api.v1.knowledge_intelligence import router as knowledge_intelligence_router
+
 
 
 
@@ -216,6 +218,8 @@ def create_app() -> FastAPI:
     app.include_router(security_intelligence_router)
     app.include_router(ai_lifecycle_router)
     app.include_router(event_intelligence_router)
+    app.include_router(knowledge_intelligence_router)
+
 
 
 

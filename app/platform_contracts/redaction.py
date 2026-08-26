@@ -46,7 +46,12 @@ class SensitiveDataSanitizer:
         self.secret_manager = secret_manager or SecretManager()
         self.policy = policy or RedactionPolicy()
 
+    @classmethod
+    def sanitize(cls, data: Any) -> Any:
+        return cls().sanitize_copy(data)
+
     def sanitize_copy(self, data: Any) -> Any:
+
         copied = copy.deepcopy(data)
         return self._sanitize_recursive(copied)
 

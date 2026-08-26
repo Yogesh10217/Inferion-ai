@@ -1,57 +1,43 @@
-export class KnowledgeClient {
-  private _fetch: (url: string, options: any) => Promise<Response>;
-  private _baseUrl: string;
-  private _headers: Record<string, string>;
+/**
+ * TypeScript SDK Client for Enterprise AI Knowledge Intelligence Platform (Phase 5.35).
+ */
 
-  constructor(fetchImpl: (url: string, options: any) => Promise<Response>, baseUrl: string, headers: Record<string, string>) {
-    this._fetch = fetchImpl;
-    this._baseUrl = baseUrl;
-    this._headers = headers;
+export class KnowledgeIntelligenceClient {
+  private client: any;
+
+  constructor(client: any) {
+    this.client = client;
   }
 
-  private async request(method: string, path: string, body?: any, isStream = false) {
-    const res = await this._fetch(`${this._baseUrl}${path}`, {
-      method,
-      headers: this._headers,
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    if (!res.ok) throw new Error(`API Error ${res.status}`);
-    return isStream ? res : res.json();
+  async createItem(tenantId: string, title: str, knowledgeType: string = "DOCUMENT", classification: string = "INTERNAL"): Promise<any> {
+    return this.client.post(`/v1/knowledge/items?tenant_id=${tenantId}`, { title, knowledge_type: knowledgeType, classification });
   }
 
-  async create(name: string, description: string = '') {
-    return this.request('POST', '/v1/knowledge/create', { name, description });
+  async listItems(tenantId: string): Promise<any> {
+    return this.client.get(`/v1/knowledge/items?tenant_id=${tenantId}`);
   }
 
-  async list() {
-    return this.request('GET', '/v1/knowledge/list');
+  async getItem(itemId: string, tenantId: string): Promise<any> {
+    return this.client.get(`/v1/knowledge/items/${itemId}?tenant_id=${tenantId}`);
   }
 
-  async search(indexId: string, query: string, k: number = 5) {
-    return this.request('POST', '/v1/knowledge/search', { index_id: indexId, query, k });
+  async getProvenance(targetId: string, tenantId: string): Promise<any> {
+    return this.client.get(`/v1/knowledge/provenance?target_id=${targetId}&tenant_id=${tenantId}`);
   }
 
-  async retrieve(documentId: string) {
-    return this.request('GET', `/v1/knowledge/retrieve/${documentId}`);
+  async getGraph(startNodeId: string, tenantId: string, depth: number = 2): Promise<any> {
+    return this.client.get(`/v1/knowledge/graph?start_node_id=${startNodeId}&tenant_id=${tenantId}&depth=${depth}`);
   }
 
-  async delete(resourceType: 'index'|'document', id: string) {
-    return this.request('DELETE', `/v1/knowledge/delete/${resourceType}/${id}`);
+  async retrieve(tenantId: string, query: string): Promise<any> {
+    return this.client.post(`/v1/knowledge/retrieval?tenant_id=${tenantId}`, { query });
   }
 
-  async reindex(indexId: string) {
-    return this.request('POST', '/v1/knowledge/reindex', { index_id: indexId }, true);
+  async assembleContext(tenantId: string, itemIds: string[]): Promise<any> {
+    return this.client.post(`/v1/knowledge/context?tenant_id=${tenantId}`, { item_ids: itemIds });
   }
 
-  async citations(query: string, indexId: string) {
-    return this.request('POST', '/v1/knowledge/citations', { query, index_id: indexId });
-  }
-
-  async jobs() {
-    return this.request('GET', '/v1/knowledge/jobs');
-  }
-
-  async status(jobId: string) {
-    return this.request('GET', `/v1/knowledge/status/${jobId}`);
+  async getAnalytics(tenantId: string): Promise<any> {
+    return this.client.get(`/v1/knowledge/analytics?tenant_id=${tenantId}`);
   }
 }
