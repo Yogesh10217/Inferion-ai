@@ -174,7 +174,11 @@ class ControlPlaneManager:
         from app.platform_resilience.manager import PlatformResilienceManager
         self.platform_resilience_manager = PlatformResilienceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.37 Platform Resilience Manager")
+        # Phase 5.38 Enterprise AI Control Assurance Manager
+        from app.control_assurance.manager import ControlAssuranceManager
+        self.control_assurance_manager = ControlAssuranceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.38 Control Assurance Manager")
 
 
 

@@ -123,6 +123,8 @@ class LLMEngineClient:
         self.knowledge = KnowledgeIntelligenceClient(self)
         from .resilience import ResilienceClient
         self.resilience = ResilienceClient(self.base_url, api_key or "")
+        from .control_assurance import ControlAssuranceClient
+        self.control_assurance = ControlAssuranceClient(self.base_url, api_key or "")
 
 
 

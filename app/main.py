@@ -68,6 +68,7 @@ from app.api.v1.event_intelligence import router as event_intelligence_router
 from app.api.v1.knowledge_intelligence import router as knowledge_intelligence_router
 from app.api.v1.agent_orchestration import router as agent_orchestration_router
 from app.api.v1.platform_resilience import router as platform_resilience_router
+from app.api.v1.control_assurance import router as control_assurance_router
 
 
 
@@ -223,6 +224,7 @@ def create_app() -> FastAPI:
     app.include_router(knowledge_intelligence_router)
     app.include_router(agent_orchestration_router)
     app.include_router(platform_resilience_router)
+    app.include_router(control_assurance_router)
 
 
 

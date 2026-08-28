@@ -19,6 +19,7 @@ export * from './events.js';
 export * from './knowledge.js';
 export * from './agents.js';
 export * from './resilience.js';
+export * from './control_assurance.js';
 
 
 

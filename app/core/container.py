@@ -402,6 +402,10 @@ class ServiceContainer:
         from app.platform_resilience.manager import PlatformResilienceManager
         self.platform_resilience_manager = PlatformResilienceManager()
 
+        # Phase 5.38 Enterprise AI Control Assurance Manager
+        from app.control_assurance.manager import ControlAssuranceManager
+        self.control_assurance_manager = ControlAssuranceManager()
+
 
 
 
