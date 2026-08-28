@@ -394,6 +394,14 @@ class ServiceContainer:
         from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
         self.knowledge_intelligence_manager = KnowledgeIntelligenceManager()
 
+        # Phase 5.36 Enterprise AI Agent Orchestration Manager
+        from app.agent_orchestration.manager import AgentOrchestrationManager
+        self.agent_orchestration_manager = AgentOrchestrationManager()
+
+        # Phase 5.37 Enterprise AI Platform Resilience Manager
+        from app.platform_resilience.manager import PlatformResilienceManager
+        self.platform_resilience_manager = PlatformResilienceManager()
+
 
 
 

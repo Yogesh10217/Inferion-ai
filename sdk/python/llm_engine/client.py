@@ -121,6 +121,8 @@ class LLMEngineClient:
         self.events = EventsClient(self)
         from .knowledge_intelligence import KnowledgeIntelligenceClient
         self.knowledge = KnowledgeIntelligenceClient(self)
+        from .resilience import ResilienceClient
+        self.resilience = ResilienceClient(self.base_url, api_key or "")
 
 
 
