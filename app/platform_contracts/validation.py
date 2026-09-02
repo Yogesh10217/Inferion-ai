@@ -67,6 +67,8 @@ class CircularDependencyValidator:
         "AgentOrchestrationManager",
         "PlatformResilienceManager",
         "ControlAssuranceManager",
+        "AccessIntelligenceManager",
+        "IntegrationIntelligenceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -78,6 +80,8 @@ class CircularDependencyValidator:
         "app.agent_orchestration",
         "app.platform_resilience",
         "app.control_assurance",
+        "app.access_intelligence",
+        "app.integration_intelligence",
     }
 
     @classmethod

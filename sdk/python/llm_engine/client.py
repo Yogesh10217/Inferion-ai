@@ -125,6 +125,8 @@ class LLMEngineClient:
         self.resilience = ResilienceClient(self.base_url, api_key or "")
         from .control_assurance import ControlAssuranceClient
         self.control_assurance = ControlAssuranceClient(self.base_url, api_key or "")
+        from .access_intelligence import AccessIntelligenceClient
+        self.access = AccessIntelligenceClient(self.base_url, api_key or "")
 
 
 

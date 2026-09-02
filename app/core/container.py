@@ -406,6 +406,14 @@ class ServiceContainer:
         from app.control_assurance.manager import ControlAssuranceManager
         self.control_assurance_manager = ControlAssuranceManager()
 
+        # Phase 5.39 Enterprise AI Access Intelligence Manager
+        from app.access_intelligence.manager import AccessIntelligenceManager
+        self.access_intelligence_manager = AccessIntelligenceManager()
+
+        # Phase 5.40 Enterprise AI Integration Intelligence Manager
+        from app.integration_intelligence.manager import IntegrationIntelligenceManager
+        self.integration_intelligence_manager = IntegrationIntelligenceManager()
+
 
 
 

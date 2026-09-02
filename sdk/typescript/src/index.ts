@@ -20,6 +20,7 @@ export * from './knowledge.js';
 export * from './agents.js';
 export * from './resilience.js';
 export * from './control_assurance.js';
+export * from './access.js';
 
 
 

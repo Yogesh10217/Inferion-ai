@@ -26,6 +26,7 @@ type Client struct {
 	Security     *SecurityClient
 	AILifecycle  *AILifecycleClient
 	Events       *EventsClient
+	Access       *AccessClient
 	Knowledge    *KnowledgeClient
 
 
@@ -59,6 +60,7 @@ func NewClient(cfg Config) *Client {
 	c.Compliance = &ComplianceClient{client: c}
 	c.Portfolio = &PortfolioClient{client: c}
 	c.Decisions = &DecisionsClient{client: c}
+	c.Access = NewAccessClient(c.baseURL, c.apiKey)
 
 
 

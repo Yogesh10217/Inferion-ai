@@ -16,18 +16,34 @@ func NewIntegrationClient(baseURL, apiKey string) *IntegrationClient {
 	}
 }
 
-type IntegrationResponse struct {
-	Name     string `json:"name"`
-	Category string `json:"category"`
-	TenantID string `json:"tenant_id"`
-	Status   string `json:"status"`
+type ConnectorResponse struct {
+	ConnectorID string `json:"connector_id"`
+	Name        string `json:"name"`
+	Type        string `json:"connector_type"`
+	TenantID    string `json:"tenant_id"`
+	Status      string `json:"status"`
 }
 
-func (c *IntegrationClient) RegisterIntegration(ctx context.Context, name, category, tenantID string) (*IntegrationResponse, error) {
-	return &IntegrationResponse{
-		Name:     name,
-		Category: category,
-		TenantID: tenantID,
-		Status:   "ACTIVE",
+type WorkflowResponse struct {
+	WorkflowID string `json:"workflow_id"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+}
+
+func (c *IntegrationClient) RegisterConnector(ctx context.Context, name, connectorType, externalSystemID, tenantID string) (*ConnectorResponse, error) {
+	return &ConnectorResponse{
+		ConnectorID: "conn_go_123",
+		Name:        name,
+		Type:        connectorType,
+		TenantID:    tenantID,
+		Status:      "ACTIVE",
+	}, nil
+}
+
+func (c *IntegrationClient) CreateWorkflow(ctx context.Context, name, tenantID string) (*WorkflowResponse, error) {
+	return &WorkflowResponse{
+		WorkflowID: "wf_go_123",
+		Name:       name,
+		Status:     "DRAFT",
 	}, nil
 }
