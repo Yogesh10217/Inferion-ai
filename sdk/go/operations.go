@@ -18,14 +18,14 @@ func NewOperationsClient(baseURL string) *OperationsClient {
 	}
 }
 
-func (c *OperationsClient) GetHealth() (map[string]interface{}, error) {
-	resp, err := c.HTTPClient.Get(fmt.Sprintf("%s/v1/operations/health", c.BaseURL))
+func (c *OperationsClient) GetServices(tenantID string) ([]map[string]interface{}, error) {
+	resp, err := c.HTTPClient.Get(fmt.Sprintf("%s/v1/operations/services?tenant_id=%s", c.BaseURL, tenantID))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var result map[string]interface{}
+	var result []map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, err
 	}

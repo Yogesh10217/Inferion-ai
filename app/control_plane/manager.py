@@ -186,7 +186,11 @@ class ControlPlaneManager:
         from app.integration_intelligence.manager import IntegrationIntelligenceManager
         self.integration_intelligence_manager = IntegrationIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.40 Integration Intelligence Manager")
+        # Phase 5.41 Enterprise AI Operations Intelligence Manager
+        from app.operations_intelligence.manager import OperationsIntelligenceManager
+        self.operations_intelligence_manager = OperationsIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.41 Operations Intelligence Manager")
 
 
 

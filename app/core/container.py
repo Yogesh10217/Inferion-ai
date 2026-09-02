@@ -414,6 +414,10 @@ class ServiceContainer:
         from app.integration_intelligence.manager import IntegrationIntelligenceManager
         self.integration_intelligence_manager = IntegrationIntelligenceManager()
 
+        # Phase 5.41 Enterprise AI Operations Intelligence Manager
+        from app.operations_intelligence.manager import OperationsIntelligenceManager
+        self.operations_intelligence_manager = OperationsIntelligenceManager()
+
 
 
 
