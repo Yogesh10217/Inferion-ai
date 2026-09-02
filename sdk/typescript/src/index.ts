@@ -21,6 +21,7 @@ export * from './agents.js';
 export * from './resilience.js';
 export * from './control_assurance.js';
 export * from './access.js';
+export * from './finops.js';
 
 
 

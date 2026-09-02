@@ -72,6 +72,7 @@ from app.api.v1.control_assurance import router as control_assurance_router
 from app.api.v1.access_intelligence import router as access_intelligence_router
 from app.api.v1.integration_intelligence import router as integration_intelligence_router
 from app.api.v1.operations_intelligence import router as operations_intelligence_router
+from app.api.v1.finops_intelligence import router as finops_intelligence_router
 
 
 
@@ -231,6 +232,7 @@ def create_app() -> FastAPI:
     app.include_router(access_intelligence_router)
     app.include_router(integration_intelligence_router)
     app.include_router(operations_intelligence_router)
+    app.include_router(finops_intelligence_router)
 
 
 

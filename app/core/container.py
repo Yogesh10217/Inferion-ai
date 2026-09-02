@@ -418,6 +418,10 @@ class ServiceContainer:
         from app.operations_intelligence.manager import OperationsIntelligenceManager
         self.operations_intelligence_manager = OperationsIntelligenceManager()
 
+        # Phase 5.42 Enterprise AI FinOps Intelligence Manager
+        from app.finops_intelligence.manager import FinOpsIntelligenceManager
+        self.finops_intelligence_manager = FinOpsIntelligenceManager()
+
 
 
 

@@ -70,6 +70,7 @@ class CircularDependencyValidator:
         "AccessIntelligenceManager",
         "IntegrationIntelligenceManager",
         "OperationsIntelligenceManager",
+        "FinOpsIntelligenceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -84,6 +85,7 @@ class CircularDependencyValidator:
         "app.access_intelligence",
         "app.integration_intelligence",
         "app.operations_intelligence",
+        "app.finops_intelligence",
     }
 
     @classmethod

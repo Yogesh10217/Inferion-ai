@@ -190,7 +190,11 @@ class ControlPlaneManager:
         from app.operations_intelligence.manager import OperationsIntelligenceManager
         self.operations_intelligence_manager = OperationsIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.41 Operations Intelligence Manager")
+        # Phase 5.42 Enterprise AI FinOps Intelligence Manager
+        from app.finops_intelligence.manager import FinOpsIntelligenceManager
+        self.finops_intelligence_manager = FinOpsIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.42 FinOps Intelligence Manager")
 
 
 

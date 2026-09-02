@@ -127,6 +127,8 @@ class LLMEngineClient:
         self.control_assurance = ControlAssuranceClient(self.base_url, api_key or "")
         from .access_intelligence import AccessIntelligenceClient
         self.access = AccessIntelligenceClient(self.base_url, api_key or "")
+        from .finops_intelligence import FinOpsClient as FinOpsIntelligenceClient
+        self.finops_intelligence = FinOpsIntelligenceClient(self.base_url, api_key or "")
 
 
 
