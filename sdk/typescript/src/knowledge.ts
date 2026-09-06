@@ -1,43 +1,96 @@
 /**
- * TypeScript SDK Client for Enterprise AI Knowledge Intelligence Platform (Phase 5.35).
+ * TypeScript SDK client for Phase 5.46 Knowledge Assurance platform.
  */
 
-export class KnowledgeIntelligenceClient {
-  private client: any;
+export interface KnowledgeReference {
+  reference_id: string;
+  tenant_id: string;
+  external_key: string;
+  resource_type: string;
+  status: string;
+  classification: string;
+  sha256_checksum: string;
+  is_immutable: boolean;
+  created_at: string;
+}
 
-  constructor(client: any) {
-    this.client = client;
+export interface KnowledgeTrustAssessment {
+  assessment_id: string;
+  tenant_id: string;
+  target_resource_id: string;
+  overall_score: number;
+  trust_band: string;
+  confidence_level: string;
+  created_at: string;
+}
+
+export class KnowledgeAssuranceClient {
+  constructor(private baseUrl: string, private apiKey?: string) {}
+
+  private async request(path: string, options: RequestInit = {}, tenantId = "default_tenant"): Promise<any> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "x-tenant-id": tenantId,
+      ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
+      ...(options.headers as Record<string, string>),
+    };
+
+    const res = await fetch(`${this.baseUrl}${path}`, { ...options, headers });
+    if (!res.ok) {
+      throw new Error(`Knowledge Assurance API error: ${res.statusText}`);
+    }
+    return res.json();
   }
 
-  async createItem(tenantId: string, title: str, knowledgeType: string = "DOCUMENT", classification: string = "INTERNAL"): Promise<any> {
-    return this.client.post(`/v1/knowledge/items?tenant_id=${tenantId}`, { title, knowledge_type: knowledgeType, classification });
+  async getStatus(tenantId = "default_tenant"): Promise<any> {
+    return this.request("/v1/knowledge/status", { method: "GET" }, tenantId);
   }
 
-  async listItems(tenantId: string): Promise<any> {
-    return this.client.get(`/v1/knowledge/items?tenant_id=${tenantId}`);
+  async createReference(
+    externalKey: string,
+    resourceType = "DOCUMENT",
+    classification = "INTERNAL",
+    tenantId = "default_tenant"
+  ): Promise<KnowledgeReference> {
+    return this.request(
+      "/v1/knowledge/references",
+      {
+        method: "POST",
+        body: JSON.stringify({ external_key: externalKey, resource_type: resourceType, classification }),
+      },
+      tenantId
+    );
   }
 
-  async getItem(itemId: string, tenantId: string): Promise<any> {
-    return this.client.get(`/v1/knowledge/items/${itemId}?tenant_id=${tenantId}`);
+  async listReferences(tenantId = "default_tenant"): Promise<KnowledgeReference[]> {
+    return this.request("/v1/knowledge/references", { method: "GET" }, tenantId);
   }
 
-  async getProvenance(targetId: string, tenantId: string): Promise<any> {
-    return this.client.get(`/v1/knowledge/provenance?target_id=${targetId}&tenant_id=${tenantId}`);
+  async registerSource(
+    name: string,
+    sourceType = "DOCUMENT_REPOSITORY",
+    authority = "AUTHORITATIVE",
+    tenantId = "default_tenant"
+  ): Promise<any> {
+    return this.request(
+      "/v1/knowledge/sources",
+      {
+        method: "POST",
+        body: JSON.stringify({ name, source_type: sourceType, authority }),
+      },
+      tenantId
+    );
   }
 
-  async getGraph(startNodeId: string, tenantId: string, depth: number = 2): Promise<any> {
-    return this.client.get(`/v1/knowledge/graph?start_node_id=${startNodeId}&tenant_id=${tenantId}&depth=${depth}`);
+  async evaluateTrust(targetResourceId: string, tenantId = "default_tenant"): Promise<KnowledgeTrustAssessment> {
+    return this.request(`/v1/knowledge/trust/${targetResourceId}`, { method: "GET" }, tenantId);
   }
 
-  async retrieve(tenantId: string, query: string): Promise<any> {
-    return this.client.post(`/v1/knowledge/retrieval?tenant_id=${tenantId}`, { query });
+  async assessAssurance(targetResourceId: string, tenantId = "default_tenant"): Promise<any> {
+    return this.request(`/v1/knowledge/assurance/${targetResourceId}`, { method: "GET" }, tenantId);
   }
 
-  async assembleContext(tenantId: string, itemIds: string[]): Promise<any> {
-    return this.client.post(`/v1/knowledge/context?tenant_id=${tenantId}`, { item_ids: itemIds });
-  }
-
-  async getAnalytics(tenantId: string): Promise<any> {
-    return this.client.get(`/v1/knowledge/analytics?tenant_id=${tenantId}`);
+  async getAnalyticsReport(tenantId = "default_tenant"): Promise<any> {
+    return this.request("/v1/knowledge/analytics/report", { method: "GET" }, tenantId);
   }
 }

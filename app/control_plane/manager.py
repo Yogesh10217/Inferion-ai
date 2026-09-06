@@ -206,7 +206,11 @@ class ControlPlaneManager:
         from app.decision_governance.manager import DecisionGovernanceManager
         self.decision_governance_manager = DecisionGovernanceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.45 Decision Governance Manager")
+        # Phase 5.46 Enterprise AI Knowledge Assurance Manager
+        from app.knowledge_assurance.manager import KnowledgeAssuranceManager
+        self.knowledge_assurance_manager = KnowledgeAssuranceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.46 Knowledge Assurance Manager")
 
 
 

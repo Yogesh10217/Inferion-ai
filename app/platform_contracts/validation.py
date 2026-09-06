@@ -74,6 +74,7 @@ class CircularDependencyValidator:
         "DataIntelligenceManager",
         "ModelIntelligenceManager",
         "DecisionGovernanceManager",
+        "KnowledgeAssuranceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -92,6 +93,7 @@ class CircularDependencyValidator:
         "app.data_intelligence",
         "app.model_intelligence",
         "app.decision_governance",
+        "app.knowledge_assurance",
     }
 
     @classmethod

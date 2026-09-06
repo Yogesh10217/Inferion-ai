@@ -434,6 +434,10 @@ class ServiceContainer:
         from app.decision_governance.manager import DecisionGovernanceManager
         self.decision_governance_manager = DecisionGovernanceManager()
 
+        # Phase 5.46 Enterprise AI Knowledge Assurance Manager
+        from app.knowledge_assurance.manager import KnowledgeAssuranceManager
+        self.knowledge_assurance_manager = KnowledgeAssuranceManager()
+
 
 
 

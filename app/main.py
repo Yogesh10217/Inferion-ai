@@ -76,6 +76,7 @@ from app.api.v1.finops_intelligence import router as finops_intelligence_router
 from app.api.v1.data_intelligence import router as data_intelligence_router
 from app.api.v1.model_intelligence import router as model_intelligence_router
 from app.api.v1.decision_governance import router as decision_governance_router
+from app.api.v1.knowledge_assurance import router as knowledge_assurance_router
 
 
 
@@ -239,6 +240,7 @@ def create_app() -> FastAPI:
     app.include_router(data_intelligence_router)
     app.include_router(model_intelligence_router)
     app.include_router(decision_governance_router)
+    app.include_router(knowledge_assurance_router)
 
 
 

@@ -31,6 +31,14 @@ class PlatformSnapshot(BaseModel):
     metadata: SnapshotMetadata
     domain_payload: Dict[str, Any] = Field(default_factory=dict)
 
+    @property
+    def snapshot_id(self) -> str:
+        return self.metadata.snapshot_id
+
+    @property
+    def checksum(self) -> str:
+        return self.metadata.fingerprint
+
 
 class SnapshotReference(BaseModel):
     snapshot_id: str
