@@ -131,6 +131,8 @@ class LLMEngineClient:
         self.finops_intelligence = FinOpsIntelligenceClient(self.base_url, api_key or "")
         from .data_intelligence import DataIntelligenceClient
         self.data = DataIntelligenceClient(self.base_url, api_key or "")
+        from .model_intelligence import ModelsClient
+        self.models = ModelsClient(self.client)
 
 
 

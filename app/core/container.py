@@ -426,6 +426,10 @@ class ServiceContainer:
         from app.data_intelligence.manager import DataIntelligenceManager
         self.data_intelligence_manager = DataIntelligenceManager()
 
+        # Phase 5.44 Enterprise AI Model Intelligence Manager
+        from app.model_intelligence.manager import ModelIntelligenceManager
+        self.model_intelligence_manager = ModelIntelligenceManager()
+
 
 
 
