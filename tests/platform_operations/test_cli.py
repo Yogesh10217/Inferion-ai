@@ -7,12 +7,13 @@ from cli.commands.operations import operations_cli
 
 def test_cli_operations_services_list():
     runner = CliRunner()
-    result = runner.invoke(operations_cli, ["services", "list"])
+    result = runner.invoke(operations_cli, ["services", "--tenant-id", "t_cli"])
     assert result.exit_code == 0
+    assert "t_cli" in result.output
 
 
-def test_cli_operations_services_create():
+def test_cli_operations_incidents_list():
     runner = CliRunner()
-    result = runner.invoke(operations_cli, ["services", "create", "--name", "CLI Service Test", "--tenant-id", "t_cli"])
+    result = runner.invoke(operations_cli, ["incidents", "--tenant-id", "t_cli"])
     assert result.exit_code == 0
-    assert "Created service" in result.output
+    assert "t_cli" in result.output

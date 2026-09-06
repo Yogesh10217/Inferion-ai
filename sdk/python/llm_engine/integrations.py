@@ -30,6 +30,15 @@ class IntegrationClient:
             "status": "ACTIVE",
         }
 
+    def register_integration(self, name: str, category: str = "COMMUNICATION", tenant_id: str = "default_tenant") -> Dict[str, Any]:
+        return {
+            "integration_id": "integ_mock_123",
+            "name": name,
+            "category": category,
+            "tenant_id": tenant_id,
+            "status": "ACTIVE",
+        }
+
     def create_workflow(self, name: str, workflow_type: str = "SYNC_API", tenant_id: str = "default_tenant") -> Dict[str, Any]:
         return {
             "workflow_id": "wf_mock_123",

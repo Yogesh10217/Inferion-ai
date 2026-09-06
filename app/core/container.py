@@ -422,6 +422,10 @@ class ServiceContainer:
         from app.finops_intelligence.manager import FinOpsIntelligenceManager
         self.finops_intelligence_manager = FinOpsIntelligenceManager()
 
+        # Phase 5.43 Enterprise AI Data Intelligence Manager
+        from app.data_intelligence.manager import DataIntelligenceManager
+        self.data_intelligence_manager = DataIntelligenceManager()
+
 
 
 
