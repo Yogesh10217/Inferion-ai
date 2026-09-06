@@ -50,6 +50,10 @@ class SensitiveDataSanitizer:
     def sanitize(cls, data: Any) -> Any:
         return cls().sanitize_copy(data)
 
+    @classmethod
+    def sanitize_metadata(cls, data: Any) -> Any:
+        return cls().sanitize_copy(data)
+
     def sanitize_copy(self, data: Any) -> Any:
 
         copied = copy.deepcopy(data)

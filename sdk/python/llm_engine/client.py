@@ -133,6 +133,8 @@ class LLMEngineClient:
         self.data = DataIntelligenceClient(self.base_url, api_key or "")
         from .model_intelligence import ModelsClient
         self.models = ModelsClient(self.client)
+        from .decision_governance import DecisionGovernanceClient
+        self.decisions = DecisionGovernanceClient(self.client)
 
 
 

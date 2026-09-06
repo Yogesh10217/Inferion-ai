@@ -73,6 +73,7 @@ class CircularDependencyValidator:
         "FinOpsIntelligenceManager",
         "DataIntelligenceManager",
         "ModelIntelligenceManager",
+        "DecisionGovernanceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -90,6 +91,7 @@ class CircularDependencyValidator:
         "app.finops_intelligence",
         "app.data_intelligence",
         "app.model_intelligence",
+        "app.decision_governance",
     }
 
     @classmethod

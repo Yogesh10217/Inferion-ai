@@ -430,6 +430,10 @@ class ServiceContainer:
         from app.model_intelligence.manager import ModelIntelligenceManager
         self.model_intelligence_manager = ModelIntelligenceManager()
 
+        # Phase 5.45 Enterprise AI Decision Governance Manager
+        from app.decision_governance.manager import DecisionGovernanceManager
+        self.decision_governance_manager = DecisionGovernanceManager()
+
 
 
 

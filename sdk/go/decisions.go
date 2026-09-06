@@ -1,49 +1,57 @@
 package llmengine
 
 import (
-	"context"
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
-type DecisionsClient struct {
+type Decision struct {
+	DecisionID   string  `json:"decision_id"`
+	TenantID     string  `json:"tenant_id"`
+	Title        string  `json:"title"`
+	Description  string  `json:"description,omitempty"`
+	DecisionType string  `json:"decision_type"`
+	Status       string  `json:"status"`
+	Priority     string  `json:"priority"`
+	Outcome      string  `json:"outcome,omitempty"`
+	Confidence   float64 `json:"confidence"`
+	RiskScore    float64 `json:"risk_score"`
+}
+
+type DecisionGovernanceService struct {
 	client *Client
 }
 
-func NewDecisionsClient(client *Client) *DecisionsClient {
-	return &DecisionsClient{client: client}
-}
-
-func (c *DecisionsClient) CreateContext(ctx context.Context, title, description string) (map[string]interface{}, error) {
-	payload := map[string]interface{}{
-		"title":       title,
-		"description": description,
+func (s *DecisionGovernanceService) CreateDecision(tenantID, title, decisionType, description string) (*Decision, error) {
+	reqBody := map[string]interface{}{
+		"title":         title,
+		"decision_type": decisionType,
+		"description":   description,
 	}
-	var res map[string]interface{}
-	err := c.client.Post(ctx, "/v1/decisions/context", payload, &res)
-	return res, err
-}
+	bodyBytes, _ := json.Marshal(reqBody)
 
-func (c *DecisionsClient) Analyze(ctx context.Context, title string) (map[string]interface{}, error) {
-	payload := map[string]interface{}{"title": title}
-	var res map[string]interface{}
-	err := c.client.Post(ctx, "/v1/decisions/analyze", payload, &res)
-	return res, err
-}
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/v1/decisions", s.client.BaseURL), bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("x-tenant-id", tenantID)
 
-func (c *DecisionsClient) GetDecision(ctx context.Context, decisionID string) (map[string]interface{}, error) {
-	var res map[string]interface{}
-	err := c.client.Get(ctx, fmt.Sprintf("/v1/decisions/%s", decisionID), &res)
-	return res, err
-}
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
 
-func (c *DecisionsClient) FinalizeDecision(ctx context.Context, decisionID string) (map[string]interface{}, error) {
-	var res map[string]interface{}
-	err := c.client.Post(ctx, fmt.Sprintf("/v1/decisions/%s/finalize", decisionID), nil, &res)
-	return res, err
-}
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("decisions API error: %s", resp.Status)
+	}
 
-func (c *DecisionsClient) GetAnalytics(ctx context.Context) (map[string]interface{}, error) {
-	var res map[string]interface{}
-	err := c.client.Get(ctx, "/v1/decisions/analytics", &res)
-	return res, err
+	var d Decision
+	if err := json.NewDecoder(resp.Body).Decode(&d); err != nil {
+		return nil, err
+	}
+	return &d, nil
 }

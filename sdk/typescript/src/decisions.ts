@@ -1,35 +1,61 @@
 /**
- * TypeScript SDK Client for Enterprise AI Decision Intelligence Platform (Phase 5.29).
+ * TypeScript SDK client for Decision Governance platform.
  */
 
+export interface Decision {
+  decision_id: str;
+  tenant_id: str;
+  title: str;
+  description?: str;
+  decision_type: string;
+  status: string;
+  priority: string;
+  outcome?: string;
+  confidence: number;
+  risk_score: number;
+  fingerprint?: string;
+  is_immutable: boolean;
+  created_at: string;
+}
+
 export class DecisionsClient {
-  private client: any;
+  constructor(private baseUrl: string, private apiKey?: string) {}
 
-  constructor(client: any) {
-    this.client = client;
+  private async request(path: string, options: RequestInit = {}, tenantId = "default_tenant"): Promise<any> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "x-tenant-id": tenantId,
+      ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
+      ...(options.headers as Record<string, string>),
+    };
+
+    const res = await fetch(`${this.baseUrl}${path}`, { ...options, headers });
+    if (!res.ok) {
+      throw new Error(`Decisions API error: ${res.statusText}`);
+    }
+    return res.json();
   }
 
-  async createContext(title: string, description: string): Promise<any> {
-    return this.client.request('POST', '/v1/decisions/context', { title, description });
+  async createDecision(title: string, decisionType = "OPERATIONAL", description = "", tenantId = "default_tenant"): Promise<Decision> {
+    return this.request("/v1/decisions", {
+      method: "POST",
+      body: JSON.stringify({ title, decision_type: decisionType, description }),
+    }, tenantId);
   }
 
-  async createScenario(contextId: string, title: string, scenarioType: string = 'BASELINE'): Promise<any> {
-    return this.client.request('POST', '/v1/decisions/scenarios', { context_id: contextId, title, scenario_type: scenarioType });
+  async listDecisions(tenantId = "default_tenant"): Promise<Decision[]> {
+    return this.request("/v1/decisions", { method: "GET" }, tenantId);
   }
 
-  async analyze(title: string): Promise<any> {
-    return this.client.request('POST', '/v1/decisions/analyze', { title });
+  async getDecision(decisionId: string, tenantId = "default_tenant"): Promise<Decision> {
+    return this.request(`/v1/decisions/${decisionId}`, { method: "GET" }, tenantId);
   }
 
-  async getDecision(decisionId: string): Promise<any> {
-    return this.client.request('GET', `/v1/decisions/${decisionId}`);
+  async analyzeDecision(decisionId: string, tenantId = "default_tenant"): Promise<any> {
+    return this.request(`/v1/decisions/${decisionId}/analyze`, { method: "POST" }, tenantId);
   }
 
-  async finalizeDecision(decisionId: string): Promise<any> {
-    return this.client.request('POST', `/v1/decisions/${decisionId}/finalize`);
-  }
-
-  async getAnalytics(): Promise<any> {
-    return this.client.request('GET', '/v1/decisions/analytics');
+  async approveDecision(decisionId: string, tenantId = "default_tenant"): Promise<Decision> {
+    return this.request(`/v1/decisions/${decisionId}/approve`, { method: "POST" }, tenantId);
   }
 }
