@@ -7,6 +7,16 @@ from app.knowledge_assurance.manager import KnowledgeAssuranceManager
 _mgr = KnowledgeAssuranceManager()
 
 
+def add_knowledge_parser(subparsers):
+    parser = subparsers.add_parser("knowledge", help="Manage Knowledge Assurance")
+    parser.set_defaults(func=handle_knowledge_command)
+    return parser
+
+
+def handle_knowledge_command(args):
+    print("Knowledge command handled.")
+
+
 @click.group(name="knowledge")
 def knowledge_cli():
     """Manage Enterprise AI Knowledge Assurance, Trust, and Context operations."""

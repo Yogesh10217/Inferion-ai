@@ -137,6 +137,8 @@ class LLMEngineClient:
         self.decisions = DecisionGovernanceClient(self.client)
         from .knowledge_assurance import KnowledgeAssuranceClient
         self.knowledge = KnowledgeAssuranceClient(self.client)
+        from .identity_assurance import IdentityAssuranceClient
+        self.identities = IdentityAssuranceClient(self.client)
 
 
 

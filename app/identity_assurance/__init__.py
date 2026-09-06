@@ -1,0 +1,75 @@
+"""Identity Assurance Platform exports."""
+
+from app.identity_assurance.exceptions import (
+    IdentityAssuranceException,
+    CrossTenantIdentityAssuranceException,
+    IdentityNotFoundException,
+    IdentityProfileNotFoundException,
+    IdentityTrustException,
+    AccessPatternException,
+    AuthorizationRiskException,
+    PrivilegeRiskException,
+    IdentityAnomalyException,
+    AccessReviewNotFoundException,
+    DelegatedAccessException,
+    IdentityInvestigationException,
+    IdentityRemediationBlockedException,
+    HighRiskIdentityActionRequiresApprovalException,
+    ImmutableIdentityRecordException,
+)
+from app.identity_assurance.identities import (
+    IdentityManager,
+    IdentityType,
+    IdentityStatus,
+    IdentityCategory,
+    IdentityReference,
+    IdentityMetadata,
+)
+from app.identity_assurance.trust import (
+    IdentityTrustEngine,
+    IdentityTrustScore,
+    IdentityTrustDimension,
+    IdentityTrustFactor,
+    IdentityTrustAssessment,
+)
+from app.identity_assurance.governance import (
+    IdentityGovernanceEngine,
+    IdentityGovernanceOutcome,
+    IdentityGovernanceRequest,
+    IdentityGovernanceResult,
+)
+from app.identity_assurance.manager import IdentityAssuranceManager
+
+__all__ = [
+    "IdentityAssuranceException",
+    "CrossTenantIdentityAssuranceException",
+    "IdentityNotFoundException",
+    "IdentityProfileNotFoundException",
+    "IdentityTrustException",
+    "AccessPatternException",
+    "AuthorizationRiskException",
+    "PrivilegeRiskException",
+    "IdentityAnomalyException",
+    "AccessReviewNotFoundException",
+    "DelegatedAccessException",
+    "IdentityInvestigationException",
+    "IdentityRemediationBlockedException",
+    "HighRiskIdentityActionRequiresApprovalException",
+    "ImmutableIdentityRecordException",
+    "IdentityManager",
+    "IdentityType",
+    "IdentityStatus",
+    "IdentityCategory",
+    "IdentityReference",
+    "IdentityMetadata",
+    "IdentityTrustEngine",
+    "IdentityTrustScore",
+    "IdentityTrustDimension",
+    "IdentityTrustFactor",
+    "IdentityTrustAssessment",
+    "IdentityGovernanceEngine",
+    "IdentityGovernanceOutcome",
+    "IdentityGovernanceRequest",
+    "IdentityGovernanceResult",
+    "IdentityAssuranceManager",
+]

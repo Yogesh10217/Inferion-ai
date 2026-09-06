@@ -438,6 +438,10 @@ class ServiceContainer:
         from app.knowledge_assurance.manager import KnowledgeAssuranceManager
         self.knowledge_assurance_manager = KnowledgeAssuranceManager()
 
+        # Phase 5.48 Enterprise AI Identity Assurance Manager
+        from app.identity_assurance.manager import IdentityAssuranceManager
+        self.identity_assurance_manager = IdentityAssuranceManager()
+
 
 
 

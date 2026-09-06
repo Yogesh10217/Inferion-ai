@@ -28,6 +28,7 @@ type Client struct {
 	Events       *EventsClient
 	Access       *AccessClient
 	Data         *DataClient
+	Identities   *IdentityAssuranceService
 	Knowledge    *KnowledgeClient
 
 
@@ -63,6 +64,7 @@ func NewClient(cfg Config) *Client {
 	c.Decisions = &DecisionsClient{client: c}
 	c.Access = NewAccessClient(c.baseURL, c.apiKey)
 	c.Data = NewDataClient(c.baseURL)
+	c.Identities = &IdentityAssuranceService{client: c}
 
 	return c
 }

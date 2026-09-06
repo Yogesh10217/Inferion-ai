@@ -23,6 +23,7 @@ export * from './control_assurance.js';
 export * from './access.js';
 export * from './finops.js';
 export * from './data.js';
+export * from './identities.js';
 
 
 
