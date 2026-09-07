@@ -30,6 +30,7 @@ type Client struct {
 	Data         *DataClient
 	Identities   *IdentityAssuranceService
 	Operations   *OperationsAssuranceService
+	SecurityAssurance *SecurityAssuranceService
 	Knowledge    *KnowledgeClient
 	baseURL      string
 	apiKey       string
@@ -59,6 +60,7 @@ func NewClient(cfg Config) *Client {
 	c.Data = NewDataClient(c.baseURL)
 	c.Identities = &IdentityAssuranceService{client: c}
 	c.Operations = &OperationsAssuranceService{client: c}
+	c.SecurityAssurance = &SecurityAssuranceService{client: c}
 
 	return c
 }

@@ -141,6 +141,8 @@ class LLMEngineClient:
         self.identities = IdentityAssuranceClient(self.client)
         from .operations_assurance import OperationsAssuranceClient
         self.operations = OperationsAssuranceClient(self.client)
+        from .security_assurance import SecurityAssuranceClient
+        self.security_assurance = SecurityAssuranceClient(self.client)
 
 
 

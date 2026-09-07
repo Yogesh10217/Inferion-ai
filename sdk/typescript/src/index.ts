@@ -25,6 +25,7 @@ export * from './finops.js';
 export * from './data.js';
 export * from './identities.js';
 export * from './operations.js';
+export * from './security_assurance.js';
 
 
 
