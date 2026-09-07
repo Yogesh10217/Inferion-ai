@@ -3,18 +3,20 @@
 import logging
 from typing import Dict, Any, Optional, List
 
+from app.decision_intelligence.providers import DecisionIntelligenceProviderRegistry, ProviderRegistry, IntelligenceDomain
 from app.decision_intelligence.context import DecisionContextManager, DecisionContextBuilder, DecisionContextType, DecisionScope, DecisionPriority
 from app.decision_intelligence.evidence import DecisionEvidenceManager, EvidenceReference, EvidenceStrength, EvidenceReliability
 from app.decision_intelligence.scenarios import ScenarioManager, ScenarioType, ScenarioAssumption, ScenarioVariable
 from app.decision_intelligence.constraints import ConstraintManager, DecisionConstraint, ConstraintType, ConstraintSeverity
 from app.decision_intelligence.alternatives import AlternativeManager, AlternativeScore
+from app.decision_intelligence.decision_options import DecisionOptionsRegistry, DecisionOption
 from app.decision_intelligence.tradeoffs import TradeoffAnalyzer, Tradeoff, TradeoffDimension, TradeoffSeverity
 from app.decision_intelligence.recommendations import RecommendationEngine, RecommendationType, DecisionRecommendation
 from app.decision_intelligence.scoring import DecisionScoringEngine, DecisionScoreDimension
 from app.decision_intelligence.risk import DecisionRiskManager, DecisionRiskDimension
 from app.decision_intelligence.trust import DecisionTrustEngine, DecisionTrustDimension
 from app.decision_intelligence.governance import DecisionGovernanceEngine, DecisionGovernanceStatus
-from app.decision_intelligence.decisions import DecisionManager, EnterpriseDecision, DecisionType, DecisionStatus
+from app.decision_intelligence.decisions import DecisionManager, EnterpriseDecision, DecisionType, DecisionLifecycleState, DecisionStatus
 from app.decision_intelligence.delegation import DecisionDelegationManager, DelegationTarget
 from app.decision_intelligence.outcomes import DecisionOutcomeManager, OutcomeStatus
 from app.decision_intelligence.learning import DecisionLearningManager
@@ -22,14 +24,26 @@ from app.decision_intelligence.analytics import DecisionAnalyticsEngine, Decisio
 from app.decision_intelligence.observability import DecisionMetricsCollector
 from app.decision_intelligence.billing import DecisionBillingTracker
 from app.decision_intelligence.repositories import InMemoryDecisionRepository
+from app.decision_intelligence.uncertainty import DecisionUncertaintyEngine, DecisionUncertaintyAssessment
+from app.decision_intelligence.reproducibility import DecisionReproducibilityEngine, DecisionReproducibilityRecord
+from app.decision_intelligence.simulation import DecisionSimulationEngine, DecisionSimulationResult
+from app.decision_intelligence.approvals import DecisionApprovalManager, DecisionApprovalRecord
+from app.decision_intelligence.human_review import DecisionHumanReviewEngine
+from app.decision_intelligence.investigations import DecisionInvestigationEngine
+from app.decision_intelligence.remediation import DecisionRemediationEngine
+from app.decision_intelligence.verification import DecisionVerificationEngine
+from app.decision_intelligence.assurance import DecisionAssuranceEngine
+from app.decision_intelligence.snapshots import DecisionSnapshotStore
 
 logger = logging.getLogger(__name__)
 
 
 class DecisionIntelligenceManager:
-    """Master Orchestrator unifying all Decision Intelligence domain subsystems."""
+    """Master Orchestrator unifying all Decision Intelligence domain subsystems via Provider-based Decoupling."""
 
-    def __init__(self) -> None:
+    def __init__(self, provider_registry: Optional[DecisionIntelligenceProviderRegistry] = None) -> None:
+        self.provider_registry = provider_registry or DecisionIntelligenceProviderRegistry()
+
         self.context_builder = DecisionContextBuilder()
         self.context_manager = DecisionContextManager()
 
@@ -37,6 +51,7 @@ class DecisionIntelligenceManager:
         self.scenario_manager = ScenarioManager()
         self.constraint_manager = ConstraintManager()
         self.alternative_manager = AlternativeManager()
+        self.options_registry = DecisionOptionsRegistry()
         self.tradeoff_analyzer = TradeoffAnalyzer()
 
         self.scoring_engine = DecisionScoringEngine()
@@ -51,11 +66,22 @@ class DecisionIntelligenceManager:
         self.outcome_manager = DecisionOutcomeManager()
         self.learning_manager = DecisionLearningManager()
 
+        self.uncertainty_engine = DecisionUncertaintyEngine()
+        self.reproducibility_engine = DecisionReproducibilityEngine()
+        self.simulation_engine = DecisionSimulationEngine()
+        self.approval_manager = DecisionApprovalManager()
+        self.human_review_engine = DecisionHumanReviewEngine()
+        self.investigation_engine = DecisionInvestigationEngine()
+        self.remediation_engine = DecisionRemediationEngine()
+        self.verification_engine = DecisionVerificationEngine()
+        self.assurance_engine = DecisionAssuranceEngine()
+        self.snapshot_store = DecisionSnapshotStore()
+
         self.analytics_engine = DecisionAnalyticsEngine()
         self.metrics_collector = DecisionMetricsCollector()
         self.billing_tracker = DecisionBillingTracker()
 
-        logger.info("[DECISION INTELLIGENCE MASTER] DecisionIntelligenceManager initialized cleanly with all domain subsystems.")
+        logger.info("[DECISION INTELLIGENCE MASTER] DecisionIntelligenceManager initialized cleanly with all domain subsystems and provider decoupling.")
 
     def run_full_decision_flow(
         self,
@@ -63,10 +89,20 @@ class DecisionIntelligenceManager:
         title: str = "Enterprise AI Architecture Modernization",
         decision_type: DecisionType = DecisionType.CROSS_DOMAIN,
     ) -> Dict[str, Any]:
-        """Runs complete end-to-end decision flow: Context -> Evidence -> Scenario -> Constraints -> Alternatives -> Trade-offs -> Risk -> Trust -> Recommendation -> Governance -> Approval -> Delegation -> Outcome -> Learning -> Finalization."""
+        """Runs complete end-to-end decision flow across strict decision lifecycle states."""
 
-        # 1. Decision Record & Context
+        # 1. Decision Creation & State: PROPOSED
         dec = self.decision_manager.create_decision(tenant_id, title, decision_type)
+        
+        # Transition: PROPOSED -> ANALYZING
+        dec.transition_to(DecisionLifecycleState.ANALYZING, reason="Assembling cross-domain context")
+
+        # 2. Context & Cross-Domain Signals via Provider Registry
+        cross_domain_signals = []
+        for domain, provider in self.provider_registry.list_providers().items():
+            if hasattr(provider, "get_domain_signals"):
+                cross_domain_signals.extend(provider.get_domain_signals(tenant_id))
+
         ctx = self.context_builder.assemble_context(
             tenant_id=tenant_id,
             title=title,
@@ -78,52 +114,59 @@ class DecisionIntelligenceManager:
         self.context_manager.create_context(ctx)
         dec.context_id = ctx.context_id
 
-        # 2. Evidence Collection
+        # Transition: ANALYZING -> OPTIONS_IDENTIFIED
+        dec.transition_to(DecisionLifecycleState.OPTIONS_IDENTIFIED, reason="Identifying decision options")
+
+        # 3. Decision Options Identification
+        opt1 = self.options_registry.add_option(
+            decision_id=dec.decision_id,
+            tenant_id=tenant_id,
+            title="Cloud Native Migration",
+            description="Migrate workloads to managed cloud-native platform",
+            action_type="DELEGATE",
+            target_system="OPERATIONS",
+            estimated_cost=25000.0,
+            reversibility="REVERSIBLE",
+        )
+        opt2 = self.options_registry.add_option(
+            decision_id=dec.decision_id,
+            tenant_id=tenant_id,
+            title="In-Place Refactoring",
+            description="Refactor existing monolith in-place",
+            action_type="DELEGATE",
+            target_system="DEVELOPMENT",
+            estimated_cost=15000.0,
+            reversibility="PARTIALLY_REVERSIBLE",
+        )
+
+        # Evidence
         ev_ref = EvidenceReference(
             source_subsystem="ARCHITECTURE",
             source_entity_id="arch_001",
             description="Verified system topology baseline.",
             strength=EvidenceStrength.STRONG,
-            metadata={"secret_token": "sk-secret-12345"},
         )
         ev_col = self.evidence_manager.collect_evidence(tenant_id, ctx.context_id, [ev_ref])
         dec.evidence_id = ev_col.collection_id
 
-        # 3. Scenario & Alternatives & Tradeoffs
-        scen = self.scenario_manager.create_scenario(tenant_id, ctx.context_id, "Cost-Optimized Modernization", scenario_type=ScenarioType.COST_OPTIMIZED)
-        sim_scen = self.scenario_manager.simulate_scenario(scen.scenario_id, tenant_id)
+        # Transition: OPTIONS_IDENTIFIED -> RISK_ASSESSED
+        dec.transition_to(DecisionLifecycleState.RISK_ASSESSED, reason="Evaluating risk and trust scores")
 
-        alt = self.alternative_manager.create_alternative(tenant_id, ctx.context_id, "Cloud Native Migration", "Migrate to managed services")
-        tradeoff = Tradeoff(
-            dimension=TradeoffDimension.OPERATIONAL_COMPLEXITY,
-            gain_description="Higher scalability and lower infrastructure overhead.",
-            sacrifice_description="Temporary operational transition complexity.",
-            severity=TradeoffSeverity.MODERATE,
-            is_negative_impact=True,
-        )
-        tradeoff_analysis = self.tradeoff_analyzer.analyze_tradeoffs(tenant_id, ctx.context_id, alt.alternative_id, [tradeoff])
-
-        # 4. Constraints & Risk & Trust Evaluation
-        const_result = self.constraint_manager.evaluate_constraints(
-            tenant_id=tenant_id,
-            context_id=ctx.context_id,
-            observed_values={ConstraintType.RISK: 20.0, ConstraintType.TRUST: 90.0},
-        )
+        # 4. Risk, Uncertainty & Simulation
         risk_prof = self.risk_manager.evaluate_decision_risk(tenant_id, ctx.context_id, architecture_risk=20.0, compliance_risk=20.0)
         trust_score = self.trust_engine.calculate_trust_score(tenant_id, ctx.context_id, architecture_trust=90.0, compliance_trust=90.0)
-
-        # 5. Recommendation & Governance & Approval
-        rec = self.recommendation_engine.generate_recommendation(
+        uncert = self.uncertainty_engine.assess_uncertainty(dec.decision_id, tenant_id, evidence_quality_score=ev_col.quality_score)
+        
+        sim_result = self.simulation_engine.simulate_decision_options(
+            decision_id=dec.decision_id,
             tenant_id=tenant_id,
-            context_id=ctx.context_id,
-            constraint_result=const_result,
-            tradeoff_analysis=tradeoff_analysis,
-            risk_score=risk_prof.overall_risk_score,
-            trust_score=trust_score.overall_score,
-            alternative_id=alt.alternative_id,
+            options=[opt1.model_dump(), opt2.model_dump()],
         )
-        dec.recommendation_id = rec.recommendation_id
 
+        # Transition: RISK_ASSESSED -> POLICY_EVALUATED
+        dec.transition_to(DecisionLifecycleState.POLICY_EVALUATED, reason="Evaluating governance policies")
+
+        # 5. Policy Evaluation & Recommendation
         gov_dec = self.governance_engine.evaluate_decision_governance(
             tenant_id=tenant_id,
             decision_id=dec.decision_id,
@@ -133,15 +176,44 @@ class DecisionIntelligenceManager:
         )
         dec.governance_id = gov_dec.governance_id
 
-        # 6. Delegation Plan
+        # Transition: POLICY_EVALUATED -> RECOMMENDED
+        dec.transition_to(DecisionLifecycleState.RECOMMENDED, reason="Generating recommendation")
+
+        rec = self.recommendation_engine.generate_recommendation(
+            tenant_id=tenant_id,
+            context_id=ctx.context_id,
+            constraint_result=None,
+            tradeoff_analysis=None,
+            risk_score=risk_prof.overall_risk_score,
+            trust_score=trust_score.overall_score,
+            alternative_id=opt1.option_id,
+        )
+        dec.recommendation_id = rec.recommendation_id
+
+        # 6. Approval & Delegation
+        # Transition: RECOMMENDED -> REQUIRES_APPROVAL -> APPROVED
+        dec.transition_to(DecisionLifecycleState.REQUIRES_APPROVAL, reason="Awaiting human approval for high-risk action")
+        appr_rec = self.approval_manager.submit_approval(dec.decision_id, tenant_id, approver="security_admin@enterprise.local", approved=True)
+        dec.transition_to(DecisionLifecycleState.APPROVED, reason="Approved by human reviewer")
+
+        # Transition: APPROVED -> DELEGATED
+        dec.transition_to(DecisionLifecycleState.DELEGATED, reason="Delegating to downstream execution platform")
         del_plan = self.delegation_manager.create_delegation_plan(tenant_id, dec.decision_id, DelegationTarget.PORTFOLIO_PLATFORM)
         delegated_plan = self.delegation_manager.delegate_execution(del_plan.delegation_id, tenant_id, "PortfolioPlatformManager")
 
-        # 7. Outcome & Learning
-        outcome = self.outcome_manager.record_outcome(tenant_id, dec.decision_id, 100000.0, 110000.0)
-        learning = self.learning_manager.process_outcome_learning(tenant_id, outcome)
+        # Transition: DELEGATED -> VERIFIED
+        dec.transition_to(DecisionLifecycleState.VERIFIED, reason="Verifying execution outcome")
+        verif_rec = self.verification_engine.verify_delegation(dec.decision_id, tenant_id, delegated_plan.delegation_id)
 
-        # 8. Finalize Decision (Immutable)
+        # 7. Reproducibility & Immutability
+        repro_rec = self.reproducibility_engine.capture_reproducibility_record(
+            decision_id=dec.decision_id,
+            tenant_id=tenant_id,
+            context_fingerprint=f"ctx_fp_{ctx.context_id}",
+            evidence_hashes=[f"ev_hash_{ev_col.collection_id}"],
+        )
+
+        # Transition: VERIFIED -> CLOSED
         finalized_dec = self.decision_manager.finalize_decision(
             decision_id=dec.decision_id,
             tenant_id=tenant_id,
@@ -155,16 +227,16 @@ class DecisionIntelligenceManager:
             "decision": finalized_dec.model_dump(),
             "context": ctx.model_dump(),
             "evidence": ev_col.model_dump(),
-            "scenario": sim_scen.model_dump(),
-            "alternative": alt.model_dump(),
-            "tradeoffs": tradeoff_analysis.model_dump(),
+            "simulation": sim_result.model_dump(),
+            "uncertainty": uncert.model_dump(),
             "risk_profile": risk_prof.model_dump(),
             "trust_score": trust_score.model_dump(),
             "recommendation": rec.model_dump(),
             "governance": gov_dec.model_dump(),
+            "approval": appr_rec.model_dump(),
             "delegation": delegated_plan.model_dump(),
-            "outcome": outcome.model_dump(),
-            "learning": learning.model_dump(),
+            "verification": verif_rec.model_dump(),
+            "reproducibility": repro_rec.model_dump(),
         }
 
     def get_summary(self, tenant_id: str = "global") -> Dict[str, Any]:

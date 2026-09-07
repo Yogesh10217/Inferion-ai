@@ -1,87 +1,132 @@
-"""Domain Exceptions for Enterprise AI Decision Intelligence Platform (Phase 5.29)."""
+"""
+Custom exceptions for Phase 5.52 Enterprise AI Decision Intelligence Platform.
+All exceptions are tenant-safe and avoid leaking sensitive metadata.
+"""
 
 
 class DecisionIntelligenceException(Exception):
-    """Base exception for all Decision Intelligence platform errors."""
+    """Base exception for all decision intelligence operations."""
+    pass
 
-    def __init__(self, message: str, code: str = "DECISION_INTELLIGENCE_ERROR"):
-        super().__init__(message)
-        self.message = message
-        self.code = code
+
+class CrossTenantDecisionIntelligenceException(DecisionIntelligenceException):
+    """Raised when cross-tenant access is attempted without authorization (Zero Metadata Leakage)."""
+    pass
+
+
+class InvalidDecisionStateTransitionException(DecisionIntelligenceException):
+    """Raised when an invalid decision lifecycle state transition is attempted."""
+    pass
 
 
 class DecisionNotFoundException(DecisionIntelligenceException):
-    def __init__(self, decision_id: str, tenant_id: str):
-        super().__init__(
-            f"Decision '{decision_id}' not found for tenant '{tenant_id}'.",
-            code="DECISION_NOT_FOUND",
-        )
+    """Raised when a requested decision is not found."""
+    pass
 
 
-class DecisionContextException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_CONTEXT_ERROR")
+class DecisionContextNotFoundException(DecisionIntelligenceException):
+    """Raised when a requested decision context is not found."""
+    pass
 
 
-class DecisionEvidenceException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_EVIDENCE_ERROR")
+class DecisionOptionNotFoundException(DecisionIntelligenceException):
+    """Raised when a requested decision option is not found."""
+    pass
+
+
+class DecisionRecommendationNotFoundException(DecisionIntelligenceException):
+    """Raised when a decision recommendation is not found."""
+    pass
+
+
+class DecisionEvidenceNotFoundException(DecisionIntelligenceException):
+    """Raised when decision evidence is not found."""
+    pass
+
+
+class DecisionInvestigationNotFoundException(DecisionIntelligenceException):
+    """Raised when a decision investigation is not found."""
+    pass
+
+
+class DecisionVerificationException(DecisionIntelligenceException):
+    """Raised when decision verification fails."""
+    pass
+
+
+class DecisionAnalysisException(DecisionIntelligenceException):
+    """Raised when decision analysis fails."""
+    pass
+
+
+class DecisionTradeoffException(DecisionIntelligenceException):
+    """Raised when tradeoff evaluation fails."""
+    pass
+
+
+class DecisionGovernanceException(DecisionIntelligenceException):
+    """Raised when decision governance policy check fails."""
+    pass
+
+
+class DecisionDelegationException(DecisionIntelligenceException):
+    """Raised when decision delegation construction fails."""
+    pass
+
+
+class HighRiskDecisionRequiresApprovalException(DecisionIntelligenceException):
+    """Raised when a high-risk decision action requires human approval before delegation."""
+    pass
+
+
+class ImmutableDecisionRecordException(DecisionIntelligenceException):
+    """Raised when attempting to modify an immutable decision evidence record or snapshot."""
+    pass
+
+
+class DecisionRemediationBlockedException(DecisionIntelligenceException):
+    """Raised when a decision remediation plan is blocked by policy or governance."""
+    pass
 
 
 class DecisionConstraintViolationException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_CONSTRAINT_VIOLATION")
+    """Raised when a decision constraint is violated."""
+    pass
 
 
 class DecisionScenarioException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_SCENARIO_ERROR")
+    """Raised when scenario evaluation fails."""
+    pass
 
 
 class DecisionSimulationException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_SIMULATION_ERROR")
-
-
-class DecisionRecommendationException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_RECOMMENDATION_ERROR")
+    """Raised when decision simulation fails."""
+    pass
 
 
 class DecisionPolicyViolationException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_POLICY_VIOLATION")
+    """Raised when decision policy evaluation yields a denial."""
+    pass
 
 
 class DecisionRiskException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_RISK_EXCEEDED")
+    """Raised when decision risk scoring fails."""
+    pass
 
 
 class DecisionApprovalRequiredException(DecisionIntelligenceException):
-    def __init__(self, decision_id: str, reason: str):
-        super().__init__(
-            f"Decision '{decision_id}' requires explicit human approval: {reason}",
-            code="DECISION_APPROVAL_REQUIRED",
-        )
-
-
-class ImmutableDecisionException(DecisionIntelligenceException):
-    def __init__(self, decision_id: str):
-        super().__init__(
-            f"Decision '{decision_id}' is finalized and immutable. Further mutations are forbidden.",
-            code="IMMUTABLE_DECISION_ERROR",
-        )
+    """Raised when approval is required."""
+    pass
 
 
 class DecisionOutcomeException(DecisionIntelligenceException):
-    def __init__(self, message: str):
-        super().__init__(message, code="DECISION_OUTCOME_ERROR")
+    """Raised when decision outcome verification fails."""
+    pass
 
 
-class CrossTenantDecisionAccessException(DecisionIntelligenceException):
-    def __init__(self, requested_tenant: str, owner_tenant: str):
-        super().__init__(
-            f"Access denied: Resource belongs to tenant '{owner_tenant}', requested by '{requested_tenant}'. Zero metadata leaked.",
-            code="CROSS_TENANT_DECISION_ACCESS_DENIED",
-        )
+# Backward compatibility aliases
+CrossTenantDecisionAccessException = CrossTenantDecisionIntelligenceException
+DecisionContextException = DecisionContextNotFoundException
+DecisionEvidenceException = DecisionEvidenceNotFoundException
+DecisionRecommendationException = DecisionRecommendationNotFoundException
+ImmutableDecisionException = ImmutableDecisionRecordException

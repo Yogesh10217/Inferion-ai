@@ -73,7 +73,20 @@ class DecisionScoringEngine:
         return DecisionScore(
             tenant_id=tenant_id,
             context_id=context_id,
-            overall_score=overall,
+            overall_score=round(overall, 2),
             dimension_scores=dimension_scores,
             model_version=self.scoring_model.version,
         )
+
+    def calculate_score(self, tenant_id: str, context_id: str, risk_score: float = 20.0, trust_score: float = 90.0) -> DecisionScore:
+        dim_scores = {
+            DecisionScoreDimension.RISK: max(0.0, 100.0 - risk_score),
+            DecisionScoreDimension.TRUST: trust_score,
+            DecisionScoreDimension.COMPLIANCE: 90.0,
+            DecisionScoreDimension.BUSINESS_VALUE: 85.0,
+        }
+        return self.compute_score(tenant_id, context_id, dim_scores)
+
+    def calculate_confidence(self, evidence_quality: float = 95.0, signal_coherence: float = 0.9) -> float:
+        ev_comp = min(1.0, max(0.0, evidence_quality / 100.0))
+        return round((ev_comp * 0.5) + (signal_coherence * 0.5), 4)

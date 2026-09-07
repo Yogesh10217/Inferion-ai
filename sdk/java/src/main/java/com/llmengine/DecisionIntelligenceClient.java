@@ -1,24 +1,43 @@
 package com.llmengine;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class DecisionIntelligenceClient {
-    public DecisionIntelligenceClient() {}
+    private final String baseUrl;
+    private final String apiKey;
+    private final String tenantId;
+    private final HttpClient httpClient;
 
-    public Map<String, Object> createContext(String title, String description) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "SUCCESS");
-        result.put("title", title);
-        result.put("description", description);
-        return result;
+    public DecisionIntelligenceClient(String baseUrl, String apiKey, String tenantId) {
+        this.baseUrl = baseUrl != null ? baseUrl.replaceAll("/$", "") : "http://localhost:8000";
+        this.apiKey = apiKey;
+        this.tenantId = tenantId != null ? tenantId : "default";
+        this.httpClient = HttpClient.newHttpClient();
     }
 
-    public Map<String, Object> getAnalytics() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "SUCCESS");
-        result.put("total_decisions_count", 1);
-        result.put("overall_trust_score", 90.0);
-        return result;
+    public String createDecision(String title, String description, String decisionType) throws Exception {
+        String jsonPayload = String.format(
+            "{\"title\":\"%s\",\"description\":\"%s\",\"decision_type\":\"%s\"}",
+            title, description != null ? description : "", decisionType != null ? decisionType : "OPERATIONAL"
+        );
+
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+            .uri(URI.create(baseUrl + "/v1/decisions"))
+            .header("Content-Type", "application/json")
+            .header("X-Tenant-ID", tenantId)
+            .POST(HttpRequest.BodyPublishers.ofString(jsonPayload));
+
+        if (apiKey != null) {
+            builder.header("Authorization", "Bearer " + apiKey);
+        }
+
+        HttpResponse<String> response = httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() >= 400) {
+            throw new RuntimeException("Create decision failed: " + response.body());
+        }
+        return response.body();
     }
 }

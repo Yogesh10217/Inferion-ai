@@ -38,21 +38,37 @@ class DecisionRiskManager:
         self,
         tenant_id: str,
         context_id: str,
-        architecture_risk: float = 20.0,
-        compliance_risk: float = 20.0,
-        data_risk: float = 20.0,
-        portfolio_risk: float = 20.0,
-        ops_risk: float = 20.0,
-        sec_risk: float = 20.0,
+        architecture_risk: Optional[float] = None,
+        compliance_risk: Optional[float] = None,
+        data_risk: Optional[float] = None,
+        portfolio_risk: Optional[float] = None,
+        ops_risk: Optional[float] = None,
+        sec_risk: Optional[float] = None,
     ) -> DecisionRiskProfile:
-        dim_risks = {
-            DecisionRiskDimension.ARCHITECTURE: architecture_risk,
-            DecisionRiskDimension.COMPLIANCE: compliance_risk,
-            DecisionRiskDimension.DATA_GOVERNANCE: data_risk,
-            DecisionRiskDimension.PORTFOLIO: portfolio_risk,
-            DecisionRiskDimension.OPERATIONS: ops_risk,
-            DecisionRiskDimension.SECURITY: sec_risk,
-        }
+        dim_risks: Dict[DecisionRiskDimension, float] = {}
+
+        if architecture_risk is not None:
+            dim_risks[DecisionRiskDimension.ARCHITECTURE] = architecture_risk
+        if compliance_risk is not None:
+            dim_risks[DecisionRiskDimension.COMPLIANCE] = compliance_risk
+        if data_risk is not None:
+            dim_risks[DecisionRiskDimension.DATA_GOVERNANCE] = data_risk
+        if portfolio_risk is not None:
+            dim_risks[DecisionRiskDimension.PORTFOLIO] = portfolio_risk
+        if ops_risk is not None:
+            dim_risks[DecisionRiskDimension.OPERATIONS] = ops_risk
+        if sec_risk is not None:
+            dim_risks[DecisionRiskDimension.SECURITY] = sec_risk
+
+        if not dim_risks:
+            dim_risks = {
+                DecisionRiskDimension.ARCHITECTURE: 20.0,
+                DecisionRiskDimension.COMPLIANCE: 20.0,
+                DecisionRiskDimension.DATA_GOVERNANCE: 20.0,
+                DecisionRiskDimension.PORTFOLIO: 20.0,
+                DecisionRiskDimension.OPERATIONS: 20.0,
+                DecisionRiskDimension.SECURITY: 20.0,
+            }
 
         max_risk = max(dim_risks.values())
         avg_risk = sum(dim_risks.values()) / len(dim_risks)
@@ -70,7 +86,7 @@ class DecisionRiskManager:
         return DecisionRiskProfile(
             tenant_id=tenant_id,
             context_id=context_id,
-            overall_risk_score=overall,
+            overall_risk_score=round(overall, 2),
             overall_risk_level=level,
             dimension_risks=dim_risks,
         )

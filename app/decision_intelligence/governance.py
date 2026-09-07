@@ -14,6 +14,7 @@ from app.orchestration.human_tasks import HumanTaskManager
 
 class DecisionGovernanceStatus(str, Enum):
     ALLOW = "ALLOW"
+    APPROVED = "APPROVED"
     WARN = "WARN"
     REQUIRE_APPROVAL = "REQUIRE_APPROVAL"
     ESCALATE = "ESCALATE"
@@ -25,7 +26,7 @@ class DecisionGovernanceDecision(BaseModel):
     governance_id: str = Field(default_factory=lambda: f"decgov_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     decision_id: str
-    status: DecisionGovernanceStatus = DecisionGovernanceStatus.ALLOW
+    status: DecisionGovernanceStatus = DecisionGovernanceStatus.APPROVED
     requires_approval: bool = False
     approval_request_id: Optional[str] = None
     reason: str
@@ -71,7 +72,7 @@ class DecisionGovernanceEngine:
             )
             app_req_id = app_req.request_id
         else:
-            gov_status = DecisionGovernanceStatus.ALLOW
+            gov_status = DecisionGovernanceStatus.APPROVED
             reason = "Decision approved within autonomous thresholds."
 
         return DecisionGovernanceDecision(

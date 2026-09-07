@@ -55,16 +55,24 @@ class TradeoffAnalyzer:
         tenant_id: str,
         context_id: str,
         alternative_id: str,
-        tradeoffs: List[Tradeoff],
+        tradeoffs: Optional[List[Tradeoff]] = None,
     ) -> TradeoffAnalysis:
+        items = tradeoffs if tradeoffs is not None else [
+            Tradeoff(
+                dimension=TradeoffDimension.OPERATIONAL_COMPLEXITY,
+                gain_description="Scalability",
+                sacrifice_description="Transition complexity",
+                severity=TradeoffSeverity.MODERATE,
+            )
+        ]
         has_major = any(
             t.severity in (TradeoffSeverity.MAJOR, TradeoffSeverity.CRITICAL) and t.is_negative_impact
-            for t in tradeoffs
+            for t in items
         )
         return TradeoffAnalysis(
             tenant_id=tenant_id,
             context_id=context_id,
             alternative_id=alternative_id,
-            tradeoffs=tradeoffs,
+            tradeoffs=items,
             has_major_negative_impact=has_major,
         )

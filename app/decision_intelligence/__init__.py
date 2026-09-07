@@ -13,8 +13,20 @@ from app.decision_intelligence.exceptions import (
     DecisionRiskException,
     DecisionApprovalRequiredException,
     ImmutableDecisionException,
+    ImmutableDecisionRecordException,
     DecisionOutcomeException,
     CrossTenantDecisionAccessException,
+    CrossTenantDecisionIntelligenceException,
+    InvalidDecisionStateTransitionException,
+    HighRiskDecisionRequiresApprovalException,
+)
+
+from app.decision_intelligence.providers import (
+    DecisionIntelligenceProvider,
+    BaseDecisionIntelligenceProvider,
+    DecisionIntelligenceProviderRegistry,
+    ProviderRegistry,
+    IntelligenceDomain,
 )
 
 from app.decision_intelligence.context import (
@@ -58,6 +70,11 @@ from app.decision_intelligence.alternatives import (
     DecisionAlternative,
     AlternativeStatus,
     AlternativeScore,
+)
+
+from app.decision_intelligence.decision_options import (
+    DecisionOptionsRegistry,
+    DecisionOption,
 )
 
 from app.decision_intelligence.tradeoffs import (
@@ -106,8 +123,10 @@ from app.decision_intelligence.decisions import (
     DecisionManager,
     EnterpriseDecision,
     DecisionStatus,
+    DecisionLifecycleState,
     DecisionType,
     DecisionSnapshot,
+    VALID_TRANSITIONS,
 )
 
 from app.decision_intelligence.delegation import (
@@ -122,6 +141,59 @@ from app.decision_intelligence.outcomes import (
     DecisionOutcome,
     OutcomeStatus,
     OutcomeDeviation,
+)
+
+from app.decision_intelligence.uncertainty import (
+    DecisionUncertaintyEngine,
+    DecisionUncertaintyAssessment,
+    UncertaintyDimension,
+    UncertaintyLevel,
+)
+
+from app.decision_intelligence.reproducibility import (
+    DecisionReproducibilityEngine,
+    DecisionReproducibilityRecord,
+)
+
+from app.decision_intelligence.simulation import (
+    DecisionSimulationEngine,
+    DecisionSimulationResult,
+    SimulatedOptionOutcome,
+)
+
+from app.decision_intelligence.approvals import (
+    DecisionApprovalManager,
+    DecisionApprovalRecord,
+)
+
+from app.decision_intelligence.human_review import (
+    DecisionHumanReviewEngine,
+    DecisionHumanReviewTicket,
+)
+
+from app.decision_intelligence.investigations import (
+    DecisionInvestigationEngine,
+    DecisionInvestigation,
+)
+
+from app.decision_intelligence.remediation import (
+    DecisionRemediationEngine,
+    DecisionRemediationPlan,
+)
+
+from app.decision_intelligence.verification import (
+    DecisionVerificationEngine,
+    DecisionVerificationRecord,
+)
+
+from app.decision_intelligence.assurance import (
+    DecisionAssuranceEngine,
+    DecisionAssuranceRating,
+)
+
+from app.decision_intelligence.snapshots import (
+    DecisionSnapshotStore,
+    DecisionPointInTimeSnapshot,
 )
 
 from app.decision_intelligence.learning import (
@@ -161,8 +233,17 @@ __all__ = [
     "DecisionRiskException",
     "DecisionApprovalRequiredException",
     "ImmutableDecisionException",
+    "ImmutableDecisionRecordException",
     "DecisionOutcomeException",
     "CrossTenantDecisionAccessException",
+    "CrossTenantDecisionIntelligenceException",
+    "InvalidDecisionStateTransitionException",
+    "HighRiskDecisionRequiresApprovalException",
+    "DecisionIntelligenceProvider",
+    "BaseDecisionIntelligenceProvider",
+    "DecisionIntelligenceProviderRegistry",
+    "ProviderRegistry",
+    "IntelligenceDomain",
     "DecisionContextManager",
     "DecisionContextBuilder",
     "DecisionContext",
@@ -191,6 +272,8 @@ __all__ = [
     "DecisionAlternative",
     "AlternativeStatus",
     "AlternativeScore",
+    "DecisionOptionsRegistry",
+    "DecisionOption",
     "TradeoffAnalyzer",
     "TradeoffAnalysis",
     "TradeoffDimension",
@@ -218,8 +301,10 @@ __all__ = [
     "DecisionManager",
     "EnterpriseDecision",
     "DecisionStatus",
+    "DecisionLifecycleState",
     "DecisionType",
     "DecisionSnapshot",
+    "VALID_TRANSITIONS",
     "DecisionDelegationManager",
     "DecisionDelegationPlan",
     "DelegationTarget",
@@ -228,6 +313,29 @@ __all__ = [
     "DecisionOutcome",
     "OutcomeStatus",
     "OutcomeDeviation",
+    "DecisionUncertaintyEngine",
+    "DecisionUncertaintyAssessment",
+    "UncertaintyDimension",
+    "UncertaintyLevel",
+    "DecisionReproducibilityEngine",
+    "DecisionReproducibilityRecord",
+    "DecisionSimulationEngine",
+    "DecisionSimulationResult",
+    "SimulatedOptionOutcome",
+    "DecisionApprovalManager",
+    "DecisionApprovalRecord",
+    "DecisionHumanReviewEngine",
+    "DecisionHumanReviewTicket",
+    "DecisionInvestigationEngine",
+    "DecisionInvestigation",
+    "DecisionRemediationEngine",
+    "DecisionRemediationPlan",
+    "DecisionVerificationEngine",
+    "DecisionVerificationRecord",
+    "DecisionAssuranceEngine",
+    "DecisionAssuranceRating",
+    "DecisionSnapshotStore",
+    "DecisionPointInTimeSnapshot",
     "DecisionLearningManager",
     "DecisionLearningRecord",
     "DecisionPattern",

@@ -46,6 +46,7 @@ class DecisionRecommendation(BaseModel):
     recommended_alternative_id: Optional[str] = None
     evidence_references: List[str] = Field(default_factory=list)
     tradeoff_summary: Optional[TradeoffAnalysis] = None
+    auto_execute: bool = False  # Platform invariant: advisory recommendations must not auto-execute
     requires_approval: bool = False
     recommended_next_action: str = "PROCEED_TO_GOVERNANCE"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -58,14 +59,14 @@ class RecommendationEngine:
         self,
         tenant_id: str,
         context_id: str,
-        constraint_result: ConstraintResult,
+        constraint_result: Optional[ConstraintResult] = None,
         tradeoff_analysis: Optional[TradeoffAnalysis] = None,
         risk_score: float = 20.0,
         trust_score: float = 90.0,
         alternative_id: Optional[str] = None,
     ) -> DecisionRecommendation:
-        # Check hard constraint block first!
-        if not constraint_result.passed_all:
+        # Check hard constraint block first if constraint_result is supplied
+        if constraint_result is not None and not constraint_result.passed_all:
             return DecisionRecommendation(
                 tenant_id=tenant_id,
                 context_id=context_id,
@@ -74,6 +75,7 @@ class RecommendationEngine:
                 status=RecommendationStatus.PROPOSED,
                 rationale=f"Hard constraint violation detected ({constraint_result.hard_violations_count} violation(s)). Recommendation REJECTED.",
                 requires_approval=True,
+                auto_execute=False,
                 recommended_next_action="REVISE_CONSTRAINTS_OR_ALTERNATIVE",
             )
 
@@ -99,6 +101,7 @@ class RecommendationEngine:
             rationale=rat,
             recommended_alternative_id=alternative_id,
             tradeoff_summary=tradeoff_analysis,
+            auto_execute=False,
             requires_approval=req_appr,
             recommended_next_action="SUBMIT_FOR_GOVERNANCE",
         )
