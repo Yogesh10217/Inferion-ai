@@ -79,6 +79,7 @@ class CircularDependencyValidator:
         "OperationsAssuranceManager",
         "SecurityAssuranceManager",
         "UnifiedIntelligenceManager",
+        "AutonomousAssuranceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -102,7 +103,9 @@ class CircularDependencyValidator:
         "app.operations_assurance",
         "app.security_assurance",
         "app.unified_intelligence",
+        "app.autonomous_assurance",
     }
+
 
     @classmethod
     def validate_platform_contracts_isolation(cls, contracts_dir_path: str) -> bool:

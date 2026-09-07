@@ -27,6 +27,7 @@ export * from './identities.js';
 export * from './operations.js';
 export * from './security_assurance.js';
 export * from './unified_intelligence.js';
+export * from './autonomous.js';
 
 
 

@@ -59,6 +59,9 @@ class SensitiveDataSanitizer:
         copied = copy.deepcopy(data)
         return self._sanitize_recursive(copied)
 
+    def sanitize_dict(self, data: Any) -> Any:
+        return self.sanitize_copy(data)
+
     def sanitize_for_logging(self, data: Any) -> Any:
         return self.sanitize_copy(data)
 

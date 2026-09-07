@@ -145,6 +145,8 @@ class LLMEngineClient:
         self.security_assurance = SecurityAssuranceClient(self.client)
         from .unified_intelligence import UnifiedIntelligenceClient
         self.unified_intelligence = UnifiedIntelligenceClient(self.client)
+        from .autonomous_assurance import AutonomousAssuranceClient
+        self.autonomous_assurance = AutonomousAssuranceClient(self.base_url, api_key or "")
 
 
 
