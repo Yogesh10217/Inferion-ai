@@ -78,6 +78,7 @@ class CircularDependencyValidator:
         "IdentityAssuranceManager",
         "OperationsAssuranceManager",
         "SecurityAssuranceManager",
+        "UnifiedIntelligenceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -100,6 +101,7 @@ class CircularDependencyValidator:
         "app.identity_assurance",
         "app.operations_assurance",
         "app.security_assurance",
+        "app.unified_intelligence",
     }
 
     @classmethod

@@ -143,6 +143,8 @@ class LLMEngineClient:
         self.operations = OperationsAssuranceClient(self.client)
         from .security_assurance import SecurityAssuranceClient
         self.security_assurance = SecurityAssuranceClient(self.client)
+        from .unified_intelligence import UnifiedIntelligenceClient
+        self.unified_intelligence = UnifiedIntelligenceClient(self.client)
 
 
 

@@ -108,3 +108,55 @@ def list_decisions(tenant_id):
     """List intelligence decisions."""
     decisions = mgr.decision_manager.list_decisions(tenant_id)
     click.echo(json.dumps([d.model_dump(mode="json") for d in decisions], indent=2))
+
+
+# Phase 5.51 Unified Intelligence CLI Commands
+from app.unified_intelligence.manager import UnifiedIntelligenceManager as UnifiedMgr
+from app.unified_intelligence.domains import IntelligenceDomain
+from app.unified_intelligence.normalization_contracts import UnifiedDomainInput
+
+_unified_mgr = UnifiedMgr()
+
+
+@intelligence_cli.command(name="unified-signal")
+@click.option("--domain", required=True, help="Domain name (e.g. security, identity, operations)")
+@click.option("--entity-ref", required=True, help="Target entity reference")
+@click.option("--signal-type", required=True, help="Signal type")
+@click.option("--severity", default="MEDIUM", help="Severity level")
+@click.option("--tenant-id", default="default_tenant", help="Tenant ID")
+def unified_signal_cmd(domain, entity_ref, signal_type, severity, tenant_id):
+    """Ingest cross-domain unified signal."""
+    inp = UnifiedDomainInput(
+        domain=IntelligenceDomain(domain),
+        tenant_id=tenant_id,
+        entity_reference=entity_ref,
+        signal_type=signal_type,
+        severity=severity
+    )
+    sig = _unified_mgr.ingest_domain_input(tenant_id, inp)
+    click.echo(json.dumps(sig.to_dict(), indent=2))
+
+
+@intelligence_cli.command(name="unified-situations")
+@click.option("--tenant-id", default="default_tenant", help="Tenant ID")
+def unified_situations_cmd(tenant_id):
+    """Evaluate and list cross-domain enterprise situations."""
+    sits = _unified_mgr.detect_situations(tenant_id)
+    click.echo(json.dumps([s.to_dict() for s in sits], indent=2))
+
+
+@intelligence_cli.command(name="unified-risk")
+@click.option("--tenant-id", default="default_tenant", help="Tenant ID")
+def unified_risk_cmd(tenant_id):
+    """Evaluate holistic cross-domain enterprise risk score."""
+    risk = _unified_mgr.evaluate_risk(tenant_id)
+    click.echo(json.dumps(risk.to_dict(), indent=2))
+
+
+@intelligence_cli.command(name="unified-assurance")
+@click.option("--tenant-id", default="default_tenant", help="Tenant ID")
+def unified_assurance_cmd(tenant_id):
+    """Evaluate multi-domain enterprise assurance posture."""
+    assr = _unified_mgr.evaluate_assurance(tenant_id)
+    click.echo(json.dumps(assr.to_dict(), indent=2))
+

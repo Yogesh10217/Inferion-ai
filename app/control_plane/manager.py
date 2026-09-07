@@ -222,7 +222,11 @@ class ControlPlaneManager:
         from app.security_assurance.manager import SecurityAssuranceManager
         self.security_assurance_manager = SecurityAssuranceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.50 Security Assurance Manager")
+        # Phase 5.51 Enterprise AI Unified Intelligence Manager
+        from app.unified_intelligence.manager import UnifiedIntelligenceManager
+        self.unified_intelligence_manager = UnifiedIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.51 Unified Intelligence Manager")
 
 
 

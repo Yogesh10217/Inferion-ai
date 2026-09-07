@@ -450,6 +450,10 @@ class ServiceContainer:
         from app.security_assurance.manager import SecurityAssuranceManager
         self.security_assurance_manager = SecurityAssuranceManager()
 
+        # Phase 5.51 Enterprise AI Unified Intelligence Manager
+        from app.unified_intelligence.manager import UnifiedIntelligenceManager
+        self.unified_intelligence_manager = UnifiedIntelligenceManager()
+
 
 
 
