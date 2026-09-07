@@ -24,6 +24,7 @@ export * from './access.js';
 export * from './finops.js';
 export * from './data.js';
 export * from './identities.js';
+export * from './operations.js';
 
 
 

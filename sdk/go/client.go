@@ -29,15 +29,8 @@ type Client struct {
 	Access       *AccessClient
 	Data         *DataClient
 	Identities   *IdentityAssuranceService
+	Operations   *OperationsAssuranceService
 	Knowledge    *KnowledgeClient
-
-
-
-
-
-
-
-
 	baseURL      string
 	apiKey       string
 	orgID        string
@@ -65,6 +58,7 @@ func NewClient(cfg Config) *Client {
 	c.Access = NewAccessClient(c.baseURL, c.apiKey)
 	c.Data = NewDataClient(c.baseURL)
 	c.Identities = &IdentityAssuranceService{client: c}
+	c.Operations = &OperationsAssuranceService{client: c}
 
 	return c
 }

@@ -76,6 +76,7 @@ class CircularDependencyValidator:
         "DecisionGovernanceManager",
         "KnowledgeAssuranceManager",
         "IdentityAssuranceManager",
+        "OperationsAssuranceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -96,6 +97,7 @@ class CircularDependencyValidator:
         "app.decision_governance",
         "app.knowledge_assurance",
         "app.identity_assurance",
+        "app.operations_assurance",
     }
 
     @classmethod

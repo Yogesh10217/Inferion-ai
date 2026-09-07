@@ -214,7 +214,11 @@ class ControlPlaneManager:
         from app.identity_assurance.manager import IdentityAssuranceManager
         self.identity_assurance_manager = IdentityAssuranceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.48 Identity Assurance Manager")
+        # Phase 5.49 Enterprise AI Operations Assurance Manager
+        from app.operations_assurance.manager import OperationsAssuranceManager
+        self.operations_assurance_manager = OperationsAssuranceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.49 Operations Assurance Manager")
 
 
 

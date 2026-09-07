@@ -1,33 +1,47 @@
 package llmengine
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-type OperationsClient struct {
-	BaseURL    string
-	HTTPClient *http.Client
+type OperationalServiceReference struct {
+	ServiceID   string `json:"service_id"`
+	TenantID    string `json:"tenant_id"`
+	Name        string `json:"name"`
+	ServiceType string `json:"service_type"`
+	Status      string `json:"status"`
 }
 
-func NewOperationsClient(baseURL string) *OperationsClient {
-	return &OperationsClient{
-		BaseURL:    baseURL,
-		HTTPClient: &http.Client{},
+type OperationsAssuranceService struct {
+	client *Client
+}
+
+func (s *OperationsAssuranceService) RegisterService(tenantID, name, serviceType string) (*OperationalServiceReference, error) {
+	payload := map[string]string{
+		"name":         name,
+		"service_type": serviceType,
 	}
-}
+	body, _ := json.Marshal(payload)
 
-func (c *OperationsClient) GetServices(tenantID string) ([]map[string]interface{}, error) {
-	resp, err := c.HTTPClient.Get(fmt.Sprintf("%s/v1/operations/services?tenant_id=%s", c.BaseURL, tenantID))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/v1/operations/services", s.client.BaseURL), bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("x-tenant-id", tenantID)
+
+	resp, err := s.client.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var result []map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	var svc OperationalServiceReference
+	if err := json.NewDecoder(resp.Body).Decode(&svc); err != nil {
 		return nil, err
 	}
-	return result, nil
+	return &svc, nil
 }
