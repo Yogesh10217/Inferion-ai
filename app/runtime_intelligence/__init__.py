@@ -18,7 +18,12 @@ from app.runtime_intelligence.exceptions import (
     RuntimeGovernanceException,
     RuntimeProviderException,
     RuntimeIdempotencyException,
+    InvalidRuntimeStateTransitionException,
+    RuntimeConcurrencyConflictException,
+    RuntimeIntelligenceLimitExceededException,
 )
+from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleState, RuntimeLifecycleManager
+from app.runtime_intelligence.runtime_state import RuntimeOperationalState, RuntimeStateManager
 from app.runtime_intelligence.models import (
     RuntimeLifecycleState,
     RuntimeHealthStatus,

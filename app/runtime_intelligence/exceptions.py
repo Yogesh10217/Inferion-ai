@@ -91,3 +91,19 @@ RuntimeIntelligenceProviderException = RuntimeProviderException
 class RuntimeIdempotencyException(RuntimeIntelligenceException):
     def __init__(self, key: str = ""):
         super().__init__("Duplicate runtime intelligence operation detected")
+
+
+class InvalidRuntimeStateTransitionException(RuntimeIntelligenceException):
+    def __init__(self, from_state: str = "", to_state: str = ""):
+        super().__init__(f"Invalid runtime state transition from '{from_state}' to '{to_state}'")
+
+
+class RuntimeConcurrencyConflictException(RuntimeIntelligenceException):
+    def __init__(self, resource_id: str = ""):
+        super().__init__("Concurrent runtime operation conflict detected")
+
+
+class RuntimeIntelligenceLimitExceededException(RuntimeIntelligenceException):
+    def __init__(self, limit_name: str = ""):
+        super().__init__(f"Runtime intelligence execution limit exceeded: {limit_name}")
+
