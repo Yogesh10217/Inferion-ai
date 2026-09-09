@@ -458,6 +458,10 @@ class ServiceContainer:
         from app.autonomous_assurance.manager import AutonomousAssuranceManager
         self.autonomous_assurance_manager = AutonomousAssuranceManager()
 
+        # Phase 5.54 Enterprise AI Continuous Assurance Manager
+        from app.continuous_assurance.manager import ContinuousAssuranceManager
+        self.continuous_assurance_manager = ContinuousAssuranceManager()
+
 
 
 

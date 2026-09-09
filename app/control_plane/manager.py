@@ -230,7 +230,11 @@ class ControlPlaneManager:
         from app.autonomous_assurance.manager import AutonomousAssuranceManager
         self.autonomous_assurance_manager = AutonomousAssuranceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.53 Autonomous Assurance Manager")
+        # Phase 5.54 Enterprise AI Continuous Assurance Manager
+        from app.continuous_assurance.manager import ContinuousAssuranceManager
+        self.continuous_assurance_manager = ContinuousAssuranceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.54 Continuous Assurance Manager")
 
 
 
