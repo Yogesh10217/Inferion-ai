@@ -85,6 +85,8 @@ from app.api.v1.decision_intelligence import router as decision_intelligence_rou
 from app.api.v1.autonomous_assurance import router as autonomous_assurance_router
 from app.api.v1.continuous_assurance import router as continuous_assurance_router
 from app.api.v1.reliability_intelligence import router as reliability_intelligence_router
+from app.api.v1.runtime_intelligence import router as runtime_intelligence_router
+from app.api.v1.capacity_intelligence import router as capacity_intelligence_router
 
 
 
@@ -257,6 +259,8 @@ def create_app() -> FastAPI:
     app.include_router(autonomous_assurance_router)
     app.include_router(continuous_assurance_router)
     app.include_router(reliability_intelligence_router)
+    app.include_router(runtime_intelligence_router)
+    app.include_router(capacity_intelligence_router)
 
 
 

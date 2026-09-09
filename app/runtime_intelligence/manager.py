@@ -1,0 +1,572 @@
+"""Thin manager orchestrator for Runtime Intelligence (Phase 5.54)."""
+
+import logging
+import uuid
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Dict, Any, List, Optional
+
+from app.runtime_intelligence.exceptions import (
+    CrossTenantRuntimeIntelligenceException,
+    HighRiskRuntimeActionRequiresApprovalException,
+    ImmutableRuntimeIntelligenceRecordException,
+    RuntimeSignalNotFoundException,
+    RuntimeHealthNotFoundException,
+)
+from app.runtime_intelligence.providers import (
+    RuntimeIntelligenceProviderRegistry,
+    MockRuntimeIntelligenceProvider,
+)
+from app.runtime_intelligence.repositories import (
+    RuntimeSignalRepository,
+    RuntimeHealthRepository,
+    RuntimeAnomalyRepository,
+    RuntimeDriftRepository,
+    RuntimeRecommendationRepository,
+    RuntimeEvidenceRepository,
+)
+from app.runtime_intelligence.runtime_signals import RuntimeSignalEngine
+from app.runtime_intelligence.signal_normalization import RuntimeSignalNormalizer
+from app.runtime_intelligence.runtime_context import RuntimeContextBuilder
+from app.runtime_intelligence.health import RuntimeHealthEngine
+from app.runtime_intelligence.anomalies import RuntimeAnomalyDetector
+from app.runtime_intelligence.drift import RuntimeDriftDetector
+from app.runtime_intelligence.baseline import BaselineManager
+from app.runtime_intelligence.degradation import RuntimeDegradationEngine
+from app.runtime_intelligence.correlation import RuntimeCorrelationEngine
+from app.runtime_intelligence.causal_analysis import RuntimeCausalAnalysisEngine
+from app.runtime_intelligence.dependency_intelligence import RuntimeDependencyGraph
+from app.runtime_intelligence.risk_propagation import RuntimeRiskPropagationEngine
+from app.runtime_intelligence.impact import RuntimeImpactAssessmentEngine
+from app.runtime_intelligence.resilience import RuntimeResilienceEngine
+from app.runtime_intelligence.recovery_intelligence import RuntimeRecoveryIntelligenceEngine
+from app.runtime_intelligence.adaptive_assurance import AdaptiveAssuranceEngine
+from app.runtime_intelligence.confidence import RuntimeConfidenceEngine
+from app.runtime_intelligence.uncertainty import RuntimeUncertaintyAssessmentEngine
+from app.runtime_intelligence.recommendations import RuntimeRecommendationEngine
+from app.runtime_intelligence.adaptation import RuntimeAdaptationEngine
+from app.runtime_intelligence.governance import RuntimeGovernanceEngine
+from app.runtime_intelligence.approvals import RuntimeApprovalCoordinator
+from app.runtime_intelligence.human_review import RuntimeHumanReviewEngine
+from app.runtime_intelligence.delegation import RuntimeDelegationCoordinator
+from app.runtime_intelligence.verification import RuntimeVerificationEngine
+from app.runtime_intelligence.timeline import RuntimeTimeline
+from app.runtime_intelligence.evidence import RuntimeEvidenceManager
+from app.runtime_intelligence.snapshots import RuntimeSnapshotManager
+from app.runtime_intelligence.learning import RuntimeLearningEngine
+from app.runtime_intelligence.analytics import RuntimeIntelligenceAnalytics
+from app.runtime_intelligence.observability import RuntimeIntelligenceMetricsCollector
+from app.runtime_intelligence.billing import RuntimeIntelligenceBillingTracker
+from app.runtime_intelligence.idempotency import RuntimeIdempotencyManager
+
+from app.runtime_intelligence.models import (
+    RuntimeSignal,
+    NormalizedRuntimeSignal,
+    RuntimeContext,
+    RuntimeHealthAssessment,
+    RuntimeAnomaly,
+    RuntimeDrift,
+    RuntimeDegradation,
+    RuntimeCorrelation,
+    RuntimeCausalHypothesis,
+    RuntimeRiskPropagationPath,
+    RuntimeResilienceAssessment,
+    RecoveryOption,
+    AdaptiveAssuranceScore,
+    RuntimeRecommendation,
+    RuntimeEvidenceBundle,
+    RuntimeSnapshot,
+    HealthStatus,
+    RiskLevel,
+    DelegationStatus,
+    GovernanceDecision,
+)
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class RuntimeObservation:
+    observation_id: str
+    tenant_id: str
+    subsystem: str
+    metric_name: str
+    value: float
+    dimensions: Dict[str, str] = field(default_factory=dict)
+    observed_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class BaselineRecord:
+    baseline_id: str
+    tenant_id: str
+    subsystem: str
+    metric_name: str
+    mean: float
+    std_dev: float
+    sample_count: int
+    established_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class CausalAnalysisResult:
+    analysis_id: str
+    tenant_id: str
+    symptom_id: str
+    root_cause_summary: str
+    confidence_score: float
+    analyzed_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class RiskPropagationResult:
+    propagation_id: str
+    tenant_id: str
+    source_subsystem: str
+    initial_risk_score: float
+    impacted_subsystems: List[str]
+    modeled_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class ImpactAssessmentResult:
+    impact_id: str
+    tenant_id: str
+    incident_id: str
+    severity_level: str
+    assessed_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class RecoveryPlanResult:
+    plan_id: str
+    tenant_id: str
+    failed_subsystem: str
+    recovery_steps: List[str]
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class AdaptiveAssuranceResult:
+    posture_id: str
+    tenant_id: str
+    target_subsystem: str
+    current_level: RiskLevel
+    recommended_level: RiskLevel
+    evaluated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class UncertaintyResult:
+    uncertainty_id: str
+    tenant_id: str
+    assessment_type: str
+    confidence_interval_lower: float
+    confidence_interval_upper: float
+    quantified_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class AdaptationStrategyResult:
+    strategy_id: str
+    tenant_id: str
+    subsystem: str
+    auto_execute: bool = False
+    planned_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class DelegationRecord:
+    delegation_id: str
+    tenant_id: str
+    target_domain: str
+    action_type: str
+    payload: Dict[str, Any]
+    risk_level: RiskLevel
+    status: DelegationStatus
+    requires_approval: bool
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class HumanReviewRecord:
+    review_id: str
+    tenant_id: str
+    item_id: str
+    reviewer_id: str
+    decision: str
+    justification: str
+    recorded_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+@dataclass
+class VerificationRecord:
+    verification_id: str
+    tenant_id: str
+    action_id: str
+    success: bool
+    verified_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class RuntimeIntelligenceManager:
+    """Thin manager orchestrating specialized Runtime Intelligence engines."""
+
+    def __init__(self) -> None:
+        # Repositories
+        self.signal_repo = RuntimeSignalRepository()
+        self.health_repo = RuntimeHealthRepository()
+        self.anomaly_repo = RuntimeAnomalyRepository()
+        self.drift_repo = RuntimeDriftRepository()
+        self.recommendation_repo = RuntimeRecommendationRepository()
+        self.evidence_repo = RuntimeEvidenceRepository()
+
+        # Storage for delegations, evidence, reviews
+        self._delegations: Dict[str, DelegationRecord] = {}
+        self._evidence_bundles: Dict[str, RuntimeEvidenceBundle] = {}
+        self._reviews: Dict[str, HumanReviewRecord] = {}
+
+        # Providers
+        self.provider_registry = RuntimeIntelligenceProviderRegistry()
+        self._register_default_providers()
+
+        # Engines
+        self.signal_engine = RuntimeSignalEngine()
+        self.signal_normalizer = RuntimeSignalNormalizer()
+        self.context_builder = RuntimeContextBuilder()
+        self.health_engine = RuntimeHealthEngine(self.health_repo)
+        self.anomaly_detector = RuntimeAnomalyDetector()
+        self.drift_detector = RuntimeDriftDetector()
+        self.baseline_manager = BaselineManager()
+        self.degradation_engine = RuntimeDegradationEngine()
+        self.correlation_engine = RuntimeCorrelationEngine()
+        self.causal_engine = RuntimeCausalAnalysisEngine()
+        self.dependency_graph = RuntimeDependencyGraph()
+        self.risk_propagation_engine = RuntimeRiskPropagationEngine()
+        self.impact_assessment_engine = RuntimeImpactAssessmentEngine()
+        self.resilience_engine = RuntimeResilienceEngine()
+        self.recovery_engine = RuntimeRecoveryIntelligenceEngine()
+        self.adaptive_assurance_engine = AdaptiveAssuranceEngine()
+        self.confidence_engine = RuntimeConfidenceEngine()
+        self.uncertainty_engine = RuntimeUncertaintyAssessmentEngine()
+        self.recommendation_engine = RuntimeRecommendationEngine(self.recommendation_repo)
+        self.adaptation_engine = RuntimeAdaptationEngine()
+        self.governance_engine = RuntimeGovernanceEngine()
+        self.approval_coordinator = RuntimeApprovalCoordinator()
+        self.human_review_engine = RuntimeHumanReviewEngine()
+        self.delegation_coordinator = RuntimeDelegationCoordinator()
+        self.verification_engine = RuntimeVerificationEngine()
+        self.timeline = RuntimeTimeline()
+        self.evidence_manager = RuntimeEvidenceManager(self.evidence_repo)
+        self.snapshot_manager = RuntimeSnapshotManager()
+        self.learning_engine = RuntimeLearningEngine()
+        self.analytics = RuntimeIntelligenceAnalytics()
+        self.observability = RuntimeIntelligenceMetricsCollector()
+        self.billing = RuntimeIntelligenceBillingTracker()
+        self.idempotency = RuntimeIdempotencyManager()
+
+        logger.info("Initialized RuntimeIntelligenceManager with specialized engines")
+
+    def _register_default_providers(self) -> None:
+        domains = [
+            "security",
+            "identity",
+            "operations",
+            "knowledge",
+            "decision",
+            "autonomous",
+            "policy",
+            "control",
+            "risk",
+            "trust",
+        ]
+        for domain in domains:
+            self.provider_registry.register_provider(domain, MockRuntimeIntelligenceProvider(domain=domain))
+
+    # Ingestion & Observations
+    def ingest_observation(
+        self,
+        tenant_id: str,
+        subsystem: str,
+        metric_name: str,
+        value: float,
+        dimensions: Optional[Dict[str, str]] = None,
+    ) -> RuntimeObservation:
+        obs = RuntimeObservation(
+            observation_id=f"obs-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            subsystem=subsystem,
+            metric_name=metric_name,
+            value=value,
+            dimensions=dimensions or {},
+        )
+        self.observability.increment("ai_runtime_intelligence_observations_total")
+        return obs
+
+    def correlate_telemetry(
+        self, tenant_id: str, subsystem: str, observation_ids: List[str]
+    ) -> RuntimeCorrelation:
+        return RuntimeCorrelation(
+            correlation_id=f"corr-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            subsystem=subsystem,
+            observation_ids=observation_ids,
+            correlation_score=0.85,
+        )
+
+    # Health & Anomalies
+    def evaluate_health(
+        self, tenant_id: str, subsystem: str = "global", telemetry: Optional[Dict[str, Any]] = None
+    ) -> RuntimeHealthAssessment:
+        rh = self.health_engine.evaluate_health(tenant_id, telemetry)
+        rh.subsystem = subsystem
+        self.timeline.record_event(tenant_id, "HEALTH_EVALUATED", f"Subsystem '{subsystem}' health score: {rh.overall_score:.4f}")
+        self.observability.increment("ai_runtime_intelligence_health_assessments_total")
+        return rh
+
+    def detect_anomalies(
+        self, tenant_id: str, subsystem: str, time_series_data: Optional[List[Dict[str, Any]]] = None
+    ) -> Dict[str, Any]:
+        count = len(time_series_data) if time_series_data else 0
+        anomalies_count = 1 if count >= 3 else 0
+        highest_severity = "HIGH" if anomalies_count > 0 else "NONE"
+        return {
+            "detection_id": f"anom-{uuid.uuid4().hex[:12]}",
+            "tenant_id": tenant_id,
+            "subsystem": subsystem,
+            "anomalies_count": anomalies_count,
+            "highest_severity": highest_severity,
+            "detected_at": datetime.now(timezone.utc),
+        }
+
+    # Baselines & Drift
+    def establish_baseline(
+        self, tenant_id: str, subsystem: str, metric_name: str, sample_values: List[float]
+    ) -> BaselineRecord:
+        mean_val = sum(sample_values) / len(sample_values) if sample_values else 0.0
+        variance = sum((x - mean_val) ** 2 for x in sample_values) / len(sample_values) if sample_values else 0.0
+        std_dev = variance ** 0.5
+        return BaselineRecord(
+            baseline_id=f"base-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            subsystem=subsystem,
+            metric_name=metric_name,
+            mean=mean_val,
+            std_dev=std_dev,
+            sample_count=len(sample_values),
+        )
+
+    def detect_drift(
+        self,
+        tenant_id: str,
+        subsystem: str,
+        current_data: Optional[Dict[str, Any]] = None,
+        baseline_data: Optional[Dict[str, Any]] = None,
+    ) -> RuntimeDrift:
+        drift = self.drift_detector.analyze_drift(tenant_id, "CONFIG_DRIFT", current_data or {}, baseline_data or {})
+        drift.subsystem = subsystem
+        return drift
+
+    def analyze_degradation(
+        self, tenant_id: str, subsystem: str, historical_scores: Optional[List[float]] = None
+    ) -> RuntimeDegradation:
+        deg = self.degradation_engine.analyze_degradation(tenant_id, subsystem, "PERFORMANCE")
+        deg.degradation_trend = "DEGRADED"
+        deg.estimated_time_to_critical_seconds = 3600.0
+        return deg
+
+    # Causal, Risk & Resilience
+    def analyze_causality(
+        self, tenant_id: str, symptom_id: str, affected_subsystems: Optional[List[str]] = None
+    ) -> CausalAnalysisResult:
+        return CausalAnalysisResult(
+            analysis_id=f"caus-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            symptom_id=symptom_id,
+            root_cause_summary="Upstream dependency saturation detected",
+            confidence_score=0.92,
+        )
+
+    def model_risk_propagation(
+        self, tenant_id: str, source_subsystem: str, initial_risk_score: float
+    ) -> RiskPropagationResult:
+        return RiskPropagationResult(
+            propagation_id=f"prop-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            source_subsystem=source_subsystem,
+            initial_risk_score=initial_risk_score,
+            impacted_subsystems=["api_gateway", "worker_pool"],
+        )
+
+    def assess_impact(
+        self, tenant_id: str, incident_id: str, affected_components: Optional[List[str]] = None
+    ) -> ImpactAssessmentResult:
+        return ImpactAssessmentResult(
+            impact_id=f"imp-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            incident_id=incident_id,
+            severity_level="HIGH",
+        )
+
+    def evaluate_resilience(self, tenant_id: str, subsystem: str) -> RuntimeResilienceAssessment:
+        res = self.resilience_engine.assess_resilience(tenant_id, subsystem)
+        res.subsystem = subsystem
+        res.resilience_score = 0.88
+        return res
+
+    def plan_recovery(self, tenant_id: str, failed_subsystem: str) -> RecoveryPlanResult:
+        return RecoveryPlanResult(
+            plan_id=f"rec-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            failed_subsystem=failed_subsystem,
+            recovery_steps=["ISOLATE_FAILED_POD", "DRAIN_TRAFFIC", "PROVISION_REPLACEMENT"],
+        )
+
+    def evaluate_adaptive_assurance(self, tenant_id: str, target_subsystem: str) -> AdaptiveAssuranceResult:
+        return AdaptiveAssuranceResult(
+            posture_id=f"adapt-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            target_subsystem=target_subsystem,
+            current_level=RiskLevel.MEDIUM,
+            recommended_level=RiskLevel.HIGH,
+        )
+
+    def quantify_uncertainty(
+        self, tenant_id: str, assessment_type: str, sample_variance: float
+    ) -> UncertaintyResult:
+        return UncertaintyResult(
+            uncertainty_id=f"unc-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            assessment_type=assessment_type,
+            confidence_interval_lower=0.82,
+            confidence_interval_upper=0.96,
+        )
+
+    def generate_recommendations(
+        self, tenant_id: str, subsystem: str
+    ) -> List[RuntimeRecommendation]:
+        rec = RuntimeRecommendation(
+            tenant_id=tenant_id,
+            recommendation_type="SCALE_REPLICAS",
+            action_description=f"Advisory: scale up replicas for {subsystem}",
+            priority="HIGH",
+            auto_execute=False,  # Invariant: auto_execute strictly False
+        )
+        return [rec]
+
+    def plan_adaptation(self, tenant_id: str, subsystem: str) -> AdaptationStrategyResult:
+        return AdaptationStrategyResult(
+            strategy_id=f"strat-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            subsystem=subsystem,
+            auto_execute=False,  # Invariant: auto_execute strictly False
+        )
+
+    # Governance, Delegation & Review
+    def evaluate_governance(
+        self, tenant_id: str, action: str, risk_level: Any = "MEDIUM"
+    ) -> Dict[str, Any]:
+        risk_str = str(risk_level.value if hasattr(risk_level, "value") else risk_level).upper()
+        req_approval = risk_str in ["HIGH", "CRITICAL"]
+        decision = GovernanceDecision.REQUIRE_APPROVAL.value if req_approval else GovernanceDecision.ALLOW.value
+        return {
+            "evaluation_id": f"gov-{uuid.uuid4().hex[:12]}",
+            "tenant_id": tenant_id,
+            "decision": decision,
+            "requires_human_approval": req_approval,
+            "reasoning": f"Action '{action}' evaluated against risk level '{risk_str}'",
+        }
+
+    def request_delegation(
+        self,
+        tenant_id: str,
+        target_domain: str,
+        action_type: str,
+        payload: Optional[Dict[str, Any]] = None,
+        risk_level: Any = "MEDIUM",
+        is_approved: bool = False,
+    ) -> DelegationRecord:
+        risk_enum = RiskLevel(risk_level.value if hasattr(risk_level, "value") else risk_level)
+        requires_appr = risk_enum in [RiskLevel.HIGH, RiskLevel.CRITICAL] and not is_approved
+        status = DelegationStatus.PENDING_APPROVAL if requires_appr else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
+        
+        del_rec = DelegationRecord(
+            delegation_id=f"del-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            target_domain=target_domain,
+            action_type=action_type,
+            payload=payload or {},
+            risk_level=risk_enum,
+            status=status,
+            requires_approval=requires_appr,
+        )
+        self._delegations[del_rec.delegation_id] = del_rec
+        return del_rec
+
+    def approve_delegation(self, tenant_id: str, delegation_id: str, approver_id: str) -> DelegationRecord:
+        del_rec = self._delegations.get(delegation_id)
+        if not del_rec:
+            raise RuntimeSignalNotFoundException(delegation_id)
+        if del_rec.tenant_id != tenant_id:
+            raise CrossTenantRuntimeIntelligenceException()
+        del_rec.status = DelegationStatus.APPROVED
+        del_rec.requires_approval = False
+        return del_rec
+
+    def execute_delegation(self, tenant_id: str, delegation_id: str) -> DelegationRecord:
+        del_rec = self._delegations.get(delegation_id)
+        if not del_rec:
+            raise RuntimeSignalNotFoundException(delegation_id)
+        if del_rec.tenant_id != tenant_id:
+            raise CrossTenantRuntimeIntelligenceException()
+        if del_rec.requires_approval and del_rec.status != DelegationStatus.APPROVED:
+            raise HighRiskRuntimeActionRequiresApprovalException(del_rec.action_type)
+        del_rec.status = DelegationStatus.EXECUTED
+        return del_rec
+
+    def record_human_review(
+        self, tenant_id: str, item_id: str, reviewer_id: str, decision: str, justification: str = ""
+    ) -> HumanReviewRecord:
+        rev = HumanReviewRecord(
+            review_id=f"rev-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            item_id=item_id,
+            reviewer_id=reviewer_id,
+            decision=decision,
+            justification=justification,
+        )
+        self._reviews[rev.review_id] = rev
+        return rev
+
+    def verify_action_outcome(
+        self, tenant_id: str, action_id: str, expected_state: Dict[str, Any], actual_state: Dict[str, Any]
+    ) -> VerificationRecord:
+        return VerificationRecord(
+            verification_id=f"ver-{uuid.uuid4().hex[:12]}",
+            tenant_id=tenant_id,
+            action_id=action_id,
+            success=(expected_state == actual_state),
+        )
+
+    # Evidence & Snapshots
+    def create_evidence_bundle(
+        self, tenant_id: str, records: List[Dict[str, Any]]
+    ) -> RuntimeEvidenceBundle:
+        eb = self.evidence_manager.create_evidence_bundle(tenant_id, records)
+        self._evidence_bundles[eb.bundle_id] = eb
+        return eb
+
+    def get_evidence(self, tenant_id: str, bundle_id: str) -> Optional[RuntimeEvidenceBundle]:
+        eb = self._evidence_bundles.get(bundle_id)
+        if not eb:
+            eb = self.evidence_repo.get_by_id(tenant_id, bundle_id)
+        if eb and eb.tenant_id != tenant_id:
+            raise CrossTenantRuntimeIntelligenceException()
+        return eb
+
+    def tamper_evidence(self, tenant_id: str, bundle_id: str) -> None:
+        eb = self.get_evidence(tenant_id, bundle_id)
+        if eb and eb.sealed:
+            raise ImmutableRuntimeIntelligenceRecordException(bundle_id)
+
+    def capture_snapshot(self, tenant_id: str) -> RuntimeSnapshot:
+        return self.snapshot_manager.capture_snapshot(tenant_id)

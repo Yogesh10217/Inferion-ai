@@ -151,6 +151,10 @@ class LLMEngineClient:
         self.continuous_assurance = ContinuousAssuranceClient(self.base_url, api_key or "")
         from .reliability_intelligence import ReliabilityIntelligenceClient
         self.reliability = ReliabilityIntelligenceClient(self.base_url, api_key or "")
+        from .runtime_intelligence import RuntimeIntelligenceClient
+        self.runtime = RuntimeIntelligenceClient(self.base_url, api_key or "")
+        from .capacity_intelligence import CapacityIntelligenceClient
+        self.capacity = CapacityIntelligenceClient(self.base_url, api_key or "")
 
 
 

@@ -238,7 +238,15 @@ class ControlPlaneManager:
         from app.reliability_intelligence.manager import ReliabilityIntelligenceManager
         self.reliability_intelligence_manager = ReliabilityIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.55 Reliability Intelligence Manager")
+        # Phase 5.54 Enterprise AI Runtime Intelligence Manager
+        from app.runtime_intelligence.manager import RuntimeIntelligenceManager
+        self.runtime_intelligence_manager = RuntimeIntelligenceManager()
+
+        # Phase 5.56 Enterprise AI Capacity Intelligence Manager
+        from app.capacity_intelligence.manager import CapacityIntelligenceManager
+        self.capacity_intelligence_manager = CapacityIntelligenceManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.54/5.56 Managers")
 
 
 
