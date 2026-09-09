@@ -149,6 +149,8 @@ class LLMEngineClient:
         self.autonomous_assurance = AutonomousAssuranceClient(self.base_url, api_key or "")
         from .continuous_assurance import ContinuousAssuranceClient
         self.continuous_assurance = ContinuousAssuranceClient(self.base_url, api_key or "")
+        from .reliability_intelligence import ReliabilityIntelligenceClient
+        self.reliability = ReliabilityIntelligenceClient(self.base_url, api_key or "")
 
 
 

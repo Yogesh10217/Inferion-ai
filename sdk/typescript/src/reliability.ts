@@ -1,52 +1,81 @@
 /**
- * TypeScript SDK Client for Enterprise AI Reliability Platform (Phase 5.31).
+ * TypeScript SDK Client for Reliability Intelligence (Phase 5.55).
  */
 
-export class ReliabilityClient {
-  private client: any;
+export class ReliabilityIntelligenceClient {
+  private baseUrl: string;
+  private apiKey: string;
 
-  constructor(client: any) {
-    this.client = client;
+  constructor(baseUrl: string, apiKey: string = "") {
+    this.baseUrl = baseUrl.replace(/\/$/, "");
+    this.apiKey = apiKey;
   }
 
-  async registerService(tenantId: string, name: string, tier: string = "TIER_1_HIGH"): Promise<any> {
-    return this.client.post(`/v1/reliability/services?tenant_id=${tenantId}`, { name, tier });
+  private getHeaders(tenantId: string): Record<string, string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "X-Tenant-ID": tenantId,
+    };
+    if (this.apiKey) {
+      headers["Authorization"] = `Bearer ${this.apiKey}`;
+    }
+    return headers;
   }
 
-  async createSLO(tenantId: string, serviceId: string, name: string, targetPercentage: number = 99.9): Promise<any> {
-    return this.client.post(`/v1/reliability/slos?tenant_id=${tenantId}`, {
-      service_id: serviceId,
-      name,
-      target_percentage: targetPercentage,
+  async evaluateServiceHealth(
+    tenantId: string,
+    serviceId: string,
+    rawMetrics: Record<string, any> = {}
+  ): Promise<any> {
+    const res = await fetch(`${this.baseUrl}/v1/reliability/health`, {
+      method: "POST",
+      headers: this.getHeaders(tenantId),
+      body: JSON.stringify({ service_id: serviceId, metrics: rawMetrics }),
     });
+    return res.json();
   }
 
-  async createIncident(tenantId: string, serviceId: string, title: str, severity: string = "SEV_1_HIGH"): Promise<any> {
-    return this.client.post(`/v1/reliability/incidents?tenant_id=${tenantId}`, {
-      service_id: serviceId,
-      title,
-      severity,
+  async predictFailure(
+    tenantId: string,
+    serviceId: string,
+    horizonMinutes: number = 60
+  ): Promise<any> {
+    const res = await fetch(`${this.baseUrl}/v1/reliability/predictions`, {
+      method: "POST",
+      headers: this.getHeaders(tenantId),
+      body: JSON.stringify({ service_id: serviceId, horizon_minutes: horizonMinutes }),
     });
+    return res.json();
   }
 
-  async planRemediation(tenantId: string, incidentId: string, idempotencyKey: string, actionName: string = "RESTART_POD", isHighRisk: boolean = false): Promise<any> {
-    return this.client.post(`/v1/reliability/remediations/plan?tenant_id=${tenantId}`, {
-      incident_id: incidentId,
-      idempotency_key: idempotencyKey,
-      action_name: actionName,
-      is_high_risk: isHighRisk,
+  async planRecovery(
+    tenantId: string,
+    serviceId: string,
+    strategy: string = "FAILOVER"
+  ): Promise<any> {
+    const res = await fetch(`${this.baseUrl}/v1/reliability/recovery/plan`, {
+      method: "POST",
+      headers: this.getHeaders(tenantId),
+      body: JSON.stringify({ service_id: serviceId, strategy }),
     });
+    return res.json();
   }
 
-  async createPostmortem(tenantId: string, incidentId: string, summary: string, rootCause: string): Promise<any> {
-    return this.client.post(`/v1/reliability/postmortems?tenant_id=${tenantId}`, {
-      incident_id: incidentId,
-      summary,
-      root_cause: rootCause,
+  async proposeChaosExperiment(
+    tenantId: string,
+    experimentName: string,
+    targetService: string,
+    hypothesis: string
+  ): Promise<any> {
+    const res = await fetch(`${this.baseUrl}/v1/reliability/chaos/propose`, {
+      method: "POST",
+      headers: this.getHeaders(tenantId),
+      body: JSON.stringify({
+        experiment_name: experimentName,
+        target_service: targetService,
+        hypothesis,
+      }),
     });
-  }
-
-  async getAnalyticsReport(tenantId: string): Promise<any> {
-    return this.client.get(`/v1/reliability/analytics/report?tenant_id=${tenantId}`);
+    return res.json();
   }
 }

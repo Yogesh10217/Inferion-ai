@@ -81,6 +81,7 @@ class CircularDependencyValidator:
         "UnifiedIntelligenceManager",
         "AutonomousAssuranceManager",
         "ContinuousAssuranceManager",
+        "ReliabilityIntelligenceManager",
     }
 
     PROHIBITED_MODULES = {
@@ -106,6 +107,7 @@ class CircularDependencyValidator:
         "app.unified_intelligence",
         "app.autonomous_assurance",
         "app.continuous_assurance",
+        "app.reliability_intelligence",
     }
 
 

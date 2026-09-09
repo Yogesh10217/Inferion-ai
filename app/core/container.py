@@ -462,6 +462,10 @@ class ServiceContainer:
         from app.continuous_assurance.manager import ContinuousAssuranceManager
         self.continuous_assurance_manager = ContinuousAssuranceManager()
 
+        # Phase 5.55 Enterprise AI Reliability Intelligence Manager
+        from app.reliability_intelligence.manager import ReliabilityIntelligenceManager
+        self.reliability_intelligence_manager = ReliabilityIntelligenceManager()
+
 
 
 
