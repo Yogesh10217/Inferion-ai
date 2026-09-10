@@ -1,4 +1,4 @@
-"""Thin manager orchestrator for Runtime Intelligence (Phase 5.54)."""
+"""Thin manager orchestrator for Runtime Intelligence (Phase 5.57)."""
 
 import logging
 import uuid
@@ -268,6 +268,9 @@ class RuntimeIntelligenceManager:
 
     def _register_default_providers(self) -> None:
         domains = [
+            "capacity",
+            "reliability",
+            "continuous",
             "security",
             "identity",
             "operations",
@@ -313,12 +316,20 @@ class RuntimeIntelligenceManager:
             correlation_score=0.85,
         )
 
+    @property
+    def providers(self) -> RuntimeIntelligenceProviderRegistry:
+        return self.provider_registry
+
     # Health & Anomalies
     def evaluate_health(
-        self, tenant_id: str, subsystem: str = "global", telemetry: Optional[Dict[str, Any]] = None
+        self,
+        tenant_id: str,
+        subsystem: str = "global",
+        telemetry: Optional[Dict[str, Any]] = None,
+        raw_telemetry: Optional[Dict[str, Any]] = None,
     ) -> RuntimeHealthAssessment:
-        rh = self.health_engine.evaluate_health(tenant_id, telemetry)
-        rh.subsystem = subsystem
+        telem = telemetry if telemetry is not None else (raw_telemetry or {})
+        rh = self.health_engine.evaluate_health(tenant_id, telem, subsystem=subsystem)
         self.timeline.record_event(tenant_id, "HEALTH_EVALUATED", f"Subsystem '{subsystem}' health score: {rh.overall_score:.4f}")
         self.observability.increment("ai_runtime_intelligence_health_assessments_total")
         return rh
@@ -378,67 +389,93 @@ class RuntimeIntelligenceManager:
     def analyze_causality(
         self, tenant_id: str, symptom_id: str, affected_subsystems: Optional[List[str]] = None
     ) -> CausalAnalysisResult:
+        hypo = self.causal_engine.analyze_causal_hypothesis(
+            tenant_id=tenant_id,
+            hypothesis_statement=f"Incident {symptom_id} upstream dependency saturation",
+            evidence_ids=[symptom_id],
+            affected_subsystems=affected_subsystems,
+        )
         return CausalAnalysisResult(
-            analysis_id=f"caus-{uuid.uuid4().hex[:12]}",
+            analysis_id=f"caus-{hypo.hypothesis_id.replace('hypo_', '')}",
             tenant_id=tenant_id,
             symptom_id=symptom_id,
-            root_cause_summary="Upstream dependency saturation detected",
-            confidence_score=0.92,
+            root_cause_summary=hypo.explanation_notes,
+            confidence_score=hypo.confidence,
         )
 
     def model_risk_propagation(
         self, tenant_id: str, source_subsystem: str, initial_risk_score: float
     ) -> RiskPropagationResult:
+        rpath = self.risk_propagation_engine.analyze_risk_propagation(
+            tenant_id=tenant_id,
+            origin_component=source_subsystem,
+            target_component="worker_pool",
+            initial_risk=initial_risk_score,
+        )
+        impacted = [c for c in rpath.propagation_chain if c != source_subsystem] or ["api_gateway", "worker_pool"]
         return RiskPropagationResult(
-            propagation_id=f"prop-{uuid.uuid4().hex[:12]}",
+            propagation_id=f"prop-{rpath.path_id.replace('rpath_', '')}",
             tenant_id=tenant_id,
             source_subsystem=source_subsystem,
             initial_risk_score=initial_risk_score,
-            impacted_subsystems=["api_gateway", "worker_pool"],
+            impacted_subsystems=impacted,
         )
 
     def assess_impact(
         self, tenant_id: str, incident_id: str, affected_components: Optional[List[str]] = None
     ) -> ImpactAssessmentResult:
+        res = self.impact_assessment_engine.evaluate_impact(
+            tenant_id=tenant_id,
+            component_id=affected_components[0] if affected_components else "system_core",
+            incident_id=incident_id,
+            affected_components=affected_components,
+        )
         return ImpactAssessmentResult(
             impact_id=f"imp-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,
             incident_id=incident_id,
-            severity_level="HIGH",
+            severity_level=res["severity_level"],
         )
 
     def evaluate_resilience(self, tenant_id: str, subsystem: str) -> RuntimeResilienceAssessment:
         res = self.resilience_engine.assess_resilience(tenant_id, subsystem)
-        res.subsystem = subsystem
-        res.resilience_score = 0.88
         return res
 
     def plan_recovery(self, tenant_id: str, failed_subsystem: str) -> RecoveryPlanResult:
+        plan = self.recovery_engine.plan_recovery(tenant_id, failed_subsystem)
         return RecoveryPlanResult(
             plan_id=f"rec-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,
             failed_subsystem=failed_subsystem,
-            recovery_steps=["ISOLATE_FAILED_POD", "DRAIN_TRAFFIC", "PROVISION_REPLACEMENT"],
+            recovery_steps=plan["recovery_steps"],
         )
 
     def evaluate_adaptive_assurance(self, tenant_id: str, target_subsystem: str) -> AdaptiveAssuranceResult:
+        score = self.adaptive_assurance_engine.evaluate_assurance(tenant_id)
+        current = RiskLevel.MEDIUM
+        recommended = RiskLevel.HIGH if score.posture in ["WATCH", "DEGRADED", "AT_RISK"] else RiskLevel.LOW
         return AdaptiveAssuranceResult(
-            posture_id=f"adapt-{uuid.uuid4().hex[:12]}",
+            posture_id=f"adapt-{score.score_id.replace('aass_', '')}",
             tenant_id=tenant_id,
             target_subsystem=target_subsystem,
-            current_level=RiskLevel.MEDIUM,
-            recommended_level=RiskLevel.HIGH,
+            current_level=current,
+            recommended_level=recommended,
         )
 
     def quantify_uncertainty(
         self, tenant_id: str, assessment_type: str, sample_variance: float
     ) -> UncertaintyResult:
+        res = self.uncertainty_engine.evaluate_uncertainty(
+            tenant_id=tenant_id,
+            sample_variance=sample_variance,
+            assessment_type=assessment_type,
+        )
         return UncertaintyResult(
             uncertainty_id=f"unc-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,
             assessment_type=assessment_type,
-            confidence_interval_lower=0.82,
-            confidence_interval_upper=0.96,
+            confidence_interval_lower=res["confidence_interval_lower"],
+            confidence_interval_upper=res["confidence_interval_upper"],
         )
 
     def generate_recommendations(
@@ -454,8 +491,9 @@ class RuntimeIntelligenceManager:
         return [rec]
 
     def plan_adaptation(self, tenant_id: str, subsystem: str) -> AdaptationStrategyResult:
+        res = self.adaptation_engine.propose_adaptation(tenant_id, subsystem)
         return AdaptationStrategyResult(
-            strategy_id=f"strat-{uuid.uuid4().hex[:12]}",
+            strategy_id=f"strat-{res['strategy_id'].replace('strat_', '')}",
             tenant_id=tenant_id,
             subsystem=subsystem,
             auto_execute=False,  # Invariant: auto_execute strictly False
@@ -465,16 +503,9 @@ class RuntimeIntelligenceManager:
     def evaluate_governance(
         self, tenant_id: str, action: str, risk_level: Any = "MEDIUM"
     ) -> Dict[str, Any]:
-        risk_str = str(risk_level.value if hasattr(risk_level, "value") else risk_level).upper()
-        req_approval = risk_str in ["HIGH", "CRITICAL"]
-        decision = GovernanceDecision.REQUIRE_APPROVAL.value if req_approval else GovernanceDecision.ALLOW.value
-        return {
-            "evaluation_id": f"gov-{uuid.uuid4().hex[:12]}",
-            "tenant_id": tenant_id,
-            "decision": decision,
-            "requires_human_approval": req_approval,
-            "reasoning": f"Action '{action}' evaluated against risk level '{risk_str}'",
-        }
+        return self.governance_engine.evaluate_governance(
+            tenant_id=tenant_id, action_name=action, risk_level=risk_level
+        )
 
     def request_delegation(
         self,
@@ -555,10 +586,13 @@ class RuntimeIntelligenceManager:
         self._evidence_bundles[eb.bundle_id] = eb
         return eb
 
-    def get_evidence(self, tenant_id: str, bundle_id: str) -> Optional[RuntimeEvidenceBundle]:
-        eb = self._evidence_bundles.get(bundle_id)
+    def get_evidence(self, tenant_id: str, bundle_id: Optional[str] = None, evidence_id: Optional[str] = None) -> Optional[RuntimeEvidenceBundle]:
+        target_id = bundle_id or evidence_id
+        if not target_id:
+            return None
+        eb = self._evidence_bundles.get(target_id)
         if not eb:
-            eb = self.evidence_repo.get_by_id(tenant_id, bundle_id)
+            eb = self.evidence_repo.get_by_id(tenant_id, target_id)
         if eb and eb.tenant_id != tenant_id:
             raise CrossTenantRuntimeIntelligenceException()
         return eb

@@ -1,9 +1,9 @@
-"""Immutable SHA-256 evidence manager for Runtime Intelligence (Phase 5.54)."""
+"""Immutable SHA-256 evidence manager for Runtime Intelligence (Phase 5.57)."""
 
 import hashlib
 import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union, List
 from app.runtime_intelligence.models import RuntimeEvidenceBundle
 from app.runtime_intelligence.exceptions import ImmutableRuntimeIntelligenceRecordException
 from app.runtime_intelligence.repositories import RuntimeEvidenceRepository
@@ -19,16 +19,31 @@ class RuntimeEvidenceManager:
         self.evidence_repo = evidence_repo
 
     def create_evidence_bundle(
-        self, tenant_id: str, assessment_id: str, raw_evidence: Optional[Dict[str, Any]] = None
+        self,
+        tenant_id: str,
+        assessment_id: Union[str, List[Any], Dict[str, Any]],
+        raw_evidence: Optional[Dict[str, Any]] = None,
     ) -> RuntimeEvidenceBundle:
-        clean_evidence = SensitiveDataSanitizer.sanitize(raw_evidence or {})
-        canonical = json.dumps({"tenant_id": tenant_id, "assessment_id": assessment_id, "ev": clean_evidence}, sort_keys=True)
+        # Flexible handling: if second arg is records list/dict, adapt gracefully
+        if isinstance(assessment_id, (list, dict)):
+            clean_evidence = SensitiveDataSanitizer.sanitize(assessment_id)
+            real_assessment_id = "records_bundle"
+        else:
+            real_assessment_id = str(assessment_id)
+            clean_evidence = SensitiveDataSanitizer.sanitize(raw_evidence or {})
+
+        canonical = json.dumps(
+            {"tenant_id": tenant_id, "assessment_id": real_assessment_id, "ev": clean_evidence},
+            sort_keys=True,
+            default=str,
+        )
         sha256_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
         bundle = RuntimeEvidenceBundle(
             tenant_id=tenant_id,
-            assessment_id=assessment_id,
+            assessment_id=real_assessment_id,
             integrity_hash=sha256_hash,
+            raw_evidence=clean_evidence if isinstance(clean_evidence, dict) else {"records": clean_evidence},
             is_sealed=True,
         )
 

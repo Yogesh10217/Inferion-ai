@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Dict, Any, Optional
 
-from app.platform_contracts.sanitizer import SensitiveDataSanitizer
+from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 
 class RuntimeSignalCategory(str, Enum):
@@ -39,18 +39,7 @@ class RuntimeDomainInput:
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
-@dataclass
-class NormalizedRuntimeSignal:
-    tenant_id: str
-    signal_id: str
-    source_domain: str
-    category: RuntimeSignalCategory
-    metric_name: str
-    metric_value: float
-    unit: str
-    sanitized_metadata: Dict[str, Any]
-    signal_fingerprint: str
-    normalized_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+from app.runtime_intelligence.models import NormalizedRuntimeSignal
 
 
 class RuntimeSignalNormalizerEngine:
@@ -59,9 +48,6 @@ class RuntimeSignalNormalizerEngine:
     @classmethod
     def normalize_input(cls, domain_input: RuntimeDomainInput) -> NormalizedRuntimeSignal:
         sanitized = SensitiveDataSanitizer.sanitize(domain_input.raw_payload)
-        category_enum = RuntimeSignalCategory(domain_input.signal_type.upper()) if domain_input.signal_type.upper() in RuntimeSignalCategory.__members__ else RuntimeSignalCategory.RESOURCE
-        
-        sig_id = f"sig_{hashlib.sha256(f'{domain_input.tenant_id}:{domain_input.source_domain}:{domain_input.timestamp}'.encode()).hexdigest()[:12]}"
         
         fingerprint_data = {
             "tenant_id": domain_input.tenant_id,
@@ -70,15 +56,15 @@ class RuntimeSignalNormalizerEngine:
             "sanitized": sanitized,
         }
         fingerprint = hashlib.sha256(json.dumps(fingerprint_data, sort_keys=True, default=str).encode()).hexdigest()
+        sig_id = f"sig_{fingerprint[:12]}"
 
         return NormalizedRuntimeSignal(
             tenant_id=domain_input.tenant_id,
             signal_id=sig_id,
+            normalized_type=domain_input.signal_type,
+            normalized_severity=str(sanitized.get("severity", "MEDIUM")),
             source_domain=domain_input.source_domain,
-            category=category_enum,
-            metric_name=sanitized.get("metric_name", "runtime_metric"),
-            metric_value=float(sanitized.get("value", 0.0)),
-            unit=str(sanitized.get("unit", "units")),
-            sanitized_metadata=sanitized,
-            signal_fingerprint=fingerprint,
+            raw_payload=sanitized,
+            fingerprint=fingerprint,
+            timestamp=domain_input.timestamp,
         )

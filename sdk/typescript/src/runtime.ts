@@ -1,5 +1,5 @@
 /**
- * TypeScript SDK Client for Runtime Intelligence (Phase 5.54).
+ * TypeScript SDK Client for Runtime Intelligence (Phase 5.57).
  */
 
 export class RuntimeIntelligenceClient {

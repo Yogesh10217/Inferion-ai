@@ -1,4 +1,4 @@
-"""Pure Python domain models for Runtime Intelligence (Phase 5.54)."""
+"""Pure Python domain models for Runtime Intelligence (Phase 5.57)."""
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -6,28 +6,7 @@ from enum import Enum
 from typing import Dict, Any, List, Optional
 import uuid
 
-
-class RuntimeLifecycleState(str, Enum):
-    OBSERVING = "OBSERVING"
-    SIGNAL_INGESTION = "SIGNAL_INGESTION"
-    NORMALIZATION = "NORMALIZATION"
-    CONTEXT_FUSION = "CONTEXT_FUSION"
-    HEALTH_ANALYSIS = "HEALTH_ANALYSIS"
-    ANOMALY_DETECTION = "ANOMALY_DETECTION"
-    DRIFT_DETECTION = "DRIFT_DETECTION"
-    DEGRADATION_ANALYSIS = "DEGRADATION_ANALYSIS"
-    CORRELATION = "CORRELATION"
-    CAUSAL_ANALYSIS = "CAUSAL_ANALYSIS"
-    RISK_PROPAGATION = "RISK_PROPAGATION"
-    RESILIENCE_ASSESSMENT = "RESILIENCE_ASSESSMENT"
-    ADAPTIVE_ASSURANCE = "ADAPTIVE_ASSURANCE"
-    RECOMMENDATION = "RECOMMENDATION"
-    GOVERNANCE_EVALUATION = "GOVERNANCE_EVALUATION"
-    REQUIRES_APPROVAL = "REQUIRES_APPROVAL"
-    APPROVED = "APPROVED"
-    DELEGATION_CREATED = "DELEGATION_CREATED"
-    VERIFICATION = "VERIFICATION"
-    CLOSED = "CLOSED"
+from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleState
 
 
 class RuntimeHealthStatus(str, Enum):
@@ -291,8 +270,17 @@ class RuntimeResilienceAssessment:
     recovery_capability: float
     redundancy_level: str
     rollback_available: bool
+    subsystem: str = "global"
     assessment_id: str = field(default_factory=lambda: f"res_{uuid.uuid4().hex[:12]}")
     evaluated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    @property
+    def status(self) -> RuntimeHealthStatus:
+        if self.resilience_score >= 0.85:
+            return RuntimeHealthStatus.HEALTHY
+        elif self.resilience_score >= 0.70:
+            return RuntimeHealthStatus.DEGRADED
+        return RuntimeHealthStatus.AT_RISK
 
 
 @dataclass
@@ -333,6 +321,7 @@ class RuntimeEvidenceBundle:
     assessment_id: str
     integrity_hash: str
     evidence_id: str = field(default_factory=lambda: f"ev_{uuid.uuid4().hex[:12]}")
+    raw_evidence: Dict[str, Any] = field(default_factory=dict)
     is_sealed: bool = True
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -350,7 +339,19 @@ class RuntimeEvidenceBundle:
 
     @property
     def records(self) -> list:
-        return []
+        if isinstance(self.raw_evidence, list):
+            return self.raw_evidence
+        elif isinstance(self.raw_evidence, dict) and "records" in self.raw_evidence:
+            return self.raw_evidence["records"]
+        return [self.raw_evidence] if self.raw_evidence else []
+
+
+@dataclass
+class RuntimeSnapshotMetadata:
+    subsystem: str
+    version: str = "v5.57.0"
+    author: str = "RuntimeIntelligenceManager"
+    tags: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -358,5 +359,15 @@ class RuntimeSnapshot:
     tenant_id: str
     health: RuntimeHealthAssessment
     snapshot_id: str = field(default_factory=lambda: f"snap_{uuid.uuid4().hex[:12]}")
+    subsystem: str = "global"
+    metadata: Optional[RuntimeSnapshotMetadata] = None
+    runtime_state: Dict[str, Any] = field(default_factory=dict)
+    context_fingerprint: str = ""
+    state_fingerprint: str = ""
+    integrity_hash: str = ""
     snapshot_fingerprint: str = ""
+    records_count: int = 0
+    is_finalized: bool = True
+    lineage_parent_id: Optional[str] = None
+    captured_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))

@@ -1,4 +1,4 @@
-"""Runtime context fusion builder for Runtime Intelligence (Phase 5.54)."""
+"""Runtime context fusion builder for Runtime Intelligence (Phase 5.57)."""
 
 import hashlib
 import json

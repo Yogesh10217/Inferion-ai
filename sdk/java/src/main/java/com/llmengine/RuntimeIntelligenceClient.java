@@ -7,7 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
- * Java SDK Client for Enterprise AI Runtime Intelligence Platform (Phase 5.54).
+ * Java SDK Client for Enterprise AI Runtime Intelligence Platform (Phase 5.57).
  */
 public class RuntimeIntelligenceClient {
     private final String baseUrl;

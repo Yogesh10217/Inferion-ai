@@ -1,4 +1,4 @@
-"""Tenant-safe exception hierarchy for Runtime Intelligence (Phase 5.54)."""
+"""Tenant-safe exception hierarchy for Runtime Intelligence (Phase 5.57)."""
 
 class RuntimeIntelligenceException(Exception):
     """Base exception for all Runtime Intelligence errors."""

@@ -1,4 +1,4 @@
-"""SQLAlchemy ORM models for Runtime Intelligence (Phase 5.54)."""
+"""SQLAlchemy ORM models for Runtime Intelligence (Phase 5.57)."""
 
 from sqlalchemy import Column, String, Float, Boolean, DateTime, JSON, Text
 from sqlalchemy.orm import declarative_base

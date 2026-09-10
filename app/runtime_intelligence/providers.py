@@ -1,4 +1,4 @@
-"""Provider-decoupled architecture for Runtime Intelligence (Phase 5.54)."""
+"""Provider-decoupled architecture for Runtime Intelligence (Phase 5.57)."""
 
 import logging
 from typing import Dict, Any, List, Optional
@@ -28,6 +28,10 @@ class RuntimeIntelligenceProvider:
     def collect_metrics(self, tenant_id: str) -> Dict[str, Any]:
         raise NotImplementedError
 
+    def collect_intelligence(self, tenant_id: str) -> Dict[str, Any]:
+        """Aggregate cross-domain intelligence summary."""
+        raise NotImplementedError
+
 
 class MockRuntimeIntelligenceProvider(RuntimeIntelligenceProvider):
     """Mock implementation providing fault-isolated domain intelligence."""
@@ -53,6 +57,19 @@ class MockRuntimeIntelligenceProvider(RuntimeIntelligenceProvider):
 
     def collect_metrics(self, tenant_id: str) -> Dict[str, Any]:
         return {"error_rate": 0.001, "cpu_usage": 0.35, "domain": self.domain}
+
+    def collect_intelligence(self, tenant_id: str) -> Dict[str, Any]:
+        """Aggregate intelligence dictionary for provider domain."""
+        return {
+            "domain": self.domain,
+            "status": "HEALTHY",
+            "score": 0.95,
+            "signals": self.collect_runtime_signals(tenant_id),
+            "health": self.collect_health(tenant_id),
+            "risks": self.collect_risks(tenant_id),
+            "assurance": self.collect_assurance(tenant_id),
+            "metrics": self.collect_metrics(tenant_id),
+        }
 
 
 class RuntimeIntelligenceProviderRegistry:

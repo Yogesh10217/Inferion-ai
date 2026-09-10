@@ -1,4 +1,4 @@
-"""Runtime intelligence metrics collector for Runtime Intelligence (Phase 5.54)."""
+"""Runtime intelligence metrics collector for Runtime Intelligence (Phase 5.57)."""
 
 import logging
 from typing import Dict

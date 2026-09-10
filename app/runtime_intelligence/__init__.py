@@ -1,4 +1,4 @@
-"""Phase 5.54 — Enterprise AI Continuous Runtime Intelligence, Adaptive Assurance & System Resilience Platform."""
+"""Phase 5.57 — Enterprise AI Continuous Runtime Intelligence, Adaptive Assurance & System Resilience Platform."""
 
 from app.runtime_intelligence.exceptions import (
     RuntimeIntelligenceException,
@@ -25,7 +25,6 @@ from app.runtime_intelligence.exceptions import (
 from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleState, RuntimeLifecycleManager
 from app.runtime_intelligence.runtime_state import RuntimeOperationalState, RuntimeStateManager
 from app.runtime_intelligence.models import (
-    RuntimeLifecycleState,
     RuntimeHealthStatus,
     RuntimeDriftSeverity,
     RuntimeAnomalySeverity,

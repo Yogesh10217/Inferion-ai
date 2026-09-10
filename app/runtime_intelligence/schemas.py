@@ -1,4 +1,4 @@
-"""Pydantic request/response schemas for Runtime Intelligence (Phase 5.54)."""
+"""Pydantic request/response schemas for Runtime Intelligence (Phase 5.57)."""
 
 from typing import Dict, Any, List, Optional
 from datetime import datetime

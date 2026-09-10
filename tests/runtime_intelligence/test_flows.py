@@ -1,4 +1,4 @@
-"""Comprehensive End-to-End Test Suite for Phase 5.54 Runtime Intelligence Platform (22 Test Flows)."""
+"""Comprehensive End-to-End Test Suite for Phase 5.57 Runtime Intelligence Platform (22 Test Flows)."""
 
 import pytest
 import datetime
@@ -297,3 +297,167 @@ def test_flow_22_cross_tenant_isolation(manager):
         manager.get_evidence("tenant_b", eb.bundle_id)
     
     assert "Access denied" in str(exc_info.value)
+
+
+# Flow 23: Complete End-to-End Runtime Intelligence Lifecycle (Mandatory E2E)
+def test_full_runtime_intelligence_lifecycle(manager):
+    """Signal -> Normalization -> Context -> Health -> Anomaly -> Risk -> Recommendation -> Governance -> Approval -> Delegation -> Verification -> Evidence -> Snapshot -> Analytics"""
+    tenant_id = "tenant_enterprise"
+    subsystem = "llm_serving_engine"
+
+    # 1. Ingest Signal
+    obs = manager.ingest_observation(
+        tenant_id=tenant_id,
+        subsystem=subsystem,
+        metric_name="latency_p99_ms",
+        value=350.0,
+        dimensions={"model": "deepseek-r1"},
+    )
+    assert obs.observation_id.startswith("obs")
+
+    # 2. Evaluate Health
+    health = manager.evaluate_health(tenant_id=tenant_id, subsystem=subsystem, raw_telemetry={"latency_p99_ms": 350.0, "error_rate": 0.002})
+    assert health.overall_status == HealthStatus.HEALTHY
+    assert health.overall_score >= 0.85
+
+    # 3. Detect Anomalies & Drift
+    anom_result = manager.detect_anomalies(tenant_id=tenant_id, subsystem=subsystem, time_series_data=[{"value": 100}, {"value": 110}, {"value": 450}])
+    assert anom_result["anomalies_count"] == 1
+
+    drift = manager.detect_drift(tenant_id=tenant_id, subsystem=subsystem, current_data={"temperature": 0.7}, baseline_data={"temperature": 0.2})
+    assert drift.drift_detected is True
+
+    # 4. Analyze Causal & Risk Propagation
+    causal = manager.analyze_causality(tenant_id=tenant_id, symptom_id="symp_slowdown", affected_subsystems=[subsystem])
+    assert causal.confidence_score >= 0.80
+
+    risk_prop = manager.model_risk_propagation(tenant_id=tenant_id, source_subsystem=subsystem, initial_risk_score=0.88)
+    assert len(risk_prop.impacted_subsystems) > 0
+
+    # 5. Assess Resilience
+    resilience = manager.evaluate_resilience(tenant_id=tenant_id, subsystem=subsystem)
+    assert resilience.resilience_score > 0.70
+
+    # 6. Generate Recommendations (Advisory Only)
+    recs = manager.generate_recommendations(tenant_id=tenant_id, subsystem=subsystem)
+    assert len(recs) == 1
+    assert recs[0].auto_execute is False  # Mandatory Invariant
+
+    # 7. Governance Evaluation
+    gov = manager.evaluate_governance(tenant_id=tenant_id, action="SCALE_REPLICAS", risk_level=RiskLevel.HIGH)
+    assert gov["requires_human_approval"] is True
+
+    # 8. Request & Approve Delegation
+    del_req = manager.request_delegation(
+        tenant_id=tenant_id,
+        target_domain="CAPACITY_ORCHESTRATOR",
+        action_type="SCALE_REPLICAS",
+        payload={"replicas": 4},
+        risk_level=RiskLevel.HIGH,
+    )
+    assert del_req.status == DelegationStatus.PENDING_APPROVAL
+
+    approved_del = manager.approve_delegation(tenant_id=tenant_id, delegation_id=del_req.delegation_id, approver_id="admin_user")
+    assert approved_del.status == DelegationStatus.APPROVED
+
+    executed_del = manager.execute_delegation(tenant_id=tenant_id, delegation_id=del_req.delegation_id)
+    assert executed_del.status == DelegationStatus.EXECUTED
+
+    # 9. Closed-Loop Verification
+    verif = manager.verify_action_outcome(
+        tenant_id=tenant_id,
+        action_id=del_req.delegation_id,
+        expected_state={"replicas": 4},
+        actual_state={"replicas": 4},
+    )
+    assert verif.success is True
+
+    # 10. Evidence Sealing
+    ev = manager.create_evidence_bundle(tenant_id=tenant_id, records=[{"action": "SCALE_REPLICAS", "verified": True}])
+    assert ev.sealed is True
+    assert len(ev.integrity_hash) == 64
+
+    # 11. Snapshot Capture & Verification
+    snap = manager.capture_snapshot(tenant_id=tenant_id)
+    assert snap.snapshot_id.startswith("snap_")
+    assert snap.is_finalized is True
+    assert snap.records_count >= 1
+
+    verify_snap = manager.snapshot_manager.verify_snapshot(tenant_id=tenant_id, snapshot_id=snap.snapshot_id)
+    assert verify_snap["is_valid"] is True
+
+    # 12. FinOps Billing Tracking
+    billing = manager.billing.get_usage_summary(tenant_id=tenant_id)
+    assert billing["total_cost_usd"] >= 0.0
+
+
+# Flow 24: Lifecycle State Machine Transitions & Invariant Validation
+def test_flow_24_canonical_lifecycle_transitions():
+    from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleManager, RuntimeLifecycleState
+    from app.runtime_intelligence.exceptions import InvalidRuntimeStateTransitionException
+
+    lm = RuntimeLifecycleManager()
+    assert lm.current_state == RuntimeLifecycleState.OBSERVED
+
+    # Valid transitions
+    lm.transition_to(RuntimeLifecycleState.ANALYZING, "Starting analysis")
+    assert lm.current_state == RuntimeLifecycleState.ANALYZING
+
+    lm.transition_to(RuntimeLifecycleState.HEALTH_ASSESSED, "Health computed")
+    assert lm.current_state == RuntimeLifecycleState.HEALTH_ASSESSED
+
+    lm.transition_to(RuntimeLifecycleState.RISK_ASSESSED, "Risk scored")
+    assert lm.current_state == RuntimeLifecycleState.RISK_ASSESSED
+
+    # Invalid transition directly to CLOSED from RISK_ASSESSED without intermediate step
+    lm.transition_to(RuntimeLifecycleState.ADAPTATION_RECOMMENDED, "Proposed")
+    with pytest.raises(InvalidRuntimeStateTransitionException):
+        lm.transition_to(RuntimeLifecycleState.OBSERVED, "Illegal rewind")
+
+
+# Flow 25: Concurrency Conflict Protection
+def test_flow_25_concurrency_conflict():
+    from app.runtime_intelligence.concurrency import RuntimeConcurrencyManager
+    from app.runtime_intelligence.exceptions import RuntimeConcurrencyConflictException
+
+    cm = RuntimeConcurrencyManager()
+    key = cm.acquire_lock("tenant_1", "worker_pool_alpha")
+    assert key == "tenant_1:worker_pool_alpha"
+
+    # Conflicting lock attempt
+    with pytest.raises(RuntimeConcurrencyConflictException):
+        cm.acquire_lock("tenant_1", "worker_pool_alpha")
+
+    # Releasing lock allows re-acquisition
+    cm.release_lock("tenant_1", "worker_pool_alpha")
+    cm.acquire_lock("tenant_1", "worker_pool_alpha")
+
+
+# Flow 26: Idempotency Key Deduplication
+def test_flow_26_idempotency_deduplication():
+    from app.runtime_intelligence.idempotency import RuntimeIdempotencyManager
+
+    im = RuntimeIdempotencyManager()
+    key = im.generate_key("tenant_1", "INGEST_SIGNAL", {"payload": 123})
+    assert len(key) == 64
+
+    # First attempt succeeds
+    assert im.check_and_record(key) is True
+    # Second duplicate attempt is rejected
+    assert im.check_and_record(key) is False
+
+
+# Flow 27: Cross-Domain Provider Integration (Capacity, Reliability, Continuous, Autonomous)
+def test_flow_27_cross_domain_provider_registry(manager):
+    reg = manager.providers
+    domains = ["capacity", "reliability", "continuous", "autonomous", "security", "operations"]
+
+    for d in domains:
+        provider = reg.get_provider(d)
+        assert provider is not None
+        assert provider.domain == d
+
+        data = provider.collect_intelligence("tenant_alpha")
+        assert "domain" in data
+        assert data["domain"] == d
+        assert "score" in data
