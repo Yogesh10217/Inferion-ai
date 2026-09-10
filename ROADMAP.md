@@ -1,6 +1,6 @@
 # Project Roadmap
 
-This document outlines the planned future features, integrations, and architectural enhancements for the LLM Inference Engine.
+This document outlines the planned future features, integrations, and architectural enhancements for the Inferion AI.
 
 ## Phase 1 (Completed Foundation)
 - [x] Standardized API contracts compatible with OpenAI specifications.

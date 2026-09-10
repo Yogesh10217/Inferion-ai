@@ -1,6 +1,6 @@
 # Extensible Plugin Framework (Phase 4.0)
 
-The **Plugin Framework** enables enterprise developers to extend the LLM Inference Engine without modifying the core gateway codebase.
+The **Plugin Framework** enables enterprise developers to extend the Inferion AI without modifying the core gateway codebase.
 
 ---
 

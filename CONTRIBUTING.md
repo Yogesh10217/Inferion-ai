@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for contributing to the LLM Inference Engine. This guide outlines the project's coding standards, development workflow, and pull request checklist.
+Thank you for contributing to the Inferion AI. This guide outlines the project's coding standards, development workflow, and pull request checklist.
 
 ## Development Setup
 

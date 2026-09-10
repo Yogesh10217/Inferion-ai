@@ -1,6 +1,6 @@
 # OpenTelemetry Distributed Tracing (Phase 4.3)
 
-The **LLM Inference Engine** implements enterprise-grade, low-overhead distributed tracing using W3C Trace Context and OpenTelemetry semantic standards.
+The **Inferion AI** implements enterprise-grade, low-overhead distributed tracing using W3C Trace Context and OpenTelemetry semantic standards.
 
 ---
 

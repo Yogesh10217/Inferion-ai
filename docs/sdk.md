@@ -1,6 +1,6 @@
 # Official LLM Engine SDKs (Phase 4.1)
 
-The **LLM Inference Engine** provides official SDKs for Python, TypeScript, and Go.
+The **Inferion AI** provides official SDKs for Python, TypeScript, and Go.
 
 ---
 

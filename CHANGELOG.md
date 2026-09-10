@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **LLM Inference Engine** project will be documented in this file.
+All notable changes to the **Inferion AI** project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -53,9 +53,9 @@ Initial production-grade release of the **LLM Inference Serving Platform** — p
 ## GitHub Release Description (v0.1.0)
 
 ```markdown
-# ⚡ LLM Inference Engine v0.1.0 Release
+# ⚡ Inferion AI v0.1.0 Release
 
-We are excited to announce the **v0.1.0 release** of the LLM Inference Engine!
+We are excited to announce the **v0.1.0 release** of the Inferion AI!
 
 ### Highlights
 - 🚀 **OpenAI-Compatible Serving API**: Drop-in API replacement for OpenAI chat completions and model listings.
@@ -67,8 +67,8 @@ We are excited to announce the **v0.1.0 release** of the LLM Inference Engine!
 
 ### Quick Start
 ```bash
-git clone https://github.com/OnHighEngineer/llm-inference-engine.git
-cd llm-inference-engine
+git clone https://github.com/Yogesh10217/Inferion-ai.git
+cd Inferion-ai
 cp .env.example .env
 make install
 make run

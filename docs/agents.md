@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-The Enterprise Agent Framework provides a modular, production-grade autonomous agent execution engine built on top of the LLM Inference Engine.
+The Enterprise Agent Framework provides a modular, production-grade autonomous agent execution engine built on top of the Inferion AI.
 
 ```
 app/agents/

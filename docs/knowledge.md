@@ -1,6 +1,6 @@
 # Knowledge & Retrieval Platform
 
-The Phase 5.0 Knowledge & Retrieval platform introduces robust RAG (Retrieval-Augmented Generation) capabilities to the LLM Inference Engine.
+The Phase 5.0 Knowledge & Retrieval platform introduces robust RAG (Retrieval-Augmented Generation) capabilities to the Inferion AI.
 
 ## Architecture
 The platform is built on a highly modular and decoupled architecture, separating ingestion, storage, retrieval, and inference injection.

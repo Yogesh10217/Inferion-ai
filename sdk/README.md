@@ -1,6 +1,6 @@
 # Official Client SDKs
 
-Welcome to the official client SDKs for the LLM Inference Engine.
+Welcome to the official client SDKs for the Inferion AI.
 
 These SDKs provide an idiomatic, typed interface across multiple languages to interface with the AI Gateway.
 

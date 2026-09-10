@@ -1,7 +1,7 @@
 # Operational Runbooks
 
 ## Overview
-This runbook provides guidance for operating the LLM Inference Engine in Kubernetes production environments.
+This runbook provides guidance for operating the Inferion AI in Kubernetes production environments.
 
 ## Incident Procedures
 1. **Gateway Pod Crashes / CrashLoopBackOff**

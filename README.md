@@ -3,13 +3,13 @@
 <br/>
 
 ```
-██╗     ██╗     ███╗   ███╗    ██╗███╗   ██╗███████╗███████╗██████╗ ███████╗███╗   ██╗ ██████╗███████╗
-██║     ██║     ████╗ ████║    ██║████╗  ██║██╔════╝██╔════╝██╔══██╗██╔════╝████╗  ██║██╔════╝██╔════╝
-██║     ██║     ██╔████╔██║    ██║██╔██╗ ██║█████╗  █████╗  ██████╔╝█████╗  ██╔██╗ ██║██║     █████╗  
-██║     ██║     ██║╚██╔╝██║    ██║██║╚██╗██║██╔══╝  ██╔══╝  ██╔══██╗██╔══╝  ██║╚██╗██║██║     ██╔══╝  
-███████╗███████╗██║ ╚═╝ ██║    ██║██║ ╚████║██║     ███████╗██║  ██║███████╗██║ ╚████║╚██████╗███████╗
-╚══════╝╚══════╝╚═╝     ╚═╝    ╚═╝╚═╝  ╚═══╝╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝
-                                                                                               ENGINE ⚡
+██╗███╗   ██╗███████╗██████╗ ██╗██████╗ ███╗   ██╗     █████╗ ██╗
+██║████╗  ██║██╔════╝██╔══██╗██║██╔══██╗████╗  ██║    ██╔══██╗██║
+██║██╔██╗ ██║█████╗  ██████╔╝██║██║  ██║██╔██╗ ██║    ███████║██║
+██║██║╚██╗██║██╔══╝  ██╔══██╗██║██║  ██║██║╚██╗██║    ██╔══██║██║
+██║██║ ╚████║██║     ██║  ██║██║██████╔╝██║ ╚████║    ██║  ██║██║
+╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝╚═╝╚═════╝ ╚═╝  ╚═══╝    ╚═╝  ╚═╝╚═╝
+                                                               AI ⚡
 ```
 
 <h3>The Enterprise AI Platform That Replaces 5 SaaS Tools — Self-Hosted, Open-Source, Free.</h3>
@@ -23,7 +23,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Redis](https://img.shields.io/badge/Redis-Powered-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
 [![Prometheus](https://img.shields.io/badge/Prometheus-Monitored-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io)
-[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/OnHighEngineer/llm-inference-engine/actions)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/Yogesh10217/Inferion-ai/actions)
 
 <br/>
 
@@ -55,12 +55,12 @@ Most teams hit a wall when scaling AI in production:
 - 🔀 **Vendor lock-in** — OpenAI goes down, your product goes down
 - 🤖 **LLMs just answer** — they can't actually *do things* for you
 
-**LLM Inference Engine solves all of this.**
+**Inferion AI solves all of this.**
 
 It's an **enterprise-grade AI gateway and autonomous agent platform** that sits between your apps and every AI model in the world — adding intelligent routing, multi-tenancy, billing, compliance, RAG, memory, and full autonomous agent execution.
 
 ```
-Your App  ──►  LLM Inference Engine  ──►  OpenAI
+Your App  ──►  Inferion AI  ──►  OpenAI
                     (this project)    ──►  Ollama (local)
                                       ──►  Anthropic
                                       ──►  Any LLM
@@ -82,8 +82,8 @@ client = OpenAI(base_url="http://your-engine:8002/v1", api_key="sk-...")
 
 ```bash
 # Clone
-git clone https://github.com/OnHighEngineer/llm-inference-engine.git
-cd llm-inference-engine
+git clone https://github.com/Yogesh10217/Inferion-ai.git
+cd Inferion-ai
 
 # Setup
 python -m venv .venv && .venv\Scripts\activate   # Windows
@@ -576,7 +576,7 @@ POST   /v1/tracing/exporters     # Switch exporter
 
 ## 🆚 vs Alternatives
 
-| Feature | **LLM Inference Engine** | LiteLLM | Portkey | Dify | AWS Bedrock |
+| Feature | **Inferion AI** | LiteLLM | Portkey | Dify | AWS Bedrock |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Multi-provider routing | ✅ 9-stage | ✅ Basic | ✅ | ✅ | ✅ |
 | Hierarchical rate limiting | ✅ | ✅ | ✅ | ❌ | ✅ |
@@ -598,7 +598,7 @@ POST   /v1/tracing/exporters     # Switch exporter
 | **Open Source** | ✅ MIT | ✅ MIT | ❌ Paid | ✅ MIT | ❌ |
 | SDK (Python/TS/Go/Java) | ✅ All 4 | ✅ | ✅ | ❌ | ✅ |
 
-> 💡 **LLM Inference Engine = LiteLLM + Dify + CrewAI + Langfuse + Compliance SaaS** — all in one self-hosted platform.
+> 💡 **Inferion AI = LiteLLM + Dify + CrewAI + Langfuse + Compliance SaaS** — all in one self-hosted platform.
 
 **Estimated commercial equivalent cost: ~$3,700/month** across 5 separate SaaS tools.  
 **This project: $0. Forever.**
@@ -782,7 +782,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for our code of conduct and contr
 
 ## 📜 License
 
-MIT © [LLM Inference Engine Contributors](LICENSE)
+MIT © [Inferion AI Contributors](LICENSE)
 
 ---
 
@@ -794,8 +794,8 @@ If this project saved you time or money, please ⭐ **star the repo** — it hel
 
 <br/>
 
-[![Star History](https://img.shields.io/github/stars/OnHighEngineer/llm-inference-engine?style=social)](https://github.com/OnHighEngineer/llm-inference-engine)
-[![Fork](https://img.shields.io/github/forks/OnHighEngineer/llm-inference-engine?style=social)](https://github.com/OnHighEngineer/llm-inference-engine/fork)
+[![Star History](https://img.shields.io/github/stars/Yogesh10217/Inferion-ai?style=social)](https://github.com/Yogesh10217/Inferion-ai)
+[![Fork](https://img.shields.io/github/forks/Yogesh10217/Inferion-ai?style=social)](https://github.com/Yogesh10217/Inferion-ai/fork)
 
 <br/>
 

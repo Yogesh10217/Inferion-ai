@@ -1,6 +1,6 @@
-# LLM Inference Engine — Architecture Overview
+# Inferion AI — Architecture Overview
 
-This document summarizes the backend architecture scaffold that has been created so far for the LLM Inference Engine project.
+This document summarizes the backend architecture scaffold that has been created so far for the Inferion AI project.
 
 ## Goal
 
