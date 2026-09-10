@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -17,25 +19,28 @@ type Config struct {
 }
 
 type Client struct {
-	Knowledge    *KnowledgeClient
-	Architecture *ArchitectureClient
-	Compliance   *ComplianceClient
-	Portfolio    *PortfolioClient
-	Decisions    *DecisionsClient
-	Reliability  *ReliabilityClient
-	Security     *SecurityClient
-	AILifecycle  *AILifecycleClient
-	Events       *EventsClient
-	Access       *AccessClient
-	Data         *DataClient
-	Identities   *IdentityAssuranceService
-	Operations   *OperationsAssuranceService
+	Knowledge         *KnowledgeClient
+	Architecture      *ArchitectureClient
+	Compliance        *ComplianceClient
+	Portfolio         *PortfolioClient
+	Decisions         *DecisionsClient
+	Reliability       *ReliabilityClient
+	Security          *SecurityClient
+	AILifecycle       *AILifecycleClient
+	Events            *EventsClient
+	Access            *AccessClient
+	Data              *DataClient
+	Identities        *IdentityAssuranceService
+	Operations        *OperationsAssuranceService
 	SecurityAssurance *SecurityAssuranceService
-	Knowledge    *KnowledgeClient
-	baseURL      string
-	apiKey       string
-	orgID        string
-	hc           *http.Client
+
+	BaseURL    string
+	HTTPClient *http.Client
+
+	baseURL string
+	apiKey  string
+	orgID   string
+	hc      *http.Client
 }
 
 func NewClient(cfg Config) *Client {
@@ -45,17 +50,24 @@ func NewClient(cfg Config) *Client {
 	if cfg.Timeout == 0 {
 		cfg.Timeout = 30 * time.Second
 	}
+	httpClient := &http.Client{Timeout: cfg.Timeout}
 	c := &Client{
-		baseURL: cfg.BaseURL,
-		apiKey:  cfg.APIKey,
-		orgID:   cfg.OrganizationID,
-		hc:      &http.Client{Timeout: cfg.Timeout},
+		BaseURL:    cfg.BaseURL,
+		HTTPClient: httpClient,
+		baseURL:    cfg.BaseURL,
+		apiKey:     cfg.APIKey,
+		orgID:      cfg.OrganizationID,
+		hc:         httpClient,
 	}
 	c.Knowledge = &KnowledgeClient{client: c}
 	c.Architecture = &ArchitectureClient{client: c}
 	c.Compliance = &ComplianceClient{client: c}
 	c.Portfolio = &PortfolioClient{client: c}
 	c.Decisions = &DecisionsClient{client: c}
+	c.Reliability = &ReliabilityClient{client: c}
+	c.Security = &SecurityClient{client: c}
+	c.AILifecycle = &AILifecycleClient{client: c}
+	c.Events = &EventsClient{client: c}
 	c.Access = NewAccessClient(c.baseURL, c.apiKey)
 	c.Data = NewDataClient(c.baseURL)
 	c.Identities = &IdentityAssuranceService{client: c}
@@ -65,6 +77,77 @@ func NewClient(cfg Config) *Client {
 	return c
 }
 
+func (c *Client) Do(req *http.Request) (*http.Response, error) {
+	if req.Header.Get("Content-Type") == "" && req.Method != "GET" {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	if c.apiKey != "" && req.Header.Get("X-API-Key") == "" && req.Header.Get("Authorization") == "" {
+		req.Header.Set("X-API-Key", c.apiKey)
+	}
+	if c.orgID != "" && req.Header.Get("X-Organization-ID") == "" {
+		req.Header.Set("X-Organization-ID", c.orgID)
+	}
+	return c.hc.Do(req)
+}
+
+func (c *Client) do(ctx context.Context, method, path string, body, result interface{}) error {
+	var bodyReader io.Reader
+	if body != nil {
+		buf, err := json.Marshal(body)
+		if err != nil {
+			return err
+		}
+		bodyReader = bytes.NewReader(buf)
+	}
+
+	url := c.baseURL + path
+	if !strings.HasPrefix(path, "http") && !strings.HasPrefix(path, "/") {
+		url = c.baseURL + "/" + path
+	}
+
+	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if c.apiKey != "" {
+		req.Header.Set("X-API-Key", c.apiKey)
+	}
+	if c.orgID != "" {
+		req.Header.Set("X-Organization-ID", c.orgID)
+	}
+
+	res, err := c.hc.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode >= 400 {
+		return fmt.Errorf("request failed with status: %d", res.StatusCode)
+	}
+
+	if result != nil {
+		return json.NewDecoder(res.Body).Decode(result)
+	}
+	return nil
+}
+
+func (c *Client) post(ctx context.Context, path string, body, result interface{}) error {
+	return c.do(ctx, http.MethodPost, path, body, result)
+}
+
+func (c *Client) get(ctx context.Context, path string, result interface{}) error {
+	return c.do(ctx, http.MethodGet, path, nil, result)
+}
+
+func (c *Client) Post(ctx context.Context, path string, body, result interface{}) error {
+	return c.do(ctx, http.MethodPost, path, body, result)
+}
+
+func (c *Client) Get(ctx context.Context, path string, result interface{}) error {
+	return c.do(ctx, http.MethodGet, path, nil, result)
+}
 
 func (c *Client) Health(ctx context.Context) (map[string]interface{}, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", c.baseURL+"/health", nil)

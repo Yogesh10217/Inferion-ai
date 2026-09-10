@@ -25,11 +25,14 @@ type Decision struct {
 }
 
 type DecisionClient struct {
+	client   *Client
 	BaseURL  string
 	APIKey   string
 	TenantID string
 	HTTP     *http.Client
 }
+
+type DecisionsClient = DecisionClient
 
 func NewDecisionClient(baseURL, apiKey, tenantID string) *DecisionClient {
 	if baseURL == "" {

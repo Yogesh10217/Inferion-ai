@@ -30,6 +30,8 @@ type KnowledgeAssuranceService struct {
 	client *Client
 }
 
+type KnowledgeClient = KnowledgeAssuranceService
+
 func (s *KnowledgeAssuranceService) GetStatus(tenantID string) (map[string]interface{}, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/v1/knowledge/status", s.client.BaseURL), nil)
 	if err != nil {

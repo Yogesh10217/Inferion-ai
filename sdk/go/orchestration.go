@@ -16,12 +16,6 @@ func NewOrchestrationClient(baseURL, apiKey string) *OrchestrationClient {
 	}
 }
 
-type WorkflowResponse struct {
-	Name           string `json:"name"`
-	TenantID       string `json:"tenant_id"`
-	LifecycleState string `json:"lifecycle_state"`
-}
-
 func (c *OrchestrationClient) CreateWorkflow(ctx context.Context, name, tenantID string) (*WorkflowResponse, error) {
 	return &WorkflowResponse{
 		Name:           name,

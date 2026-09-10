@@ -24,12 +24,6 @@ type ConnectorResponse struct {
 	Status      string `json:"status"`
 }
 
-type WorkflowResponse struct {
-	WorkflowID string `json:"workflow_id"`
-	Name       string `json:"name"`
-	Status     string `json:"status"`
-}
-
 func (c *IntegrationClient) RegisterConnector(ctx context.Context, name, connectorType, externalSystemID, tenantID string) (*ConnectorResponse, error) {
 	return &ConnectorResponse{
 		ConnectorID: "conn_go_123",
