@@ -1,306 +1,688 @@
-# ⚡ LLM Inference Engine — High-Performance LLM Serving Platform
+<div align="center">
 
-> A production-grade inference engine for serving large language models at scale — with **multi-model routing**, **thread-safe model registry**, **SSE streaming**, and **robust observability** compatible with the OpenAI API specification.
+<br/>
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-async-green)](https://fastapi.tiangolo.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CI](https://img.shields.io/badge/CI-GitHub_Actions-brightgreen?logo=github)](https://github.com/OnHighEngineer/llm-inference-engine/actions)
-
----
-
-## 🎯 Project Vision
-
-Most developers just call OpenAI's API — this project shows you how inference *actually works* at scale. This engine provides:
-
-- 🚀 **Async inference serving** with streaming responses (SSE)
-- 🔀 **Multi-model routing** — route to the right model based on task, prefix, and provider
-- 📊 **Real-time metrics and tracing** — thread-safe counters, latency tracking, and structured logging
-- 🏥 **Detailed health orchestration** — overall system metrics, model registration statuses, and provider checks
-- 🌐 **OpenAI-compatible API** — drop-in replacement for OpenAI API calls
-
----
-
-## 🏗️ Architecture Overview
-
-The project consists of several core subsystems that work together to provide a robust, multi-tenant inference platform:
-
-- **Tenant Isolation**: A multi-tenant architecture with robust `TenantMiddleware` separating Organizations, Workspaces, Memberships, and Roles. Supports scoped API keys and context propagation down to the lowest service layer.
-- **Quotas & Rate Limiting**: Extensible, multi-level limits (User, API Key, Workspace, Organization) backed by Redis algorithms (Fixed Window, Token Bucket, Sliding Window Log) ensuring reliable throughput. Usage tracking is detached from inference paths via high-performance, async `UsageEventEmitter`.
-- **Billing & Subscriptions**: Subscription plans referencing reusable pricing models and quota policies. `CostCalculator` translates usage directly to structured invoices, while `BudgetMiddleware` enforces soft and hard organizational spend limits dynamically with customizable alert thresholds.
-- **Routing & Failover**: An intelligent `RequestRouter` dynamically distributes traffic across multiple LLM providers based on custom load balancing strategies and robust fallback/failover mechanics. 
-- **Batching & Scheduling**: Advanced `RequestScheduler` aggregates asynchronous incoming queries into grouped workloads optimized for the provider's capabilities.
-- **Cache**: Fast exact-match caching reduces latency and prevents redundant queries.
-- **Streaming**: Full SSE implementation supporting real-time token stream delivery for supported models.
-
-## Observability Stack
-
-The Inference Engine includes a full Prometheus and Grafana observability stack with pre-provisioned dashboards for the internal metrics.
-
-Start the full stack using docker compose:
-```bash
-docker compose up -d
+```
+██╗     ██╗     ███╗   ███╗    ██╗███╗   ██╗███████╗███████╗██████╗ ███████╗███╗   ██╗ ██████╗███████╗
+██║     ██║     ████╗ ████║    ██║████╗  ██║██╔════╝██╔════╝██╔══██╗██╔════╝████╗  ██║██╔════╝██╔════╝
+██║     ██║     ██╔████╔██║    ██║██╔██╗ ██║█████╗  █████╗  ██████╔╝█████╗  ██╔██╗ ██║██║     █████╗  
+██║     ██║     ██║╚██╔╝██║    ██║██║╚██╗██║██╔══╝  ██╔══╝  ██╔══██╗██╔══╝  ██║╚██╗██║██║     ██╔══╝  
+███████╗███████╗██║ ╚═╝ ██║    ██║██║ ╚████║██║     ███████╗██║  ██║███████╗██║ ╚████║╚██████╗███████╗
+╚══════╝╚══════╝╚═╝     ╚═╝    ╚═╝╚═╝  ╚═══╝╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝
+                                                                                               ENGINE ⚡
 ```
 
-### Accessing the Monitoring Tools
-- **Grafana**: `http://localhost:3000` (Default credentials: admin/admin)
-- **Prometheus**: `http://localhost:9090`
-- **Application Metrics Endpoint**: `http://localhost:8002/metrics`
+<h3>The Enterprise AI Platform That Replaces 5 SaaS Tools — Self-Hosted, Open-Source, Free.</h3>
 
-The Grafana instance automatically provisions a folder called "LLM Inference Engine" containing pre-built dashboards for System Overview, Provider Latency, Batching metrics, Cache hits/misses, Scheduler queues, and more.
+<br/>
 
-## Documentation
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F7DF1E?style=for-the-badge)](LICENSE)
+[![OpenAI Compatible](https://img.shields.io/badge/OpenAI-Compatible-412991?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/docs)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Redis](https://img.shields.io/badge/Redis-Powered-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
+[![Prometheus](https://img.shields.io/badge/Prometheus-Monitored-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/OnHighEngineer/llm-inference-engine/actions)
 
-Full architectural documentation can be found in `ARCHITECTURE.md` and `ARCHITECTURE_OVERVIEW.md`.
+<br/>
 
-For full architectural blueprints, diagrams, and deployment patterns, refer to the [docs/](docs/) directory.
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-api-reference">API Reference</a> •
+  <a href="#-vs-alternatives">Comparison</a> •
+  <a href="#-documentation">Docs</a>
+</p>
 
----
+<br/>
 
-## 🔒 Authentication & Authorization (Phase 3.1 & 3.2)
+> **⚡ One platform. Infinite scale. Zero vendor lock-in.**  
+> Route AI traffic intelligently, run autonomous agents, store enterprise memory, enforce compliance — all from a single self-hosted API that's 100% OpenAI-compatible.
 
-The engine now supports a full RBAC-based multi-tenant authentication system:
-
-- **Optional Auth**: Set `AUTH_ENABLED=false` (default) for local dev without auth, or `AUTH_ENABLED=true` for production.
-- **Database Backend**: Uses async SQLAlchemy (defaults to SQLite, compatible with PostgreSQL).
-- **JWT & API Keys**: Support for JWT Bearer Tokens (with refresh tokens) and revocable API Keys (`sk_...`).
-- **First-class Multi-Tenancy**: Users belong to Organizations. Resources (like API keys) are strictly isolated.
-- **Workspaces**: Optional subdivisions within an organization for more granular resource management.
-- **Dynamic RBAC**: Built-in roles (Admin, Developer, Viewer) scoped at both the Organization and Workspace levels.
-- **Admin Bootstrapping**: Create the initial admin user and default organization using the CLI bootstrap script:
-  ```bash
-  python app/cli/bootstrap.py --username admin --email admin@example.com --password <your_admin_password>
-  ```
-
-### Tenant Resolution
-When authenticating via JWT (e.g., UI), the active tenant is resolved via the `X-Organization-Id` and `X-Workspace-Id` headers.
-API Keys are strongly bound to a specific Organization (and optionally a Workspace) upon creation, completely overriding any headers provided by the client to ensure security.
-
-### API Key Management
-Once authenticated (e.g. via `/v1/auth/login` passing `X-Organization-Id`), users can generate their own API keys via `POST /v1/auth/api-keys`. These keys can be passed as a standard Bearer token (`Authorization: Bearer sk_...`).
+</div>
 
 ---
 
-## 🚦 Quotas, Rate Limiting & Usage (Phase 3.3)
+## 🧠 What Is This?
 
-A robust, hierarchical system manages API abuse and tracks usage seamlessly without impacting core inference paths.
+Most teams hit a wall when scaling AI in production:
 
-- **Rate Limiting**: Configurable limits (sliding window, token bucket, fixed window) to prevent immediate traffic spikes.
-- **Quota Policies**: Configurable limits (requests per day, tokens per day) mapped strictly to Organizations, Workspaces, API Keys, and Users.
-- **Hierarchical Evaluation**: Limits are evaluated top-down: `Organization → Workspace → API Key → User`. The request stops immediately at the first violation.
-- **Concurrency Control**: Prevents resource starvation by issuing decaying "leases" for currently executing requests.
-- **Multi-Backend**: Uses Redis (Lua scripts) for high-performance atomic increments, with a local Memory fallback circuit-breaker when Redis is down.
-- **Async Usage Collection**: Usage events (token counts, durations, status codes) are emitted asynchronously avoiding latency overhead in the critical path.
+- 💸 **Runaway costs** — everyone calls GPT-4 even for simple tasks
+- 🔒 **No access control** — a single leaked API key = game over
+- 📊 **Zero visibility** — you have no idea who's using what
+- 🔀 **Vendor lock-in** — OpenAI goes down, your product goes down
+- 🤖 **LLMs just answer** — they can't actually *do things* for you
 
----
+**LLM Inference Engine solves all of this.**
 
-## 💰 Billing, Subscriptions & Budgets (Phase 3.4)
+It's an **enterprise-grade AI gateway and autonomous agent platform** that sits between your apps and every AI model in the world — adding intelligent routing, multi-tenancy, billing, compliance, RAG, memory, and full autonomous agent execution.
 
-A fully integrated billing ecosystem converts metered usage into structured invoices while preventing overspend.
+```
+Your App  ──►  LLM Inference Engine  ──►  OpenAI
+                    (this project)    ──►  Ollama (local)
+                                      ──►  Anthropic
+                                      ──►  Any LLM
+```
 
-- **Subscriptions**: Organizations can subscribe to predefined `SubscriptionPlan`s, seamlessly inheriting quota overrides.
-- **Cost Calculation**: Independent pricing rules (per-provider, per-model, input vs output) accurately evaluate costs.
-- **Invoicing**: Automatic generation of `Invoice`s and line items (via `InvoiceLineItem`) spanning custom billing cycles.
-- **Budgets**: Prevent runaway costs by establishing `warning`, `critical`, and `hard_limit` thresholds evaluated strictly at runtime by a `BudgetMiddleware`.
+**Drop-in compatible.** Change one line of code:
 
----
+```python
+# Before
+client = OpenAI(base_url="https://api.openai.com/v1", api_key="sk-...")
 
-## 🏢 Enterprise Administration Platform (Phase 3.5)
-
-A comprehensive suite for platform operators to manage, audit, and monitor the entire LLM ecosystem.
-
-- **Centralized Management**: Dedicated `/v1/admin/*` endpoints strictly protected by a global `platform_admin` role.
-- **Organization Lifecycle**: Support for suspending or archiving rogue or churned organizations instantly.
-- **Audit Logging**: Immutable, queryable `AuditEvent`s capturing all control-plane modifications (e.g. role grants, API key rotations).
-- **System Health**: Endpoints to introspect internal cache stats, active batch dimensions, database pings, and backend availability.
-- **Reporting Jobs**: Framework for asynchronous execution and compilation of high-level usage CSV/JSON exports.
-
----
-
-## 📡 Event Platform & Webhooks (Phase 3.6)
-
-A production-grade event-driven subsystem for internal event publishing and external webhook delivery decoupled from core inference execution.
-
-### Architecture & Features
-- **Abstract EventBus (`IEventBus`)**: Decoupled pub/sub interface allowing seamless backend substitution (Redis, Kafka, NATS, In-Memory).
-- **Standardized Event Envelope**: All events use a unified schema containing `event_id`, `event_type`, `version` (schema version), `timestamp`, `organization_id`, `workspace_id`, `actor`, `source`, `correlation_id`, `request_id`, `payload`, and `metadata`.
-- **Subscriber Isolation**: Async error boundaries ensure delivery failures to one webhook endpoint never impact other subscribers.
-- **Staged Execution Pipeline**: Staged lifecycle `Publish -> Persist -> Queue Delivery -> Delivery Attempt -> Retry -> Dead-Letter`.
-- **HMAC-SHA256 Security & Secret Rotation**: Webhooks signed with `HMAC-SHA256`. Supports dual-secret verification (`secret` & `secondary_secret`) for smooth secret rotation and configurable replay protection tolerance windows (`X-Timestamp`).
-- **Retry Policy**: Exponential backoff with configurable initial/max intervals, retryable status codes (`[408, 429, 500, 502, 503, 504]`), and randomized jitter.
-- **Dead-Letter Queue & Replay**: Failed deliveries beyond max retries route to DLQ. Replaying creates a new `WebhookDelivery` record while preserving original events and audit trails.
-
-### Event Types (19 Total)
-- **Inference**: `inference.completed`, `inference.failed`, `streaming.started`, `streaming.finished`
-- **Tenancy**: `organization.created`, `organization.suspended`, `workspace.created`
-- **Auth**: `user.created`, `user.disabled`, `api_key.created`, `api_key.revoked`
-- **Billing**: `subscription.changed`, `budget.warning`, `budget.exceeded`, `invoice.generated`
-- **System**: `provider.healthy`, `provider.unhealthy`, `system.startup`, `system.shutdown`
-
-### Admin Webhook Endpoints
-- `GET /v1/webhooks` - List webhook endpoints
-- `POST /v1/webhooks` - Register new webhook endpoint
-- `PATCH /v1/webhooks/{id}` - Update endpoint or secret
-- `DELETE /v1/webhooks/{id}` - Delete endpoint
-- `GET /v1/webhooks/deliveries` - Query delivery history
-- `GET /v1/webhooks/events` - Query event log
-- `POST /v1/webhooks/replay/{delivery_id}` - Replay failed delivery
+# After — full enterprise control, zero other changes
+client = OpenAI(base_url="http://your-engine:8002/v1", api_key="sk-...")
+```
 
 ---
 
 ## ⚡ Quick Start
 
-### Prerequisites
-- Python 3.10+
-- (Optional) [Ollama](https://ollama.com) installed locally for local model serving
-- (Optional) Docker & Docker Compose for containerized deployment
-
-### Local Development
-
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/OnHighEngineer/llm-inference-engine.git
 cd llm-inference-engine
 
-# Setup environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# Setup
+python -m venv .venv && .venv\Scripts\activate   # Windows
+# source .venv/bin/activate                       # Linux/macOS
 
-# Install dependencies
-make install
-# Or manually:
-# pip install -r requirements.txt
+pip install -r requirements.txt
 
-# Copy and configure environment variables
+# Configure
 cp .env.example .env
-# Edit .env to add your OPENAI_API_KEY if desired
+# Add your OPENAI_API_KEY to .env
 
-# Run the FastAPI application
-make run
-# Or manually:
-# uvicorn app.main:app --host 0.0.0.0 --port 8002
+# Launch 🚀
+uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
 ```
 
-### Docker Deployment
+**Visit http://localhost:8002/docs** → Interactive API explorer with every endpoint.
+
+### 🐳 Full Stack (App + Ollama + Prometheus + Grafana)
 
 ```bash
-# Build and start all services (app + Ollama)
-make compose-up
-# Or manually:
-# docker compose up -d --build
-
-# Stop all services
-make compose-down
-
-# Build Docker image only
-make docker
+docker compose up -d --build
 ```
 
-The `docker-compose.yml` includes:
-- **app**: The inference engine on port `8002`
-- **ollama**: Local Ollama server on port `11434`
-- Commented placeholders for Redis, Prometheus, and Grafana (ready for Phase 2)
-
----
-
-## 🔌 OpenAI-Compatible API
-
-This engine implements the OpenAI API specification — any code using OpenAI can switch to this engine by changing the `base_url`:
-
-```python
-from openai import OpenAI
-
-# Point to your inference engine instead of OpenAI
-client = OpenAI(
-    base_url="http://localhost:8002/v1",
-    api_key="your-api-key",
-)
-
-# Non-streaming request
-response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[{"role": "user", "content": "Hello!"}],
-)
-print(response.choices[0].message.content)
-```
-
-### Streaming Example (SSE)
-
-```python
-# Streaming request — tokens arrive in real-time via Server-Sent Events
-stream = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[{"role": "user", "content": "Explain quantum computing"}],
-    stream=True,
-)
-
-for chunk in stream:
-    delta = chunk.choices[0].delta
-    if delta.content:
-        print(delta.content, end="", flush=True)
-```
-
-### curl Examples
-
-```bash
-# Health check
-curl http://localhost:8002/v1/health
-
-# List models
-curl http://localhost:8002/v1/models
-
-# Non-streaming chat completion
-curl -X POST http://localhost:8002/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello!"}]}'
-
-# Streaming chat completion
-curl -N -X POST http://localhost:8002/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello!"}], "stream": true}'
-```
-
----
-
-## ⚙️ Environment Variables
-
-| Variable | Default | Description |
+| Service | URL | Credentials |
 |---|---|---|
-| `APP_NAME` | `LLM Inference Engine` | Application display name |
-| `APP_VERSION` | `0.1.0` | Semantic version |
-| `ENVIRONMENT` | `development` | Runtime environment |
-| `DEBUG` | `false` | Enable debug mode |
-| `HOST` | `0.0.0.0` | Server bind host |
-| `PORT` | `8002` | Server bind port |
-| `LOG_LEVEL` | `INFO` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
-| `API_PREFIX` | `/v1` | API route prefix |
-| `OPENAI_API_KEY` | *(empty)* | OpenAI API key (leave empty for simulated responses) |
-| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server endpoint |
-| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated allowed origins |
-| `DEFAULT_PROVIDER` | `openai` | Default provider for routing |
-| `DEFAULT_MODEL` | `gpt-4o-mini` | Default model for inference |
-| `AUTH_ENABLED` | `false` | Enable/disable authentication |
-| `DATABASE_URL` | `sqlite+aiosqlite:///./data/engine.db` | DB connection string |
-| `JWT_SECRET` | *(string)* | Secret for JWT signing |
-| `RATE_LIMITING_ENABLED` | `true` | Enable rate limiting & quotas |
-| `RATE_LIMIT_BACKEND` | `redis` | Backend to use (`redis` or `memory`) |
-| `REDIS_URL` | `redis://localhost:6379/0` | Redis connection URL |
-
-See [.env.example](.env.example) for a ready-to-use template.
+| **API + Swagger** | http://localhost:8002/docs | — |
+| **Grafana Dashboards** | http://localhost:3000 | admin / admin |
+| **Prometheus** | http://localhost:9090 | — |
+| **Metrics Endpoint** | http://localhost:8002/metrics | — |
 
 ---
 
-## 🧪 Testing
+## 🏗️ Architecture
+
+```
+                        ┌─────────────────────────────────────────────────────────┐
+                        │              LLM INFERENCE ENGINE                       │
+                        │                                                          │
+   Your Apps ──────────►│  FastAPI Gateway                                         │
+   OpenAI SDK ─────────►│    │                                                    │
+   REST Clients ────────►│    ├── Auth Middleware (JWT / API Keys / RBAC)          │
+                        │    ├── Tenant Middleware (Org → Workspace → User)       │
+                        │    ├── Rate Limit Middleware (Redis Token Bucket)       │
+                        │    └── Budget Middleware (Hard Limit Enforcement)       │
+                        │                  │                                       │
+                        │    ┌─────────────▼────────────────────────────┐         │
+                        │    │     9-Stage Intelligent Router           │         │
+                        │    │  Capability → Rules → Policy → Health    │         │
+                        │    │  → Scoring → Ranking → Selection         │         │
+                        │    │  → Failover → Final Decision             │         │
+                        │    └──────┬─────────────┬──────────┬──────────┘         │
+                        │          │             │          │                     │
+                        │       OpenAI        Ollama    Anthropic                 │
+                        │       (Cloud)       (Local)   (+ more)                 │
+                        │                                                          │
+                        │  ┌──────────┐  ┌──────────┐  ┌──────────┐             │
+                        │  │  Agent   │  │Workflows │  │ Memory   │             │
+                        │  │Framework │  │  Engine  │  │Platform  │             │
+                        │  │4 Planners│  │DAG + DAGs│  │6 Tiers   │             │
+                        │  └──────────┘  └──────────┘  └──────────┘             │
+                        │                                                          │
+                        │  ┌──────────┐  ┌──────────┐  ┌──────────┐             │
+                        │  │Knowledge │  │ FinOps + │  │Compliance│             │
+                        │  │RAG+Vector│  │  MLOps   │  │SOC2/GDPR │             │
+                        │  └──────────┘  └──────────┘  └──────────┘             │
+                        │                                                          │
+                        │  Observability: Prometheus + Grafana + OpenTelemetry   │
+                        └─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Features
+
+### 🔀 Intelligent 9-Stage Routing Engine
+Route every request to the optimal provider automatically — no manual configuration needed.
+
+```
+Request → Capability Filter → Rule Evaluation → Policy Evaluation → Health Check
+        → Weighted Scoring → Provider Ranking → Selection → Failover → Decision
+```
+
+- **Cost-optimized**: Automatically prefer cheaper models for simple tasks
+- **Latency-optimized**: Route to the fastest healthy provider
+- **Custom policies**: Define your own scoring weights per organization
+- **Circuit breaker**: Automatically skip degraded providers
+- **Full trace**: Every routing decision is explained and logged
 
 ```bash
-# Run all tests
-make test
+# Simulate a routing decision and see the full explanation trace
+POST /v1/routing/decide
+{
+  "model": "gpt-4o-mini",
+  "required_capabilities": ["streaming", "function_calling"]
+}
+```
 
-# Run with verbose output
-pytest -v
+---
 
-# Run with coverage
-pytest --cov=app --cov-report=term-missing
+### 🏢 Enterprise Multi-Tenancy
+
+```
+Your Company (Organization)
+├── Engineering Team (Workspace)  →  Budget: $2,000/mo  |  Quota: 50k req/day
+├── Sales Team (Workspace)        →  Budget: $500/mo   |  Quota: 10k req/day
+└── Finance Team (Workspace)      →  Budget: $1,000/mo |  Quota: 5k req/day
+```
+
+- Organizations → Workspaces → Users hierarchy
+- Per-tenant API keys (`sk_...`), JWT tokens, and RBAC roles
+- Complete resource isolation — one team's usage never affects another
+- Admin, Developer, Viewer roles at both Org and Workspace scope
+
+---
+
+### 🤖 Enterprise Agent Framework
+
+Go beyond chat. Give your AI the ability to **actually do things**.
+
+```python
+# Create an agent that can browse the web, write code, and execute it
+agent = client.agents.create(
+    agent_id="dev_assistant",
+    planner_strategy="react",       # ZeroShot | ReAct | PlanExecute | TreeOfThought
+    tools=["calculator", "python", "shell", "rest_api", "knowledge_search"],
+    budget={"max_tokens": 50000, "max_cost_usd": 2.00},
+    require_approval_for=["shell"]  # Human-in-the-loop for dangerous actions
+)
+
+result = client.agents.run("dev_assistant", 
+    prompt="Find all failing tests in the project, fix them, and run pytest to verify"
+)
+```
+
+**Agent Lifecycle:**
+```
+User Prompt → Context Assembly → Knowledge Retrieval → Planning
+→ Tool Selection → Approval Gate → Tool Execution → Observation
+→ Reflection → Memory Update → Checkpoint → Final Response
+```
+
+**4 Planning Strategies:**
+| Strategy | Best For |
+|---|---|
+| **ZeroShot** | Simple, direct tasks |
+| **ReAct** | Iterative reasoning with tool use |
+| **Plan-Execute** | Complex multi-step workflows |
+| **Tree of Thought** | Exploring multiple solution paths |
+
+---
+
+### 🧠 Enterprise Memory Platform — 6 Tiers
+
+Your AI remembers everything across sessions, users, and time.
+
+```python
+# Store a memory
+client.memory.create(content="User prefers concise Python code with type hints")
+
+# Semantic search across all memory
+results = client.memory.search("What coding style does this user prefer?")
+# → Returns ranked memories with composite scoring
+```
+
+**Memory Tiers:**
+
+| Tier | What It Stores |
+|---|---|
+| 🔴 **Working** | Current execution scratchpad (planner state, tool outputs) |
+| 🟠 **Conversation** | Multi-turn message history with token budgeting |
+| 🟡 **Semantic** | Learned facts, preferences, domain knowledge (vector-indexed) |
+| 🟢 **Profile** | User preferences, coding patterns, communication style |
+| 🔵 **Session** | Active project/task context with auto-expiry |
+| 🟣 **Episodic** | Historical agent/workflow runs for experience-based recall |
+
+**Composite Ranking Formula:**
+$$\text{Score} = (0.4 \times \text{Similarity}) + (0.2 \times \text{Recency}) + (0.2 \times \text{Importance}) + (0.2 \times \text{Confidence})$$
+
+---
+
+### 📚 Knowledge & RAG Platform
+
+Turn any document collection into a searchable AI knowledge base.
+
+```python
+# Index documents
+client.knowledge.ingest(
+    documents=["report.pdf", "manual.docx", "data.csv"],
+    embedding_model="text-embedding-3-large",
+    chunk_size=512
+)
+
+# Hybrid semantic + keyword search
+results = client.knowledge.search(
+    query="What were the Q3 revenue figures?",
+    top_k=5,
+    rerank=True  # Cross-encoder reranking for precision
+)
+```
+
+**Pipeline:** Document Parsing → Chunking → Embedding → Vector Store → Hybrid Search → Reranking → Context Assembly → Citation Tracking
+
+**Supported Vector Stores:** Pinecone · Milvus · Qdrant · FAISS (local)
+
+---
+
+### ⚡ Workflow Engine
+
+Define complex multi-step AI pipelines as code.
+
+```python
+workflow = {
+    "name": "Research & Report",
+    "nodes": [
+        {"id": "search",    "type": "knowledge_search", "query": "{input}"},
+        {"id": "analyze",   "type": "llm",   "prompt": "Analyze: {search}"},
+        {"id": "approval",  "type": "human", "message": "Review before publishing?"},
+        {"id": "publish",   "type": "tool",  "tool": "send_email", "depends_on": ["approval"]}
+    ]
+}
+```
+
+- **DAG-based execution** — parallel branches, conditional edges
+- **Checkpoint & Recovery** — resume from any failed step
+- **Human approval gates** — require sign-off before critical actions
+- **Reusable templates** — build once, run anywhere
+
+---
+
+### 🛡️ Resilience & Reliability
+
+```python
+# Automatic failover: OpenAI → Ollama → Anthropic
+# Circuit breaker trips after 5 failures in 60 seconds
+# Exponential backoff retry (1s → 2s → 4s → 8s)
+# Bulkhead isolation: provider failures don't cascade
+# Timeout enforcement: no request hangs forever
+```
+
+---
+
+### 💰 Billing, FinOps & Budget Control
+
+```
+Request comes in
+     ↓
+Budget Middleware checks:  Is org spend < hard_limit?
+     ↓ NO  → 429 blocked instantly
+     ↓ YES
+Rate Limiter checks:       Is request rate within quota?
+     ↓ NO  → 429 rate limited
+     ↓ YES
+Request proceeds → Usage tracked → Invoice updated → Forecasting updated
+```
+
+- Per-tenant, per-model, per-provider cost attribution
+- Subscription plans with quota inheritance
+- Automated invoicing with line items
+- Cost anomaly detection and alerts
+- Chargeback reports for internal billing
+
+---
+
+### 📡 Event Platform & Webhooks
+
+React to everything that happens in real-time.
+
+**19 built-in event types:**
+
+```
+inference.completed    inference.failed       streaming.started
+organization.created   organization.suspended workspace.created
+user.created           user.disabled          api_key.created
+api_key.revoked        subscription.changed   budget.warning
+budget.exceeded        invoice.generated      provider.healthy
+provider.unhealthy     system.startup         system.shutdown
+```
+
+- HMAC-SHA256 signed payloads for security
+- Dual-secret rotation (no downtime during rotation)
+- Exponential backoff retries → Dead Letter Queue → Manual replay
+
+---
+
+### 🔭 Observability Stack
+
+Full visibility across every request, provider, and cost center.
+
+```bash
+docker compose up -d  # Grafana + Prometheus auto-provisioned
+```
+
+**Pre-built dashboards for:**
+- 📊 System overview & request rates
+- ⚡ Provider latency & health
+- 💰 Cost tracking per tenant/model
+- 🤖 Agent execution metrics
+- 🧠 Memory usage analytics
+- 🔀 Routing decision stats
+
+**OpenTelemetry Distributed Tracing:**
+```
+HTTP POST /v1/chat/completions  (Root Span)
+  └── routing.decision          (Child Span)
+  └── inference.execution       (Child Span)
+       └── plugin.metrics_logger (Child Span)
+  └── db.query                  (Child Span)
+```
+
+Exporters: **Console · OTLP HTTP · OTLP gRPC · Jaeger · Zipkin**
+
+---
+
+### 🧩 Plugin Framework
+
+Extend the platform without touching core code.
+
+```python
+# manifest.json
+{
+  "id": "my_plugin",
+  "version": "1.0.0",
+  "permissions": [{"action": "events.publish", "resource": "*"}]
+}
+
+# plugin.py
+class MyPlugin(BasePlugin):
+    async def on_after_inference(self, ctx, response):
+        await ctx.events.publish("custom.metric", {"tokens": response.usage.total_tokens})
+        return response  # optionally modify the response
+```
+
+**10 lifecycle hooks:** `on_startup` · `on_before_request` · `on_after_request` · `on_before_inference` · `on_after_inference` · `on_provider_selected` · `on_provider_failed` · and more
+
+**7 plugin states:** DISCOVERED → LOADED → INITIALIZED → ENABLED → RUNNING → DISABLED → UNLOADED
+
+---
+
+### 🏛️ Compliance Platform
+
+Built-in support for major regulatory frameworks.
+
+| Framework | Status |
+|---|---|
+| **SOC 2 Type II** | ✅ Controls mapping, evidence collection, continuous monitoring |
+| **GDPR** | ✅ Consent management, data retention, right to erasure |
+| **HIPAA** | ✅ PHI handling controls, audit trails |
+| **ISO 27001** | ✅ Information security controls |
+
+- Automated evidence collection and attestations
+- Finding management and remediation workflows
+- Real-time compliance posture scoring
+- Immutable audit log for every control-plane action
+
+---
+
+### 🤝 Multi-Agent Coordination
+
+Deploy teams of AI agents that collaborate, negotiate, and hand off work.
+
+```python
+team = client.teams.create(
+    name="Research Team",
+    agents=[
+        {"id": "researcher", "role": "lead",     "tools": ["web_search", "knowledge_search"]},
+        {"id": "analyst",    "role": "worker",   "tools": ["calculator", "python"]},
+        {"id": "writer",     "role": "reporter", "tools": ["document_writer"]}
+    ],
+    coordination="supervisor"  # supervisor | consensus | peer-to-peer
+)
+
+result = client.teams.run("Research Team",
+    task="Research quantum computing trends and write an executive summary"
+)
+```
+
+**Coordination patterns:** Supervisor-Worker · Peer-to-Peer · Consensus Voting · Agent Negotiation · Task Delegation · Context Handoff
+
+---
+
+### ⚙️ MLOps Platform
+
+Full model lifecycle management baked in.
+
+- **Model Registry** — versioned artifact storage with metadata
+- **A/B Experiments** — traffic splitting between model versions
+- **Drift Detection** — automatic alerts when model behavior changes
+- **Progressive Delivery** — canary and blue-green deployments
+- **Prompt Management** — versioned prompt templates with rollback
+- **Automated Rollback** — trigger on metric thresholds
+
+---
+
+## 🔌 API Reference
+
+### Core Inference
+```http
+POST   /v1/chat/completions      # Chat (streaming & non-streaming)
+GET    /v1/models                # List available models
+GET    /v1/health                # Health status
+GET    /v1/ready                 # Readiness probe
+GET    /v1/live                  # Liveness probe
+```
+
+### Auth & Identity
+```http
+POST   /v1/auth/login            # Get JWT token
+POST   /v1/auth/refresh          # Refresh token
+POST   /v1/auth/api-keys         # Create API key
+GET    /v1/auth/api-keys         # List API keys
+DELETE /v1/auth/api-keys/{id}    # Revoke API key
+```
+
+### Organizations & Workspaces
+```http
+GET    /v1/organizations
+POST   /v1/organizations
+PATCH  /v1/organizations/{id}/suspend
+GET    /v1/workspaces
+POST   /v1/workspaces
+```
+
+### Agents
+```http
+POST   /v1/agents                          # Create agent
+GET    /v1/agents                          # List agents
+POST   /v1/agents/{id}/run                 # Run agent
+POST   /v1/agents/sessions/{id}/resume     # Resume / submit approval
+POST   /v1/agents/sessions/{id}/cancel     # Cancel execution
+GET    /v1/agents/{id}/sessions            # Session history
+```
+
+### Memory
+```http
+POST   /v1/memory                # Store memory
+GET    /v1/memory                # List memories
+POST   /v1/memory/search         # Semantic search
+POST   /v1/memory/compress       # Compress history
+GET    /v1/memory/profile        # User profile
+PATCH  /v1/memory/profile        # Update profile
+GET    /v1/memory/analytics      # Usage analytics
+```
+
+### Knowledge / RAG
+```http
+POST   /v1/knowledge/ingest      # Index documents
+POST   /v1/knowledge/search      # Search knowledge base
+GET    /v1/knowledge/documents   # List documents
+DELETE /v1/knowledge/documents/{id}
+```
+
+### Routing
+```http
+GET    /v1/routing/policies      # List policies
+POST   /v1/routing/decide        # Simulate decision (with trace)
+GET    /v1/routing/health        # Provider health
+GET    /v1/routing/metrics       # Latency & success rates
+GET    /v1/routing/rankings      # Provider rankings
+```
+
+### Webhooks
+```http
+GET    /v1/webhooks              # List endpoints
+POST   /v1/webhooks              # Register endpoint
+PATCH  /v1/webhooks/{id}         # Update / rotate secret
+DELETE /v1/webhooks/{id}         # Remove endpoint
+GET    /v1/webhooks/deliveries   # Delivery history
+POST   /v1/webhooks/replay/{id}  # Replay failed delivery
+```
+
+### Plugins
+```http
+GET    /v1/plugins               # List plugins
+POST   /v1/plugins/install       # Install plugin
+POST   /v1/plugins/enable/{id}   # Enable
+POST   /v1/plugins/disable/{id}  # Disable
+POST   /v1/plugins/reload/{id}   # Hot-reload
+GET    /v1/plugins/{id}/health   # Plugin diagnostics
+```
+
+### Tracing
+```http
+GET    /v1/tracing/config        # Active config
+PUT    /v1/tracing/config        # Update exporter / sampling
+GET    /v1/tracing/exporters     # List exporters
+POST   /v1/tracing/exporters     # Switch exporter
+```
+
+---
+
+## 🆚 vs Alternatives
+
+| Feature | **LLM Inference Engine** | LiteLLM | Portkey | Dify | AWS Bedrock |
+|---|:---:|:---:|:---:|:---:|:---:|
+| Multi-provider routing | ✅ 9-stage | ✅ Basic | ✅ | ✅ | ✅ |
+| Hierarchical rate limiting | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Multi-tenancy (Org/Workspace) | ✅ Full | ✅ Basic | ✅ | ✅ | ✅ |
+| Billing & Invoicing | ✅ Full | ✅ Basic | ✅ | ❌ | ✅ |
+| Webhook event platform | ✅ 19 types | ❌ | ✅ | ❌ | ✅ |
+| Plugin framework | ✅ 7-state | ❌ | ❌ | ✅ | ❌ |
+| Autonomous agent framework | ✅ 4 planners | ❌ | ❌ | ✅ | ✅ |
+| RAG / Knowledge platform | ✅ Full pipeline | ❌ | ❌ | ✅ | ✅ |
+| Enterprise memory (6 tiers) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Multi-agent coordination | ✅ Teams+consensus | ❌ | ❌ | ❌ | ❌ |
+| Workflow engine (DAG) | ✅ | ❌ | ❌ | ✅ | ✅ |
+| Compliance (SOC2/GDPR/HIPAA) | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Data governance | ✅ Full | ❌ | ❌ | ❌ | ✅ |
+| FinOps platform | ✅ Full | ❌ | ✅ Basic | ❌ | ✅ |
+| MLOps (A/B, drift, canary) | ✅ Full | ❌ | ❌ | ❌ | ✅ |
+| OpenTelemetry tracing | ✅ 5 exporters | ✅ | ✅ | ❌ | ✅ |
+| **Self-hostable** | ✅ | ✅ | ❌ SaaS | ✅ | ❌ Cloud |
+| **Open Source** | ✅ MIT | ✅ MIT | ❌ Paid | ✅ MIT | ❌ |
+| SDK (Python/TS/Go/Java) | ✅ All 4 | ✅ | ✅ | ❌ | ✅ |
+
+> 💡 **LLM Inference Engine = LiteLLM + Dify + CrewAI + Langfuse + Compliance SaaS** — all in one self-hosted platform.
+
+**Estimated commercial equivalent cost: ~$3,700/month** across 5 separate SaaS tools.  
+**This project: $0. Forever.**
+
+---
+
+## 🌍 Real-World Use Cases
+
+<table>
+<tr>
+<td width="50%">
+
+**🏦 FinTech Company**
+- Route sensitive financial queries to private on-prem Ollama
+- Route general queries to cheap GPT-4o-mini
+- GDPR compliance built-in
+- Full audit trail for every AI interaction
+- Budget alerts before overspending
+
+</td>
+<td width="50%">
+
+**🏥 Healthcare Provider**
+- HIPAA compliance controls out-of-the-box
+- Separate workspaces for each department
+- PHI detection and masking
+- Immutable audit logs
+- Knowledge base from medical literature
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**🚀 SaaS Startup**
+- One platform for all customers (multi-tenant)
+- Per-customer billing and quotas
+- Webhooks notify your app on every AI event
+- Plugin marketplace for extensibility
+- Usage-based pricing automation
+
+</td>
+<td width="50%">
+
+**🏢 Enterprise IT**
+- SSO integration
+- Role-based access (Admin/Dev/Viewer)
+- Cost chargeback by team
+- Compliance reporting for auditors
+- MLOps for model governance
+
+</td>
+</tr>
+</table>
+
+---
+
+## ⚙️ Configuration
+
+```env
+# Server
+PORT=8002
+HOST=0.0.0.0
+ENVIRONMENT=development
+
+# Providers
+OPENAI_API_KEY=sk-...
+OLLAMA_BASE_URL=http://localhost:11434
+DEFAULT_PROVIDER=openai
+DEFAULT_MODEL=gpt-4o-mini
+
+# Auth (set true for production)
+AUTH_ENABLED=false
+JWT_SECRET=your-secret-key
+DATABASE_URL=sqlite+aiosqlite:///./data/engine.db
+
+# Rate Limiting
+RATE_LIMITING_ENABLED=true
+RATE_LIMIT_BACKEND=redis
+REDIS_URL=redis://localhost:6379/0
+
+# Observability
+PROMETHEUS_ENABLED=true
+LOG_LEVEL=INFO
 ```
 
 ---
@@ -309,50 +691,114 @@ pytest --cov=app --cov-report=term-missing
 
 ### Makefile Commands
 
-| Command | Description |
-|---|---|
-| `make install` | Install all dependencies (runtime + dev) |
-| `make run` | Start FastAPI dev server with auto-reload |
-| `make test` | Run pytest test suite |
-| `make lint` | Run Ruff linter |
-| `make format` | Format code with Black + Ruff auto-fix |
-| `make docker` | Build local Docker image |
-| `make compose-up` | Start services via Docker Compose |
-| `make compose-down` | Stop Docker Compose services |
-| `make clean` | Remove cache files and build artifacts |
+```bash
+make install      # Install all dependencies
+make run          # Start dev server with auto-reload
+make test         # Run pytest suite (56+ tests)
+make lint         # Ruff linting
+make format       # Black + Ruff auto-fix
+make docker       # Build Docker image
+make compose-up   # Full stack (app + Ollama + Grafana)
+make compose-down # Stop all services
+make clean        # Remove cache artifacts
+```
 
 ### Pre-commit Hooks
 
 ```bash
-# Install pre-commit hooks (one-time setup)
-pip install pre-commit
-pre-commit install
+pip install pre-commit && pre-commit install
+# Automatically runs: Ruff lint → Black format → whitespace fix on every commit
+```
 
-# Hooks run automatically on git commit:
-# - Ruff (linting + auto-fix)
-# - Black (formatting)
-# - trailing-whitespace fixer
-# - end-of-file fixer
+### Testing
+
+```bash
+pytest -v                                    # All tests
+pytest --cov=app --cov-report=term-missing   # With coverage
+pytest tests/test_health.py -v               # Specific file
 ```
 
 ---
 
-## 📜 Roadmap & Future Enhancements
+## 📚 Documentation
 
-See [ROADMAP.md](ROADMAP.md) for details on future development phases including real HTTP integrations, persistent PostgreSQL/Redis model registries, and semantic vector caching.
+| Doc | Description |
+|---|---|
+| [📖 Architecture Overview](ARCHITECTURE_OVERVIEW.md) | System design and component details |
+| [🤖 Agent Framework](docs/agents.md) | Agent lifecycle, planners, tools |
+| [🧠 Memory Platform](docs/memory.md) | 6-tier memory system |
+| [🔀 Routing Engine](docs/routing.md) | 9-stage routing pipeline |
+| [📚 Knowledge & RAG](docs/knowledge.md) | Document ingestion and retrieval |
+| [🧩 Plugin Framework](docs/plugins.md) | Building and deploying plugins |
+| [🔭 Distributed Tracing](docs/tracing.md) | OpenTelemetry setup |
+| [📦 SDKs](docs/sdk.md) | Python, TypeScript, Go SDK guides |
+| [🚨 Runbook](docs/operations/RUNBOOK.md) | Operational runbook |
+| [🔒 Security Hardening](docs/operations/SECURITY_HARDENING.md) | Production security guide |
+| [♻️ Disaster Recovery](docs/operations/DISASTER_RECOVERY.md) | DR procedures |
+| [📈 Roadmap](ROADMAP.md) | Upcoming features |
+| [📝 Changelog](CHANGELOG.md) | Version history |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome and appreciated!
+
+```bash
+# Fork → Clone → Branch
+git checkout -b feature/your-feature-name
+
+# Make changes, add tests
+pytest -v
+
+# Commit (pre-commit hooks run automatically)
+git commit -m "feat: add your feature"
+
+# Push and open a PR
+git push origin feature/your-feature-name
+```
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for our code of conduct and contribution guidelines.
+
+---
+
+## 📊 Project Stats
+
+| Metric | Count |
+|---|---|
+| Backend modules | **85** |
+| API endpoint groups | **50+** |
+| Agent planner strategies | **4** |
+| Memory tiers | **6** |
+| Routing pipeline stages | **9** |
+| Webhook event types | **19** |
+| Plugin lifecycle hooks | **10** |
+| Tracing exporters | **5** |
+| SDK languages | **4** |
+| Compliance frameworks | **4** |
+| Automated tests | **56+** |
 
 ---
 
 ## 📜 License
 
-MIT — see [LICENSE](LICENSE)
+MIT © [LLM Inference Engine Contributors](LICENSE)
 
-## Plugin Framework (Phase 4.0)
+---
 
-The LLM Inference Engine now supports an extensible AI Gateway via a production-grade plugin framework. Plugins extend the platform without modifying the core source code. See pp/plugins/examples for reference plugins.
+<div align="center">
 
-### Plugin Lifecycle
-Plugins support the following states: Install, Initialize, Enable, Disable, Uninstall.
+**Built with ❤️ for the open-source AI community**
 
-### Permission Model
-Capability-based permissions (e.g., events.publish) are enforced through a secure PluginContext injected into every plugin.
+If this project saved you time or money, please ⭐ **star the repo** — it helps others discover it!
+
+<br/>
+
+[![Star History](https://img.shields.io/github/stars/OnHighEngineer/llm-inference-engine?style=social)](https://github.com/OnHighEngineer/llm-inference-engine)
+[![Fork](https://img.shields.io/github/forks/OnHighEngineer/llm-inference-engine?style=social)](https://github.com/OnHighEngineer/llm-inference-engine/fork)
+
+<br/>
+
+*"Most developers just call OpenAI's API — this is how inference actually works at scale."*
+
+</div>
