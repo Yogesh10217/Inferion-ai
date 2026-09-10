@@ -44,7 +44,8 @@ select = ["E", "F", "W", "I"]
 ignore = []
 
 [tool.pytest.ini_options]
-asyncio_mode = "strict"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
 testpaths = ["tests"]
 
 [tool.hatch.build.targets.wheel]
