@@ -246,7 +246,11 @@ class ControlPlaneManager:
         from app.capacity_intelligence.manager import CapacityIntelligenceManager
         self.capacity_intelligence_manager = CapacityIntelligenceManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.54/5.56 Managers")
+        # Phase 5.58 Enterprise AI Platform Integration Manager
+        from app.platform_integration.manager import PlatformIntegrationManager
+        self.platform_integration_manager = PlatformIntegrationManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.58 Manager")
 
 
 

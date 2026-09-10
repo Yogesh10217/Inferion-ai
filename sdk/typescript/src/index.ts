@@ -31,9 +31,7 @@ export * from './autonomous.js';
 export * from './continuous-assurance.js';
 export * from './runtime.js';
 export * from './capacity.js';
-
-
-
+export * from './platform_integration.js';
 
 
 

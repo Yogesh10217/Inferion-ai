@@ -474,9 +474,9 @@ class ServiceContainer:
         from app.capacity_intelligence.manager import CapacityIntelligenceManager
         self.capacity_intelligence_manager = CapacityIntelligenceManager()
 
-
-
-
+        # Phase 5.58 Enterprise AI Platform Integration Manager
+        from app.platform_integration.manager import PlatformIntegrationManager
+        self.platform_integration_manager = PlatformIntegrationManager()
 
 
 

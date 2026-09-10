@@ -155,8 +155,8 @@ class LLMEngineClient:
         self.runtime = RuntimeIntelligenceClient(self.base_url, api_key or "")
         from .capacity_intelligence import CapacityIntelligenceClient
         self.capacity = CapacityIntelligenceClient(self.base_url, api_key or "")
-
-
+        from .platform_integration import PlatformIntegrationClient
+        self.integration = PlatformIntegrationClient(self.base_url, api_key or "")
 
 
 
