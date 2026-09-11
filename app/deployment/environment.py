@@ -41,6 +41,7 @@ class EnvironmentManager:
             messaging_enabled=os.getenv("MESSAGING_ENABLED", "true").lower() in ("true", "1"),
             observability_enabled=os.getenv("OBSERVABILITY_ENABLED", "true").lower() in ("true", "1"),
             log_level=os.getenv("LOG_LEVEL", "INFO").upper(),
+            redis_url=os.getenv("REDIS_URL") or "redis://localhost:6379/0",
             shutdown_timeout=int(os.getenv("SHUTDOWN_TIMEOUT", "30")),
             startup_timeout=int(os.getenv("STARTUP_TIMEOUT", "30")),
         )

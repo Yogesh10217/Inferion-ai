@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import hashlib
 import os
 from typing import Optional, Protocol
+
 
 from app.deployment.exceptions import SecretAccessError
 
@@ -49,3 +51,32 @@ class VaultSecretProvider:
         if not val:
             raise SecretAccessError(f"Required Vault secret key '{key}' is missing")
         return val
+
+
+class SecretsSanitizer:
+    """SHA-256 backed string sanitizer masking passwords, keys, and tokens."""
+
+    import re
+    SECRET_PATTERN = re.compile(
+        r"(password|passwd|secret|jwt_secret|api_key|token|private_key|auth_token)[:=]\s*([^\s,;&'\"]+)",
+        re.IGNORECASE,
+    )
+    URL_CREDS_PATTERN = re.compile(r"://([^:@]+):([^@]+)@", re.IGNORECASE)
+
+    @classmethod
+    def sanitize_string(cls, input_str: str) -> str:
+        if not input_str:
+            return ""
+        # Redact URL credentials: postgresql://user:password@host -> postgresql://user:[REDACTED]@host
+        sanitized = cls.URL_CREDS_PATTERN.sub(r"://\1:[REDACTED]@", input_str)
+
+        # Redact key-value secrets
+        def replace_kv(match):
+            key = match.group(1)
+            val = match.group(2)
+            val_hash = hashlib.sha256(val.encode("utf-8")).hexdigest()[:8]
+            return f"{key}=[REDACTED:{val_hash}]"
+
+        sanitized = cls.SECRET_PATTERN.sub(replace_kv, sanitized)
+        return sanitized
+

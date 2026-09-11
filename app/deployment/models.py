@@ -78,8 +78,18 @@ class DeploymentReleaseStatus(str, Enum):
 class PlatformReadinessClassification(str, Enum):
     ARCHITECTURALLY_READY = "ARCHITECTURALLY_READY"
     DEPLOYMENT_FOUNDATION_READY = "DEPLOYMENT_FOUNDATION_READY"
+    CONTAINER_CONFIGURATION_READY = "CONTAINER_CONFIGURATION_READY"
+    STAGING_CONFIGURATION_READY = "STAGING_CONFIGURATION_READY"
+    CONTAINER_BUILD_VALIDATED = "CONTAINER_BUILD_VALIDATED"
+    CONTAINER_RUNTIME_VALIDATED = "CONTAINER_RUNTIME_VALIDATED"
+    STAGING_DEPLOYMENT_EXECUTED = "STAGING_DEPLOYMENT_EXECUTED"
+    STAGING_HEALTH_VALIDATED = "STAGING_HEALTH_VALIDATED"
+    STAGING_VALIDATED = "STAGING_VALIDATED"
     STAGING_READY = "STAGING_READY"
     PRODUCTION_READY = "PRODUCTION_READY"
+    PARTIALLY_VALIDATED = "PARTIALLY_VALIDATED"
+    RUNTIME_BLOCKED = "RUNTIME_BLOCKED"
+
 
 
 @dataclass
@@ -96,6 +106,7 @@ class EnvironmentConfig:
     messaging_enabled: bool
     observability_enabled: bool
     log_level: str
+    redis_url: str = "redis://localhost:6379/0"
     shutdown_timeout: int = 30
     startup_timeout: int = 30
     metadata: Dict[str, Any] = field(default_factory=dict)

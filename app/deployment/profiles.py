@@ -60,7 +60,7 @@ class DeploymentProfile:
                 strict_validation=True,
                 allow_fallback_secrets=False,
                 require_database=True,
-                require_cache=False,
+                require_cache=True,
                 require_messaging=False,
                 require_observability=True,
                 min_log_level="INFO",

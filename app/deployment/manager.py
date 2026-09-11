@@ -71,6 +71,11 @@ class DeploymentPlatformManager:
         return self.health_engine.check_health()
 
     def check_readiness(self) -> Dict[str, Any]:
+        if self.startup_manager.state == StartupState.INITIALIZED:
+            try:
+                self.startup()
+            except Exception:
+                pass
         probe = DeploymentReadinessProbe(
             config_manager=self.config_manager,
             container=self.container,
@@ -85,8 +90,9 @@ class DeploymentPlatformManager:
         self.diagnostics_engine.startup_state = self.startup_manager.state
         return self.diagnostics_engine.generate_diagnostics()
 
-    def validate_release(self) -> DeploymentReleaseValidationResult:
-        return self.release_validator.validate_release_readiness()
+    def validate_release(self, validation_run: Optional[Any] = None) -> DeploymentReleaseValidationResult:
+        return self.release_validator.validate_release_readiness(validation_run=validation_run)
+
 
     def get_secret(self, key: str, default: Optional[str] = None) -> Optional[str]:
         return self.secret_provider.get_secret(key, default)

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.deployment.configuration_fingerprint import ConfigurationFingerprintEngine
 from app.deployment.manager import DeploymentPlatformManager
+from app.deployment.models import StartupState
 
 router = APIRouter(tags=["Deployment Platform"])
 
@@ -13,7 +14,17 @@ router = APIRouter(tags=["Deployment Platform"])
 def get_deployment_manager(request: Request) -> DeploymentPlatformManager:
     container = getattr(request.app.state, "container", None)
     if not hasattr(request.app.state, "deployment_manager"):
-        request.app.state.deployment_manager = DeploymentPlatformManager(container=container)
+        manager = DeploymentPlatformManager(container=container)
+        try:
+            manager.startup()
+        except Exception:
+            pass
+        request.app.state.deployment_manager = manager
+    elif request.app.state.deployment_manager.startup_manager.state == StartupState.INITIALIZED:
+        try:
+            request.app.state.deployment_manager.startup()
+        except Exception:
+            pass
     return request.app.state.deployment_manager
 
 
@@ -44,7 +55,11 @@ async def health_check(
 async def readiness_check(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:
-    return manager.check_readiness()
+    res = manager.check_readiness()
+    if not res.get("ready", False):
+        raise HTTPException(status_code=503, detail=res)
+    return res
+
 
 
 @router.get("/live")

@@ -30,6 +30,7 @@ class DeploymentDependencyValidator:
         cache_res = CacheDependencyValidator.validate_cache(
             enabled=config.cache_enabled,
             required=profile.require_cache,
+            redis_url=config.redis_url,
         )
         results.append(cache_res)
 

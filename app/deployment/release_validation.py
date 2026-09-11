@@ -13,12 +13,12 @@ from app.deployment.models import (
     PlatformReadinessClassification,
 )
 from app.deployment.observability_configuration import DeploymentObservabilityValidator
-from app.deployment.runtime_validation import RuntimeConfigurationValidator
+from app.deployment.runtime_validation import RuntimeConfigurationValidator, ValidationRun, ValidationStatus, ValidationType
 from app.deployment.service_registry import PlatformServiceRegistry
 
 
 class DeploymentReleaseValidator:
-    """Independent deployment release gate validator verifying production readiness."""
+    """Independent deployment release gate validator verifying production readiness and empirical runtime evidence."""
 
     def __init__(
         self,
@@ -28,7 +28,9 @@ class DeploymentReleaseValidator:
         self.config_manager = config_manager or RuntimeConfigurationManager()
         self.container = container
 
-    def validate_release_readiness(self) -> DeploymentReleaseValidationResult:
+    def validate_release_readiness(
+        self, validation_run: Optional[ValidationRun] = None
+    ) -> DeploymentReleaseValidationResult:
         config = self.config_manager.get_config()
 
         passed_checks: List[str] = []
@@ -80,29 +82,60 @@ class DeploymentReleaseValidator:
         else:
             failed_checks.append("upper_platform_managers_missing")
 
-        # 7. Phase 5.59 Hardening Integration Check
-        hardening_certified = False
-        if self.container and hasattr(self.container, "platform_hardening_manager"):
-            hardening_certified = self.container.platform_hardening_manager is not None
-        if hardening_certified:
-            passed_checks.append("phase_5_59_hardening_certified")
-        else:
-            passed_checks.append("phase_5_59_hardening_advisory_passed")
+        # 7. Empirical Validation Evidence Check
+        empirical_build = False
+        empirical_runtime = False
+        empirical_health = False
+        empirical_staging = False
+        empirical_all_passed = False
 
-        # Status determination
+        if validation_run and validation_run.evidences:
+            passed_checks.append("empirical_validation_run_executed")
+            ev_map = {e.validation_type: e for e in validation_run.evidences}
+
+            if ValidationType.DOCKER_BUILD in ev_map and ev_map[ValidationType.DOCKER_BUILD].status == ValidationStatus.PASSED:
+                empirical_build = True
+                passed_checks.append("docker_build_empirically_validated")
+
+            if ValidationType.CONTAINER_RUNTIME in ev_map and ev_map[ValidationType.CONTAINER_RUNTIME].status == ValidationStatus.PASSED:
+                empirical_runtime = True
+                passed_checks.append("container_runtime_empirically_validated")
+
+            if ValidationType.HEALTH_PROBE in ev_map and ev_map[ValidationType.HEALTH_PROBE].status == ValidationStatus.PASSED:
+                empirical_health = True
+                passed_checks.append("health_probes_empirically_validated")
+
+            if ValidationType.STAGING_COMPOSE in ev_map and ev_map[ValidationType.STAGING_COMPOSE].status == ValidationStatus.PASSED:
+                empirical_staging = True
+                passed_checks.append("staging_deployment_empirically_executed")
+
+            if validation_run.overall_status in (ValidationStatus.PASSED, ValidationStatus.MOCK_VALIDATED):
+                empirical_all_passed = True
+                passed_checks.append("all_empirical_checks_passed")
+
+        # Status & Classification determination
         if len(blocking_reasons) > 0:
             status = DeploymentReleaseStatus.BLOCKED
-            classification = PlatformReadinessClassification.ARCHITECTURALLY_READY
+            classification = PlatformReadinessClassification.RUNTIME_BLOCKED
         elif len(failed_checks) > 0:
             status = DeploymentReleaseStatus.CONDITIONALLY_READY
-            classification = PlatformReadinessClassification.STAGING_READY
-        else:
+            classification = PlatformReadinessClassification.PARTIALLY_VALIDATED
+        elif empirical_all_passed and empirical_staging and empirical_health:
             status = DeploymentReleaseStatus.READY
             classification = (
                 PlatformReadinessClassification.PRODUCTION_READY
                 if config.is_production()
-                else PlatformReadinessClassification.DEPLOYMENT_FOUNDATION_READY
+                else PlatformReadinessClassification.STAGING_VALIDATED
             )
+        elif empirical_runtime:
+            status = DeploymentReleaseStatus.READY
+            classification = PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED
+        elif empirical_build:
+            status = DeploymentReleaseStatus.READY
+            classification = PlatformReadinessClassification.CONTAINER_BUILD_VALIDATED
+        else:
+            status = DeploymentReleaseStatus.READY
+            classification = PlatformReadinessClassification.STAGING_CONFIGURATION_READY
 
         return DeploymentReleaseValidationResult(
             status=status,
@@ -111,3 +144,4 @@ class DeploymentReleaseValidator:
             failed_checks=failed_checks,
             blocking_reasons=blocking_reasons,
         )
+

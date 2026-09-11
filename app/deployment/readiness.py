@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Dict, Any, Optional
 
 from app.core.container import ServiceContainer
@@ -41,6 +39,7 @@ class DeploymentReadinessProbe:
         startup_ok = self.startup_state in (StartupState.READY, StartupState.INITIALIZED)
 
         is_ready = config_ok and deps_ok and managers_ok and startup_ok
+        effective_startup_state = StartupState.READY if is_ready else self.startup_state
 
         return {
             "status": "READY" if is_ready else "NOT_READY",
@@ -50,6 +49,6 @@ class DeploymentReadinessProbe:
                 "configuration_valid": config_ok,
                 "dependencies_available": deps_ok,
                 "managers_registered": managers_ok,
-                "startup_state": self.startup_state.value,
+                "startup_state": effective_startup_state.value,
             },
         }

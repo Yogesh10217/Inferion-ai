@@ -145,11 +145,19 @@ async def lifespan(app: FastAPI):
         container.plugin_manager = PluginManager()
         await container.plugin_manager.initialize()
 
+        # Initialize Deployment Platform Manager & Execute Startup State Machine
+        from app.deployment.manager import DeploymentPlatformManager
+        app.state.deployment_manager = DeploymentPlatformManager(container=container)
+        app.state.deployment_manager.startup()
+
     yield
 
     if hasattr(app.state, "container"):
         container = app.state.container
         container.logger.info("Shutting down the application and releasing resources...")
+        
+        if hasattr(app.state, "deployment_manager"):
+            app.state.deployment_manager.shutdown()
         
         # Emit system.shutdown event
         if hasattr(container, "event_publisher"):
