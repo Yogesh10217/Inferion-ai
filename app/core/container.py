@@ -478,6 +478,10 @@ class ServiceContainer:
         from app.platform_integration.manager import PlatformIntegrationManager
         self.platform_integration_manager = PlatformIntegrationManager()
 
+        # Phase 5.59 Enterprise AI Platform Hardening Manager
+        from app.platform_hardening.manager import PlatformHardeningManager
+        self.platform_hardening_manager = PlatformHardeningManager()
+
 
 
 

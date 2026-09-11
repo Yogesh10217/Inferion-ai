@@ -85,6 +85,7 @@ class CircularDependencyValidator:
         "RuntimeIntelligenceManager",
         "CapacityIntelligenceManager",
         "PlatformIntegrationManager",
+        "PlatformHardeningManager",
     }
 
     PROHIBITED_MODULES = {
@@ -114,6 +115,7 @@ class CircularDependencyValidator:
         "app.runtime_intelligence",
         "app.capacity_intelligence",
         "app.platform_integration",
+        "app.platform_hardening",
     }
 
 

@@ -88,6 +88,7 @@ from app.api.v1.reliability_intelligence import router as reliability_intelligen
 from app.api.v1.runtime_intelligence import router as runtime_intelligence_router
 from app.api.v1.capacity_intelligence import router as capacity_intelligence_router
 from app.api.v1.platform_integration import router as platform_integration_router
+from app.api.v1.platform_hardening import router as platform_hardening_router
 
 
 
@@ -259,6 +260,7 @@ def create_app() -> FastAPI:
     app.include_router(runtime_intelligence_router)
     app.include_router(capacity_intelligence_router)
     app.include_router(platform_integration_router)
+    app.include_router(platform_hardening_router)
 
 
 

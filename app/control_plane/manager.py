@@ -250,7 +250,11 @@ class ControlPlaneManager:
         from app.platform_integration.manager import PlatformIntegrationManager
         self.platform_integration_manager = PlatformIntegrationManager()
 
-        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.58 Manager")
+        # Phase 5.59 Enterprise AI Platform Hardening Manager
+        from app.platform_hardening.manager import PlatformHardeningManager
+        self.platform_hardening_manager = PlatformHardeningManager()
+
+        logger.info("[CONTROL PLANE MASTER] ControlPlaneManager initialized with all platform control subsystems & Phase 5.59 Manager")
 
 
 
