@@ -482,6 +482,10 @@ class ServiceContainer:
         from app.platform_hardening.manager import PlatformHardeningManager
         self.platform_hardening_manager = PlatformHardeningManager()
 
+        # Phase 5.60 Enterprise AI Production Deployment Platform Manager
+        from app.deployment.manager import DeploymentPlatformManager
+        self.deployment_manager = DeploymentPlatformManager(container=self)
+
 
 
 
