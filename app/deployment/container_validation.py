@@ -1,9 +1,40 @@
 from __future__ import annotations
 
 import os
+import subprocess
 from typing import Any, Dict
 
 from app.deployment.models import ArtifactIntegrityStatus, DependencyStatus
+
+
+class DockerPreflightValidator:
+    """Performs real preflight checks to determine host Docker daemon and Docker Compose availability."""
+
+    @classmethod
+    def check_docker_daemon(cls) -> Dict[str, Any]:
+        try:
+            res = subprocess.run(["docker", "info"], capture_output=True, text=True, timeout=5)
+            if res.returncode == 0:
+                return {
+                    "available": True,
+                    "status": "DOCKER_DAEMON_AVAILABLE",
+                    "output": res.stdout[:500],
+                    "returncode": 0,
+                }
+            else:
+                return {
+                    "available": False,
+                    "status": "DOCKER_DAEMON_NOT_AVAILABLE",
+                    "output": res.stderr[:500] or res.stdout[:500],
+                    "returncode": res.returncode,
+                }
+        except Exception as e:
+            return {
+                "available": False,
+                "status": "DOCKER_DAEMON_NOT_AVAILABLE",
+                "output": str(e),
+                "returncode": -1,
+            }
 
 
 class ContainerValidationEngine:

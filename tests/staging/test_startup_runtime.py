@@ -22,8 +22,10 @@ def test_startup_lifecycle_successful():
     assert config.environment == DeploymentEnvironment.STAGING
 
 
-def test_startup_rejected_when_debug_in_production():
+def test_startup_rejected_when_debug_in_production(monkeypatch):
     """Verifies that debug mode in PRODUCTION environment causes startup rejection."""
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://app_user:app_pass@localhost:5432/llm_engine_prod")
+    monkeypatch.setenv("JWT_SECRET", "valid-complex-production-secret-999")
     env_mgr = EnvironmentManager(override_env="PRODUCTION")
     cfg_mgr = RuntimeConfigurationManager(env_mgr)
     config = cfg_mgr.get_config()
