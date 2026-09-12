@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     ports:
       - "8003:8000"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     environment:
       - ENVIRONMENT=PRODUCTION
       - DEPLOYMENT_MODE=SIMULATION
@@ -15,7 +16,7 @@ services:
       - PORT=8000
       - LOG_LEVEL=INFO
       - AUTH_ENABLED=true
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@simulation-db:5432/llm_engine_sim
+      - DATABASE_URL=postgresql+asyncpg://sim_user:sim_secure_pass_9921@simulation-db:5432/llm_engine_sim
       - REDIS_URL=redis://simulation-redis:6379/0
     depends_on:
       simulation-db:
@@ -31,12 +32,12 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_DB=llm_engine_sim
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=sim_user
+      - POSTGRES_PASSWORD=sim_secure_pass_9921
     networks:
       - production-simulation-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U sim_user"]
       interval: 5s
       timeout: 5s
       retries: 5
