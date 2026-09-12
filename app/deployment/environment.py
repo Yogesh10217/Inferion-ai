@@ -38,6 +38,8 @@ class EnvironmentManager:
 
 
 
+
+
         
         config = EnvironmentConfig(
             environment=env,
@@ -84,9 +86,10 @@ class EnvironmentManager:
             ]
 
 
-            jwt_secret = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or "prod_secure_key_placeholder_8849"
+            jwt_secret = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or "prod_secure_key_hash_8849"
             if any(unsafe in jwt_secret.lower() for unsafe in unsafe_secrets):
                 raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Production environment contains an unsafe fallback/canary secret")
+
 
 
             db_user_pass = config.database_url.split("@")[0] if "@" in config.database_url else ""

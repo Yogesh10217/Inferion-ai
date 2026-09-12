@@ -80,3 +80,18 @@ class SecretsSanitizer:
         sanitized = cls.SECRET_PATTERN.sub(replace_kv, sanitized)
         return sanitized
 
+    @classmethod
+    def sanitize_text(cls, input_str: str) -> str:
+        return cls.sanitize_string(input_str)
+
+    @classmethod
+    def sanitize_structure(cls, data: Any) -> Any:
+        if isinstance(data, str):
+            return cls.sanitize_string(data)
+        elif isinstance(data, dict):
+            return {k: cls.sanitize_structure(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [cls.sanitize_structure(item) for item in data]
+        return data
+
+

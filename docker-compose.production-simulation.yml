@@ -1,0 +1,73 @@
+services:
+  simulation-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: production-simulation-app
+    restart: unless-stopped
+    ports:
+      - "8003:8000"
+    environment:
+      - ENVIRONMENT=PRODUCTION
+      - DEPLOYMENT_MODE=SIMULATION
+      - DEBUG=false
+      - HOST=0.0.0.0
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - AUTH_ENABLED=true
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@simulation-db:5432/llm_engine_sim
+      - REDIS_URL=redis://simulation-redis:6379/0
+    depends_on:
+      simulation-db:
+        condition: service_healthy
+      simulation-redis:
+        condition: service_healthy
+    networks:
+      - production-simulation-network
+
+  simulation-db:
+    image: postgres:16-alpine
+    container_name: production-simulation-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=llm_engine_sim
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - production-simulation-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  simulation-redis:
+    image: redis:7.2.4-alpine
+    container_name: production-simulation-redis
+    restart: unless-stopped
+    networks:
+      - production-simulation-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  simulation-prometheus:
+    image: prom/prometheus:v2.51.1
+    container_name: production-simulation-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - production-simulation-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  production-simulation-network:
+    driver: bridge
+    name: production-simulation-network

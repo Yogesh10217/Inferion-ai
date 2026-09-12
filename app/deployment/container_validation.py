@@ -12,15 +12,48 @@ class ContainerValidationEngine:
     FORBIDDEN_PROD_TAGS = {"latest", "dev", "development", "test", "local", ""}
 
     @classmethod
+    def validate_image_digest(cls, image_digest: str) -> tuple[bool, str]:
+        if not image_digest or image_digest.strip() == "" or image_digest == "NOT_AVAILABLE":
+            return False, "Image digest is missing or not available"
+        raw_digest = image_digest.strip()
+        if raw_digest.startswith("@"):
+            raw_digest = raw_digest[1:]
+        if not raw_digest.startswith("sha256:"):
+            return False, "Image digest must use sha256: prefix"
+        hex_part = raw_digest.split("sha256:")[-1]
+        if len(hex_part) != 64 or not all(c in "0123456789abcdefABCDEF" for c in hex_part):
+            return False, "Image digest sha256 hash must contain exactly 64 hexadecimal characters"
+        return True, "Image digest format is valid sha256 immutable digest"
+
+    @classmethod
+    def validate_runtime_artifact(cls, expected_digest: str, actual_runtime_digest: str) -> tuple[bool, str]:
+        digest_valid, msg = cls.validate_image_digest(expected_digest)
+        if not digest_valid:
+            return False, f"Expected digest invalid: {msg}"
+        actual_valid, msg_act = cls.validate_image_digest(actual_runtime_digest)
+        if not actual_valid:
+            return False, f"Actual runtime digest invalid: {msg_act}"
+        exp_clean = expected_digest.strip().lstrip("@")
+        act_clean = actual_runtime_digest.strip().lstrip("@")
+        if exp_clean.lower() != act_clean.lower():
+            return False, f"DEPLOYMENT_ARTIFACT_MISMATCH: Expected digest {exp_clean} does not match runtime digest {act_clean}"
+        return True, "Runtime artifact digest matches expected deployment identity"
+
+    @classmethod
     def validate_image_tag(cls, image_tag: str, is_production: bool = False) -> tuple[bool, str]:
         if not image_tag or image_tag.strip() == "":
             return False, "Image tag is empty"
-        if "@sha256:" in image_tag.lower():
-            return True, "Image tag is an immutable sha256 digest reference"
+        if "@sha256:" in image_tag.lower() or "sha256:" in image_tag.lower():
+            valid_dig, msg_dig = cls.validate_image_digest(image_tag.split("@")[-1] if "@" in image_tag else image_tag)
+            if valid_dig:
+                return True, "Image tag is an immutable sha256 digest reference"
+            else:
+                return False, f"Invalid image digest reference in tag: {msg_dig}"
         tag_clean = image_tag.split(":")[-1].strip().lower() if ":" in image_tag else image_tag.strip().lower()
         if is_production and (tag_clean in cls.FORBIDDEN_PROD_TAGS or image_tag.strip().lower() in cls.FORBIDDEN_PROD_TAGS):
             return False, f"Ambiguous or forbidden image tag '{image_tag}' rejected in PRODUCTION environment"
         return True, "Image tag is production-safe"
+
 
     @classmethod
     def validate_container_environment(cls, image_tag: str = "enterprise-ai-platform:5.61", is_production: bool = False) -> Dict[str, Any]:

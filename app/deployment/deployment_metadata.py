@@ -14,7 +14,7 @@ class DeploymentIdentityBuilder:
     """Builds and validates deterministic, sanitized DeploymentIdentity structures."""
 
     @classmethod
-    def build_identity(cls, config: EnvironmentConfig) -> DeploymentIdentity:
+    def build_identity(cls, config: EnvironmentConfig, require_digest: bool = False) -> DeploymentIdentity:
         if not config.deployment_version or config.deployment_version.strip() == "":
             raise ConfigurationValidationError("Deployment version cannot be empty")
 
@@ -29,6 +29,11 @@ class DeploymentIdentityBuilder:
         if not tag_valid:
             raise ConfigurationValidationError(tag_msg)
 
+        if require_digest or (image_digest and image_digest != "NOT_AVAILABLE"):
+            dig_valid, dig_msg = ContainerValidationEngine.validate_image_digest(image_digest)
+            if not dig_valid:
+                raise ConfigurationValidationError(f"Invalid image digest: {dig_msg}")
+
         return DeploymentIdentity(
             application_version=app_version,
             deployment_version=dep_version,
@@ -38,6 +43,7 @@ class DeploymentIdentityBuilder:
             image_tag=image_tag,
             image_digest=image_digest,
         )
+
 
 
 class DeploymentMetadataProvider:
