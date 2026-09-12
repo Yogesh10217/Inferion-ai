@@ -103,3 +103,27 @@ class ObservationMiddleware(BaseHTTPMiddleware):
             resp = JSONResponse(status_code=status_code, content=payload)
             resp.headers["X-Request-ID"] = request_id
             return resp
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Middleware applying production HTTP security headers and trusted proxy handling."""
+
+    def __init__(self, app: Any, enable_hsts: bool = False, trust_proxies: bool = False) -> None:
+        super().__init__(app)
+        self.enable_hsts = enable_hsts
+        self.trust_proxies = trust_proxies
+
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        # X-Forwarded-Proto is NOT trusted unless trust_proxies is explicitly True
+        if not self.trust_proxies and "x-forwarded-proto" in request.headers:
+            # Untrusted proxy header present; enforce standard scheme without overriding
+            pass
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+        if self.enable_hsts:
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        return response
+

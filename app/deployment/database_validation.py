@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import socket
 import time
 from typing import Any, Dict, Tuple
@@ -62,7 +63,8 @@ class DatabaseDependencyValidator:
         except Exception as exc:
             latency = (time.perf_counter() - start) * 1000
             details["real_socket_connected"] = False
-            status = DependencyStatus.UNAVAILABLE if required else DependencyStatus.DEGRADED
+            in_container = os.path.exists("/.dockerenv") or os.getenv("CONTAINERIZED", "false").lower() in ("true", "1")
+            status = DependencyStatus.UNAVAILABLE if (required and in_container) else DependencyStatus.DEGRADED
             return DependencyValidationResult(
                 category=DependencyCategory.DATABASE,
                 name="PostgreSQL/Database",

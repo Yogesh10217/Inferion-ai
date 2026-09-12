@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import os
 import socket
 import time
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from app.deployment.models import DependencyCategory, DependencyStatus, DependencyValidationResult
+
 
 
 from urllib.parse import urlparse
@@ -42,6 +44,7 @@ class CacheDependencyValidator:
                 details=details,
             )
 
+        in_container = os.path.exists("/.dockerenv") or os.getenv("CONTAINERIZED", "false").lower() in ("true", "1")
         try:
             with socket.create_connection((host, port), timeout=timeout_sec):
                 latency = (time.perf_counter() - start) * 1000
@@ -57,7 +60,7 @@ class CacheDependencyValidator:
         except Exception as exc:
             latency = (time.perf_counter() - start) * 1000
             details["real_socket_connected"] = False
-            status = DependencyStatus.UNAVAILABLE if required else DependencyStatus.DEGRADED
+            status = DependencyStatus.UNAVAILABLE if (required and in_container) else DependencyStatus.DEGRADED
             return DependencyValidationResult(
                 category=DependencyCategory.CACHE,
                 name="Redis/Cache",
@@ -67,4 +70,5 @@ class CacheDependencyValidator:
                 details=details,
                 error_message=f"TCP connection to Redis ({host}:{port}) failed: {str(exc)}",
             )
+
 

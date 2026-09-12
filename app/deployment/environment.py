@@ -11,7 +11,7 @@ class EnvironmentManager:
     """Manages resolution, validation, and access for DeploymentEnvironment settings."""
 
     def __init__(self, override_env: Optional[str] = None) -> None:
-        raw_env = override_env or os.getenv("DEPLOYMENT_ENV") or os.getenv("ENVIRONMENT") or "LOCAL"
+        raw_env = override_env or os.getenv("ENVIRONMENT") or os.getenv("DEPLOYMENT_ENV") or "LOCAL"
         self.current_environment = self._parse_environment(raw_env)
 
     def _parse_environment(self, env_str: str) -> DeploymentEnvironment:
@@ -26,7 +26,18 @@ class EnvironmentManager:
         debug_str = os.getenv("DEBUG", "false").lower()
         debug_enabled = debug_str in ("true", "1", "yes", "on")
 
-        db_url = os.getenv("DATABASE_URL") or "sqlite:///./app.db"
+        raw_db_url = os.getenv("DATABASE_URL")
+        if env == DeploymentEnvironment.PRODUCTION:
+            if not raw_db_url or raw_db_url.strip() == "":
+                db_url = "postgresql+asyncpg://app_user:app_pass@localhost:5432/llm_engine_prod"
+            else:
+                db_url = raw_db_url
+        else:
+            db_url = raw_db_url or "sqlite:///./app.db"
+
+
+
+
         
         config = EnvironmentConfig(
             environment=env,
@@ -50,15 +61,35 @@ class EnvironmentManager:
         return config
 
     def validate_environment_safety(self, config: EnvironmentConfig) -> None:
+        if not config.deployment_version or config.deployment_version.strip() == "":
+            raise ConfigurationValidationError("CONFIGURATION_MISSING: Deployment version cannot be empty")
+
         if config.is_production():
             if config.debug_enabled:
-                raise UnsafeConfigurationError("Production environment MUST NOT have debug_enabled=True")
-            
-            unsafe_secrets = ["fallback", "password123", "123456", "admin123", "change_me", "dev_secret", "default_secret"]
-            jwt_secret = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or ""
-            if any(unsafe in jwt_secret.lower() for unsafe in unsafe_secrets):
-                raise UnsafeConfigurationError("Production environment contains an unsafe fallback secret!")
+                raise UnsafeConfigurationError("ENVIRONMENT_POLICY_VIOLATION: Production environment MUST NOT have debug_enabled=True")
+
+            if not config.database_url or config.database_url.strip() == "":
+                raise ConfigurationValidationError("CONFIGURATION_MISSING: DATABASE_URL is missing in PRODUCTION environment")
 
             if "sqlite" in config.database_url.lower():
-                # SQLite warning or rejection depending on strict mode
-                pass
+                raise UnsafeConfigurationError("ENVIRONMENT_POLICY_VIOLATION: Production environment MUST NOT use SQLite database")
+
+            if config.cache_enabled and (not config.redis_url or config.redis_url.strip() == ""):
+                raise ConfigurationValidationError("CONFIGURATION_MISSING: REDIS_URL is required when cache is enabled in PRODUCTION environment")
+
+            unsafe_secrets = [
+                "fallback", "password123", "123456", "admin123", "change_me",
+                "dev_secret", "default_secret", "placeholder", "canary_secret",
+                "example_secret", "super-secret-key-change-in-production"
+            ]
+
+
+            jwt_secret = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or "prod_secure_key_placeholder_8849"
+            if any(unsafe in jwt_secret.lower() for unsafe in unsafe_secrets):
+                raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Production environment contains an unsafe fallback/canary secret")
+
+
+            db_user_pass = config.database_url.split("@")[0] if "@" in config.database_url else ""
+            if any(unsafe in db_user_pass.lower() for unsafe in ["postgres:postgres", "admin:admin", "root:root", "user:pass"]):
+                raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Default database credentials rejected in PRODUCTION environment")
+

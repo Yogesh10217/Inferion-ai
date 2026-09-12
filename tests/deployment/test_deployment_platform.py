@@ -55,6 +55,7 @@ def test_2_production_configuration_validation():
     os.environ["DEPLOYMENT_ENV"] = "PRODUCTION"
     os.environ["DEBUG"] = "false"
     os.environ["JWT_SECRET"] = "SuperRandomProductionSecretKey998877665544332211"
+    os.environ["DATABASE_URL"] = "postgresql+asyncpg://prod_user:prod_pass@localhost:5432/db"
     
     mgr = EnvironmentManager()
     cfg = mgr.load_environment_config()

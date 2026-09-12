@@ -75,6 +75,33 @@ class DeploymentReleaseStatus(str, Enum):
     BLOCKED = "BLOCKED"
 
 
+class DeploymentDecision(str, Enum):
+    ALLOW = "ALLOW"
+    BLOCK = "BLOCK"
+    ROLLBACK_REQUIRED = "ROLLBACK_REQUIRED"
+    MANUAL_REVIEW_REQUIRED = "MANUAL_REVIEW_REQUIRED"
+    NOT_EXECUTED = "NOT_EXECUTED"
+
+
+class MigrationSafetyStatus(str, Enum):
+    MIGRATION_SYSTEM_AVAILABLE = "MIGRATION_SYSTEM_AVAILABLE"
+    MIGRATION_SYSTEM_NOT_CONFIGURED = "MIGRATION_SYSTEM_NOT_CONFIGURED"
+    MIGRATION_CONFIGURATION_VALIDATED = "MIGRATION_CONFIGURATION_VALIDATED"
+    MIGRATION_RUNTIME_NOT_EXECUTED = "MIGRATION_RUNTIME_NOT_EXECUTED"
+    MIGRATION_STATE_UNKNOWN = "MIGRATION_STATE_UNKNOWN"
+
+
+class RollbackTrigger(str, Enum):
+    CONFIGURATION_FAILURE = "configuration_failure"
+    READINESS_FAILURE = "readiness_failure"
+    HEALTH_REGRESSION = "health_regression"
+    DEPENDENCY_FAILURE = "dependency_failure"
+    CONTAINER_FAILURE = "container_failure"
+    MANAGER_REGISTRATION_FAILURE = "manager_registration_failure"
+    SECURITY_POLICY_VIOLATION = "security_policy_violation"
+    SECRET_EXPOSURE_DETECTION = "secret_exposure_detection"
+
+
 class PlatformReadinessClassification(str, Enum):
     ARCHITECTURALLY_READY = "ARCHITECTURALLY_READY"
     DEPLOYMENT_FOUNDATION_READY = "DEPLOYMENT_FOUNDATION_READY"
@@ -86,10 +113,83 @@ class PlatformReadinessClassification(str, Enum):
     STAGING_HEALTH_VALIDATED = "STAGING_HEALTH_VALIDATED"
     STAGING_VALIDATED = "STAGING_VALIDATED"
     STAGING_READY = "STAGING_READY"
+    PRODUCTION_CONFIGURATION_READY = "PRODUCTION_CONFIGURATION_READY"
+    PRODUCTION_SAFETY_VALIDATED = "PRODUCTION_SAFETY_VALIDATED"
+    PRODUCTION_DEPLOYMENT_GATED = "PRODUCTION_DEPLOYMENT_GATED"
+    ROLLBACK_STRATEGY_READY = "ROLLBACK_STRATEGY_READY"
     PRODUCTION_READY = "PRODUCTION_READY"
     PARTIALLY_VALIDATED = "PARTIALLY_VALIDATED"
     RUNTIME_BLOCKED = "RUNTIME_BLOCKED"
 
+
+
+@dataclass
+class DeploymentIdentity:
+    application_version: str
+    deployment_version: str
+    build_identifier: str
+    git_revision: str
+    environment: str
+    image_tag: str = "enterprise-ai-platform:5.61"
+    image_digest: str = "NOT_AVAILABLE"
+
+    def canonical_fingerprint(self) -> str:
+        import hashlib
+        import json
+        payload = {
+            "application_version": self.application_version,
+            "deployment_version": self.deployment_version,
+            "build_identifier": self.build_identifier,
+            "git_revision": self.git_revision,
+            "environment": self.environment,
+            "image_tag": self.image_tag,
+            "image_digest": self.image_digest,
+        }
+        encoded = json.dumps(payload, sort_keys=True).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+
+@dataclass
+class DeploymentMetadata:
+    identity: DeploymentIdentity
+    generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    validation_timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    build_timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+
+@dataclass
+class DeploymentState:
+    status: str
+    identity: DeploymentIdentity
+    active_since: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class RollbackEvidence:
+    trigger: RollbackTrigger
+    detected_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    details: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class RollbackPlan:
+    trigger: RollbackTrigger
+    deployment_identity: DeploymentIdentity
+    previous_deployment_reference: str = "NO_PREVIOUS_DEPLOYMENT_REFERENCE"
+    required_operator_actions: List[str] = field(default_factory=list)
+    automatic_actions: List[str] = field(default_factory=list)
+    validation_requirements: List[str] = field(default_factory=list)
+    evidence: Optional[RollbackEvidence] = None
+    safety_classification: PlatformReadinessClassification = PlatformReadinessClassification.ROLLBACK_STRATEGY_READY
+    generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+
+@dataclass
+class RollbackState:
+    status: str = "ROLLBACK_STRATEGY_READY"
+    active_plan: Optional[RollbackPlan] = None
+    executed: bool = False
 
 
 @dataclass
@@ -181,8 +281,11 @@ class DiagnosticsReport:
 @dataclass
 class DeploymentReleaseValidationResult:
     status: DeploymentReleaseStatus
-    readiness_classification: PlatformReadinessClassification
+    decision: DeploymentDecision = DeploymentDecision.BLOCK
+    readiness_classification: PlatformReadinessClassification = PlatformReadinessClassification.RUNTIME_BLOCKED
     passed_checks: List[str] = field(default_factory=list)
     failed_checks: List[str] = field(default_factory=list)
     blocking_reasons: List[str] = field(default_factory=list)
+    migration_safety_status: MigrationSafetyStatus = MigrationSafetyStatus.MIGRATION_RUNTIME_NOT_EXECUTED
     validated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+

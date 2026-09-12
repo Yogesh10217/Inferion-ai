@@ -11,7 +11,7 @@ from app.core.config import get_settings
 from app.core.container import ServiceContainer
 from app.core.initializer import InfrastructureInitializer
 from app.core.exceptions import register_exception_handlers
-from app.core.middleware import ObservationMiddleware
+from app.core.middleware import ObservationMiddleware, SecurityHeadersMiddleware
 from app.auth.middleware import AuthenticationMiddleware, AuthorizationMiddleware
 from app.tenant.middleware import TenantMiddleware
 from app.api.auth import router as auth_router
@@ -90,25 +90,7 @@ from app.api.v1.capacity_intelligence import router as capacity_intelligence_rou
 from app.api.v1.platform_integration import router as platform_integration_router
 from app.api.v1.platform_hardening import router as platform_hardening_router
 from app.api.v1.deployment import router as deployment_router
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import os
 
 
 from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
@@ -178,18 +160,37 @@ def create_app() -> FastAPI:
     # Create service container to manage application state
     container = ServiceContainer(settings)
 
+    env_str = (os.getenv("ENVIRONMENT") or os.getenv("DEPLOYMENT_ENV") or settings.environment).upper()
+    is_prod = env_str == "PRODUCTION"
+    allow_docs = os.getenv("ALLOW_DOCS_IN_PROD", "false").lower() in ("true", "1")
+
+    docs_url = None if (is_prod and not allow_docs) else "/docs"
+    redoc_url = None if (is_prod and not allow_docs) else "/redoc"
+    openapi_url = None if (is_prod and not allow_docs) else "/openapi.json"
+
+    cors_origins = settings.cors_origins
+    if is_prod:
+        if not cors_origins or len(cors_origins) == 0:
+            raise ValueError("CORS_POLICY_VIOLATION: Allowed CORS origins cannot be empty in PRODUCTION environment")
+        for origin in cors_origins:
+            clean_o = str(origin).strip()
+            if not clean_o or clean_o == "*":
+                raise ValueError("CORS_POLICY_VIOLATION: Wildcard origin '*' or empty origin rejected in PRODUCTION environment")
+            if clean_o.lower().startswith("http://") and not (clean_o.lower().startswith("http://localhost") or clean_o.lower().startswith("http://127.0.0.1")):
+                raise ValueError(f"CORS_POLICY_VIOLATION: Unsafe HTTP origin '{clean_o}' rejected in PRODUCTION environment")
+
     app = FastAPI(
         title=settings.app_name,
         version=settings.app_version,
         debug=settings.debug,
-        docs_url="/docs",
-        redoc_url="/redoc",
-        openapi_url="/openapi.json",
+        docs_url=docs_url,
+        redoc_url=redoc_url,
+        openapi_url=openapi_url,
         lifespan=lifespan,
     )
     app.state.container = container
 
-    app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+    app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
     
     # Auth Middlewares
     app.add_middleware(BudgetMiddleware, budget_service=container.budget_service)
@@ -198,8 +199,9 @@ def create_app() -> FastAPI:
     app.add_middleware(TenantMiddleware)
     app.add_middleware(AuthenticationMiddleware)
     
-    # Observability
+    # Observability & Security Headers
     app.add_middleware(ObservationMiddleware)
+    app.add_middleware(SecurityHeadersMiddleware, enable_hsts=is_prod)
     
     # Register exception handlers
     register_exception_handlers(app)
@@ -272,31 +274,6 @@ def create_app() -> FastAPI:
     app.include_router(platform_hardening_router)
     app.include_router(deployment_router)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     if settings.auth_enabled:
         app.include_router(auth_router, prefix=settings.api_prefix)
         app.include_router(admin_router, prefix=settings.api_prefix)
