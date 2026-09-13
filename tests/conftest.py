@@ -1,5 +1,6 @@
 import os
 os.environ["AUTH_ENABLED"] = "true"
+os.environ["ALLOW_ANONYMOUS"] = "true"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
 
 try:
