@@ -21,6 +21,11 @@ class StartupLifecycleError(DeploymentError):
     pass
 
 
+class IllegalStateTransitionError(DeploymentError):
+    """Raised when illegal state transitions occur in deployment state machines."""
+    pass
+
+
 class ShutdownLifecycleError(DeploymentError):
     """Raised when error or timeout occurs during graceful process shutdown."""
     pass

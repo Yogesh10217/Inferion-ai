@@ -63,6 +63,8 @@ class SecretsSanitizer:
     )
     URL_CREDS_PATTERN = re.compile(r"://([^:@]+):([^@]+)@", re.IGNORECASE)
 
+    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production", "canary_secret"}
+
     @classmethod
     def sanitize_string(cls, input_str: str) -> str:
         if not input_str:
@@ -78,6 +80,10 @@ class SecretsSanitizer:
             return f"{key}=[REDACTED:{val_hash}]"
 
         sanitized = cls.SECRET_PATTERN.sub(replace_kv, sanitized)
+        for canary in cls.UNSAFE_CANARIES:
+            if canary in sanitized:
+                val_hash = hashlib.sha256(canary.encode("utf-8")).hexdigest()[:8]
+                sanitized = sanitized.replace(canary, f"[REDACTED:{val_hash}]")
         return sanitized
 
     @classmethod
@@ -89,7 +95,17 @@ class SecretsSanitizer:
         if isinstance(data, str):
             return cls.sanitize_string(data)
         elif isinstance(data, dict):
-            return {k: cls.sanitize_structure(v) for k, v in data.items()}
+            sanitized = {}
+            for k, v in data.items():
+                k_str = str(k)
+                k_lower = k_str.lower()
+                is_secret_key = any(s in k_lower for s in ("pass", "secret", "token", "api_key", "private_key", "auth_token", "jwt", "credential"))
+                if is_secret_key and isinstance(v, str):
+                    val_hash = hashlib.sha256(v.encode("utf-8")).hexdigest()[:8]
+                    sanitized[k_str] = f"[REDACTED:{val_hash}]"
+                else:
+                    sanitized[k_str] = cls.sanitize_structure(v)
+            return sanitized
         elif isinstance(data, list):
             return [cls.sanitize_structure(item) for item in data]
         return data
