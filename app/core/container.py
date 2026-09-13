@@ -126,6 +126,13 @@ class ServiceContainer:
         from app.services.batching.batch_executor import BatchExecutor
         from app.services.batching.batch_collector import BatchCollector
 
+        from app.resilience import CircuitBreakerRegistry, BulkheadRegistry
+        from app.services.dead_letter_queue import DeadLetterQueue
+
+        self.circuit_breaker_registry = CircuitBreakerRegistry()
+        self.bulkhead_registry = BulkheadRegistry()
+        self.dead_letter_queue = DeadLetterQueue()
+
         self.batch_config = BatchConfig(
             enabled=self.settings.batch_enabled,
             max_batch_size=self.settings.batch_max_size,
@@ -136,7 +143,10 @@ class ServiceContainer:
         self.batch_executor = BatchExecutor(
             failover_policy=self.failover_policy, 
             metrics=self.metrics_service,
-            cache_manager=self.cache_manager
+            cache_manager=self.cache_manager,
+            circuit_breaker_registry=self.circuit_breaker_registry,
+            bulkhead_registry=self.bulkhead_registry,
+            dead_letter_queue=self.dead_letter_queue
         )
         self.batch_collector = BatchCollector(
             policy=self.batch_policy,

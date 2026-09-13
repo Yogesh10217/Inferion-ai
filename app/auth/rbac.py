@@ -83,5 +83,14 @@ class RBACService:
         if not user or not user.is_active:
             return set()
         roles = {role.name for role in user.roles}
+        if user.is_admin:
+            roles.add("admin")
+            roles.add("super_admin")
+        if organization_id:
+            stmt_mem = select(Membership).where(Membership.user_id == user_id, Membership.organization_id == organization_id)
+            res_mem = await db.execute(stmt_mem)
+            mem = res_mem.scalar_one_or_none()
+            if mem and mem.status == "active" and mem.role_id:
+                roles.add(mem.role_id)
         return roles
 

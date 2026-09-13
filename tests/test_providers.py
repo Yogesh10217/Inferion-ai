@@ -19,7 +19,7 @@ async def test_openai_provider_generate_returns_standardized_response() -> None:
 
 @pytest.mark.asyncio
 async def test_ollama_provider_health_and_models() -> None:
-    provider = OllamaProvider()
+    provider = OllamaProvider(base_url="mock")
 
     assert await provider.health_check() is True
     models = await provider.list_models()

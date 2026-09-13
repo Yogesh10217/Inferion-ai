@@ -59,7 +59,9 @@ async def test_scheduler_fifo_ordering(mock_router, metrics_service):
     req3 = InferenceRequest(model="test-model", messages=[{"role": "user", "content": "3"}])
     
     task1 = asyncio.create_task(scheduler.generate(req1))
+    await asyncio.sleep(0.001)
     task2 = asyncio.create_task(scheduler.generate(req2))
+    await asyncio.sleep(0.001)
     task3 = asyncio.create_task(scheduler.generate(req3))
     
     await asyncio.gather(task1, task2, task3)

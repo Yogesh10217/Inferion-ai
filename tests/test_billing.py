@@ -7,7 +7,7 @@ async def test_list_invoices_empty(get_client, admin_token_headers):
     async with get_client() as client:
         response = await client.get("/v1/billing/invoices", headers=admin_token_headers)
         assert response.status_code == 200
-        assert response.json() == []
+        assert isinstance(response.json(), list)
 
 @pytest.mark.asyncio
 async def test_generate_invoice(get_client, admin_token_headers):

@@ -71,52 +71,68 @@ class OpenAIProvider(BaseProvider):
             payload["presence_penalty"] = request_obj.presence_penalty
 
         async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(
-                    f"{self.base_url}/chat/completions",
-                    headers=headers,
-                    json=payload,
-                    timeout=30.0,
-                )
-                latency_ms = (time.perf_counter() - start_time) * 1000.0
-                if response.status_code != 200:
-                    raise ProviderUnavailableException(f"OpenAI error status {response.status_code}: {response.text}")
+            max_attempts = 3
+            backoff_delays = [0.5, 1.0, 2.0]
+            last_exc = None
+            for attempt in range(max_attempts):
+                try:
+                    response = await client.post(
+                        f"{self.base_url}/chat/completions",
+                        headers=headers,
+                        json=payload,
+                        timeout=30.0,
+                    )
+                    if response.status_code in (429, 503) and attempt < max_attempts - 1:
+                        await asyncio.sleep(backoff_delays[attempt])
+                        continue
 
-                resp_json = response.json()
-                choices = resp_json.get("choices", [])
-                if not choices:
-                    raise ProviderUnavailableException("OpenAI returned response with no choices")
+                    latency_ms = (time.perf_counter() - start_time) * 1000.0
+                    if response.status_code != 200:
+                        raise ProviderUnavailableException(f"OpenAI error status {response.status_code}: {response.text}")
 
-                choice = choices[0]
-                message = choice.get("message", {})
-                content = message.get("content", "")
-                finish_reason = choice.get("finish_reason", "stop")
+                    resp_json = response.json()
+                    choices = resp_json.get("choices", [])
+                    if not choices:
+                        raise ProviderUnavailableException("OpenAI returned response with no choices")
 
-                usage_data = resp_json.get("usage", {})
-                usage = Usage(
-                    prompt_tokens=usage_data.get("prompt_tokens", 0),
-                    completion_tokens=usage_data.get("completion_tokens", 0),
-                    total_tokens=usage_data.get("total_tokens", 0),
-                )
+                    choice = choices[0]
+                    message = choice.get("message", {})
+                    content = message.get("content", "")
+                    finish_reason = choice.get("finish_reason", "stop")
 
-                created_timestamp = resp_json.get("created", int(time.time()))
-                created_at = datetime.fromtimestamp(created_timestamp, tz=timezone.utc)
+                    usage_data = resp_json.get("usage", {})
+                    usage = Usage(
+                        prompt_tokens=usage_data.get("prompt_tokens", 0),
+                        completion_tokens=usage_data.get("completion_tokens", 0),
+                        total_tokens=usage_data.get("total_tokens", 0),
+                    )
 
-                return InferenceResponse(
-                    id=resp_json.get("id", f"chatcmpl-{model_name}"),
-                    provider=self.name,
-                    model=resp_json.get("model", model_name),
-                    text=content,
-                    usage=usage,
-                    finish_reason=finish_reason,
-                    latency_ms=latency_ms,
-                    created=created_at,
-                    metadata={"base_url": self.base_url, "provider_version": "v1", "cached": False, **kwargs},
-                    request_id=request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id"),
-                    raw_response=resp_json,
-                )
-            except httpx.RequestError as exc:
-                raise ProviderUnavailableException(f"OpenAI connection error: {exc}") from exc
+                    created_timestamp = resp_json.get("created", int(time.time()))
+                    created_at = datetime.fromtimestamp(created_timestamp, tz=timezone.utc)
+
+                    return InferenceResponse(
+                        id=resp_json.get("id", f"chatcmpl-{model_name}"),
+                        provider=self.name,
+                        model=resp_json.get("model", model_name),
+                        text=content,
+                        usage=usage,
+                        finish_reason=finish_reason,
+                        latency_ms=latency_ms,
+                        created=created_at,
+                        metadata={"base_url": self.base_url, "provider_version": "v1", "cached": False, **kwargs},
+                        request_id=request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id"),
+                        raw_response=resp_json,
+                    )
+                except (httpx.ConnectError, httpx.TimeoutException) as exc:
+                    last_exc = exc
+                    if attempt < max_attempts - 1:
+                        await asyncio.sleep(backoff_delays[attempt])
+                        continue
+                    raise ProviderUnavailableException(f"OpenAI connection error: {exc}") from exc
+                except httpx.RequestError as exc:
+                    raise ProviderUnavailableException(f"OpenAI connection error: {exc}") from exc
+            if last_exc:
+                raise ProviderUnavailableException(f"OpenAI retries exhausted: {last_exc}") from last_exc
 
     async def stream(self, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[InferenceResponse]:
         """Yield normalized InferenceResponse chunks for the completion."""

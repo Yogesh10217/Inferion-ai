@@ -68,44 +68,60 @@ class OllamaProvider(BaseProvider):
             payload["options"] = options
 
         async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(
-                    f"{self.base_url}/api/chat",
-                    json=payload,
-                    timeout=30.0,
-                )
-                latency_ms = (asyncio.get_event_loop().time() - start_time) * 1000.0
-                if response.status_code != 200:
-                    raise ProviderUnavailableException(f"Ollama error status {response.status_code}: {response.text}")
+            max_attempts = 3
+            backoff_delays = [0.5, 1.0, 2.0]
+            last_exc = None
+            for attempt in range(max_attempts):
+                try:
+                    response = await client.post(
+                        f"{self.base_url}/api/chat",
+                        json=payload,
+                        timeout=30.0,
+                    )
+                    if response.status_code in (429, 503) and attempt < max_attempts - 1:
+                        await asyncio.sleep(backoff_delays[attempt])
+                        continue
 
-                resp_json = response.json()
-                message = resp_json.get("message", {})
-                content = message.get("content", "")
-                done_reason = resp_json.get("done_reason", "stop")
+                    latency_ms = (asyncio.get_event_loop().time() - start_time) * 1000.0
+                    if response.status_code != 200:
+                        raise ProviderUnavailableException(f"Ollama error status {response.status_code}: {response.text}")
 
-                prompt_tokens = resp_json.get("prompt_eval_count", 0)
-                completion_tokens = resp_json.get("eval_count", 0)
-                usage = Usage(
-                    prompt_tokens=prompt_tokens,
-                    completion_tokens=completion_tokens,
-                    total_tokens=prompt_tokens + completion_tokens,
-                )
+                    resp_json = response.json()
+                    message = resp_json.get("message", {})
+                    content = message.get("content", "")
+                    done_reason = resp_json.get("done_reason", "stop")
 
-                return InferenceResponse(
-                    id=f"chatcmpl-{model_name}",
-                    provider=self.name,
-                    model=model_name,
-                    text=content,
-                    usage=usage,
-                    finish_reason=done_reason or "stop",
-                    latency_ms=latency_ms,
-                    created=datetime.now(timezone.utc),
-                    metadata={"base_url": self.base_url, "provider_version": "v1", "cached": False, **kwargs},
-                    request_id=request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id"),
-                    raw_response=resp_json,
-                )
-            except httpx.RequestError as exc:
-                raise ProviderUnavailableException(f"Ollama connection error: {exc}") from exc
+                    prompt_tokens = resp_json.get("prompt_eval_count", 0)
+                    completion_tokens = resp_json.get("eval_count", 0)
+                    usage = Usage(
+                        prompt_tokens=prompt_tokens,
+                        completion_tokens=completion_tokens,
+                        total_tokens=prompt_tokens + completion_tokens,
+                    )
+
+                    return InferenceResponse(
+                        id=f"chatcmpl-{model_name}",
+                        provider=self.name,
+                        model=model_name,
+                        text=content,
+                        usage=usage,
+                        finish_reason=done_reason or "stop",
+                        latency_ms=latency_ms,
+                        created=datetime.now(timezone.utc),
+                        metadata={"base_url": self.base_url, "provider_version": "v1", "cached": False, **kwargs},
+                        request_id=request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id"),
+                        raw_response=resp_json,
+                    )
+                except (httpx.ConnectError, httpx.TimeoutException) as exc:
+                    last_exc = exc
+                    if attempt < max_attempts - 1:
+                        await asyncio.sleep(backoff_delays[attempt])
+                        continue
+                    raise ProviderUnavailableException(f"Ollama connection error: {exc}") from exc
+                except httpx.RequestError as exc:
+                    raise ProviderUnavailableException(f"Ollama connection error: {exc}") from exc
+            if last_exc:
+                raise ProviderUnavailableException(f"Ollama retries exhausted: {last_exc}") from last_exc
 
     async def stream(self, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[InferenceResponse]:
         """Yield normalized InferenceResponse chunks for the completion."""

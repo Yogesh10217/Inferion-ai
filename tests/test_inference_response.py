@@ -51,7 +51,7 @@ async def test_openai_provider_returns_inference_response() -> None:
 
 @pytest.mark.asyncio
 async def test_ollama_provider_returns_inference_response() -> None:
-    provider = OllamaProvider()
+    provider = OllamaProvider(base_url="mock")
     response = await provider.generate(request=None, model="llama3.1", prompt="Hello")
     assert isinstance(response, InferenceResponse)
     assert response.provider == "ollama"

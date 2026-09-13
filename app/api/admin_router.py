@@ -220,3 +220,15 @@ async def list_reports(
 ):
     jobs = await ReportAdminService(db).list_report_jobs(limit=limit, offset=offset)
     return [{"id": j.id, "type": j.type, "status": j.status, "created_at": j.created_at} for j in jobs]
+
+# ----------------- DEAD-LETTER QUEUE -----------------
+
+@admin_router.get("/dlq")
+async def get_dead_letter_queue():
+    """Retrieve permanently failed requests from Dead Letter Queue."""
+    from app.main import app
+    container = getattr(app.state, "container", None)
+    if container and hasattr(container, "dead_letter_queue") and container.dead_letter_queue:
+        entries = await container.dead_letter_queue.get_entries()
+        return {"count": len(entries), "entries": [e.model_dump() for e in entries]}
+    return {"count": 0, "entries": []}
