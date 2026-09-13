@@ -63,7 +63,7 @@ class SecretsSanitizer:
     )
     URL_CREDS_PATTERN = re.compile(r"://([^:@]+):([^@]+)@", re.IGNORECASE)
 
-    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production", "canary_secret", "secret_key"}
+    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production", "canary_secret", "secret_key", "super_secret_test_value"}
 
     @classmethod
     def sanitize_string(cls, input_str: str) -> str:
@@ -109,6 +109,20 @@ class SecretsSanitizer:
         elif isinstance(data, list):
             return [cls.sanitize_structure(item) for item in data]
         return data
+
+    @classmethod
+    def sanitize_dict(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+        return cls.sanitize_structure(data)
+
+
+_sanitizer_instance: Optional[SecretsSanitizer] = None
+
+def get_secrets_sanitizer() -> SecretsSanitizer:
+    global _sanitizer_instance
+    if _sanitizer_instance is None:
+        _sanitizer_instance = SecretsSanitizer()
+    return _sanitizer_instance
+
 
 
 class SecretProviderReadinessEvaluator:
