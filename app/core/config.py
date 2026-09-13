@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     prometheus_subsystem: str = Field(default="inference", alias="PROMETHEUS_SUBSYSTEM")
 
     # Authentication & Database Configuration
-    auth_enabled: bool = Field(default=False, alias="AUTH_ENABLED")
+    auth_enabled: bool = Field(default=True, alias="AUTH_ENABLED")
     database_url: str = Field(default="sqlite+aiosqlite:///./data/engine.db", alias="DATABASE_URL")
     jwt_secret: str = Field(default="super-secret-key-change-in-production", alias="JWT_SECRET")
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
@@ -66,6 +66,13 @@ class Settings(BaseSettings):
     default_tokens_per_day: int = Field(default=100000, alias="DEFAULT_TOKENS_PER_DAY")
     default_concurrent_requests: int = Field(default=5, alias="DEFAULT_CONCURRENT_REQUESTS")
 
+    @field_validator("jwt_secret")
+    @classmethod
+    def validate_jwt_secret(cls, value: str, info: ValidationInfo) -> str:
+        env = info.data.get("environment", "development")
+        if env.lower() == "production" and value == "super-secret-key-change-in-production":
+            raise ValueError("JWT_SECRET must be changed from default in production environment!")
+        return value
 
     @field_validator("cors_origins", mode="before")
     @classmethod

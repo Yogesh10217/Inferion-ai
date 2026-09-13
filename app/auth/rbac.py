@@ -69,3 +69,19 @@ class RBACService:
     def has_permission(user_permissions: Set[str], required_permission: str) -> bool:
         """Check if user has a specific permission."""
         return required_permission in user_permissions
+
+    @staticmethod
+    async def get_user_roles(db: AsyncSession, user_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None) -> Set[str]:
+        """Fetch all assigned role names for a user in their context."""
+        stmt = (
+            select(User)
+            .options(selectinload(User.roles))
+            .where(User.id == user_id)
+        )
+        result = await db.execute(stmt)
+        user = result.scalar_one_or_none()
+        if not user or not user.is_active:
+            return set()
+        roles = {role.name for role in user.roles}
+        return roles
+

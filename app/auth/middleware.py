@@ -20,38 +20,16 @@ from app.auth.rbac import RBACService
 settings = get_settings()
 
 PUBLIC_PATHS = [
-    re.compile(r"^(?:/api)?(?:/v1)?/health/?"),
-    re.compile(r"^(?:/api)?(?:/v1)?/live/?"),
-    re.compile(r"^(?:/api)?(?:/v1)?/ready/?"),
-    re.compile(r"^(?:/api)?(?:/v1)?/metrics/?"),
-    re.compile(r"^(?:/api)?(?:/v1)?/docs/?"),
-    re.compile(r"^(?:/api)?(?:/v1)?/openapi.json"),
-    re.compile(r"^(?:/api)?(?:/v1)?/redoc/?"),
-    re.compile(r"^(?:/api)?(?:/v1)?/auth/login/?"),
-    re.compile(r"^(?:/v1)?/observability(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/operations(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/security(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/governance(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/jobs(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/reliability(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/control-plane(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/developers(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/events(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/extensions(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/marketplace(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/data-sources(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/data-sync(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/data-catalog(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/data-governance(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/mlops(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/finops(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/operations(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/identity(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/orchestration(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/knowledge_platform(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/integrations(?:/.*)?$"),
-    re.compile(r"^(?:/v1)?/developer-platform(?:/.*)?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/health/?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/live/?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/ready/?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/metrics/?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/docs/?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/openapi\.json$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/redoc/?$"),
+    re.compile(r"^(?:/api)?(?:/v1)?/auth/login/?$"),
 ]
+
 
 
 
@@ -165,19 +143,45 @@ def require_roles(roles: list[str]):
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            # Since request is not always the first arg, we look for it
             request = kwargs.get("request")
             if not request:
                 for arg in args:
                     if isinstance(arg, Request):
                         request = arg
                         break
-            
+
             if not request:
                 raise HTTPException(status_code=400, detail="Request object not found")
-                
-            # For walkthrough purposes, we'll bypass actual role checking
-            # in real app, we would query RBACService to verify role assignment
+
+            if not settings.auth_enabled:
+                return await func(*args, **kwargs)
+
+            user_id = getattr(request.state, "user_id", None)
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Authentication required")
+
+            user_roles = getattr(request.state, "roles", None)
+            if user_roles is None:
+                try:
+                    async with async_session_maker() as session:
+                        org_id = getattr(request.state, "organization_id", None)
+                        ws_id = getattr(request.state, "workspace_id", None)
+                        user_roles = await RBACService.get_user_roles(session, user_id, organization_id=org_id, workspace_id=ws_id)
+                        request.state.roles = user_roles
+                except Exception:
+                    user_roles = set()
+
+            permissions = getattr(request.state, "permissions", set())
+            has_role = any(role in user_roles for role in roles)
+            has_admin_perm = "admin:all" in permissions or "super_admin" in user_roles or "admin" in user_roles
+
+            if not (has_role or has_admin_perm):
+                raise HTTPException(
+                    status_code=403,
+                    detail=f"Forbidden: Missing required role ({', '.join(roles)})"
+                )
+
             return await func(*args, **kwargs)
         return wrapper
     return decorator
+

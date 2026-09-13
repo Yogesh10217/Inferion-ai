@@ -126,10 +126,14 @@ class RequestScheduler:
         self.start()
         
         try:
-            return await entry.result_future
+            return await asyncio.wait_for(entry.result_future, timeout=30.0)
+        except asyncio.TimeoutError:
+            entry.cancellation_state.set()
+            raise ProviderUnavailableException("Request execution timed out after 30.0s")
         except asyncio.CancelledError:
             entry.cancellation_state.set()
             raise
+
 
     async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
         """Enqueue a streaming request and yield its response chunks."""
