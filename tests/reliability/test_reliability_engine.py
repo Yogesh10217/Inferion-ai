@@ -11,23 +11,23 @@ def test_reliability_score_boundaries():
     # 100% score
     res_100 = engine.evaluate_reliability()
     assert res_100.overall_score == 100.0
-    assert res_100.status == ReliabilityStatus.RELIABLE
+    assert res_100.status == ReliabilityStatus.HEALTHY
 
     # Low score
     res_low = engine.evaluate_reliability(
-        availability_score=20.0,
-        redundancy_score=20.0,
+        application_resilience_score=20.0,
+        database_resilience_score=20.0,
+        cache_resilience_score=20.0,
+        network_resilience_score=20.0,
         dependency_resilience_score=20.0,
-        recovery_readiness_score=20.0,
-        failure_detection_score=20.0,
-        incident_response_score=20.0,
-        rollback_readiness_score=20.0,
-        backup_readiness_score=20.0,
-        disaster_recovery_score=20.0,
-        business_continuity_score=20.0,
+        container_resilience_score=20.0,
+        recovery_capability_score=20.0,
+        failover_readiness_score=20.0,
+        observability_detection_score=20.0,
+        security_dependency_score=20.0,
     )
     assert res_low.overall_score == 20.0
-    assert res_low.status == ReliabilityStatus.CRITICAL
+    assert res_low.status == ReliabilityStatus.FAILING
 
 
 def test_reliability_unexecuted_and_blocked():

@@ -1,14 +1,12 @@
-# Reliability Certification
+# Reliability Certification Policy
 
-## Overview
-Defines certification requirements and decision states for Phase 5.70.
-
-## Certification Decision States
-- `RELIABILITY_CERTIFIED`: All reliability checks passed, audit valid, no blockers.
-- `RELIABILITY_CERTIFIED_WITH_WARNINGS`: Passed with non-critical warnings.
-- `RELIABILITY_MANUAL_REVIEW_REQUIRED`: Requires human operator sign-off.
+## Decision States
+- `RELIABILITY_CERTIFIED`: All reliability checks, chaos simulations, and audit integrity passed.
+- `RELIABILITY_CERTIFIED_WITH_WARNINGS`: Non-critical warnings present.
+- `RELIABILITY_MANUAL_REVIEW_REQUIRED`: Manual intervention required.
+- `RELIABILITY_AT_RISK`: Reliability score < 75.0.
 - `RELIABILITY_BLOCKED`: Critical failure or audit tampering detected.
-- `RELIABILITY_NOT_EXECUTED`: Pipeline not run.
+- `RELIABILITY_NOT_EXECUTED`: Pipeline unexecuted.
 
-## Final Certification Token
-`PHASE_5_70_RELIABILITY_AND_BUSINESS_CONTINUITY_CERTIFIED`
+## Token
+Issued token: `PHASE_5_70_RELIABILITY_RESILIENCE_CERTIFIED`

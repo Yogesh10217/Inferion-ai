@@ -8,7 +8,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from app.reliability.reliability_engine import ReliabilityResult, ReliabilityStatus
+from app.reliability.reliability_models import ReliabilityStatus
+from app.reliability.reliability_engine import ReliabilityResult
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 from app.reliability.recovery_audit import RecoveryAuditResult
 
@@ -17,6 +18,7 @@ class ReliabilityCertificationDecision(str, Enum):
     RELIABILITY_CERTIFIED = "RELIABILITY_CERTIFIED"
     RELIABILITY_CERTIFIED_WITH_WARNINGS = "RELIABILITY_CERTIFIED_WITH_WARNINGS"
     RELIABILITY_MANUAL_REVIEW_REQUIRED = "RELIABILITY_MANUAL_REVIEW_REQUIRED"
+    RELIABILITY_AT_RISK = "RELIABILITY_AT_RISK"
     RELIABILITY_BLOCKED = "RELIABILITY_BLOCKED"
     RELIABILITY_NOT_EXECUTED = "RELIABILITY_NOT_EXECUTED"
 
@@ -74,7 +76,7 @@ class ReliabilityCertificationEngine:
 
         reasons: List[str] = []
         score = reliability_result.overall_score if reliability_result else 100.0
-        rel_status = reliability_result.status if reliability_result else ReliabilityStatus.RELIABLE
+        rel_status = reliability_result.status if reliability_result else ReliabilityStatus.HEALTHY
 
         audit_passed = audit_result.valid if audit_result else True
         if audit_result and audit_result.tampering_detected:
@@ -86,15 +88,19 @@ class ReliabilityCertificationEngine:
             certified = False
             if rel_status == ReliabilityStatus.BLOCKED:
                 reasons.append("Platform reliability status is BLOCKED.")
+        elif rel_status == ReliabilityStatus.FAILING:
+            decision = ReliabilityCertificationDecision.RELIABILITY_BLOCKED
+            certified = False
+            reasons.append("Platform reliability status is FAILING.")
+        elif rel_status == ReliabilityStatus.AT_RISK:
+            decision = ReliabilityCertificationDecision.RELIABILITY_AT_RISK
+            certified = False
+            reasons.append(f"Reliability score is low ({score}) with status AT_RISK.")
         elif not backup_ready or not failover_ready or not business_continuity_ready:
             decision = ReliabilityCertificationDecision.RELIABILITY_MANUAL_REVIEW_REQUIRED
             certified = False
             reasons.append("Backup, failover, or business continuity evaluation incomplete or blocked.")
-        elif rel_status == ReliabilityStatus.AT_RISK or rel_status == ReliabilityStatus.CRITICAL:
-            decision = ReliabilityCertificationDecision.RELIABILITY_BLOCKED
-            certified = False
-            reasons.append(f"Reliability score is low ({score}) with status {rel_status.value}.")
-        elif rel_status == ReliabilityStatus.WARNING:
+        elif rel_status == ReliabilityStatus.DEGRADED:
             decision = ReliabilityCertificationDecision.RELIABILITY_CERTIFIED_WITH_WARNINGS
             certified = True
             reasons.append(f"Reliability certified with warnings (score {score}).")

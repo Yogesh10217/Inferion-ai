@@ -14,5 +14,5 @@ def test_reliability_orchestrator_pipeline_execution():
     assert res.certification.certified is True
     assert res.certification.decision == ReliabilityCertificationDecision.RELIABILITY_CERTIFIED
     assert res.certification.live_production_recovery_validated is False
-    assert res.dashboard_snapshot.overall_score > 90.0
+    assert res.dashboard_snapshot.reliability_score > 90.0
     assert res.audit_result.valid is True

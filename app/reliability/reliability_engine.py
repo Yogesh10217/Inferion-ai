@@ -1,23 +1,14 @@
 """
 Phase 5.70 - Reliability Engineering Engine Module.
 
-Calculates deterministic reliability scores (0 to 100) and categorizes platform reliability status.
+Calculates deterministic reliability scores (0 to 100) across 10 explicit dimensions.
 """
 
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Any, Dict, List, Optional
 
+from app.reliability.reliability_models import ReliabilityStatus
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
-
-
-class ReliabilityStatus(str, Enum):
-    RELIABLE = "RELIABLE"
-    WARNING = "WARNING"
-    AT_RISK = "AT_RISK"
-    CRITICAL = "CRITICAL"
-    BLOCKED = "BLOCKED"
-    NOT_EXECUTED = "NOT_EXECUTED"
 
 
 @dataclass
@@ -37,24 +28,37 @@ class ReliabilityResult:
     summary: str
 
 
-class ReliabilityEngineeringEngine:
-    """Evaluates comprehensive platform reliability across 10 core dimensions."""
+class ReliabilityEngine:
+    """Evaluates comprehensive platform reliability across 10 explicit core dimensions."""
+
+    EXPLICIT_DIMENSIONS = [
+        "application_resilience",
+        "database_resilience",
+        "cache_resilience",
+        "network_resilience",
+        "dependency_resilience",
+        "container_resilience",
+        "recovery_capability",
+        "failover_readiness",
+        "observability_and_detection",
+        "security_dependency_resilience",
+    ]
 
     def __init__(self, evidence_level: ReliabilityEvidenceLevel = ReliabilityEvidenceLevel.SIMULATION_RUNTIME) -> None:
         self.evidence_level = evidence_level
 
     def evaluate_reliability(
         self,
-        availability_score: float = 100.0,
-        redundancy_score: float = 100.0,
+        application_resilience_score: float = 100.0,
+        database_resilience_score: float = 100.0,
+        cache_resilience_score: float = 100.0,
+        network_resilience_score: float = 100.0,
         dependency_resilience_score: float = 100.0,
-        recovery_readiness_score: float = 100.0,
-        failure_detection_score: float = 100.0,
-        incident_response_score: float = 100.0,
-        rollback_readiness_score: float = 100.0,
-        backup_readiness_score: float = 100.0,
-        disaster_recovery_score: float = 100.0,
-        business_continuity_score: float = 100.0,
+        container_resilience_score: float = 100.0,
+        recovery_capability_score: float = 100.0,
+        failover_readiness_score: float = 100.0,
+        observability_detection_score: float = 100.0,
+        security_dependency_score: float = 100.0,
         blocked: bool = False,
         executed: bool = True,
     ) -> ReliabilityResult:
@@ -73,20 +77,20 @@ class ReliabilityEngineeringEngine:
                 status=ReliabilityStatus.BLOCKED,
                 assessments=[],
                 evidence_level=self.evidence_level,
-                summary="Reliability evaluation blocked by critical issue.",
+                summary="Reliability evaluation blocked by critical failure or audit tampering.",
             )
 
         dimensions = [
-            ("availability", availability_score),
-            ("redundancy", redundancy_score),
+            ("application_resilience", application_resilience_score),
+            ("database_resilience", database_resilience_score),
+            ("cache_resilience", cache_resilience_score),
+            ("network_resilience", network_resilience_score),
             ("dependency_resilience", dependency_resilience_score),
-            ("recovery_readiness", recovery_readiness_score),
-            ("failure_detection", failure_detection_score),
-            ("incident_response", incident_response_score),
-            ("rollback_readiness", rollback_readiness_score),
-            ("backup_readiness", backup_readiness_score),
-            ("disaster_recovery_readiness", disaster_recovery_score),
-            ("business_continuity_readiness", business_continuity_score),
+            ("container_resilience", container_resilience_score),
+            ("recovery_capability", recovery_capability_score),
+            ("failover_readiness", failover_readiness_score),
+            ("observability_and_detection", observability_detection_score),
+            ("security_dependency_resilience", security_dependency_score),
         ]
 
         assessments: List[ReliabilityAssessment] = []
@@ -97,13 +101,13 @@ class ReliabilityEngineeringEngine:
             total_score += clamped_score
 
             if clamped_score >= 90.0:
-                status = ReliabilityStatus.RELIABLE
+                status = ReliabilityStatus.HEALTHY
             elif clamped_score >= 75.0:
-                status = ReliabilityStatus.WARNING
+                status = ReliabilityStatus.DEGRADED
             elif clamped_score >= 50.0:
                 status = ReliabilityStatus.AT_RISK
             else:
-                status = ReliabilityStatus.CRITICAL
+                status = ReliabilityStatus.FAILING
 
             assessments.append(
                 ReliabilityAssessment(
@@ -119,13 +123,13 @@ class ReliabilityEngineeringEngine:
         overall_score = round(total_score / count, 2) if count > 0 else 0.0
 
         if overall_score >= 90.0:
-            overall_status = ReliabilityStatus.RELIABLE
+            overall_status = ReliabilityStatus.HEALTHY
         elif overall_score >= 75.0:
-            overall_status = ReliabilityStatus.WARNING
+            overall_status = ReliabilityStatus.DEGRADED
         elif overall_score >= 50.0:
             overall_status = ReliabilityStatus.AT_RISK
         else:
-            overall_status = ReliabilityStatus.CRITICAL
+            overall_status = ReliabilityStatus.FAILING
 
         return ReliabilityResult(
             overall_score=overall_score,
@@ -134,3 +138,7 @@ class ReliabilityEngineeringEngine:
             evidence_level=self.evidence_level,
             summary=f"Reliability overall score is {overall_score} ({overall_status.value}).",
         )
+
+
+# Backward compatibility alias
+ReliabilityEngineeringEngine = ReliabilityEngine

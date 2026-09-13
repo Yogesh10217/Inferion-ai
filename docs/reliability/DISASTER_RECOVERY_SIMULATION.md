@@ -1,0 +1,14 @@
+# Disaster Recovery Simulation Policy
+
+## Target Metrics
+- **RTO (Recovery Time Objective)**: <= 15 minutes (`RTO_TARGET_MINUTES = 15.0`)
+- **RPO (Recovery Point Objective)**: <= 5 minutes (`RPO_TARGET_MINUTES = 5.0`)
+
+## Status Classifications
+- `RTO_CONFIGURATION_READY`
+- `RTO_SIMULATION_VALIDATED`
+- `RPO_CONFIGURATION_READY`
+- `RPO_SIMULATION_VALIDATED`
+- `PRODUCTION_RTO_VALIDATED = NOT_EXECUTED`
+- `PRODUCTION_RPO_VALIDATED = NOT_EXECUTED`
+- `PRODUCTION_DISASTER_RECOVERY_EXECUTED = NOT_EXECUTED`

@@ -1,83 +1,102 @@
 """
-Phase 5.70 - Platform Reliability Engineering, Disaster Recovery Execution & Business Continuity Certification Package.
+Phase 5.70 - Platform Reliability Engineering, Resilience Validation, Chaos Simulation & Disaster Recovery Certification Package.
 
 Canonical exports for Phase 5.70.
 """
 
 from app.reliability.graceful_shutdown import GracefulShutdownManager
 from app.reliability.health import SystemHealthManager
-from app.reliability.availability_engine import (
-    AvailabilityClassification,
-    AvailabilityEvaluator,
-    AvailabilityResult,
+
+from app.reliability.reliability_models import (
+    ChaosExecutionMode,
+    ChaosFailureType,
+    FailureSeverity,
+    RecoveryStatus,
+    ReliabilityStatus,
 )
-from app.reliability.backup_recovery import (
-    BackupClassification,
-    BackupRecoveryEvaluator,
-    BackupRecoveryResult,
+from app.reliability.chaos_state_machine import (
+    ChaosState,
+    ChaosStateMachine,
+    ChaosStateTransition,
+    IllegalStateTransitionError,
 )
-from app.reliability.business_continuity import (
-    BusinessContinuityEngine,
-    BusinessContinuityPlan,
-    BusinessContinuityResult,
-    ContinuityClassification,
+from app.reliability.reliability_engine import (
+    ReliabilityAssessment,
+    ReliabilityEngine,
+    ReliabilityEngineeringEngine,
+    ReliabilityResult,
 )
-from app.reliability.critical_service_management import (
-    CriticalService,
-    CriticalServiceManager,
-    ServiceCriticality,
+from app.reliability.resilience_evaluator import (
+    ResilienceEvaluator,
+    ResilienceResult,
 )
-from app.reliability.degradation_management import (
-    DegradationManager,
-    DegradationResult,
-    DegradationStrategy,
+from app.reliability.chaos_engine import (
+    ChaosEngineeringEngine,
+    ChaosExperiment,
+    ChaosExperimentResult,
 )
-from app.reliability.dependency_resilience import (
-    DependencyFailureScenario,
-    DependencyResilienceEvaluator,
-    DependencyResilienceResult,
-    DependencyState,
+from app.reliability.failure_injection import (
+    FailureInjectionEngine,
+    FailureInjectionResult,
 )
-from app.reliability.disaster_recovery_execution import (
-    DisasterRecoveryExecutionEngine,
-    DisasterRecoveryPlan,
+from app.reliability.database_resilience import (
+    DatabaseResilienceEvaluator,
+    DatabaseResilienceResult,
+)
+from app.reliability.cache_resilience import (
+    CacheResilienceEvaluator,
+    CacheResilienceResult,
+)
+from app.reliability.network_resilience import (
+    NetworkResilienceEvaluator,
+    NetworkResilienceResult,
+)
+from app.reliability.circuit_breaker import (
+    CircuitBreaker,
+    CircuitBreakerResult,
+    CircuitBreakerState,
+)
+from app.reliability.retry_policy import (
+    RetryBackoffType,
+    RetryPolicyConfig,
+    RetryPolicyEngine,
+    RetryPolicyResult,
+)
+from app.reliability.timeout_management import (
+    TimeoutConfig,
+    TimeoutManagementEngine,
+    TimeoutManagementResult,
+)
+from app.reliability.recovery_orchestrator import (
+    RecoveryOrchestrationResult,
+    RecoveryOrchestrator,
+)
+from app.reliability.disaster_recovery_simulation import (
     DisasterRecoveryResult,
-    RecoveryExecutionState,
+    DisasterRecoverySimulationEngine,
 )
-from app.reliability.failover_engine import (
-    FailoverEngine,
-    FailoverPlan,
-    FailoverResult,
-    FailoverState,
-    FailoverTrigger,
+from app.reliability.failover_evaluator import (
+    FailoverEvaluationResult,
+    FailoverEvaluationStatus,
+    FailoverEvaluator,
 )
-from app.reliability.fault_tolerance import (
-    FaultClassification,
-    FaultScenario,
-    FaultToleranceEngine,
-    FaultToleranceResult,
-    FaultType,
+from app.reliability.recovery_validation import (
+    RecoveryValidationEngine,
+    RecoveryValidationResult,
+)
+from app.reliability.reliability_metrics import (
+    ReliabilityMetricsCalculator,
+    ReliabilityMetricsResult,
+)
+from app.reliability.reliability_evidence import (
+    ReliabilityEvidence,
+    ReliabilityEvidenceCollector,
+    ReliabilityEvidenceLevel,
 )
 from app.reliability.recovery_audit import (
     RecoveryAuditEngine,
     RecoveryAuditRecord,
     RecoveryAuditResult,
-)
-from app.reliability.recovery_objectives import (
-    RecoveryObjective,
-    RecoveryObjectiveResult,
-    RecoveryObjectivesEvaluator,
-)
-from app.reliability.recovery_recommendation import (
-    RecoveryAction,
-    RecoveryRecommendation,
-    RecoveryRecommendationEngine,
-)
-from app.reliability.recovery_state_machine import (
-    IllegalRecoveryTransitionError,
-    RecoveryState,
-    RecoveryStateMachine,
-    RecoveryStateTransition,
 )
 from app.reliability.reliability_certification import (
     ReliabilityCertificationDecision,
@@ -85,129 +104,71 @@ from app.reliability.reliability_certification import (
     ReliabilityCertificationResult,
 )
 from app.reliability.reliability_dashboard import ReliabilityDashboardSnapshot
-from app.reliability.reliability_engine import (
-    ReliabilityAssessment,
-    ReliabilityEngineeringEngine,
-    ReliabilityResult,
-    ReliabilityStatus,
-)
-from app.reliability.reliability_evidence import (
-    ReliabilityEvidence,
-    ReliabilityEvidenceCollector,
-    ReliabilityEvidenceLevel,
-)
-from app.reliability.reliability_incident_integration import (
-    IncidentIntegrationResult,
-    ReliabilityIncidentIntegration,
-)
-from app.reliability.reliability_metrics import (
-    ReliabilityMetricsCalculator,
-    ReliabilityMetricsResult,
-)
 from app.reliability.reliability_orchestrator import (
     ReliabilityOperationsOrchestrator,
     ReliabilityOperationsResult,
-)
-from app.reliability.reliability_scenarios import (
-    ReliabilityScenario,
-    ReliabilityScenarioEngine,
-    ScenarioResult,
-    ScenarioType,
-)
-from app.reliability.restore_validation import (
-    RestoreStatus,
-    RestoreValidationEngine,
-    RestoreValidationResult,
-)
-from app.reliability.resilience_testing import (
-    ResilienceTest,
-    ResilienceTestingEngine,
-    ResilienceTestMode,
-    ResilienceTestResult,
-)
-from app.reliability.security_recovery_integration import (
-    SecurityRecoveryIntegration,
-    SecurityRecoveryResult,
 )
 
 __all__ = [
     "GracefulShutdownManager",
     "SystemHealthManager",
-    "AvailabilityClassification",
-    "AvailabilityEvaluator",
-    "AvailabilityResult",
-    "BackupClassification",
-    "BackupRecoveryEvaluator",
-    "BackupRecoveryResult",
-    "BusinessContinuityEngine",
-    "BusinessContinuityPlan",
-    "BusinessContinuityResult",
-    "ContinuityClassification",
-    "CriticalService",
-    "CriticalServiceManager",
-    "DegradationManager",
-    "DegradationResult",
-    "DegradationStrategy",
-    "DependencyFailureScenario",
-    "DependencyResilienceEvaluator",
-    "DependencyResilienceResult",
-    "DependencyState",
-    "DisasterRecoveryExecutionEngine",
-    "DisasterRecoveryPlan",
+    "ReliabilityStatus",
+    "FailureSeverity",
+    "RecoveryStatus",
+    "ChaosExecutionMode",
+    "ChaosFailureType",
+    "ChaosState",
+    "ChaosStateMachine",
+    "ChaosStateTransition",
+    "IllegalStateTransitionError",
+    "ReliabilityAssessment",
+    "ReliabilityEngine",
+    "ReliabilityEngineeringEngine",
+    "ReliabilityResult",
+    "ResilienceEvaluator",
+    "ResilienceResult",
+    "ChaosEngineeringEngine",
+    "ChaosExperiment",
+    "ChaosExperimentResult",
+    "FailureInjectionEngine",
+    "FailureInjectionResult",
+    "DatabaseResilienceEvaluator",
+    "DatabaseResilienceResult",
+    "CacheResilienceEvaluator",
+    "CacheResilienceResult",
+    "NetworkResilienceEvaluator",
+    "NetworkResilienceResult",
+    "CircuitBreaker",
+    "CircuitBreakerResult",
+    "CircuitBreakerState",
+    "RetryBackoffType",
+    "RetryPolicyConfig",
+    "RetryPolicyEngine",
+    "RetryPolicyResult",
+    "TimeoutConfig",
+    "TimeoutManagementEngine",
+    "TimeoutManagementResult",
+    "RecoveryOrchestrator",
+    "RecoveryOrchestrationResult",
+    "DisasterRecoverySimulationEngine",
     "DisasterRecoveryResult",
-    "FailoverEngine",
-    "FailoverPlan",
-    "FailoverResult",
-    "FailoverState",
-    "FailoverTrigger",
-    "FaultClassification",
-    "FaultScenario",
-    "FaultToleranceEngine",
-    "FaultToleranceResult",
-    "FaultType",
-    "IllegalRecoveryTransitionError",
-    "IncidentIntegrationResult",
-    "RecoveryAction",
+    "FailoverEvaluator",
+    "FailoverEvaluationResult",
+    "FailoverEvaluationStatus",
+    "RecoveryValidationEngine",
+    "RecoveryValidationResult",
+    "ReliabilityMetricsCalculator",
+    "ReliabilityMetricsResult",
+    "ReliabilityEvidence",
+    "ReliabilityEvidenceCollector",
+    "ReliabilityEvidenceLevel",
     "RecoveryAuditEngine",
     "RecoveryAuditRecord",
     "RecoveryAuditResult",
-    "RecoveryExecutionState",
-    "RecoveryObjective",
-    "RecoveryObjectiveResult",
-    "RecoveryObjectivesEvaluator",
-    "RecoveryRecommendation",
-    "RecoveryRecommendationEngine",
-    "RecoveryState",
-    "RecoveryStateMachine",
-    "RecoveryStateTransition",
-    "ReliabilityAssessment",
     "ReliabilityCertificationDecision",
     "ReliabilityCertificationEngine",
     "ReliabilityCertificationResult",
     "ReliabilityDashboardSnapshot",
-    "ReliabilityEngineeringEngine",
-    "ReliabilityEvidence",
-    "ReliabilityEvidenceCollector",
-    "ReliabilityEvidenceLevel",
-    "ReliabilityIncidentIntegration",
-    "ReliabilityMetricsCalculator",
-    "ReliabilityMetricsResult",
     "ReliabilityOperationsOrchestrator",
     "ReliabilityOperationsResult",
-    "ReliabilityResult",
-    "ReliabilityScenario",
-    "ReliabilityScenarioEngine",
-    "ReliabilityStatus",
-    "ResilienceTest",
-    "ResilienceTestingEngine",
-    "ResilienceTestMode",
-    "ResilienceTestResult",
-    "RestoreStatus",
-    "RestoreValidationEngine",
-    "RestoreValidationResult",
-    "ScenarioResult",
-    "ScenarioType",
-    "SecurityRecoveryIntegration",
-    "SecurityRecoveryResult",
-    "ServiceCriticality",
 ]

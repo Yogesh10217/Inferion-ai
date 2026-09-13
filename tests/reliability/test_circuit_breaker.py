@@ -1,36 +1,28 @@
-"""Unit tests for CircuitBreaker."""
+"""
+Tests for Circuit Breaker Module.
+"""
 
-import pytest
-import asyncio
-from app.resilience.circuit_breaker import CircuitBreaker, CircuitBreakerPolicy, CircuitState, CircuitBreakerOpenException
+import time
+
+from app.reliability.circuit_breaker import CircuitBreaker, CircuitBreakerState
 
 
-@pytest.mark.asyncio
-async def test_circuit_breaker_transitions():
-    policy = CircuitBreakerPolicy(failure_threshold=2, recovery_timeout_seconds=0.2, success_threshold=1)
-    cb = CircuitBreaker("test_cb", policy)
+def test_circuit_breaker_state_transitions():
+    cb = CircuitBreaker("test_breaker", failure_threshold=2, recovery_timeout_seconds=0.1)
+    assert cb.state == CircuitBreakerState.CLOSED
 
-    assert cb.state == CircuitState.CLOSED
-
-    # Failure 1
+    # Fail attempt 1 -> CLOSED
     cb.record_failure()
-    assert cb.state == CircuitState.CLOSED
+    assert cb.state == CircuitBreakerState.CLOSED
 
-    # Failure 2 -> State transitions to OPEN
+    # Fail attempt 2 -> OPEN
     cb.record_failure()
-    assert cb.state == CircuitState.OPEN
+    assert cb.state == CircuitBreakerState.OPEN
 
-    # Call while OPEN raises exception
-    with pytest.raises(CircuitBreakerOpenException):
-        await cb.call_async(lambda: "ok")
+    # Sleep recovery timeout -> HALF_OPEN
+    time.sleep(0.15)
+    assert cb.state == CircuitBreakerState.HALF_OPEN
 
-    # Wait for recovery timeout
-    await asyncio.sleep(0.25)
-
-    # State transitions to HALF_OPEN and allows trial call
-    async def dummy_success():
-        return "success"
-
-    res = await cb.call_async(dummy_success)
-    assert res == "success"
-    assert cb.state == CircuitState.CLOSED
+    # Success in HALF_OPEN -> CLOSED
+    cb.record_success()
+    assert cb.state == CircuitBreakerState.CLOSED
