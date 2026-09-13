@@ -4,7 +4,8 @@ from app.deployment.exceptions import ConfigurationValidationError
 from app.deployment.models import DeploymentEnvironment, EnvironmentConfig
 
 
-def test_valid_deployment_identity_construction():
+def test_valid_deployment_identity_construction(monkeypatch):
+    monkeypatch.delenv("IMAGE_DIGEST", raising=False)
     cfg = EnvironmentConfig(
         environment=DeploymentEnvironment.PRODUCTION,
         application_name="Enterprise-AI",

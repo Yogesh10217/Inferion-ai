@@ -68,7 +68,7 @@ class EnvironmentManager:
 
         if config.is_production():
             if config.debug_enabled:
-                raise UnsafeConfigurationError("ENVIRONMENT_POLICY_VIOLATION: Production environment MUST NOT have debug_enabled=True")
+                raise UnsafeConfigurationError("ENVIRONMENT_POLICY_VIOLATION: Debug mode enabled in PRODUCTION")
 
             if not config.database_url or config.database_url.strip() == "":
                 raise ConfigurationValidationError("CONFIGURATION_MISSING: DATABASE_URL is missing in PRODUCTION environment")
