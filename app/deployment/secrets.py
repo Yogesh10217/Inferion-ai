@@ -63,7 +63,7 @@ class SecretsSanitizer:
     )
     URL_CREDS_PATTERN = re.compile(r"://([^:@]+):([^@]+)@", re.IGNORECASE)
 
-    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production", "canary_secret"}
+    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production", "canary_secret", "secret_key"}
 
     @classmethod
     def sanitize_string(cls, input_str: str) -> str:

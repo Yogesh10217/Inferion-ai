@@ -1,81 +1,83 @@
-"""Operations & SRE Platform Package."""
+"""
+Operations, Observability, SRE, and Incident Management package for Enterprise AI Platform.
+Phase 5.68 canonical operations module.
+"""
 
-from app.operations.exceptions import (
-    OperationsException,
-    SLOBreachException,
-    RemediationFailedException,
-    RunbookExecutionException,
-    IncidentNotFoundException,
-)
-from app.operations.telemetry import TelemetryManager, TelemetryEvent, TelemetryType, TelemetrySeverity, TelemetryContext
-from app.operations.topology import TopologyManager, ServiceNode, ServiceDependency, TopologyImpactAnalysis
-from app.operations.slo import SLOManager, ServiceLevelObjective, SLOType, SLOStatus
-from app.operations.alerting import AlertManager, Alert, AlertSeverity, AlertStatus
-from app.operations.incidents import IncidentManager, Incident, IncidentSeverity, IncidentStatus, TimelineEvent
-from app.operations.root_cause import RootCauseAnalysisEngine, RootCauseAnalysis, RootCauseCandidate, CauseRole
-from app.operations.change_intelligence import ChangeCorrelationEngine, OperationalChange
-from app.operations.prediction import FailurePredictionEngine, FailurePrediction, PredictionRiskLevel
-from app.operations.runbooks import RunbookManager, Runbook, RunbookStep, RunbookExecution, RunbookMode
-from app.operations.remediation import AutonomousRemediationEngine, RemediationPlan, RemediationRisk, RemediationStatus
-from app.operations.postmortem import PostmortemManager, Postmortem
-from app.operations.analytics import OperationsAnalyticsEngine, OperationalMetricsReport
-from app.operations.storage import TelemetryRetentionManager, RetentionPolicy, RetentionTier
-from app.operations.observability import OperationsMetricsCollector
-from app.operations.manager import OperationsManager
+from app.operations.observability_engine import ObservabilityEngine, RuntimeObservation, ObservationStatus, ObservationResult
+from app.operations.sli import ServiceLevelIndicator, SLIEvaluator, SLIResult, SLIType
+from app.operations.slo import ServiceLevelObjective, SLOEvaluator, SLOResult, SLOStatus
+from app.operations.error_budget import ErrorBudget, ErrorBudgetEvaluator, ErrorBudgetResult, ErrorBudgetStatus
+from app.operations.anomaly_detection import RuleBasedAnomalyDetector, Anomaly, AnomalyType, AnomalySeverity
+from app.operations.alerting import AlertEngine, Alert, AlertSeverity, AlertStatus
+from app.operations.alert_deduplication import AlertDeduplicationEngine, AlertFingerprint
+from app.operations.incident_management import IncidentManager, Incident, IncidentSeverity, IncidentStatus
+from app.operations.incident_state_machine import IncidentStateMachine, IncidentState, IllegalStateTransitionError
+from app.operations.incident_detection import IncidentDetectionEngine
+from app.operations.incident_escalation import IncidentEscalationEngine, EscalationResult, NotificationReadiness
+from app.operations.recovery_decision import RecoveryDecisionEngine, RecoveryDecision, RecoveryRecommendation
+from app.operations.deployment_health import DeploymentHealthCorrelator, DeploymentHealthResult
+from app.operations.prometheus_observability import PrometheusObservabilityAdapter, PrometheusRuntimeStatus
+from app.operations.operational_dashboard import OperationalDashboardSnapshot
+from app.operations.operational_evidence import OperationalEvidenceCollector, OperationalEvidence
+from app.operations.operational_certification import OperationalCertificationEngine, OperationalCertificationResult, OperationalCertificationStatus
+from app.operations.operations_orchestrator import OperationsOrchestrator
+from app.operations.post_incident import PostIncidentReportGenerator, PostIncidentReport
+from app.operations.sre_metrics import SREMetricsCalculator, SREMetricsResult
 
 __all__ = [
-    "OperationsException",
-    "SLOBreachException",
-    "RemediationFailedException",
-    "RunbookExecutionException",
-    "IncidentNotFoundException",
-    "TelemetryManager",
-    "TelemetryEvent",
-    "TelemetryType",
-    "TelemetrySeverity",
-    "TelemetryContext",
-    "TopologyManager",
-    "ServiceNode",
-    "ServiceDependency",
-    "TopologyImpactAnalysis",
-    "SLOManager",
+    "ObservabilityEngine",
+    "RuntimeObservation",
+    "ObservationStatus",
+    "ObservationResult",
+    "ServiceLevelIndicator",
+    "SLIEvaluator",
+    "SLIResult",
+    "SLIType",
     "ServiceLevelObjective",
-    "SLOType",
+    "SLOEvaluator",
+    "SLOResult",
     "SLOStatus",
-    "AlertManager",
+    "ErrorBudget",
+    "ErrorBudgetEvaluator",
+    "ErrorBudgetResult",
+    "ErrorBudgetStatus",
+    "RuleBasedAnomalyDetector",
+    "Anomaly",
+    "AnomalyType",
+    "AnomalySeverity",
+    "AlertEngine",
     "Alert",
     "AlertSeverity",
     "AlertStatus",
+    "AlertDeduplicationEngine",
+    "AlertFingerprint",
     "IncidentManager",
     "Incident",
     "IncidentSeverity",
     "IncidentStatus",
-    "TimelineEvent",
-    "RootCauseAnalysisEngine",
-    "RootCauseAnalysis",
-    "RootCauseCandidate",
-    "CauseRole",
-    "ChangeCorrelationEngine",
-    "OperationalChange",
-    "FailurePredictionEngine",
-    "FailurePrediction",
-    "PredictionRiskLevel",
-    "RunbookManager",
-    "Runbook",
-    "RunbookStep",
-    "RunbookExecution",
-    "RunbookMode",
-    "AutonomousRemediationEngine",
-    "RemediationPlan",
-    "RemediationRisk",
-    "RemediationStatus",
-    "PostmortemManager",
-    "Postmortem",
-    "OperationsAnalyticsEngine",
-    "OperationalMetricsReport",
-    "TelemetryRetentionManager",
-    "RetentionPolicy",
-    "RetentionTier",
-    "OperationsMetricsCollector",
-    "OperationsManager",
+    "IncidentStateMachine",
+    "IncidentState",
+    "IllegalStateTransitionError",
+    "IncidentDetectionEngine",
+    "IncidentEscalationEngine",
+    "EscalationResult",
+    "NotificationReadiness",
+    "RecoveryDecisionEngine",
+    "RecoveryDecision",
+    "RecoveryRecommendation",
+    "DeploymentHealthCorrelator",
+    "DeploymentHealthResult",
+    "PrometheusObservabilityAdapter",
+    "PrometheusRuntimeStatus",
+    "OperationalDashboardSnapshot",
+    "OperationalEvidenceCollector",
+    "OperationalEvidence",
+    "OperationalCertificationEngine",
+    "OperationalCertificationResult",
+    "OperationalCertificationStatus",
+    "OperationsOrchestrator",
+    "PostIncidentReportGenerator",
+    "PostIncidentReport",
+    "SREMetricsCalculator",
+    "SREMetricsResult",
 ]
