@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 
 @pytest.mark.asyncio
 async def test_health_routes(get_client) -> None:
@@ -49,12 +49,13 @@ async def test_chat_completion_streaming_route_returns_sse_events(get_client, ad
 
 @pytest.mark.asyncio
 async def test_chat_completion_route_uses_mocked_openai_provider(get_client, admin_token_headers) -> None:
-    with patch("app.services.inference_service.DefaultInferenceService.complete") as mocked_complete:
+    with patch("app.services.inference_service.DefaultInferenceService.complete", new_callable=AsyncMock) as mocked_complete:
         mocked_complete.return_value = type(
             "Response",
             (),
             {"text": "mocked", "model": "gpt-4o-mini", "provider": "openai", "finish_reason": "stop"},
         )()
+
         payload = {
             "model": "gpt-4o-mini",
             "messages": [{"role": "user", "content": "Hello"}],

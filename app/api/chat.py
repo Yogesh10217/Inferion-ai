@@ -59,25 +59,38 @@ async def create_chat_completion(
         prompt=payload.messages[-1].content,
         metadata=payload.metadata,
     )
-    request.state.provider = response.provider
-    request.state.model = response.model
+    request.state.provider = getattr(response, "provider", None)
+    request.state.model = getattr(response, "model", payload.model)
 
-    prompt_toks = response.usage.prompt_tokens if response.usage else 0
-    comp_toks = response.usage.completion_tokens if response.usage else 0
-    tot_toks = response.usage.total_tokens if response.usage else (prompt_toks + comp_toks)
+    res_id = getattr(response, "id", None) or "chatcmpl-placeholder"
+    res_usage = getattr(response, "usage", None)
+    prompt_toks = getattr(res_usage, "prompt_tokens", 0) if res_usage else 0
+    comp_toks = getattr(res_usage, "completion_tokens", 0) if res_usage else 0
+    tot_toks = getattr(res_usage, "total_tokens", 0) if res_usage else (prompt_toks + comp_toks)
+
+    res_created = getattr(response, "created", None)
+    created_ts = (
+        int(res_created.timestamp())
+        if (res_created and hasattr(res_created, "timestamp"))
+        else (int(res_created) if isinstance(res_created, (int, float)) else 0)
+    )
+
+    res_text = getattr(response, "text", "")
+    finish_reason = getattr(response, "finish_reason", "stop") or "stop"
 
     return ChatCompletionResponse(
-        id=response.id or "chatcmpl-placeholder",
+        id=res_id,
         object="chat.completion",
-        created=int(response.created.timestamp()) if (response.created and hasattr(response.created, "timestamp")) else 0,
+        created=created_ts,
         model=payload.model,
         choices=[
             Choice(
                 index=0,
-                message=ChatCompletionChoiceMessage(role="assistant", content=response.text),
-                finish_reason=response.finish_reason or "stop",
+                message=ChatCompletionChoiceMessage(role="assistant", content=res_text),
+                finish_reason=finish_reason,
             )
         ],
         usage=Usage(prompt_tokens=prompt_toks, completion_tokens=comp_toks, total_tokens=tot_toks),
     )
+
 
