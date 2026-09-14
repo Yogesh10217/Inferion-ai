@@ -1,4 +1,4 @@
-"""Unified AI Asset Registry & Versioning Subsystem."""
+"""Unified AI Asset Registry & Versioning Subsystem with Database Persistence."""
 
 from datetime import datetime, timezone
 from enum import Enum
@@ -8,7 +8,11 @@ import json
 import logging
 from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
+from app.core.database import async_session_maker
+from app.mlops.models import AIAssetModel, AIAssetVersionModel
 from app.mlops.exceptions import AssetNotFoundException, VersionNotFoundException, GovernanceViolationException
 
 logger = logging.getLogger(__name__)
@@ -62,7 +66,7 @@ class AIAssetVersion(BaseModel):
     creator: str = "system"
     configuration: Dict[str, Any] = Field(default_factory=dict)
     configuration_hash: str = ""
-    dependencies: Dict[str, str] = Field(default_factory=dict)  # asset_id -> required_version
+    dependencies: Dict[str, str] = Field(default_factory=dict)
     parent_version: Optional[str] = None
     changelog: str = ""
 
@@ -98,10 +102,19 @@ class AIAsset(BaseModel):
 
 
 class AIAssetRegistry:
-    """Central multi-tenant registry for AI Assets, versions, dependency tracking, and immutable promotions."""
+    """Central multi-tenant database-backed registry for AI Assets and versions."""
 
-    def __init__(self) -> None:
+    def __init__(self, session_factory=None) -> None:
+        self._session_factory = session_factory or async_session_maker
         self._assets: Dict[str, AIAsset] = {}
+
+    def _persist_async(self, coro):
+        try:
+            import asyncio
+            loop = asyncio.get_running_loop()
+            loop.create_task(coro)
+        except RuntimeError:
+            pass
 
     def register_asset(
         self,
@@ -134,6 +147,41 @@ class AIAssetRegistry:
         asset.versions.append(initial_ver)
         self._assets[asset.asset_id] = asset
 
+        async def _db_register():
+            async with self._session_factory() as session:
+                db_asset = AIAssetModel(
+                    asset_id=asset.asset_id,
+                    tenant_id=asset.tenant_id,
+                    organization_id=asset.organization_id,
+                    workspace_id=asset.workspace_id,
+                    name=asset.name,
+                    asset_type=asset.asset_type.value,
+                    description=asset.description,
+                    current_version=asset.current_version,
+                    status=asset.status.value,
+                )
+                db_ver = AIAssetVersionModel(
+                    version_id=initial_ver.version_id,
+                    version_number=initial_ver.version_number,
+                    asset_id=asset.asset_id,
+                    tenant_id=initial_ver.tenant_id,
+                    organization_id=initial_ver.organization_id,
+                    workspace_id=initial_ver.workspace_id,
+                    creator=initial_ver.creator,
+                    configuration_json=json.dumps(initial_ver.configuration),
+                    configuration_hash=initial_ver.configuration_hash,
+                    dependencies_json=json.dumps(initial_ver.dependencies),
+                    parent_version=initial_ver.parent_version,
+                    changelog=initial_ver.changelog,
+                    status=initial_ver.status.value,
+                    approval_status=initial_ver.approval_status,
+                    is_immutable=initial_ver.is_immutable,
+                )
+                session.add(db_asset)
+                session.add(db_ver)
+                await session.commit()
+
+        self._persist_async(_db_register())
         logger.info(f"[AI ASSET REGISTRY] Registered asset '{asset.name}' (ID: {asset.asset_id}, Type: {asset.asset_type.value}, Tenant: {tenant_id})")
         return asset
 
@@ -166,6 +214,35 @@ class AIAssetRegistry:
         asset.current_version = version_number
         asset.updated_at = _now()
 
+        async def _db_create_ver():
+            async with self._session_factory() as session:
+                db_ver = AIAssetVersionModel(
+                    version_id=ver.version_id,
+                    version_number=ver.version_number,
+                    asset_id=ver.asset_id,
+                    tenant_id=ver.tenant_id,
+                    organization_id=ver.organization_id,
+                    workspace_id=ver.workspace_id,
+                    creator=ver.creator,
+                    configuration_json=json.dumps(ver.configuration),
+                    configuration_hash=ver.configuration_hash,
+                    dependencies_json=json.dumps(ver.dependencies),
+                    parent_version=ver.parent_version,
+                    changelog=ver.changelog,
+                    status=ver.status.value,
+                    approval_status=ver.approval_status,
+                    is_immutable=ver.is_immutable,
+                )
+                stmt = select(AIAssetModel).where(AIAssetModel.asset_id == asset_id)
+                res = await session.execute(stmt)
+                db_asset = res.scalar_one_or_none()
+                if db_asset:
+                    db_asset.current_version = version_number
+                    db_asset.updated_at = _now()
+                session.add(db_ver)
+                await session.commit()
+
+        self._persist_async(_db_create_ver())
         logger.info(f"[AI ASSET REGISTRY] Created version '{version_number}' for asset '{asset.name}' (Hash: {ver.configuration_hash[:8]}...)")
         return ver
 
@@ -198,7 +275,6 @@ class AIAssetRegistry:
         return res
 
     def promote_version(self, asset_id: str, version_number: str, target_status: AIAssetStatus) -> AIAssetVersion:
-        """Promote version status. Production promotions lock version as immutable."""
         asset = self.get_asset(asset_id)
         ver = self.get_version(asset_id, version_number)
 
@@ -208,14 +284,33 @@ class AIAssetRegistry:
 
         ver.status = target_status
         if target_status == AIAssetStatus.PRODUCTION:
-            ver.is_immutable = True  # Lock production version as immutable!
+            ver.is_immutable = True
             asset.status = AIAssetStatus.PRODUCTION
 
+        async def _db_promote():
+            async with self._session_factory() as session:
+                stmt = select(AIAssetVersionModel).where(
+                    AIAssetVersionModel.asset_id == asset_id,
+                    AIAssetVersionModel.version_number == version_number,
+                )
+                res = await session.execute(stmt)
+                db_ver = res.scalar_one_or_none()
+                if db_ver:
+                    db_ver.status = target_status.value
+                    if target_status == AIAssetStatus.PRODUCTION:
+                        db_ver.is_immutable = True
+                        stmt_a = select(AIAssetModel).where(AIAssetModel.asset_id == asset_id)
+                        res_a = await session.execute(stmt_a)
+                        db_asset = res_a.scalar_one_or_none()
+                        if db_asset:
+                            db_asset.status = AIAssetStatus.PRODUCTION.value
+                    await session.commit()
+
+        self._persist_async(_db_promote())
         logger.info(f"[AI ASSET REGISTRY] Promoted version '{version_number}' of asset '{asset.name}' to '{target_status.value}' (Immutable: {ver.is_immutable})")
         return ver
 
     def rollback_version(self, asset_id: str, target_version_number: str) -> AIAssetVersion:
-        """Rollback current active version to a previously validated target version."""
         asset = self.get_asset(asset_id)
         target_ver = self.get_version(asset_id, target_version_number)
 
@@ -223,5 +318,17 @@ class AIAssetRegistry:
         asset.status = target_ver.status
         asset.updated_at = _now()
 
+        async def _db_rollback():
+            async with self._session_factory() as session:
+                stmt = select(AIAssetModel).where(AIAssetModel.asset_id == asset_id)
+                res = await session.execute(stmt)
+                db_asset = res.scalar_one_or_none()
+                if db_asset:
+                    db_asset.current_version = target_ver.version_number
+                    db_asset.status = target_ver.status.value
+                    db_asset.updated_at = _now()
+                    await session.commit()
+
+        self._persist_async(_db_rollback())
         logger.info(f"[AI ASSET REGISTRY] Rolled back asset '{asset.name}' to version '{target_ver.version_number}'")
         return target_ver

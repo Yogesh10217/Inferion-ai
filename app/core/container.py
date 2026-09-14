@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from app.core.config import Settings, get_settings
 from app.core.logger import get_logger, setup_logging
 from app.providers.provider_factory import ProviderFactory
-from app.registry.model_registry import InMemoryModelRegistry
+from app.registry.db_registry import DatabaseModelRegistry
 from app.routing.model_strategy import ModelBasedRoutingStrategy
 from app.routing.request_router import RequestRouter
 from app.services.inference_service import DefaultInferenceService
@@ -56,8 +56,8 @@ class ServiceContainer:
         # Initialize provider factory
         self.provider_factory = ProviderFactory()
 
-        # Initialize model registry
-        self.registry = InMemoryModelRegistry()
+        # Initialize database-backed model registry
+        self.registry = DatabaseModelRegistry(session_factory=async_session_maker)
 
         # Initialize request router with model-based routing strategy
         self.request_router = RequestRouter(

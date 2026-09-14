@@ -39,6 +39,8 @@ import app.admin.models
 import app.events.event_models
 import app.knowledge.models
 import app.observability.models
+import app.registry.models
+import app.mlops.models
 
 
 

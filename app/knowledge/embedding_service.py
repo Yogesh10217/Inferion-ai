@@ -47,16 +47,25 @@ class CohereProvider:
         return response.embeddings
 
 class EmbeddingCache:
-    def __init__(self):
-        self.cache: Dict[str, List[float]] = {}
+    def __init__(self, max_size: int = 10000):
+        from collections import OrderedDict
+        self.max_size = max_size
+        self.cache: OrderedDict[str, List[float]] = OrderedDict()
     
     def get(self, text: str) -> Optional[List[float]]:
         key = hashlib.sha256(text.encode()).hexdigest()
-        return self.cache.get(key)
+        if key in self.cache:
+            self.cache.move_to_end(key)
+            return self.cache[key]
+        return None
     
     def set(self, text: str, embedding: List[float]):
         key = hashlib.sha256(text.encode()).hexdigest()
+        if key in self.cache:
+            self.cache.move_to_end(key)
         self.cache[key] = embedding
+        if len(self.cache) > self.max_size:
+            self.cache.popitem(last=False)
 
 class EmbeddingStage(PipelineStage):
     """Generates embeddings for chunks using a ProviderFactory with batching, retries, and caching."""

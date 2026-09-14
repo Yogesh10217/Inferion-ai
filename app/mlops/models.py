@@ -1,69 +1,60 @@
-"""SQLAlchemy Persistence Models for MLOps Platform."""
-
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, Integer, Boolean, DateTime, JSON, Text, ForeignKey
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, String, Text, Boolean, DateTime, ForeignKey, Index
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
-
-
-def _now() -> datetime:
-    return datetime.now(timezone.utc)
+from app.core.database import Base
 
 
 class AIAssetModel(Base):
-    __tablename__ = "mlops_ai_assets"
+    """SQLAlchemy model for persistent AI Assets."""
 
-    id = Column(String(64), primary_key=True)
-    tenant_id = Column(String(64), nullable=False, index=True)
-    organization_id = Column(String(64), nullable=True)
-    workspace_id = Column(String(64), nullable=True)
+    __tablename__ = "ai_assets"
 
-    name = Column(String(128), nullable=False)
-    asset_type = Column(String(64), nullable=False)
-    description = Column(Text, nullable=True)
+    asset_id = Column(String, primary_key=True)
+    tenant_id = Column(String, default="global", index=True)
+    organization_id = Column(String, nullable=True)
+    workspace_id = Column(String, nullable=True)
 
-    current_version = Column(String(32), default="1.0.0")
-    status = Column(String(32), default="DRAFT")
+    name = Column(String, nullable=False, index=True)
+    asset_type = Column(String, nullable=False, index=True)
+    description = Column(Text, default="")
 
-    created_at = Column(DateTime(timezone=True), default=_now)
-    updated_at = Column(DateTime(timezone=True), default=_now, onupdate=_now)
+    current_version = Column(String, default="1.0.0")
+    status = Column(String, default="DRAFT", index=True)
+
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    versions = relationship("AIAssetVersionModel", back_populates="asset", cascade="all, delete-orphan", lazy="selectin")
 
 
 class AIAssetVersionModel(Base):
-    __tablename__ = "mlops_ai_asset_versions"
+    """SQLAlchemy model for persistent immutable AI Asset Versions."""
 
-    id = Column(String(64), primary_key=True)
-    version_number = Column(String(32), nullable=False)
-    asset_id = Column(String(64), ForeignKey("mlops_ai_assets.id"), nullable=False, index=True)
+    __tablename__ = "ai_asset_versions"
 
-    tenant_id = Column(String(64), nullable=False, index=True)
-    creator = Column(String(128), default="system")
+    version_id = Column(String, primary_key=True)
+    version_number = Column(String, nullable=False)
+    asset_id = Column(String, ForeignKey("ai_assets.asset_id", ondelete="CASCADE"), nullable=False, index=True)
 
-    configuration = Column(JSON, nullable=False)
-    configuration_hash = Column(String(64), nullable=False)
-    dependencies = Column(JSON, nullable=True)
-    parent_version = Column(String(32), nullable=True)
-    changelog = Column(Text, nullable=True)
+    tenant_id = Column(String, default="global")
+    organization_id = Column(String, nullable=True)
+    workspace_id = Column(String, nullable=True)
 
-    status = Column(String(32), default="DRAFT")
-    approval_status = Column(String(32), default="NOT_REQUESTED")
+    creator = Column(String, default="system")
+    configuration_json = Column(Text, default="{}")
+    configuration_hash = Column(String, default="")
+    dependencies_json = Column(Text, default="{}")
+    parent_version = Column(String, nullable=True)
+    changelog = Column(Text, default="")
+
+    status = Column(String, default="DRAFT")
+    approval_status = Column(String, default="NOT_REQUESTED")
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     is_immutable = Column(Boolean, default=False)
-    created_at = Column(DateTime(timezone=True), default=_now)
 
+    asset = relationship("AIAssetModel", back_populates="versions")
 
-class DeploymentModel(Base):
-    __tablename__ = "mlops_deployments"
-
-    id = Column(String(64), primary_key=True)
-    name = Column(String(128), nullable=False)
-    tenant_id = Column(String(64), nullable=False, index=True)
-
-    asset_id = Column(String(64), nullable=False)
-    version_number = Column(String(32), nullable=False)
-    environment = Column(String(32), default="DEVELOPMENT")
-    status = Column(String(32), default="PENDING")
-
-    active_traffic_percentage = Column(Float, default=100.0)
-    created_at = Column(DateTime(timezone=True), default=_now)
-    updated_at = Column(DateTime(timezone=True), default=_now, onupdate=_now)
+    __table_args__ = (
+        Index("idx_asset_version_num", "asset_id", "version_number", unique=True),
+    )
