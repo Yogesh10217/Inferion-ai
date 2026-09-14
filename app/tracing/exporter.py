@@ -1,9 +1,9 @@
-import time
 import queue
 import threading
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
+
 
 logger = logging.getLogger(__name__)
 

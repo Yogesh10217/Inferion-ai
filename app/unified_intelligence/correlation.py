@@ -7,7 +7,6 @@ import uuid
 from pydantic import BaseModel, Field
 
 from app.unified_intelligence.domains import IntelligenceDomain
-from app.unified_intelligence.signals import UnifiedSignal
 from app.unified_intelligence.context_fusion import UnifiedContext
 
 

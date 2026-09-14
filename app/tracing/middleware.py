@@ -1,5 +1,5 @@
-import time
 from fastapi import Request
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from .tracer import get_tracer
 from .context_propagation import ContextPropagator

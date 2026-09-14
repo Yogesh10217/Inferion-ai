@@ -3,8 +3,9 @@ import logging
 from typing import Dict, List, Optional, Any
 from .trace_context import SpanContext, generate_trace_id, generate_span_id
 from .context_propagation import ContextPropagator
-from .sampling import Sampler, AlwaysOnSampler, SamplingResult
-from .exporter import ExporterRegistry, BatchSpanProcessor, ConsoleExporter
+from .sampling import Sampler, AlwaysOnSampler
+from .exporter import ExporterRegistry, BatchSpanProcessor
+
 
 logger = logging.getLogger(__name__)
 

@@ -8,7 +8,7 @@ import logging
 from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 
-from app.workers.worker_templates import WorkerTemplate, WorkerTemplateType
+from app.workers.worker_templates import WorkerTemplateType
 from app.autonomy.execution_engine import AutonomousExecutionEngine
 
 logger = logging.getLogger(__name__)

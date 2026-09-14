@@ -12,8 +12,7 @@ import uuid
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
     InvalidUnifiedIntelligenceInputException,
-    HighRiskUnifiedActionRequiresApprovalException,
-    GovernanceUnifiedPolicyViolationException
+    HighRiskUnifiedActionRequiresApprovalException
 )
 from app.unified_intelligence.coordination import CoordinationPlan
 from app.unified_intelligence.recommendations import UnifiedRecommendation
@@ -84,15 +83,6 @@ class GovernancePolicyEvaluatorEngine:
 
         if is_high_risk and not approved_by:
             reasons.append(f"Recommendation {recommendation.recommendation_id} is high risk and requires explicit human approval.")
-            res = GovernanceEvaluationResult(
-                evaluation_id=eval_id,
-                tenant_id=tenant_id,
-                plan_id=None,
-                recommendation_id=recommendation.recommendation_id,
-                policy_status="REQUIRE_APPROVAL",
-                reasons=reasons,
-                risk_score=0.85
-            )
             raise HighRiskUnifiedActionRequiresApprovalException(
                 f"Governance policy requires human approval for action '{recommendation.title}' in tenant '{tenant_id}'."
             )

@@ -5,7 +5,6 @@ Defines and manages telemetry and metrics prefixed with ai_unified_intelligence_
 """
 
 import logging
-from typing import Dict, Any
 
 try:
     from prometheus_client import Counter, Gauge

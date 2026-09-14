@@ -4,7 +4,7 @@ Workflow Database Persistence Models (SQLAlchemy)
 
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Integer, Float, DateTime, Text, JSON, ForeignKey, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, Text, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base

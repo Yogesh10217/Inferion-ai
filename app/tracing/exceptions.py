@@ -1,2 +1,7 @@
-class TracingError(Exception): pass
-class ExporterConfigurationError(TracingError): pass
+class TracingError(Exception):
+    pass
+
+
+class ExporterConfigurationError(TracingError):
+    pass
+

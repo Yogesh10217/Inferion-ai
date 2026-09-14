@@ -5,7 +5,6 @@ Workflow Registry for Definitions & Templates
 from typing import Dict, Any, List, Optional
 from app.workflows.workflow import WorkflowDefinition
 from app.workflows.templates import WorkflowTemplates
-from app.workflows.exceptions import WorkflowError
 
 
 class WorkflowRegistry:

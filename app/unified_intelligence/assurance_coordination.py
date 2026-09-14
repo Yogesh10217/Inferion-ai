@@ -10,7 +10,6 @@ from datetime import datetime
 import uuid
 
 from app.unified_intelligence.exceptions import (
-    CrossTenantUnifiedIntelligenceException,
     InvalidUnifiedIntelligenceInputException
 )
 from app.unified_intelligence.domains import IntelligenceDomain

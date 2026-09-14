@@ -6,7 +6,8 @@ and intelligence performance stats with tenant isolation.
 """
 
 from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
+
 
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,

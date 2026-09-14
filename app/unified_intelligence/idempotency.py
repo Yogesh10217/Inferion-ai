@@ -5,13 +5,12 @@ Enforces idempotency across signal ingestion, situation updates, recommendation 
 and delegation requests using SHA-256 fingerprinting.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 import hashlib
 import json
 
 from app.unified_intelligence.exceptions import (
-    CrossTenantUnifiedIntelligenceException,
     InvalidUnifiedIntelligenceInputException
 )
 

@@ -12,7 +12,7 @@ from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
     InvalidUnifiedIntelligenceInputException
 )
-from app.unified_intelligence.coordination import CoordinationPlan, CoordinationStep
+from app.unified_intelligence.coordination import CoordinationPlan
 
 
 class RemediationActionResult:

@@ -5,12 +5,11 @@ Learns cross-domain correlation patterns and outcome feedback in strictly ADVISO
 enforcing auto_execute = False for zero unapproved mutation.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime
 import uuid
 
 from app.unified_intelligence.exceptions import (
-    CrossTenantUnifiedIntelligenceException,
     InvalidUnifiedIntelligenceInputException
 )
 

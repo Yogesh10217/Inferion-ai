@@ -9,27 +9,24 @@ governance evaluation, autonomous delegation, evidence creation, and observabili
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 import logging
-import uuid
 
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException,
-    HighRiskUnifiedActionRequiresApprovalException
+    InvalidUnifiedIntelligenceInputException
 )
 from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.providers import IntelligenceProviderRegistry, BaseIntelligenceProvider
-from app.unified_intelligence.normalization_contracts import UnifiedDomainInput, NormalizedSignal
-from app.unified_intelligence.confidence import ConfidenceCalculator
+from app.unified_intelligence.normalization_contracts import UnifiedDomainInput
 from app.unified_intelligence.signals import UnifiedSignal
 from app.unified_intelligence.signal_normalization import SignalNormalizationEngine
 from app.unified_intelligence.context_fusion import ContextFusionEngine, UnifiedContextPolicy, UnifiedContext
-from app.unified_intelligence.correlation import CrossDomainCorrelationEngine, CorrelationGroup
+from app.unified_intelligence.correlation import CrossDomainCorrelationEngine
 from app.unified_intelligence.causal_analysis import CausalAnalysisEngine, CausalHypothesis
-from app.unified_intelligence.dependency_intelligence import DependencyIntelligenceEngine, DependencyGraph
-from app.unified_intelligence.risk_propagation import RiskPropagationEngine, RiskPropagationGraph
+from app.unified_intelligence.dependency_intelligence import DependencyIntelligenceEngine
+from app.unified_intelligence.risk_propagation import RiskPropagationEngine
 from app.unified_intelligence.situation_awareness import SituationAwarenessEngine, EnterpriseSituation
-from app.unified_intelligence.timeline import UnifiedTimelineEngine, CorrelationTimeline
-from app.unified_intelligence.impact import UnifiedImpactEngine, UnifiedImpactAssessment
+from app.unified_intelligence.timeline import UnifiedTimelineEngine
+from app.unified_intelligence.impact import UnifiedImpactEngine
 from app.unified_intelligence.risk import UnifiedRiskEngine, UnifiedRiskAssessment
 from app.unified_intelligence.assurance_coordination import CrossDomainAssuranceCoordinator, UnifiedAssurancePosture
 from app.unified_intelligence.trust import CrossDomainTrustEngine, UnifiedTrustAssessment
@@ -37,12 +34,12 @@ from app.unified_intelligence.recommendations import UnifiedRecommendationEngine
 from app.unified_intelligence.coordination import CoordinationPlannerEngine, CoordinationPlan
 from app.unified_intelligence.governance import GovernancePolicyEvaluatorEngine, GovernanceEvaluationResult
 from app.unified_intelligence.investigations import UnifiedInvestigationEngine, UnifiedInvestigation
-from app.unified_intelligence.remediation import CrossDomainRemediationCoordinator, RemediationActionResult
+from app.unified_intelligence.remediation import CrossDomainRemediationCoordinator
 from app.unified_intelligence.delegation import AutonomousDelegationEngine
-from app.unified_intelligence.verification import DelegationVerificationEngine, UnifiedVerificationResult
-from app.unified_intelligence.evidence import SHA256EvidenceLedgerEngine, UnifiedEvidenceRecord
+from app.unified_intelligence.verification import DelegationVerificationEngine
+from app.unified_intelligence.evidence import SHA256EvidenceLedgerEngine
 from app.unified_intelligence.snapshots import UnifiedSnapshotGenerator
-from app.unified_intelligence.learning import AdvisoryLearningEngine, AdvisoryModelInsight
+from app.unified_intelligence.learning import AdvisoryLearningEngine
 from app.unified_intelligence.analytics import CrossDomainAnalyticsEngine, UnifiedAnalyticsSummary
 from app.unified_intelligence.observability import UnifiedObservabilityEngine
 from app.unified_intelligence.billing import IntelligenceBillingEngine, UnifiedBillingRecord

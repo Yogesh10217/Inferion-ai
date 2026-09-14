@@ -2,7 +2,7 @@
 Conditional Execution Engine & Branch Evaluator
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from app.workflows.edge import Edge
 
 

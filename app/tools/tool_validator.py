@@ -3,9 +3,10 @@ Tool Parameter and Input Validator
 """
 
 import logging
-from typing import Dict, Any, List
-from app.tools.tool import BaseTool, ToolMetadata
+from typing import Dict, Any
+from app.tools.tool import BaseTool
 from app.tools.exceptions import ToolValidationError
+
 
 logger = logging.getLogger(__name__)
 

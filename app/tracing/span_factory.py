@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Optional
 from .tracer import get_tracer, Span
 from .trace_attributes import TraceAttributes
 

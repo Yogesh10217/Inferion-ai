@@ -5,12 +5,10 @@ Tracks tenant resource consumption, signal ingestion units, situation processing
 and cross-domain reasoning metrics for accurate billing and quota enforcement.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime
-import uuid
 
 from app.unified_intelligence.exceptions import (
-    CrossTenantUnifiedIntelligenceException,
     InvalidUnifiedIntelligenceInputException
 )
 
@@ -86,9 +84,9 @@ class IntelligenceBillingEngine:
         record.correlations_computed += correlations
         # Calculation: 0.01 per signal + 0.10 per situation + 0.05 per correlation
         record.total_billing_units = (
-            (record.signals_processed * 0.01) +
-            (record.situations_evaluated * 0.10) +
-            (record.correlations_computed * 0.05)
+            (record.signals_processed * 0.01)
+            + (record.situations_evaluated * 0.10)
+            + (record.correlations_computed * 0.05)
         )
         record.updated_at = datetime.utcnow()
         return record

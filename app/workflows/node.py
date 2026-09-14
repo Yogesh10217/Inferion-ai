@@ -154,7 +154,7 @@ class AgentNode(BaseNode):
         self.started_at = datetime.now(timezone.utc).isoformat()
         self.status = NodeStatus.RUNNING
         prompt = self.config.get("prompt") or context.get("prompt") or f"Execute agent task for node {self.name}"
-        
+
         # Check tenant context
         tenant_org = context.get("organization_id")
         if not tenant_org:
@@ -214,7 +214,7 @@ class ToolNode(BaseNode):
             raise RBACPermissionDeniedError(f"User with roles {user_roles} lacks required role '{required_role}' for tool execution")
 
         params = self.config.get("parameters", {})
-        
+
         # Tool execution handler
         tool_executor = context.get("tool_executor")
         if tool_executor and hasattr(tool_executor, "execute_tool"):
@@ -301,7 +301,7 @@ class ConditionNode(BaseNode):
         try:
             # ponytail: simple eval in isolated dict for condition expressions
             eval_result = bool(eval(expr, {"__builtins__": {}}, variables))
-        except Exception as e:
+        except Exception:
             eval_result = False
 
         self.input_data = {"expression": expr, "variables": variables}

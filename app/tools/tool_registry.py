@@ -4,10 +4,11 @@ Thread-safe, Multi-tenant, RBAC & Version-aware Tool Registry
 
 import threading
 import logging
-from typing import Dict, Any, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
-from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolDefinition
-from app.tools.exceptions import ToolNotFoundException, ToolValidationError, ToolPermissionDenied
+from app.tools.tool import BaseTool, ToolMetadata, ToolCategory
+from app.tools.exceptions import ToolNotFoundException, ToolValidationError
+
 
 logger = logging.getLogger(__name__)
 

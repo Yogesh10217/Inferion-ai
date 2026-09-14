@@ -4,7 +4,7 @@ Delegation Verification Engine for Phase 5.51 Enterprise AI Unified Intelligence
 Verifies the execution results and post-delegation status of delegated requests.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime
 import uuid
 

@@ -82,7 +82,7 @@ class ContextFusionEngine:
 
         # Apply context bounding policy (max_signals limit)
         bounded_signals = signals[-active_policy.max_signals:] if len(signals) > active_policy.max_signals else signals
-        
+
         # Bounded domains
         all_domains = []
         for s in bounded_signals:

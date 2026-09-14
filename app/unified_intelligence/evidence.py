@@ -5,7 +5,7 @@ Generates and seals tamper-evident audit packages with SHA-256 verification,
 raising ImmutableUnifiedIntelligenceRecordException if mutations are attempted on finalized records.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime
 import hashlib
 import json

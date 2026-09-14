@@ -4,7 +4,6 @@ SQLAlchemy / ORM Database Models for Phase 5.51 Enterprise AI Unified Intelligen
 Defines persistence model structures for database serialization.
 """
 
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
 from pydantic import BaseModel, Field
 

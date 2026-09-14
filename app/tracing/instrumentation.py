@@ -1,7 +1,8 @@
 import logging
 from typing import Any
 from .middleware import TracingMiddleware
-from .tracer import get_tracer
+
+
 
 logger = logging.getLogger(__name__)
 

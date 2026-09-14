@@ -6,7 +6,8 @@ import logging
 from typing import Dict, Any, List, Optional
 from app.tools.tool import BaseTool, ToolCapability
 from app.tools.tool_context import ToolContext
-from app.tools.tool_policies import ToolPolicy, PolicyEffect, PolicyRule
+from app.tools.tool_policies import ToolPolicy, PolicyEffect
+
 from app.tools.exceptions import ToolPermissionDenied, ToolApprovalRequiredException
 
 logger = logging.getLogger(__name__)
