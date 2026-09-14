@@ -8,6 +8,35 @@ class AuditAdminService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
+    async def record_event(
+        self,
+        action: str,
+        organization_id: str,
+        actor_id: Optional[str] = None,
+        workspace_id: Optional[str] = None,
+        resource_type: Optional[str] = None,
+        resource_id: Optional[str] = None,
+        severity: str = "info",
+        details: Optional[dict] = None,
+        category: Optional[str] = None,
+        status: Optional[str] = None,
+    ) -> AuditEvent:
+        event = AuditEvent(
+            action=action,
+            actor_id=actor_id,
+            organization_id=organization_id,
+            workspace_id=workspace_id,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            severity=severity,
+            details=str(details) if details else None,
+            category=category,
+        )
+        self.db.add(event)
+        await self.db.commit()
+        await self.db.refresh(event)
+        return event
+
     async def search_events(
         self,
         organization_id: Optional[str] = None,

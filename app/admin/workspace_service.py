@@ -8,6 +8,13 @@ class WorkspaceAdminService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
+    async def create_workspace(self, name: str, organization_id: str, slug: Optional[str] = None, description: Optional[str] = None) -> Workspace:
+        ws = Workspace(name=name, organization_id=organization_id, description=description)
+        self.db.add(ws)
+        await self.db.commit()
+        await self.db.refresh(ws)
+        return ws
+
     async def list_workspaces(self, organization_id: Optional[str] = None, limit: int = 100, offset: int = 0) -> List[Workspace]:
         stmt = select(Workspace)
         if organization_id:

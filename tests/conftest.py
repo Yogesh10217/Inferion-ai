@@ -40,6 +40,11 @@ def event_loop():
 def anyio_backend():
     return "asyncio"
 
+@pytest_asyncio.fixture(autouse=True)
+async def auto_setup_db():
+    from app.core.database import init_db
+    await init_db()
+
 @pytest.fixture
 def get_client(event_loop):
     from httpx import AsyncClient, ASGITransport

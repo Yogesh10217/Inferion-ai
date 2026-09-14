@@ -54,21 +54,30 @@ async def create_chat_completion(
             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )
 
-    response = await service.complete(model_id=payload.model, prompt=payload.messages[-1].content)
+    response = await service.complete(
+        model_id=payload.model,
+        prompt=payload.messages[-1].content,
+        metadata=payload.metadata,
+    )
     request.state.provider = response.provider
     request.state.model = response.model
 
+    prompt_toks = response.usage.prompt_tokens if response.usage else 0
+    comp_toks = response.usage.completion_tokens if response.usage else 0
+    tot_toks = response.usage.total_tokens if response.usage else (prompt_toks + comp_toks)
+
     return ChatCompletionResponse(
-        id="chatcmpl-placeholder",
+        id=response.id or "chatcmpl-placeholder",
         object="chat.completion",
-        created=0,
+        created=int(response.created.timestamp()) if (response.created and hasattr(response.created, "timestamp")) else 0,
         model=payload.model,
         choices=[
             Choice(
                 index=0,
                 message=ChatCompletionChoiceMessage(role="assistant", content=response.text),
-                finish_reason="stop",
+                finish_reason=response.finish_reason or "stop",
             )
         ],
-        usage=Usage(prompt_tokens=0, completion_tokens=0, total_tokens=0),
+        usage=Usage(prompt_tokens=prompt_toks, completion_tokens=comp_toks, total_tokens=tot_toks),
     )
+

@@ -26,6 +26,11 @@ class InferenceService(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def generate(self, request: InferenceRequest) -> InferenceResponse:
+        """Generate a completion directly for the given InferenceRequest."""
+        raise NotImplementedError
+
+    @abstractmethod
     async def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
         """Stream a completion for the given model and prompt."""
         raise NotImplementedError
@@ -34,6 +39,7 @@ class InferenceService(ABC):
     async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
         """Stream a completion returning InferenceResponse chunks."""
         raise NotImplementedError
+
 
 
 class DefaultInferenceService(InferenceService):
@@ -103,6 +109,23 @@ class DefaultInferenceService(InferenceService):
             raise ProviderUnavailableError(f"Provider failed for model '{model_id}'") from exc
 
         return response
+
+    async def generate(self, request: InferenceRequest) -> InferenceResponse:
+        model_id = request.model
+        prompt = self._extract_prompt_from_request(request)
+        return await self.complete(
+            model_id=model_id,
+            prompt=prompt,
+            temperature=request.temperature,
+            top_p=request.top_p,
+            max_tokens=request.max_tokens,
+            stream=request.stream,
+            stop=request.stop,
+            frequency_penalty=request.frequency_penalty,
+            presence_penalty=request.presence_penalty,
+            metadata=request.metadata,
+        )
+
 
     async def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
         self._validate_request(model_id=model_id, prompt=prompt)

@@ -9,6 +9,13 @@ class OrganizationAdminService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
+    async def create_organization(self, name: str, slug: str) -> Organization:
+        org = Organization(name=name, slug=slug, status="active")
+        self.db.add(org)
+        await self.db.commit()
+        await self.db.refresh(org)
+        return org
+
     async def list_organizations(self, limit: int = 100, offset: int = 0) -> List[Organization]:
         result = await self.db.execute(select(Organization).limit(limit).offset(offset))
         return result.scalars().all()
