@@ -29,15 +29,24 @@ class PGVectorStore(VectorStore):
             max_retries: Max retries for operations.
             base_backoff: Base backoff time for retries in seconds.
         """
-        # Ensure connection string is for asyncpg
-        if connection_string.startswith("postgresql://"):
-            connection_string = connection_string.replace("postgresql://", "postgresql+asyncpg://", 1)
+        connect_args = {}
+        if "postgresql+asyncpg" in connection_string or "postgres+asyncpg" in connection_string:
+            if "?" in connection_string:
+                base_url, query_str = connection_string.split("?", 1)
+                params = [p for p in query_str.split("&") if not p.startswith("sslmode=") and not p.startswith("channel_binding=")]
+                connection_string = base_url + ("?" + "&".join(params) if params else "")
+            import ssl
+            ssl_ctx = ssl.create_default_context()
+            ssl_ctx.check_hostname = False
+            ssl_ctx.verify_mode = ssl.CERT_NONE
+            connect_args["ssl"] = ssl_ctx
 
         self.engine = create_async_engine(
             connection_string,
             pool_size=pool_size,
             max_overflow=max_overflow,
-            pool_pre_ping=True
+            pool_pre_ping=True,
+            connect_args=connect_args
         )
         self.session_maker = async_sessionmaker(self.engine, class_=AsyncSession, expire_on_commit=False)
         self.max_retries = max_retries

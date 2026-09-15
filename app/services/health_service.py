@@ -4,6 +4,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+from sqlalchemy import text
+
+from app.core.config import get_settings
+from app.core.database import async_session_maker
 from app.providers.provider_factory import ProviderFactory
 from app.registry.model_registry import ModelRegistry
 from app.services.metrics_service import MetricsService
@@ -18,7 +22,7 @@ class ProviderHealth:
 
 
 class HealthService:
-    """Service to aggregate system health, readiness, and liveness information."""
+    """Service to aggregate system health, readiness, liveness, DB, and Redis information."""
 
     def __init__(
         self,
@@ -34,6 +38,32 @@ class HealthService:
         self.startup_time = startup_time
         self.app_version = app_version
 
+    async def check_database_health(self) -> dict[str, Any]:
+        """Check PostgreSQL database connectivity via SELECT 1."""
+        try:
+            async with async_session_maker() as session:
+                res = await session.execute(text("SELECT 1"))
+                if res.scalar() == 1:
+                    return {"status": "healthy", "message": "Database connection OK"}
+                return {"status": "unhealthy", "message": "Unexpected SELECT 1 result"}
+        except Exception as exc:
+            return {"status": "unhealthy", "message": f"Database error: {exc}"}
+
+    async def check_redis_health(self) -> dict[str, Any]:
+        """Check Redis cache and rate-limiting backend connectivity."""
+        try:
+            settings = get_settings()
+            if settings.cache_backend.lower() != "redis" and settings.rate_limit_backend.lower() != "redis":
+                return {"status": "disabled", "message": "Redis not configured for cache or rate limiting"}
+            
+            import redis.asyncio as aioredis
+            client = aioredis.from_url(settings.redis_url, socket_timeout=2.0)
+            await client.ping()
+            await client.aclose()
+            return {"status": "healthy", "message": "Redis connection OK"}
+        except Exception as exc:
+            return {"status": "degraded", "message": f"Redis unreachable: {exc}"}
+
     async def check_providers_health(self) -> list[ProviderHealth]:
         """Perform health checks on all registered providers."""
         results = []
@@ -48,28 +78,33 @@ class HealthService:
         return results
 
     async def get_health_status(self, endpoint: str = "health") -> dict[str, Any]:
-        """Compile a full health report of the system."""
+        """Compile a full health report of the system including DB and Redis."""
+        db_health = await self.check_database_health()
+        redis_health = await self.check_redis_health()
         provider_health_list = await self.check_providers_health()
 
-        # Check overall status: if any provider has an error or is unhealthy, overall might be degraded,
-        # but the app itself might still be considered healthy. Let's make overall_status depend on providers.
-        # If all providers are healthy, overall is healthy.
-        all_healthy = all(p.status == "healthy" for p in provider_health_list)
-        overall_status = "healthy" if all_healthy else "degraded"
+        all_providers_healthy = all(p.status == "healthy" for p in provider_health_list)
+        
+        if db_health["status"] != "healthy":
+            overall_status = "unhealthy"
+        elif not all_providers_healthy or redis_health["status"] == "degraded":
+            overall_status = "degraded"
+        else:
+            overall_status = "healthy"
 
         uptime_seconds = (datetime.now(timezone.utc) - self.startup_time).total_seconds()
 
-        # Build response map
         return {
             "status": "ok" if endpoint == "health" else ("ready" if endpoint == "ready" else "alive"),
             "overall_status": overall_status,
             "application_version": self.app_version,
             "uptime": uptime_seconds,
             "startup_timestamp": self.startup_time.isoformat(),
+            "database": db_health,
+            "redis": redis_health,
             "registered_providers": self.provider_factory.list_providers(),
             "registered_models": [m.id for m in self.registry.list_models()],
             "provider_health": {p.name: p.status for p in provider_health_list},
-            "application_state": "healthy",
+            "application_state": overall_status,
             "request_count": self.metrics_service.get_request_count(),
-            "memory_usage": "0 MB",  # Placeholder
         }

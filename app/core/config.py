@@ -21,9 +21,13 @@ class Settings(BaseSettings):
     api_prefix: str = Field(default="/v1", alias="API_PREFIX")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
+    anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
+    gemini_api_key: str | None = Field(default=None, alias="GEMINI_API_KEY")
+    cohere_api_key: str | None = Field(default=None, alias="COHERE_API_KEY")
+    mistral_api_key: str | None = Field(default=None, alias="MISTRAL_API_KEY")
     ollama_base_url: str = Field(default="http://localhost:11434", alias="OLLAMA_BASE_URL")
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"], alias="CORS_ORIGINS")
-    
+
     # Batching Config
     batch_enabled: bool = Field(default=True, alias="BATCH_ENABLED")
     batch_max_size: int = Field(default=10, alias="BATCH_MAX_SIZE")

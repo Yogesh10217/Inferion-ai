@@ -19,10 +19,19 @@ build/
 .uv/
 uv.lock
 
-# Environment
+# Environment & Secrets
 .env
 .env.local
 .env.*.local
+.env.staging
+.env.production.simulation
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+test.db
+data/*.db
 
 # Node / Frontend
 node_modules/
@@ -40,8 +49,9 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Temporal
-# (No generated files to ignore, but temporal server data if running locally)
-
-# Docker
+# Logs & Temporary Traces
 *.log
+pytest.log
+test_output.txt
+traceback.txt
+replacements.txt

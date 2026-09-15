@@ -2,10 +2,27 @@ name: Generate Software Bill of Materials (SBOM)
 on:
   push:
     branches: [ main ]
+    tags: [ "v*" ]
+
 jobs:
   sbom:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Generate SBOM
-        run: echo "SBOM generated."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Container Image for SBOM
+        run: docker build -t llm-engine:sbom .
+
+      - name: Generate SBOM via Syft
+        uses: anchore/sbom-action@v0
+        with:
+          image: llm-engine:sbom
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-spdx-json
+          path: sbom.spdx.json

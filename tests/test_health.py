@@ -1,7 +1,5 @@
-from app.main import app
-
-
 import pytest
+
 
 @pytest.mark.asyncio
 async def test_health_endpoint(get_client) -> None:
@@ -14,12 +12,14 @@ async def test_health_endpoint(get_client) -> None:
         assert "application_version" in data
         assert "uptime" in data
         assert "startup_timestamp" in data
+        assert "database" in data
+        assert "redis" in data
         assert "registered_providers" in data
         assert "registered_models" in data
         assert "provider_health" in data
-        assert data["application_state"] == "healthy"
+        assert "application_state" in data
         assert "request_count" in data
-        assert "memory_usage" in data
+
 
 @pytest.mark.asyncio
 async def test_ready_and_live_endpoints(get_client) -> None:

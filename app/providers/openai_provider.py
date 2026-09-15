@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import ChatMessage, InferenceRequest
+from app.core.config import get_settings
 from app.core.exceptions import ProviderUnavailableException
 
 
@@ -20,7 +21,7 @@ class OpenAIProvider(BaseProvider):
     name = "openai"
 
     def __init__(self, *, api_key: str | None = None, base_url: str | None = None) -> None:
-        self.api_key = api_key
+        self.api_key = api_key or get_settings().openai_api_key
         self.base_url = base_url or "https://api.openai.com/v1"
 
     async def generate(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> InferenceResponse:

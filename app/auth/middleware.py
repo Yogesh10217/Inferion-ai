@@ -20,6 +20,7 @@ from app.auth.rbac import RBACService
 settings = get_settings()
 
 PUBLIC_PATHS = [
+    re.compile(r"^/$"),
     re.compile(r"^(?:/api)?(?:/v1)?/health/?$"),
     re.compile(r"^(?:/api)?(?:/v1)?/live/?$"),
     re.compile(r"^(?:/api)?(?:/v1)?/ready/?$"),

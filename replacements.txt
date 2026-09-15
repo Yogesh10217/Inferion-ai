@@ -1,3 +1,0 @@
---password supersecret==>--password <your_admin_password>
-my_secret_key_123==>test_webhook_secret_key
-supersecretpassword123==>test_user_password_456

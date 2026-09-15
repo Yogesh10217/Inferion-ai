@@ -1,5 +1,6 @@
 import logging
 import os
+import ssl
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -11,17 +12,36 @@ logger = logging.getLogger("app")
 
 settings = get_settings()
 
-if settings.database_url.startswith("sqlite"):
-    db_path = settings.database_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
+db_url = settings.database_url
+connect_args = {}
+
+if db_url.startswith("sqlite"):
+    db_path = db_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
     dir_name = os.path.dirname(db_path)
     if dir_name:
         os.makedirs(dir_name, exist_ok=True)
+elif "postgresql+asyncpg" in db_url or "postgres+asyncpg" in db_url:
+    # asyncpg dialect does not support `sslmode` as a connection parameter.
+    # Strip `sslmode` and `channel_binding` from URL query string and pass SSL context via connect_args.
+    if "?" in db_url:
+        base_url, query_str = db_url.split("?", 1)
+        params = [
+            p for p in query_str.split("&")
+            if not p.startswith("sslmode=") and not p.startswith("channel_binding=")
+        ]
+        db_url = base_url + ("?" + "&".join(params) if params else "")
+
+    ssl_ctx = ssl.create_default_context()
+    ssl_ctx.check_hostname = False
+    ssl_ctx.verify_mode = ssl.CERT_NONE
+    connect_args["ssl"] = ssl_ctx
 
 engine = create_async_engine(
-    settings.database_url,
+    db_url,
     echo=settings.debug,
     future=True,
     pool_pre_ping=True,
+    connect_args=connect_args,
 )
 
 async_session_maker = async_sessionmaker(
@@ -43,7 +63,6 @@ import app.registry.models
 import app.mlops.models
 
 
-
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     """
     FastAPI dependency for injecting the database session.
@@ -62,7 +81,6 @@ async def init_db() -> None:
     or during bootstrap.
     """
     if settings.database_url.startswith("sqlite"):
-        # Make sure the data directory exists
         db_path = settings.database_url.replace("sqlite+aiosqlite:///", "").replace("sqlite:///", "")
         dir_name = os.path.dirname(db_path)
         if dir_name:
@@ -71,4 +89,3 @@ async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created.")
-
