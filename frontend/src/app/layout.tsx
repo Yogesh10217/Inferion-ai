@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Inferion AI | High-Performance LLM Inference Engine",
-  description: "Foundation of the new digital epoch. High-throughput model serving, real-time observability, dynamic batching, and enterprise governance.",
+  description: "High-throughput LLM inference for modern AI applications. Real-time model serving, dynamic batching, and enterprise governance with sub-millisecond latency.",
 };
 
 export default function RootLayout({

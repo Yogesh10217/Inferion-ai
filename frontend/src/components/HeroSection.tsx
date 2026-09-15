@@ -91,16 +91,15 @@ export const HeroSection: React.FC = () => {
 
             {/* Headline */}
             <h1 className="font-display text-[42px] md:text-[56px] font-medium tracking-tight text-[#0a1b33] leading-[1.1] mb-4">
-              Foundation of the
+              High-throughput LLM inference
               <br />
-              new digital epoch
+              for modern AI applications
             </h1>
 
             {/* Subheadline */}
             <p className="font-sans text-[14px] md:text-[15px] text-[#64748b] leading-relaxed max-w-lg mb-8">
-              Designing products, powering ecosystems and laying the foundation
-              of a decentralized web for enterprises, builders and communities
-              alike.
+              Powering real-time model serving, dynamic batching, and enterprise
+              governance with sub-millisecond latency.
             </p>
 
             {/* Contact Button */}
