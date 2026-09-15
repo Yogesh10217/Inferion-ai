@@ -305,6 +305,33 @@ def create_app() -> FastAPI:
     if settings.prometheus_enabled:
         app.include_router(metrics_router)
 
+    from fastapi.openapi.utils import get_openapi
+    def custom_openapi():
+        if app.openapi_schema:
+            return app.openapi_schema
+        openapi_schema = get_openapi(
+            title=settings.app_name,
+            version=settings.app_version,
+            description="Enterprise AI LLM Inference Engine API",
+            routes=app.routes,
+        )
+        openapi_schema["components"]["securitySchemes"] = {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Enter Bearer Token or API Key",
+            }
+        }
+        for path in openapi_schema["paths"].values():
+            for method in path.values():
+                if isinstance(method, dict):
+                    method.setdefault("security", [{"HTTPBearer": []}])
+        app.openapi_schema = openapi_schema
+        return app.openapi_schema
+
+    app.openapi = custom_openapi
+
     @app.get("/", include_in_schema=False)
     async def root() -> dict[str, str]:
         return {"service": settings.app_name, "status": "ok"}
