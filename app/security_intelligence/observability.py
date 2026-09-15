@@ -1,10 +1,9 @@
 """Prometheus Security Observability Metrics Subsystem (Phase 5.32)."""
 
 import logging
-from typing import Dict, Any, Optional
 from prometheus_client import Counter, Gauge
 
-from app.platform_contracts.observability import MetricNameValidator, SafeMetricLabelSanitizer
+from app.platform_contracts.observability import SafeMetricLabelSanitizer
 
 logger = logging.getLogger(__name__)
 

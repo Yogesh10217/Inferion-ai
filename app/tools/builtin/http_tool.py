@@ -5,7 +5,7 @@ Production HTTP Request Tool
 import time
 import httpx
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
 from app.tools.tool_context import ToolContext

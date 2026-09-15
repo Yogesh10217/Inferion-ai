@@ -8,8 +8,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
-import hashlib
-import json
 
 from app.deployment.secrets import SecretsSanitizer
 from app.security_operations.audit_integrity import AuditIntegrityResult

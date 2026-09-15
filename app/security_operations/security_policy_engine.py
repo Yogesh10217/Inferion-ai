@@ -37,7 +37,6 @@ class SecurityPolicy:
     rules: List[SecurityPolicyRule]
 
 
-
 @dataclass
 class SecurityPolicyResult:
     overall_action: SecurityPolicyAction
@@ -106,10 +105,10 @@ class SecurityPolicyEngine:
         if hasattr(posture_result, "critical_findings"):
             for f in posture_result.critical_findings:
                 findings.append({"category": "SECRET_EXPOSURE", "finding": f})
-        
+
         res = self.evaluate_policies(findings, evidence_level)
         res.is_production = is_production
-        
+
         # Check production threshold
         score = posture_result.score if hasattr(posture_result, 'score') else 100.0
         if is_production and score < self.min_production_score:

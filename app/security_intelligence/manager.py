@@ -1,27 +1,27 @@
 """Master SecurityIntelligenceManager Orchestrator Subsystem (Phase 5.32)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any
 
-from app.security_intelligence.assets import SecurityAssetManager, SecurityAsset, SecurityAssetType, SecurityAssetCriticality
-from app.security_intelligence.attack_surface import AttackSurfaceManager, AttackSurface, AttackSurfaceEntry
-from app.security_intelligence.signals import SecuritySignalManager, SecuritySignal, SecuritySignalType, SecuritySignalSeverity
-from app.security_intelligence.threats import ThreatManager, SecurityThreat, ThreatType, ThreatSeverity
-from app.security_intelligence.ai_threats import AIThreatManager, AIThreat, AIThreatType, AIThreatSeverity
-from app.security_intelligence.vulnerabilities import VulnerabilityManager, SecurityVulnerability, VulnerabilitySeverity, VulnerabilityStatus
-from app.security_intelligence.correlation import SecurityCorrelationManager, SecurityCorrelation, CorrelationType
-from app.security_intelligence.attack_paths import AttackPathAnalyzer, AttackPath
-from app.security_intelligence.incidents import SecurityIncidentManager, SecurityIncident, SecurityIncidentStatus, SecurityIncidentSeverity
-from app.security_intelligence.impact import SecurityImpactAnalyzer, SecurityImpactAssessment
-from app.security_intelligence.risk import SecurityRiskManager, SecurityRiskAssessment
-from app.security_intelligence.governance import SecurityGovernanceEngine, GovernanceDecision
-from app.security_intelligence.remediation import SecurityRemediationManager, SecurityRemediationPlan, SecurityRemediationAction, SecurityRemediationPriority
-from app.security_intelligence.posture import SecurityPostureManager, SecurityPosture
-from app.security_intelligence.trust import SecurityTrustEngine, SecurityTrustScore
-from app.security_intelligence.evidence import SecurityEvidenceManager, SecurityEvidenceBundle, SecurityEvidence
-from app.security_intelligence.investigations import InvestigationManager, SecurityInvestigation, InvestigationFinding
-from app.security_intelligence.learning import SecurityLearningManager, SecurityLearningRecord
-from app.security_intelligence.analytics import SecurityAnalyticsEngine, PlatformReport
+from app.security_intelligence.assets import SecurityAssetManager, SecurityAssetType, SecurityAssetCriticality
+from app.security_intelligence.attack_surface import AttackSurfaceManager, AttackSurfaceEntry
+from app.security_intelligence.signals import SecuritySignalManager, SecuritySignalType, SecuritySignalSeverity
+from app.security_intelligence.threats import ThreatManager, ThreatType, ThreatSeverity
+from app.security_intelligence.ai_threats import AIThreatManager, AIThreatType, AIThreatSeverity
+from app.security_intelligence.vulnerabilities import VulnerabilityManager, VulnerabilitySeverity, VulnerabilityStatus
+from app.security_intelligence.correlation import SecurityCorrelationManager
+from app.security_intelligence.attack_paths import AttackPathAnalyzer
+from app.security_intelligence.incidents import SecurityIncidentManager, SecurityIncidentStatus, SecurityIncidentSeverity
+from app.security_intelligence.impact import SecurityImpactAnalyzer
+from app.security_intelligence.risk import SecurityRiskManager
+from app.security_intelligence.governance import SecurityGovernanceEngine
+from app.security_intelligence.remediation import SecurityRemediationManager, SecurityRemediationAction, SecurityRemediationPriority
+from app.security_intelligence.posture import SecurityPostureManager
+from app.security_intelligence.trust import SecurityTrustEngine
+from app.security_intelligence.evidence import SecurityEvidenceManager, SecurityEvidence
+from app.security_intelligence.investigations import InvestigationManager, InvestigationFinding
+from app.security_intelligence.learning import SecurityLearningManager
+from app.security_intelligence.analytics import SecurityAnalyticsEngine
 from app.security_intelligence.observability import SecurityMetricsCollector
 from app.security_intelligence.billing import SecurityBillingTracker
 from app.security_intelligence.repositories import SecurityRepository
@@ -98,7 +98,7 @@ class SecurityIntelligenceManager:
 
         # 7. Impact & Risk Assessment
         impact = self.impact_analyzer.analyze_impact(tenant_id, asset.asset_id)
-        risk_ass = self.risk_manager.assess_security_risk(tenant_id, asset.asset_id, "HIGH")
+        self.risk_manager.assess_security_risk(tenant_id, asset.asset_id, "HIGH")
 
         # 8. Remediation Planning & Governance Evaluation
         action = SecurityRemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="REVOKE_KEY", priority=SecurityRemediationPriority.HIGH)

@@ -1,7 +1,7 @@
 """Security Signal Processing Subsystem (Phase 5.32)."""
 
 from enum import Enum
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from datetime import datetime, timezone
 import uuid
 from pydantic import BaseModel, Field

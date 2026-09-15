@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 import uuid
 
 from app.deployment.secrets import SecretsSanitizer

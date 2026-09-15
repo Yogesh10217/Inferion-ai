@@ -83,11 +83,7 @@ class IntelligenceBillingEngine:
         record.situations_evaluated += situations
         record.correlations_computed += correlations
         # Calculation: 0.01 per signal + 0.10 per situation + 0.05 per correlation
-        record.total_billing_units = (
-            (record.signals_processed * 0.01)
-            + (record.situations_evaluated * 0.10)
-            + (record.correlations_computed * 0.05)
-        )
+        record.total_billing_units = (record.signals_processed * 0.01) + (record.situations_evaluated * 0.10) + (record.correlations_computed * 0.05)
         record.updated_at = datetime.utcnow()
         return record
 

@@ -4,7 +4,7 @@ MCP Server Implementation for Model Context Protocol Subsystem
 
 import inspect
 import logging
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, Optional, Callable, Tuple
 
 from app.tools.mcp.schemas import (
     MCPJsonRpcRequest,

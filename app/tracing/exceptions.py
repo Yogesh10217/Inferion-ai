@@ -4,4 +4,3 @@ class TracingError(Exception):
 
 class ExporterConfigurationError(TracingError):
     pass
-

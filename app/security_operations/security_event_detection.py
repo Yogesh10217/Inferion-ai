@@ -93,7 +93,7 @@ class SecurityEventDetector:
             self.incident_manager = incident_manager
             self.alert_engine = alert_engine
             self.alert_deduplicating_engine = alert_deduplicating_engine
-        
+
         self.recorded_events: Dict[str, SecurityEvent] = {}
 
     def record_event(

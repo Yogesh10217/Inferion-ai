@@ -4,7 +4,7 @@ Confluence External Integration Tool
 
 import time
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
 from app.tools.tool_context import ToolContext

@@ -8,7 +8,7 @@ import time
 import asyncio
 import logging
 from io import StringIO
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
 from app.tools.tool_context import ToolContext

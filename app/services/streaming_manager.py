@@ -6,6 +6,7 @@ from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import InferenceRequest
 from app.services.request_scheduler import RequestScheduler
 
+
 class StreamingManager:
     """Intermediary between InferenceService and the scheduling layer for stream management."""
 
@@ -16,6 +17,6 @@ class StreamingManager:
         """Delegate streaming to the scheduler and yield normalized InferenceResponse chunks."""
         if self._scheduler is None:
             raise RuntimeError("RequestScheduler not configured")
-        
+
         async for chunk in self._scheduler.stream(request=request):
             yield chunk

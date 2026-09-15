@@ -6,9 +6,10 @@ from sqlalchemy import select
 from app.core.config import get_settings
 from app.core.database import async_session_maker
 from app.auth.models import User, APIKey
-from app.tenant.models import Membership, WorkspaceMembership, Organization, Workspace
+from app.tenant.models import Membership, WorkspaceMembership
 
 settings = get_settings()
+
 
 class TenantMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -19,7 +20,6 @@ class TenantMiddleware(BaseHTTPMiddleware):
 
         auth_method = getattr(request.state, "auth_method", None)
         user_id = getattr(request.state, "user_id", None)
-        
         if not user_id or auth_method in ["none", "public", "anonymous"]:
             request.state.organization_id = None
             request.state.workspace_id = None
@@ -37,10 +37,10 @@ class TenantMiddleware(BaseHTTPMiddleware):
                         request.state.organization_id = api_key.organization_id
                         request.state.workspace_id = api_key.workspace_id
                         return await call_next(request)
-            
+
             # If JWT, resolve via header or default
             org_id_header = request.headers.get("X-Organization-Id")
-            
+
             if org_id_header:
                 org_id = org_id_header
             else:
@@ -68,9 +68,9 @@ class TenantMiddleware(BaseHTTPMiddleware):
             membership = result.scalar_one_or_none()
             if not membership or membership.status != "active":
                 return JSONResponse(status_code=403, content={"detail": "Access to organization denied"})
-                
+
             request.state.organization_id = org_id
-            
+
             # Optional Workspace resolution
             workspace_id = request.headers.get("X-Workspace-Id")
             request.state.workspace_id = None
@@ -84,5 +84,5 @@ class TenantMiddleware(BaseHTTPMiddleware):
                 if not ws_membership:
                     return JSONResponse(status_code=403, content={"detail": "Access to workspace denied"})
                 request.state.workspace_id = workspace_id
-                
+
         return await call_next(request)

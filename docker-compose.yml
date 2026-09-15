@@ -137,11 +137,29 @@ services:
       timeout: 5s
       retries: 3
 
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: llm-inference-engine-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-storage:/alertmanager
+    networks:
+      - inference-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9093/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
 volumes:
   postgres-storage:
   redis-storage:
   prometheus-storage:
   grafana-storage:
+  alertmanager-storage:
 
 networks:
   inference-network:

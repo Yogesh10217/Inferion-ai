@@ -49,7 +49,7 @@ class KnowledgeTool(BaseTool):
                 output = {"results": [r.to_dict() if hasattr(r, "to_dict") else str(r) for r in results]}
             else:
                 from app.knowledge.search import SearchEngine
-                engine = SearchEngine(collection_name=collection)
+                SearchEngine(collection_name=collection)
                 # Production execution output
                 output = {
                     "query": query,

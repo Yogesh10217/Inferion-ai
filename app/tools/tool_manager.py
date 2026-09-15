@@ -3,7 +3,7 @@ High-Level Tool Platform Coordinator & Lifecycle Manager
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 
 from app.tools.tool_registry import ToolRegistry
 from app.tools.tool_executor import ToolExecutor

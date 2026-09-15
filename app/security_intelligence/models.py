@@ -1,6 +1,6 @@
 """SQLAlchemy Database ORM Models for Security Intelligence (Phase 5.32)."""
 
-from sqlalchemy import Column, String, Float, DateTime, JSON, Text, Boolean
+from sqlalchemy import Column, String, Float, DateTime, JSON
 from sqlalchemy.orm import declarative_base
 from datetime import datetime, timezone
 

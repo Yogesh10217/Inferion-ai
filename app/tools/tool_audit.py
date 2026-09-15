@@ -2,7 +2,6 @@
 Multi-tenant Audit Logging Subsystem for Enterprise Tool Calling
 """
 
-import time
 import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
@@ -88,7 +87,7 @@ class ToolAuditLogger:
     ) -> List[Dict[str, Any]]:
         logs = self._audit_records
         if tenant_id:
-            logs = [l for l in logs if l.get("tenant_id") == tenant_id]
+            logs = [log for log in logs if log.get("tenant_id") == tenant_id]
         if tool_name:
-            logs = [l for l in logs if l.get("tool_name") == tool_name]
+            logs = [log for log in logs if log.get("tool_name") == tool_name]
         return logs[-limit:]

@@ -7,7 +7,7 @@ import asyncio
 import logging
 from typing import Dict, Any, List, Optional, AsyncGenerator
 
-from app.tools.tool import BaseTool, ToolCategory, RetryPolicy
+from app.tools.tool import RetryPolicy
 from app.tools.tool_context import ToolContext
 from app.tools.tool_result import ToolResult, ToolExecutionStatus
 from app.tools.tool_registry import ToolRegistry
@@ -16,12 +16,7 @@ from app.tools.tool_permissions import ToolPermissionEngine
 from app.tools.tool_audit import ToolAuditLogger
 from app.tools.tool_billing import ToolBillingTracker
 from app.tools.exceptions import (
-    ToolException,
-    ToolNotFoundException,
-    ToolValidationError,
-    ToolPermissionDenied,
     ToolTimeoutException,
-    ToolExecutionException,
     ToolApprovalRequiredException,
 )
 from app.tools.tool_metrics import (
@@ -38,11 +33,20 @@ try:
     tracer = trace.get_tracer("app.tools.executor")
 except ImportError:
     class DummySpan:
-        def __enter__(self): return self
-        def __exit__(self, exc_type, exc_val, exc_tb): pass
-        def set_attribute(self, key, value): pass
-        def set_status(self, status, description=None): pass
-        def record_exception(self, exception): pass
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            pass
+
+        def set_attribute(self, key, value):
+            pass
+
+        def set_status(self, status, description=None):
+            pass
+
+        def record_exception(self, exception):
+            pass
 
     class DummyTracer:
         def start_as_current_span(self, name, **kwargs):

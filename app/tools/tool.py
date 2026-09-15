@@ -4,12 +4,12 @@ Tool Definition Layer & Base Abstract Class for Enterprise Tool Calling Platform
 
 import abc
 import asyncio
-from typing import Dict, Any, List, Optional, Callable, Union
+from typing import Dict, Any, List, Optional
 from enum import Enum
 from pydantic import BaseModel, Field
 
 from app.tools.tool_context import ToolContext
-from app.tools.tool_result import ToolResult, ToolExecutionStatus
+from app.tools.tool_result import ToolResult
 
 
 class ToolCategory(str, Enum):

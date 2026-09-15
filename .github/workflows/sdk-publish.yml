@@ -1,4 +1,5 @@
 name: SDK Build and Publish
+
 on:
   push:
     branches:
@@ -7,40 +8,61 @@ on:
       - 'v*.*.*'
 
 jobs:
-  build-python:
+  build-and-test-python:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Test Python SDK
         run: |
           cd sdk/python
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip build twine
           python -m pip install -e ".[test]"
           python -m pytest tests/
+      - name: Build Package
+        run: |
+          cd sdk/python
+          python -m build
+      - name: Publish to PyPI
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          cd sdk/python
+          python -m twine upload dist/*
 
-  build-typescript:
+  build-and-test-typescript:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
       - name: Test TypeScript SDK
         run: |
           cd sdk/typescript
+          npm ci
           npm test
+      - name: Publish to npm
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd sdk/typescript
+          npm publish --access public
 
-  build-go:
+  build-and-test-go:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: '1.21'
       - name: Test Go SDK

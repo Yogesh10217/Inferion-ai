@@ -43,7 +43,7 @@ class WorkflowExecutor:
         run_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Runs workflow graph execution to completion or pause point."""
-        run_id = run_id or f"run_{int(time.time()*1000)}"
+        run_id = run_id or f"run_{int(time.time() * 1000)}"
         exec_context = context or {}
         exec_context.update({
             "workflow_id": workflow_id,

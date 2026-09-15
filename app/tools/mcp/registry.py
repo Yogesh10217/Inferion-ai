@@ -4,11 +4,11 @@ MCP Registry for Managing Multiple MCP Client/Server Connections
 
 import threading
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 
 from app.tools.mcp.client import MCPClient
 from app.tools.mcp.server import MCPServer
-from app.tools.mcp.transport import MCPTransport, InMemoryTransport, StdioTransport, HTTPTransport
+from app.tools.mcp.transport import MCPTransport, InMemoryTransport
 from app.tools.exceptions import MCPException
 
 logger = logging.getLogger(__name__)

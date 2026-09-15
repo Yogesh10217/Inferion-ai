@@ -10,6 +10,7 @@ from app.services.metrics_service import MetricsService
 
 logger = get_logger("app.batching.collector")
 
+
 class BatchCollector:
     """Collects and groups inference requests into batches."""
 
@@ -24,7 +25,7 @@ class BatchCollector:
         self._metrics = metrics
         self._buckets: Dict[BatchKey, Batch] = {}
         self._lock = asyncio.Lock()
-        
+
         self._is_running = False
         self._flush_task: Optional[asyncio.Task] = None
 
@@ -44,7 +45,7 @@ class BatchCollector:
                 await self._flush_task
             except asyncio.CancelledError:
                 pass
-                
+
         # Flush any remaining batches immediately
         async with self._lock:
             for key, batch in self._buckets.items():
@@ -85,7 +86,7 @@ class BatchCollector:
                 batch = Batch(key=key)
                 self._buckets[key] = batch
                 self._metrics.record_active_batch_added()
-                
+
             batch.add_entry(entry)
 
             if self._policy.should_dispatch(batch):
@@ -107,19 +108,19 @@ class BatchCollector:
 
     async def _flush_loop(self) -> None:
         """Periodically check all buckets for timeouts."""
-        check_interval = max(0.01, self._policy._config.max_batch_wait_ms / 2000.0) # Check roughly twice per timeout window
-        
+        check_interval = max(0.01, self._policy._config.max_batch_wait_ms / 2000.0)  # Check roughly twice per timeout window
+
         while self._is_running:
             try:
                 await asyncio.sleep(check_interval)
-                
+
                 async with self._lock:
                     dispatched_keys = []
                     for key, batch in self._buckets.items():
                         if self._policy.should_dispatch(batch):
                             dispatched_keys.append(key)
                             self._dispatch(batch)
-                            
+
                     for key in dispatched_keys:
                         self._buckets.pop(key, None)
                         self._metrics.record_active_batch_removed()

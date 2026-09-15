@@ -3,6 +3,7 @@ from __future__ import annotations
 from threading import RLock
 from typing import Any
 
+
 class MetricsService:
     """Thread-safe service to track application metrics like request count, errors, and latencies."""
 
@@ -11,7 +12,7 @@ class MetricsService:
         self._request_count = 0
         self._error_count = 0
         self._total_latency = 0.0
-        
+
         # Scheduler metrics
         self._queue_depth = 0
         self._scheduled_count = 0
@@ -230,7 +231,7 @@ class MetricsService:
             }
 
     # --- Load Balancing Metrics ---
-    
+
     def record_load_balancer_decision(self, provider_id: str, instance_id: str) -> None:
         if not hasattr(self, "_load_balancer_decisions"):
             self._load_balancer_decisions = 0
@@ -238,24 +239,24 @@ class MetricsService:
             self._requests_per_instance = {}
             self._provider_failures = {}
             self._provider_failovers = {}
-            
+
         with self._lock:
             self._load_balancer_decisions += 1
             self._requests_per_provider[provider_id] = self._requests_per_provider.get(provider_id, 0) + 1
             self._requests_per_instance[instance_id] = self._requests_per_instance.get(instance_id, 0) + 1
-        
+
     def record_provider_failure(self, provider_id: str, instance_id: str) -> None:
         if not hasattr(self, "_provider_failures"):
             self._provider_failures = {}
-            
+
         key = f"{provider_id}::{instance_id}"
         with self._lock:
             self._provider_failures[key] = self._provider_failures.get(key, 0) + 1
-        
+
     def record_failover(self, provider_id: str) -> None:
         if not hasattr(self, "_provider_failovers"):
             self._provider_failovers = {}
-            
+
         with self._lock:
             self._provider_failovers[provider_id] = self._provider_failovers.get(provider_id, 0) + 1
 
@@ -283,7 +284,7 @@ class MetricsService:
             return data
 
     # --- Limits & Quotas Metrics ---
-    
+
     def record_rate_limit_check(self, allowed: bool) -> None:
         with self._lock:
             self._rate_limit_requests += 1

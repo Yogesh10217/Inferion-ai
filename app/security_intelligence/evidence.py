@@ -1,6 +1,6 @@
 """Security Evidence References Subsystem (Phase 5.32)."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, List
 from datetime import datetime, timezone
 import uuid
 from pydantic import BaseModel, Field
@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.security_intelligence.exceptions import ImmutableSecurityRecordException, SecurityEvidenceIntegrityException, CrossTenantSecurityAccessException
+from app.security_intelligence.exceptions import ImmutableSecurityRecordException, CrossTenantSecurityAccessException
 
 
 class SecurityEvidence(BaseModel):
@@ -23,7 +23,6 @@ class SecurityEvidence(BaseModel):
 class SecurityEvidenceIntegrity(BaseModel):
     is_valid: bool = True
     sha256_hash: str = ""
-
 
 
 class SecurityEvidenceBundle(BaseModel):

@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import hashlib
 import json
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.deployment.secrets import SecretsSanitizer
 

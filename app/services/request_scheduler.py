@@ -14,15 +14,18 @@ from app.services.metrics_service import MetricsService
 
 logger = get_logger("app.scheduler")
 
+
 class SchedulingPolicy(str, Enum):
     FIFO = "fifo"
     PRIORITY = "priority"
     FAIR = "fair"
 
+
 @dataclass
 class SchedulerConfig:
     max_queue_size: int = 1000
     policy: SchedulingPolicy = SchedulingPolicy.FIFO
+
 
 @dataclass
 class QueueEntry:
@@ -34,29 +37,30 @@ class QueueEntry:
     priority: int = 0
     cancellation_state: asyncio.Event = field(default_factory=asyncio.Event)
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+
     # Futures to return the result back to the caller
     result_future: asyncio.Future = field(default_factory=asyncio.Future)
     stream_queue: asyncio.Queue = field(default_factory=asyncio.Queue)
 
+
 class RequestQueue:
     """Internal async queue wrapping asyncio.Queue."""
-    
+
     def __init__(self, max_size: int = 0):
         self._queue: asyncio.Queue[QueueEntry] = asyncio.Queue(maxsize=max_size)
-        
+
     async def enqueue(self, entry: QueueEntry) -> None:
         await self._queue.put(entry)
-        
+
     async def dequeue(self) -> QueueEntry:
         return await self._queue.get()
-        
+
     def queue_size(self) -> int:
         return self._queue.qsize()
-        
+
     def pending_requests(self) -> int:
         return self.queue_size()
-        
+
     def shutdown(self) -> None:
         """Cancel all pending requests in the queue."""
         while not self._queue.empty():
@@ -69,9 +73,10 @@ class RequestQueue:
             except asyncio.QueueEmpty:
                 break
 
+
 class RequestScheduler:
     """Scheduler for enqueueing and dispatching inference requests."""
-    
+
     def __init__(
         self,
         router: RequestRouter,
@@ -90,7 +95,7 @@ class RequestScheduler:
     def start(self) -> None:
         """Start the background worker."""
         current_loop = asyncio.get_running_loop()
-        
+
         needs_restart = False
         if not self._is_running or self._worker_task is None or self._worker_task.done():
             needs_restart = True
@@ -98,7 +103,7 @@ class RequestScheduler:
             # Handle TestClient creating new event loops per test
             self._worker_task.cancel()
             needs_restart = True
-            
+
         if needs_restart:
             self._is_running = True
             self._worker_task = current_loop.create_task(self._worker_loop())
@@ -122,10 +127,10 @@ class RequestScheduler:
         entry = QueueEntry(request=request, decision=decision, is_streaming=False)
         self._metrics.record_enqueue()
         await self._queue.enqueue(entry)
-        
+
         # Start worker if not already running (lazy start)
         self.start()
-        
+
         try:
             return await asyncio.wait_for(entry.result_future, timeout=30.0)
         except asyncio.TimeoutError:
@@ -135,17 +140,16 @@ class RequestScheduler:
             entry.cancellation_state.set()
             raise
 
-
     async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
         """Enqueue a streaming request and yield its response chunks."""
         decision = await self._router.route(RoutingRequest(model_id=request.model))
         entry = QueueEntry(request=request, decision=decision, is_streaming=True)
         self._metrics.record_enqueue()
         await self._queue.enqueue(entry)
-        
+
         # Start worker if not already running (lazy start)
         self.start()
-        
+
         try:
             while True:
                 chunk = await entry.stream_queue.get()
@@ -165,13 +169,13 @@ class RequestScheduler:
                 entry = await self._queue.dequeue()
             except asyncio.CancelledError:
                 break
-                
+
             wait_time_ms = (time.time() - entry.enqueue_time) * 1000
             self._metrics.record_dequeue(wait_time_ms)
-            
+
             if entry.cancellation_state.is_set():
                 continue
-                
+
             asyncio.create_task(self._process_entry(entry))
 
     async def _process_entry(self, entry: QueueEntry) -> None:
@@ -179,11 +183,11 @@ class RequestScheduler:
         try:
             if entry.cancellation_state.is_set():
                 return
-                
+
             if self._batch_collector:
                 await self._batch_collector.add_entry(entry)
                 return
-                
+
             # Fallback direct execution if no batching layer
             # Without batching layer, we don't have load balancers here.
             # We would need to resolve the provider instance directly, but in Phase 2.3
@@ -191,7 +195,7 @@ class RequestScheduler:
             # To avoid breaking tests, we just raise an error if this fallback is hit in Phase 2.3
             # Or we could fetch it via a static method, but let's just let it fail or remove fallback.
             raise NotImplementedError("Direct fallback execution is deprecated in Phase 2.3. Use BatchCollector -> LoadBalancer.")
-                    
+
         except Exception as exc:
             if entry.is_streaming:
                 await entry.stream_queue.put(exc)

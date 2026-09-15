@@ -50,7 +50,7 @@ class HealthService:
     async def get_health_status(self, endpoint: str = "health") -> dict[str, Any]:
         """Compile a full health report of the system."""
         provider_health_list = await self.check_providers_health()
-        
+
         # Check overall status: if any provider has an error or is unhealthy, overall might be degraded,
         # but the app itself might still be considered healthy. Let's make overall_status depend on providers.
         # If all providers are healthy, overall is healthy.

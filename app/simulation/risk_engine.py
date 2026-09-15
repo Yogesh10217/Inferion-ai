@@ -3,8 +3,8 @@ Risk Analysis Engine for Plan Execution
 """
 
 import logging
-from typing import Dict, Any, List
-from pydantic import BaseModel, Field
+from typing import List
+from pydantic import BaseModel
 from app.planning.execution_plan import ExecutionPlan
 
 logger = logging.getLogger(__name__)

@@ -10,7 +10,7 @@ from enum import Enum
 import hashlib
 import json
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from app.deployment.secrets import SecretsSanitizer
 

@@ -110,7 +110,7 @@ class CoordinationPlannerEngine:
         # Create step for each domain
         prev_step_id = None
         for i, domain in enumerate(recommendation.target_domains):
-            s_id = f"step-{i+1}"
+            s_id = f"step-{i + 1}"
             step = CoordinationStep(
                 step_id=s_id,
                 target_domain=domain,

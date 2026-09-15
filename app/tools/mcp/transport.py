@@ -6,7 +6,7 @@ import abc
 import json
 import asyncio
 import logging
-from typing import Dict, Any, Optional, Callable
+from typing import Optional
 
 from app.tools.mcp.schemas import MCPJsonRpcRequest, MCPJsonRpcResponse
 from app.tools.exceptions import MCPConnectionError

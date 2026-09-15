@@ -4,11 +4,10 @@ MCP Client Implementation for Model Context Protocol Platform
 
 import uuid
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 from app.tools.mcp.schemas import (
     MCPJsonRpcRequest,
-    MCPJsonRpcResponse,
     MCPToolSchema,
     MCPResourceSchema,
     MCPPromptSchema,

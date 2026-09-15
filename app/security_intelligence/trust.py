@@ -1,11 +1,9 @@
 """Security Trust Engine Subsystem (Phase 5.32)."""
 
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
-import uuid
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence
+from app.platform_contracts.trust import TrustAssessment
 from app.platform_contracts.adapters import TrustAssessmentAdapter
 
 

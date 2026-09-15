@@ -3,9 +3,7 @@ Tool Factory for Dynamic Tool Creation
 """
 
 import inspect
-import asyncio
-from typing import Dict, Any, Callable, Optional, Type
-from pydantic import BaseModel
+from typing import Dict, Any, Callable, Optional
 
 from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
 from app.tools.tool_context import ToolContext

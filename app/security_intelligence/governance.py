@@ -1,11 +1,10 @@
 """Security Governance Orchestration Subsystem (Phase 5.32)."""
 
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
 
-from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator, PolicyEvaluationResult
-from app.governance_platform.risk import RiskManager, RiskLevel
-from app.approvals.approval_engine import ApprovalEngine, ApprovalRequest, ApprovalStatus
+from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
+from app.governance_platform.risk import RiskManager
+from app.approvals.approval_engine import ApprovalEngine
 from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionStatus, GovernanceDecisionReason
 from app.security_intelligence.remediation import SecurityRemediationPlan, SecurityRemediationPriority
 
@@ -27,7 +26,7 @@ class SecurityGovernanceEngine:
         is_high_risk = plan.priority in (SecurityRemediationPriority.HIGH, SecurityRemediationPriority.CRITICAL)
 
         if is_high_risk:
-            app_req = self.approval_engine.request_approval(
+            self.approval_engine.request_approval(
                 execution_id=plan.plan_id,
                 action_type="HIGH_RISK_SECURITY_REMEDIATION",
                 tenant_id=tenant_id,

@@ -4,7 +4,7 @@ Email External Integration Tool
 
 import time
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 
 from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
 from app.tools.tool_context import ToolContext
@@ -43,7 +43,6 @@ class EmailTool(BaseTool):
         action = parameters.get("action", "send")
         to_addr = parameters.get("to", "")
         subject = parameters.get("subject", "")
-        body = parameters.get("body", "")
 
         try:
             elapsed = time.time() - start_time

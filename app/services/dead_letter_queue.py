@@ -4,6 +4,7 @@ import uuid
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
+
 class DLQEntry(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     model: str
@@ -11,6 +12,7 @@ class DLQEntry(BaseModel):
     error: str
     failed_at: float = Field(default_factory=time.time)
     request_data: Optional[Dict[str, Any]] = None
+
 
 class DeadLetterQueue:
     """In-memory Dead Letter Queue for capturing permanently failed inference requests."""

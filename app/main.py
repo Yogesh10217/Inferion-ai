@@ -21,6 +21,7 @@ from app.api.workspaces import router as ws_router
 from app.api.quotas import router as quotas_router
 from app.api.usage import router as usage_router
 from app.limits.middleware import RateLimitMiddleware
+from app.tracing.middleware import TracingMiddleware
 from app.billing.middleware import BudgetMiddleware
 from app.api.plans import router as plans_router
 from app.api.subscriptions import router as subscriptions_router
@@ -137,10 +138,10 @@ async def lifespan(app: FastAPI):
     if hasattr(app.state, "container"):
         container = app.state.container
         container.logger.info("Shutting down the application and releasing resources...")
-        
+
         if hasattr(app.state, "deployment_manager"):
             app.state.deployment_manager.shutdown()
-        
+
         # Emit system.shutdown event
         if hasattr(container, "event_publisher"):
             await container.event_publisher.publish(
@@ -191,18 +192,19 @@ def create_app() -> FastAPI:
     app.state.container = container
 
     app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
-    
+
     # Auth Middlewares
     app.add_middleware(BudgetMiddleware, budget_service=container.budget_service)
     app.add_middleware(RateLimitMiddleware, rate_limit_service=container.rate_limit_service, quota_service=container.quota_service)
     app.add_middleware(AuthorizationMiddleware)
     app.add_middleware(TenantMiddleware)
     app.add_middleware(AuthenticationMiddleware)
-    
+
     # Observability & Security Headers
     app.add_middleware(ObservationMiddleware)
+    app.add_middleware(TracingMiddleware)
     app.add_middleware(SecurityHeadersMiddleware, enable_hsts=is_prod)
-    
+
     # Register exception handlers
     register_exception_handlers(app)
 
@@ -281,20 +283,20 @@ def create_app() -> FastAPI:
         app.include_router(ws_router, prefix=settings.api_prefix)
         app.include_router(quotas_router, prefix=settings.api_prefix)
         app.include_router(usage_router, prefix=settings.api_prefix)
-        
+
         # Billing
         app.include_router(plans_router, prefix=settings.api_prefix)
         app.include_router(subscriptions_router, prefix=settings.api_prefix)
         app.include_router(budgets_router, prefix=settings.api_prefix)
         app.include_router(billing_router, prefix=settings.api_prefix)
-        
+
         # Webhooks
         app.include_router(webhooks_router, prefix=settings.api_prefix)
-        
+
         # Plugins
         from app.plugins.plugin_api import router as plugins_router
         app.include_router(plugins_router, prefix=settings.api_prefix)
-        
+
     if settings.prometheus_enabled:
         app.include_router(metrics_router)
 
@@ -306,4 +308,3 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
-

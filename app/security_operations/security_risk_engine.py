@@ -5,7 +5,7 @@ Calculates security risk score (likelihood x impact) and policy actions.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 import hashlib
 import json

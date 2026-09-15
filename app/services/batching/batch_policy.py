@@ -13,11 +13,11 @@ class BatchPolicy:
         """Decide if a queue entry can be batched."""
         if not self._config.enabled:
             return False
-            
+
         # Phase 2.2: Batching non-streaming requests only is acceptable.
         if entry.is_streaming:
             return False
-            
+
         return True
 
     def get_batch_key(self, entry: QueueEntry, provider_id: str) -> BatchKey:
@@ -32,8 +32,8 @@ class BatchPolicy:
         """Determine if a batch meets the conditions for dispatch."""
         if batch.size() >= self._config.max_batch_size:
             return True
-            
+
         if batch.elapsed_ms() >= self._config.max_batch_wait_ms:
             return True
-            
+
         return False

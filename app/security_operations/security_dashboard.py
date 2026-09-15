@@ -8,7 +8,7 @@ into a unified real-time dashboard snapshot for operational security visibility.
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 import hashlib
 import json
 
@@ -83,7 +83,7 @@ class SecurityDashboard:
         is_production: bool = False,
     ) -> SecurityDashboardSnapshot:
         now_str = datetime.now(timezone.utc).isoformat()
-        
+
         payload_for_fp = {
             "posture": posture_result.score,
             "cert": certification_result.decision,

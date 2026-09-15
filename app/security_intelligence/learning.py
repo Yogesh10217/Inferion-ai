@@ -1,11 +1,9 @@
 """Tenant-Scoped Security Learning Subsystem (Phase 5.32)."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, List
 from datetime import datetime, timezone
 import uuid
 from pydantic import BaseModel, Field
-
-from app.security_intelligence.exceptions import CrossTenantSecurityAccessException
 
 
 class SecurityRecommendation(BaseModel):
