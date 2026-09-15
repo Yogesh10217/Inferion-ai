@@ -1,56 +1,55 @@
-# Contributing Guidelines
+# Contributing to Inferion AI
 
-Thank you for contributing to the Inferion AI. This guide outlines the project's coding standards, development workflow, and pull request checklist.
-
-## Development Setup
-
-1. **Virtual Environment**:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-2. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   pip install -e .[dev]
-   ```
-3. **Configuration**:
-   ```bash
-   cp .env.example .env
-   ```
+Thank you for your interest in contributing to **Inferion AI**! We welcome contributions from developers, researchers, and AI engineers of all experience levels.
 
 ---
 
-## Coding Standards
+## 🚀 How to Contribute
 
-### 1. Architectural Integrity
-- **No Global Service State**: Do not import service singletons or instances globally. Always resolve services dynamically using FastAPI's dependency injection (`Depends`) from the application container (`request.app.state.container`).
-- **Thin Transport Layer**: Keep route files in `app/api/` focused purely on protocol serialization, validation, and request state registration. Business logic must be delegated to orchestration services (e.g., `InferenceService`, `HealthService`).
-- **Modular Providers**: All new LLM providers must inherit from `BaseProvider` and be registered inside `ProviderFactory._register_defaults()`.
+### 1. Reporting Bugs & Requesting Features
+- Search existing issues before creating a new one.
+- Describe the bug or feature request clearly with reproducible code snippets or error logs.
 
-### 2. Typing and Documentation
-- **Strict Typing**: All function signatures and module-level variables must have complete type annotations. Use `from __future__ import annotations` and structure complex type references under `if TYPE_CHECKING:` blocks to avoid circular imports.
-- **Docstrings**: Provide clean Google-style docstrings for every class, interface, method, and function.
+### 2. Development Setup
 
-### 3. Observability Rules
-- **No Request Body Parsing in Middleware**: The `ObservationMiddleware` handles transport-level logging and tracking only. Endpoint handlers must populate the request state (`request.state.model`, `request.state.provider`) so the middleware can read them upon completion.
-- **Custom Exceptions**: Define specific exceptions extending `AppException` rather than raising generic errors. Map new exception codes to standardized JSON outputs in `register_exception_handlers`.
-
----
-
-## Running Tests
-
-Verify your changes using `pytest` before opening a pull request:
 ```bash
-python -m pytest
+# Fork & Clone repository
+git clone https://github.com/Yogesh10217/Inferion-ai.git
+cd Inferion-ai
+
+# Set up virtual environment
+python -m venv .venv
+.venv\Scripts\activate      # Windows
+# source .venv/bin/activate  # Linux/macOS
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install pre-commit hooks
+pip install pre-commit
+pre-commit install
 ```
 
+### 3. Running Tests & Linting
+
+```bash
+# Run test suite
+pytest -v
+
+# Run linting and formatting
+make lint
+make format
+```
+
+### 4. Pull Request Process
+1. Create a feature branch: `git checkout -b feat/your-feature-name`
+2. Commit your changes with clear messages following conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`).
+3. Ensure all automated tests pass before opening a PR.
+4. Submit your PR against the `main` branch with a thorough description of your changes.
+
 ---
 
-## Pull Request Checklist
-
-Before submitting a pull request, ensure:
-- [ ] All automated tests pass successfully (`python -m pytest`).
-- [ ] Coverage levels have not decreased.
-- [ ] No stack traces are leaked in client error payloads.
-- [ ] Documentation has been updated to reflect any new modules or settings changes.
+## 📜 Code Style Guidelines
+- **Python**: Follow PEP8 conventions using `Ruff` and `Black`.
+- **Typing**: Use strict Python type hints (`mypy` compatible).
+- **Documentation**: Provide clear docstrings for all public modules, functions, and endpoints.
