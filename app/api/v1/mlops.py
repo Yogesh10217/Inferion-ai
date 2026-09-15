@@ -194,3 +194,15 @@ async def deploy_release(id: str, mgr: MLOpsManager = Depends(get_mlops)):
 async def list_drift_events(deployment_id: Optional[str] = None, tenant_id: Optional[str] = None, mgr: MLOpsManager = Depends(get_mlops)):
     events = mgr.drift_detector.list_drift_events(deployment_id=deployment_id, tenant_id=tenant_id)
     return {"drift_events": [e.model_dump() for e in events]}
+
+
+# 5. Fine-Tuning Pipeline Endpoints
+@router.post("/fine-tuning/jobs")
+async def create_fine_tuning_job(payload: Dict[str, Any]):
+    from app.mlops.fine_tuning.job_service import FineTuningService
+    service = FineTuningService()
+    model = payload.get("model", "llama3.1")
+    dataset_uri = payload.get("dataset_uri", "s3://datasets/train.jsonl")
+    job = service.create_job(model=model, dataset_uri=dataset_uri, hyperparameters=payload.get("hyperparameters"))
+    return job.model_dump()
+

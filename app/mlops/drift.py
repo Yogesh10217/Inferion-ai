@@ -83,6 +83,24 @@ class DriftDetector:
 
         return None
 
+    def compute_psi_divergence(self, baseline_dist: List[float], current_dist: List[float]) -> float:
+        """Compute Population Stability Index (PSI) divergence between baseline and current distributions."""
+        if len(baseline_dist) != len(current_dist) or not baseline_dist:
+            return 0.0
+
+        psi = 0.0
+        eps = 1e-4
+        b_sum = sum(baseline_dist) or 1.0
+        c_sum = sum(current_dist) or 1.0
+
+        for b, c in zip(baseline_dist, current_dist):
+            b_pct = (b / b_sum) + eps
+            c_pct = (c / c_sum) + eps
+            import math
+            psi += (c_pct - b_pct) * math.log(c_pct / b_pct)
+
+        return round(psi, 4)
+
     def list_drift_events(self, deployment_id: Optional[str] = None, tenant_id: Optional[str] = None) -> List[DriftResult]:
         res = self._events
         if deployment_id:

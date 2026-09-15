@@ -39,8 +39,18 @@ compose-up:
 compose-down:
 	docker compose down
 
+infra-init:
+	cd infra/terraform && terraform init
+
+infra-plan:
+	cd infra/terraform && terraform plan
+
+infra-apply:
+	cd infra/terraform && terraform apply -auto-approve
+
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
+

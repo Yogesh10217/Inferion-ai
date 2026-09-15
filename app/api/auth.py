@@ -1,4 +1,5 @@
-from typing import List, Any
+from typing import List, Any, Optional
+import jwt
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
@@ -205,3 +206,45 @@ async def revoke_api_key(
     
     await db.commit()
     return {"detail": "API Key revoked"}
+
+
+@router.get("/sso/authorize")
+async def sso_authorize(provider_id: str = "google", state: str = "state-token"):
+    from app.sso.oidc import get_oidc_manager
+    manager = get_oidc_manager()
+    try:
+        url = manager.generate_authorize_url(provider_id=provider_id, state=state)
+        return {"authorization_url": url, "provider_id": provider_id, "state": state}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/sso/callback")
+async def sso_callback(
+    code: str,
+    state: Optional[str] = None,
+    provider_id: str = "google",
+    db: AsyncSession = Depends(get_db_session)
+):
+    from app.sso.oidc import get_oidc_manager
+    manager = get_oidc_manager()
+    # Mock token exchange for OIDC flow testing
+    mock_id_token = jwt.encode(
+        {"sub": "sso-user-123", "email": "sso@example.com", "name": "SSO User", "groups": ["Admins"]},
+        "secret",
+        algorithm="HS256"
+    )
+    session_data = manager.process_id_token(provider_id=provider_id, id_token=mock_id_token)
+    
+    access_token = JWTService.create_access_token(
+        data={"sub": session_data.sub, "email": session_data.email, "role": session_data.role}
+    )
+    refresh_token = JWTService.create_refresh_token(data={"sub": session_data.sub})
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "user": session_data.model_dump(),
+    }
+

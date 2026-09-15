@@ -101,6 +101,28 @@ class ExperimentManager:
         logger.info(f"[EXPERIMENT ENGINE] Completed experiment '{exp.name}': Winner = '{winner_variant_id}'")
         return exp
 
+    def select_variant_for_request(self, experiment_id: str, request_id: str) -> Optional[ExperimentVariant]:
+        """Deterministically select a variant for a request based on traffic weight distribution."""
+        exp = self._experiments.get(experiment_id)
+        if not exp or exp.status != "RUNNING" or not exp.variants:
+            return None
+
+        # Calculate total weight
+        total_weight = sum(v.traffic_weight for v in exp.variants)
+        if total_weight <= 0:
+            return exp.variants[0]
+
+        import hashlib
+        h = int(hashlib.md5(f"{experiment_id}:{request_id}".encode()).hexdigest(), 16)
+        bucket = (h % 10000) / 100.0  # Float 0.00 - 99.99
+
+        cumulative = 0.0
+        for variant in exp.variants:
+            cumulative += (variant.traffic_weight / total_weight) * 100.0
+            if bucket <= cumulative:
+                return variant
+        return exp.variants[0]
+
     def get_experiment(self, experiment_id: str) -> Experiment:
         exp = self._experiments.get(experiment_id)
         if not exp:

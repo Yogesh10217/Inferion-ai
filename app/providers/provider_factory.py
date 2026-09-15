@@ -21,9 +21,17 @@ class ProviderFactory:
     def _register_defaults(self) -> None:
         from app.providers.ollama_provider import OllamaProvider
         from app.providers.openai_provider import OpenAIProvider
+        from app.providers.anthropic_provider import AnthropicProvider
+        from app.providers.gemini_provider import GeminiProvider
+        from app.providers.cohere_provider import CohereProvider
+        from app.providers.mistral_provider import MistralProvider
 
         self.register_provider("openai", OpenAIProvider)
         self.register_provider("ollama", OllamaProvider)
+        self.register_provider("anthropic", AnthropicProvider)
+        self.register_provider("gemini", GeminiProvider)
+        self.register_provider("cohere", CohereProvider)
+        self.register_provider("mistral", MistralProvider)
         self.register_provider("embedding", OpenAIProvider)  # Mock registration
         self.register_provider("reranking", OllamaProvider)  # Mock registration
 

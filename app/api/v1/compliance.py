@@ -245,3 +245,13 @@ async def get_analytics(
     """Get tenant compliance report & analytics."""
     report = mgr.analytics_engine.generate_report(tenant_id)
     return report.model_dump()
+
+
+@router.delete("/users/{user_id}/data")
+async def delete_user_data(user_id: str):
+    """GDPR Right to Erasure (Data Deletion Endpoint)."""
+    from app.compliance_platform.gdpr import GDPRService
+    service = GDPRService()
+    record = await service.erase_user_data(user_id)
+    return record.model_dump()
+

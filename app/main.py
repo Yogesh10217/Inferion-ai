@@ -276,6 +276,11 @@ def create_app() -> FastAPI:
     app.include_router(platform_hardening_router)
     app.include_router(deployment_router)
 
+    from app.api.websocket.stream_endpoint import router as ws_stream_router
+    from app.api.graphql.schema import router as graphql_router
+    app.include_router(ws_stream_router)
+    app.include_router(graphql_router)
+
     if settings.auth_enabled:
         app.include_router(auth_router, prefix=settings.api_prefix)
         app.include_router(admin_router, prefix=settings.api_prefix)
