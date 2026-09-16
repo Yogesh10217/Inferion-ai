@@ -40,7 +40,7 @@ export class ResilienceClient {
         return response.json() as Promise<T>;
     }
 
-    async registerService(serviceName: string, tier: string = "TIER_2_STANDARD", region: str = "us-east-1"): Promise<ResilienceServiceRegistration> {
+    async registerService(serviceName: string, tier: string = "TIER_2_STANDARD", region: string = "us-east-1"): Promise<ResilienceServiceRegistration> {
         return this.request<ResilienceServiceRegistration>(
             `/v1/resilience/services/register?service_name=${encodeURIComponent(serviceName)}&tier=${tier}&region=${region}`,
             { method: "POST" }

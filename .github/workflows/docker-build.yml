@@ -16,18 +16,27 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: false
-          tags: llm-inference-engine:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+        run: |
+          docker build -t llm-inference-engine:test .
+
+      - name: Verify Docker Image Exists
+        run: |
+          docker image inspect llm-inference-engine:test
 
       - name: Smoke Test Image Liveness
         run: |
           docker run -d --name engine-smoke -e PORT=8000 -p 8000:8000 llm-inference-engine:test
-          sleep 3
-          docker logs engine-smoke
-          docker rm -f engine-smoke
+
+          trap 'docker logs engine-smoke || true; docker rm -f engine-smoke || true' EXIT
+
+          for i in {1..30}; do
+            if curl -fsS http://localhost:8000/v1/health; then
+              echo "Container readiness check passed!"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Container failed readiness check"
+          exit 1
+

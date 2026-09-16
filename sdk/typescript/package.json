@@ -6,10 +6,16 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "echo 'Build TypeScript SDK'",
-    "test": "node --test"
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/tests/client.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.4.0"
   },
   "keywords": ["llm", "ai", "sdk", "typescript"],
   "author": "AGY Team",
   "license": "MIT"
 }
+

@@ -45,7 +45,7 @@ export class AILifecycleClient {
     return this.client.post(`/v1/ai-lifecycle/drift?tenant_id=${tenantId}`, { asset_id: assetId, drift_type: driftType, severity });
   }
 
-  async requestRollback(tenantId: string, assetId: string, targetVersion: string = "1.0.0", reason: str = "Performance degradation"): Promise<any> {
+  async requestRollback(tenantId: string, assetId: string, targetVersion: string = "1.0.0", reason: string = "Performance degradation"): Promise<any> {
     return this.client.post(`/v1/ai-lifecycle/rollbacks?tenant_id=${tenantId}`, { asset_id: assetId, target_version: targetVersion, reason });
   }
 

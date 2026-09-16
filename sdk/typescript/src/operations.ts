@@ -30,7 +30,7 @@ export class OperationsAssuranceClient {
     };
   }
 
-  async evaluateAssurance(serviceId: str, tenantId: str = "default_tenant"): Promise<any> {
+  async evaluateAssurance(serviceId: string, tenantId: string = "default_tenant"): Promise<any> {
     return {
       service_id: serviceId,
       tenant_id: tenantId,

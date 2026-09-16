@@ -16,7 +16,6 @@ export * from './reliability.js';
 export * from './security.js';
 export * from './ai_lifecycle.js';
 export * from './events.js';
-export * from './knowledge.js';
 export * from './agents.js';
 export * from './resilience.js';
 export * from './control_assurance.js';

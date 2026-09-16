@@ -94,3 +94,21 @@ export class KnowledgeAssuranceClient {
     return this.request("/v1/knowledge/analytics/report", { method: "GET" }, tenantId);
   }
 }
+
+export class KnowledgeClient {
+  constructor(
+    private fetchFn: typeof fetch,
+    private baseUrl: string,
+    private headers: Record<string, string>
+  ) {}
+
+  async search(query: string): Promise<any> {
+    const res = await this.fetchFn(`${this.baseUrl}/v1/knowledge/search`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({ query }),
+    });
+    return res.json();
+  }
+}
+

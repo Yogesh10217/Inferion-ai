@@ -42,7 +42,8 @@ EXPOSE 8002
 
 # Healthcheck configuration using python helper to check health endpoint
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8002/v1/health', timeout=2)" || exit 1
+    CMD python -c "import urllib.request, os; port = os.getenv('PORT', '8002'); urllib.request.urlopen(f'http://localhost:{port}/v1/health', timeout=2)" || exit 1
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8002}"]
+
 

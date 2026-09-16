@@ -17,7 +17,7 @@ export class ApplicationPlatformClient {
     };
   }
 
-  async executeApplication(applicationId: str, versionId: str, inputData: Record<string, any>, tenantId: string = "global") {
+  async executeApplication(applicationId: string, versionId: string, inputData: Record<string, any>, tenantId: string = "global") {
     return {
       application_id: applicationId,
       version_id: versionId,

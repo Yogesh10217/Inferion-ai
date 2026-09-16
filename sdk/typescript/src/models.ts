@@ -51,3 +51,39 @@ export class ModelIntelligenceClient {
     return res.json();
   }
 }
+
+export interface ChatMessage {
+  role: string;
+  content: string;
+}
+
+export interface ChatCompletionRequest {
+  model: string;
+  messages: ChatMessage[];
+  temperature?: number;
+  max_tokens?: number;
+  stream?: boolean;
+  metadata?: Record<string, any>;
+}
+
+export interface ChatCompletionChoice {
+  index: number;
+  message: ChatMessage;
+  finish_reason: string;
+}
+
+export interface UsageInfo {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+export interface ChatCompletionResponse {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  choices: ChatCompletionChoice[];
+  usage?: UsageInfo;
+}
+

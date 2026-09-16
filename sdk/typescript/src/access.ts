@@ -3,18 +3,18 @@
  */
 
 export interface AccessIdentity {
-  identity_id: str;
-  tenant_id: str;
-  name: str;
-  identity_type: str;
-  status: str;
-  risk_level: str;
+  identity_id: string;
+  tenant_id: string;
+  name: string;
+  identity_type: string;
+  status: string;
+  risk_level: string;
 }
 
 export interface AuthorizationDecision {
-  decision_id: str;
-  request_id: str;
-  tenant_id: str;
+  decision_id: string;
+  request_id: string;
+  tenant_id: string;
   outcome: string;
   reason: string;
   risk_score: number;

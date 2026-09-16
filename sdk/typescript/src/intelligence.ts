@@ -11,7 +11,7 @@ export class IntelligenceClient {
     this.apiKey = apiKey;
   }
 
-  async ingestSignal(source: string, signalType: string, message: str, tenantId: string = "global"): Promise<any> {
+  async ingestSignal(source: string, signalType: string, message: string, tenantId: string = "global"): Promise<any> {
     const res = await fetch(`${this.baseUrl}/v1/intelligence/signals`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

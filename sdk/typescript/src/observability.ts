@@ -65,7 +65,7 @@ export class ObservabilityClient {
     return res.json();
   }
 
-  async replay(executionId: str, forceExternalEffects: boolean = false): Promise<any> {
+  async replay(executionId: string, forceExternalEffects: boolean = false): Promise<any> {
     const res = await fetch(`${this.baseUrl}/v1/observability/executions/${executionId}/replay`, {
       method: "POST",
       headers: this.getHeaders(),

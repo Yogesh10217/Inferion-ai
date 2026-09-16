@@ -6,7 +6,7 @@ export interface AssuranceReport {
     report_id: string;
     tenant_id: string;
     total_controls: number;
-    assurance_score_avg: float;
+    assurance_score_avg: number;
     insights: any[];
 }
 
