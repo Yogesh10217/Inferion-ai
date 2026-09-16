@@ -1,4 +1,5 @@
 import bcrypt
+from passlib.context import CryptContext
 
 # Passlib 1.7.4 compatibility patch for bcrypt 4.0+
 _orig_hashpw = bcrypt.hashpw
@@ -12,7 +13,6 @@ def _safe_hashpw(password: bytes, salt: bytes) -> bytes:
 
 bcrypt.hashpw = _safe_hashpw
 
-from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

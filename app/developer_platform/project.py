@@ -1,10 +1,11 @@
 """Developer Project & Membership Management Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.developer_platform.exceptions import ProjectNotFoundException
@@ -25,7 +26,6 @@ class ProjectStatus(str, Enum):
 
 
 ProjectLifecycle = ProjectStatus
-
 
 
 class ProjectMember(BaseModel):
@@ -68,7 +68,6 @@ class ProjectManager:
         logger.info(f"[PROJECT MANAGER] Created project '{proj.project_id}' ('{name}') for tenant '{tenant_id}'")
         return proj
 
-
     def get_project(self, project_id: str) -> DeveloperProject:
         proj = self._projects.get(project_id)
         if not proj or proj.status == ProjectStatus.DELETED:
@@ -80,4 +79,3 @@ class ProjectManager:
         if tenant_id:
             res = [r for r in res if r.tenant_id == tenant_id]
         return res
-

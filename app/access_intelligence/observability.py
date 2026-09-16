@@ -1,14 +1,14 @@
 """Access Intelligence Observability & Prometheus Metrics (Phase 5.39)."""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 
 
 class AccessMetricsCollector:
     """Collects Prometheus metrics for Access Intelligence using `ai_access_*` prefix.
-    
+
     NEVER exposes secrets, raw authorization tokens, or sensitive identity metadata.
     """
 

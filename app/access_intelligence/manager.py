@@ -1,35 +1,35 @@
 """Master Orchestrator for Access Intelligence Platform (Phase 5.39)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
 
-from app.access_intelligence.identities import IdentityManager, IdentityType, IdentityRiskLevel
-from app.access_intelligence.entitlements import EntitlementManager, EntitlementType, EntitlementScope, EntitlementCriticality
-from app.access_intelligence.relationships import AccessRelationshipManager, AccessRelationshipType, RelationshipStrength
 from app.access_intelligence.access_graph import AccessGraphManager
-from app.access_intelligence.authorization import AuthorizationManager, AuthorizationDecisionOutcome
-from app.access_intelligence.least_privilege import LeastPrivilegeManager
-from app.access_intelligence.privileged_access import PrivilegedAccessManager, PrivilegedAccessScope
-from app.access_intelligence.emergency_access import EmergencyAccessManager, EmergencyAccessReason
+from app.access_intelligence.access_reviews import AccessReviewManager
 from app.access_intelligence.access_risk import AccessRiskManager
-from app.access_intelligence.toxic_combinations import ToxicCombinationManager, ToxicCombinationSeverity
-from app.access_intelligence.access_reviews import AccessReviewManager, AccessReviewScope, AccessReviewDecision
-from app.access_intelligence.certifications import AccessCertificationManager, CertificationScope, CertificationDecision
-from app.access_intelligence.anomalies import AccessAnomalyManager, AccessAnomalyType, AccessAnomalySeverity
-from app.access_intelligence.signals import AccessSignalManager, AccessSignalType, AccessSignalSeverity, AccessSignalSource
-from app.access_intelligence.correlation import AccessCorrelationManager, AccessCorrelationType
-from app.access_intelligence.investigations import AccessInvestigationManager
-from app.access_intelligence.remediation import AccessRemediationManager, AccessRemediationAction, AccessRemediationPriority
-from app.access_intelligence.governance import AccessGovernanceEngine
-from app.access_intelligence.delegation import AccessDelegationManager, AccessDelegationAction
-from app.access_intelligence.verification import AccessVerificationManager, VerificationCheck
-from app.access_intelligence.evidence import AccessEvidenceManager
-from app.access_intelligence.snapshots import AccessSnapshotManager
-from app.access_intelligence.trust import AccessTrustEngine
-from app.access_intelligence.learning import AccessLearningManager
 from app.access_intelligence.analytics import AccessAnalyticsEngine
-from app.access_intelligence.observability import AccessMetricsCollector
+from app.access_intelligence.anomalies import AccessAnomalyManager, AccessAnomalyType
+from app.access_intelligence.authorization import AuthorizationManager
 from app.access_intelligence.billing import AccessBillingTracker
+from app.access_intelligence.certifications import AccessCertificationManager
+from app.access_intelligence.correlation import AccessCorrelationManager, AccessCorrelationType
+from app.access_intelligence.delegation import AccessDelegationManager
+from app.access_intelligence.emergency_access import EmergencyAccessManager
+from app.access_intelligence.entitlements import EntitlementManager, EntitlementType
+from app.access_intelligence.evidence import AccessEvidenceManager
+from app.access_intelligence.governance import AccessGovernanceEngine
+from app.access_intelligence.identities import IdentityManager, IdentityType
+from app.access_intelligence.investigations import AccessInvestigationManager
+from app.access_intelligence.learning import AccessLearningManager
+from app.access_intelligence.least_privilege import LeastPrivilegeManager
+from app.access_intelligence.observability import AccessMetricsCollector
+from app.access_intelligence.privileged_access import PrivilegedAccessManager, PrivilegedAccessScope
+from app.access_intelligence.relationships import AccessRelationshipManager, AccessRelationshipType
+from app.access_intelligence.remediation import AccessRemediationAction, AccessRemediationManager
+from app.access_intelligence.signals import AccessSignalManager, AccessSignalType
+from app.access_intelligence.snapshots import AccessSnapshotManager
+from app.access_intelligence.toxic_combinations import ToxicCombinationManager
+from app.access_intelligence.trust import AccessTrustEngine
+from app.access_intelligence.verification import AccessVerificationManager, VerificationCheck
 
 logger = logging.getLogger(__name__)
 

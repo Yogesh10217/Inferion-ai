@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from app.deployment.models import ConfigurationFingerprint, EnvironmentConfig
 

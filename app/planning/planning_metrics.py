@@ -2,7 +2,7 @@
 Prometheus Metrics Declarations for Autonomous Planning Platform
 """
 
-from prometheus_client import Counter, Histogram, Gauge
+from prometheus_client import Counter, Gauge, Histogram
 
 plans_created_total = Counter(
     "plans_created_total",

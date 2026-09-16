@@ -1,8 +1,8 @@
 """Trace and Context Propagation Engine for Phase 5.58."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
+from typing import Dict, Optional
 
 from app.platform_integration.models import TraceContext
 

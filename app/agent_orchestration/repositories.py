@@ -1,8 +1,9 @@
 """Tenant-Scoped Repository Abstractions (Phase 5.36)."""
 
-from typing import Dict, Any, Optional, List, Generic, TypeVar
-from app.platform_contracts.tenant import TenantAccessGuard
+from typing import Any, Dict, Generic, List, Optional, TypeVar
+
 from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 T = TypeVar("T")
 

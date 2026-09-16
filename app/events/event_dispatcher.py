@@ -1,13 +1,14 @@
 import asyncio
 import logging
 from typing import Callable, Optional
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.events.dead_letter_queue import DeadLetterQueue
+from app.events.delivery_service import DeliveryService
 from app.events.event_bus import IEventBus
 from app.events.event_serializer import EventEnvelope
 from app.events.event_storage import EventStorage
-from app.events.delivery_service import DeliveryService
-from app.events.dead_letter_queue import DeadLetterQueue
 from app.events.webhook_service import WebhookService
 from app.services.metrics_service import MetricsService
 

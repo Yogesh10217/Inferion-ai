@@ -5,12 +5,12 @@ Aggregates duplicate alerts using deterministic SHA-256 fingerprints into canoni
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Dict, List
 
 from app.deployment.secrets import SecretsSanitizer
-from app.operations.alerting import Alert, AlertStatus
+from app.operations.alerting import Alert
 
 
 @dataclass

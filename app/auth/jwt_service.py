@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
+
 import jwt
 
-from app.core.config import get_settings
 from app.auth.exceptions import ExpiredTokenException, InvalidTokenException
+from app.core.config import get_settings
 
 settings = get_settings()
 

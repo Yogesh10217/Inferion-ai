@@ -1,8 +1,9 @@
 """Access Intelligence Cost Attribution & Billing Integration (Phase 5.39)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
 

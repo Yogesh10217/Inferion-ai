@@ -1,11 +1,12 @@
 """Hallucination Intelligence Layer (Phase 5.44)."""
 
-import logging
 import hashlib
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
+import logging
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException

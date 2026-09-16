@@ -1,15 +1,15 @@
 """Immutable Evidence Management for Model Intelligence (Phase 5.44)."""
 
-import logging
 import hashlib
-import json
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
+import logging
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
+from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ImmutableModelIntelligenceRecordException
 
 logger = logging.getLogger(__name__)
 

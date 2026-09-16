@@ -1,8 +1,9 @@
 """Operations Analytics Engine (MTTD, MTTA, MTTR, MTBF, SLO Compliance)."""
 
-from datetime import datetime, timezone
 import logging
-from typing import Dict, Any, Optional, List
+from datetime import datetime, timezone
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from app.operations.incidents import IncidentManager

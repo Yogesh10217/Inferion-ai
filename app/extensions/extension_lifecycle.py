@@ -1,13 +1,12 @@
 """Extension Lifecycle State Machine with Atomic Upgrade & Rollback."""
 
 import logging
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Dict
 
-from app.extensions.extension import Extension, ExtensionVersion
 from app.extensions.exceptions import InvalidExtensionLifecycleTransition
+from app.extensions.extension import Extension, ExtensionVersion
 
 logger = logging.getLogger(__name__)
 

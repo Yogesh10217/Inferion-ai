@@ -1,13 +1,14 @@
 """Resilience Risk Composition Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.governance_platform.risk import RiskManager
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class ResilienceRiskDimension(str, Enum):
@@ -59,7 +60,7 @@ class ResilienceRiskManager:
             base_score += 0.45
 
         risk_score = min(1.0, base_score)
-        
+
         level = "LOW"
         if risk_score >= 0.8:
             level = "CRITICAL"

@@ -2,13 +2,14 @@
 Agent Subsystem REST API Router (/v1/agents)
 """
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, Header
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 
-from app.agents.agent_manager import AgentManager
 from app.agents.agent_context import AgentContext
-from app.agents.exceptions import AgentNotFoundError, ToolError, BudgetExceededException, ApprovalRequiredException
+from app.agents.agent_manager import AgentManager
+from app.agents.exceptions import AgentNotFoundError, ApprovalRequiredException, BudgetExceededException, ToolError
 
 router = APIRouter(prefix="/v1/agents", tags=["Agents"])
 

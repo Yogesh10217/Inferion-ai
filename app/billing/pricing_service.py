@@ -1,9 +1,9 @@
 from typing import Optional
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from sqlalchemy import select
-from datetime import datetime
 
 from app.billing.models import PricingRule
+
 
 class PricingService:
     def __init__(self, session_factory):
@@ -15,7 +15,7 @@ class PricingService:
             PricingRule.provider == provider,
             PricingRule.model == model
         ).order_by(PricingRule.effective_from.desc()).limit(1)
-        
+
         async with self.session_factory() as db:
             result = await db.execute(stmt)
             return result.scalars().first()
@@ -40,7 +40,7 @@ class PricingService:
             PricingRule(provider="anthropic", model="claude-3-sonnet", input_cost_per_1k_tokens=0.003, output_cost_per_1k_tokens=0.015),
             PricingRule(provider="google", model="gemini-1.5-pro", input_cost_per_1k_tokens=0.0035, output_cost_per_1k_tokens=0.0105),
         ]
-        
+
         async with self.session_factory() as db:
             db.add_all(examples)
             await db.commit()

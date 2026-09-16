@@ -1,60 +1,45 @@
 """Master Knowledge Intelligence Orchestrator Subsystem (Phase 5.35)."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
+from typing import Any, Dict
 
-from app.knowledge_intelligence.exceptions import (
-    CrossTenantKnowledgeAccessException,
-    KnowledgeNotFoundException,
-    ImmutableKnowledgeRecordException,
-)
+from app.knowledge_intelligence.analytics import KnowledgeAnalyticsEngine
+from app.knowledge_intelligence.billing import KnowledgeBillingTracker
+from app.knowledge_intelligence.context import KnowledgeContextManager
+from app.knowledge_intelligence.contradictions import KnowledgeContradictionManager
+from app.knowledge_intelligence.delegation import KnowledgeDelegationManager
+from app.knowledge_intelligence.evidence import KnowledgeEvidenceManager
+from app.knowledge_intelligence.freshness import KnowledgeFreshnessManager
+from app.knowledge_intelligence.governance import KnowledgeGovernanceEngine
+from app.knowledge_intelligence.graph import KnowledgeGraphManager
+from app.knowledge_intelligence.investigations import KnowledgeInvestigationManager
 from app.knowledge_intelligence.knowledge import (
-    KnowledgeItem,
-    KnowledgeType,
-    KnowledgeStatus,
     KnowledgeClassification,
-    KnowledgeOrigin,
     KnowledgeManager,
+    KnowledgeType,
 )
-from app.knowledge_intelligence.sources import (
-    KnowledgeSource,
-    KnowledgeSourceType,
-    KnowledgeSourceManager,
-)
-from app.knowledge_intelligence.normalization import KnowledgeNormalizer, KnowledgeNormalizationResult
+from app.knowledge_intelligence.learning import KnowledgeLearningManager
+from app.knowledge_intelligence.memory import OrganizationalMemoryManager
+from app.knowledge_intelligence.normalization import KnowledgeNormalizer
+from app.knowledge_intelligence.observability import KnowledgeMetricsCollector
 from app.knowledge_intelligence.provenance import (
     KnowledgeProvenanceManager,
-    ProvenanceRecord,
-    ProvenanceType,
     ProvenanceReference,
-    ProvenanceChain,
+    ProvenanceType,
 )
+from app.knowledge_intelligence.recommendations import KnowledgeRecommendationEngine, KnowledgeRecommendationType
 from app.knowledge_intelligence.relationships import (
     KnowledgeRelationshipManager,
-    KnowledgeRelationship,
     RelationshipType,
-    RelationshipStrength,
 )
-from app.knowledge_intelligence.graph import KnowledgeGraphManager, GraphTraversalResult
-from app.knowledge_intelligence.semantic import SemanticIntelligenceManager, SemanticRepresentation
-from app.knowledge_intelligence.evidence import KnowledgeEvidenceManager, KnowledgeEvidenceBundle
-from app.knowledge_intelligence.trust import KnowledgeTrustEngine, KnowledgeTrustScore
-from app.knowledge_intelligence.freshness import KnowledgeFreshnessManager, FreshnessEvaluation
-from app.knowledge_intelligence.contradictions import KnowledgeContradictionManager, KnowledgeContradiction, ContradictionType
-from app.knowledge_intelligence.retrieval import KnowledgeRetrievalManager, KnowledgeRetrievalRequest, RetrievalResult
-from app.knowledge_intelligence.context import KnowledgeContextManager, KnowledgeContext
-from app.knowledge_intelligence.recommendations import KnowledgeRecommendationEngine, KnowledgeRecommendation, KnowledgeRecommendationType
-from app.knowledge_intelligence.governance import KnowledgeGovernanceEngine, KnowledgeGovernanceDecision
-from app.knowledge_intelligence.delegation import KnowledgeDelegationManager, KnowledgeDelegationPlan
-from app.knowledge_intelligence.investigations import KnowledgeInvestigationManager, KnowledgeInvestigation
-from app.knowledge_intelligence.memory import OrganizationalMemoryManager, OrganizationalMemory
-from app.knowledge_intelligence.learning import KnowledgeLearningManager, KnowledgeLearningRecord
-from app.knowledge_intelligence.analytics import KnowledgeAnalyticsEngine
-from app.knowledge_intelligence.observability import KnowledgeMetricsCollector
-from app.knowledge_intelligence.billing import KnowledgeBillingTracker
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
-from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.knowledge_intelligence.retrieval import KnowledgeRetrievalManager, KnowledgeRetrievalRequest
+from app.knowledge_intelligence.semantic import SemanticIntelligenceManager
+from app.knowledge_intelligence.sources import (
+    KnowledgeSourceManager,
+    KnowledgeSourceType,
+)
+from app.knowledge_intelligence.trust import KnowledgeTrustEngine
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +70,7 @@ class KnowledgeIntelligenceManager:
         self.analytics_engine = KnowledgeAnalyticsEngine()
         self.metrics_collector = KnowledgeMetricsCollector()
         self.billing_tracker = KnowledgeBillingTracker()
-        
+
         # Immutable snapshot registry
         self._finalized_snapshots: Dict[str, PlatformSnapshot] = {}
         logger.info("[KNOWLEDGE INTELLIGENCE MASTER] KnowledgeIntelligenceManager initialized with 24 subsystems.")

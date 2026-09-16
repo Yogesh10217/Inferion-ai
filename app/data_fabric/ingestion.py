@@ -1,17 +1,17 @@
 """Data Ingestion Pipeline Engine."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.data_fabric.data_source import DataSource
 from app.data_fabric.connector import ConnectorFactory
+from app.data_fabric.data_source import DataSource
 from app.jobs.job_queue import JobQueue
 from app.resilience.circuit_breaker import CircuitBreakerRegistry
-
 
 logger = logging.getLogger(__name__)
 

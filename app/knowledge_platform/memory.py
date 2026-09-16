@@ -1,14 +1,15 @@
 """Organizational Memory Governance & Scope Isolation Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.knowledge_platform.exceptions import KnowledgeAccessDeniedException, MemoryNotFoundException
 from app.memory.memory_manager import MemoryManager as BaseMemoryManager
-from app.knowledge_platform.exceptions import MemoryNotFoundException, KnowledgeAccessDeniedException
 
 logger = logging.getLogger(__name__)
 

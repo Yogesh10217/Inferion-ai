@@ -1,164 +1,84 @@
 """Enterprise AI Identity, Access Intelligence, Authorization & Privileged Action Governance Platform (Phase 5.39)."""
 
-from app.access_intelligence.exceptions import (
-    AccessIntelligenceException,
-    CrossTenantAccessIntelligenceException,
-    IdentityNotFoundException,
-    AccessRelationshipNotFoundException,
-    EntitlementNotFoundException,
-    PrivilegedAccessNotFoundException,
-    AccessReviewNotFoundException,
-    AccessCertificationNotFoundException,
-    InvalidAccessStateTransitionException,
-    AccessPolicyViolationException,
-    PrivilegedActionBlockedException,
-    AccessRiskThresholdExceededException,
-    ImmutableAccessRecordException,
-    AccessEvidenceIntegrityException,
-    AccessDelegationBlockedException,
-    HighRiskAccessRequiresApprovalException,
-)
-from app.access_intelligence.identities import (
-    AccessIdentity,
-    IdentityType,
-    IdentityStatus,
-    IdentityRiskLevel,
-    IdentityReference,
-    IdentityManager,
-)
-from app.access_intelligence.entitlements import (
-    Entitlement,
-    EntitlementType,
-    EntitlementScope,
-    EntitlementCriticality,
-    EntitlementStatus,
-    EntitlementReference,
-    EntitlementManager,
-)
-from app.access_intelligence.relationships import (
-    AccessRelationship,
-    AccessRelationshipType,
-    RelationshipStrength,
-    RelationshipStatus,
-    AccessRelationshipManager,
-)
 from app.access_intelligence.access_graph import (
     AccessGraph,
-    AccessGraphNode,
     AccessGraphEdge,
+    AccessGraphManager,
+    AccessGraphNode,
     AccessGraphPath,
     AccessGraphTraversal,
-    AccessGraphManager,
-)
-from app.access_intelligence.authorization import (
-    AuthorizationRequest,
-    AuthorizationDecision,
-    AuthorizationDecisionOutcome,
-    AuthorizationConstraint,
-    AuthorizationEvidence,
-    AuthorizationManager,
-)
-from app.access_intelligence.least_privilege import (
-    LeastPrivilegeAssessment,
-    PrivilegeGap,
-    PrivilegeRecommendation,
-    PrivilegeSeverity,
-    LeastPrivilegeManager,
-)
-from app.access_intelligence.privileged_access import (
-    PrivilegedAccessRequest,
-    PrivilegedAccessScope,
-    PrivilegedAccessStatus,
-    PrivilegedAccessDuration,
-    PrivilegedAccessManager,
-)
-from app.access_intelligence.emergency_access import (
-    EmergencyAccessRequest,
-    EmergencyAccessReason,
-    EmergencyAccessStatus,
-    EmergencyAccessVerification,
-    EmergencyAccessManager,
-)
-from app.access_intelligence.access_risk import (
-    AccessRiskProfile,
-    AccessRiskDimension,
-    AccessRiskAssessment,
-    AccessRiskFactor,
-    AccessRiskManager,
-)
-from app.access_intelligence.toxic_combinations import (
-    ToxicCombination,
-    ToxicCombinationRule,
-    ToxicCombinationSeverity,
-    ToxicCombinationEvidence,
-    ToxicCombinationManager,
 )
 from app.access_intelligence.access_reviews import (
     AccessReview,
-    AccessReviewScope,
-    AccessReviewStatus,
     AccessReviewDecision,
     AccessReviewManager,
+    AccessReviewScope,
+    AccessReviewStatus,
 )
-from app.access_intelligence.certifications import (
-    AccessCertification,
-    CertificationScope,
-    CertificationStatus,
-    CertificationDecision,
-    AccessCertificationManager,
+from app.access_intelligence.access_risk import (
+    AccessRiskAssessment,
+    AccessRiskDimension,
+    AccessRiskFactor,
+    AccessRiskManager,
+    AccessRiskProfile,
+)
+from app.access_intelligence.analytics import (
+    AccessAnalyticsEngine,
+    AccessInsight,
+    AccessReport,
 )
 from app.access_intelligence.anomalies import (
     AccessAnomaly,
-    AccessAnomalyType,
-    AccessAnomalySeverity,
     AccessAnomalyConfidence,
     AccessAnomalyEvidence,
     AccessAnomalyManager,
+    AccessAnomalySeverity,
+    AccessAnomalyType,
 )
-from app.access_intelligence.signals import (
-    AccessSignal,
-    AccessSignalType,
-    AccessSignalSeverity,
-    AccessSignalSource,
-    AccessSignalManager,
+from app.access_intelligence.authorization import (
+    AuthorizationConstraint,
+    AuthorizationDecision,
+    AuthorizationDecisionOutcome,
+    AuthorizationEvidence,
+    AuthorizationManager,
+    AuthorizationRequest,
+)
+from app.access_intelligence.billing import AccessBillingTracker, AccessCostEvent
+from app.access_intelligence.certifications import (
+    AccessCertification,
+    AccessCertificationManager,
+    CertificationDecision,
+    CertificationScope,
+    CertificationStatus,
 )
 from app.access_intelligence.correlation import (
     AccessCorrelation,
-    AccessCorrelationType,
     AccessCorrelationConfidence,
     AccessCorrelationEvidence,
     AccessCorrelationManager,
-)
-from app.access_intelligence.investigations import (
-    AccessInvestigation,
-    AccessInvestigationStatus,
-    AccessFinding,
-    AccessInvestigationManager,
-)
-from app.access_intelligence.remediation import (
-    AccessRemediationPlan,
-    AccessRemediationAction,
-    AccessRemediationPriority,
-    AccessRemediationStatus,
-    AccessRemediationManager,
-)
-from app.access_intelligence.governance import (
-    AccessGovernanceDecision,
-    AccessGovernanceStatus,
-    AccessGovernanceRequirement,
-    AccessGovernanceEngine,
+    AccessCorrelationType,
 )
 from app.access_intelligence.delegation import (
-    AccessDelegationPlan,
     AccessDelegationAction,
-    AccessDelegationStatus,
     AccessDelegationManager,
+    AccessDelegationPlan,
+    AccessDelegationStatus,
 )
-from app.access_intelligence.verification import (
-    AccessVerification,
-    VerificationCheck,
-    VerificationStatus,
-    AccessVerificationManager,
+from app.access_intelligence.emergency_access import (
+    EmergencyAccessManager,
+    EmergencyAccessReason,
+    EmergencyAccessRequest,
+    EmergencyAccessStatus,
+    EmergencyAccessVerification,
+)
+from app.access_intelligence.entitlements import (
+    Entitlement,
+    EntitlementCriticality,
+    EntitlementManager,
+    EntitlementReference,
+    EntitlementScope,
+    EntitlementStatus,
+    EntitlementType,
 )
 from app.access_intelligence.evidence import (
     AccessEvidence,
@@ -166,31 +86,111 @@ from app.access_intelligence.evidence import (
     AccessEvidenceIntegrity,
     AccessEvidenceManager,
 )
+from app.access_intelligence.exceptions import (
+    AccessCertificationNotFoundException,
+    AccessDelegationBlockedException,
+    AccessEvidenceIntegrityException,
+    AccessIntelligenceException,
+    AccessPolicyViolationException,
+    AccessRelationshipNotFoundException,
+    AccessReviewNotFoundException,
+    AccessRiskThresholdExceededException,
+    CrossTenantAccessIntelligenceException,
+    EntitlementNotFoundException,
+    HighRiskAccessRequiresApprovalException,
+    IdentityNotFoundException,
+    ImmutableAccessRecordException,
+    InvalidAccessStateTransitionException,
+    PrivilegedAccessNotFoundException,
+    PrivilegedActionBlockedException,
+)
+from app.access_intelligence.governance import (
+    AccessGovernanceDecision,
+    AccessGovernanceEngine,
+    AccessGovernanceRequirement,
+    AccessGovernanceStatus,
+)
+from app.access_intelligence.identities import (
+    AccessIdentity,
+    IdentityManager,
+    IdentityReference,
+    IdentityRiskLevel,
+    IdentityStatus,
+    IdentityType,
+)
+from app.access_intelligence.investigations import (
+    AccessFinding,
+    AccessInvestigation,
+    AccessInvestigationManager,
+    AccessInvestigationStatus,
+)
+from app.access_intelligence.learning import (
+    AccessLearningManager,
+    AccessLearningRecommendation,
+    AccessLearningRecord,
+    AccessPattern,
+)
+from app.access_intelligence.least_privilege import (
+    LeastPrivilegeAssessment,
+    LeastPrivilegeManager,
+    PrivilegeGap,
+    PrivilegeRecommendation,
+    PrivilegeSeverity,
+)
+from app.access_intelligence.manager import AccessIntelligenceManager
+from app.access_intelligence.observability import AccessMetricsCollector
+from app.access_intelligence.privileged_access import (
+    PrivilegedAccessDuration,
+    PrivilegedAccessManager,
+    PrivilegedAccessRequest,
+    PrivilegedAccessScope,
+    PrivilegedAccessStatus,
+)
+from app.access_intelligence.relationships import (
+    AccessRelationship,
+    AccessRelationshipManager,
+    AccessRelationshipType,
+    RelationshipStatus,
+    RelationshipStrength,
+)
+from app.access_intelligence.remediation import (
+    AccessRemediationAction,
+    AccessRemediationManager,
+    AccessRemediationPlan,
+    AccessRemediationPriority,
+    AccessRemediationStatus,
+)
+from app.access_intelligence.repositories import TenantScopedRepository
+from app.access_intelligence.signals import (
+    AccessSignal,
+    AccessSignalManager,
+    AccessSignalSeverity,
+    AccessSignalSource,
+    AccessSignalType,
+)
 from app.access_intelligence.snapshots import (
     AccessSnapshot,
     AccessSnapshotManager,
 )
+from app.access_intelligence.toxic_combinations import (
+    ToxicCombination,
+    ToxicCombinationEvidence,
+    ToxicCombinationManager,
+    ToxicCombinationRule,
+    ToxicCombinationSeverity,
+)
 from app.access_intelligence.trust import (
-    AccessTrustScore,
     AccessTrustDimension,
-    AccessTrustFactor,
     AccessTrustEngine,
+    AccessTrustFactor,
+    AccessTrustScore,
 )
-from app.access_intelligence.learning import (
-    AccessLearningRecord,
-    AccessPattern,
-    AccessLearningRecommendation,
-    AccessLearningManager,
+from app.access_intelligence.verification import (
+    AccessVerification,
+    AccessVerificationManager,
+    VerificationCheck,
+    VerificationStatus,
 )
-from app.access_intelligence.analytics import (
-    AccessAnalyticsEngine,
-    AccessReport,
-    AccessInsight,
-)
-from app.access_intelligence.observability import AccessMetricsCollector
-from app.access_intelligence.billing import AccessCostEvent, AccessBillingTracker
-from app.access_intelligence.repositories import TenantScopedRepository
-from app.access_intelligence.manager import AccessIntelligenceManager
 
 __all__ = [
     "AccessIntelligenceException",

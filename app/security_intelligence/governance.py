@@ -2,10 +2,10 @@
 
 from typing import Optional
 
+from app.approvals.approval_engine import ApprovalEngine
 from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
 from app.governance_platform.risk import RiskManager
-from app.approvals.approval_engine import ApprovalEngine
-from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionStatus, GovernanceDecisionReason
+from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionReason, GovernanceDecisionStatus
 from app.security_intelligence.remediation import SecurityRemediationPlan, SecurityRemediationPriority
 
 

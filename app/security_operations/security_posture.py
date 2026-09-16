@@ -5,16 +5,16 @@ Evaluates multi-dimensional platform security posture and calculates determinist
 
 from __future__ import annotations
 
+import hashlib
+import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-import hashlib
-import json
 from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer
-from app.security_operations.vulnerability_management import VulnerabilityManager, VulnerabilityAssessment
 from app.security_operations.container_security import ContainerSecurityEvaluator, ContainerSecurityResult
+from app.security_operations.vulnerability_management import VulnerabilityAssessment, VulnerabilityManager
 
 
 class SecurityPosture(str, Enum):

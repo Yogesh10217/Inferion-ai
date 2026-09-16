@@ -9,8 +9,8 @@ Destructive recommendations strictly default to auto_execution_blocked = True.
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
+from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 
 
 @dataclass

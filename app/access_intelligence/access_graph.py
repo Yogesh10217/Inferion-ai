@@ -1,11 +1,10 @@
 """Enterprise Access Graph (Phase 5.39)."""
 
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Set
 
-from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceException
+from pydantic import BaseModel, Field
 
 
 class AccessGraphNode(BaseModel):

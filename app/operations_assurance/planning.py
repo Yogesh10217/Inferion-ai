@@ -1,12 +1,16 @@
 """Autonomous operational planning with strict recommendation -> governance -> approval -> delegation flow."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, OperationalPlanNotFoundException
+from app.operations_assurance.exceptions import (
+    CrossTenantOperationsAssuranceException,
+    OperationalPlanNotFoundException,
+)
 
 
 class PlanningStrategy(str, Enum):

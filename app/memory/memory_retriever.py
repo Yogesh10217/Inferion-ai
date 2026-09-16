@@ -2,10 +2,11 @@
 Multi-Strategy Memory Retrieval Engine
 """
 
-from typing import Dict, Any, List, Optional
-from app.memory.memory_vector_store import MemoryVectorStore
+from typing import Any, Dict, List, Optional
+
 from app.memory.memory_embeddings import MemoryEmbeddingService
 from app.memory.memory_ranker import MemoryRanker
+from app.memory.memory_vector_store import MemoryVectorStore
 
 
 class MemoryRetriever:

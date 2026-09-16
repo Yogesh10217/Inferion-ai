@@ -1,11 +1,12 @@
 """Security Threat Correlation Engine (Security-Specific)."""
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.security_assurance.threats import SecurityThreatStore, SecurityThreat, ThreatSeverity
+from app.security_assurance.threats import SecurityThreat, SecurityThreatStore, ThreatSeverity
 
 
 class CorrelatedThreatCluster(BaseModel):

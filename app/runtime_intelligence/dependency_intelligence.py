@@ -1,7 +1,7 @@
 """Runtime dependency graph intelligence for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Set, List
+from typing import Dict, List, Set
 
 logger = logging.getLogger(__name__)
 

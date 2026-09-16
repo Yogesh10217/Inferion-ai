@@ -7,13 +7,12 @@ Provides user & role personalization while enforcing explicit consent boundaries
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from app.application_platform.exceptions import ConsentDeniedException
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 

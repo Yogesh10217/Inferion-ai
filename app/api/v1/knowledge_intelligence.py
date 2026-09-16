@@ -1,23 +1,21 @@
 """REST API Router for Enterprise AI Knowledge Intelligence Platform (Phase 5.35)."""
 
+from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, HTTPException, Query, status
-from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
-from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
-from app.knowledge_intelligence.knowledge import KnowledgeType, KnowledgeClassification
-from app.knowledge_intelligence.sources import KnowledgeSourceType
-from app.knowledge_intelligence.relationships import RelationshipType, RelationshipStrength
 from app.knowledge_intelligence.exceptions import (
     CrossTenantKnowledgeAccessException,
     KnowledgeNotFoundException,
-    KnowledgeSourceNotFoundException,
-    KnowledgeAccessDeniedException,
 )
+from app.knowledge_intelligence.knowledge import KnowledgeClassification, KnowledgeType
+from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
+from app.knowledge_intelligence.relationships import RelationshipStrength, RelationshipType
+from app.knowledge_intelligence.sources import KnowledgeSourceType
 
 router = APIRouter(prefix="/v1/knowledge", tags=["Knowledge Intelligence"])
 manager = KnowledgeIntelligenceManager()
-
 
 
 class CreateKnowledgeItemRequest(BaseModel):
@@ -95,11 +93,10 @@ def get_knowledge_item(item_id: str, tenant_id: str = Query(...)):
     try:
         item = manager.knowledge_manager.get_knowledge(item_id, tenant_id)
         return item.model_dump()
-    except CrossTenantKnowledgeAccessException as e:
+    except CrossTenantKnowledgeAccessException:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Knowledge item not found.")
     except KnowledgeNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-
 
 
 @router.post("/sources")
@@ -130,7 +127,6 @@ def get_provenance_chain(target_id: str = Query(...), tenant_id: str = Query(...
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Target not found.")
 
 
-
 @router.post("/relationships")
 def create_relationship(req: CreateRelationshipRequest, tenant_id: str = Query(...)):
     rel = manager.relationship_manager.create_relationship(
@@ -158,7 +154,6 @@ def traverse_graph(start_node_id: str = Query(...), tenant_id: str = Query(...),
         return trav.model_dump()
     except CrossTenantKnowledgeAccessException:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Node not found.")
-
 
 
 @router.post("/retrieval")

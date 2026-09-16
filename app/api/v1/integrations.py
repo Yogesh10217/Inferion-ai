@@ -1,14 +1,14 @@
 """REST API Router for Phase 5.20 Enterprise AI Integration & Ecosystem Platform."""
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query, Header
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Header, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
+from app.integrations.automation import ActionType, TriggerType
+from app.integrations.integration import IntegrationType
 from app.integrations.manager import IntegrationManager
-from app.integrations.integration import IntegrationType, IntegrationStatus
-from app.integrations.automation import TriggerType, ActionType
 from app.integrations.plugins import PluginManifest
-
 
 router = APIRouter(prefix="/v1/integrations", tags=["integrations"])
 _global_manager = IntegrationManager()

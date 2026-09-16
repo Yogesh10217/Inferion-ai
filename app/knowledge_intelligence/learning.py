@@ -1,12 +1,10 @@
 """Knowledge Learning Subsystem (Phase 5.35)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Dict, List
 
-from app.knowledge_intelligence.exceptions import KnowledgeLearningException
-from app.platform_contracts.redaction import SensitiveDataSanitizer
+from pydantic import BaseModel, Field
 
 
 class KnowledgeLearningSignal(BaseModel):

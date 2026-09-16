@@ -1,15 +1,16 @@
 """Marketplace Installation Pipeline with Safe Transactional Rollback."""
 
 import logging
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
 
-from app.marketplace.marketplace_item import MarketplaceItem
+from pydantic import BaseModel
+
 from app.extensions.extension import Extension
-from app.extensions.extension_registry import ExtensionRegistry
-from app.extensions.extension_loader import ExtensionLoader
 from app.extensions.extension_lifecycle import ExtensionLifecycleManager, ExtensionLifecycleState
+from app.extensions.extension_loader import ExtensionLoader
+from app.extensions.extension_registry import ExtensionRegistry
 from app.extensions.security import ExtensionSecurityEngine
+from app.marketplace.marketplace_item import MarketplaceItem
 
 logger = logging.getLogger(__name__)
 

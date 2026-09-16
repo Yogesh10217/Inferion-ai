@@ -5,20 +5,19 @@ Enforces idempotency across signal ingestion, situation updates, recommendation 
 and delegation requests using SHA-256 fingerprinting.
 """
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timedelta
 import hashlib
 import json
+from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
 
-from app.unified_intelligence.exceptions import (
-    InvalidUnifiedIntelligenceInputException
-)
+from app.unified_intelligence.exceptions import InvalidUnifiedIntelligenceInputException
 
 
 class IdempotencyEngine:
     """
     Deduplicates incoming signals and operations via idempotency keys and sliding time windows.
     """
+
     def __init__(self, default_ttl_seconds: int = 3600):
         self.default_ttl_seconds = default_ttl_seconds
         # Mapping: tenant_id:idempotency_key -> (result_data, expiration_time)

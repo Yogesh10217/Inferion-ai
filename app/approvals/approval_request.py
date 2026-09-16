@@ -2,11 +2,13 @@
 Human Approval Request Entity Representation
 """
 
-import uuid
 import time
-from typing import Dict, Any, Optional
+import uuid
 from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
+
 from app.approvals.approval_policies import RiskLevel
 
 

@@ -9,14 +9,15 @@ Triggers:
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.orchestration.human_tasks import HumanTaskManager, HumanTask, TaskPriority, TaskStatus
 from app.approvals.approval_engine import ApprovalEngine
+from app.orchestration.human_tasks import HumanTaskManager, TaskPriority
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +99,6 @@ class HumanExperienceManager:
             execution_id=execution_id,
             priority=TaskPriority.HIGH if reason in {EscalationReason.HIGH_RISK, EscalationReason.SAFETY_CONCERN} else TaskPriority.MEDIUM,
         )
-
 
         esc = HumanEscalation(
             application_id=application_id,

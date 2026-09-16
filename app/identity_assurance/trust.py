@@ -1,13 +1,14 @@
 """Identity Trust Engine."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
+from app.governance_platform.trust import TrustAssessment, TrustDimension, TrustFactor
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException
-from app.governance_platform.trust import TrustAssessment, TrustFactor, TrustDimension
 
 
 class IdentityTrustDimension(str, Enum):

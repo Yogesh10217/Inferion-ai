@@ -1,10 +1,11 @@
 """Unified Telemetry Platform with Trace/Execution Correlation & Secret Redaction."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field, field_validator
 
 from app.security.secrets import SecretManager
@@ -69,7 +70,6 @@ class TelemetryEvent(BaseModel):
         s = str(v)
         secret_mgr = SecretManager()
         return secret_mgr.sanitize_text(s) if hasattr(secret_mgr, "sanitize_text") else s
-
 
 
 class TelemetryManager:

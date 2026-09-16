@@ -5,7 +5,8 @@ Parses production codebase files with AST analysis to detect and classify stubs.
 
 import ast
 import os
-from typing import Dict, List, Optional
+from typing import Dict, List
+
 from app.platform_hardening.ast_analysis import ASTNodeFinding, PlatformASTAnalysisEngine
 from app.platform_hardening.code_analysis import PlatformCodeAnalysisEngine
 from app.platform_hardening.models import (

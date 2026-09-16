@@ -3,7 +3,8 @@ Workflow Recovery, Rollback, Replay, and Fork Capabilities
 """
 
 import uuid
-from typing import Dict, Any, Tuple, Optional
+from typing import Any, Dict, Optional, Tuple
+
 from app.workflows.checkpoint import CheckpointManager, WorkflowCheckpoint
 
 

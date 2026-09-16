@@ -1,9 +1,10 @@
 """Knowledge Provenance, Citation & Lineage Traceability Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

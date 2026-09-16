@@ -1,12 +1,16 @@
 """Cross-System Data Mapping Intelligence (Phase 5.40)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.integration_intelligence.exceptions import CrossTenantIntegrationAccessException, IntegrationValidationException
+from app.integration_intelligence.exceptions import (
+    CrossTenantIntegrationAccessException,
+    IntegrationValidationException,
+)
 
 
 class MappingTransformation(str, Enum):
@@ -73,7 +77,7 @@ class IntegrationMappingManager:
     def validate_mapping(self, tenant_id: str, mapping_id: str, target_schema_fields: List[str]) -> MappingValidation:
         mapping = self.get_mapping(tenant_id, mapping_id)
         target_fields_mapped = {r.target_field for r in mapping.rules}
-        
+
         missing = [f for f in target_schema_fields if f not in target_fields_mapped]
         is_valid = len(missing) == 0
 

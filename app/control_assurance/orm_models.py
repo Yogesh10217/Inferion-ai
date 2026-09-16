@@ -1,18 +1,15 @@
 """SQLAlchemy Production ORM Models for Control Assurance Subsystem (Phase 5.38)."""
 
 from datetime import datetime, timezone
-from typing import Any, Dict
 
 from sqlalchemy import (
-    Column,
-    String,
-    Boolean,
-    Float,
-    Integer,
-    DateTime,
     JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    String,
     Text,
-    Enum as SQLEnum,
 )
 from sqlalchemy.orm import declarative_base
 

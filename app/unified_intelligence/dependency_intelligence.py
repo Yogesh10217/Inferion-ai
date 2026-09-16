@@ -1,7 +1,8 @@
 """Cross-Domain Dependency Intelligence Engine for Phase 5.51 Enterprise AI Unified Intelligence."""
 
-from typing import Dict, List, Set, Optional
 import uuid
+from typing import Dict, List, Optional, Set
+
 from pydantic import BaseModel
 
 from app.unified_intelligence.domains import IntelligenceDomain

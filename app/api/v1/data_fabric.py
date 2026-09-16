@@ -1,14 +1,15 @@
 """FastAPI Router for Data Fabric (/v1/data-sources, /v1/data-sync, /v1/data-catalog, /v1/data-governance)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.data_fabric.manager import DataFabricManager
-from app.data_fabric.data_source import DataSourceType, DataSourceStatus
-from app.data_fabric.sync import SyncStrategy
-from app.data_fabric.governance import DataClassification, DataPolicy
+from app.data_fabric.data_source import DataSourceStatus, DataSourceType
 from app.data_fabric.exceptions import DataFabricException
+from app.data_fabric.governance import DataClassification, DataPolicy
+from app.data_fabric.manager import DataFabricManager
+from app.data_fabric.sync import SyncStrategy
 
 router = APIRouter(tags=["data-fabric"])
 

@@ -5,16 +5,16 @@ Generates and seals tamper-evident audit packages with SHA-256 verification,
 raising ImmutableUnifiedIntelligenceRecordException if mutations are attempted on finalized records.
 """
 
-from typing import Dict, Any, Optional
-from datetime import datetime
 import hashlib
 import json
 import uuid
+from datetime import datetime
+from typing import Any, Dict, Optional
 
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
+    ImmutableUnifiedIntelligenceRecordException,
     InvalidUnifiedIntelligenceInputException,
-    ImmutableUnifiedIntelligenceRecordException
 )
 
 
@@ -22,6 +22,7 @@ class UnifiedEvidenceRecord:
     """
     Immutable evidence record representing cryptographic proof of cross-domain decisions.
     """
+
     def __init__(
         self,
         evidence_id: str,
@@ -63,6 +64,7 @@ class SHA256EvidenceLedgerEngine:
     """
     Cryptographic SHA-256 evidence ledger for cross-domain unified intelligence.
     """
+
     def __init__(self):
         self._ledger: Dict[str, UnifiedEvidenceRecord] = {}
 

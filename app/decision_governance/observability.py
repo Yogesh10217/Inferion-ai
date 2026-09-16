@@ -1,7 +1,6 @@
 """Prometheus observability exporter using ai_decision_* metric prefix."""
 
-from typing import Dict, Any
-from prometheus_client import Counter, Gauge, Histogram, CollectorRegistry
+from prometheus_client import CollectorRegistry, Counter, Gauge
 
 
 class DecisionGovernanceMetrics:

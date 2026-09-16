@@ -5,12 +5,12 @@ Generates immutable audit records with SHA-256 fingerprints (sha256:<64 hex>).
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
 import hashlib
 import json
-from typing import Any, Dict, List, Optional
 import uuid
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer
 

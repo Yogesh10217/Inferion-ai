@@ -1,9 +1,9 @@
 """Continuous assurance remediation planner (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List
-from app.continuous_assurance.models import ContinuousAssuranceRemediationPlan
+
 from app.continuous_assurance.delegation import ContinuousAssuranceDelegationCoordinator
+from app.continuous_assurance.models import ContinuousAssuranceRemediationPlan
 
 logger = logging.getLogger(__name__)
 

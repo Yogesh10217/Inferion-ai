@@ -1,184 +1,65 @@
 """Enterprise AI Model Intelligence, Model Governance, Performance Evaluation & Continuous Model Assurance Platform."""
 
-from app.model_intelligence.exceptions import (
-    ModelIntelligenceException,
-    CrossTenantModelIntelligenceException,
-    ModelReferenceNotFoundException,
-    ModelEvaluationNotFoundException,
-    ModelPerformanceNotFoundException,
-    ModelDriftNotFoundException,
-    ModelIncidentNotFoundException,
-    ModelRiskNotFoundException,
-    ModelTrustNotFoundException,
-    ModelGovernanceBlockedException,
-    ModelRemediationBlockedException,
-    HighRiskModelActionRequiresApprovalException,
-    ImmutableModelIntelligenceRecordException,
-    ModelAssuranceException,
-    ModelMonitoringException,
-)
-from app.model_intelligence.models import (
-    ModelReference,
-    ModelType,
-    ModelProviderReference,
-    ModelStatus,
-    ModelCapabilityReference,
-    ModelMetadata,
-    ModelVersionReference,
-    ModelDeploymentReference,
-    ModelIntelligenceRegistry,
-)
-from app.model_intelligence.versions import (
-    ModelVersion,
-    VersionStatus,
-    VersionCompatibility,
-    VersionComparison,
-    VersionAssessment,
-    ModelVersionManager,
-)
-from app.model_intelligence.evaluation import (
-    ModelEvaluation,
-    EvaluationType,
-    EvaluationMetric,
-    EvaluationResult,
-    EvaluationStatus,
-    EvaluationEvidence,
-    ModelEvaluationManager,
-)
-from app.model_intelligence.benchmarks import (
-    ModelBenchmark,
-    BenchmarkSuite,
-    BenchmarkMetric,
-    BenchmarkResult,
-    BenchmarkComparison,
-    ModelBenchmarkManager,
-)
-from app.model_intelligence.performance import (
-    ModelPerformance,
-    PerformanceMetric,
-    PerformanceDimension,
-    PerformanceAssessment,
-    PerformanceTrend,
-    ModelPerformanceManager,
-)
-from app.model_intelligence.quality import (
-    ModelQualityAssessment,
-    QualityDimension,
-    QualityScore,
-    QualityEvidence,
-    QualityStatus,
-    ModelQualityManager,
-)
-from app.model_intelligence.hallucination import (
-    HallucinationFinding,
-    HallucinationType,
-    HallucinationSeverity,
-    HallucinationEvidence,
-    HallucinationAssessment,
-    HallucinationManager,
-)
-from app.model_intelligence.drift import (
-    ModelDrift,
-    ModelDriftType,
-    DriftSeverity,
-    DriftAssessment,
-    DriftEvidence,
-    ModelDriftManager,
-)
-from app.model_intelligence.reliability import (
-    ModelReliabilityAssessment,
-    ReliabilityDimension,
-    ReliabilityScore,
-    ModelFailurePattern,
-    ModelReliabilityManager,
-)
-from app.model_intelligence.safety import (
-    ModelSafetyAssessment,
-    SafetyRisk,
-    SafetyFinding,
-    SafetyEvidence,
-    SafetyStatus,
-    ModelSafetyManager,
-)
-from app.model_intelligence.security import (
-    ModelSecurityAssessment,
-    ModelSecurityRisk,
-    ModelSecurityFinding,
-    ModelSecurityEvidence,
-    ModelSecurityManager,
-)
-from app.model_intelligence.risk import (
-    ModelRiskProfile,
-    ModelRiskDimension,
-    ModelRiskFactor,
-    ModelRiskAssessment,
-    ModelRiskManager,
-)
-from app.model_intelligence.trust import (
-    ModelTrustScore,
-    ModelTrustDimension,
-    ModelTrustFactor,
-    ModelTrustAssessment,
-    ModelTrustEngine,
-)
-from app.model_intelligence.explainability import (
-    ModelExplanation,
-    ExplanationType,
-    ExplanationEvidence,
-    ExplainabilityAssessment,
-    ModelExplainabilityManager,
-)
-from app.model_intelligence.monitoring import (
-    ModelMonitoringProfile,
-    MonitoringSignal,
-    MonitoringStatus,
-    MonitoringAssessment,
-    ModelMonitoringManager,
+from app.model_intelligence.analytics import (
+    ModelIntelligenceAnalyticsEngine,
+    ModelIntelligenceInsight,
+    ModelIntelligenceReport,
 )
 from app.model_intelligence.anomalies import (
     ModelAnomaly,
-    ModelAnomalyType,
-    ModelAnomalySeverity,
-    ModelAnomalyStatus,
     ModelAnomalyEvidence,
     ModelAnomalyManager,
+    ModelAnomalySeverity,
+    ModelAnomalyStatus,
+    ModelAnomalyType,
 )
-from app.model_intelligence.incidents import (
-    ModelIncident,
-    ModelIncidentSeverity,
-    ModelIncidentStatus,
-    ModelIncidentImpact,
-    ModelIncidentManager,
+from app.model_intelligence.assurance import (
+    AssuranceAssessment,
+    AssuranceDimension,
+    AssuranceStatus,
+    ModelAssuranceManager,
+    ModelAssuranceScore,
 )
-from app.model_intelligence.investigations import (
-    ModelInvestigation,
-    ModelFinding,
-    ModelInvestigationEvidence,
-    ModelInvestigationManager,
+from app.model_intelligence.benchmarks import (
+    BenchmarkComparison,
+    BenchmarkMetric,
+    BenchmarkResult,
+    BenchmarkSuite,
+    ModelBenchmark,
+    ModelBenchmarkManager,
 )
-from app.model_intelligence.governance import (
-    ModelIntelligenceGovernanceEngine,
-    ModelGovernanceDecision,
-    ModelGovernanceDecisionStatus,
+from app.model_intelligence.billing import (
+    ModelIntelligenceBillingTracker,
+    ModelIntelligenceCostEvent,
 )
-from app.model_intelligence.remediation import (
-    ModelRemediationPlan,
-    ModelRemediationAction,
-    ModelRemediationPriority,
-    ModelRemediationStatus,
-    ModelRemediationManager,
+from app.model_intelligence.correlation import (
+    CorrelationEvidence,
+    CorrelationType,
+    ModelCorrelation,
+    ModelCorrelationManager,
 )
 from app.model_intelligence.delegation import (
-    ModelDelegationPlan,
     ModelDelegationAction,
-    ModelDelegationStatus,
     ModelDelegationManager,
+    ModelDelegationPlan,
+    ModelDelegationStatus,
 )
-from app.model_intelligence.verification import (
-    ModelVerification,
-    VerificationCheck,
-    VerificationStatus,
-    ModelVerificationManager,
+from app.model_intelligence.drift import (
+    DriftAssessment,
+    DriftEvidence,
+    DriftSeverity,
+    ModelDrift,
+    ModelDriftManager,
+    ModelDriftType,
+)
+from app.model_intelligence.evaluation import (
+    EvaluationEvidence,
+    EvaluationMetric,
+    EvaluationResult,
+    EvaluationStatus,
+    EvaluationType,
+    ModelEvaluation,
+    ModelEvaluationManager,
 )
 from app.model_intelligence.evidence import (
     ModelEvidence,
@@ -186,51 +67,170 @@ from app.model_intelligence.evidence import (
     ModelEvidenceIntegrity,
     ModelEvidenceManager,
 )
-from app.model_intelligence.assurance import (
-    ModelAssuranceScore,
-    AssuranceDimension,
-    AssuranceAssessment,
-    AssuranceStatus,
-    ModelAssuranceManager,
+from app.model_intelligence.exceptions import (
+    CrossTenantModelIntelligenceException,
+    HighRiskModelActionRequiresApprovalException,
+    ImmutableModelIntelligenceRecordException,
+    ModelAssuranceException,
+    ModelDriftNotFoundException,
+    ModelEvaluationNotFoundException,
+    ModelGovernanceBlockedException,
+    ModelIncidentNotFoundException,
+    ModelIntelligenceException,
+    ModelMonitoringException,
+    ModelPerformanceNotFoundException,
+    ModelReferenceNotFoundException,
+    ModelRemediationBlockedException,
+    ModelRiskNotFoundException,
+    ModelTrustNotFoundException,
 )
-from app.model_intelligence.correlation import (
-    ModelCorrelation,
-    CorrelationType,
-    CorrelationEvidence,
-    ModelCorrelationManager,
+from app.model_intelligence.explainability import (
+    ExplainabilityAssessment,
+    ExplanationEvidence,
+    ExplanationType,
+    ModelExplainabilityManager,
+    ModelExplanation,
+)
+from app.model_intelligence.governance import (
+    ModelGovernanceDecision,
+    ModelGovernanceDecisionStatus,
+    ModelIntelligenceGovernanceEngine,
+)
+from app.model_intelligence.hallucination import (
+    HallucinationAssessment,
+    HallucinationEvidence,
+    HallucinationFinding,
+    HallucinationManager,
+    HallucinationSeverity,
+    HallucinationType,
+)
+from app.model_intelligence.incidents import (
+    ModelIncident,
+    ModelIncidentImpact,
+    ModelIncidentManager,
+    ModelIncidentSeverity,
+    ModelIncidentStatus,
+)
+from app.model_intelligence.investigations import (
+    ModelFinding,
+    ModelInvestigation,
+    ModelInvestigationEvidence,
+    ModelInvestigationManager,
+)
+from app.model_intelligence.learning import (
+    ModelLearningManager,
+    ModelLearningPattern,
+    ModelLearningRecommendation,
+    ModelLearningRecord,
+)
+from app.model_intelligence.manager import ModelIntelligenceManager
+from app.model_intelligence.models import (
+    ModelCapabilityReference,
+    ModelDeploymentReference,
+    ModelIntelligenceRegistry,
+    ModelMetadata,
+    ModelProviderReference,
+    ModelReference,
+    ModelStatus,
+    ModelType,
+    ModelVersionReference,
+)
+from app.model_intelligence.monitoring import (
+    ModelMonitoringManager,
+    ModelMonitoringProfile,
+    MonitoringAssessment,
+    MonitoringSignal,
+    MonitoringStatus,
+)
+from app.model_intelligence.observability import ModelIntelligenceMetricsCollector
+from app.model_intelligence.performance import (
+    ModelPerformance,
+    ModelPerformanceManager,
+    PerformanceAssessment,
+    PerformanceDimension,
+    PerformanceMetric,
+    PerformanceTrend,
+)
+from app.model_intelligence.quality import (
+    ModelQualityAssessment,
+    ModelQualityManager,
+    QualityDimension,
+    QualityEvidence,
+    QualityScore,
+    QualityStatus,
+)
+from app.model_intelligence.reliability import (
+    ModelFailurePattern,
+    ModelReliabilityAssessment,
+    ModelReliabilityManager,
+    ReliabilityDimension,
+    ReliabilityScore,
+)
+from app.model_intelligence.remediation import (
+    ModelRemediationAction,
+    ModelRemediationManager,
+    ModelRemediationPlan,
+    ModelRemediationPriority,
+    ModelRemediationStatus,
+)
+from app.model_intelligence.repositories import (
+    ModelEvidenceRepository,
+    ModelIncidentRepository,
+    ModelReferenceRepository,
+)
+from app.model_intelligence.risk import (
+    ModelRiskAssessment,
+    ModelRiskDimension,
+    ModelRiskFactor,
+    ModelRiskManager,
+    ModelRiskProfile,
+)
+from app.model_intelligence.safety import (
+    ModelSafetyAssessment,
+    ModelSafetyManager,
+    SafetyEvidence,
+    SafetyFinding,
+    SafetyRisk,
+    SafetyStatus,
+)
+from app.model_intelligence.security import (
+    ModelSecurityAssessment,
+    ModelSecurityEvidence,
+    ModelSecurityFinding,
+    ModelSecurityManager,
+    ModelSecurityRisk,
 )
 from app.model_intelligence.signals import (
     ModelSignal,
-    ModelSignalType,
-    ModelSignalSource,
     ModelSignalManager,
+    ModelSignalSource,
+    ModelSignalType,
 )
 from app.model_intelligence.snapshots import (
     ModelIntelligenceSnapshot,
     ModelIntelligenceSnapshotManager,
 )
-from app.model_intelligence.learning import (
-    ModelLearningRecord,
-    ModelLearningPattern,
-    ModelLearningRecommendation,
-    ModelLearningManager,
+from app.model_intelligence.trust import (
+    ModelTrustAssessment,
+    ModelTrustDimension,
+    ModelTrustEngine,
+    ModelTrustFactor,
+    ModelTrustScore,
 )
-from app.model_intelligence.analytics import (
-    ModelIntelligenceAnalyticsEngine,
-    ModelIntelligenceReport,
-    ModelIntelligenceInsight,
+from app.model_intelligence.verification import (
+    ModelVerification,
+    ModelVerificationManager,
+    VerificationCheck,
+    VerificationStatus,
 )
-from app.model_intelligence.observability import ModelIntelligenceMetricsCollector
-from app.model_intelligence.billing import (
-    ModelIntelligenceCostEvent,
-    ModelIntelligenceBillingTracker,
+from app.model_intelligence.versions import (
+    ModelVersion,
+    ModelVersionManager,
+    VersionAssessment,
+    VersionComparison,
+    VersionCompatibility,
+    VersionStatus,
 )
-from app.model_intelligence.repositories import (
-    ModelReferenceRepository,
-    ModelIncidentRepository,
-    ModelEvidenceRepository,
-)
-from app.model_intelligence.manager import ModelIntelligenceManager
 
 __all__ = [
     "ModelIntelligenceException",

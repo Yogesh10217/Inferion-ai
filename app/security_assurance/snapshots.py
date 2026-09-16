@@ -3,13 +3,14 @@
 import hashlib
 import json
 import logging
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.security_assurance.exceptions import ImmutableSecurityRecordException, CrossTenantSecurityAssuranceException
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
+from app.platform_contracts.snapshots import SnapshotFactory
+from app.security_assurance.exceptions import CrossTenantSecurityAssuranceException
 
 logger = logging.getLogger(__name__)
 

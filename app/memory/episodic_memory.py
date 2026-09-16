@@ -3,8 +3,8 @@ Episodic Memory (Tier 6): Completed Event Episode Logging & Historical Recall
 """
 
 import uuid
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 
 class EpisodeRecord:
@@ -65,9 +65,9 @@ class EpisodicMemory:
         results = list(self._episodes.values())
         if episode_type:
             results = [ep for ep in results if ep.episode_type == episode_type]
-        
+
         query_words = set(query.lower().split())
-        
+
         def match_score(ep: EpisodeRecord) -> int:
             words = set(ep.summary.lower().split())
             return len(query_words.intersection(words))

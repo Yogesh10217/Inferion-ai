@@ -1,7 +1,7 @@
 """Agent Knowledge Adapter & Delegated Scope Boundary Integration."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Optional
 
 from app.identity.agent_identity import AgentIdentityManager
 from app.knowledge_platform.retrieval import RetrievalPipeline, RetrievalRequest, RetrievalResult

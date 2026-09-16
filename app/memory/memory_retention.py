@@ -2,9 +2,10 @@
 Memory Retention Manager: Policies, Archiving, Soft & Hard Deletion
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone, timedelta
-from app.memory.memory_types import RetentionPolicy, MemoryStatus
+from datetime import datetime, timedelta, timezone
+from typing import Optional
+
+from app.memory.memory_types import RetentionPolicy
 
 
 class MemoryRetentionManager:

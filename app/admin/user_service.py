@@ -1,8 +1,11 @@
 from typing import List
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from sqlalchemy import select
-from app.auth.models import User
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.admin.exceptions import ResourceNotFoundException
+from app.auth.models import User
+
 
 class UserAdminService:
     def __init__(self, db: AsyncSession):

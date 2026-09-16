@@ -1,17 +1,16 @@
 """Runtime signal manager for Runtime Intelligence (Phase 5.57)."""
 
-import hashlib
-import json
 import logging
-from typing import Dict, Any, List, Optional
-from app.runtime_intelligence.models import (
-    RuntimeSignal,
-    RuntimeSignalType,
-    RuntimeSignalSeverity,
-    RuntimeSignalMetadata,
-)
+from typing import Any, Dict, Optional
+
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 from app.runtime_intelligence.exceptions import RuntimeIntelligenceException
+from app.runtime_intelligence.models import (
+    RuntimeSignal,
+    RuntimeSignalMetadata,
+    RuntimeSignalSeverity,
+    RuntimeSignalType,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Set, Optional
+from typing import Any, Dict, List, Set
 
 from app.platform_integration.exceptions import IntelligenceLineageException
 

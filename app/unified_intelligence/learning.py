@@ -5,19 +5,18 @@ Learns cross-domain correlation patterns and outcome feedback in strictly ADVISO
 enforcing auto_execute = False for zero unapproved mutation.
 """
 
-from typing import Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, Optional
 
-from app.unified_intelligence.exceptions import (
-    InvalidUnifiedIntelligenceInputException
-)
+from app.unified_intelligence.exceptions import InvalidUnifiedIntelligenceInputException
 
 
 class AdvisoryModelInsight:
     """
     Advisory ML model insight for cross-domain pattern matching.
     """
+
     def __init__(
         self,
         insight_id: str,
@@ -55,6 +54,7 @@ class AdvisoryLearningEngine:
     """
     Analyzes historical cross-domain situations and outcome feedback to refine advisory correlation rules.
     """
+
     def __init__(self):
         pass
 

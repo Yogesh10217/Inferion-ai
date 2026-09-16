@@ -3,15 +3,15 @@
 import hashlib
 import json
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, List, Optional
 import uuid
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Optional
 
 from app.platform_integration.models import (
-    CrossPhaseSignal,
-    CrossPhaseFinding,
     CrossPhaseAssessment,
+    CrossPhaseFinding,
+    CrossPhaseSignal,
     TraceContext,
 )
 from app.platform_integration.providers import PlatformProviderResult

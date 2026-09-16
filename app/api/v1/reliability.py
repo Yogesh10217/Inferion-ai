@@ -1,14 +1,13 @@
 """REST API Router for Enterprise AI Reliability Platform (Phase 5.31)."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict
+
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
+from app.reliability_platform.incidents import IncidentSeverity
 from app.reliability_platform.manager import ReliabilityPlatformManager
-from app.reliability_platform.services import ServiceTier, ReliabilityService
-from app.reliability_platform.slo import SLO
-from app.reliability_platform.incidents import ReliabilityIncident, IncidentSeverity, IncidentStatus
-from app.reliability_platform.postmortems import PostmortemReport
+from app.reliability_platform.services import ServiceTier
 
 router = APIRouter(prefix="/v1/reliability", tags=["reliability-platform"])
 mgr = ReliabilityPlatformManager()
@@ -92,8 +91,8 @@ async def plan_remediation(
     req: RemediationPlanRequest,
     tenant_id: str = Query(..., description="Tenant ID"),
 ):
-    from app.reliability_platform.remediation import RemediationAction, RemediationRisk
     from app.platform_contracts.delegation import DelegationTarget
+    from app.reliability_platform.remediation import RemediationAction, RemediationRisk
 
     risk = RemediationRisk.HIGH if req.is_high_risk else RemediationRisk.LOW
     action = RemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name=req.action_name, risk=risk)
@@ -153,4 +152,3 @@ async def legacy_reliability_health():
 @router.get("/circuit-breakers", response_model=Dict[str, Any])
 async def legacy_circuit_breakers():
     return {"circuit_breakers": []}
-

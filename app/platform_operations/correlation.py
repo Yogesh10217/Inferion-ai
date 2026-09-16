@@ -1,14 +1,14 @@
 """Deterministic Signal Correlation Engine."""
 
-from datetime import datetime, timezone, timedelta
-from enum import Enum
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_operations.signals import OperationalSignal, SignalManager
 from app.platform_operations.services import ServiceCatalogManager
+from app.platform_operations.signals import OperationalSignal, SignalManager
 
 logger = logging.getLogger(__name__)
 

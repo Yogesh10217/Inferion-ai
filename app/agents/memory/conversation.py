@@ -3,7 +3,8 @@ Persistent Conversation Memory with Summarization & Compression
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -31,7 +32,7 @@ class ConversationMemory:
         cutoff = len(self.messages) - (self.max_messages // 2)
         old_messages = self.messages[:cutoff]
         self.messages = self.messages[cutoff:]
-        
+
         summary_text = "\n".join([f"{m.role}: {m.content[:100]}" for m in old_messages])
         if self.summary:
             self.summary += f"\n{summary_text}"

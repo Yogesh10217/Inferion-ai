@@ -1,14 +1,14 @@
 """Canonical Domain Normalization Adapters for Phase 5.58 Platform Integration."""
 
 import logging
-from typing import Dict, Any, List, Optional
 import uuid
+from typing import Any, Dict, Optional
 
 from app.platform_integration.models import (
-    IntegrationPlatform,
-    CrossPhaseSignal,
-    CrossPhaseFinding,
     CrossPhaseAssessment,
+    CrossPhaseFinding,
+    CrossPhaseSignal,
+    IntegrationPlatform,
     TraceContext,
 )
 

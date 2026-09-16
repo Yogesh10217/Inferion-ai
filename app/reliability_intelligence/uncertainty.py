@@ -1,6 +1,7 @@
 """Reliability uncertainty assessment engine (Phase 5.55)."""
 
-from typing import Dict, Any, List
+from typing import Any, Dict
+
 
 class ReliabilityUncertaintyCategory:
     DATA_UNCERTAINTY = "DATA_UNCERTAINTY"

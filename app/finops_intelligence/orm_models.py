@@ -1,7 +1,8 @@
 """SQLAlchemy Production Models for FinOps Intelligence (Phase 5.42)."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, Boolean, DateTime, Integer, JSON, Text
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

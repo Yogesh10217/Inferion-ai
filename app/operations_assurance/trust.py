@@ -1,10 +1,8 @@
 """Operational trust intelligence adapting results to platform TrustAssessment primitive."""
 
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, Optional
 
-from app.governance_platform.trust import TrustAssessment, TrustFactor, TrustDimension
+from app.governance_platform.trust import TrustAssessment, TrustFactor
 
 
 class OperationsTrustEngine:

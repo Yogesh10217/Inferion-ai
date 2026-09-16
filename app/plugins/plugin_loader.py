@@ -1,13 +1,13 @@
-import os
-import sys
 import importlib
 import importlib.util
 import logging
-from typing import Dict, List, Set, Type, Optional, Any
+import os
+import sys
+from typing import Any, Dict, List, Set, Type
+
+from .exceptions import PluginDependencyError, PluginLoadError
 from .plugin import Plugin
 from .plugin_manifest import PluginManifest
-from .plugin_context import PluginContext
-from .exceptions import PluginLoadError, PluginDependencyError
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class PluginLoader:
             spec = importlib.util.spec_from_file_location(module_name, file_path)
             if spec is None or spec.loader is None:
                 raise PluginLoadError(f"Cannot load module spec for {file_path}")
-            
+
             module = importlib.util.module_from_spec(spec)
             sys.modules[module_name] = module
             spec.loader.exec_module(module)
@@ -39,7 +39,7 @@ class PluginLoader:
                 raise PluginLoadError(f"Class '{class_name}' not found in {file_path}")
             if not issubclass(plugin_class, Plugin):
                 raise PluginLoadError(f"Class '{class_name}' is not a subclass of Plugin")
-            
+
             return plugin_class
         except Exception as e:
             logger.error(f"Failed to load plugin class '{class_name}' from {file_path}: {e}")

@@ -1,8 +1,9 @@
 """Policy drift analyzer for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
-from app.continuous_assurance.models import AssuranceDrift, DriftType, DriftSeverity, DriftStatus
+from typing import Any, Dict
+
+from app.continuous_assurance.models import AssuranceDrift, DriftSeverity, DriftStatus, DriftType
 
 logger = logging.getLogger(__name__)
 

@@ -13,16 +13,16 @@ All fallbacks strictly preserve authorization and governance controls.
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.resilience.circuit_breaker import CircuitBreakerRegistry
-from app.resilience.retry import RetryManager
 from app.resilience.fallback import FallbackManager
-
+from app.resilience.retry import RetryManager
 
 logger = logging.getLogger(__name__)
 

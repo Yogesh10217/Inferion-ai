@@ -1,8 +1,8 @@
 """Deterministic and explainable failure prediction engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.reliability_intelligence.models import FailurePrediction, FailureClassification
+
+from app.reliability_intelligence.models import FailureClassification, FailurePrediction
 from app.reliability_intelligence.repositories import FailurePredictionRepository
 
 logger = logging.getLogger(__name__)
@@ -27,10 +27,10 @@ class FailurePredictionEngine:
 
         if capacity_utilization > 0.90:
             pred_type = FailureClassification.CAPACITY
-            explanation = f"High capacity utilization ({capacity_utilization*100:.1f}%) projects capacity exhaustion within {horizon_minutes}m."
+            explanation = f"High capacity utilization ({capacity_utilization * 100:.1f}%) projects capacity exhaustion within {horizon_minutes}m."
         elif recent_error_rate > 0.02:
             pred_type = FailureClassification.DEPENDENCY
-            explanation = f"Elevated error rate ({recent_error_rate*100:.2f}%) indicates imminent upstream dependency degradation."
+            explanation = f"Elevated error rate ({recent_error_rate * 100:.2f}%) indicates imminent upstream dependency degradation."
         else:
             pred_type = FailureClassification.TRANSIENT
             explanation = f"Baseline error trends indicate low failure probability ({prob:.2f})."

@@ -1,11 +1,11 @@
-import time
 import logging
-from typing import Dict, List, Optional, Any
-from .trace_context import SpanContext, generate_trace_id, generate_span_id
-from .context_propagation import ContextPropagator
-from .sampling import Sampler, AlwaysOnSampler
-from .exporter import ExporterRegistry, BatchSpanProcessor
+import time
+from typing import Any, Dict, List, Optional
 
+from .context_propagation import ContextPropagator
+from .exporter import BatchSpanProcessor, ExporterRegistry
+from .sampling import AlwaysOnSampler, Sampler
+from .trace_context import SpanContext, generate_span_id, generate_trace_id
 
 logger = logging.getLogger(__name__)
 

@@ -3,7 +3,8 @@
 import hashlib
 import json
 import logging
-from app.capacity_intelligence.models import CapacitySnapshot, CapacityAssessment
+
+from app.capacity_intelligence.models import CapacityAssessment, CapacitySnapshot
 
 logger = logging.getLogger(__name__)
 

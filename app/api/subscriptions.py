@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
-from typing import Optional
 
-from app.core.container import ServiceContainer
 from app.api.dependencies import get_container
-from app.billing.exceptions import InvalidPlanException
 from app.auth.middleware import require_roles
+from app.billing.exceptions import InvalidPlanException
+from app.core.container import ServiceContainer
 
 router = APIRouter(prefix="/subscriptions", tags=["Billing Subscriptions"])
+
 
 @router.get("", response_model=dict)
 @require_roles(["admin", "org_admin"])
@@ -27,6 +27,7 @@ async def get_active_subscription(request: Request, container: ServiceContainer 
         "status": sub.status,
         "expires_at": sub.expires_at
     }
+
 
 @router.post("/{plan_id}")
 @require_roles(["admin", "org_admin"])

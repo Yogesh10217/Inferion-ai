@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from app.deployment.models import ProductionDeploymentState, RollbackTrigger
 from app.deployment.secrets import SecretsSanitizer

@@ -1,9 +1,10 @@
 """Data intelligence governance engine (Phase 5.43)."""
 
 import uuid
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException

@@ -5,9 +5,9 @@ Validates database restore plans, backup/schema/artifact compatibility, and post
 Preserves Truthfulness Boundary: Production database restore remains NOT_EXECUTED unless empirically executed.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

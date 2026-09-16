@@ -4,7 +4,8 @@ Shell Command Execution Tool
 
 import asyncio
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from app.agents.agent_context import AgentContext
 
 logger = logging.getLogger(__name__)

@@ -2,15 +2,15 @@
 
 import hashlib
 import json
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.portfolio_platform.exceptions import (
     FundingDecisionException,
-    CrossTenantPortfolioAccessException,
 )
 
 
@@ -43,7 +43,6 @@ class FundingRequest(BaseModel):
     funding_source: FundingSource = FundingSource.STRATEGIC_AI_CAPEX
     status: FundingStatus = FundingStatus.REQUESTED
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
 
 
 class FundingAllocation(BaseModel):

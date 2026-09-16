@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
 import asyncio
-from typing import Awaitable, Callable, Dict, List, Optional, Set
 import logging
+from abc import ABC, abstractmethod
+from typing import Awaitable, Callable, Dict, Set
 
 from app.events.event_serializer import EventEnvelope
 
@@ -16,17 +16,14 @@ class IEventBus(ABC):
     @abstractmethod
     async def publish(self, event: EventEnvelope) -> None:
         """Publish an event to all interested subscribers."""
-        pass
 
     @abstractmethod
     def subscribe(self, event_type: str, handler: SubscriberCallable) -> None:
         """Subscribe a handler function to a specific event_type or wildcard '*'."""
-        pass
 
     @abstractmethod
     def unsubscribe(self, event_type: str, handler: SubscriberCallable) -> None:
         """Unsubscribe a handler from an event type."""
-        pass
 
 
 class InMemoryEventBus(IEventBus):

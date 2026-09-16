@@ -1,17 +1,15 @@
 """REST API Router for Enterprise AI Access Intelligence Platform (Phase 5.39)."""
 
-from fastapi import APIRouter, HTTPException, Depends, Header, Query
-from typing import Dict, Any, Optional, List
+from typing import Optional
 
-from app.access_intelligence.manager import AccessIntelligenceManager
-from app.access_intelligence.exceptions import AccessIntelligenceException
-from app.access_intelligence.identities import IdentityType, IdentityRiskLevel
-from app.access_intelligence.entitlements import EntitlementType
-from app.access_intelligence.privileged_access import PrivilegedAccessScope
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
+
 from app.access_intelligence.emergency_access import EmergencyAccessReason
-from app.access_intelligence.access_reviews import AccessReviewScope, AccessReviewDecision
-from app.access_intelligence.certifications import CertificationScope, CertificationDecision
-from app.access_intelligence.remediation import AccessRemediationAction
+from app.access_intelligence.entitlements import EntitlementType
+from app.access_intelligence.exceptions import AccessIntelligenceException
+from app.access_intelligence.identities import IdentityType
+from app.access_intelligence.manager import AccessIntelligenceManager
+from app.access_intelligence.privileged_access import PrivilegedAccessScope
 
 router = APIRouter(prefix="/v1/access", tags=["Access Intelligence"])
 

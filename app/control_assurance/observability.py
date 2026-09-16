@@ -1,7 +1,7 @@
 """Prometheus-Compatible Control Assurance Metrics Subsystem (Phase 5.38)."""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Any, Dict
 
 from app.platform_contracts.observability import MetricNameValidator, SafeMetricLabelSanitizer
 

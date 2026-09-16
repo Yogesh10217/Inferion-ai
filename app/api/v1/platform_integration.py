@@ -1,24 +1,25 @@
 """FastAPI REST API Router for Platform Integration Fabric (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, status
 
 from app.platform_integration.manager import PlatformIntegrationManager
 from app.platform_integration.schemas import (
+    AssuranceResponse,
     ContextBuildRequest,
     ContextResponse,
     CorrelateRequest,
     CorrelateResponse,
-    AssuranceResponse,
+    DelegationCreateRequest,
+    DelegationResponse,
     InvestigationRequest,
     InvestigationResponse,
     RecommendationResponse,
-    DelegationCreateRequest,
-    DelegationResponse,
+    SnapshotCaptureResponse,
     VerificationRequest,
     VerificationResponse,
-    SnapshotCaptureResponse,
 )
 
 logger = logging.getLogger(__name__)

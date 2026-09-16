@@ -1,15 +1,14 @@
 """Evidence-Backed Root Cause Analysis & Diagnosis Engine."""
 
-from datetime import datetime, timezone
-from enum import Enum
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_operations.incident_intelligence import IncidentContext
 from app.platform_operations.services import ServiceCatalogManager, ServiceDependencyType
-from app.platform_operations.anomalies import AnomalyType
 
 logger = logging.getLogger(__name__)
 

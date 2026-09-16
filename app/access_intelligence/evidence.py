@@ -1,16 +1,16 @@
 """Access Evidence Management (Phase 5.39)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 import hashlib
 import json
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.access_intelligence.exceptions import (
-    CrossTenantAccessIntelligenceException,
     AccessEvidenceIntegrityException,
+    CrossTenantAccessIntelligenceException,
     ImmutableAccessRecordException,
 )
 from app.platform_contracts.redaction import SensitiveDataSanitizer

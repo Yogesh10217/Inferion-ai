@@ -18,7 +18,6 @@ from app.security_operations.security_posture import SecurityPostureResult
 from app.security_operations.security_risk_engine import RiskAssessment, RiskPolicyAction
 from app.security_operations.vulnerability_management import VulnerabilityAssessment
 
-
 UNEXECUTED_PRODUCTION_CLAIMS = [
     "PRODUCTION_PENETRATION_TEST_EXECUTED",
     "PRODUCTION_VULNERABILITY_SCAN_EXECUTED",

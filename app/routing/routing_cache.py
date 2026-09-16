@@ -1,6 +1,6 @@
-import time
 import threading
-from typing import Any, Dict, Optional, Tuple
+import time
+from typing import Any, Dict, Optional
 
 
 class CacheItem:

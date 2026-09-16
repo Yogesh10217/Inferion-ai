@@ -1,12 +1,13 @@
 """Lifecycle Trust Evaluation Subsystem (Phase 5.33)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.trust import TrustAssessment
 from app.platform_contracts.adapters import TrustAssessmentAdapter
+from app.platform_contracts.trust import TrustAssessment
 
 
 class LifecycleTrustDimension(BaseModel):

@@ -1,14 +1,15 @@
 """Intelligence Signal Fabric & Sanitized Telemetry Ingestion."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.security.secrets import SecretManager
 from app.intelligence_platform.exceptions import SignalValidationException
+from app.security.secrets import SecretManager
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +104,6 @@ class SignalNormalizer:
         if not text:
             return text
         return self.secret_manager.sanitize_text(text)
-
 
     def sanitize_payload(self, obj: Any) -> Any:
         if isinstance(obj, str):

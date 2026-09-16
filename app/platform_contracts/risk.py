@@ -1,12 +1,12 @@
 """Unified Risk Reference Contract (Phase 5.30)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.governance_platform.risk import RiskManager, RiskLevel
+from app.governance_platform.risk import RiskLevel
 
 
 class RiskEvidenceReference(BaseModel):

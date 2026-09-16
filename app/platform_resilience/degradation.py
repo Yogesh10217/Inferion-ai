@@ -1,9 +1,10 @@
 """Graceful Degradation Planning Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
@@ -51,7 +52,7 @@ class DegradationPlan(BaseModel):
 
 class GracefulDegradationManager:
     """Graceful Degradation Planning Manager.
-    
+
     Formulates degradation plans explicitly documenting functionality preserved, reduced, or disabled.
     """
 
@@ -85,10 +86,10 @@ class GracefulDegradationManager:
         plan = self._plans.get(plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

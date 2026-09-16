@@ -2,12 +2,11 @@
 FastAPI Router for Autonomous Execution Engine (/v1/autonomy)
 """
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, HTTPException, status
+from pydantic import BaseModel
 
-from app.autonomy.execution_engine import AutonomousExecutionEngine
 from app.autonomy.exceptions import AutonomyException, EmergencyStopException
+from app.autonomy.execution_engine import AutonomousExecutionEngine
 
 router = APIRouter(prefix="/v1/autonomy", tags=["autonomy"])
 

@@ -1,11 +1,12 @@
 """REST API Router for Enterprise AI Control Assurance (Phase 5.38)."""
 
-from fastapi import APIRouter, HTTPException, Depends, Header, Query
-from typing import Dict, Any, Optional, List
+from typing import Optional
 
-from app.control_assurance.manager import ControlAssuranceManager
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
+
+from app.control_assurance.controls import ControlCategory, ControlCriticality
 from app.control_assurance.exceptions import ControlAssuranceException
-from app.control_assurance.controls import ControlCategory, ControlType, ControlCriticality
+from app.control_assurance.manager import ControlAssuranceManager
 
 router = APIRouter(prefix="/v1/control-assurance", tags=["Control Assurance"])
 

@@ -1,15 +1,15 @@
 """Immutable decision evidence bundle management with SHA-256 integrity."""
 
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-import uuid
 import hashlib
-import json
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.decision_governance.exceptions import (
-    DecisionEvidenceNotFoundException,
     CrossTenantDecisionGovernanceException,
+    DecisionEvidenceNotFoundException,
     ImmutableDecisionRecordException,
 )
 from app.platform_contracts.redaction import SensitiveDataSanitizer

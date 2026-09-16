@@ -1,8 +1,9 @@
 """Privilege Creep Intelligence."""
 
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Dict
+
 from pydantic import BaseModel, Field
 
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException

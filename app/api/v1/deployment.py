@@ -61,7 +61,6 @@ async def readiness_check(
     return res
 
 
-
 @router.get("/live")
 @router.get("/v1/deployment/live")
 async def liveness_check(
@@ -124,7 +123,7 @@ async def sanitized_configuration(
 ) -> Dict[str, Any]:
     config = manager.get_config()
     fp = ConfigurationFingerprintEngine.generate_fingerprint(config)
-    
+
     # Return sanitized configuration representation only
     return {
         "environment": config.environment.value,

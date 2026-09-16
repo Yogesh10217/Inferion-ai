@@ -1,35 +1,36 @@
 """FastAPI REST API Router for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 
 from app.capacity_intelligence.manager import CapacityIntelligenceManager
 from app.capacity_intelligence.schemas import (
-    ResourceRegistrationRequest,
-    ResourceRegistrationResponse,
-    TelemetryIngestionRequest,
-    TelemetryIngestionResponse,
+    BottleneckDetectionRequest,
+    BottleneckDetectionResponse,
     CapacityAssessmentRequest,
     CapacityAssessmentResponse,
     CapacityForecastRequest,
     CapacityForecastResponse,
-    DemandPredictionRequest,
-    DemandPredictionResponse,
-    SaturationAnalysisRequest,
-    SaturationAnalysisResponse,
-    BottleneckDetectionRequest,
-    BottleneckDetectionResponse,
-    OptimizationRequest,
-    OptimizationResponse,
     CostPerformanceRequest,
     CostPerformanceResponse,
-    GovernanceRequest,
-    GovernanceResponse,
     DelegationRequestSchema,
     DelegationResponseSchema,
+    DemandPredictionRequest,
+    DemandPredictionResponse,
     EvidenceBundleResponse,
+    GovernanceRequest,
+    GovernanceResponse,
+    OptimizationRequest,
+    OptimizationResponse,
+    ResourceRegistrationRequest,
+    ResourceRegistrationResponse,
+    SaturationAnalysisRequest,
+    SaturationAnalysisResponse,
     SnapshotResponse,
+    TelemetryIngestionRequest,
+    TelemetryIngestionResponse,
 )
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/v1/capacity", tags=["Capacity Intelligence"])
 
 _manager_instance: Optional[CapacityIntelligenceManager] = None
+
 
 def get_capacity_manager() -> CapacityIntelligenceManager:
     global _manager_instance

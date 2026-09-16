@@ -3,7 +3,8 @@ Memory Vector Store & Cosine Similarity Search Engine
 """
 
 import math
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from app.memory.exceptions import TenantMemoryIsolationError
 
 

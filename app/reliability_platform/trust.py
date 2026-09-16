@@ -1,13 +1,11 @@
 """Reliability Trust Engine Subsystem (Phase 5.31)."""
 
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
-import uuid
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence
 from app.platform_contracts.adapters import TrustAssessmentAdapter
-
+from app.platform_contracts.trust import TrustAssessment
 
 
 class ReliabilityTrustScore(BaseModel):

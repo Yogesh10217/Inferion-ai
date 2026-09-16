@@ -1,8 +1,9 @@
 """Cross-Domain Security Correlation Engine (Enterprise Platform Synthesis)."""
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 

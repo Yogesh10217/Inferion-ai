@@ -1,12 +1,13 @@
 """FastAPI Router for Developer Platform (/v1/developers & /v1/events)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
+from typing import List, Optional
 
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+
+from app.developer_platform.exceptions import DeveloperPlatformException
 from app.developer_platform.manager import DeveloperPlatformManager
 from app.developer_platform.project import ProjectLifecycle
-from app.developer_platform.exceptions import DeveloperPlatformException
 
 router = APIRouter(tags=["developers"])
 

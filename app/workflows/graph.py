@@ -2,10 +2,11 @@
 Workflow Graph Data Structure & DAG Topological Processor
 """
 
-from typing import Dict, List, Optional, Any
-from app.workflows.node import BaseNode, NodeType
+from typing import Any, Dict, List, Optional
+
 from app.workflows.edge import Edge
 from app.workflows.exceptions import GraphValidationError
+from app.workflows.node import BaseNode, NodeType
 
 
 class WorkflowGraph:

@@ -4,6 +4,7 @@ Generates RemediationRecommendation items with mandatory auto_execute = False en
 """
 
 from typing import List
+
 from app.platform_hardening.models import (
     PlatformAuditFinding,
     PlatformAuditSeverity,

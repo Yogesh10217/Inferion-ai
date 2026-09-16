@@ -5,15 +5,15 @@ Calculates cross-domain enterprise risk scores, evaluates risk vectors,
 and tracks risk trends across domains with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
-from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.risk_propagation import RiskPropagationGraph
 
 
@@ -21,6 +21,7 @@ class UnifiedRiskAssessment:
     """
     Holistic cross-domain risk assessment result.
     """
+
     def __init__(
         self,
         assessment_id: str,
@@ -61,6 +62,7 @@ class UnifiedRiskEngine:
     """
     Evaluates enterprise-wide multi-domain risk scores combining signals, situations, and risk propagation graphs.
     """
+
     def __init__(self):
         pass
 

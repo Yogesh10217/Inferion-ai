@@ -4,6 +4,7 @@ Aggregates audit findings, broken providers, disconnected engines, stubs, dead c
 """
 
 from typing import Dict, List
+
 from app.platform_hardening.models import (
     PlatformAuditFinding,
     PlatformAuditSeverity,

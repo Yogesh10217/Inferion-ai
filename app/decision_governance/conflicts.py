@@ -1,12 +1,11 @@
 """Decision conflict detection and resolution recommendation intelligence."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
 
-from app.decision_governance.exceptions import DecisionConflictException, CrossTenantDecisionGovernanceException
+from pydantic import BaseModel, Field
 
 
 class ConflictType(str, Enum):

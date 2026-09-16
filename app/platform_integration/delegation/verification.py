@@ -1,7 +1,6 @@
 """Cross-Phase Verification Engine for Closed-Loop Outcome Validation (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List, Optional
 import uuid
 
 from app.platform_integration.models import (

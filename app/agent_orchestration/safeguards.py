@@ -1,18 +1,18 @@
 """Autonomous Execution Safeguards Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
-    AgentExecutionBlockedException,
-    AgentRuntimeLimitExceededException,
     AgentBudgetExceededException,
+    AgentRuntimeLimitExceededException,
     HighRiskAgentActionRequiresApprovalException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class SafeguardType(str, Enum):

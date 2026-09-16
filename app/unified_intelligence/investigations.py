@@ -5,22 +5,23 @@ Manages multi-domain investigation contexts, hypothesis tracking, evidence colle
 and lifecycle management with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from app.unified_intelligence.causal_analysis import CausalHypothesis
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
 from app.unified_intelligence.situation_awareness import EnterpriseSituation
-from app.unified_intelligence.causal_analysis import CausalHypothesis
 
 
 class UnifiedInvestigation:
     """
     Cross-domain investigation instance.
     """
+
     def __init__(
         self,
         investigation_id: str,
@@ -67,6 +68,7 @@ class UnifiedInvestigationEngine:
     """
     Orchestrates cross-domain investigation creation, updates, evidence attachment, and closure.
     """
+
     def __init__(self):
         pass
 

@@ -1,13 +1,14 @@
 """Decision investigation lifecycle producing PlatformSnapshot artifacts upon conclusion."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 from app.decision_governance.exceptions import CrossTenantDecisionGovernanceException
+from app.platform_contracts.snapshots import SnapshotFactory
 
 
 class InvestigationStatus(str, Enum):

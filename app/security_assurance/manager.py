@@ -1,52 +1,52 @@
 """Master Orchestrator for Enterprise AI Security Intelligence & Continuous Security Assurance Platform."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Optional
 
-from app.security_assurance.assets import SecurityAsset, SecurityAssetType, SecurityCriticality
+from app.security_assurance.agent_security import AgentSecurityEngine
+from app.security_assurance.analytics import SecurityAnalyticsEngine
+from app.security_assurance.api_security import APISecurityEngine
+from app.security_assurance.application_security import AppSecEngine
 from app.security_assurance.asset_inventory import SecurityAssetInventory
-from app.security_assurance.posture import SecurityPostureEngine, SecurityPostureAssessment
-from app.security_assurance.threats import SecurityThreatStore, SecurityThreat, ThreatType, ThreatSeverity
-from app.security_assurance.threat_indicators import ThreatIndicatorManager, ThreatIndicator
-from app.security_assurance.threat_detection import SecurityThreatDetector
-from app.security_assurance.threat_correlation import ThreatCorrelationEngine, CorrelatedThreatCluster
-from app.security_assurance.vulnerabilities import SecurityVulnerabilityStore, SecurityVulnerability, VulnerabilitySeverity
-from app.security_assurance.vulnerability_risk import VulnerabilityRiskAssessor, VulnerabilityRiskAssessment
-from app.security_assurance.attack_surface import AttackSurfaceAnalyzer, AttackSurfaceProfile
-from app.security_assurance.attack_graph import AnalyticalAttackGraph
-from app.security_assurance.attack_paths import AttackPathFinder, DefensiveAttackPath
-from app.security_assurance.misconfigurations import MisconfigurationDetector, SecurityMisconfiguration
-from app.security_assurance.exposure import ExposureAnalyzer, ExposureRiskAssessment
-from app.security_assurance.secrets_intelligence import SecretsIntelligenceEngine, SecretReference
-from app.security_assurance.application_security import AppSecEngine, AppSecScanResult
-from app.security_assurance.api_security import APISecurityEngine, APISecurityAssessment
-from app.security_assurance.model_security import ModelSecurityEngine, ModelVulnerabilityAssessment
-from app.security_assurance.agent_security import AgentSecurityEngine, AgentRiskAssessment
-from app.security_assurance.data_security import DataSecurityEngine, DataExfiltrationRiskAssessment
-from app.security_assurance.identity_security import IdentitySecurityEngine, IdentityRiskAssessment
-from app.security_assurance.cloud_security import CloudSecurityEngine, CloudPostureAssessment
-from app.security_assurance.container_security import ContainerSecurityEngine, ContainerScanResult
-from app.security_assurance.network_security import NetworkSecurityEngine, NetworkPostureAssessment
-from app.security_assurance.incidents import SecurityIncidentManager, SecurityIncident, SecurityIncidentSeverity, SecurityIncidentState
-from app.security_assurance.investigations import SecurityInvestigationManager, SecurityInvestigation
-from app.security_assurance.root_cause import SecurityRootCauseEngine, SecurityRootCauseAssessment
-from app.security_assurance.impact import SecurityImpactEngine, SecurityImpactScore
-from app.security_assurance.risk import SecurityRiskEngine, SecurityRiskAssessment
-from app.security_assurance.governance import SecurityGovernanceEngine, SecurityGovernanceResult
-from app.security_assurance.recommendations import SecurityRecommendationManager, SecurityRecommendation
-from app.security_assurance.remediation import SecurityRemediationPlanner, SecurityRemediationPlan
-from app.security_assurance.delegation import SecurityDelegationManager, SecurityDelegationPlan
-from app.security_assurance.verification import SecurityVerificationEngine, SecurityVerificationResult
-from app.security_assurance.evidence import SecurityEvidenceManager, SecurityEvidence
-from app.security_assurance.signals import SecuritySignalEngine, SecuritySignal, SecuritySignalType
-from app.security_assurance.correlation import CrossDomainSecurityCorrelationEngine, CrossDomainCorrelationResult
+from app.security_assurance.assets import SecurityAsset, SecurityAssetType, SecurityCriticality
 from app.security_assurance.assurance import SecurityAssuranceEngine, SecurityAssuranceScore
-from app.security_assurance.trust import SecurityTrustEngine, SecurityTrustScore
-from app.security_assurance.snapshots import SecurityAssuranceSnapshotManager, SecurityAssuranceSnapshot
-from app.security_assurance.learning import SecurityLearningManager, SecurityLearningRecord
-from app.security_assurance.analytics import SecurityAnalyticsEngine, SecurityAnalyticsReport
-from app.security_assurance.observability import SecurityObservabilityEngine
+from app.security_assurance.attack_graph import AnalyticalAttackGraph
+from app.security_assurance.attack_paths import AttackPathFinder
+from app.security_assurance.attack_surface import AttackSurfaceAnalyzer
 from app.security_assurance.billing import SecurityBillingTracker
+from app.security_assurance.cloud_security import CloudSecurityEngine
+from app.security_assurance.container_security import ContainerSecurityEngine
+from app.security_assurance.correlation import CrossDomainSecurityCorrelationEngine
+from app.security_assurance.data_security import DataSecurityEngine
+from app.security_assurance.delegation import SecurityDelegationManager
+from app.security_assurance.evidence import SecurityEvidenceManager
+from app.security_assurance.exposure import ExposureAnalyzer
+from app.security_assurance.governance import SecurityGovernanceEngine
+from app.security_assurance.identity_security import IdentitySecurityEngine
+from app.security_assurance.impact import SecurityImpactEngine
+from app.security_assurance.incidents import SecurityIncidentManager
+from app.security_assurance.investigations import SecurityInvestigationManager
+from app.security_assurance.learning import SecurityLearningManager
+from app.security_assurance.misconfigurations import MisconfigurationDetector
+from app.security_assurance.model_security import ModelSecurityEngine
+from app.security_assurance.network_security import NetworkSecurityEngine
+from app.security_assurance.observability import SecurityObservabilityEngine
+from app.security_assurance.posture import SecurityPostureAssessment, SecurityPostureEngine
+from app.security_assurance.recommendations import SecurityRecommendationManager
+from app.security_assurance.remediation import SecurityRemediationPlanner
+from app.security_assurance.risk import SecurityRiskEngine
+from app.security_assurance.root_cause import SecurityRootCauseEngine
+from app.security_assurance.secrets_intelligence import SecretsIntelligenceEngine
+from app.security_assurance.signals import SecuritySignalEngine
+from app.security_assurance.snapshots import SecurityAssuranceSnapshotManager
+from app.security_assurance.threat_correlation import ThreatCorrelationEngine
+from app.security_assurance.threat_detection import SecurityThreatDetector
+from app.security_assurance.threat_indicators import ThreatIndicatorManager
+from app.security_assurance.threats import SecurityThreatStore
+from app.security_assurance.trust import SecurityTrustEngine
+from app.security_assurance.verification import SecurityVerificationEngine
+from app.security_assurance.vulnerabilities import SecurityVulnerabilityStore
+from app.security_assurance.vulnerability_risk import VulnerabilityRiskAssessor
 
 logger = logging.getLogger(__name__)
 

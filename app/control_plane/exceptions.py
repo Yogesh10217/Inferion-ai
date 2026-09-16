@@ -1,6 +1,7 @@
 """Domain exceptions for Enterprise Control Plane & Platform Management."""
 
 from typing import Any, Dict, Optional
+
 from app.core.exceptions import AppException
 
 

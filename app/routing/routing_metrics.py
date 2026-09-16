@@ -1,7 +1,7 @@
-import time
 import threading
-from typing import Dict, Any, Optional
-from prometheus_client import Counter, Histogram, Gauge
+from typing import Any, Dict
+
+from prometheus_client import Counter, Histogram
 
 # Singleton / Global Prometheus metrics for routing
 ROUTING_DECISIONS_TOTAL = Counter(

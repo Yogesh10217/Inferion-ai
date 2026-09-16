@@ -1,211 +1,185 @@
 """Enterprise AI Event Intelligence, Automation & Cross-Platform Coordination Platform Exports (Phase 5.34)."""
 
-from app.event_intelligence.exceptions import (
-    EventIntelligenceException,
-    CrossTenantEventAccessException,
-    EventNotFoundException,
-    InvalidEventException,
-    EventSchemaValidationException,
-    DuplicateEventException,
-    EventCorrelationException,
-    EventAutomationBlockedException,
-    EventPolicyViolationException,
-    ImmutableEventRecordException,
-    EventDelegationBlockedException,
-    EventResolutionException,
-    EventSourceNotRegisteredException,
-    EventCausalityException,
-    HighRiskAutomationRequiresApprovalException,
-)
-
-from app.event_intelligence.events import (
-    EnterpriseEvent,
-    EventType,
-    EventCategory,
-    EventSeverity,
-    EventPriority,
-    EventStatus,
-    EventSource,
-    EventMetadata,
-    EventReference,
-    EventManager,
-)
-
-from app.event_intelligence.sources import (
-    EventSourceDefinition,
-    EventSourceType,
-    EventSourceStatus,
-    EventSourceCapability,
-    EventSourceRegistration,
-    EventSourceManager,
-)
-
-from app.event_intelligence.normalization import (
-    EventNormalizer,
-    NormalizedEvent,
-    EventNormalizationRule,
-    EventSchema,
-    EventSchemaRegistry,
-)
-
-from app.event_intelligence.classification import (
-    EventClassification,
-    EventClassificationDimension,
-    EventClassifier,
-    ClassificationConfidence,
-)
-
-from app.event_intelligence.deduplication import (
-    EventFingerprint,
-    EventDuplicate,
-    EventDeduplicationResult,
-    EventDeduplicator,
-)
-
-from app.event_intelligence.correlation import (
-    EventCorrelation,
-    CorrelationGroup,
-    CorrelationType,
-    CorrelationConfidence,
-    CorrelationEvidence,
-    EventCorrelationManager,
-)
-
-from app.event_intelligence.causality import (
-    CausalRelationship,
-    CausalNode,
-    CausalEdge,
-    CausalGraph,
-    CausalConfidence,
-    CausalityAnalysis,
-    EventCausalityAnalyzer,
-)
-
-from app.event_intelligence.context import (
-    EventContext,
-    EventContextReference,
-    EventContextSource,
-    EventContextBuilder,
-    EventContextManager,
-)
-
-from app.event_intelligence.impact import (
-    EventImpactAssessment,
-    EventImpactDimension,
-    EventImpactSeverity,
-    BusinessImpact,
-    TechnicalImpact,
-    FinancialImpact,
-    ComplianceImpact,
-    CustomerImpact,
-    EventImpactAnalyzer,
-)
-
-from app.event_intelligence.patterns import (
-    EventPattern,
-    PatternType,
-    PatternConfidence,
-    PatternEvidence,
-    EventPatternDetector,
-)
-
-from app.event_intelligence.automation import (
-    AutomationTrigger,
-    AutomationCondition,
-    AutomationAction,
-    AutomationPlan,
-    AutomationStatus,
-    AutomationEligibility,
-    AutomationManager,
-)
-
-
-from app.event_intelligence.rules import (
-    EventRule,
-    EventRuleCondition,
-    EventRuleAction,
-    EventRuleStatus,
-    EventRuleEvaluation,
-    EventRuleManager,
-)
-
-from app.event_intelligence.prioritization import (
-    EventPriorityScore,
-    PriorityDimension,
-    EventPrioritizationResult,
-    EventPrioritizationEngine,
-)
-
-from app.event_intelligence.governance import (
-    EventGovernanceEngine,
-)
-
-from app.event_intelligence.response import (
-    EventResponsePlan,
-    EventResponseAction,
-    ResponseTarget,
-    ResponseStatus,
-    EventResponseManager,
-)
-
-from app.event_intelligence.delegation import (
-    EventDelegationPlan,
-    EventDelegationReference,
-    EventDelegationManager,
-)
-
-from app.event_intelligence.resolution import (
-    EventResolution,
-    EventResolutionStatus,
-    ResolutionEvidence,
-    ResolutionVerification,
-    EventResolutionManager,
-)
-
-from app.event_intelligence.investigations import (
-    EventInvestigation,
-    InvestigationStatus,
-    InvestigationFinding,
-    InvestigationEvidence,
-    InvestigationConclusion,
-    EventInvestigationManager,
-)
-
-from app.event_intelligence.learning import (
-    EventLearningRecord,
-    EventPatternLearning,
-    EventRecommendation,
-    EventLearningManager,
-)
-
-from app.event_intelligence.trust import (
-    EventTrustScore,
-    EventTrustDimension,
-    EventTrustEngine,
-)
-
 from app.event_intelligence.analytics import (
     EventAnalyticsEngine,
 )
-
-from app.event_intelligence.observability import (
-    EventMetricsCollector,
+from app.event_intelligence.automation import (
+    AutomationAction,
+    AutomationCondition,
+    AutomationEligibility,
+    AutomationManager,
+    AutomationPlan,
+    AutomationStatus,
+    AutomationTrigger,
 )
-
 from app.event_intelligence.billing import (
     EventBillingTracker,
 )
-
+from app.event_intelligence.causality import (
+    CausalConfidence,
+    CausalEdge,
+    CausalGraph,
+    CausalityAnalysis,
+    CausalNode,
+    CausalRelationship,
+    EventCausalityAnalyzer,
+)
+from app.event_intelligence.classification import (
+    ClassificationConfidence,
+    EventClassification,
+    EventClassificationDimension,
+    EventClassifier,
+)
+from app.event_intelligence.context import (
+    EventContext,
+    EventContextBuilder,
+    EventContextManager,
+    EventContextReference,
+    EventContextSource,
+)
+from app.event_intelligence.correlation import (
+    CorrelationConfidence,
+    CorrelationEvidence,
+    CorrelationGroup,
+    CorrelationType,
+    EventCorrelation,
+    EventCorrelationManager,
+)
+from app.event_intelligence.deduplication import (
+    EventDeduplicationResult,
+    EventDeduplicator,
+    EventDuplicate,
+    EventFingerprint,
+)
+from app.event_intelligence.delegation import (
+    EventDelegationManager,
+    EventDelegationPlan,
+    EventDelegationReference,
+)
+from app.event_intelligence.events import (
+    EnterpriseEvent,
+    EventCategory,
+    EventManager,
+    EventMetadata,
+    EventPriority,
+    EventReference,
+    EventSeverity,
+    EventSource,
+    EventStatus,
+    EventType,
+)
+from app.event_intelligence.exceptions import (
+    CrossTenantEventAccessException,
+    DuplicateEventException,
+    EventAutomationBlockedException,
+    EventCausalityException,
+    EventCorrelationException,
+    EventDelegationBlockedException,
+    EventIntelligenceException,
+    EventNotFoundException,
+    EventPolicyViolationException,
+    EventResolutionException,
+    EventSchemaValidationException,
+    EventSourceNotRegisteredException,
+    HighRiskAutomationRequiresApprovalException,
+    ImmutableEventRecordException,
+    InvalidEventException,
+)
+from app.event_intelligence.governance import (
+    EventGovernanceEngine,
+)
+from app.event_intelligence.impact import (
+    BusinessImpact,
+    ComplianceImpact,
+    CustomerImpact,
+    EventImpactAnalyzer,
+    EventImpactAssessment,
+    EventImpactDimension,
+    EventImpactSeverity,
+    FinancialImpact,
+    TechnicalImpact,
+)
+from app.event_intelligence.investigations import (
+    EventInvestigation,
+    EventInvestigationManager,
+    InvestigationConclusion,
+    InvestigationEvidence,
+    InvestigationFinding,
+    InvestigationStatus,
+)
+from app.event_intelligence.learning import (
+    EventLearningManager,
+    EventLearningRecord,
+    EventPatternLearning,
+    EventRecommendation,
+)
+from app.event_intelligence.manager import (
+    EventIntelligenceManager,
+)
+from app.event_intelligence.normalization import (
+    EventNormalizationRule,
+    EventNormalizer,
+    EventSchema,
+    EventSchemaRegistry,
+    NormalizedEvent,
+)
+from app.event_intelligence.observability import (
+    EventMetricsCollector,
+)
+from app.event_intelligence.patterns import (
+    EventPattern,
+    EventPatternDetector,
+    PatternConfidence,
+    PatternEvidence,
+    PatternType,
+)
+from app.event_intelligence.prioritization import (
+    EventPrioritizationEngine,
+    EventPrioritizationResult,
+    EventPriorityScore,
+    PriorityDimension,
+)
 from app.event_intelligence.repositories import (
-    EventRepository,
-    EventCorrelationRepository,
     AutomationRepository,
+    EventCorrelationRepository,
+    EventRepository,
     InvestigationRepository,
     ResolutionRepository,
 )
-
-from app.event_intelligence.manager import (
-    EventIntelligenceManager,
+from app.event_intelligence.resolution import (
+    EventResolution,
+    EventResolutionManager,
+    EventResolutionStatus,
+    ResolutionEvidence,
+    ResolutionVerification,
+)
+from app.event_intelligence.response import (
+    EventResponseAction,
+    EventResponseManager,
+    EventResponsePlan,
+    ResponseStatus,
+    ResponseTarget,
+)
+from app.event_intelligence.rules import (
+    EventRule,
+    EventRuleAction,
+    EventRuleCondition,
+    EventRuleEvaluation,
+    EventRuleManager,
+    EventRuleStatus,
+)
+from app.event_intelligence.sources import (
+    EventSourceCapability,
+    EventSourceDefinition,
+    EventSourceManager,
+    EventSourceRegistration,
+    EventSourceStatus,
+    EventSourceType,
+)
+from app.event_intelligence.trust import (
+    EventTrustDimension,
+    EventTrustEngine,
+    EventTrustScore,
 )
 
 __all__ = [

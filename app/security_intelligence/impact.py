@@ -1,15 +1,16 @@
 """Multidimensional Security Impact Analysis Subsystem (Phase 5.32)."""
 
-from enum import Enum
-from typing import Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.architecture_platform.manager import ArchitecturePlatformManager
 from app.compliance_platform.manager import CompliancePlatformManager
-from app.reliability_platform.manager import ReliabilityPlatformManager
 from app.portfolio_platform.manager import PortfolioPlatformManager
+from app.reliability_platform.manager import ReliabilityPlatformManager
 
 
 class SecurityImpactSeverity(str, Enum):

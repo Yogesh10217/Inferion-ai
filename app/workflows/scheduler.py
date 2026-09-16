@@ -3,7 +3,8 @@ Workflow Scheduler for Async Background Execution
 """
 
 import asyncio
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 from app.workflows.executor import WorkflowExecutor
 from app.workflows.graph import WorkflowGraph
 

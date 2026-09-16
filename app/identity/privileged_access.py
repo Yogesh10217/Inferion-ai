@@ -1,14 +1,14 @@
 """Just-In-Time (JIT) Privileged Access Management Subsystem."""
 
-from datetime import datetime, timezone, timedelta
-from enum import Enum
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timedelta, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.approvals.approval_engine import ApprovalEngine
-from app.identity.exceptions import PrivilegedAccessDeniedException
 
 logger = logging.getLogger(__name__)
 

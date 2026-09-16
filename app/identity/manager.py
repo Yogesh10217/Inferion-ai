@@ -1,22 +1,22 @@
 """Master Identity Security Manager & Zero-Trust Orchestration Engine."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Optional
 
-from app.identity.identity import IdentityManager, IdentityType, IdentityStatus
-from app.identity.authentication import AuthenticationManager, AuthenticationMethod, AuthenticationAssuranceLevel
-from app.identity.access_control import AccessControlManager, AccessContext, AccessDecision
-from app.identity.privileged_access import PrivilegedAccessManager, PrivilegedRole, PrivilegedAccessStatus
-from app.identity.zero_trust import ZeroTrustEngine, TrustLevel, ZeroTrustAction
-from app.identity.session import SessionManager, SessionState
-from app.identity.workload_identity import WorkloadIdentityManager, WorkloadType
-from app.identity.credentials import CredentialManager, CredentialType, CredentialStatus
-from app.identity.risk import IdentityRiskEngine, AnomalyType, IdentityRiskSeverity
-from app.identity.agent_identity import AgentIdentityManager, AgentPermissionBoundary
-from app.identity.explainability import ExplainabilityEngine, AuthorizationExplanation
+from app.identity.access_control import AccessControlManager
+from app.identity.agent_identity import AgentIdentityManager
 from app.identity.audit import IdentityAuditManager
+from app.identity.authentication import AuthenticationManager
+from app.identity.credentials import CredentialManager
+from app.identity.explainability import ExplainabilityEngine
+from app.identity.identity import IdentityManager
 from app.identity.lifecycle import IdentityLifecycleManager
 from app.identity.observability import IdentityMetricsCollector
+from app.identity.privileged_access import PrivilegedAccessManager
+from app.identity.risk import IdentityRiskEngine
+from app.identity.session import SessionManager
+from app.identity.workload_identity import WorkloadIdentityManager
+from app.identity.zero_trust import ZeroTrustEngine
 
 logger = logging.getLogger(__name__)
 

@@ -3,12 +3,11 @@ Decision Post-Execution Verification Subsystem.
 Verifies that delegated decision actions produce the expected operational, security, and governance outcomes.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
 
-from app.decision_intelligence.exceptions import DecisionVerificationException
+from pydantic import BaseModel, Field
 
 
 class DecisionVerificationRecord(BaseModel):

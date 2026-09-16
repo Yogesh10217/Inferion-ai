@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import List
 
 from app.deployment.cache_validation import CacheDependencyValidator
-from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.database_validation import DatabaseDependencyValidator
 from app.deployment.messaging_validation import MessagingDependencyValidator
 from app.deployment.models import DependencyCategory, DependencyStatus, DependencyValidationResult, EnvironmentConfig

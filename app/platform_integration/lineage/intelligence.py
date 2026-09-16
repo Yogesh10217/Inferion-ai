@@ -2,12 +2,12 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
 
 from app.platform_integration.models import (
-    TraceContext,
-    GovernanceDecision,
     DelegationStatus,
+    GovernanceDecision,
+    TraceContext,
     VerificationStatus,
 )
 

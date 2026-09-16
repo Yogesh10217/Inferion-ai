@@ -7,7 +7,7 @@ from typing import Any, AsyncIterator, Dict, Optional
 
 from app.core.exceptions import ProviderUnavailableException
 from app.core.logger import get_logger
-from app.routing.request_router import RequestRouter, RoutingRequest, RoutingDecision
+from app.routing.request_router import RequestRouter, RoutingDecision, RoutingRequest
 from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import InferenceRequest
 from app.services.metrics_service import MetricsService

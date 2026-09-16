@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional, Set
+from typing import List, Optional, Set, Tuple
 
 
 class ProviderSelector:

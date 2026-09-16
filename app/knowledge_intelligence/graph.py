@@ -1,13 +1,12 @@
 """Cross-Platform Knowledge Graph Subsystem (Phase 5.35)."""
 
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
+from typing import Any, Dict, List, Optional, Set
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_intelligence.exceptions import (
     CrossTenantKnowledgeAccessException,
-    KnowledgeGraphException,
 )
 from app.knowledge_intelligence.relationships import KnowledgeRelationship, RelationshipType
 from app.platform_contracts.redaction import SensitiveDataSanitizer
@@ -78,7 +77,7 @@ class KnowledgeGraphManager:
         if relationship.tenant_id != tenant_id:
             raise CrossTenantKnowledgeAccessException(tenant_id)
         graph = self.get_or_create_graph(tenant_id)
-        
+
         if relationship.source_id not in graph.nodes:
             self.add_node(tenant_id, relationship.source_id, f"Node_{relationship.source_id}")
         if relationship.target_id not in graph.nodes:

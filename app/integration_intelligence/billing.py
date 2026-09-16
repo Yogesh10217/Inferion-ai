@@ -1,12 +1,13 @@
 """Integration Billing & Cost Attribution (Phase 5.40)."""
 
-from typing import Dict, Any, Optional, List
+import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
-import uuid
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 
 class IntegrationCostEvent(BaseModel):

@@ -1,211 +1,187 @@
 """Enterprise AI Knowledge Intelligence Platform Package (Phase 5.35)."""
 
-from app.knowledge_intelligence.exceptions import (
-    KnowledgeIntelligenceException,
-    CrossTenantKnowledgeAccessException,
-    KnowledgeNotFoundException,
-    KnowledgeSourceNotFoundException,
-    KnowledgeProvenanceException,
-    KnowledgeIntegrityException,
-    KnowledgeAccessDeniedException,
-    KnowledgeRetrievalBlockedException,
-    KnowledgePolicyViolationException,
-    KnowledgeGraphException,
-    KnowledgeRelationshipNotFoundException,
-    ImmutableKnowledgeRecordException,
-    KnowledgeRecommendationBlockedException,
-    KnowledgeDelegationBlockedException,
-    KnowledgeEvidenceValidationException,
-    KnowledgeLearningException,
+from app.knowledge_intelligence.analytics import (
+    KnowledgeAnalyticsEngine,
+    KnowledgeInsight,
+    KnowledgeReport,
 )
-
-from app.knowledge_intelligence.knowledge import (
-    KnowledgeItem,
-    KnowledgeType,
-    KnowledgeStatus,
-    KnowledgeClassification,
-    KnowledgeOrigin,
-    KnowledgeMetadata,
-    KnowledgeReference,
-    KnowledgeManager,
+from app.knowledge_intelligence.billing import (
+    KnowledgeBillingTracker,
+    KnowledgeCostEvent,
 )
-
-from app.knowledge_intelligence.sources import (
-    KnowledgeSource,
-    KnowledgeSourceType,
-    KnowledgeSourceStatus,
-    KnowledgeSourceCapability,
-    KnowledgeSourceReference,
-    KnowledgeSourceManager,
+from app.knowledge_intelligence.context import (
+    ContextAssemblyPlan,
+    KnowledgeContext,
+    KnowledgeContextBuilder,
+    KnowledgeContextItem,
+    KnowledgeContextManager,
+    KnowledgeContextReference,
 )
-
-from app.knowledge_intelligence.normalization import (
-    NormalizedKnowledge,
-    KnowledgeNormalizationRule,
-    KnowledgeNormalizationResult,
-    KnowledgeNormalizer,
+from app.knowledge_intelligence.contradictions import (
+    ContradictionEvidence,
+    ContradictionSeverity,
+    ContradictionStatus,
+    ContradictionType,
+    KnowledgeContradiction,
+    KnowledgeContradictionManager,
 )
-
-from app.knowledge_intelligence.provenance import (
-    KnowledgeProvenance,
-    ProvenanceRecord,
-    ProvenanceType,
-    ProvenanceChain,
-    ProvenanceReference,
-    ProvenanceIntegrity,
-    KnowledgeProvenanceManager,
+from app.knowledge_intelligence.delegation import (
+    KnowledgeDelegationAction,
+    KnowledgeDelegationManager,
+    KnowledgeDelegationPlan,
 )
-
-from app.knowledge_intelligence.relationships import (
-    KnowledgeRelationship,
-    RelationshipType,
-    RelationshipStrength,
-    RelationshipDirection,
-    RelationshipEvidence,
-    KnowledgeRelationshipManager,
-)
-
-from app.knowledge_intelligence.graph import (
-    KnowledgeGraph,
-    KnowledgeGraphNode,
-    KnowledgeGraphEdge,
-    GraphTraversal,
-    GraphTraversalResult,
-    KnowledgeGraphManager,
-)
-
-from app.knowledge_intelligence.semantic import (
-    SemanticRepresentation,
-    SemanticConcept,
-    SemanticEntity,
-    SemanticRelationship,
-    SemanticSimilarity,
-    SemanticEnrichmentResult,
-    SemanticIntelligenceManager,
-)
-
 from app.knowledge_intelligence.evidence import (
     KnowledgeEvidence,
     KnowledgeEvidenceBundle,
-    KnowledgeEvidenceStrength,
     KnowledgeEvidenceIntegrity,
     KnowledgeEvidenceManager,
+    KnowledgeEvidenceStrength,
 )
-
-from app.knowledge_intelligence.trust import (
-    KnowledgeTrustScore,
-    KnowledgeTrustDimension,
-    KnowledgeTrustFactor,
-    KnowledgeTrustEngine,
+from app.knowledge_intelligence.exceptions import (
+    CrossTenantKnowledgeAccessException,
+    ImmutableKnowledgeRecordException,
+    KnowledgeAccessDeniedException,
+    KnowledgeDelegationBlockedException,
+    KnowledgeEvidenceValidationException,
+    KnowledgeGraphException,
+    KnowledgeIntegrityException,
+    KnowledgeIntelligenceException,
+    KnowledgeLearningException,
+    KnowledgeNotFoundException,
+    KnowledgePolicyViolationException,
+    KnowledgeProvenanceException,
+    KnowledgeRecommendationBlockedException,
+    KnowledgeRelationshipNotFoundException,
+    KnowledgeRetrievalBlockedException,
+    KnowledgeSourceNotFoundException,
 )
-
 from app.knowledge_intelligence.freshness import (
-    KnowledgeFreshness,
-    FreshnessStatus,
-    FreshnessPolicy,
     FreshnessEvaluation,
+    FreshnessPolicy,
+    FreshnessStatus,
+    KnowledgeFreshness,
     KnowledgeFreshnessManager,
 )
-
-from app.knowledge_intelligence.contradictions import (
-    KnowledgeContradiction,
-    ContradictionType,
-    ContradictionSeverity,
-    ContradictionStatus,
-    ContradictionEvidence,
-    KnowledgeContradictionManager,
-)
-
-from app.knowledge_intelligence.retrieval import (
-    KnowledgeRetrievalRequest,
-    RetrievalStrategy,
-    RetrievalConstraint,
-    RetrievalResult,
-    RetrievalEvidence,
-    KnowledgeRetrievalManager,
-)
-
-from app.knowledge_intelligence.context import (
-    KnowledgeContext,
-    KnowledgeContextItem,
-    KnowledgeContextReference,
-    ContextAssemblyPlan,
-    KnowledgeContextBuilder,
-    KnowledgeContextManager,
-)
-
-from app.knowledge_intelligence.recommendations import (
-    KnowledgeRecommendation,
-    KnowledgeRecommendationType,
-    RecommendationPriority,
-    RecommendationConfidence,
-    RecommendationStatus,
-    KnowledgeRecommendationEngine,
-)
-
 from app.knowledge_intelligence.governance import (
     KnowledgeGovernanceDecision,
-    KnowledgeGovernanceStatus,
-    KnowledgeGovernanceRequirement,
     KnowledgeGovernanceEngine,
+    KnowledgeGovernanceRequirement,
+    KnowledgeGovernanceStatus,
 )
-
-from app.knowledge_intelligence.delegation import (
-    KnowledgeDelegationPlan,
-    KnowledgeDelegationAction,
-    KnowledgeDelegationManager,
+from app.knowledge_intelligence.graph import (
+    GraphTraversal,
+    GraphTraversalResult,
+    KnowledgeGraph,
+    KnowledgeGraphEdge,
+    KnowledgeGraphManager,
+    KnowledgeGraphNode,
 )
-
 from app.knowledge_intelligence.investigations import (
-    KnowledgeInvestigation,
-    KnowledgeInvestigationStatus,
     KnowledgeFinding,
+    KnowledgeInvestigation,
     KnowledgeInvestigationManager,
+    KnowledgeInvestigationStatus,
 )
-
+from app.knowledge_intelligence.knowledge import (
+    KnowledgeClassification,
+    KnowledgeItem,
+    KnowledgeManager,
+    KnowledgeMetadata,
+    KnowledgeOrigin,
+    KnowledgeReference,
+    KnowledgeStatus,
+    KnowledgeType,
+)
+from app.knowledge_intelligence.learning import (
+    KnowledgeLearningManager,
+    KnowledgeLearningRecommendation,
+    KnowledgeLearningRecord,
+    KnowledgeLearningSignal,
+    KnowledgePattern,
+)
+from app.knowledge_intelligence.manager import (
+    KnowledgeIntelligenceManager,
+)
 from app.knowledge_intelligence.memory import (
-    OrganizationalMemory,
-    MemoryType,
-    MemoryScope,
-    MemoryRetentionStatus,
     MemoryReference,
+    MemoryRetentionStatus,
+    MemoryScope,
+    MemoryType,
+    OrganizationalMemory,
     OrganizationalMemoryManager,
 )
-
-from app.knowledge_intelligence.learning import (
-    KnowledgeLearningRecord,
-    KnowledgePattern,
-    KnowledgeLearningSignal,
-    KnowledgeLearningRecommendation,
-    KnowledgeLearningManager,
+from app.knowledge_intelligence.normalization import (
+    KnowledgeNormalizationResult,
+    KnowledgeNormalizationRule,
+    KnowledgeNormalizer,
+    NormalizedKnowledge,
 )
-
-from app.knowledge_intelligence.analytics import (
-    KnowledgeAnalyticsEngine,
-    KnowledgeReport,
-    KnowledgeInsight,
-)
-
 from app.knowledge_intelligence.observability import (
     KnowledgeMetricsCollector,
 )
-
-from app.knowledge_intelligence.billing import (
-    KnowledgeCostEvent,
-    KnowledgeBillingTracker,
+from app.knowledge_intelligence.provenance import (
+    KnowledgeProvenance,
+    KnowledgeProvenanceManager,
+    ProvenanceChain,
+    ProvenanceIntegrity,
+    ProvenanceRecord,
+    ProvenanceReference,
+    ProvenanceType,
 )
-
+from app.knowledge_intelligence.recommendations import (
+    KnowledgeRecommendation,
+    KnowledgeRecommendationEngine,
+    KnowledgeRecommendationType,
+    RecommendationConfidence,
+    RecommendationPriority,
+    RecommendationStatus,
+)
+from app.knowledge_intelligence.relationships import (
+    KnowledgeRelationship,
+    KnowledgeRelationshipManager,
+    RelationshipDirection,
+    RelationshipEvidence,
+    RelationshipStrength,
+    RelationshipType,
+)
 from app.knowledge_intelligence.repositories import (
+    KnowledgeInvestigationRepository,
+    KnowledgeRelationshipRepository,
     KnowledgeRepository,
     KnowledgeSourceRepository,
-    ProvenanceRepository,
-    KnowledgeRelationshipRepository,
-    KnowledgeInvestigationRepository,
     MemoryRepository,
+    ProvenanceRepository,
 )
-
-from app.knowledge_intelligence.manager import (
-    KnowledgeIntelligenceManager,
+from app.knowledge_intelligence.retrieval import (
+    KnowledgeRetrievalManager,
+    KnowledgeRetrievalRequest,
+    RetrievalConstraint,
+    RetrievalEvidence,
+    RetrievalResult,
+    RetrievalStrategy,
+)
+from app.knowledge_intelligence.semantic import (
+    SemanticConcept,
+    SemanticEnrichmentResult,
+    SemanticEntity,
+    SemanticIntelligenceManager,
+    SemanticRelationship,
+    SemanticRepresentation,
+    SemanticSimilarity,
+)
+from app.knowledge_intelligence.sources import (
+    KnowledgeSource,
+    KnowledgeSourceCapability,
+    KnowledgeSourceManager,
+    KnowledgeSourceReference,
+    KnowledgeSourceStatus,
+    KnowledgeSourceType,
+)
+from app.knowledge_intelligence.trust import (
+    KnowledgeTrustDimension,
+    KnowledgeTrustEngine,
+    KnowledgeTrustFactor,
+    KnowledgeTrustScore,
 )
 
 __all__ = [

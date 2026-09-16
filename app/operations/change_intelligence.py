@@ -1,10 +1,10 @@
 """Change Intelligence & Operational Regression Correlation Subsystem."""
 
-from datetime import datetime, timezone
-from enum import Enum
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.control_plane.change_history import ChangeHistoryTracker
@@ -62,7 +62,6 @@ class ChangeCorrelationEngine:
                 )
             except Exception:
                 pass
-
 
         logger.info(f"[CHANGE INTELLIGENCE] Recorded change '{chg.change_id}' ({change_type}) on resource '{resource_id}'")
         return chg

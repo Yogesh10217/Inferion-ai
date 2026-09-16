@@ -5,9 +5,9 @@ Simulates and evaluates system behavior under controlled fault scenarios.
 Live destructive fault injection is strictly blocked by default.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

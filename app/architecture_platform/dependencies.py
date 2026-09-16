@@ -1,15 +1,11 @@
 """Directed Architecture Dependency Graph & Cycle Detection Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set, Tuple
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set
 
-from app.architecture_platform.exceptions import (
-    ArchitectureDependencyException,
-    CrossTenantArchitectureAccessException,
-)
+from pydantic import BaseModel, Field
 
 
 class DependencyType(str, Enum):
@@ -190,5 +186,5 @@ class DependencyManager:
         return {
             "total_dependencies": len(graph.dependencies),
             "high_in_degree_nodes": high_in_degree,  # Potential SPOF / Bottleneck
-            "high_out_degree_nodes": high_out_degree, # Complex Orchestrator / Consumer
+            "high_out_degree_nodes": high_out_degree,  # Complex Orchestrator / Consumer
         }

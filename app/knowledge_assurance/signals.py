@@ -1,13 +1,13 @@
 """Knowledge signal ingestion using SensitiveDataSanitizer."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
 
 
 class KnowledgeSignalType(str, Enum):

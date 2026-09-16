@@ -1,9 +1,7 @@
 """Cross-Phase Dependency Graph with DFS Cycle Detection and Impact Resolution."""
 
 import logging
-from typing import Dict, Any, List, Set, Optional
-
-from app.platform_integration.exceptions import CrossPhaseDependencyException
+from typing import Dict, List, Set
 
 logger = logging.getLogger(__name__)
 

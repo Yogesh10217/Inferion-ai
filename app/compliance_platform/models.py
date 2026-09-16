@@ -1,11 +1,10 @@
 """SQLAlchemy ORM Models for Compliance Platform (Phase 5.27)."""
 
-from datetime import datetime, timezone
 import uuid
-from typing import Optional, Dict, Any
+from datetime import datetime, timezone
 
-from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Integer, Float, Boolean, Text
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy import Boolean, DateTime, Float, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
 

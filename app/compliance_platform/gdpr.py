@@ -2,8 +2,9 @@
 GDPR Compliance Right to Erasure (Data Erasure Service).
 """
 
-from typing import Dict
 from datetime import datetime, timezone
+from typing import Dict
+
 from pydantic import BaseModel, Field
 
 

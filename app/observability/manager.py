@@ -4,20 +4,21 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Any, Dict, List, Optional
-from app.observability.context import ObservabilityContext, get_current_context, set_current_context, with_context
-from app.observability.tracing import TracingManager
-from app.observability.logging import StructuredLogger
-from app.observability.cost_tracking import CostTracker
-from app.observability.performance import PerformanceMonitor
-from app.observability.replay import ExecutionReplayManager
-from app.observability.failure_analysis import FailureAnalyzer
-from app.observability.anomaly_detection import AnomalyDetector
-from app.observability.sla import SLAEngine
+from typing import Any, Dict, Optional
+
 from app.observability.alerting import AlertManager
+from app.observability.anomaly_detection import AnomalyDetector
+from app.observability.context import ObservabilityContext, get_current_context, set_current_context
+from app.observability.cost_tracking import CostTracker
 from app.observability.evaluation import EvaluationEngine
 from app.observability.execution_trace import ExecutionTrace
-from app.observability.metrics import get_observability_metrics, ObservabilityMetrics
+from app.observability.failure_analysis import FailureAnalyzer
+from app.observability.logging import StructuredLogger
+from app.observability.metrics import get_observability_metrics
+from app.observability.performance import PerformanceMonitor
+from app.observability.replay import ExecutionReplayManager
+from app.observability.sla import SLAEngine
+from app.observability.tracing import TracingManager
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +108,7 @@ class ObservabilityManager:
     ) -> Dict[str, Any]:
         """End tracking an execution span, record cost, performance, anomalies, and metrics."""
         ctx = context or get_current_context()
-        
+
         attrs: Dict[str, Any] = {
             "component": component,
             "input_tokens": input_tokens,
@@ -146,7 +147,6 @@ class ObservabilityManager:
         if is_error:
             cat = self.failure_analyzer.identify_root_cause(str(error) if error else "Execution error", component)
             self.metrics.ai_execution_failures_total.labels(component=component, failure_category=cat).inc()
-
 
         # Anomaly detection check
         anomalies = self.anomaly_detector.detect_anomalies(component, latency_ms=dur_ms, error_rate=0.0)

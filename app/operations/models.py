@@ -1,7 +1,8 @@
 """SQLAlchemy Persistence Models for Operations Platform."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Numeric, DateTime, JSON, Text, Boolean, Float
+
+from sqlalchemy import JSON, Column, DateTime, Float, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

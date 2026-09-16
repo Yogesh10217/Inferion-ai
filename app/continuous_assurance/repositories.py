@@ -1,23 +1,24 @@
 """Thread-safe tenant-isolated repositories for Continuous Assurance (Phase 5.54)."""
 
 import threading
-from typing import Dict, Any, List, Optional
-from app.continuous_assurance.models import (
-    RuntimeObservation,
-    ContinuousAssuranceAssessment,
-    ControlEffectivenessAssessment,
-    AssuranceDrift,
-    ContinuousVerificationResult,
-    AdaptiveControlRecommendation,
-    ContinuousAssuranceEvidenceBundle,
-    ContinuousAssuranceSnapshot,
-)
+from typing import Dict, List, Optional
+
 from app.continuous_assurance.exceptions import (
-    CrossTenantContinuousAssuranceException,
-    RuntimeObservationNotFoundException,
+    AssuranceDriftNotFoundException,
     ContinuousAssuranceRecordNotFoundException,
     ControlEffectivenessNotFoundException,
-    AssuranceDriftNotFoundException,
+    CrossTenantContinuousAssuranceException,
+    RuntimeObservationNotFoundException,
+)
+from app.continuous_assurance.models import (
+    AdaptiveControlRecommendation,
+    AssuranceDrift,
+    ContinuousAssuranceAssessment,
+    ContinuousAssuranceEvidenceBundle,
+    ContinuousAssuranceSnapshot,
+    ContinuousVerificationResult,
+    ControlEffectivenessAssessment,
+    RuntimeObservation,
 )
 
 

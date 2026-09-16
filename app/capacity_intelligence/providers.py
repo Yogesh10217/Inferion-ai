@@ -1,8 +1,7 @@
 """Provider-decoupled architecture for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.capacity_intelligence.exceptions import CapacityIntelligenceException
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

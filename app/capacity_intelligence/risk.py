@@ -1,6 +1,7 @@
 """Capacity risk engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
+
 from app.capacity_intelligence.models import CapacityRiskProfile
 
 logger = logging.getLogger(__name__)

@@ -4,83 +4,82 @@ import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
+from app.capacity_intelligence.analytics import CapacityIntelligenceAnalytics
+from app.capacity_intelligence.approvals import CapacityApprovalCoordinator
+from app.capacity_intelligence.assurance import CapacityAssuranceEngine
+from app.capacity_intelligence.billing import CapacityIntelligenceBillingTracker
+from app.capacity_intelligence.bottlenecks import BottleneckEngine
+from app.capacity_intelligence.capacity_assessment import CapacityAssessmentEngine
+from app.capacity_intelligence.capacity_forecasting import CapacityForecastEngine
+from app.capacity_intelligence.capacity_propagation import CapacityPropagationEngine
+from app.capacity_intelligence.confidence import CapacityConfidenceEngine
+from app.capacity_intelligence.cost_performance import CostPerformanceEngine
+from app.capacity_intelligence.delegation import CapacityDelegationCoordinator
+from app.capacity_intelligence.demand_prediction import DemandPredictionEngine
+from app.capacity_intelligence.dependency_intelligence import CapacityDependencyGraph
+from app.capacity_intelligence.evidence import CapacityEvidenceManager
+from app.capacity_intelligence.evidence_lineage import CapacityEvidenceLineageGraph
 from app.capacity_intelligence.exceptions import (
     CrossTenantCapacityIntelligenceException,
     HighRiskCapacityActionRequiresApprovalException,
     ImmutableCapacityIntelligenceRecordException,
     ResourceProfileNotFoundException,
 )
+from app.capacity_intelligence.explainability import CapacityExplainabilityEngine
+from app.capacity_intelligence.governance import CapacityGovernanceEngine
+from app.capacity_intelligence.idempotency import CapacityIdempotencyManager
+from app.capacity_intelligence.impact import CapacityImpactEngine
+from app.capacity_intelligence.learning import CapacityLearningEngine
+from app.capacity_intelligence.models import (
+    Bottleneck,
+    CapacityAssessment,
+    CapacityEvidenceBundle,
+    CapacityForecast,
+    CapacityOptimization,
+    CapacityRecommendation,
+    CapacityScenario,
+    CapacitySnapshot,
+    CapacityTelemetry,
+    DelegationStatus,
+    DemandPrediction,
+    GovernanceDecision,
+    ResourceProfile,
+    RiskLevel,
+    SaturationAssessment,
+)
+from app.capacity_intelligence.observability import CapacityIntelligenceMetricsCollector
+from app.capacity_intelligence.optimization import CapacityOptimizationEngine
+from app.capacity_intelligence.performance import PerformanceEngine
 from app.capacity_intelligence.providers import (
     CapacityIntelligenceProviderRegistry,
     MockCapacityIntelligenceProvider,
 )
-from app.capacity_intelligence.repositories import (
-    ResourceRepository,
-    CapacityTelemetryRepository,
-    CapacityAssessmentRepository,
-    CapacityForecastRepository,
-    BottleneckRepository,
-    CapacityRecommendationRepository,
-    CapacityEvidenceRepository,
-)
-from app.capacity_intelligence.resources import ResourceProfileEngine
-from app.capacity_intelligence.telemetry import CapacityTelemetryEngine
-from app.capacity_intelligence.workload import WorkloadEngine
-from app.capacity_intelligence.capacity_assessment import CapacityAssessmentEngine
-from app.capacity_intelligence.capacity_forecasting import CapacityForecastEngine
-from app.capacity_intelligence.demand_prediction import DemandPredictionEngine
-from app.capacity_intelligence.saturation import SaturationEngine
-from app.capacity_intelligence.performance import PerformanceEngine
-from app.capacity_intelligence.bottlenecks import BottleneckEngine
-from app.capacity_intelligence.resource_efficiency import ResourceEfficiencyEngine
-from app.capacity_intelligence.optimization import CapacityOptimizationEngine
-from app.capacity_intelligence.cost_performance import CostPerformanceEngine
-from app.capacity_intelligence.tradeoffs import CapacityTradeoffEngine
-from app.capacity_intelligence.dependency_intelligence import CapacityDependencyGraph
-from app.capacity_intelligence.capacity_propagation import CapacityPropagationEngine
-from app.capacity_intelligence.reliability_impact import CapacityReliabilityImpactEngine
-from app.capacity_intelligence.resilience_capacity import CapacityResilienceEngine
-from app.capacity_intelligence.scenarios import CapacityScenarioEngine
 from app.capacity_intelligence.recommendations import CapacityRecommendationEngine
-from app.capacity_intelligence.governance import CapacityGovernanceEngine
-from app.capacity_intelligence.approvals import CapacityApprovalCoordinator
-from app.capacity_intelligence.delegation import CapacityDelegationCoordinator
-from app.capacity_intelligence.verification import CapacityVerificationEngine
-from app.capacity_intelligence.assurance import CapacityAssuranceEngine
-from app.capacity_intelligence.confidence import CapacityConfidenceEngine
-from app.capacity_intelligence.risk import CapacityRiskEngine
-from app.capacity_intelligence.impact import CapacityImpactEngine
-from app.capacity_intelligence.explainability import CapacityExplainabilityEngine
-from app.capacity_intelligence.evidence import CapacityEvidenceManager
-from app.capacity_intelligence.evidence_lineage import CapacityEvidenceLineageGraph
-from app.capacity_intelligence.snapshots import CapacitySnapshotManager
-from app.capacity_intelligence.timeline import CapacityTimeline
-from app.capacity_intelligence.reproducibility import CapacityReproducibilityRecord
-from app.capacity_intelligence.learning import CapacityLearningEngine
-from app.capacity_intelligence.analytics import CapacityIntelligenceAnalytics
-from app.capacity_intelligence.observability import CapacityIntelligenceMetricsCollector
-from app.capacity_intelligence.billing import CapacityIntelligenceBillingTracker
-from app.capacity_intelligence.idempotency import CapacityIdempotencyManager
-
-from app.capacity_intelligence.models import (
-    ResourceProfile,
-    CapacityTelemetry,
-    CapacityAssessment,
-    CapacityForecast,
-    DemandPrediction,
-    SaturationAssessment,
-    Bottleneck,
-    CapacityOptimization,
-    CapacityScenario,
-    CapacityRecommendation,
-    CapacityEvidenceBundle,
-    CapacitySnapshot,
-    RiskLevel,
-    DelegationStatus,
-    GovernanceDecision,
+from app.capacity_intelligence.reliability_impact import CapacityReliabilityImpactEngine
+from app.capacity_intelligence.repositories import (
+    BottleneckRepository,
+    CapacityAssessmentRepository,
+    CapacityEvidenceRepository,
+    CapacityForecastRepository,
+    CapacityRecommendationRepository,
+    CapacityTelemetryRepository,
+    ResourceRepository,
 )
+from app.capacity_intelligence.reproducibility import CapacityReproducibilityRecord
+from app.capacity_intelligence.resilience_capacity import CapacityResilienceEngine
+from app.capacity_intelligence.resource_efficiency import ResourceEfficiencyEngine
+from app.capacity_intelligence.resources import ResourceProfileEngine
+from app.capacity_intelligence.risk import CapacityRiskEngine
+from app.capacity_intelligence.saturation import SaturationEngine
+from app.capacity_intelligence.scenarios import CapacityScenarioEngine
+from app.capacity_intelligence.snapshots import CapacitySnapshotManager
+from app.capacity_intelligence.telemetry import CapacityTelemetryEngine
+from app.capacity_intelligence.timeline import CapacityTimeline
+from app.capacity_intelligence.tradeoffs import CapacityTradeoffEngine
+from app.capacity_intelligence.verification import CapacityVerificationEngine
+from app.capacity_intelligence.workload import WorkloadEngine
 
 logger = logging.getLogger(__name__)
 
@@ -482,7 +481,7 @@ class CapacityIntelligenceManager:
         risk_enum = RiskLevel(risk_level.value if hasattr(risk_level, "value") else risk_level)
         requires_appr = risk_enum in [RiskLevel.HIGH, RiskLevel.CRITICAL] and not is_approved
         status = DelegationStatus.PENDING_APPROVAL if requires_appr else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
-        
+
         del_rec = CapacityDelegationRecord(
             delegation_id=f"cdel-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,

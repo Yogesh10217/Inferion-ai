@@ -2,10 +2,11 @@
 Event Engine for Autonomous Execution & Reactive Workflows
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional, Callable
+import time
 from enum import Enum
+from typing import Any, Callable, Dict, List
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

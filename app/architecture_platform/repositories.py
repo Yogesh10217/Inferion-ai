@@ -1,12 +1,9 @@
 """Repository Interfaces & Persistence Implementations for Architecture Platform."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
 
 from app.architecture_platform.nodes import ArchitectureNode
-from app.architecture_platform.dependencies import ArchitectureDependency
-from app.architecture_platform.topology import TopologySnapshot
-from app.architecture_platform.decisions import ArchitectureDecisionRecord
 
 
 class ArchitectureNodeRepository(ABC):

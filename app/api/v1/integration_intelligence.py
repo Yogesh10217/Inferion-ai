@@ -1,18 +1,19 @@
 """REST API Router for Integration Intelligence Platform (Phase 5.40)."""
 
-from typing import Dict, Any, Optional, List
-from fastapi import APIRouter, HTTPException, Depends, Header
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
-from app.integration_intelligence.manager import IntegrationIntelligenceManager
-from app.integration_intelligence.connectors import ConnectorType, ConnectorCapability
-from app.integration_intelligence.endpoints import EndpointType, EndpointProtocol
-from app.integration_intelligence.workflows import WorkflowType, WorkflowTrigger, WorkflowStep
+from app.integration_intelligence.connectors import ConnectorCapability, ConnectorType
+from app.integration_intelligence.endpoints import EndpointProtocol, EndpointType
 from app.integration_intelligence.exceptions import (
     CrossTenantIntegrationAccessException,
-    IntegrationIntelligenceException,
     HighRiskIntegrationRequiresApprovalException,
+    IntegrationIntelligenceException,
 )
+from app.integration_intelligence.manager import IntegrationIntelligenceManager
+from app.integration_intelligence.workflows import WorkflowStep, WorkflowTrigger, WorkflowType
 
 router = APIRouter(prefix="/v1/integrations", tags=["Integration Intelligence"])
 manager = IntegrationIntelligenceManager()

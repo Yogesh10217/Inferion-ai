@@ -1,15 +1,12 @@
 """Reliability Governance & Human Approval Integration (Phase 5.31)."""
 
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
 
-from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator, PolicyEvaluationResult
-
-from app.governance_platform.risk import RiskManager, RiskLevel
-from app.approvals.approval_engine import ApprovalEngine, ApprovalRequest, ApprovalStatus
+from app.approvals.approval_engine import ApprovalEngine
+from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
+from app.governance_platform.risk import RiskManager
 from app.orchestration.human_tasks import HumanTaskManager
-
-from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionStatus, GovernanceDecisionReason
+from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionReason, GovernanceDecisionStatus
 from app.reliability_platform.remediation import RemediationPlan, RemediationRisk
 
 
@@ -46,7 +43,6 @@ class ReliabilityGovernanceEngine:
                 status=GovernanceDecisionStatus.REQUIRE_APPROVAL,
                 reasons=[GovernanceDecisionReason(code="HIGH_RISK_APPROVAL_REQUIRED", message="Human approval required for high-risk action")],
             )
-
 
         return GovernanceDecision(
             tenant_id=tenant_id,

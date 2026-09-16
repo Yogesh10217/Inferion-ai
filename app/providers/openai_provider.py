@@ -3,16 +3,16 @@ from __future__ import annotations
 import asyncio
 import json
 import time
+from datetime import datetime, timezone
 from typing import Any, AsyncIterator
+
 import httpx
 
-from datetime import datetime, timezone
-
+from app.core.config import get_settings
+from app.core.exceptions import ProviderUnavailableException
 from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import ChatMessage, InferenceRequest
-from app.core.config import get_settings
-from app.core.exceptions import ProviderUnavailableException
 
 
 class OpenAIProvider(BaseProvider):
@@ -144,10 +144,10 @@ class OpenAIProvider(BaseProvider):
                 **kwargs
             )
         model_name = request.model
-        
+
         # Check if we should use mock/simulation fallback or real client
         is_mock = not self.api_key or self.api_key in ("mock", "test-key", "test") or (request.metadata and request.metadata.get("mock") is True)
-        
+
         if is_mock:
             prompt_text = self._extract_prompt(request)
             text = f"[openai:{model_name}] {prompt_text}"
@@ -182,7 +182,7 @@ class OpenAIProvider(BaseProvider):
             "messages": messages,
             "stream": True,
         }
-        
+
         if request.temperature is not None:
             payload["temperature"] = request.temperature
         if request.top_p is not None:
@@ -224,7 +224,7 @@ class OpenAIProvider(BaseProvider):
                                 delta = choices[0].get("delta", {})
                                 text = delta.get("content", "")
                                 finish_reason = choices[0].get("finish_reason")
-                                
+
                                 usage_data = chunk_data.get("usage")
                                 usage = Usage()
                                 if usage_data:
@@ -307,4 +307,3 @@ class OpenAIProvider(BaseProvider):
         except Exception:
             pass
         return defaults
-

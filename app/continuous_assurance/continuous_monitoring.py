@@ -1,7 +1,8 @@
 """Continuous monitoring engine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict
+
 from app.continuous_assurance.models import RuntimeObservation
 from app.continuous_assurance.monitoring_windows import MonitoringWindowPolicy, MonitoringWindowType
 from app.continuous_assurance.repositories import RuntimeObservationRepository

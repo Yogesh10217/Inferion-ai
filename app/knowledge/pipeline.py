@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
 
 class PipelineStatus(Enum):
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     FAILED = "failed"
+
 
 @dataclass
 class DocumentContext:
@@ -20,7 +22,7 @@ class DocumentContext:
     embeddings: List[List[float]] = None
     status: PipelineStatus = PipelineStatus.PENDING
     errors: List[str] = None
-    
+
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
@@ -31,10 +33,10 @@ class DocumentContext:
         if self.errors is None:
             self.errors = []
 
+
 class PipelineStage(ABC):
     """Abstract base class for a pipeline stage."""
-    
+
     @abstractmethod
     async def process(self, context: DocumentContext) -> DocumentContext:
         """Processes the document context."""
-        pass

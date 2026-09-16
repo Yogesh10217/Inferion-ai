@@ -1,12 +1,13 @@
 """Cost Analytics, Unit Economics & Cost Growth Intelligence Engine."""
 
+import logging
 from datetime import datetime, timezone
 from decimal import Decimal
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field, field_validator
 
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
+from app.finops.cost_ledger import UnifiedCostLedger
 
 logger = logging.getLogger(__name__)
 

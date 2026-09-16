@@ -7,18 +7,19 @@ provenance, consistency, coverage, and conflict risk dimensions.
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.knowledge_assurance.conflicts import KnowledgeConflictManager
+from app.knowledge_assurance.consistency import KnowledgeConsistencyManager
+from app.knowledge_assurance.coverage import KnowledgeCoverageManager
 from app.knowledge_assurance.exceptions import (
     CrossTenantKnowledgeAssuranceException,
 )
-from app.knowledge_assurance.trust import KnowledgeTrustEngine
 from app.knowledge_assurance.freshness import KnowledgeFreshnessManager
 from app.knowledge_assurance.provenance import KnowledgeProvenanceManager
-from app.knowledge_assurance.consistency import KnowledgeConsistencyManager
-from app.knowledge_assurance.coverage import KnowledgeCoverageManager
-from app.knowledge_assurance.conflicts import KnowledgeConflictManager
+from app.knowledge_assurance.trust import KnowledgeTrustEngine
 
 
 class KnowledgeAssuranceDimension(str, Enum):

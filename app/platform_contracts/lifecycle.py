@@ -1,6 +1,7 @@
 """Reusable Lifecycle State Machine Framework (Phase 5.30)."""
 
-from typing import Dict, Any, Set, List
+from typing import List, Set
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.exceptions import InvalidLifecycleTransitionException

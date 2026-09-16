@@ -1,9 +1,11 @@
 """SQLAlchemy Database Models for Observability Persistence."""
 
-from datetime import datetime, timezone
 import uuid
-from sqlalchemy import Column, String, Float, Integer, Boolean, DateTime, Text, JSON, ForeignKey, Index
+from datetime import datetime, timezone
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+
 from app.core.database import Base
 
 

@@ -4,12 +4,17 @@ Workflow Node Abstractions & Node Type Implementations
 
 import asyncio
 from abc import ABC, abstractmethod
-from enum import Enum
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
+from app.workflows.exceptions import (
+    ApprovalRequiredError,
+    NodeExecutionError,
+    RBACPermissionDeniedError,
+    TenantIsolationError,
+)
 from app.workflows.state import NodeStatus
-from app.workflows.exceptions import NodeExecutionError, ApprovalRequiredError, RBACPermissionDeniedError, TenantIsolationError
 
 
 class NodeType(str, Enum):
@@ -72,7 +77,6 @@ class BaseNode(ABC):
     @abstractmethod
     async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Execute node business logic."""
-        pass
 
     def checkpoint(self) -> Dict[str, Any]:
         """Return state representation for checkpointing."""
@@ -132,6 +136,7 @@ class EndNode(BaseNode):
 
 class AgentNode(BaseNode):
     """Integrates directly with Phase 5.1 Agents or Agent Execution logic."""
+
     def __init__(
         self,
         node_id: str,
@@ -185,6 +190,7 @@ class AgentNode(BaseNode):
 
 class ToolNode(BaseNode):
     """Executes tools (REST, MCP, Plugin, GitHub, Slack, DB, Python, Shell)."""
+
     def __init__(
         self,
         node_id: str,
@@ -240,6 +246,7 @@ class ToolNode(BaseNode):
 
 class HumanApprovalNode(BaseNode):
     """Pauses workflow execution and requests human approval."""
+
     def __init__(
         self,
         node_id: str,
@@ -280,6 +287,7 @@ class HumanApprovalNode(BaseNode):
 
 class ConditionNode(BaseNode):
     """Evaluates condition expressions to direct workflow branching."""
+
     def __init__(
         self,
         node_id: str,
@@ -313,6 +321,7 @@ class ConditionNode(BaseNode):
 
 class ParallelNode(BaseNode):
     """Spawns parallel paths."""
+
     def __init__(self, node_id: str, name: str, branch_nodes: Optional[List[str]] = None, config: Optional[Dict[str, Any]] = None):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.PARALLEL, config=config)
         self.branch_nodes = branch_nodes or []
@@ -328,6 +337,7 @@ class ParallelNode(BaseNode):
 
 class JoinNode(BaseNode):
     """Joins parallel execution paths."""
+
     def __init__(self, node_id: str, name: str, config: Optional[Dict[str, Any]] = None):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.JOIN, config=config)
 
@@ -343,6 +353,7 @@ class JoinNode(BaseNode):
 
 class KnowledgeNode(BaseNode):
     """Integrates with Phase 5.0 Knowledge & RAG subsystem."""
+
     def __init__(self, node_id: str, name: str, action: str = "search", query: str = "", config: Optional[Dict[str, Any]] = None):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.KNOWLEDGE, config=config)
         self.action = action

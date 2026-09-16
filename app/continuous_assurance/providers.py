@@ -1,8 +1,8 @@
 """Provider-decoupled architecture for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, Optional, Protocol, List, Union, runtime_checkable
 from enum import Enum
+from typing import Any, Dict, List, Optional, Protocol, Union, runtime_checkable
 
 logger = logging.getLogger(__name__)
 

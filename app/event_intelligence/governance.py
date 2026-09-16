@@ -1,13 +1,12 @@
 """Event Governance Engine Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional
-from pydantic import BaseModel
+from typing import Optional
 
+from app.approvals.approval_engine import ApprovalEngine
 from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
 from app.governance_platform.risk import RiskManager
-from app.approvals.approval_engine import ApprovalEngine
 from app.orchestration.human_tasks import HumanTaskManager
-from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionStatus, GovernanceDecisionReason
+from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionReason, GovernanceDecisionStatus
 
 
 class EventGovernanceEngine:

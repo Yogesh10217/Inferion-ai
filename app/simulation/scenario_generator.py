@@ -3,7 +3,9 @@ Simulation Scenario Generator
 """
 
 from typing import Dict
+
 from pydantic import BaseModel
+
 from app.planning.execution_plan import ExecutionPlan
 
 

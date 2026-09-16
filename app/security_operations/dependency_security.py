@@ -5,11 +5,11 @@ Evaluates dependency lock files, version pinning, and package integrity.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from enum import Enum
 import hashlib
 import json
 import os
+from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Dict, Optional
 
 from app.deployment.secrets import SecretsSanitizer

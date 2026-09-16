@@ -83,8 +83,8 @@ class DeploymentProfile:
         errors: list[str] = []
         if not self.allow_debug and config.debug_enabled:
             errors.append(f"Debug mode is forbidden in deployment profile '{self.environment.value}'")
-        
+
         if self.strict_validation and not config.application_name:
             errors.append("Application name is required under strict validation profile")
-            
+
         return len(errors) == 0, errors

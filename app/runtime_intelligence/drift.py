@@ -1,7 +1,8 @@
 """Runtime drift detector for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from app.runtime_intelligence.models import RuntimeDrift, RuntimeDriftSeverity
 
 logger = logging.getLogger(__name__)

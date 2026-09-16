@@ -1,10 +1,10 @@
-import os
-import json
 import logging
+import os
 from abc import ABC, abstractmethod
-from typing import List, Dict, Optional
-from .plugin_manifest import PluginManifest
+from typing import Dict, List, Optional, Tuple
+
 from .exceptions import PluginLoadError
+from .plugin_manifest import PluginManifest
 
 logger = logging.getLogger(__name__)
 
@@ -53,12 +53,12 @@ class LocalFilesystemStore(PluginStore):
     async def load_manifest(self, plugin_id: str) -> PluginManifest:
         if plugin_id in self._manifest_cache:
             return self._manifest_cache[plugin_id][1]
-        
+
         # Fallback manual discovery if cache miss
         await self.discover_plugins()
         if plugin_id in self._manifest_cache:
             return self._manifest_cache[plugin_id][1]
-            
+
         raise PluginLoadError(f"Plugin '{plugin_id}' not found in filesystem store: {self.directory}")
 
     def get_plugin_dir(self, plugin_id: str) -> Optional[str]:

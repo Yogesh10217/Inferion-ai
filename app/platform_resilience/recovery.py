@@ -1,18 +1,18 @@
 """Coordinated Recovery Workflows Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
+from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
     CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
     InvalidFailoverTransitionException,
-    RecoveryVerificationFailedException,
+    ResilienceResourceNotFoundException,
 )
 
 
@@ -97,7 +97,7 @@ class RecoveryManager:
             ],
         )
         self._plans[plan.recovery_plan_id] = plan
-        
+
         self.transition_status(plan, RecoveryStatus.ASSESSING)
         self.transition_status(plan, RecoveryStatus.PLANNED)
         self.transition_status(plan, RecoveryStatus.GOVERNED)
@@ -105,7 +105,7 @@ class RecoveryManager:
 
     def execute_recovery(self, plan_id: str, tenant_id: str) -> RecoveryPlan:
         plan = self.get_plan(plan_id, tenant_id)
-        
+
         self.transition_status(plan, RecoveryStatus.APPROVED)
 
         del_req = DelegationRequest(
@@ -135,10 +135,10 @@ class RecoveryManager:
         plan = self._plans.get(plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

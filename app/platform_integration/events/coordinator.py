@@ -1,16 +1,16 @@
 """Cross-Phase Event Coordinator and Subscriber Dispatch (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List, Callable, Optional
 import uuid
+from typing import Any, Callable, Dict, List, Optional
 
+from app.platform_integration.events.events import EventStore
 from app.platform_integration.models import (
     CrossPhaseEvent,
     CrossPhaseEventType,
     IntegrationPlatform,
     TraceContext,
 )
-from app.platform_integration.events.events import EventStore
 
 logger = logging.getLogger(__name__)
 

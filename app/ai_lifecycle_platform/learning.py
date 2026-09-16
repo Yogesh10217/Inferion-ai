@@ -1,11 +1,10 @@
 """Lifecycle Learning & Improvement Subsystem (Phase 5.33)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Dict, List
 
-from app.ai_lifecycle_platform.exceptions import CrossTenantLifecycleAccessException
+from pydantic import BaseModel, Field
 
 
 class LifecycleRecommendation(BaseModel):

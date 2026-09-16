@@ -1,12 +1,11 @@
 """Data & Asset Exposure Analyzer."""
 
-from typing import Dict, Any, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 from app.security_assurance.asset_inventory import SecurityAssetInventory
-from app.security_assurance.assets import SecurityAssetType
 
 
 class ExposureRiskAssessment(BaseModel):

@@ -1,51 +1,107 @@
 """Integration Intelligence Platform Package (Phase 5.40)."""
 
-from app.integration_intelligence.exceptions import (
-    IntegrationIntelligenceException,
-    CrossTenantIntegrationAccessException,
-    InvalidAccessStateTransitionException,
-    IntegrationNotFoundException,
-    ConnectorNotFoundException,
-    WorkflowNotFoundException,
-    IntegrationExecutionNotFoundException,
-    IntegrationPolicyViolationException,
-    ConnectorAccessDeniedException,
-    IntegrationExecutionBlockedException,
-    IntegrationValidationException,
-    IntegrationFailureException,
-    IntegrationRetryException,
-    IntegrationDelegationBlockedException,
-    ImmutableIntegrationRecordException,
-    HighRiskIntegrationRequiresApprovalException,
-    IntegrationDependencyException,
-)
-
-from app.integration_intelligence.connectors import ConnectorManager, ConnectorType, ConnectorCapability, IntegrationConnector
-from app.integration_intelligence.endpoints import EndpointManager, EndpointType, EndpointProtocol, IntegrationEndpoint
-from app.integration_intelligence.workflows import WorkflowManager, WorkflowType, WorkflowTrigger, WorkflowStatus, IntegrationWorkflow
-from app.integration_intelligence.mapping import IntegrationMappingManager, MappingRule, MappingTransformation, IntegrationMapping
-from app.integration_intelligence.orchestration import IntegrationOrchestrationManager, IntegrationPlan, IntegrationPlanStep
-from app.integration_intelligence.routing import IntegrationRoutingManager, RoutingStrategy, IntegrationRoute
-from app.integration_intelligence.dependencies import IntegrationDependencyManager, DependencyImpact, IntegrationDependency
-from app.integration_intelligence.execution import IntegrationExecutionManager, IntegrationExecutionStatus, IntegrationExecution
-from app.integration_intelligence.retries import RetryManager, RetryPolicy, RetryStatus, RetryDecision
-from app.integration_intelligence.failures import IntegrationFailureManager, FailureType, FailureSeverity, IntegrationFailure
-from app.integration_intelligence.recovery import IntegrationRecoveryManager, RecoveryStatus, IntegrationRecoveryPlan
-from app.integration_intelligence.compensation import CompensationManager, CompensationStatus, CompensationPlan
-from app.integration_intelligence.transactions import TransactionCoordinator, TransactionState, TransactionConsistency, IntegrationTransaction
-from app.integration_intelligence.governance import IntegrationGovernanceEngine, IntegrationGovernanceStatus, IntegrationGovernanceDecision
-from app.integration_intelligence.risk import IntegrationRiskManager, IntegrationRiskDimension, IntegrationRiskAssessment
-from app.integration_intelligence.security import IntegrationSecurityManager, IntegrationSecurityAssessment
-from app.integration_intelligence.data_governance import IntegrationDataGovernanceManager, IntegrationDataClassification, IntegrationDataAssessment
-from app.integration_intelligence.verification import IntegrationVerificationManager, VerificationStatus, IntegrationVerification
-from app.integration_intelligence.evidence import IntegrationEvidenceManager, IntegrationEvidenceBundle
-from app.integration_intelligence.investigations import IntegrationInvestigationManager, InvestigationStatus, IntegrationInvestigation
-from app.integration_intelligence.observability import IntegrationMetricsCollector
 from app.integration_intelligence.analytics import IntegrationAnalyticsEngine
-from app.integration_intelligence.trust import IntegrationTrustEngine, IntegrationTrustDimension
-from app.integration_intelligence.learning import IntegrationLearningManager, IntegrationLearningRecord
 from app.integration_intelligence.billing import IntegrationBillingTracker
+from app.integration_intelligence.compensation import CompensationManager, CompensationPlan, CompensationStatus
+from app.integration_intelligence.connectors import (
+    ConnectorCapability,
+    ConnectorManager,
+    ConnectorType,
+    IntegrationConnector,
+)
+from app.integration_intelligence.data_governance import (
+    IntegrationDataAssessment,
+    IntegrationDataClassification,
+    IntegrationDataGovernanceManager,
+)
+from app.integration_intelligence.dependencies import (
+    DependencyImpact,
+    IntegrationDependency,
+    IntegrationDependencyManager,
+)
+from app.integration_intelligence.endpoints import EndpointManager, EndpointProtocol, EndpointType, IntegrationEndpoint
+from app.integration_intelligence.evidence import IntegrationEvidenceBundle, IntegrationEvidenceManager
+from app.integration_intelligence.exceptions import (
+    ConnectorAccessDeniedException,
+    ConnectorNotFoundException,
+    CrossTenantIntegrationAccessException,
+    HighRiskIntegrationRequiresApprovalException,
+    ImmutableIntegrationRecordException,
+    IntegrationDelegationBlockedException,
+    IntegrationDependencyException,
+    IntegrationExecutionBlockedException,
+    IntegrationExecutionNotFoundException,
+    IntegrationFailureException,
+    IntegrationIntelligenceException,
+    IntegrationNotFoundException,
+    IntegrationPolicyViolationException,
+    IntegrationRetryException,
+    IntegrationValidationException,
+    WorkflowNotFoundException,
+)
+from app.integration_intelligence.execution import (
+    IntegrationExecution,
+    IntegrationExecutionManager,
+    IntegrationExecutionStatus,
+)
+from app.integration_intelligence.failures import (
+    FailureSeverity,
+    FailureType,
+    IntegrationFailure,
+    IntegrationFailureManager,
+)
+from app.integration_intelligence.governance import (
+    IntegrationGovernanceDecision,
+    IntegrationGovernanceEngine,
+    IntegrationGovernanceStatus,
+)
+from app.integration_intelligence.investigations import (
+    IntegrationInvestigation,
+    IntegrationInvestigationManager,
+    InvestigationStatus,
+)
+from app.integration_intelligence.learning import IntegrationLearningManager, IntegrationLearningRecord
 from app.integration_intelligence.manager import IntegrationIntelligenceManager
+from app.integration_intelligence.mapping import (
+    IntegrationMapping,
+    IntegrationMappingManager,
+    MappingRule,
+    MappingTransformation,
+)
+from app.integration_intelligence.observability import IntegrationMetricsCollector
+from app.integration_intelligence.orchestration import (
+    IntegrationOrchestrationManager,
+    IntegrationPlan,
+    IntegrationPlanStep,
+)
+from app.integration_intelligence.recovery import IntegrationRecoveryManager, IntegrationRecoveryPlan, RecoveryStatus
+from app.integration_intelligence.retries import RetryDecision, RetryManager, RetryPolicy, RetryStatus
+from app.integration_intelligence.risk import (
+    IntegrationRiskAssessment,
+    IntegrationRiskDimension,
+    IntegrationRiskManager,
+)
+from app.integration_intelligence.routing import IntegrationRoute, IntegrationRoutingManager, RoutingStrategy
+from app.integration_intelligence.security import IntegrationSecurityAssessment, IntegrationSecurityManager
+from app.integration_intelligence.transactions import (
+    IntegrationTransaction,
+    TransactionConsistency,
+    TransactionCoordinator,
+    TransactionState,
+)
+from app.integration_intelligence.trust import IntegrationTrustDimension, IntegrationTrustEngine
+from app.integration_intelligence.verification import (
+    IntegrationVerification,
+    IntegrationVerificationManager,
+    VerificationStatus,
+)
+from app.integration_intelligence.workflows import (
+    IntegrationWorkflow,
+    WorkflowManager,
+    WorkflowStatus,
+    WorkflowTrigger,
+    WorkflowType,
+)
 
 __all__ = [
     "IntegrationIntelligenceException",

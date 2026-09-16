@@ -1,12 +1,11 @@
 """Detect operational anomalies across degradation, errors, latency, saturation, capacity, dependencies, and traffic with explainable results."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, OperationalAnomalyException
+from pydantic import BaseModel, Field
 
 
 class AnomalyCategory(str, Enum):

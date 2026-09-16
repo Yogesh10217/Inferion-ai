@@ -1,10 +1,11 @@
 """Integration Core & Model Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -55,7 +56,6 @@ class IntegrationConfiguration(BaseModel):
 
 
 class IntegrationVersion(BaseModel):
-
 
     version_id: str = Field(default_factory=lambda: f"iver_{uuid.uuid4().hex[:10]}")
     version_number: str = "1.0.0"

@@ -5,15 +5,15 @@ Evaluates cross-domain impact across business, security, identity, operations,
 compliance, data, and model assets with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
-from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.situation_awareness import EnterpriseSituation, SituationSeverity
 
 
@@ -21,6 +21,7 @@ class UnifiedImpactAssessment:
     """
     Cross-domain impact assessment result for an enterprise situation or set of signals.
     """
+
     def __init__(
         self,
         impact_id: str,
@@ -73,6 +74,7 @@ class UnifiedImpactEngine:
     """
     Engine to evaluate cross-domain impact for unified intelligence situations and risk propagation.
     """
+
     def __init__(self):
         pass
 

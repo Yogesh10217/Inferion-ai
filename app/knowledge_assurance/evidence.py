@@ -7,8 +7,8 @@ import hashlib
 import json
 import uuid
 from datetime import datetime, timezone
-from enum import Enum
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_assurance.exceptions import (

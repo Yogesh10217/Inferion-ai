@@ -3,10 +3,11 @@ Unified Memory Storage Engine & Repository Implementation
 """
 
 import uuid
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from app.memory.exceptions import MemoryNotFoundError, TenantMemoryIsolationError
-from app.memory.memory_types import MemoryType, RetentionPolicy, MemoryStatus
+from app.memory.memory_types import MemoryStatus, MemoryType, RetentionPolicy
 
 
 class MemoryItemRecord:
@@ -112,7 +113,7 @@ class MemoryStore:
     def search(self, query: str, organization_id: str, top_k: int = 10) -> List[MemoryItemRecord]:
         records = self.list(organization_id)
         q_words = set(query.lower().split())
-        
+
         def match_fn(rec: MemoryItemRecord) -> int:
             words = set(rec.content.lower().split())
             return len(q_words.intersection(words))

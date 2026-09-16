@@ -1,13 +1,14 @@
 """Scaling Governance & Planning Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
 from app.platform_resilience.exceptions import CrossTenantResilienceAccessException, ResilienceResourceNotFoundException
 
 
@@ -63,7 +64,7 @@ class ScalingPlan(BaseModel):
 
 class ScalingManager:
     """Scaling Governance and Planning Manager.
-    
+
     Generates non-mutating scaling plans and delegates infrastructure mutation via DelegationRequest.
     """
 
@@ -119,7 +120,7 @@ class ScalingManager:
         )
         plan.delegation_id = del_req.delegation_id
         plan.status = ScalingStatus.DELEGATED
-        
+
         self._plans[plan.plan_id] = plan
         return plan
 
@@ -127,10 +128,10 @@ class ScalingManager:
         plan = self._plans.get(plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

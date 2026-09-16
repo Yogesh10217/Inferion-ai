@@ -1,7 +1,7 @@
 """Resource profile management for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any, List, Optional
+
 from app.capacity_intelligence.models import ResourceProfile
 
 logger = logging.getLogger(__name__)

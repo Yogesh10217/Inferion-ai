@@ -3,8 +3,9 @@ Execution Governance Engine & Safety Controls
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.autonomy.exceptions import EmergencyStopException, AutonomyException
+from typing import Dict, List, Optional
+
+from app.autonomy.exceptions import AutonomyException, EmergencyStopException
 
 logger = logging.getLogger(__name__)
 

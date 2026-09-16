@@ -7,6 +7,7 @@ such as SSNs, Credit Cards, Medical Record Numbers (MRN), and Email addresses.
 
 import re
 from typing import Dict, List
+
 from pydantic import BaseModel
 
 

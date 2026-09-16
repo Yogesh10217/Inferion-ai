@@ -1,7 +1,7 @@
 """Prometheus metrics collector for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 

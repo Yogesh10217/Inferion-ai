@@ -1,11 +1,11 @@
 """SQLAlchemy ORM Models for Architecture Platform (Phase 5.26)."""
 
-from datetime import datetime, timezone
 import uuid
-from typing import Optional, Dict, Any
+from datetime import datetime, timezone
+from typing import Optional
 
-from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Integer, Float, Boolean, Text
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy import JSON, Boolean, DateTime, Float, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
 

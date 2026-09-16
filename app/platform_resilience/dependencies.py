@@ -1,14 +1,14 @@
 """Service Dependency Intelligence Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.architecture_platform.manager import ArchitecturePlatformManager
-from app.platform_resilience.exceptions import CrossTenantResilienceAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class DependencyType(str, Enum):
@@ -95,7 +95,7 @@ class DependencyManager:
             criticality=criticality,
         )
         graph.edges.append(edge)
-        
+
         # Add nodes if not existing
         node_names = {n.service_name for n in graph.nodes}
         if source_service not in node_names:
@@ -123,7 +123,7 @@ class DependencyManager:
     def evaluate_failure_impact(self, tenant_id: str, failed_service: str) -> DependencyFailureImpact:
         graph = self.get_or_create_graph(tenant_id)
         affected = [e.source_service for e in graph.edges if e.target_service == failed_service]
-        
+
         cascade_score = min(1.0, len(affected) * 0.25)
         return DependencyFailureImpact(
             failed_service=failed_service,

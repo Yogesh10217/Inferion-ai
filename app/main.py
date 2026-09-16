@@ -1,101 +1,99 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.admin_router import admin_router
+from app.api.auth import router as auth_router
+from app.api.billing import router as billing_router
+from app.api.budgets import router as budgets_router
 from app.api.chat import router as chat_router
 from app.api.health import router as health_router
-from app.api.models import router as models_router
 from app.api.metrics import router as metrics_router
-from app.core.config import get_settings
-from app.core.container import ServiceContainer
-from app.core.initializer import InfrastructureInitializer
-from app.core.exceptions import register_exception_handlers
-from app.core.middleware import ObservationMiddleware, SecurityHeadersMiddleware
-from app.auth.middleware import AuthenticationMiddleware, AuthorizationMiddleware
-from app.tenant.middleware import TenantMiddleware
-from app.api.auth import router as auth_router
-from app.api.admin_router import admin_router
+from app.api.models import router as models_router
 from app.api.organizations import router as org_router
-from app.api.workspaces import router as ws_router
-from app.api.quotas import router as quotas_router
-from app.api.usage import router as usage_router
-from app.limits.middleware import RateLimitMiddleware
-from app.tracing.middleware import TracingMiddleware
-from app.billing.middleware import BudgetMiddleware
 from app.api.plans import router as plans_router
+from app.api.quotas import router as quotas_router
 from app.api.subscriptions import router as subscriptions_router
-from app.api.budgets import router as budgets_router
-from app.api.billing import router as billing_router
-from app.api.webhooks import router as webhooks_router
+from app.api.usage import router as usage_router
+from app.api.v1.access_intelligence import router as access_intelligence_router
+from app.api.v1.agent_orchestration import router as agent_orchestration_router
 from app.api.v1.agents import router as agents_router
-from app.api.v1.workflows import router as workflows_router
-from app.api.v1.memory import router as memory_router
-from app.api.v1.tools import router as tools_router
-from app.api.v1.teams import router as teams_router
-from app.api.v1.planning import router as planning_router
+from app.api.v1.ai_lifecycle import router as ai_lifecycle_router
+from app.api.v1.application_platform import router as application_platform_router
+from app.api.v1.architecture import router as architecture_router
+from app.api.v1.autonomous_assurance import router as autonomous_assurance_router
 from app.api.v1.autonomy import router as autonomy_router
-from app.api.v1.workers import router as workers_router
-from app.api.v1.observability import router as observability_router
-from app.api.v1.security import router as security_router
-from app.api.v1.governance import router as governance_router
-from app.api.v1.jobs import router as jobs_router
-from app.api.v1.reliability import router as reliability_router
+from app.api.v1.capacity_intelligence import router as capacity_intelligence_router
+from app.api.v1.compliance import router as compliance_router
+from app.api.v1.continuous_assurance import router as continuous_assurance_router
+from app.api.v1.control_assurance import router as control_assurance_router
 from app.api.v1.control_plane import router as control_plane_router
-from app.api.v1.developers import router as developers_router
-from app.api.v1.extensions import router as extensions_router
-from app.api.v1.marketplace import router as marketplace_router
 from app.api.v1.data_fabric import router as data_fabric_router
-from app.api.v1.mlops import router as mlops_router
+from app.api.v1.data_governance import router as data_governance_router
+from app.api.v1.data_intelligence import router as data_intelligence_router
+from app.api.v1.decision_governance import router as decision_governance_router
+from app.api.v1.decision_intelligence import router as decision_intelligence_router
+from app.api.v1.decisions import router as decisions_router
+from app.api.v1.deployment import router as deployment_router
+from app.api.v1.developer_platform import router as developer_platform_router
+from app.api.v1.developers import router as developers_router
+from app.api.v1.event_intelligence import router as event_intelligence_router
+from app.api.v1.extensions import router as extensions_router
 from app.api.v1.finops import router as finops_router
-from app.api.v1.operations import router as operations_router
+from app.api.v1.finops_intelligence import router as finops_intelligence_router
+from app.api.v1.governance import router as governance_router
 from app.api.v1.governance_platform import router as governance_platform_router
 from app.api.v1.identity import router as identity_router
-from app.api.v1.orchestration import router as orchestration_router
-from app.api.v1.knowledge_platform import router as knowledge_platform_router
-from app.api.v1.integrations import router as integrations_router
-from app.api.v1.developer_platform import router as developer_platform_router
-from app.api.v1.application_platform import router as application_platform_router
-from app.api.v1.platform_operations import router as platform_operations_router
-from app.api.v1.intelligence import router as intelligence_router
-from app.api.v1.data_governance import router as data_governance_router
-from app.api.v1.architecture import router as architecture_router
-from app.api.v1.compliance import router as compliance_router
-from app.api.v1.portfolio import router as portfolio_router
-from app.api.v1.decisions import router as decisions_router
-from app.api.v1.security_intelligence import router as security_intelligence_router
-from app.api.v1.ai_lifecycle import router as ai_lifecycle_router
-from app.api.v1.event_intelligence import router as event_intelligence_router
-from app.api.v1.knowledge_intelligence import router as knowledge_intelligence_router
-from app.api.v1.agent_orchestration import router as agent_orchestration_router
-from app.api.v1.platform_resilience import router as platform_resilience_router
-from app.api.v1.control_assurance import router as control_assurance_router
-from app.api.v1.access_intelligence import router as access_intelligence_router
-from app.api.v1.integration_intelligence import router as integration_intelligence_router
-from app.api.v1.operations_intelligence import router as operations_intelligence_router
-from app.api.v1.finops_intelligence import router as finops_intelligence_router
-from app.api.v1.data_intelligence import router as data_intelligence_router
-from app.api.v1.model_intelligence import router as model_intelligence_router
-from app.api.v1.decision_governance import router as decision_governance_router
-from app.api.v1.knowledge_assurance import router as knowledge_assurance_router
 from app.api.v1.identity_assurance import router as identity_assurance_router
+from app.api.v1.integration_intelligence import router as integration_intelligence_router
+from app.api.v1.integrations import router as integrations_router
+from app.api.v1.intelligence import router as intelligence_router
+from app.api.v1.jobs import router as jobs_router
+from app.api.v1.knowledge_assurance import router as knowledge_assurance_router
+from app.api.v1.knowledge_intelligence import router as knowledge_intelligence_router
+from app.api.v1.knowledge_platform import router as knowledge_platform_router
+from app.api.v1.marketplace import router as marketplace_router
+from app.api.v1.memory import router as memory_router
+from app.api.v1.mlops import router as mlops_router
+from app.api.v1.model_intelligence import router as model_intelligence_router
+from app.api.v1.observability import router as observability_router
+from app.api.v1.operations import router as operations_router
 from app.api.v1.operations_assurance import router as operations_assurance_router
-from app.api.v1.security_assurance import router as security_assurance_router
-from app.api.v1.unified_intelligence import router as unified_intelligence_router
-from app.api.v1.decision_intelligence import router as decision_intelligence_router
-from app.api.v1.autonomous_assurance import router as autonomous_assurance_router
-from app.api.v1.continuous_assurance import router as continuous_assurance_router
+from app.api.v1.operations_intelligence import router as operations_intelligence_router
+from app.api.v1.orchestration import router as orchestration_router
+from app.api.v1.planning import router as planning_router
+from app.api.v1.platform_hardening import router as platform_hardening_router
+from app.api.v1.platform_integration import router as platform_integration_router
+from app.api.v1.platform_operations import router as platform_operations_router
+from app.api.v1.platform_resilience import router as platform_resilience_router
+from app.api.v1.portfolio import router as portfolio_router
+from app.api.v1.reliability import router as reliability_router
 from app.api.v1.reliability_intelligence import router as reliability_intelligence_router
 from app.api.v1.runtime_intelligence import router as runtime_intelligence_router
-from app.api.v1.capacity_intelligence import router as capacity_intelligence_router
-from app.api.v1.platform_integration import router as platform_integration_router
-from app.api.v1.platform_hardening import router as platform_hardening_router
-from app.api.v1.deployment import router as deployment_router
-import os
-
-
-from app.events import InMemoryEventBus, EventPublisher, EventDispatcher, EventRegistry
+from app.api.v1.security import router as security_router
+from app.api.v1.security_assurance import router as security_assurance_router
+from app.api.v1.security_intelligence import router as security_intelligence_router
+from app.api.v1.teams import router as teams_router
+from app.api.v1.tools import router as tools_router
+from app.api.v1.unified_intelligence import router as unified_intelligence_router
+from app.api.v1.workers import router as workers_router
+from app.api.v1.workflows import router as workflows_router
+from app.api.webhooks import router as webhooks_router
+from app.api.workspaces import router as ws_router
+from app.auth.middleware import AuthenticationMiddleware, AuthorizationMiddleware
+from app.billing.middleware import BudgetMiddleware
+from app.core.config import get_settings
+from app.core.container import ServiceContainer
 from app.core.database import async_session_maker
+from app.core.exceptions import register_exception_handlers
+from app.core.initializer import InfrastructureInitializer
+from app.core.middleware import ObservationMiddleware, SecurityHeadersMiddleware
+from app.events import EventDispatcher, EventPublisher, EventRegistry, InMemoryEventBus
+from app.limits.middleware import RateLimitMiddleware
+from app.tenant.middleware import TenantMiddleware
+from app.tracing.middleware import TracingMiddleware
 
 
 @asynccontextmanager
@@ -276,8 +274,8 @@ def create_app() -> FastAPI:
     app.include_router(platform_hardening_router)
     app.include_router(deployment_router)
 
-    from app.api.websocket.stream_endpoint import router as ws_stream_router
     from app.api.graphql.schema import router as graphql_router
+    from app.api.websocket.stream_endpoint import router as ws_stream_router
     app.include_router(ws_stream_router)
     app.include_router(graphql_router)
 
@@ -306,6 +304,7 @@ def create_app() -> FastAPI:
         app.include_router(metrics_router)
 
     from fastapi.openapi.utils import get_openapi
+
     def custom_openapi():
         if app.openapi_schema:
             return app.openapi_schema

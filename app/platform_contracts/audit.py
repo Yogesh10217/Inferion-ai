@@ -1,12 +1,11 @@
 """Standardized Audit Event Contract (Phase 5.30)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Optional
 
-from app.control_plane.admin_audit import AdministrativeAuditLedger
+from pydantic import BaseModel, Field
 
 
 class AuditEventType(str, Enum):

@@ -1,10 +1,9 @@
 """Explainability Engine for Cross-Phase Inferences (Phase 5.58)."""
 
-from typing import Dict, Any, List
+from typing import Any, Dict
 
 from app.platform_integration.models import (
     CrossPhaseCorrelation,
-    CrossPhaseRecommendation,
     PlatformAssurancePosture,
 )
 

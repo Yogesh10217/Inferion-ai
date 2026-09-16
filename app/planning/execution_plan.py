@@ -2,11 +2,13 @@
 Execution Plan Model Representation
 """
 
-import uuid
 import time
-from typing import Dict, Any, List, Optional
+import uuid
+from typing import List
+
 from pydantic import BaseModel, Field
-from app.planning.goals import Goal, Objective, Milestone, Task
+
+from app.planning.goals import Milestone, Objective, Task
 
 
 class ExecutionPlan(BaseModel):

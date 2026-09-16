@@ -10,14 +10,14 @@ Propagates immutable ExecutionContext, deadline, and cancellation tokens.
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.application_platform.exceptions import (
-    ApplicationNotFoundException,
     ExecutionCancelledException,
     GovernanceBlockedException,
 )
@@ -126,11 +126,11 @@ class ApplicationRuntime:
             # 4. Composition & Execution
             check_cancellation()
             exec_record.state = RuntimeState.EXECUTING
-            
+
             # Simulate execution of composed components (or direct model response)
             user_message = input_data.get("message", input_data.get("prompt", ""))
             response_text = f"Application [{context.application_id}:{context.application_version_id}] response to: '{user_message}'"
-            
+
             exec_record.steps_completed.append("COMPONENTS_EXECUTED")
 
             # 5. Output Safety Checkpoint & Response Composition
@@ -138,7 +138,7 @@ class ApplicationRuntime:
             if context.governance_decision == "BLOCK":
                 exec_record.state = RuntimeState.BLOCKED
                 raise GovernanceBlockedException("Output safety policy blocked response delivery.")
-            
+
             exec_record.output_payload = {
                 "status": "success",
                 "response": response_text,

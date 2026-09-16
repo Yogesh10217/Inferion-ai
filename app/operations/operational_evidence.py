@@ -5,11 +5,11 @@ Collects, sanitizes, formats deterministically, and fingerprints operational tel
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
 import hashlib
 import json
-from typing import Any, Dict, Optional
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Any, Dict
 
 from app.deployment.secrets import SecretsSanitizer
 

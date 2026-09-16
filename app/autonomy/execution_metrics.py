@@ -2,7 +2,7 @@
 Prometheus Metrics Declarations for Autonomous Execution & Digital Workforce
 """
 
-from prometheus_client import Counter, Histogram, Gauge
+from prometheus_client import Counter, Gauge, Histogram
 
 autonomous_runs_total = Counter(
     "autonomous_runs_total",

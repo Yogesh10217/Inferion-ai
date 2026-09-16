@@ -7,18 +7,19 @@ the strict invariant that Unified Intelligence ONLY delegates external mutations
 
 import uuid
 
+from app.platform_contracts.delegation import DelegationRequest, DelegationStatus, DelegationTarget
+from app.unified_intelligence.coordination import CoordinationPlan, CoordinationStep
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
-from app.unified_intelligence.coordination import CoordinationPlan, CoordinationStep
 
 
 class AutonomousDelegationEngine:
     """
     Translates unified intelligence coordination plans into standardized platform DelegationRequests.
     """
+
     def __init__(self):
         pass
 

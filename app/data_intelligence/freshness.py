@@ -1,9 +1,10 @@
 """Data freshness intelligence (Phase 5.43)."""
 
 import uuid
+from datetime import datetime, timedelta, timezone
 from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone, timedelta
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException

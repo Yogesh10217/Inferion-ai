@@ -5,10 +5,10 @@ Calculates deterministic reliability scores (0 to 100) across 10 explicit dimens
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
-from app.reliability.reliability_models import ReliabilityStatus
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
+from app.reliability.reliability_models import ReliabilityStatus
 
 
 @dataclass

@@ -1,7 +1,8 @@
 """Capacity assurance engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from app.capacity_intelligence.models import CapacityAssuranceScore, CapacityStatus
+
+from app.capacity_intelligence.models import CapacityAssuranceScore
 
 logger = logging.getLogger(__name__)
 

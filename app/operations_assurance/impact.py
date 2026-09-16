@@ -1,9 +1,10 @@
 """Operational impact assessment across Technical, Service, Business, Financial, Security, Data, Model, and Customer dimensions."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict
+
 from pydantic import BaseModel, Field
 
 

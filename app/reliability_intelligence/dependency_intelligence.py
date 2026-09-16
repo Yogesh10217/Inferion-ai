@@ -1,7 +1,7 @@
 """Dependency intelligence engine for Reliability Intelligence (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List, Set
+from typing import Dict, List, Set
 
 logger = logging.getLogger(__name__)
 

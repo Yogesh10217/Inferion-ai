@@ -1,14 +1,15 @@
 """Lifecycle Evidence References Subsystem (Phase 5.33)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.ai_lifecycle_platform.exceptions import CrossTenantLifecycleAccessException, ImmutableLifecycleRecordException
 from app.platform_contracts.fingerprinting import FingerprintGenerator
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.ai_lifecycle_platform.exceptions import ImmutableLifecycleRecordException, CrossTenantLifecycleAccessException
 
 
 class LifecycleEvidence(BaseModel):

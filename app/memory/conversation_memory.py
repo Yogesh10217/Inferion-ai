@@ -2,8 +2,8 @@
 Conversation Memory (Tier 2): Multi-Turn Chat History Buffer & Trimming
 """
 
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 
 class ConversationMemory:
@@ -46,7 +46,7 @@ class ConversationMemory:
         """Compresses conversation messages into a canonical summary block."""
         if not self.messages:
             return {"summary": self.summary, "message_count": 0}
-        
+
         recent_text = "\n".join([f"{m['role']}: {m['content']}" for m in self.messages[-5:]])
         self.summary = f"Conversation summary up to {datetime.now(timezone.utc).isoformat()}: Recent turns included:\n{recent_text}"
         return {"summary": self.summary, "message_count": len(self.messages)}

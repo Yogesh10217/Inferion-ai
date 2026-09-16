@@ -5,10 +5,10 @@ Evaluates and enforces request, database, cache, dependency, pipeline, and recov
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
-from app.reliability.reliability_models import ReliabilityStatus
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
+from app.reliability.reliability_models import ReliabilityStatus
 
 
 @dataclass

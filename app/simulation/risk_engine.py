@@ -4,7 +4,9 @@ Risk Analysis Engine for Plan Execution
 
 import logging
 from typing import List
+
 from pydantic import BaseModel
+
 from app.planning.execution_plan import ExecutionPlan
 
 logger = logging.getLogger(__name__)

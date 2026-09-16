@@ -1,7 +1,8 @@
 """SQLAlchemy ORM Persistence Models for Knowledge Intelligence Platform (Phase 5.35)."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, Boolean, DateTime, Text, Index
+
+from sqlalchemy import Column, DateTime, Index, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

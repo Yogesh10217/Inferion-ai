@@ -1,7 +1,8 @@
 """Runtime recovery intelligence engine for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List
+
 from app.runtime_intelligence.models import RecoveryOption
 
 logger = logging.getLogger(__name__)

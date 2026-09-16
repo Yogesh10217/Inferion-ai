@@ -4,7 +4,7 @@ import hashlib
 import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.deployment.models import PlatformReadinessClassification, RuntimeCertificationStatus
 from app.deployment.secrets import SecretsSanitizer

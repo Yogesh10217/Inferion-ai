@@ -5,9 +5,9 @@ Enforces deterministic lifecycle transitions for chaos experiments.
 Illegal transitions raise IllegalStateTransitionError.
 """
 
+import time
 from dataclasses import dataclass, field
 from enum import Enum
-import time
 from typing import Any, Dict, List, Optional
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceCollector, ReliabilityEvidenceLevel
@@ -31,8 +31,6 @@ class ChaosState(str, Enum):
 
 class IllegalStateTransitionError(Exception):
     """Raised when an invalid state transition is attempted in the Chaos State Machine."""
-
-    pass
 
 
 @dataclass

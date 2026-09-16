@@ -2,7 +2,8 @@
 Agent Scoped Execution Context
 """
 
-from typing import Optional, Dict, Any, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 

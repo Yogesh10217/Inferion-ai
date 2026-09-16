@@ -1,20 +1,20 @@
 """FastAPI REST API endpoints for Phase 5.49 Operations Assurance platform."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
+from app.operations_assurance.events import OperationalEventType, OperationalSeverity
 from app.operations_assurance.exceptions import (
     CrossTenantOperationsAssuranceException,
-    OperationsAssuranceException,
     ServiceNotFoundException,
 )
-from app.operations_assurance.services import ServiceType, ServiceTier, ServiceCriticality
-from app.operations_assurance.service_dependencies import DependencyType, DependencyCriticality
-from app.operations_assurance.events import OperationalEventType, OperationalSeverity
 from app.operations_assurance.forecasting import ForecastScenario
 from app.operations_assurance.incidents import OperationalIncidentSeverity
 from app.operations_assurance.manager import OperationsAssuranceManager
+from app.operations_assurance.service_dependencies import DependencyCriticality, DependencyType
+from app.operations_assurance.services import ServiceCriticality, ServiceTier, ServiceType
 
 router = APIRouter(prefix="/v1/operations", tags=["Operations Assurance"])
 

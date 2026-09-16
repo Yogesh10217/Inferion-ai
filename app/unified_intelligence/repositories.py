@@ -4,22 +4,23 @@ Data Access Repositories for Phase 5.51 Enterprise AI Unified Intelligence.
 Provides in-memory and database persistence repositories with strict tenant isolation.
 """
 
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
+from app.unified_intelligence.investigations import UnifiedInvestigation
+from app.unified_intelligence.recommendations import UnifiedRecommendation
 from app.unified_intelligence.signals import UnifiedSignal
 from app.unified_intelligence.situation_awareness import EnterpriseSituation
-from app.unified_intelligence.recommendations import UnifiedRecommendation
-from app.unified_intelligence.investigations import UnifiedInvestigation
 
 
 class UnifiedIntelligenceRepository:
     """
     Repository for Unified Intelligence state entities with strict tenant filtering.
     """
+
     def __init__(self):
         self._signals: Dict[str, UnifiedSignal] = {}
         self._situations: Dict[str, EnterpriseSituation] = {}

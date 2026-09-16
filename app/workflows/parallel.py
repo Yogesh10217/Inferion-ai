@@ -3,9 +3,10 @@ Parallel Path Execution Engine (asyncio.gather)
 """
 
 import asyncio
-from typing import Dict, Any, List, Callable, Awaitable, Tuple
-from app.workflows.node import BaseNode
+from typing import Any, Awaitable, Callable, Dict, List, Tuple
+
 from app.workflows.exceptions import NodeExecutionError
+from app.workflows.node import BaseNode
 
 
 class ParallelExecutor:

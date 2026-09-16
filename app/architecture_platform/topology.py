@@ -2,13 +2,17 @@
 
 import hashlib
 import json
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.architecture_platform.exceptions import (
+    CrossTenantArchitectureAccessException,
+    ImmutableTopologySnapshotException,
+)
 from app.architecture_platform.nodes import ArchitectureNode, ArchitectureNodeManager
-from app.architecture_platform.exceptions import ImmutableTopologySnapshotException, CrossTenantArchitectureAccessException
 
 
 class TopologyVersion(BaseModel):

@@ -1,9 +1,10 @@
 """Runtime risk propagation engine for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import List, Optional
-from app.runtime_intelligence.models import RuntimeRiskPropagationPath
+from typing import Optional
+
 from app.runtime_intelligence.dependency_intelligence import RuntimeDependencyGraph
+from app.runtime_intelligence.models import RuntimeRiskPropagationPath
 
 logger = logging.getLogger(__name__)
 

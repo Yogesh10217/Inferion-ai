@@ -4,6 +4,7 @@ Validates thread safety, tenant isolation, cross-tenant data leakage protection,
 """
 
 from typing import List, Tuple
+
 from app.platform_hardening.exceptions import CrossTenantPlatformHardeningException
 from app.platform_hardening.models import (
     PlatformAuditFinding,

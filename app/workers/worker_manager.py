@@ -3,10 +3,11 @@ Digital Worker Manager & Coordinator
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
+from app.autonomy.execution_engine import AutonomousExecutionEngine
 from app.workers.worker import DigitalWorker
 from app.workers.worker_templates import WorkerTemplate, WorkerTemplateType
-from app.autonomy.execution_engine import AutonomousExecutionEngine
 
 logger = logging.getLogger(__name__)
 

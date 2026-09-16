@@ -1,9 +1,10 @@
 """Fallback Manager for Degraded Modes & Multi-Tier Fallback Strategies."""
 
-import logging
 import asyncio
+import logging
 from enum import Enum
-from typing import Dict, Any, Callable, Optional, List, Union
+from typing import Any, Callable, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

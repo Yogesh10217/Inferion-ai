@@ -1,12 +1,11 @@
 """Data Quality Evaluation & Operational Incident Generation Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from app.data_governance.exceptions import DataQualityViolationException
+from pydantic import BaseModel, Field
 
 
 class QualityDimension(str, Enum):
@@ -127,7 +126,6 @@ class DataQualityManager:
 
         overall_score = sum(dimension_scores.values()) / len(dimension_scores)
         has_critical = overall_score < 70.0 or any(not m.passed for m in metrics if m.dimension in (QualityDimension.COMPLETENESS, QualityDimension.UNIQUENESS))
-
 
         if has_critical:
             violations.append(f"Critical Data Quality Score ({overall_score:.1f}/100.0) below acceptable threshold.")

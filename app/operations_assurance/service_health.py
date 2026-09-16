@@ -1,9 +1,10 @@
 """Service health intelligence evaluating availability, latency, error rate, throughput, dependency health, resource pressure, and incident state."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, ServiceHealthNotFoundException

@@ -1,10 +1,9 @@
 """Agent Integration Adapter & Delegated Scope Boundary Enforcement."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from app.identity.agent_identity import AgentIdentityManager
-from app.identity.exceptions import AgentBoundaryViolationException
 
 logger = logging.getLogger(__name__)
 

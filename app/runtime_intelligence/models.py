@@ -1,12 +1,10 @@
 """Pure Python domain models for Runtime Intelligence (Phase 5.57)."""
 
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-
-from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleState
+from typing import Any, Dict, List, Optional
 
 
 class RuntimeHealthStatus(str, Enum):

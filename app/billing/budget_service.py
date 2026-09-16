@@ -1,10 +1,11 @@
-from typing import Optional, List
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional
+
 from sqlalchemy import select
 
-from app.billing.models import Budget, BudgetAlert
-from app.services.metrics_service import MetricsService
 from app.billing.exceptions import BudgetExceededException
+from app.billing.models import Budget
+from app.services.metrics_service import MetricsService
+
 
 class BudgetService:
     def __init__(self, session_factory, metrics_service: MetricsService):
@@ -19,8 +20,8 @@ class BudgetService:
         if workspace_id:
             stmt = stmt.where(Budget.workspace_id == workspace_id)
         else:
-            stmt = stmt.where(Budget.workspace_id == None)
-        
+            stmt = stmt.where(Budget.workspace_id.is_(None))
+
         async with self.session_factory() as db:
             result = await db.execute(stmt)
             return result.scalars().first()
@@ -31,20 +32,20 @@ class BudgetService:
             if workspace_id:
                 stmt = stmt.where(Budget.workspace_id == workspace_id)
             else:
-                stmt = stmt.where(Budget.workspace_id == None)
-            
+                stmt = stmt.where(Budget.workspace_id.is_(None))
+
             result = await db.execute(stmt)
             budget = result.scalars().first()
-            
+
             if not budget:
                 budget = Budget(organization_id=org_id, workspace_id=workspace_id)
                 db.add(budget)
-                
+
             budget.hard_limit = hard_limit
             budget.warning_threshold = warning
             budget.critical_threshold = critical
             budget.enabled = True
-            
+
             await db.commit()
             await db.refresh(budget)
             return budget

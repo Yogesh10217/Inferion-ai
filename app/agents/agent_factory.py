@@ -2,7 +2,8 @@
 Agent Factory
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 from app.agents.agent_config import AgentConfig
 from app.agents.agent_templates import AGENT_TEMPLATES
 
@@ -13,7 +14,7 @@ class AgentFactory:
         template = AGENT_TEMPLATES.get(template_name)
         if not template:
             raise ValueError(f"Template '{template_name}' not found. Available: {list(AGENT_TEMPLATES.keys())}")
-        
+
         data = template.model_dump()
         if overrides:
             data.update(overrides)

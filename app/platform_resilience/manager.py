@@ -1,49 +1,42 @@
 """Master PlatformResilienceManager Orchestrator Subsystem (Phase 5.37)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
 
-from app.platform_contracts.tenant import TenantAccessGuard
+from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.platform_contracts.idempotency import IdempotencyManager
 from app.platform_contracts.snapshots import SnapshotFactory
-from app.platform_contracts.fingerprinting import FingerprintGenerator
-
-from app.platform_resilience.exceptions import (
-    PlatformResilienceException,
-    CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
-    HighRiskRecoveryRequiresApprovalException,
-)
-from app.platform_resilience.services import ResilienceServiceManager, ResilienceService, ServiceCriticality
-from app.platform_resilience.dependencies import DependencyManager, DependencyType, DependencyCriticality
-from app.platform_resilience.capacity import CapacityManager, CapacityStatus, CapacityThreshold
-from app.platform_resilience.scaling import ScalingManager, ScalingDirection, ScalingPlan
-from app.platform_resilience.backpressure import BackpressureManager, BackpressureLevel, BackpressureAction
-from app.platform_resilience.load_shedding import LoadSheddingManager, LoadSheddingPlan
-from app.platform_resilience.rate_limiting import RateLimitManager, RateLimitScope
-from app.platform_resilience.circuit_breakers import CircuitBreakerManager, CircuitBreakerState
-from app.platform_resilience.bulkheads import BulkheadManager
-from app.platform_resilience.degradation import GracefulDegradationManager, DegradationLevel
-from app.platform_resilience.failover import FailoverManager, FailoverPlan, FailoverStatus
-from app.platform_resilience.disaster_recovery import DisasterRecoveryManager, DisasterRecoveryScenario, DisasterRecoveryPlan
-from app.platform_resilience.backup import BackupManager
-from app.platform_resilience.restore import RestoreManager
-from app.platform_resilience.recovery import RecoveryManager, RecoveryPlan, RecoveryStatus
-from app.platform_resilience.regional import RegionalResilienceManager, RegionalStrategy
-from app.platform_resilience.chaos import ChaosExperimentManager
-from app.platform_resilience.runbooks import RunbookManager
-from app.platform_resilience.readiness import ProductionReadinessManager, ReadinessStatus
-from app.platform_resilience.verification import ResilienceVerificationManager
-from app.platform_resilience.governance import ResilienceGovernanceEngine
-from app.platform_resilience.risk import ResilienceRiskManager
-from app.platform_resilience.trust import ResilienceTrustEngine
-from app.platform_resilience.evidence import ResilienceEvidenceManager
-from app.platform_resilience.snapshots import ResilienceSnapshotManager
-from app.platform_resilience.learning import ResilienceLearningManager
+from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.analytics import ResilienceAnalyticsEngine
-from app.platform_resilience.observability import ResilienceMetricsCollector
+from app.platform_resilience.backpressure import BackpressureManager
+from app.platform_resilience.backup import BackupManager
 from app.platform_resilience.billing import ResilienceBillingTracker
+from app.platform_resilience.bulkheads import BulkheadManager
+from app.platform_resilience.capacity import CapacityManager
+from app.platform_resilience.chaos import ChaosExperimentManager
+from app.platform_resilience.circuit_breakers import CircuitBreakerManager
+from app.platform_resilience.degradation import DegradationLevel, GracefulDegradationManager
+from app.platform_resilience.dependencies import DependencyCriticality, DependencyManager, DependencyType
+from app.platform_resilience.disaster_recovery import DisasterRecoveryManager
+from app.platform_resilience.evidence import ResilienceEvidenceManager
+from app.platform_resilience.failover import FailoverManager
+from app.platform_resilience.governance import ResilienceGovernanceEngine
+from app.platform_resilience.learning import ResilienceLearningManager
+from app.platform_resilience.load_shedding import LoadSheddingManager
+from app.platform_resilience.observability import ResilienceMetricsCollector
+from app.platform_resilience.rate_limiting import RateLimitManager
+from app.platform_resilience.readiness import ProductionReadinessManager
+from app.platform_resilience.recovery import RecoveryManager
+from app.platform_resilience.regional import RegionalResilienceManager
 from app.platform_resilience.repositories import PlatformResilienceRepository
+from app.platform_resilience.restore import RestoreManager
+from app.platform_resilience.risk import ResilienceRiskManager
+from app.platform_resilience.runbooks import RunbookManager
+from app.platform_resilience.scaling import ScalingDirection, ScalingManager
+from app.platform_resilience.services import ResilienceServiceManager, ServiceCriticality
+from app.platform_resilience.snapshots import ResilienceSnapshotManager
+from app.platform_resilience.trust import ResilienceTrustEngine
+from app.platform_resilience.verification import ResilienceVerificationManager
 
 logger = logging.getLogger(__name__)
 

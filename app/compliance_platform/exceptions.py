@@ -3,6 +3,7 @@
 
 class ComplianceException(Exception):
     """Base exception for all compliance platform errors."""
+
     def __init__(self, message: str, tenant_id: str = "global", details: dict | None = None) -> None:
         super().__init__(message)
         self.message = message

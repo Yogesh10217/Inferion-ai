@@ -1,9 +1,10 @@
 """AI-Specific Threat Intelligence Subsystem (Phase 5.32)."""
 
+import uuid
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Dict, List
-from datetime import datetime, timezone
-import uuid
+
 from pydantic import BaseModel, Field
 
 

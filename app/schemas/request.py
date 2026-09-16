@@ -76,5 +76,3 @@ class InferenceRequest(BaseModel):
 
 class ChatCompletionRequest(InferenceRequest):
     """OpenAI-compatible chat completion request model."""
-
-    pass

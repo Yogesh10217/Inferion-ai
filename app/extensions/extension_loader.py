@@ -1,9 +1,9 @@
 """Extension Loader initializing manifests and runtime handlers."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict
+
 from app.extensions.extension import Extension, ExtensionManifest
-from app.extensions.exceptions import InvalidExtensionManifestException
 
 logger = logging.getLogger(__name__)
 

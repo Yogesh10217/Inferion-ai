@@ -1,6 +1,7 @@
 """Tenant-Scoped Repositories Subsystem (Phase 5.37)."""
 
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import CrossTenantResilienceAccessException
 
@@ -20,7 +21,7 @@ class PlatformResilienceRepository:
         item = self._storage.get(entity_id)
         if not item:
             return None
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, item["tenant_id"])
         except Exception:

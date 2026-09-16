@@ -1,13 +1,14 @@
 """Immutable Model Intelligence Snapshots (Phase 5.44)."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 logger = logging.getLogger(__name__)
 

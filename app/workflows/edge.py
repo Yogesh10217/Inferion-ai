@@ -2,7 +2,7 @@
 Workflow Edge Definition & Condition Evaluator
 """
 
-from typing import Optional, Dict, Any, Callable
+from typing import Any, Callable, Dict, Optional
 
 
 class Edge:

@@ -3,7 +3,8 @@ Cross-Phase Context Validation Engine.
 Validates end-to-end propagation and preservation of tenant_id, trace_id, correlation_id, causation_id, and evidence.
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
+
 from app.platform_hardening.models import (
     ContextPropagationResult,
     PlatformAuditFinding,

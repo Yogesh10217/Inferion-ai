@@ -46,9 +46,6 @@ class RoutingException(AppException):
         super().__init__(500, "routing_failed", message)
 
 
-
-
-
 class InferenceException(AppException):
     def __init__(self, message: str = "Inference failed"):
         super().__init__(500, "inference_failed", message)
@@ -74,7 +71,6 @@ ValidationError = ValidationException
 ProviderUnavailableError = ProviderUnavailableException
 
 
-
 class AppExceptionHandler:
     """Centralized exception handler for the API layer."""
 
@@ -85,8 +81,9 @@ class AppExceptionHandler:
 
 def register_exception_handlers(app: Any) -> None:
     """Register centralized exception handlers for the FastAPI application."""
-    from fastapi.exceptions import RequestValidationError
     import logging
+
+    from fastapi.exceptions import RequestValidationError
 
     logger = logging.getLogger("app")
 
@@ -123,4 +120,3 @@ def register_exception_handlers(app: Any) -> None:
                 }
             },
         )
-

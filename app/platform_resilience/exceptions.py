@@ -1,6 +1,5 @@
 """Domain Exceptions for Platform Resilience Subsystem (Phase 5.37)."""
 
-from typing import Optional
 from app.platform_contracts.exceptions import CrossTenantAccessException
 
 
@@ -14,7 +13,7 @@ class PlatformResilienceException(Exception):
 
 class CrossTenantResilienceAccessException(CrossTenantAccessException, PlatformResilienceException):
     """Raised when cross-tenant resilience resource access is attempted.
-    
+
     CRITICAL: Must leak ZERO metadata (no resource existence, metadata, region info, infrastructure IDs, timestamps, or topology).
     """
 

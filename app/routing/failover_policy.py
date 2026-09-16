@@ -8,6 +8,7 @@ from app.routing.provider_pool import ProviderInstance
 
 logger = get_logger("app.routing.failover")
 
+
 class FailoverPolicy:
     """Handles retry and failover logic for provider execution."""
 
@@ -16,8 +17,8 @@ class FailoverPolicy:
         self.max_retries = max_retries
 
     async def execute_with_failover(
-        self, 
-        provider_id: str, 
+        self,
+        provider_id: str,
         execute_fn: Callable[[ProviderInstance], Awaitable[Any]],
     ) -> Any:
         """
@@ -25,7 +26,7 @@ class FailoverPolicy:
         The execute_fn should raise an exception if it encounters a provider-level error.
         """
         last_exception = None
-        
+
         for attempt in range(self.max_retries + 1):
             try:
                 instance = self._load_balancer.get_instance(provider_id)
@@ -37,25 +38,25 @@ class FailoverPolicy:
 
             await instance.health.record_active()
             start_time = asyncio.get_running_loop().time()
-            
+
             try:
                 result = await execute_fn(instance)
-                
+
                 # Execution successful
                 latency_ms = (asyncio.get_running_loop().time() - start_time) * 1000
                 await instance.health.record_success(latency_ms)
                 return result
-                
+
             except Exception as exc:
                 last_exception = exc
                 logger.warning(f"Execution failed on instance {instance.instance_id} (attempt {attempt + 1}/{self.max_retries + 1}): {exc}")
                 await instance.health.record_failure()
-                
+
                 # Check if it's a fatal error that shouldn't be retried (e.g. invalid request format)
-                # For now, we assume all exceptions during execution are network/provider related for failover, 
+                # For now, we assume all exceptions during execution are network/provider related for failover,
                 # but in a real system we'd check if exc is retryable (like 503 vs 400).
                 # To be simple for Phase 2.3, we'll retry all exceptions.
-                
+
                 if attempt == self.max_retries:
                     raise exc
 

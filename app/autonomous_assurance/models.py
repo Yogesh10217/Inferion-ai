@@ -2,9 +2,8 @@
 Pure Python Domain Models for Autonomous Assurance Subsystem.
 """
 
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
-import uuid
+
 from pydantic import BaseModel, Field
 
 

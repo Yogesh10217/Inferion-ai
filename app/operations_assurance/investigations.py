@@ -1,13 +1,13 @@
 """Operational investigation lifecycle generating PlatformSnapshots upon conclusion."""
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class OperationalFinding(BaseModel):

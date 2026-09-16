@@ -168,8 +168,6 @@ class InfrastructureReadinessStatus(str, Enum):
     PRODUCTION_INFRASTRUCTURE_VALIDATED = "PRODUCTION_INFRASTRUCTURE_VALIDATED"
 
 
-
-
 @dataclass
 class DeploymentIdentity:
     application_version: str
@@ -444,5 +442,3 @@ class SmokeTestExecutionStatus(Enum):
     PASSED = "PASSED"
     FAILED = "FAILED"
     BLOCKED = "BLOCKED"
-
-

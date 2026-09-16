@@ -1,30 +1,28 @@
 """FastAPI REST API Router for Phase 5.52 Enterprise AI Decision Intelligence Platform."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Any, Dict, Optional
 
-from app.decision_intelligence.manager import DecisionIntelligenceManager
-from app.decision_intelligence.schemas import (
-    DecisionCreateRequest,
-    DecisionOptionCreateRequest,
-    DecisionStateTransitionRequest,
-    DecisionApprovalRequest,
-    DecisionSimulationRequest,
-    DecisionResponse,
-    DecisionOptionResponse,
-    DecisionRecommendationResponse,
-    DecisionSimulationResultResponse,
-    DecisionReproducibilityRecordResponse,
-)
+from fastapi import APIRouter, Depends, Header, HTTPException, status
+
+from app.decision_intelligence.decisions import DecisionLifecycleState, DecisionType
 from app.decision_intelligence.exceptions import (
-    DecisionIntelligenceException,
+    CrossTenantDecisionIntelligenceException,
     DecisionNotFoundException,
     InvalidDecisionStateTransitionException,
-    CrossTenantDecisionIntelligenceException,
-    HighRiskDecisionRequiresApprovalException,
 )
-from app.decision_intelligence.decisions import DecisionLifecycleState, DecisionType
+from app.decision_intelligence.manager import DecisionIntelligenceManager
+from app.decision_intelligence.schemas import (
+    DecisionApprovalRequest,
+    DecisionCreateRequest,
+    DecisionOptionCreateRequest,
+    DecisionOptionResponse,
+    DecisionReproducibilityRecordResponse,
+    DecisionResponse,
+    DecisionSimulationRequest,
+    DecisionSimulationResultResponse,
+    DecisionStateTransitionRequest,
+)
 
 logger = logging.getLogger(__name__)
 

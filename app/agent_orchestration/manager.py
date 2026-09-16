@@ -1,47 +1,45 @@
 """Master Agent Orchestration Manager (Phase 5.36)."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.delegation import DelegationTarget, DelegationRequest
+from app.agent_orchestration.agents import AgentManager
+from app.agent_orchestration.analytics import AgentAnalyticsEngine
+from app.agent_orchestration.autonomy import AgentAutonomyManager
+from app.agent_orchestration.billing import AgentBillingTracker, AgentCostDimension
+from app.agent_orchestration.capabilities import AgentCapabilityManager, CapabilityScope
+from app.agent_orchestration.collaboration import AgentCollaborationManager
+from app.agent_orchestration.context import AgentContextManager
+from app.agent_orchestration.coordination import AgentCoordinationManager
+from app.agent_orchestration.delegation import AgentDelegationManager
+from app.agent_orchestration.evidence import AgentEvidenceManager
 from app.agent_orchestration.exceptions import (
-    AgentNotFoundException,
-    CrossTenantAgentAccessException,
-    AgentCapabilityViolationException,
     AgentAutonomyViolationException,
-    AgentToolAccessDeniedException,
-    AgentPolicyViolationException,
-    AgentExecutionBlockedException,
     HighRiskAgentActionRequiresApprovalException,
 )
-from app.agent_orchestration.agents import AgentManager, EnterpriseAgent, AgentType, AgentRole, AgentStatus
-from app.agent_orchestration.capabilities import AgentCapabilityManager, CapabilityScope
-from app.agent_orchestration.autonomy import AgentAutonomyManager, AgentAutonomyPolicy, AgentAutonomyLevel, AutonomyBoundary
-from app.agent_orchestration.tasks import AgentTaskManager, AgentTask, AgentTaskType, AgentTaskPriority, AgentTaskStatus, AgentTaskResult
-from app.agent_orchestration.planning import AgentPlanningEngine, AgentPlan, PlanStep
-from app.agent_orchestration.tool_governance import AgentToolGovernanceManager, AgentTool, AgentToolType, ToolInvocation
-from app.agent_orchestration.context import AgentContextManager, AgentContext
-from app.agent_orchestration.collaboration import AgentCollaborationManager, AgentParticipant, CollaborationType, AgentCollaborationSession
-from app.agent_orchestration.coordination import AgentCoordinationManager, AgentCoordinationPlan, CoordinationStrategy, CoordinationStep
-from app.agent_orchestration.routing import AgentRouter, AgentRoutingRequest, RoutingDecision, RoutingStrategy
-from app.agent_orchestration.governance import AgentGovernanceEngine, AgentGovernanceDecision, AgentGovernanceStatus
-from app.agent_orchestration.execution import AgentExecutionManager, AgentExecution, AgentExecutionStatus
-from app.agent_orchestration.delegation import AgentDelegationManager
-from app.agent_orchestration.runtime import AgentRuntimeManager, AgentRuntimeSession
-from app.agent_orchestration.safeguards import AgentSafeguardManager, SafeguardType
-from app.agent_orchestration.verification import AgentVerificationManager, AgentVerification
-from app.agent_orchestration.recovery import AgentRecoveryManager, AgentRecoveryPlan
-from app.agent_orchestration.failures import AgentFailureAnalyzer, AgentFailureType, AgentFailureSeverity
-from app.agent_orchestration.traces import AgentTraceManager, AgentTrace
-from app.agent_orchestration.evidence import AgentEvidenceManager, AgentEvidenceBundle
-from app.agent_orchestration.trust import AgentTrustEngine
-from app.agent_orchestration.risk import AgentRiskManager, AgentRiskAssessment
-from app.agent_orchestration.learning import AgentLearningManager, AgentLearningRecord
-from app.agent_orchestration.analytics import AgentAnalyticsEngine, AgentAnalyticsReport
+from app.agent_orchestration.execution import AgentExecutionManager
+from app.agent_orchestration.failures import AgentFailureAnalyzer
+from app.agent_orchestration.governance import AgentGovernanceEngine, AgentGovernanceStatus
+from app.agent_orchestration.learning import AgentLearningManager
 from app.agent_orchestration.observability import AgentMetricsCollector
-from app.agent_orchestration.billing import AgentBillingTracker, AgentCostDimension
+from app.agent_orchestration.planning import AgentPlanningEngine
+from app.agent_orchestration.recovery import AgentRecoveryManager
+from app.agent_orchestration.risk import AgentRiskManager
+from app.agent_orchestration.routing import AgentRouter, AgentRoutingRequest, RoutingStrategy
+from app.agent_orchestration.runtime import AgentRuntimeManager
+from app.agent_orchestration.safeguards import AgentSafeguardManager
+from app.agent_orchestration.tasks import (
+    AgentTaskManager,
+    AgentTaskPriority,
+    AgentTaskResult,
+    AgentTaskStatus,
+    AgentTaskType,
+)
+from app.agent_orchestration.tool_governance import AgentToolGovernanceManager
+from app.agent_orchestration.traces import AgentTraceManager
+from app.agent_orchestration.trust import AgentTrustEngine
+from app.agent_orchestration.verification import AgentVerificationManager
+from app.platform_contracts.tenant import TenantAccessGuard
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +49,7 @@ class AgentOrchestrationManager:
 
     def __init__(self) -> None:
         self.tenant_guard = TenantAccessGuard()
-        
+
         # Initialize internal subsystem managers
         self.agent_manager = AgentManager(tenant_guard=self.tenant_guard)
         self.capability_manager = AgentCapabilityManager(tenant_guard=self.tenant_guard)

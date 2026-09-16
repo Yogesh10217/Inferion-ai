@@ -1,13 +1,13 @@
 """Advisory Recommendation Engine for Cross-Phase Actions (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List, Optional
 import uuid
+from typing import List, Optional
 
 from app.platform_integration.models import (
+    CrossPhaseRecommendation,
     IntegrationPlatform,
     RiskLevel,
-    CrossPhaseRecommendation,
     TraceContext,
 )
 

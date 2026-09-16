@@ -1,15 +1,22 @@
 """Agent Evidence References Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.evidence import EvidenceReference, EvidenceMetadata, EvidenceIntegrity, EvidenceStrength, EvidenceSourceReference
-from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
+from app.platform_contracts.evidence import (
+    EvidenceIntegrity,
+    EvidenceMetadata,
+    EvidenceReference,
+    EvidenceSourceReference,
+    EvidenceStrength,
+)
+from app.platform_contracts.fingerprinting import FingerprintGenerator
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentEvidenceIntegrity(str, Enum):
@@ -89,7 +96,7 @@ class AgentEvidenceManager:
         bundle = self._bundles.get(bundle_id)
         if not bundle:
             return AgentEvidenceBundle(bundle_id=bundle_id, tenant_id=tenant_id, trace_id="unknown")
-            
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, bundle.tenant_id)
         except Exception:

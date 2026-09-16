@@ -1,10 +1,11 @@
 """Automatic & Deterministic Data Classification with Strict Monotonicity."""
 
-from enum import Enum, IntEnum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import re
 import uuid
+from datetime import datetime, timezone
+from enum import Enum, IntEnum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.data_governance.exceptions import DataClassificationViolationException

@@ -11,14 +11,17 @@ from app.deployment.models import (
     DeploymentDecision,
     DeploymentReleaseStatus,
     DeploymentReleaseValidationResult,
-    EnvironmentConfig,
     MigrationSafetyStatus,
     PlatformReadinessClassification,
 )
 from app.deployment.observability_configuration import DeploymentObservabilityValidator
-from app.deployment.runtime_validation import RuntimeConfigurationValidator, ValidationRun, ValidationStatus, ValidationType
+from app.deployment.runtime_validation import (
+    RuntimeConfigurationValidator,
+    ValidationRun,
+    ValidationStatus,
+    ValidationType,
+)
 from app.deployment.service_registry import PlatformServiceRegistry
-
 
 
 class DeploymentReleaseValidator:
@@ -53,7 +56,6 @@ class DeploymentReleaseValidator:
                 failed_checks=["configuration_safety_failed"],
                 blocking_reasons=[err_msg],
             )
-
 
         # 1. Runtime Configuration Check
         val_res = RuntimeConfigurationValidator.validate(config)
@@ -198,5 +200,3 @@ class DeploymentReleaseValidator:
             blocking_reasons=blocking_reasons,
             migration_safety_status=migration_status,
         )
-
-

@@ -1,9 +1,8 @@
 """Prometheus metrics using ai_operations_* naming conventions."""
 
-from typing import Dict, Any, Optional
 
 try:
-    from prometheus_client import Counter, Gauge, Histogram, Summary
+    from prometheus_client import Counter, Gauge
 
     AI_OPERATIONS_SERVICES_TOTAL = Gauge(
         "ai_operations_services_total",

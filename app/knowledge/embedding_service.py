@@ -1,15 +1,19 @@
 import asyncio
 import hashlib
 import logging
-from typing import List, Protocol, Dict, Optional, Any
-from app.knowledge.pipeline import PipelineStage, DocumentContext
+from typing import List, Optional, Protocol
+
+from app.knowledge.pipeline import DocumentContext, PipelineStage
 
 logger = logging.getLogger(__name__)
 
+
 class ProviderFactory(Protocol):
     """Protocol for embedding providers."""
+
     async def get_embeddings(self, texts: List[str]) -> List[List[float]]:
         ...
+
 
 class OpenAIProvider:
     def __init__(self, api_key: str, model: str = "text-embedding-ada-002"):
@@ -20,6 +24,7 @@ class OpenAIProvider:
     async def get_embeddings(self, texts: List[str]) -> List[List[float]]:
         response = await self.client.embeddings.create(input=texts, model=self.model)
         return [data.embedding for data in response.data]
+
 
 class OllamaProvider:
     def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama2"):
@@ -36,6 +41,7 @@ class OllamaProvider:
             embeddings.append(response.json()["embedding"])
         return embeddings
 
+
 class CohereProvider:
     def __init__(self, api_key: str, model: str = "embed-english-v3.0"):
         import cohere
@@ -46,19 +52,20 @@ class CohereProvider:
         response = await self.client.embed(texts=texts, model=self.model, input_type="search_document")
         return response.embeddings
 
+
 class EmbeddingCache:
     def __init__(self, max_size: int = 10000):
         from collections import OrderedDict
         self.max_size = max_size
         self.cache: OrderedDict[str, List[float]] = OrderedDict()
-    
+
     def get(self, text: str) -> Optional[List[float]]:
         key = hashlib.sha256(text.encode()).hexdigest()
         if key in self.cache:
             self.cache.move_to_end(key)
             return self.cache[key]
         return None
-    
+
     def set(self, text: str, embedding: List[float]):
         key = hashlib.sha256(text.encode()).hexdigest()
         if key in self.cache:
@@ -67,9 +74,10 @@ class EmbeddingCache:
         if len(self.cache) > self.max_size:
             self.cache.popitem(last=False)
 
+
 class EmbeddingStage(PipelineStage):
     """Generates embeddings for chunks using a ProviderFactory with batching, retries, and caching."""
-    
+
     def __init__(self, provider_factory: ProviderFactory, batch_size: int = 10, max_retries: int = 3, base_backoff: float = 1.0, rate_limit_delay: float = 0.1):
         self.provider_factory = provider_factory
         self.batch_size = batch_size
@@ -79,8 +87,9 @@ class EmbeddingStage(PipelineStage):
         self.cache = EmbeddingCache()
 
     async def _get_embeddings_with_retry(self, texts: List[str]) -> List[List[float]]:
-        from app.monitoring.metrics import knowledge_embedding_latency_seconds
         import time
+
+        from app.monitoring.metrics import knowledge_embedding_latency_seconds
         start_time = time.time()
         try:
             for attempt in range(self.max_retries):
@@ -120,9 +129,13 @@ class EmbeddingStage(PipelineStage):
         texts_to_embed = []
         texts_to_embed_indices = []
 
-        from app.monitoring.metrics import knowledge_cache_hits_total, knowledge_cache_misses_total, embedding_tokens_total
         from app.billing.tracker import tracker
-        
+        from app.monitoring.metrics import (
+            embedding_tokens_total,
+            knowledge_cache_hits_total,
+            knowledge_cache_misses_total,
+        )
+
         cache_hits = 0
         cache_misses = 0
         tokens_to_embed = 0
@@ -137,7 +150,7 @@ class EmbeddingStage(PipelineStage):
                 cache_misses += 1
                 texts_to_embed.append(text)
                 texts_to_embed_indices.append(text_to_idx[text])
-                
+
                 # Retrieve token count from the first chunk that has this text
                 first_idx = text_to_idx[text][0]
                 token_count = context.chunks[first_idx].get("token_count", len(text) // 4)
@@ -145,15 +158,15 @@ class EmbeddingStage(PipelineStage):
 
         knowledge_cache_hits_total.inc(cache_hits)
         knowledge_cache_misses_total.inc(cache_misses)
-        
+
         if tokens_to_embed > 0:
             embedding_tokens_total.inc(tokens_to_embed)
             tracker.track_embedding_tokens(tokens_to_embed)
 
         # Batching logic for missing embeddings
         for i in range(0, len(texts_to_embed), self.batch_size):
-            batch = texts_to_embed[i:i+self.batch_size]
-            batch_indices = texts_to_embed_indices[i:i+self.batch_size]
+            batch = texts_to_embed[i:i + self.batch_size]
+            batch_indices = texts_to_embed_indices[i:i + self.batch_size]
             try:
                 batch_embeddings = await self._get_embeddings_with_retry(batch)
                 for text, indices, emb in zip(batch, batch_indices, batch_embeddings):
@@ -161,13 +174,13 @@ class EmbeddingStage(PipelineStage):
                     for idx in indices:
                         all_embeddings[idx] = emb
             except Exception as e:
-                context.errors.append(f"Failed to generate embeddings for batch {i//self.batch_size}: {e}")
+                context.errors.append(f"Failed to generate embeddings for batch {i // self.batch_size}: {e}")
                 return context
-                
+
         context.embeddings = all_embeddings
-        
+
         # Assign embeddings back to chunks
         for chunk, embedding in zip(context.chunks, context.embeddings):
             chunk["embedding"] = embedding
-            
+
         return context

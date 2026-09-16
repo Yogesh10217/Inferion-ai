@@ -1,26 +1,20 @@
 """Thread-safe tenant-isolated repositories for Reliability Intelligence (Phase 5.55)."""
 
 import threading
-from typing import Dict, Any, List, Optional
-from app.reliability_intelligence.models import (
-    ServiceHealthAssessment,
-    ReliabilityAssessment,
-    ServiceLevelObjective,
-    ErrorBudget,
-    FailurePrediction,
-    FailurePropagationPath,
-    ResilienceAssessment,
-    DegradationPlan,
-    RecoveryPlan,
-    ReliabilityRecommendation,
-    ReliabilityEvidenceBundle,
-    ReliabilitySnapshot,
-)
+from typing import Dict, List, Optional
+
 from app.reliability_intelligence.exceptions import (
     CrossTenantReliabilityIntelligenceException,
-    ServiceHealthNotFoundException,
-    ReliabilityAssessmentNotFoundException,
     FailurePredictionNotFoundException,
+    ReliabilityAssessmentNotFoundException,
+    ServiceHealthNotFoundException,
+)
+from app.reliability_intelligence.models import (
+    FailurePrediction,
+    ReliabilityAssessment,
+    ReliabilityEvidenceBundle,
+    ServiceHealthAssessment,
+    ServiceLevelObjective,
 )
 
 

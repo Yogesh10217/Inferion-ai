@@ -1,7 +1,6 @@
 """Security Assurance Observability & Prometheus Metrics Engine."""
 
 import logging
-from typing import Dict, Any
 
 try:
     from prometheus_client import Counter, Gauge

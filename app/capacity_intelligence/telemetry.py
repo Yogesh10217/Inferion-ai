@@ -1,9 +1,8 @@
 """Telemetry ingestion engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any, List
+
 from app.capacity_intelligence.models import CapacityTelemetry
-from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 logger = logging.getLogger(__name__)
 

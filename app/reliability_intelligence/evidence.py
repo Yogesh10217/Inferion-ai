@@ -1,13 +1,14 @@
 """Immutable reliability evidence bundle manager (Phase 5.55)."""
 
-import logging
 import hashlib
 import json
-from typing import Dict, Any, List, Optional
-from app.reliability_intelligence.models import ReliabilityEvidenceBundle
-from app.reliability_intelligence.exceptions import ImmutableReliabilityRecordException
-from app.reliability_intelligence.repositories import ReliabilityEvidenceRepository
+import logging
+from typing import Any, Dict, Optional
+
 from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.reliability_intelligence.exceptions import ImmutableReliabilityRecordException
+from app.reliability_intelligence.models import ReliabilityEvidenceBundle
+from app.reliability_intelligence.repositories import ReliabilityEvidenceRepository
 
 logger = logging.getLogger(__name__)
 

@@ -2,9 +2,10 @@
 High-Level Memory Manager Orchestrator Subsystem
 """
 
-from typing import Dict, Any, List, Optional
-from app.memory.memory_service import MemoryService
+from typing import Any, Dict, List, Optional
+
 from app.memory.memory_context import MemoryContext
+from app.memory.memory_service import MemoryService
 from app.memory.memory_store import MemoryItemRecord
 
 

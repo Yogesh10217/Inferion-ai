@@ -2,9 +2,10 @@
 Checkpoint Manager for State Snapshots & Failure Recovery
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.autonomy.exceptions import CheckpointError
@@ -28,7 +29,7 @@ class CheckpointManager:
         self._checkpoints: Dict[str, List[ExecutionSnapshot]] = {}
 
     def save_checkpoint(self, execution_id: str, step_number: int, state_data: Dict[str, Any], tenant_id: str = "default_tenant") -> ExecutionSnapshot:
-        cid = f"chk_{execution_id}_{step_number}_{int(time.time()*1000)}"
+        cid = f"chk_{execution_id}_{step_number}_{int(time.time() * 1000)}"
         snapshot = ExecutionSnapshot(
             checkpoint_id=cid,
             execution_id=execution_id,

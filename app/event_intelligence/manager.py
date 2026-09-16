@@ -1,32 +1,32 @@
 """Master EventIntelligenceManager Orchestrator Subsystem (Phase 5.34)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
 
-from app.event_intelligence.events import EventManager, EnterpriseEvent, EventType, EventCategory, EventSeverity
-from app.event_intelligence.sources import EventSourceManager, EventSourceType
-from app.event_intelligence.normalization import EventNormalizer, NormalizedEvent
-from app.event_intelligence.classification import EventClassifier, EventClassification
-from app.event_intelligence.deduplication import EventDeduplicator, EventDeduplicationResult
-from app.event_intelligence.correlation import EventCorrelationManager, CorrelationGroup, CorrelationType
-from app.event_intelligence.causality import EventCausalityAnalyzer, CausalityAnalysis
-from app.event_intelligence.context import EventContextManager, EventContext
-from app.event_intelligence.impact import EventImpactAnalyzer, EventImpactAssessment
-from app.event_intelligence.patterns import EventPatternDetector, EventPattern
-from app.event_intelligence.automation import AutomationManager, AutomationPlan, AutomationAction
-from app.event_intelligence.rules import EventRuleManager, EventRule
-from app.event_intelligence.prioritization import EventPrioritizationEngine, EventPrioritizationResult
-from app.event_intelligence.governance import EventGovernanceEngine, GovernanceDecision
-from app.event_intelligence.response import EventResponseManager, EventResponsePlan, EventResponseAction, ResponseTarget
-from app.event_intelligence.delegation import EventDelegationManager, EventDelegationPlan
-from app.event_intelligence.resolution import EventResolutionManager, EventResolution, EventResolutionStatus
-from app.event_intelligence.investigations import EventInvestigationManager, EventInvestigation
-from app.event_intelligence.learning import EventLearningManager, EventLearningRecord
-from app.event_intelligence.trust import EventTrustEngine, EventTrustScore
-from app.event_intelligence.analytics import EventAnalyticsEngine, PlatformReport
-from app.event_intelligence.observability import EventMetricsCollector
+from app.event_intelligence.analytics import EventAnalyticsEngine
+from app.event_intelligence.automation import AutomationAction, AutomationManager
 from app.event_intelligence.billing import EventBillingTracker
+from app.event_intelligence.causality import EventCausalityAnalyzer
+from app.event_intelligence.classification import EventClassifier
+from app.event_intelligence.context import EventContextManager
+from app.event_intelligence.correlation import CorrelationType, EventCorrelationManager
+from app.event_intelligence.deduplication import EventDeduplicator
+from app.event_intelligence.delegation import EventDelegationManager
+from app.event_intelligence.events import EventManager, EventSeverity, EventType
+from app.event_intelligence.governance import EventGovernanceEngine
+from app.event_intelligence.impact import EventImpactAnalyzer
+from app.event_intelligence.investigations import EventInvestigationManager
+from app.event_intelligence.learning import EventLearningManager
+from app.event_intelligence.normalization import EventNormalizer
+from app.event_intelligence.observability import EventMetricsCollector
+from app.event_intelligence.patterns import EventPatternDetector
+from app.event_intelligence.prioritization import EventPrioritizationEngine
 from app.event_intelligence.repositories import EventRepository
+from app.event_intelligence.resolution import EventResolutionManager, EventResolutionStatus
+from app.event_intelligence.response import EventResponseAction, EventResponseManager, ResponseTarget
+from app.event_intelligence.rules import EventRuleManager
+from app.event_intelligence.sources import EventSourceManager, EventSourceType
+from app.event_intelligence.trust import EventTrustEngine
 from app.platform_contracts.delegation import DelegationTarget
 from app.platform_contracts.governance import GovernanceDecisionStatus
 

@@ -1,9 +1,10 @@
 """Security Asset Definitions & Data Models."""
 
-from enum import Enum
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
 

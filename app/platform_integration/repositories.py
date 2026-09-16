@@ -1,18 +1,15 @@
 """Thread-Safe, Tenant-Isolated Repositories for Phase 5.58."""
 
 import threading
-from typing import Dict, Any, List, Optional
+from typing import Dict, List, Optional
 
+from app.platform_integration.context.builder import PlatformIntegrationContext
+from app.platform_integration.exceptions import CrossTenantPlatformIntegrationException
+from app.platform_integration.investigation.engine import CrossPhaseInvestigationResult
 from app.platform_integration.models import (
-    CrossPhaseSignal,
-    CrossPhaseFinding,
-    CrossPhaseAssessment,
     CrossPhaseCorrelation,
     CrossPhaseRecommendation,
 )
-from app.platform_integration.context.builder import PlatformIntegrationContext
-from app.platform_integration.investigation.engine import CrossPhaseInvestigationResult
-from app.platform_integration.exceptions import CrossTenantPlatformIntegrationException
 
 
 class IntegrationContextRepository:

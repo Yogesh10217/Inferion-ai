@@ -1,12 +1,13 @@
 """Automated Rollback & Recovery Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.mlops.deployment import DeploymentManager, DeploymentStatus
+from app.mlops.deployment import DeploymentManager
 from app.mlops.registry import AIAssetRegistry
 
 logger = logging.getLogger(__name__)

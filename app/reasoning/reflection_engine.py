@@ -2,9 +2,10 @@
 Reflection & Self-Correction Engine
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ class ReflectionEngine:
             insight = f"Detected {len(failures)} step failures during execution episode '{episode_id}'"
             rec = "Add automatic retry backoff and fallback tool selection for transient errors."
             lesson = LessonLearned(
-                lesson_id=f"lesson_{int(time.time()*1000)}_f",
+                lesson_id=f"lesson_{int(time.time() * 1000)}_f",
                 episode_id=episode_id,
                 category="failure",
                 insight=insight,
@@ -50,7 +51,7 @@ class ReflectionEngine:
             insight = f"Successfully executed {len(successes)} steps in episode '{episode_id}'"
             rec = "Cache tool responses for recurring queries to optimize execution duration."
             lesson = LessonLearned(
-                lesson_id=f"lesson_{int(time.time()*1000)}_s",
+                lesson_id=f"lesson_{int(time.time() * 1000)}_s",
                 episode_id=episode_id,
                 category="success",
                 insight=insight,

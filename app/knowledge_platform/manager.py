@@ -1,27 +1,26 @@
 """Master KnowledgePlatformManager Orchestrator Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
 
-from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeItem, KnowledgeType, KnowledgeStatus
-from app.knowledge_platform.retrieval import RetrievalPipeline, RetrievalRequest, RetrievalResult, RetrievalStrategy
-from app.knowledge_platform.context import ContextBuilder, ContextWindow, ContextStrategy
-from app.knowledge_platform.compression import ContextCompressor, CompressionResult, CompressionStrategy
-from app.knowledge_platform.memory import MemoryManager, Memory, MemoryType, MemoryScope
-from app.knowledge_platform.knowledge_graph import KnowledgeGraphManager, KnowledgeNode, KnowledgeEdge, KnowledgeNodeType, KnowledgeRelationship
-from app.knowledge_platform.freshness import FreshnessEvaluator, StalenessReason
-from app.knowledge_platform.conflicts import KnowledgeConflictManager, KnowledgeConflict, ConflictType, ConflictResolutionStrategy
-from app.knowledge_platform.provenance import ProvenanceManager, ProvenanceChain
-from app.knowledge_platform.trust import KnowledgeTrustEngine, KnowledgeTrustScore
-from app.knowledge_platform.validation import KnowledgeValidationEngine, KnowledgeValidationResult
-from app.knowledge_platform.learning import KnowledgeLearningEngine, KnowledgeFeedback, KnowledgeFeedbackType
-from app.knowledge_platform.governance import KnowledgeGovernanceEngine, KnowledgeAccessDecision
 from app.knowledge_platform.agent_integration import AgentKnowledgeAdapter
-from app.knowledge_platform.workflow_integration import WorkflowKnowledgeAdapter
-from app.knowledge_platform.orchestration_integration import OrchestrationKnowledgeAdapter
 from app.knowledge_platform.analytics import KnowledgeAnalyticsEngine
-from app.knowledge_platform.observability import KnowledgeMetricsCollector
 from app.knowledge_platform.billing import KnowledgeBillingTracker
+from app.knowledge_platform.compression import ContextCompressor
+from app.knowledge_platform.conflicts import KnowledgeConflictManager
+from app.knowledge_platform.context import ContextBuilder
+from app.knowledge_platform.freshness import FreshnessEvaluator
+from app.knowledge_platform.governance import KnowledgeGovernanceEngine
+from app.knowledge_platform.knowledge import KnowledgeItem, KnowledgeManager, KnowledgeType
+from app.knowledge_platform.knowledge_graph import KnowledgeGraphManager
+from app.knowledge_platform.learning import KnowledgeLearningEngine
+from app.knowledge_platform.memory import MemoryManager
+from app.knowledge_platform.observability import KnowledgeMetricsCollector
+from app.knowledge_platform.orchestration_integration import OrchestrationKnowledgeAdapter
+from app.knowledge_platform.provenance import ProvenanceManager
+from app.knowledge_platform.retrieval import RetrievalPipeline
+from app.knowledge_platform.trust import KnowledgeTrustEngine
+from app.knowledge_platform.validation import KnowledgeValidationEngine
+from app.knowledge_platform.workflow_integration import WorkflowKnowledgeAdapter
 
 logger = logging.getLogger(__name__)
 

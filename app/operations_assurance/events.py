@@ -1,13 +1,17 @@
 """Operational event intelligence integrating with platform event primitives without duplicating ingestion engines."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, OperationalEventNotFoundException
 from app.event_intelligence.manager import EventIntelligenceManager
+from app.operations_assurance.exceptions import (
+    CrossTenantOperationsAssuranceException,
+    OperationalEventNotFoundException,
+)
 
 
 class OperationalEventType(str, Enum):

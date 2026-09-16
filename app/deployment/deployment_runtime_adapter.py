@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import os
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from app.deployment.deployment_target import DeploymentTarget
-from app.deployment.models import DeploymentTargetStatus, PlatformReadinessClassification
+from app.deployment.models import PlatformReadinessClassification
 from app.deployment.secrets import SecretsSanitizer
 
 

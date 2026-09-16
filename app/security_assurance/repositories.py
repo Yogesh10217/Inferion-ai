@@ -1,6 +1,6 @@
 """Repositories for Security Assurance Persistence."""
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, Optional
 
 
 class SecurityAssuranceRepository:

@@ -1,14 +1,14 @@
 """Agent Trust Evaluation Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-import uuid
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
 from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence, TrustDimension
-from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
 
 
 class AgentTrustDimension(str, Enum):

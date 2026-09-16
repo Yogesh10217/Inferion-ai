@@ -5,16 +5,16 @@ Evaluates governance requirements for unified intelligence operations, enforcing
 raising HighRiskUnifiedActionRequiresApprovalException for unapproved high-risk actions.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from app.unified_intelligence.coordination import CoordinationPlan
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
+    HighRiskUnifiedActionRequiresApprovalException,
     InvalidUnifiedIntelligenceInputException,
-    HighRiskUnifiedActionRequiresApprovalException
 )
-from app.unified_intelligence.coordination import CoordinationPlan
 from app.unified_intelligence.recommendations import UnifiedRecommendation
 
 
@@ -22,6 +22,7 @@ class GovernanceEvaluationResult:
     """
     Result of a governance policy evaluation.
     """
+
     def __init__(
         self,
         evaluation_id: str,
@@ -59,6 +60,7 @@ class GovernancePolicyEvaluatorEngine:
     """
     Enforces continuous enterprise governance policies over cross-domain intelligence decisions and delegation.
     """
+
     def __init__(self):
         pass
 

@@ -2,11 +2,12 @@
 Human Approval Workflow Engine
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, List, Optional
+
+from app.approvals.approval_policies import RiskLevel
 from app.approvals.approval_request import ApprovalRequest, ApprovalStatus
-from app.approvals.approval_policies import RiskLevel, ApprovalPolicy
 
 logger = logging.getLogger(__name__)
 

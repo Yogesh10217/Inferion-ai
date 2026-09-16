@@ -1,5 +1,6 @@
 import contextvars
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
+
 from .trace_context import SpanContext
 
 # ContextVar holding active SpanContext across async tasks

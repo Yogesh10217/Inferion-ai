@@ -3,10 +3,11 @@ Autonomous Verification Engine Subsystem.
 Verifies post-delegation outcomes, operational health, security posture, and decision alignment.
 """
 
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.autonomous_assurance.exceptions import DelegationVerificationException

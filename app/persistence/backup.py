@@ -1,10 +1,11 @@
 """Database & System Backup Abstraction with Verification & Restore Metrics."""
 
-import time
 import logging
+import time
 import uuid
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -56,7 +57,7 @@ class BackupManager:
     def get_backup(self, backup_id: str) -> Optional[BackupMetadata]:
         return self._backups.get(backup_id)
 
-    def list_backups() -> List[BackupMetadata]:
+    def list_backups(self) -> List[BackupMetadata]:
         return list(self._backups.values())
 
 

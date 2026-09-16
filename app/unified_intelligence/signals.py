@@ -1,15 +1,16 @@
 """Sanitized Cross-Domain Unified Intelligence Signals for Phase 5.51 Enterprise AI Unified Intelligence."""
 
 import logging
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.platform_contracts.redaction import SensitiveDataSanitizer
 from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.normalization_contracts import NormalizedSignal
-from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 logger = logging.getLogger(__name__)
 

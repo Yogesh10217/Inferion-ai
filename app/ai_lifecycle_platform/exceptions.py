@@ -3,7 +3,6 @@
 
 class AILifecycleException(Exception):
     """Base exception for all AI Lifecycle Platform errors."""
-    pass
 
 
 class CrossTenantLifecycleAccessException(AILifecycleException):

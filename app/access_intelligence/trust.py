@@ -1,13 +1,15 @@
 """Access Trust Engine (Phase 5.39)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceException
-from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence, TrustDimension as GenericTrustDimension
+from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence
+from app.platform_contracts.trust import TrustDimension as GenericTrustDimension
 
 
 class AccessTrustDimension(str, Enum):

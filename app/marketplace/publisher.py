@@ -1,9 +1,10 @@
 """Publisher entity & reputation management."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.marketplace.exceptions import PublisherNotFoundException

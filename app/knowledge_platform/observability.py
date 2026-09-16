@@ -1,10 +1,9 @@
 """Prometheus Metrics Collector for Knowledge Platform."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Optional
 
 from app.observability.metrics import ObservabilityMetrics
-
 
 logger = logging.getLogger(__name__)
 
@@ -20,4 +19,3 @@ class KnowledgeMetricsCollector:
 
     def record_context_tokens(self, tenant_id: str, tokens: int) -> None:
         logger.info(f"[KNOWLEDGE METRICS] Recorded context tokens for tenant '{tenant_id}': tokens={tokens}")
-

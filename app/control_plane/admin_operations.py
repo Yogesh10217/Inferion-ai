@@ -1,14 +1,15 @@
 """Controlled Administrative Operations with Emergency Stop & Approval Requirements."""
 
 import logging
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.control_plane.exceptions import ApprovalRequiredException, PlatformOperationException
 from app.approvals.approval_engine import ApprovalEngine
 from app.approvals.approval_policies import RiskLevel
+from app.control_plane.exceptions import ApprovalRequiredException
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,6 @@ HIGH_RISK_OPERATIONS = {
     "revoke_all_credentials",
     "rollback_production_config",
 }
-
 
 
 class OperationResult(BaseModel):

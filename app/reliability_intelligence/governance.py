@@ -1,9 +1,10 @@
 """Reliability governance engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any
-from app.reliability_intelligence.models import GovernanceOutcome
+from typing import Any, Dict
+
 from app.reliability_intelligence.exceptions import HighRiskReliabilityActionRequiresApprovalException
+from app.reliability_intelligence.models import GovernanceOutcome
 
 logger = logging.getLogger(__name__)
 

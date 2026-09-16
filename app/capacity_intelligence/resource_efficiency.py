@@ -1,6 +1,7 @@
 """Resource efficiency engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
+
 from app.capacity_intelligence.models import ResourceEfficiencyAssessment
 
 logger = logging.getLogger(__name__)

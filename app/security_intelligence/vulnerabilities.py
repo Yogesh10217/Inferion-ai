@@ -1,13 +1,14 @@
 """Vulnerability Intelligence Subsystem (Phase 5.32)."""
 
+import uuid
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Dict, Optional
-from datetime import datetime, timezone
-import uuid
+
 from pydantic import BaseModel, Field
 
-from app.security_intelligence.exceptions import VulnerabilityNotFoundException, CrossTenantSecurityAccessException
 from app.platform_contracts.lifecycle import LifecycleMachine, LifecycleTransition
+from app.security_intelligence.exceptions import CrossTenantSecurityAccessException, VulnerabilityNotFoundException
 
 
 class VulnerabilitySeverity(str, Enum):

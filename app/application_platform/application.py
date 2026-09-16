@@ -10,10 +10,11 @@ Enforces:
 import hashlib
 import json
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.application_platform.exceptions import (
@@ -74,7 +75,6 @@ VALID_TRANSITIONS: Dict[ApplicationStatus, List[ApplicationStatus]] = {
     ApplicationStatus.RETIRED: [ApplicationStatus.ARCHIVED],
     ApplicationStatus.ARCHIVED: [],
 }
-
 
 
 class ApplicationConfiguration(BaseModel):
@@ -225,7 +225,7 @@ class ApplicationRegistry:
         )
         ver.version_fingerprint = ver.compute_fingerprint()
         saved = self.repository.save_version(ver.model_dump(mode="json"))
-        
+
         # Link current version if none exists
         if not app.current_version_id:
             app.current_version_id = ver.version_id

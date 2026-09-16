@@ -1,8 +1,9 @@
 """Cross-Domain Risk Propagation Engine for Phase 5.51 Enterprise AI Unified Intelligence."""
 
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Tuple
+
 from pydantic import BaseModel, Field
 
 from app.unified_intelligence.domains import IntelligenceDomain

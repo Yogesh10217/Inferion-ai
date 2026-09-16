@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
 from typing import List, Optional
 
-from app.core.container import ServiceContainer
+from fastapi import APIRouter, Depends, HTTPException, Request
+
 from app.api.dependencies import get_container
-from app.billing.schemas import BudgetOut, BudgetCreate, BudgetUpdate
 from app.auth.middleware import require_roles
+from app.billing.schemas import BudgetCreate, BudgetOut
+from app.core.container import ServiceContainer
 
 router = APIRouter(prefix="/budgets", tags=["Billing Budgets"])
+
 
 @router.get("", response_model=List[BudgetOut])
 @require_roles(["admin", "org_admin"])
@@ -16,6 +18,7 @@ async def list_budgets(request: Request, workspace_id: Optional[str] = None, con
     if not budget:
         return []
     return [budget]
+
 
 @router.post("", response_model=BudgetOut)
 @require_roles(["admin", "org_admin"])

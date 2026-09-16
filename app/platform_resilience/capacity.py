@@ -1,13 +1,13 @@
 """Enterprise Capacity Intelligence Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_resilience.exceptions import CrossTenantResilienceAccessException, ResilienceResourceNotFoundException
 
 
 class CapacityStatus(str, Enum):
@@ -89,10 +89,10 @@ class CapacityManager:
             return CapacityAssessment(tenant_id=tenant_id, resource_id=resource_id, status=CapacityStatus.NORMAL)
 
         max_util = max([m.utilization_pct for m in profile.metrics.values()], default=0.0)
-        
+
         status = CapacityStatus.NORMAL
         recommendation = "NO_ACTION"
-        
+
         if max_util >= profile.thresholds.critical_threshold_pct:
             status = CapacityStatus.EXHAUSTED if max_util >= 98.0 else CapacityStatus.SATURATED
             recommendation = "SCALE_OUT_IMMEDIATE"

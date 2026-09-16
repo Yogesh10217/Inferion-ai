@@ -1,9 +1,10 @@
 """Controlled Load Shedding Governance Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
@@ -49,7 +50,7 @@ class LoadSheddingPlan(BaseModel):
 
 class LoadSheddingManager:
     """Controlled Load Shedding Governance Manager.
-    
+
     Protects critical workloads by shedding low-priority workloads first under overload.
     """
 
@@ -65,7 +66,7 @@ class LoadSheddingManager:
     ) -> LoadSheddingPlan:
         # Sort workloads by priority descending (higher integer = lower priority = shed first)
         sorted_workloads = sorted(workloads, key=lambda w: w.get("priority", 3), reverse=True)
-        
+
         shed_targets = [w["name"] for w in sorted_workloads if w.get("priority", 3) >= 2]
         protected = [w["name"] for w in sorted_workloads if w.get("priority", 3) < 2]
 
@@ -82,10 +83,10 @@ class LoadSheddingManager:
         plan = self._plans.get(plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

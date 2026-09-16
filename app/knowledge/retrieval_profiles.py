@@ -3,13 +3,16 @@ Retrieval Profiles.
 Pre-defined configurations for different retrieval strategies.
 """
 from enum import Enum
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
+
 
 class RetrievalStrategy(str, Enum):
     DENSE = "dense"
     SPARSE = "sparse"
     HYBRID = "hybrid"
+
 
 class RetrievalProfile(BaseModel):
     """Configuration profile for retrieval."""
@@ -21,6 +24,7 @@ class RetrievalProfile(BaseModel):
     reranker_top_n: Optional[int] = None
     namespace: Optional[str] = None
 
+
 class Profiles:
     """Pre-defined retrieval profiles."""
     FAST_SEARCH = RetrievalProfile(
@@ -29,7 +33,7 @@ class Profiles:
         top_k=5,
         use_reranker=False
     )
-    
+
     BALANCED = RetrievalProfile(
         name="Balanced",
         strategy=RetrievalStrategy.HYBRID,
@@ -38,7 +42,7 @@ class Profiles:
         use_reranker=True,
         reranker_top_n=5
     )
-    
+
     HIGH_RECALL = RetrievalProfile(
         name="High Recall",
         strategy=RetrievalStrategy.HYBRID,
@@ -47,7 +51,7 @@ class Profiles:
         use_reranker=True,
         reranker_top_n=10
     )
-    
+
     HIGH_PRECISION = RetrievalProfile(
         name="High Precision",
         strategy=RetrievalStrategy.DENSE,
@@ -55,14 +59,14 @@ class Profiles:
         use_reranker=True,
         reranker_top_n=3
     )
-    
+
     SEMANTIC = RetrievalProfile(
         name="Semantic",
         strategy=RetrievalStrategy.DENSE,
         top_k=10,
         use_reranker=False
     )
-    
+
     HYBRID = RetrievalProfile(
         name="Hybrid",
         strategy=RetrievalStrategy.HYBRID,
@@ -70,7 +74,7 @@ class Profiles:
         alpha=0.5,
         use_reranker=False
     )
-    
+
     CITATION_HEAVY = RetrievalProfile(
         name="Citation Heavy",
         strategy=RetrievalStrategy.HYBRID,

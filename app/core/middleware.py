@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import time
 import uuid
-from typing import Callable
+from typing import Any, Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
-from app.core.logger import log_request_event
 from app.core.exceptions import AppException
+from app.core.logger import log_request_event
 
 
 class ObservationMiddleware(BaseHTTPMiddleware):
@@ -129,4 +129,3 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         if self.enable_hsts:
             response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         return response
-

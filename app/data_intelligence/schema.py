@@ -1,12 +1,11 @@
 """Schema intelligence (Phase 5.43)."""
 
 import uuid
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Dict, List, Optional
 
-from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
+from pydantic import BaseModel, Field
 
 
 class SchemaCompatibility(str, Enum):

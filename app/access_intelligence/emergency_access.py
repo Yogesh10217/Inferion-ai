@@ -1,17 +1,17 @@
 """Emergency & Break-Glass Access Governance (Phase 5.39)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone, timedelta
-import uuid
 import hashlib
-import json
+import uuid
+from datetime import datetime, timedelta, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.access_intelligence.exceptions import (
+    AccessIntelligenceException,
     CrossTenantAccessIntelligenceException,
     InvalidAccessStateTransitionException,
-    AccessIntelligenceException,
 )
 
 
@@ -82,7 +82,7 @@ class EmergencyAccessManager:
             time_bound_minutes=time_bound_minutes,
             metadata=metadata or {},
         )
-        
+
         # Calculate SHA-256 fingerprint for audit evidence
         raw_data = f"{tenant_id}:{requester_identity_id}:{reason.value}:{justification}:{req.requested_at.isoformat()}"
         req.audit_fingerprint = hashlib.sha256(raw_data.encode("utf-8")).hexdigest()

@@ -1,12 +1,13 @@
-from typing import Set, Optional
-from fastapi import Depends, Request, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from typing import Optional, Set
 
-from app.core.database import get_db_session
-from app.core.config import get_settings
-from app.auth.models import User
+from fastapi import Depends, HTTPException, Request, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.auth.exceptions import PermissionDeniedException
+from app.auth.models import User
+from app.core.config import get_settings
+from app.core.database import get_db_session
 
 settings = get_settings()
 
@@ -45,7 +46,7 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
     """Dependency that requires the current user to be an admin."""
     if not settings.auth_enabled:
         return None
-        
+
     if not current_user or not current_user.is_admin:
         raise PermissionDeniedException(detail="Admin privileges required")
     return current_user
@@ -58,7 +59,7 @@ class RequirePermission:
     async def __call__(self, request: Request):
         if not settings.auth_enabled:
             return True
-            
+
         user_id = getattr(request.state, "user_id", None)
         if not user_id:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")

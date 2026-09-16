@@ -1,7 +1,7 @@
-from datetime import datetime, timezone
 import json
-from typing import Any, Dict, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
 
 
 class EventEnvelope:

@@ -2,14 +2,14 @@
 Task Delegation Engine and Routing Strategies
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
 from enum import Enum
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel
 
 from app.multi_agent.agent_team import AgentTeam, TeamMember
-from app.multi_agent.agent_role import RoleType
 from app.multi_agent.exceptions import DelegationError
 
 logger = logging.getLogger(__name__)

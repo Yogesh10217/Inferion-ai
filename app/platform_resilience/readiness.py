@@ -1,9 +1,10 @@
 """Production Readiness Assessment Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
@@ -54,7 +55,7 @@ class ReadinessAssessment(BaseModel):
 
 class ProductionReadinessManager:
     """Production Readiness Assessment Manager.
-    
+
     Hard requirement failures override aggregate scoring to enforce NOT_READY status.
     """
 
@@ -102,10 +103,10 @@ class ProductionReadinessManager:
         ass = self._assessments.get(assessment_id)
         if not ass:
             raise ResilienceResourceNotFoundException(assessment_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, ass.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, ass.tenant_id)
-            
+
         return ass

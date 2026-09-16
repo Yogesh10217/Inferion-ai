@@ -1,12 +1,11 @@
 """Knowledge risk intelligence profiling reusing RiskManager primitive."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
 
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
+from pydantic import BaseModel, Field
 
 
 class KnowledgeRiskDimension(str, Enum):

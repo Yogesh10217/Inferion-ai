@@ -1,7 +1,7 @@
 """Agent Observability & Prometheus Metrics Subsystem (Phase 5.36)."""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Dict
 
 from app.platform_contracts.observability import MetricNameValidator, SafeMetricLabelSanitizer
 

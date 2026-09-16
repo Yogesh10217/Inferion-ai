@@ -2,9 +2,10 @@
 Self-Improvement Optimization Engine
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ class OptimizationEngine:
 
     def optimize_plan_workflow(self, plan_id: str, current_nodes: List[Dict[str, Any]]) -> OptimizationRecommendation:
         rec = OptimizationRecommendation(
-            recommendation_id=f"opt_{int(time.time()*1000)}",
+            recommendation_id=f"opt_{int(time.time() * 1000)}",
             target_type="workflow",
             description=f"Parallelize independent execution tasks in plan '{plan_id}'",
             proposed_change={"parallelize_nodes": [n.get("node_id") for n in current_nodes[:2]]},

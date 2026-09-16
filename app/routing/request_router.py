@@ -19,7 +19,7 @@ class RoutingRequest:
 @dataclass(slots=True)
 class RoutingDecision:
     """The result of a routing decision."""
-    
+
     provider_id: str
     model_id: str
     metadata: dict[str, Any] = field(default_factory=dict)

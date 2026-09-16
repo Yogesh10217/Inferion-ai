@@ -1,11 +1,12 @@
 """REST API Endpoints for Model Intelligence Platform (Phase 5.44)."""
 
-from fastapi import APIRouter, HTTPException, Query, Header, Depends
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
+
+from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
+from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ModelIntelligenceException
 from app.model_intelligence.manager import ModelIntelligenceManager
-from app.model_intelligence.exceptions import ModelIntelligenceException, CrossTenantModelIntelligenceException
 
 router = APIRouter(prefix="/v1/models", tags=["model-intelligence"])
 model_intel_manager = ModelIntelligenceManager()

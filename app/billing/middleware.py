@@ -8,13 +8,14 @@ from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 class BudgetMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, budget_service: BudgetService):
         super().__init__(app)
         self.budget_service = budget_service
 
     async def dispatch(self, request: Request, call_next):
-        
+
         # Only apply to execution endpoints
         if not request.url.path.startswith("/v1/chat/") and not request.url.path.startswith("/v1/models"):
             return await call_next(request)
@@ -22,7 +23,7 @@ class BudgetMiddleware(BaseHTTPMiddleware):
         org_id = getattr(request.state, "organization_id", None)
         if not org_id:
             return await call_next(request)
-            
+
         workspace_id = getattr(request.state, "workspace_id", None)
 
         try:
@@ -30,7 +31,7 @@ class BudgetMiddleware(BaseHTTPMiddleware):
             await self.budget_service.check_budget_limit(org_id, workspace_id)
             if workspace_id:
                 await self.budget_service.check_budget_limit(org_id, None)
-                
+
         except BudgetExceededException as e:
             logger.warning(f"Budget hard limit exceeded for org_id={org_id}, workspace_id={workspace_id}")
             return JSONResponse(

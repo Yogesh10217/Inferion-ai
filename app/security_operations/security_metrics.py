@@ -5,9 +5,9 @@ Calculates 8 deterministic security metrics without division by zero.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
+from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from app.deployment.secrets import SecretsSanitizer

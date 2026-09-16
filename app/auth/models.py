@@ -1,9 +1,9 @@
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 from typing import List, Optional
 
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Integer
-from sqlalchemy.orm import relationship, mapped_column, Mapped
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 
@@ -36,7 +36,7 @@ class Role(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     name: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    
+
     users: Mapped[List["User"]] = relationship(secondary="role_assignments", back_populates="roles")
     permissions: Mapped[List["Permission"]] = relationship(secondary="role_permissions", back_populates="roles")
 

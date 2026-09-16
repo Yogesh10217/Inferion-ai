@@ -1,15 +1,14 @@
 """FastAPI REST API endpoints for Phase 5.48 Identity Assurance platform."""
 
 from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
 from app.identity_assurance.exceptions import (
     CrossTenantIdentityAssuranceException,
-    IdentityAssuranceException,
-    IdentityNotFoundException,
 )
-from app.identity_assurance.identities import IdentityType, IdentityCategory
+from app.identity_assurance.identities import IdentityCategory, IdentityType
 from app.identity_assurance.manager import IdentityAssuranceManager
 
 router = APIRouter(prefix="/v1/identities", tags=["Identity Assurance"])

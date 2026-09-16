@@ -1,13 +1,14 @@
 """Immutable Assurance Snapshots Subsystem (Phase 5.38)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
 from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
+from app.platform_contracts.snapshots import SnapshotFactory
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AssuranceSnapshotMetadata(BaseModel):

@@ -1,17 +1,13 @@
 """Authentication Manager for Enterprise Identity & Security."""
 
-import time
 import logging
-from typing import Dict, Any, Optional, Set
-from datetime import datetime, timezone, timedelta
+import time
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional, Set
 
-from app.security.identity import (
-    Identity, UserIdentity, ServiceIdentity, APIKeyIdentity, SystemIdentity, AuthenticationMethod
-)
-from app.security.exceptions import (
-    AuthenticationError, InvalidTokenError, ExpiredTokenError, InvalidAPIKeyError
-)
 from app.auth.jwt_service import JWTService
+from app.security.exceptions import AuthenticationError, ExpiredTokenError, InvalidAPIKeyError, InvalidTokenError
+from app.security.identity import APIKeyIdentity, Identity, ServiceIdentity, SystemIdentity, UserIdentity
 
 logger = logging.getLogger(__name__)
 

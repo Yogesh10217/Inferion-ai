@@ -1,6 +1,6 @@
 """Domain Exceptions for Enterprise AI Reliability Platform (Phase 5.31)."""
 
-from app.platform_contracts.exceptions import PlatformContractException, CrossTenantAccessException
+from app.platform_contracts.exceptions import CrossTenantAccessException, PlatformContractException
 
 
 class ReliabilityPlatformException(PlatformContractException):

@@ -5,11 +5,10 @@ Thin orchestrator delegating audits, AST parsing, cross-phase validations, harde
 
 import uuid
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import List, Optional
+
 from app.platform_hardening.api_contract_validation import APIContractValidationEngine
-from app.platform_hardening.ast_analysis import PlatformASTAnalysisEngine
 from app.platform_hardening.certification import PlatformCertificationEngine
-from app.platform_hardening.code_analysis import PlatformCodeAnalysisEngine
 from app.platform_hardening.concurrency_validation import PlatformConcurrencyValidationEngine
 from app.platform_hardening.context_validation import CrossPhaseContextValidationEngine
 from app.platform_hardening.dead_code import DeadCodeDetectionEngine
@@ -19,7 +18,6 @@ from app.platform_hardening.duplication_detection import PlatformDuplicationDete
 from app.platform_hardening.engine_connectivity import EngineConnectivityAudit
 from app.platform_hardening.evidence import PlatformHardeningEvidenceLedger
 from app.platform_hardening.evidence_validation import CrossPhaseEvidenceValidationEngine
-from app.platform_hardening.exceptions import CrossTenantPlatformHardeningException
 from app.platform_hardening.feedback_loops import PlatformFeedbackLoopValidationEngine
 from app.platform_hardening.governance_validation import CrossPhaseGovernanceValidationEngine
 from app.platform_hardening.hardening import PlatformHardeningEngine
@@ -28,12 +26,10 @@ from app.platform_hardening.integration_audit import CrossPhaseIntegrationAuditE
 from app.platform_hardening.lineage_validation import PlatformLineageValidationEngine
 from app.platform_hardening.manager_validation import ManagerIntegrationValidationEngine
 from app.platform_hardening.models import (
-    IntegrationHealth,
     IntegrationHealthStatus,
     PlatformAuditFinding,
     PlatformAuditResult,
     PlatformAuditStatus,
-    PlatformCertification,
     PlatformCertificationStatus,
     PlatformHealthSummary,
     ReleaseReadinessDecision,

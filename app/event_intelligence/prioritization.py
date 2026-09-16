@@ -1,11 +1,10 @@
 """Event Prioritization Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.event_intelligence.events import EnterpriseEvent, EventSeverity, EventPriority
+from app.event_intelligence.events import EnterpriseEvent, EventPriority, EventSeverity
 
 
 class PriorityDimension(BaseModel):

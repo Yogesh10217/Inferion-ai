@@ -3,14 +3,14 @@
 import hashlib
 import json
 import logging
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List
 
 from app.platform_integration.exceptions import (
-    ImmutablePlatformIntegrationRecordException,
     EvidenceTraceabilityException,
+    ImmutablePlatformIntegrationRecordException,
 )
 
 logger = logging.getLogger(__name__)

@@ -1,14 +1,13 @@
 """Governance-Aware Automation Planning Subsystem (Phase 5.34)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 from app.event_intelligence.events import EnterpriseEvent
-from app.event_intelligence.exceptions import EventAutomationBlockedException
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 
 class AutomationAction(str, Enum):

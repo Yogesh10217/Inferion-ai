@@ -1,29 +1,29 @@
 """Master PortfolioPlatformManager Orchestrator Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
 
-from app.portfolio_platform.strategy import StrategyManager, EnterpriseStrategy, StrategicTheme
-from app.portfolio_platform.opportunities import OpportunityManager, AIOpportunity, OpportunitySource, OpportunityType
-from app.portfolio_platform.initiatives import InitiativeManager, AIInitiative, InitiativeType, InitiativePriority, InitiativeStatus
-from app.portfolio_platform.business_cases import BusinessCaseManager, BusinessCase, CostEstimate, BenefitEstimate
-from app.portfolio_platform.prioritization import PrioritizationEngine, PrioritizationResult
-from app.portfolio_platform.investment import InvestmentManager, InvestmentProposal, InvestmentRisk, InvestmentDecision
-from app.portfolio_platform.funding import FundingManager, FundingAllocation, BudgetEnvelope
-from app.portfolio_platform.value import ValueManager, ValueDimension, ValueMeasurement
-from app.portfolio_platform.benefits import BenefitsManager, Benefit, BenefitType
-from app.portfolio_platform.portfolio import PortfolioManager, Portfolio
-from app.portfolio_platform.optimization import PortfolioOptimizationEngine, PortfolioOptimizationResult, PortfolioConstraint, OptimizationGoal
-from app.portfolio_platform.scenarios import PortfolioScenarioManager, PortfolioScenario
-from app.portfolio_platform.governance import PortfolioGovernanceEngine, PortfolioGovernanceDecision
-from app.portfolio_platform.execution import PortfolioExecutionManager, InitiativeExecutionPlan, ExecutionTarget
-from app.portfolio_platform.outcomes import OutcomeEvaluator, InitiativeOutcome
-from app.portfolio_platform.learning import PortfolioLearningManager, PortfolioRecommendation
-from app.portfolio_platform.trust import PortfolioTrustEngine, PortfolioTrustScore
-from app.portfolio_platform.observability import PortfolioMetricsCollector
-from app.portfolio_platform.analytics import PortfolioAnalyticsEngine, PortfolioReport
+from app.portfolio_platform.analytics import PortfolioAnalyticsEngine
+from app.portfolio_platform.benefits import BenefitsManager
 from app.portfolio_platform.billing import PortfolioBillingTracker
+from app.portfolio_platform.business_cases import BenefitEstimate, BusinessCaseManager, CostEstimate
+from app.portfolio_platform.execution import ExecutionTarget, PortfolioExecutionManager
+from app.portfolio_platform.funding import FundingManager
+from app.portfolio_platform.governance import PortfolioGovernanceEngine
+from app.portfolio_platform.initiatives import InitiativeManager
+from app.portfolio_platform.investment import InvestmentManager, InvestmentRisk
+from app.portfolio_platform.learning import PortfolioLearningManager
+from app.portfolio_platform.observability import PortfolioMetricsCollector
+from app.portfolio_platform.opportunities import OpportunityManager
+from app.portfolio_platform.optimization import PortfolioOptimizationEngine
+from app.portfolio_platform.outcomes import OutcomeEvaluator
+from app.portfolio_platform.portfolio import PortfolioManager
+from app.portfolio_platform.prioritization import PrioritizationEngine
 from app.portfolio_platform.repositories import PortfolioRepository
+from app.portfolio_platform.scenarios import PortfolioScenarioManager
+from app.portfolio_platform.strategy import StrategyManager
+from app.portfolio_platform.trust import PortfolioTrustEngine
+from app.portfolio_platform.value import ValueDimension, ValueManager
 
 logger = logging.getLogger(__name__)
 

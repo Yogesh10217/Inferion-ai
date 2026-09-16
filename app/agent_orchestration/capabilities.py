@@ -1,16 +1,17 @@
 """Agent Capability Discovery & Validation Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional, Set
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
     AgentCapabilityViolationException,
     CrossTenantAgentAccessException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class CapabilityScope(str, Enum):
@@ -98,12 +99,12 @@ class AgentCapabilityManager:
                 )
             except Exception:
                 raise AgentCapabilityViolationException(f"Capability '{capability_id}' not found.")
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, cap.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, cap.tenant_id)
-            
+
         return cap
 
     def list_capabilities(self, tenant_id: str) -> List[AgentCapabilityDefinition]:

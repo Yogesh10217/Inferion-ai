@@ -1,14 +1,15 @@
 """Service health intelligence engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
+from app.platform_contracts.redaction import SensitiveDataSanitizer
 from app.reliability_intelligence.models import (
     ServiceHealthAssessment,
-    ServiceHealthStatus,
     ServiceHealthDimension,
+    ServiceHealthStatus,
 )
 from app.reliability_intelligence.repositories import ServiceHealthRepository
-from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 logger = logging.getLogger(__name__)
 

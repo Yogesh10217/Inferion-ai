@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from app.deployment.models import PlatformReadinessClassification, ProductionReleaseDecision
-from app.deployment.production_readiness import ProductionReadinessEvaluator, ProductionReadinessResult
+from app.deployment.production_readiness import ProductionReadinessEvaluator
 from app.deployment.secrets import SecretsSanitizer
 
 

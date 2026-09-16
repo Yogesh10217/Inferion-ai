@@ -1,5 +1,5 @@
-from datetime import datetime, timezone
 import logging
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from app.events.delivery_service import DeliveryService

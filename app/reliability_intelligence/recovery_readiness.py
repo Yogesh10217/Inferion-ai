@@ -1,7 +1,7 @@
 """Recovery readiness assessment engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

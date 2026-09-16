@@ -1,19 +1,20 @@
 """Delegation Subsystem Integrating Platform Contracts (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.agent_orchestration.exceptions import AgentDelegationBlockedException, CrossTenantAgentAccessException
 from app.platform_contracts.delegation import (
     DelegationRequest,
-    DelegationTarget,
-    DelegationStatus,
     DelegationResult,
+    DelegationStatus,
+    DelegationTarget,
 )
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.agent_orchestration.exceptions import AgentDelegationBlockedException, CrossTenantAgentAccessException
 
 
 class AgentDelegationStatus(str, Enum):
@@ -73,7 +74,7 @@ class AgentDelegationManager:
         req = self._delegations.get(delegation_id)
         if not req:
             raise AgentDelegationBlockedException(f"Delegation request '{delegation_id}' not found.")
-            
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, req.tenant_id)
         except Exception:

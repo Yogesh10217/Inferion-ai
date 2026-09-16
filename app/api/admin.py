@@ -1,13 +1,14 @@
 from typing import List
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from pydantic import BaseModel
 
-from app.core.database import get_db_session
-from app.auth.models import User, Role, Permission
-from app.auth.dependencies import require_admin
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.api.auth import UserOut
+from app.auth.dependencies import require_admin
+from app.auth.models import Permission, Role, User
+from app.core.database import get_db_session
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -16,7 +17,7 @@ class RoleOut(BaseModel):
     id: str
     name: str
     description: str | None
-    
+
     model_config = {"from_attributes": True}
 
 
@@ -24,7 +25,7 @@ class PermissionOut(BaseModel):
     id: str
     name: str
     description: str | None
-    
+
     model_config = {"from_attributes": True}
 
 

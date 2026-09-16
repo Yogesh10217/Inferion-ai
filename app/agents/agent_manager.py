@@ -3,16 +3,16 @@ High-level Agent Platform Orchestrator & Manager Service
 """
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
+
 from app.agents.agent import Agent
 from app.agents.agent_config import AgentConfig
 from app.agents.agent_context import AgentContext
-from app.agents.agent_state import AgentState, AgentStatus
+from app.agents.agent_events import emit_agent_event
+from app.agents.agent_factory import AgentFactory
 from app.agents.agent_registry import AgentRegistry
 from app.agents.agent_session import AgentSessionManager
-from app.agents.agent_factory import AgentFactory
-from app.agents.agent_events import emit_agent_event
-from app.agents.exceptions import AgentNotFoundError
+from app.agents.agent_state import AgentState, AgentStatus
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class AgentManager:
     async def run_agent(self, agent_id: str, prompt: str, context: AgentContext) -> AgentState:
         config = self.registry.get_agent(agent_id)
         state = self.session_manager.create_session(agent_id, max_iterations=config.max_iterations)
-        
+
         await emit_agent_event("agent.started", context, {"agent_id": agent_id, "session_id": state.session_id, "prompt": prompt})
 
         agent_driver = Agent(agent_id=agent_id, config=config)
@@ -60,7 +60,7 @@ class AgentManager:
         state = self.session_manager.get_session(session_id)
         if not state:
             raise ValueError(f"Session '{session_id}' not found")
-        
+
         ctx = context or AgentContext()
         config = self.registry.get_agent(state.agent_id)
         agent_driver = Agent(agent_id=state.agent_id, config=config)

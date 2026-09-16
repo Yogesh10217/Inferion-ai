@@ -4,6 +4,7 @@ Enforces Mandated Invariant 2 & 6: auto_execute MUST BE False on all delegation 
 """
 
 from typing import Dict, List, Tuple
+
 from app.platform_hardening.models import (
     DelegationValidationResult,
     PlatformAuditFinding,

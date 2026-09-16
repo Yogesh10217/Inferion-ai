@@ -1,19 +1,20 @@
 """Integration Execution Lifecycle & Delegation-Only Execution (Phase 5.40)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 import hashlib
+import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.integration_intelligence.exceptions import (
     CrossTenantIntegrationAccessException,
-    InvalidAccessStateTransitionException,
     HighRiskIntegrationRequiresApprovalException,
     IntegrationExecutionBlockedException,
+    InvalidAccessStateTransitionException,
 )
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
+from app.platform_contracts.delegation import DelegationRequest, DelegationStatus, DelegationTarget
 from app.platform_contracts.idempotency import IdempotencyManager, IdempotencyStatus
 
 
@@ -103,7 +104,7 @@ class IntegrationExecutionManager:
             metadata=metadata or {},
         )
         self._executions[exec_obj.execution_id] = exec_obj
-        
+
         # Save execution in idempotency record
         self.idempotency_manager.complete_operation(
             tenant_id=tenant_id,
@@ -118,7 +119,7 @@ class IntegrationExecutionManager:
         exec_obj = self.get_execution(tenant_id, execution_id)
         if exec_obj.status != IntegrationExecutionStatus.REQUESTED:
             raise InvalidAccessStateTransitionException(exec_obj.status.value, IntegrationExecutionStatus.GOVERNANCE_EVALUATED.value)
-        
+
         if exec_obj.requires_approval and not exec_obj.approval_id:
             exec_obj.status = IntegrationExecutionStatus.APPROVAL_PENDING
         else:
@@ -156,7 +157,7 @@ class IntegrationExecutionManager:
         exec_obj.status = status
         exec_obj.is_finalized = True
         exec_obj.completed_at = datetime.now(timezone.utc)
-        
+
         raw = f"{exec_obj.execution_id}:{exec_obj.tenant_id}:{exec_obj.workflow_id}:{status.value}:{exec_obj.completed_at.isoformat()}"
         exec_obj.fingerprint = hashlib.sha256(raw.encode("utf-8")).hexdigest()
 

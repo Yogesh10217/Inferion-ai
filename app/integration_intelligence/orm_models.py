@@ -1,7 +1,8 @@
 """SQLAlchemy Production ORM Models for Integration Intelligence (Phase 5.40)."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, DateTime, Boolean, Float, JSON, Text
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, String
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

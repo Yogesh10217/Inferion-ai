@@ -2,7 +2,7 @@
 Memory Compressor Engine: Conversation Compression & Fact Deduplication
 """
 
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 
 class MemoryCompressor:

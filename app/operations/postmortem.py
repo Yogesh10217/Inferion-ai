@@ -1,9 +1,10 @@
 """Post-Incident Learning & Structured Postmortem Report Engine."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.operations.incidents import Incident

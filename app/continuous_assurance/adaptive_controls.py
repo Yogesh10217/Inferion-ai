@@ -1,7 +1,7 @@
 """Adaptive control recommendation engine (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
+
 from app.continuous_assurance.models import AdaptiveControlRecommendation
 from app.continuous_assurance.repositories import RecommendationRepository
 

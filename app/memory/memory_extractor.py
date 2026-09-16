@@ -2,7 +2,7 @@
 Memory Extraction Engine: Facts, Preferences, Entities & Episodic Extraction
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class ExtractedMemoryCandidate:

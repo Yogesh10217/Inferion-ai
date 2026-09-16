@@ -1,15 +1,11 @@
 """Trusted context assembly intelligence across trust, freshness, relevance, and conflict filtering."""
 
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-import uuid
 import hashlib
-from pydantic import BaseModel, Field
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
-from app.knowledge_assurance.exceptions import (
-    KnowledgeContextAssemblyException,
-    CrossTenantKnowledgeAssuranceException,
-)
+from pydantic import BaseModel, Field
 
 
 class ContextAssemblyEvidence(BaseModel):

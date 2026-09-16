@@ -8,16 +8,17 @@ import uuid
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.approvals.approval_engine import ApprovalEngine
+from app.governance_platform.risk import RiskManager
 from app.knowledge_assurance.exceptions import (
     CrossTenantKnowledgeAssuranceException,
     HighRiskKnowledgeActionRequiresApprovalException,
     KnowledgeReferenceNotFoundException,
 )
 from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
-from app.approvals.approval_engine import ApprovalEngine
-from app.governance_platform.risk import RiskManager
 
 
 class KnowledgeRemediationPriority(str, Enum):

@@ -1,16 +1,17 @@
 """Financial Investigation Lifecycle & Snapshot Generation (Phase 5.42)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.finops_intelligence.exceptions import (
     CrossTenantFinOpsIntelligenceException,
     ImmutableFinOpsRecordException,
 )
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.platform_contracts.snapshots import SnapshotFactory
 
 
 class FinOpsInvestigationStatus(str, Enum):

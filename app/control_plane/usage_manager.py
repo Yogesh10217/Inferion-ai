@@ -1,8 +1,9 @@
 """Unified Usage Aggregator across all 16 platform subsystems."""
 
 import logging
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,9 @@
 """SQLAlchemy ORM models for Intelligence Platform."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, DateTime, JSON, Text, Boolean
+
+from sqlalchemy import JSON, Column, DateTime, Float, String, Text
+
 from app.db.base import Base
 
 

@@ -1,13 +1,14 @@
 """Execution Verification Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class VerificationType(str, Enum):
@@ -61,7 +62,7 @@ class AgentVerificationManager:
     ) -> AgentVerification:
         findings = []
         is_successful = True
-        
+
         if delegated_results:
             for res in delegated_results:
                 if res.get("status") in ("FAILED", "BLOCKED"):
@@ -108,7 +109,7 @@ class AgentVerificationManager:
                 task_id="unknown",
                 result=VerificationResult(is_successful=True, verification_type=VerificationType.OUTCOME_CHECK),
             )
-            
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, verif.tenant_id)
         except Exception:

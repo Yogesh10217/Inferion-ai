@@ -1,10 +1,11 @@
 """Policy Simulator analyzing dry-run impact before policy activation."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.control_plane.policy_manager import PolicyManager, ControlPlanePolicy, PolicyTargetType
+from app.control_plane.policy_manager import PolicyManager, PolicyTargetType
 from app.control_plane.resource_registry import ResourceRegistry
 
 logger = logging.getLogger(__name__)

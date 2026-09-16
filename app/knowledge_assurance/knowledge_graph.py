@@ -1,9 +1,9 @@
 """Analytical knowledge graph traversal across platform domains."""
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
+from enum import Enum
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException

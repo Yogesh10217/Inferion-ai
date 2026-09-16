@@ -5,6 +5,7 @@ Defines persistence model structures for database serialization.
 """
 
 from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 

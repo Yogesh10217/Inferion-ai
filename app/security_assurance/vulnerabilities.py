@@ -1,12 +1,16 @@
 """Vulnerability Management Data Models & Store."""
 
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.security_assurance.exceptions import SecurityVulnerabilityNotFoundException, CrossTenantSecurityAssuranceException
+from app.security_assurance.exceptions import (
+    CrossTenantSecurityAssuranceException,
+    SecurityVulnerabilityNotFoundException,
+)
 
 
 class VulnerabilitySeverity(str, Enum):

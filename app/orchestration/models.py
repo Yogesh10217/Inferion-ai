@@ -1,7 +1,9 @@
 """SQLAlchemy Persistence Models for Orchestration Platform Domain Entities."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, Boolean, DateTime, JSON, Text
+
+from sqlalchemy import JSON, Column, DateTime, String
+
 from app.db.base import Base
 
 

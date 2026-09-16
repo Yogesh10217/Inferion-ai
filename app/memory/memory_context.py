@@ -2,7 +2,7 @@
 Memory Context Container for Prompt Assembly & Engine Integration
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class MemoryContext:

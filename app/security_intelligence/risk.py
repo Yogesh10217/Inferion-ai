@@ -1,11 +1,12 @@
 """Security Risk Management Subsystem (Phase 5.32)."""
 
-from typing import Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.governance_platform.risk import RiskManager, RiskCategory, RiskFactor, RiskSeverity, RiskAssessment
+from app.governance_platform.risk import RiskAssessment, RiskCategory, RiskFactor, RiskManager, RiskSeverity
 
 
 class SecurityRiskDimension(BaseModel):

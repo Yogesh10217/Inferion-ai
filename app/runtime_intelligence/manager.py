@@ -4,83 +4,71 @@ import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
+from app.runtime_intelligence.adaptation import RuntimeAdaptationEngine
+from app.runtime_intelligence.adaptive_assurance import AdaptiveAssuranceEngine
+from app.runtime_intelligence.analytics import RuntimeIntelligenceAnalytics
+from app.runtime_intelligence.anomalies import RuntimeAnomalyDetector
+from app.runtime_intelligence.approvals import RuntimeApprovalCoordinator
+from app.runtime_intelligence.baseline import BaselineManager
+from app.runtime_intelligence.billing import RuntimeIntelligenceBillingTracker
+from app.runtime_intelligence.causal_analysis import RuntimeCausalAnalysisEngine
+from app.runtime_intelligence.confidence import RuntimeConfidenceEngine
+from app.runtime_intelligence.correlation import RuntimeCorrelationEngine
+from app.runtime_intelligence.degradation import RuntimeDegradationEngine
+from app.runtime_intelligence.delegation import RuntimeDelegationCoordinator
+from app.runtime_intelligence.dependency_intelligence import RuntimeDependencyGraph
+from app.runtime_intelligence.drift import RuntimeDriftDetector
+from app.runtime_intelligence.evidence import RuntimeEvidenceManager
 from app.runtime_intelligence.exceptions import (
     CrossTenantRuntimeIntelligenceException,
     HighRiskRuntimeActionRequiresApprovalException,
     ImmutableRuntimeIntelligenceRecordException,
     RuntimeSignalNotFoundException,
-    RuntimeHealthNotFoundException,
 )
+from app.runtime_intelligence.governance import RuntimeGovernanceEngine
+from app.runtime_intelligence.health import RuntimeHealthEngine
+from app.runtime_intelligence.human_review import RuntimeHumanReviewEngine
+from app.runtime_intelligence.idempotency import RuntimeIdempotencyManager
+from app.runtime_intelligence.impact import RuntimeImpactAssessmentEngine
+from app.runtime_intelligence.learning import RuntimeLearningEngine
+from app.runtime_intelligence.models import (
+    DelegationStatus,
+    RiskLevel,
+    RuntimeCorrelation,
+    RuntimeDegradation,
+    RuntimeDrift,
+    RuntimeEvidenceBundle,
+    RuntimeHealthAssessment,
+    RuntimeRecommendation,
+    RuntimeResilienceAssessment,
+    RuntimeSnapshot,
+)
+from app.runtime_intelligence.observability import RuntimeIntelligenceMetricsCollector
 from app.runtime_intelligence.providers import (
-    RuntimeIntelligenceProviderRegistry,
     MockRuntimeIntelligenceProvider,
+    RuntimeIntelligenceProviderRegistry,
 )
+from app.runtime_intelligence.recommendations import RuntimeRecommendationEngine
+from app.runtime_intelligence.recovery_intelligence import RuntimeRecoveryIntelligenceEngine
 from app.runtime_intelligence.repositories import (
-    RuntimeSignalRepository,
-    RuntimeHealthRepository,
     RuntimeAnomalyRepository,
     RuntimeDriftRepository,
-    RuntimeRecommendationRepository,
     RuntimeEvidenceRepository,
+    RuntimeHealthRepository,
+    RuntimeRecommendationRepository,
+    RuntimeSignalRepository,
 )
+from app.runtime_intelligence.resilience import RuntimeResilienceEngine
+from app.runtime_intelligence.risk_propagation import RuntimeRiskPropagationEngine
+from app.runtime_intelligence.runtime_context import RuntimeContextBuilder
 from app.runtime_intelligence.runtime_signals import RuntimeSignalEngine
 from app.runtime_intelligence.signal_normalization import RuntimeSignalNormalizer
-from app.runtime_intelligence.runtime_context import RuntimeContextBuilder
-from app.runtime_intelligence.health import RuntimeHealthEngine
-from app.runtime_intelligence.anomalies import RuntimeAnomalyDetector
-from app.runtime_intelligence.drift import RuntimeDriftDetector
-from app.runtime_intelligence.baseline import BaselineManager
-from app.runtime_intelligence.degradation import RuntimeDegradationEngine
-from app.runtime_intelligence.correlation import RuntimeCorrelationEngine
-from app.runtime_intelligence.causal_analysis import RuntimeCausalAnalysisEngine
-from app.runtime_intelligence.dependency_intelligence import RuntimeDependencyGraph
-from app.runtime_intelligence.risk_propagation import RuntimeRiskPropagationEngine
-from app.runtime_intelligence.impact import RuntimeImpactAssessmentEngine
-from app.runtime_intelligence.resilience import RuntimeResilienceEngine
-from app.runtime_intelligence.recovery_intelligence import RuntimeRecoveryIntelligenceEngine
-from app.runtime_intelligence.adaptive_assurance import AdaptiveAssuranceEngine
-from app.runtime_intelligence.confidence import RuntimeConfidenceEngine
-from app.runtime_intelligence.uncertainty import RuntimeUncertaintyAssessmentEngine
-from app.runtime_intelligence.recommendations import RuntimeRecommendationEngine
-from app.runtime_intelligence.adaptation import RuntimeAdaptationEngine
-from app.runtime_intelligence.governance import RuntimeGovernanceEngine
-from app.runtime_intelligence.approvals import RuntimeApprovalCoordinator
-from app.runtime_intelligence.human_review import RuntimeHumanReviewEngine
-from app.runtime_intelligence.delegation import RuntimeDelegationCoordinator
-from app.runtime_intelligence.verification import RuntimeVerificationEngine
-from app.runtime_intelligence.timeline import RuntimeTimeline
-from app.runtime_intelligence.evidence import RuntimeEvidenceManager
 from app.runtime_intelligence.snapshots import RuntimeSnapshotManager
-from app.runtime_intelligence.learning import RuntimeLearningEngine
-from app.runtime_intelligence.analytics import RuntimeIntelligenceAnalytics
-from app.runtime_intelligence.observability import RuntimeIntelligenceMetricsCollector
-from app.runtime_intelligence.billing import RuntimeIntelligenceBillingTracker
-from app.runtime_intelligence.idempotency import RuntimeIdempotencyManager
-
-from app.runtime_intelligence.models import (
-    RuntimeSignal,
-    NormalizedRuntimeSignal,
-    RuntimeContext,
-    RuntimeHealthAssessment,
-    RuntimeAnomaly,
-    RuntimeDrift,
-    RuntimeDegradation,
-    RuntimeCorrelation,
-    RuntimeCausalHypothesis,
-    RuntimeRiskPropagationPath,
-    RuntimeResilienceAssessment,
-    RecoveryOption,
-    AdaptiveAssuranceScore,
-    RuntimeRecommendation,
-    RuntimeEvidenceBundle,
-    RuntimeSnapshot,
-    HealthStatus,
-    RiskLevel,
-    DelegationStatus,
-    GovernanceDecision,
-)
+from app.runtime_intelligence.timeline import RuntimeTimeline
+from app.runtime_intelligence.uncertainty import RuntimeUncertaintyAssessmentEngine
+from app.runtime_intelligence.verification import RuntimeVerificationEngine
 
 logger = logging.getLogger(__name__)
 
@@ -519,7 +507,7 @@ class RuntimeIntelligenceManager:
         risk_enum = RiskLevel(risk_level.value if hasattr(risk_level, "value") else risk_level)
         requires_appr = risk_enum in [RiskLevel.HIGH, RiskLevel.CRITICAL] and not is_approved
         status = DelegationStatus.PENDING_APPROVAL if requires_appr else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
-        
+
         del_rec = DelegationRecord(
             delegation_id=f"del-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,

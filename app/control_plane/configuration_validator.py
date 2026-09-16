@@ -1,8 +1,9 @@
 """Control Plane Configuration Validator ensuring safety and compliance."""
 
 import logging
-from typing import Dict, Any, List
-from app.control_plane.exceptions import ConfigurationException, PolicyViolationException
+from typing import Any, Dict, List
+
+from app.control_plane.exceptions import PolicyViolationException
 
 logger = logging.getLogger(__name__)
 

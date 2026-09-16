@@ -2,12 +2,13 @@
 
 import hashlib
 import json
+import uuid
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from enum import Enum
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone, date
-import uuid
-from pydantic import BaseModel, Field
+from typing import Any
+
+from pydantic import BaseModel
 
 
 class FingerprintAlgorithm(str, Enum):

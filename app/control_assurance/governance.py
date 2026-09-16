@@ -1,16 +1,14 @@
 """Control Assurance Governance Engine Subsystem (Phase 5.38)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator, GovernanceDecision
-from app.governance_platform.risk import RiskManager
 from app.approvals.approval_engine import ApprovalEngine
-from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
+from app.governance_platform.policy_evaluation import GovernanceDecision, UnifiedPolicyEvaluator
+from app.governance_platform.risk import RiskManager
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class ControlGovernanceRequirement(BaseModel):

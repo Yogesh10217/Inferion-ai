@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
+
 class UsageEvent:
     def __init__(
         self,
@@ -36,8 +37,7 @@ class UsageEvent:
 
 class UsageEventEmitter(ABC):
     """Abstract interface for emitting usage events asynchronously."""
-    
+
     @abstractmethod
     def emit(self, event: UsageEvent) -> None:
         """Emit a usage event without blocking the execution path."""
-        pass

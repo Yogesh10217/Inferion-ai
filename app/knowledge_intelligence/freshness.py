@@ -1,9 +1,10 @@
 """Knowledge Freshness Intelligence Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone, timedelta
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -56,7 +57,7 @@ class KnowledgeFreshnessManager:
     ) -> FreshnessEvaluation:
         pol = policy or self._default_policy
         now = datetime.now(timezone.utc)
-        
+
         if last_updated_at.tzinfo is None:
             last_updated_at = last_updated_at.replace(tzinfo=timezone.utc)
 

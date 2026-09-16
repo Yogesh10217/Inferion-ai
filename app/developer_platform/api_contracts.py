@@ -1,11 +1,12 @@
 """API Contract Analysis & Breaking Change Detection Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.developer_platform.exceptions import APIContractBreakingChangeException
 from app.approvals.approval_engine import ApprovalEngine
+from app.developer_platform.exceptions import APIContractBreakingChangeException
 
 logger = logging.getLogger(__name__)
 

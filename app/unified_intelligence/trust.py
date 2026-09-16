@@ -5,20 +5,19 @@ Evaluates composite cross-domain trust scores for entities, tenants, systems, an
 with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from app.unified_intelligence.exceptions import (
-    InvalidUnifiedIntelligenceInputException
-)
 from app.unified_intelligence.domains import IntelligenceDomain
+from app.unified_intelligence.exceptions import InvalidUnifiedIntelligenceInputException
 
 
 class UnifiedTrustAssessment:
     """
     Result of a cross-domain trust assessment.
     """
+
     def __init__(
         self,
         assessment_id: str,
@@ -59,6 +58,7 @@ class CrossDomainTrustEngine:
     """
     Computes cross-domain trust scores by combining signals across identity, security, operations, and policy.
     """
+
     def __init__(self):
         pass
 

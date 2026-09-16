@@ -3,9 +3,10 @@ Workflow Resilience Intelligence Subsystem.
 Analyzes workflow failure tolerance, recovery capability, dependency resilience, fallback availability, and compensation readiness.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 

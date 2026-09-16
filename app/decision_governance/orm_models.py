@@ -1,8 +1,9 @@
 """SQLAlchemy production ORM models for Decision Governance entities."""
 
-from datetime import datetime, timezone
 import uuid
-from sqlalchemy import Column, String, Float, Boolean, Integer, DateTime, JSON, Text
+from datetime import datetime, timezone
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

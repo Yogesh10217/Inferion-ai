@@ -4,9 +4,9 @@ Prioritizes findings (P0, P1, P2, P3), groups root patterns, and manages platfor
 """
 
 from typing import Dict, List
+
 from app.platform_hardening.models import (
     PlatformAuditFinding,
-    PlatformAuditSeverity,
     RemediationRecommendation,
 )
 from app.platform_hardening.remediation import PlatformRemediationPlanner

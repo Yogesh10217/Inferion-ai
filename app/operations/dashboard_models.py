@@ -2,8 +2,7 @@
 Operations Dashboard Metrics Models
 """
 
-from typing import Dict, Any, List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class DashboardStatus(BaseModel):

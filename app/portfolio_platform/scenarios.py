@@ -1,12 +1,18 @@
 """Portfolio Scenario Simulation Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.portfolio_platform.optimization import PortfolioOptimizationEngine, PortfolioOptimizationResult, PortfolioConstraint, OptimizationGoal
+from app.portfolio_platform.optimization import (
+    OptimizationGoal,
+    PortfolioConstraint,
+    PortfolioOptimizationEngine,
+    PortfolioOptimizationResult,
+)
 from app.portfolio_platform.prioritization import PrioritizationResult
 
 

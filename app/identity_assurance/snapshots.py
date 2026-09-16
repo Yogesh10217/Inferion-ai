@@ -1,12 +1,13 @@
 """Identity Assurance Snapshots."""
 
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class IdentityAssuranceSnapshot(BaseModel):

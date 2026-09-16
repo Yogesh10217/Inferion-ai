@@ -1,7 +1,8 @@
 """Feedback loop bounds and safety controller for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
+from typing import Dict
+
 from app.continuous_assurance.exceptions import FeedbackLoopException
 
 logger = logging.getLogger(__name__)

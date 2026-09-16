@@ -1,13 +1,14 @@
 """Auditable Architecture Drift Detector Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.architecture_platform.topology import TopologySnapshot, TopologyManager
 from app.architecture_platform.nodes import ArchitectureNodeManager
+from app.architecture_platform.topology import TopologyManager
 
 
 class DriftType(str, Enum):

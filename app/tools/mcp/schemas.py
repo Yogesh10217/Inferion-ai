@@ -2,7 +2,8 @@
 JSON-RPC 2.0 & Model Context Protocol (MCP) Schemas
 """
 
-from typing import Dict, Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
+
 from pydantic import BaseModel, Field
 
 

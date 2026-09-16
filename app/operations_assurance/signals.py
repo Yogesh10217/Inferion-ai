@@ -1,9 +1,10 @@
 """Cross-domain operational signal intelligence with SensitiveDataSanitizer enforcing metadata protection."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.redaction import SensitiveDataSanitizer

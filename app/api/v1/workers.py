@@ -2,9 +2,8 @@
 FastAPI Router for Digital Workers (/v1/workers)
 """
 
-from typing import Dict, Any, List, Optional
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.workers.worker_manager import WorkerManager
 

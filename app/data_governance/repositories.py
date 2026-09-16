@@ -1,12 +1,11 @@
 """Repository Interfaces & Persistence Implementations for Data Governance."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
 
 from app.data_governance.assets import DataAsset
-from app.data_governance.contracts import DataContract
-from app.data_governance.lineage import DataLineage
 from app.data_governance.consent import DataConsent
+from app.data_governance.contracts import DataContract
 
 
 class DataAssetRepository(ABC):

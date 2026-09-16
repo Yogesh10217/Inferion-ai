@@ -1,15 +1,13 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-import os
 from typing import Any, Dict, List, Optional
 
 from app.core.container import ServiceContainer
 from app.deployment.configuration import RuntimeConfigurationManager
-from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.database_readiness import DatabaseReleaseReadinessEvaluator
-from app.deployment.dependency_validation import DeploymentDependencyValidator
 from app.deployment.disaster_recovery import BackupReadinessEvaluator
 from app.deployment.evidence_audit import RuntimeEvidenceAuditor
 from app.deployment.infrastructure_readiness import InfrastructureReadinessEvaluator
@@ -17,7 +15,6 @@ from app.deployment.models import (
     DeploymentDecision,
     DeploymentIdentity,
     EnvironmentConfig,
-    PlatformReadinessClassification,
     ProductionReleaseDecision,
 )
 from app.deployment.observability_readiness import ObservabilityReleaseEvaluator
@@ -102,7 +99,7 @@ class ProductionReadinessEvaluator:
         try:
             config = self.config_manager.get_config()
             is_prod = config.is_production()
-        except Exception as exc:
+        except Exception:
             env_name = os.getenv("ENVIRONMENT", "STAGING").upper()
             is_prod = env_name == "PRODUCTION"
             from app.deployment.models import DeploymentEnvironment

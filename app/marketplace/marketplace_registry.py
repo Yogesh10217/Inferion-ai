@@ -1,9 +1,10 @@
 """Central Marketplace Item Registry & Catalog."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from app.marketplace.marketplace_item import MarketplaceItem, MarketplaceCategory, ItemLifecycle
+from typing import Dict, List, Optional
+
 from app.marketplace.exceptions import MarketplaceItemNotFoundException
+from app.marketplace.marketplace_item import ItemLifecycle, MarketplaceCategory, MarketplaceItem
 
 logger = logging.getLogger(__name__)
 

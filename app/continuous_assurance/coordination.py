@@ -1,7 +1,8 @@
 """Continuous assurance cross-domain coordinator (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from app.continuous_assurance.providers import ContinuousAssuranceProviderRegistry
 
 logger = logging.getLogger(__name__)

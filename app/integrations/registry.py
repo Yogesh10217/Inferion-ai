@@ -1,9 +1,10 @@
 """Integration Registry & Catalog Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from app.integrations.integration import Integration, IntegrationStatus, IntegrationType
+from typing import Any, Dict, List, Optional
+
 from app.integrations.exceptions import IntegrationNotFoundException
+from app.integrations.integration import Integration, IntegrationStatus, IntegrationType
 
 logger = logging.getLogger(__name__)
 

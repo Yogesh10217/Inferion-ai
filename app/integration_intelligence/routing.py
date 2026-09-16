@@ -1,9 +1,9 @@
 """Integration Routing Intelligence & Circuit Breaker Reuse (Phase 5.40)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from enum import Enum
+from typing import Dict
+
 from pydantic import BaseModel, Field
 
 from app.integration_intelligence.exceptions import CrossTenantIntegrationAccessException
@@ -74,7 +74,7 @@ class IntegrationRoutingManager:
             r for r in self._routes.values()
             if r.tenant_id == tenant_id and r.target_connector_id == connector_id and r.is_active
         ]
-        
+
         healthy_primary = [r for r in routes if r.strategy == RoutingStrategy.PRIMARY and r.health == RouteHealth.HEALTHY]
         if healthy_primary:
             best = min(healthy_primary, key=lambda x: x.priority)

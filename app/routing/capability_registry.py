@@ -1,5 +1,5 @@
 import threading
-from typing import Dict, Set, List, Optional
+from typing import Dict, List, Optional, Set
 
 
 class CapabilityRegistry:

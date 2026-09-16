@@ -1,11 +1,11 @@
 """SQLAlchemy ORM Models for Marketplace Persistence."""
 
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import Column, String, DateTime, JSON, Integer, Float, Boolean, Text
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy import JSON, Boolean, DateTime, Float, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
 

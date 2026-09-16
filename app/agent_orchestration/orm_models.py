@@ -1,10 +1,10 @@
 """SQLAlchemy Production ORM Models for Agent Orchestration Persistence (Phase 5.36)."""
 
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import Column, String, DateTime, JSON, Float, Boolean, Integer, Text
+from sqlalchemy import JSON, Boolean, DateTime, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base

@@ -1,5 +1,5 @@
 from app.plugins.plugin import Plugin
-import logging
+
 
 class HelloWorldPlugin(Plugin):
     async def on_install(self):

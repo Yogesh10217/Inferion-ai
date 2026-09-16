@@ -4,6 +4,7 @@ Detects one-way pipelines, disconnected verifications, and stale assurance confi
 """
 
 from typing import Dict, List, Tuple
+
 from app.platform_hardening.models import (
     PlatformAuditFinding,
     PlatformAuditSeverity,

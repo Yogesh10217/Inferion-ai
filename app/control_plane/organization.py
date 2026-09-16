@@ -1,9 +1,10 @@
 """Organization domain model & lifecycle management."""
 
 import logging
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Set
+
 from pydantic import BaseModel, Field
 
 from app.control_plane.exceptions import OrganizationNotFoundException

@@ -1,14 +1,13 @@
 """FinOps Developer Billing & Build Cost Attribution Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Optional
+
+from pydantic import BaseModel
 
 from app.finops.manager import FinOpsManager
 
 logger = logging.getLogger(__name__)
-
-
-from pydantic import BaseModel
 
 
 class DeveloperBillingRecord(BaseModel):
@@ -34,8 +33,4 @@ class DeveloperBillingAdapter:
         return DeveloperBillingRecord(total_extension_executions=1, total_compute_seconds=compute_seconds, total_cost_dollars=cost_dollars)
 
 
-
-
-
 DeveloperBillingTracker = DeveloperBillingAdapter
-

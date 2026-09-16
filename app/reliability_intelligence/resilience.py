@@ -1,7 +1,7 @@
 """Resilience assessment engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any
+
 from app.reliability_intelligence.models import ResilienceAssessment
 
 logger = logging.getLogger(__name__)

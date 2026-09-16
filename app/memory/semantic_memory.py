@@ -3,8 +3,8 @@ Semantic Memory (Tier 3): Learned Facts & Domain Knowledge Base
 """
 
 import uuid
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 
 class SemanticMemoryItem:
@@ -85,7 +85,7 @@ class SemanticMemory:
         if category:
             results = [item for item in results if item.category == category]
         query_words = set(query.lower().split())
-        
+
         def match_score(item: SemanticMemoryItem) -> float:
             words = set(item.fact.lower().split())
             overlap = len(query_words.intersection(words))

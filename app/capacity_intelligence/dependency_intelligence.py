@@ -1,7 +1,7 @@
 """Capacity dependency graph for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Set, List
+from typing import Dict, List, Set
 
 logger = logging.getLogger(__name__)
 

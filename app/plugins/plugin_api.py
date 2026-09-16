@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from typing import List, Dict, Optional, Any
 
 from .plugin_manager import PluginManager
 

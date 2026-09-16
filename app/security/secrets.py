@@ -1,13 +1,10 @@
 """Secret Management Platform Abstraction & Automatic Redaction."""
 
+import logging
 import os
 import re
-import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, Set
-from datetime import datetime, timezone
-
-from app.security.exceptions import SecretAccessDeniedError
+from typing import Dict, Optional, Set
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +14,6 @@ SECRET_PATTERNS = [
     re.compile(r"sk-[a-zA-Z0-9_\-]{20,}"),
     re.compile(r"eyJ[a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9_\-\.]+"),
 ]
-
 
 
 class SecretProvider(ABC):
@@ -109,4 +105,3 @@ class SecretManager:
                 pass
 
         return result
-

@@ -1,9 +1,10 @@
 """Deployment Telemetry Regression & Rollback Recommendation Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional
+import uuid
+from datetime import datetime, timezone
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from app.approvals.approval_engine import ApprovalEngine

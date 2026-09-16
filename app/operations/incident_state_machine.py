@@ -25,7 +25,6 @@ class IncidentState(str, Enum):
 
 class IllegalStateTransitionError(ValueError):
     """Raised when an illegal incident state transition is requested."""
-    pass
 
 
 class IncidentStateMachine:

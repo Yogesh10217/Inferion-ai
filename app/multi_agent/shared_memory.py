@@ -3,8 +3,9 @@ Team-Wide Shared Memory Integration Layer (Phase 5.3 Integration)
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.memory.memory_service import MemoryService, MemoryItemRecord
+from typing import List, Optional
+
+from app.memory.memory_service import MemoryItemRecord, MemoryService
 
 logger = logging.getLogger(__name__)
 

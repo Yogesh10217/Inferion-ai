@@ -1,13 +1,12 @@
 """Tenant-Scoped Assurance Analytics Subsystem (Phase 5.38)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.analytics import PlatformReport, PlatformInsight
-from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
 
 
 class ControlAssuranceInsight(BaseModel):

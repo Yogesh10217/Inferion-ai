@@ -5,7 +5,7 @@ Evaluates RTO, RPO, MTTD, MTTA, and MTTR compliance.
 Preserves Truthfulness Boundary: Objectives are claimed as met only when empirical evidence exists.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel

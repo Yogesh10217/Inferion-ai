@@ -2,10 +2,12 @@
 A/B Testing Traffic Splitting Middleware.
 """
 
+import uuid
+
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
+
 from app.mlops.experiments import ExperimentManager
-import uuid
 
 
 class ABTestingMiddleware(BaseHTTPMiddleware):

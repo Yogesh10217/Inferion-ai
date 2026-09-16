@@ -1,7 +1,8 @@
 """Pydantic request/response schemas for Capacity Intelligence (Phase 5.56)."""
 
-from typing import Dict, Any, List, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 

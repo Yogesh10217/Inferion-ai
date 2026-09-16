@@ -5,8 +5,7 @@ import json
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional
-from app.runtime_intelligence.models import RiskLevel, DelegationStatus
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

@@ -1,14 +1,13 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth.models import User, Session, AuditEvent, APIKey
-from app.auth.password_service import PasswordService
+from app.auth.exceptions import InvalidCredentialsException
 from app.auth.jwt_service import JWTService
-from app.auth.api_key_service import APIKeyService
-from app.auth.exceptions import InvalidCredentialsException, UserInactiveException
+from app.auth.models import AuditEvent, Session, User
+from app.auth.password_service import PasswordService
 
 
 class AuthService:
@@ -58,12 +57,12 @@ class AuthService:
         # We will use the user's default org for the session if available, else require selection later.
         org_id = user.default_organization_id
         if not org_id:
-             # Find first available org for audit log
-             from app.tenant.models import Membership
-             stmt_mem = select(Membership).where(Membership.user_id == user.id)
-             res_mem = await db.execute(stmt_mem)
-             mem = res_mem.scalars().first()
-             org_id = mem.organization_id if mem else "SYSTEM"
+            # Find first available org for audit log
+            from app.tenant.models import Membership
+            stmt_mem = select(Membership).where(Membership.user_id == user.id)
+            res_mem = await db.execute(stmt_mem)
+            mem = res_mem.scalars().first()
+            org_id = mem.organization_id if mem else "SYSTEM"
 
         await AuthService.log_audit_event(db, "login", organization_id=org_id, actor_id=user.id, ip_address=ip_address)
         return user
@@ -73,11 +72,11 @@ class AuthService:
         """Create a new session (refresh token) for the user within an organization context."""
         token_data = {"sub": user.id}
         refresh_token = JWTService.create_refresh_token(token_data)
-        
+
         # We store a hash of the refresh token in the DB to allow revoking it
         # without storing the plaintext token
         refresh_token_hash = PasswordService.get_password_hash(refresh_token)
-        
+
         session = Session(
             user_id=user.id,
             organization_id=organization_id,
@@ -88,7 +87,7 @@ class AuthService:
         db.add(session)
         await db.commit()
         await db.refresh(session)
-        
+
         # We need to return both the DB model and the raw token for the client
         session.raw_token = refresh_token
         return session

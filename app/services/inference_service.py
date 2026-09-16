@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import time
 from abc import ABC, abstractmethod
 from typing import Any, AsyncIterator
 
 from app.adapters.openai_response_adapter import OpenAIResponseAdapter
 from app.core.exceptions import AppException, NotFoundError, ProviderUnavailableError, ValidationError
+from app.limits.events import UsageEvent, UsageEventEmitter
 from app.providers.base_provider import BaseProvider
 from app.registry.model_registry import InMemoryModelRegistry, ModelRegistry
 from app.routing.request_router import RequestRouter, RoutingRequest
@@ -13,9 +15,7 @@ from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import ChatMessage, InferenceRequest
 from app.services.request_scheduler import RequestScheduler
 from app.services.streaming_manager import StreamingManager
-from app.limits.events import UsageEventEmitter, UsageEvent
 from app.tracing.tracer import get_tracer
-import time
 
 _tracer = get_tracer("inference_service")
 

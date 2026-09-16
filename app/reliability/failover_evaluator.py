@@ -7,7 +7,7 @@ Returns FAILOVER_SIMULATION_VALIDATED when simulation succeeds.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

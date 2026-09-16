@@ -1,9 +1,10 @@
 """Lifecycle state transition machine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Set, Dict
-from app.continuous_assurance.models import AssuranceLifecycleState
+from typing import Dict, Set
+
 from app.continuous_assurance.exceptions import InvalidContinuousAssuranceStateTransitionException
+from app.continuous_assurance.models import AssuranceLifecycleState
 
 logger = logging.getLogger(__name__)
 

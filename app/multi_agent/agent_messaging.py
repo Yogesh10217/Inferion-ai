@@ -2,12 +2,13 @@
 Message Bus & Agent-to-Agent Communication Subsystem
 """
 
-import uuid
-import time
 import asyncio
 import logging
-from typing import Dict, Any, List, Optional, Callable
+import time
+import uuid
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

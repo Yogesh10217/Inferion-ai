@@ -2,10 +2,9 @@
 
 import logging
 from typing import Dict, List, Optional
-from datetime import datetime, timezone
 
 from app.security_assurance.assets import SecurityAsset, SecurityAssetType, SecurityCriticality
-from app.security_assurance.exceptions import SecurityAssetNotFoundException, CrossTenantSecurityAssuranceException
+from app.security_assurance.exceptions import CrossTenantSecurityAssuranceException, SecurityAssetNotFoundException
 
 logger = logging.getLogger(__name__)
 

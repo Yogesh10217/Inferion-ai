@@ -2,9 +2,10 @@
 DAG Dependency Engine with Cycle Detection & Critical Path Calculation
 """
 
-from typing import Dict, Any, List, Set, Tuple
-from app.planning.goals import Task
+from typing import Dict, List
+
 from app.planning.exceptions import DependencyResolutionError
+from app.planning.goals import Task
 
 
 class DependencyGraph:

@@ -1,9 +1,10 @@
 """Continuous assurance governance engine (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
-from app.continuous_assurance.models import GovernanceDecisionOutcome
+from typing import Any, Dict
+
 from app.continuous_assurance.exceptions import HighRiskContinuousAssuranceActionRequiresApprovalException
+from app.continuous_assurance.models import GovernanceDecisionOutcome
 
 logger = logging.getLogger(__name__)
 

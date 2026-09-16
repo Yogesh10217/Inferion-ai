@@ -1,13 +1,14 @@
 """Workflow Templates framework providing pre-built automations."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.workflows.graph import WorkflowGraph
-from app.workflows.node import StartNode, EndNode, AgentNode
 from app.workflows.edge import Edge
 from app.workflows.executor import WorkflowExecutor
+from app.workflows.graph import WorkflowGraph
+from app.workflows.node import AgentNode, EndNode, StartNode
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,6 @@ class WorkflowTemplateEngine:
             if n.get("type") == "AGENT":
                 agent_id = n.get("config", {}).get("agent_id", "agent_default")
                 graph.add_node(AgentNode(node_id=n["id"], name=n.get("name", n["id"]), agent_id=agent_id))
-
 
         graph.add_node(EndNode("END"))
 

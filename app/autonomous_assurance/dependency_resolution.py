@@ -3,10 +3,11 @@ Workflow Dependency Resolution Subsystem.
 Validates step dependencies, detects cycles, calculates critical paths, and enforces execution ordering.
 """
 
-from typing import Dict, Any, List, Set, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional, Set
 
-from app.autonomous_assurance.exceptions import WorkflowExecutionBlockedException
+from pydantic import BaseModel
+
+from app.autonomous_assurance.exceptions import DependencyCycleException
 
 
 class WorkflowDependency(BaseModel):
@@ -54,9 +55,6 @@ class DependencyGraph:
                 dfs(n)
 
         return cycles
-
-
-from app.autonomous_assurance.exceptions import WorkflowExecutionBlockedException, DependencyCycleException
 
 
 class WorkflowDependencyResolver:
@@ -111,6 +109,7 @@ class WorkflowDependencyResolver:
             # Topological sort
             sorted_steps = []
             visited = set()
+
             def visit(step):
                 if step.step_id in visited:
                     return

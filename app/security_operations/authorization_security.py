@@ -5,9 +5,9 @@ Evaluates RBAC, permission enforcement, default deny policy, and privilege escal
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
+from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from app.deployment.secrets import SecretsSanitizer

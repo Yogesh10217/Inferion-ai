@@ -11,12 +11,8 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 from app.core.container import ServiceContainer
 from app.deployment.container_validation import ContainerValidationEngine
-from app.deployment.dependency_validation import DeploymentDependencyValidator
 from app.deployment.deployment_metadata import DeploymentIdentityBuilder
-from app.deployment.environment import EnvironmentManager
-from app.deployment.exceptions import ConfigurationValidationError
 from app.deployment.models import (
-    DeploymentDecision,
     DeploymentEnvironment,
     DeploymentIdentity,
     DeploymentReleaseStatus,
@@ -24,19 +20,16 @@ from app.deployment.models import (
     EnvironmentConfig,
     HealthStatus,
     PlatformReadinessClassification,
-    RollbackPlan,
     RollbackTrigger,
 )
 from app.deployment.release_validation import DeploymentReleaseValidator
 from app.deployment.rollback import RollbackStrategyEngine
 from app.deployment.secrets import SecretsSanitizer
-
 from app.deployment.service_registry import PlatformServiceRegistry
 
 
 class IllegalStateTransitionError(ValueError):
     """Raised when an illegal deployment state transition is attempted."""
-    pass
 
 
 class DeploymentLifecycleState(str, Enum):
@@ -121,7 +114,6 @@ class DeploymentStateMachine:
         DeploymentLifecycleState.ROLLED_BACK.value: set(),
         DeploymentLifecycleState.BLOCKED.value: set(),
     }
-
 
     def __init__(self, initial_state: DeploymentState) -> None:
         self._state = initial_state
@@ -279,7 +271,7 @@ class ProductionSimulationEngine:
         orig_mode = os.environ.get("DEPLOYMENT_MODE")
 
         try:
-            effective_digest = image_digest or f"sha256:{'a'*64}"
+            effective_digest = image_digest or f"sha256:{'a' * 64}"
             os.environ["IMAGE_DIGEST"] = effective_digest
             os.environ["DEPLOYMENT_MODE"] = deployment_mode
 
@@ -378,7 +370,6 @@ class ProductionSimulationEngine:
             else:
                 os.environ.pop("DEPLOYMENT_MODE", None)
 
-
     def inject_failure_and_rollback(
         self,
         trigger: RollbackTrigger,
@@ -457,4 +448,3 @@ class ProductionSimulationEngine:
         )
 
         return evidence, rollback_res
-

@@ -3,9 +3,9 @@ Platform Duplication Detection Engine.
 Detects duplicate models, enums, normalizers, and exception classes across phase directories.
 """
 
-import ast
 import os
 from typing import Dict, List, Tuple
+
 from app.platform_hardening.code_analysis import PlatformCodeAnalysisEngine
 from app.platform_hardening.models import (
     DuplicateDetectionResult,

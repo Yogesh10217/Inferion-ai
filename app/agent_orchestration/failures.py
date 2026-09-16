@@ -1,15 +1,15 @@
 """Failure Intelligence Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.event_intelligence.manager import EventIntelligenceManager
 from app.platform_contracts.tenant import TenantAccessGuard
 from app.reliability_platform.manager import ReliabilityPlatformManager
-from app.event_intelligence.manager import EventIntelligenceManager
-from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
 
 
 class AgentFailureType(str, Enum):

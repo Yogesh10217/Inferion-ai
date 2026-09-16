@@ -1,12 +1,12 @@
 """PromptOps & Immutable Prompt Versioning Platform."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.mlops.registry import AIAssetRegistry, AIAssetType, AIAssetStatus, AIAssetVersion
+from app.mlops.registry import AIAssetRegistry, AIAssetStatus, AIAssetType, AIAssetVersion
 
 logger = logging.getLogger(__name__)
 

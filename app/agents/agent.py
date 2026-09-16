@@ -2,22 +2,23 @@
 Core Agent Driver & Execution Pipeline
 """
 
-import time
 import logging
-from typing import Dict, Any, Optional, List
+import time
+from typing import Optional
+
 from app.agents.agent_config import AgentConfig
 from app.agents.agent_context import AgentContext
-from app.agents.agent_state import AgentState, AgentStatus, StepType, ExecutionStep
+from app.agents.agent_state import AgentState, AgentStatus, ExecutionStep, StepType
+from app.agents.approval import ApprovalController
+from app.agents.artifacts.manager import ArtifactManager
+from app.agents.budget import AgentBudgetTracker
+from app.agents.checkpoint import CheckpointManager
+from app.agents.exceptions import ApprovalRequiredException, MaxIterationsReachedError
+from app.agents.memory.coordinator import MemoryCoordinator
 from app.agents.planner.factory import PlannerFactory
 from app.agents.reflection.self_critique import SelfCritiqueReflection
-from app.agents.memory.coordinator import MemoryCoordinator
 from app.agents.tools.executor import ToolExecutor
 from app.agents.tools.registry import ToolRegistry
-from app.agents.budget import AgentBudgetTracker
-from app.agents.approval import ApprovalController
-from app.agents.checkpoint import CheckpointManager
-from app.agents.artifacts.manager import ArtifactManager
-from app.agents.exceptions import MaxIterationsReachedError, ApprovalRequiredException
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,8 @@
 """Pydantic V2 API Schemas for Reliability Intelligence (Phase 5.55)."""
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 

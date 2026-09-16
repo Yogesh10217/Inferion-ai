@@ -1,6 +1,7 @@
-from typing import List, Tuple, Dict, Any, Optional
-from .routing_policy import RoutingPolicy
+from typing import Dict, List, Optional, Tuple
+
 from .routing_metrics import RoutingMetrics
+from .routing_policy import RoutingPolicy
 
 
 class ProviderRanker:

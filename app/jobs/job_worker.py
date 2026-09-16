@@ -1,13 +1,13 @@
 """Job Worker & WorkerPool with Heartbeats & Lease Expiration Recovery."""
 
 import asyncio
-import time
 import logging
+import time
 import uuid
-from typing import Dict, Any, Callable, Optional, List
 from datetime import datetime, timezone
+from typing import Callable, Dict, List, Optional
 
-from app.jobs.job import Job, JobStatus, JobResult
+from app.jobs.job import Job
 from app.jobs.job_queue import JobQueue
 
 logger = logging.getLogger(__name__)
@@ -105,7 +105,7 @@ class WorkerPool:
 
     async def start(self) -> None:
         self.workers = [
-            JobWorker(worker_id=f"pool_worker_{i+1}", queue=self.queue)
+            JobWorker(worker_id=f"pool_worker_{i + 1}", queue=self.queue)
             for i in range(self.size)
         ]
         for w in self.workers:
@@ -116,4 +116,3 @@ class WorkerPool:
         for w in self.workers:
             await w.stop()
         logger.info("[WORKER POOL] Stopped all workers")
-

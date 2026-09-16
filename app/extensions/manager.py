@@ -1,20 +1,20 @@
 """Master Extension Manager unifying framework components."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
-from app.extensions.extension_registry import ExtensionRegistry
-from app.extensions.extension_loader import ExtensionLoader
-from app.extensions.extension_runtime import IsolatedExtensionRuntime
-from app.extensions.extension_permissions import ExtensionPermissionEngine
-from app.extensions.extension_lifecycle import ExtensionLifecycleManager
-from app.extensions.dependencies import DependencyResolver
-from app.extensions.security import ExtensionSecurityEngine
-from app.extensions.billing import ExtensionBillingTracker
-from app.extensions.observability import ExtensionMetricsCollector
 from app.extensions.agent_extension import AgentExtensionAdapter
-from app.extensions.workflow_template import WorkflowTemplateEngine
+from app.extensions.billing import ExtensionBillingTracker
+from app.extensions.dependencies import DependencyResolver
+from app.extensions.extension_lifecycle import ExtensionLifecycleManager
+from app.extensions.extension_loader import ExtensionLoader
+from app.extensions.extension_permissions import ExtensionPermissionEngine
+from app.extensions.extension_registry import ExtensionRegistry
+from app.extensions.extension_runtime import IsolatedExtensionRuntime
 from app.extensions.mcp_package import MCPPackageManager
+from app.extensions.observability import ExtensionMetricsCollector
+from app.extensions.security import ExtensionSecurityEngine
+from app.extensions.workflow_template import WorkflowTemplateEngine
 
 logger = logging.getLogger(__name__)
 

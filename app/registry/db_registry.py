@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import json
 import logging
 from datetime import datetime, timezone
 from threading import RLock
-from typing import Any, Optional, List
+from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import async_session_maker
 from app.registry.model_metadata import ModelMetadata

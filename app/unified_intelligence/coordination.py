@@ -5,15 +5,15 @@ Plans multi-step cross-domain coordination plans, enforcing step dependencies,
 approval gates, and execution parameters with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
-from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.recommendations import UnifiedRecommendation
 
 
@@ -21,6 +21,7 @@ class CoordinationStep:
     """
     Step in a cross-domain action coordination plan.
     """
+
     def __init__(
         self,
         step_id: str,
@@ -55,6 +56,7 @@ class CoordinationPlan:
     """
     Multi-step execution plan for cross-domain action coordination.
     """
+
     def __init__(
         self,
         plan_id: str,
@@ -89,6 +91,7 @@ class CoordinationPlannerEngine:
     """
     Builds structured coordination plans for execution across platform domain managers.
     """
+
     def __init__(self):
         pass
 

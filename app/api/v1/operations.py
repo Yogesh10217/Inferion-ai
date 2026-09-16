@@ -1,14 +1,14 @@
 """FastAPI Router for Observability, SRE & Autonomous Operations Platform (/v1/operations/*)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
+from typing import Optional
 
-from app.operations.manager import OperationsManager
-from app.operations.slo import SLOType
-from app.operations.runbooks import RunbookMode
-from app.operations.remediation import RemediationRisk
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+
 from app.operations.exceptions import OperationsException
+from app.operations.manager import OperationsManager
+from app.operations.runbooks import RunbookMode
+from app.operations.slo import SLOType
 
 router = APIRouter(prefix="/v1/operations", tags=["operations"])
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
 
 
@@ -89,9 +89,9 @@ class ExecutionTrace:
         parent_id = raw_span.get("parent_span_id")
         name = raw_span.get("name", "unnamed")
         attrs = raw_span.get("attributes", {})
-        
+
         component = attrs.get("component") or name.split(".")[0] if "." in name else "general"
-        
+
         tokens = {
             "input": attrs.get("prompt_tokens", attrs.get("input_tokens", 0)),
             "output": attrs.get("completion_tokens", attrs.get("output_tokens", 0)),

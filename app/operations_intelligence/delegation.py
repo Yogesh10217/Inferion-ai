@@ -1,15 +1,16 @@
 """Delegated Operational Action Coordination (Phase 5.41)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.operations_intelligence.exceptions import (
     CrossTenantOperationsAccessException,
     HighRiskOperationRequiresApprovalException,
 )
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
+from app.platform_contracts.delegation import DelegationRequest, DelegationStatus, DelegationTarget
 
 
 class OperationalDelegationPlan(BaseModel):

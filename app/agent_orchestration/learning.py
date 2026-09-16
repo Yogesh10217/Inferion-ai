@@ -1,12 +1,12 @@
 """Agent Learning Intelligence Subsystem (Phase 5.36)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
 
 
 class AgentPattern(BaseModel):

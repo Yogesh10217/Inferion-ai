@@ -1,10 +1,11 @@
 """FastAPI Router for Distributed Job Management (/v1/jobs)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.jobs.job import Job, JobStatus, JobPriority, JobMetadata
+from app.jobs.job import Job, JobMetadata, JobPriority
 from app.jobs.job_queue import JobQueue
 
 router = APIRouter(prefix="/v1/jobs", tags=["jobs"])

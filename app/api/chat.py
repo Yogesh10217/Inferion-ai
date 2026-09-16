@@ -1,11 +1,12 @@
 import json
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 
+from app.adapters.openai_response_adapter import OpenAIResponseAdapter, format_sse_event
 from app.schemas.request import ChatCompletionRequest
 from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage
 from app.services.inference_service import InferenceService, build_inference_service
-from app.adapters.openai_response_adapter import OpenAIResponseAdapter, format_sse_event
 
 router = APIRouter(tags=["chat"])
 
@@ -92,5 +93,3 @@ async def create_chat_completion(
         ],
         usage=Usage(prompt_tokens=prompt_toks, completion_tokens=comp_toks, total_tokens=tot_toks),
     )
-
-

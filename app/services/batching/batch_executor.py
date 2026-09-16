@@ -1,15 +1,15 @@
 import asyncio
 from typing import Optional
 
+from app.cache.cache_manager import CacheManager
 from app.core.logger import get_logger
+from app.resilience.bulkhead import BulkheadRegistry
+from app.resilience.circuit_breaker import CircuitBreakerOpenException, CircuitBreakerRegistry
 from app.routing.failover_policy import FailoverPolicy
 from app.routing.provider_pool import ProviderInstance
 from app.services.batching.batch_entry import Batch
-from app.services.metrics_service import MetricsService
-from app.cache.cache_manager import CacheManager
-from app.resilience.circuit_breaker import CircuitBreakerRegistry, CircuitBreakerOpenException
-from app.resilience.bulkhead import BulkheadRegistry
 from app.services.dead_letter_queue import DeadLetterQueue, DLQEntry
+from app.services.metrics_service import MetricsService
 
 logger = get_logger("app.batching.executor")
 

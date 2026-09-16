@@ -1,9 +1,8 @@
 """Analytical dependency graph supporting upstream/downstream analysis, blast radius, critical path, and circular dependency detection."""
 
-from typing import Dict, Any, List, Set, Tuple, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Set
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException
+from pydantic import BaseModel, Field
 
 
 class GraphNode(BaseModel):

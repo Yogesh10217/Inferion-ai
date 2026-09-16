@@ -1,27 +1,28 @@
 """FastAPI REST API Router for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Dict, Optional
+
+from fastapi import APIRouter, Depends, Header, status
 
 from app.continuous_assurance.manager import ContinuousAssuranceManager
 from app.continuous_assurance.schemas import (
-    CreateObservationRequest,
-    ObservationResponse,
     AssessmentRequest,
     AssessmentResponse,
-    DriftAnalysisRequest,
-    DriftResponse,
     ControlEvaluationRequest,
     ControlEvaluationResponse,
-    VerificationRequestSchema,
-    VerificationResponse,
-    RecommendationRequest,
-    RecommendationResponse,
-    GovernanceEvaluationRequest,
-    GovernanceEvaluationResponse,
+    CreateObservationRequest,
     DelegationRequestSchema,
     DelegationResponse,
+    DriftAnalysisRequest,
+    DriftResponse,
+    GovernanceEvaluationRequest,
+    GovernanceEvaluationResponse,
+    ObservationResponse,
+    RecommendationRequest,
+    RecommendationResponse,
+    VerificationRequestSchema,
+    VerificationResponse,
 )
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ router = APIRouter(prefix="/v1/continuous-assurance", tags=["Continuous Assuranc
 
 # Dependency container provider helper
 _manager_instance: Optional[ContinuousAssuranceManager] = None
+
 
 def get_assurance_manager() -> ContinuousAssuranceManager:
     global _manager_instance

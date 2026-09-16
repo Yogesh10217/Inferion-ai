@@ -2,6 +2,7 @@
 
 import logging
 from typing import List
+
 from app.capacity_intelligence.models import CapacityRecommendation
 from app.capacity_intelligence.repositories import RecommendationRepository
 

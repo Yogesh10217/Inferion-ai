@@ -1,13 +1,14 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
-from datetime import datetime, timezone
 import time
+from datetime import datetime
 
-from app.limits.models import UsageRecord
+from sqlalchemy import and_, select
+
+from app.billing.cost_calculator import CostCalculator
 from app.billing.models import Invoice, InvoiceLineItem, InvoiceStatus, OrganizationSubscription
 from app.billing.pricing_service import PricingService
-from app.billing.cost_calculator import CostCalculator
+from app.limits.models import UsageRecord
 from app.services.metrics_service import MetricsService
+
 
 class InvoiceService:
     def __init__(self, session_factory, pricing_service: PricingService, metrics: MetricsService):
@@ -40,7 +41,7 @@ class InvoiceService:
                 key = (usage.provider, usage.model)
                 if key not in grouped_usage:
                     grouped_usage[key] = {"requests": 0, "tokens": 0, "cost": 0.0, "currency": "USD"}
-                
+
                 grouped_usage[key]["requests"] += 1
                 grouped_usage[key]["tokens"] += usage.total_tokens
 
@@ -76,7 +77,7 @@ class InvoiceService:
                 db.add(line_item)
                 subtotal += data["cost"]
                 currency = data["currency"]
-                
+
                 # Record cost metric
                 self.metrics.record_cost_incurred(provider, data["cost"])
 
@@ -87,11 +88,11 @@ class InvoiceService:
             )
             sub_res = await db.execute(sub_stmt)
             active_sub = sub_res.scalars().first()
-            
+
             discount = 0.0
             if active_sub and active_sub.plan:
                 subtotal += active_sub.plan.monthly_price
-                
+
             tax = subtotal * 0.0  # Optional tax calculation
             total = subtotal - discount + tax
 
@@ -100,7 +101,7 @@ class InvoiceService:
             invoice.discount = round(discount, 6)
             invoice.total = round(total, 6)
             invoice.currency = currency
-            
+
             await db.commit()
             await db.refresh(invoice)
 

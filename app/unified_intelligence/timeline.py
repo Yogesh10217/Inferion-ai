@@ -1,8 +1,9 @@
 """Unified Intelligence Chronological Timeline Engine for Phase 5.51 Enterprise AI Unified Intelligence."""
 
-from typing import Dict, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.unified_intelligence.domains import IntelligenceDomain

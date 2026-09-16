@@ -1,8 +1,8 @@
 """Defensive Attack Path Finder."""
 
-from typing import List, Dict
-from pydantic import BaseModel, Field
-from datetime import datetime, timezone
+from typing import List
+
+from pydantic import BaseModel
 
 from app.security_assurance.attack_graph import AnalyticalAttackGraph
 

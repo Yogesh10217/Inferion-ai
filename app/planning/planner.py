@@ -2,14 +2,14 @@
 Planner Subsystem Engine
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
-from app.planning.goals import Goal, Milestone, Task, Status
-from app.planning.execution_plan import ExecutionPlan
-from app.planning.task_decomposer import TaskDecomposer
+import time
+
 from app.planning.dependency_graph import DependencyGraph
 from app.planning.exceptions import PlanValidationError
+from app.planning.execution_plan import ExecutionPlan
+from app.planning.goals import Milestone
+from app.planning.task_decomposer import TaskDecomposer
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class Planner:
         )
 
         plan = ExecutionPlan(
-            goal_id=f"goal_{int(time.time()*1000)}",
+            goal_id=f"goal_{int(time.time() * 1000)}",
             title=goal_title,
             tenant_id=tenant_id,
             workspace_id=workspace_id,

@@ -1,12 +1,12 @@
 """Immutable data intelligence snapshots (Phase 5.43)."""
 
-import uuid
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class DataIntelligenceSnapshot(BaseModel):

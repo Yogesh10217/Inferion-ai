@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import os
-from typing import Optional, Protocol
-
+from typing import Any, Dict, Optional, Protocol
 
 from app.deployment.exceptions import SecretAccessError
 
@@ -117,12 +116,12 @@ class SecretsSanitizer:
 
 _sanitizer_instance: Optional[SecretsSanitizer] = None
 
+
 def get_secrets_sanitizer() -> SecretsSanitizer:
     global _sanitizer_instance
     if _sanitizer_instance is None:
         _sanitizer_instance = SecretsSanitizer()
     return _sanitizer_instance
-
 
 
 class SecretProviderReadinessEvaluator:
@@ -175,6 +174,3 @@ class SecretProviderReadinessEvaluator:
             "canary_secrets": canaries_found,
             "classification": classification,
         }
-
-
-

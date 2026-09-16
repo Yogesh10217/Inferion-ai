@@ -1,8 +1,7 @@
 """Provider-decoupled architecture for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.runtime_intelligence.exceptions import RuntimeProviderException
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

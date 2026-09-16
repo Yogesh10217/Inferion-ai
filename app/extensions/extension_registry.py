@@ -2,9 +2,10 @@
 
 import logging
 import threading
-from typing import Dict, Any, Optional, List
-from app.extensions.extension import Extension, ExtensionType
+from typing import Dict, List, Optional
+
 from app.extensions.exceptions import ExtensionNotFoundException
+from app.extensions.extension import Extension, ExtensionType
 
 logger = logging.getLogger(__name__)
 

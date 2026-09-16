@@ -1,10 +1,11 @@
 """Integration Evidence Management (Phase 5.40)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 import hashlib
 import json
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.integration_intelligence.exceptions import (

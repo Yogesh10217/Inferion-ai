@@ -1,7 +1,8 @@
 """Pydantic V2 API Schemas for Continuous Assurance (Phase 5.54)."""
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
+from datetime import datetime
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 

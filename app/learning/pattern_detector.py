@@ -3,8 +3,9 @@ Pattern Detector for Learning Subsystem
 """
 
 import logging
-from typing import Dict, Any, List
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List
+
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

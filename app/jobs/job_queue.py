@@ -1,11 +1,11 @@
 """Distributed Job Queue with Priority, Idempotency & Dead-Letter Queuing."""
 
-import logging
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone, timedelta
 import heapq
+import logging
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional
 
-from app.jobs.job import Job, JobStatus, JobPriority, JobResult, JobMetadata
+from app.jobs.job import Job, JobStatus
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +111,6 @@ class JobQueue:
             logger.warning(f"[JOB QUEUE] Job '{job_id}' failed (attempt {job.attempts_made}/{job.max_attempts}). Retrying in {backoff_sec}s...")
 
         return job
-
 
     def retry(self, job_id: str) -> Job:
         """Manually retry a failed or dead-letter job."""

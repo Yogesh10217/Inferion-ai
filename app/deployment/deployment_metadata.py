@@ -3,11 +3,9 @@ from __future__ import annotations
 import os
 from typing import Dict
 
-from app.deployment.exceptions import ConfigurationValidationError
-from app.deployment.models import DeploymentEnvironment, DeploymentIdentity, EnvironmentConfig, PlatformReadinessClassification
-
-
 from app.deployment.container_validation import ContainerValidationEngine
+from app.deployment.exceptions import ConfigurationValidationError
+from app.deployment.models import DeploymentIdentity, EnvironmentConfig, PlatformReadinessClassification
 
 
 class DeploymentIdentityBuilder:
@@ -45,7 +43,6 @@ class DeploymentIdentityBuilder:
         )
 
 
-
 class DeploymentMetadataProvider:
     """Provides build versioning, git commit hashes, and deployment metadata."""
 
@@ -67,4 +64,3 @@ class DeploymentMetadataProvider:
             if config.is_production()
             else PlatformReadinessClassification.STAGING_VALIDATED.value,
         }
-

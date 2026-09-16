@@ -2,10 +2,11 @@ from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
-from app.limits.rate_limit_service import RateLimitService
-from app.limits.quota_service import QuotaService
-from app.limits.exceptions import RateLimitExceededException, QuotaExceededException
 from app.core.config import get_settings
+from app.limits.exceptions import QuotaExceededException, RateLimitExceededException
+from app.limits.quota_service import QuotaService
+from app.limits.rate_limit_service import RateLimitService
+
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, rate_limit_service: RateLimitService, quota_service: QuotaService):
@@ -28,7 +29,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         api_key_id = getattr(request.state, "api_key_id", None)
         user_id = getattr(request.state, "user_id", None)
 
-        # Only rate limit authenticated requests. 
+        # Only rate limit authenticated requests.
         # Anonymous limits can be handled via IP if needed, but not in this scope.
         if not org_id:
             return await call_next(request)
@@ -51,13 +52,13 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # 2. Evaluate Rate Limits
         limit = self.settings.default_requests_per_minute
         window = 60
-        
+
         # In a full implementation, RateLimitService would fetch the specific RateLimitPolicy
         # For this walkthrough, we apply the default limit to the org
         try:
             await self.rate_limit_service.check_rate_limit(
-                scope_id=f"org:{org_id}", 
-                limit=limit, 
+                scope_id=f"org:{org_id}",
+                limit=limit,
                 window_seconds=window
             )
         except RateLimitExceededException as e:
@@ -73,7 +74,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             )
         except RateLimitExceededException as e:
             return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
-        
+
         # Proceed with execution
         try:
             response = await call_next(request)

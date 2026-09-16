@@ -4,7 +4,7 @@ import hashlib
 import json
 import logging
 import threading
-from typing import Set, Dict, Any, Optional
+from typing import Any, Dict, Set
 
 logger = logging.getLogger(__name__)
 

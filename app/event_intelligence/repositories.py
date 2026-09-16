@@ -1,6 +1,7 @@
 """Event Persistence Repositories Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from app.platform_contracts.repositories import TenantScopedRepository
 
 

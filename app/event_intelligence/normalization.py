@@ -1,11 +1,19 @@
 """Event Normalization Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.event_intelligence.events import EnterpriseEvent, EventSeverity, EventCategory, EventType, EventSource, EventMetadata
+from app.event_intelligence.events import (
+    EnterpriseEvent,
+    EventCategory,
+    EventMetadata,
+    EventSeverity,
+    EventSource,
+    EventType,
+)
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 

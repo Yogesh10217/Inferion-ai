@@ -1,38 +1,33 @@
 """FastAPI REST API Router for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 
 from app.runtime_intelligence.manager import RuntimeIntelligenceManager
 from app.runtime_intelligence.schemas import (
-    RuntimeObservationRequest,
-    RuntimeObservationResponse,
-    HealthAssessmentRequest,
-    HealthAssessmentResponse,
-    AnomalyDetectionRequest,
-    AnomalyDetectionResponse,
-    DriftAnalysisRequest,
-    DriftAnalysisResponse,
-    BaselineRequest,
-    BaselineResponse,
-    DegradationRequest,
-    DegradationResponse,
-    CausalAnalysisRequest,
-    CausalAnalysisResponse,
-    ResilienceAssessmentRequest,
-    ResilienceAssessmentResponse,
-    RecoveryPlanRequest,
-    RecoveryPlanResponse,
     AdaptiveAssuranceRequest,
     AdaptiveAssuranceResponse,
-    RecommendationRequest,
-    RecommendationResponse,
-    GovernanceEvaluationRequest,
-    GovernanceEvaluationResponse,
+    AnomalyDetectionRequest,
+    AnomalyDetectionResponse,
+    BaselineRequest,
+    BaselineResponse,
+    CausalAnalysisRequest,
+    CausalAnalysisResponse,
     DelegationRequestSchema,
     DelegationResponseSchema,
+    DriftAnalysisRequest,
+    DriftAnalysisResponse,
     EvidenceBundleResponse,
+    GovernanceEvaluationRequest,
+    GovernanceEvaluationResponse,
+    HealthAssessmentRequest,
+    HealthAssessmentResponse,
+    ResilienceAssessmentRequest,
+    ResilienceAssessmentResponse,
+    RuntimeObservationRequest,
+    RuntimeObservationResponse,
     SnapshotResponse,
 )
 
@@ -41,6 +36,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/v1/runtime", tags=["Runtime Intelligence"])
 
 _manager_instance: Optional[RuntimeIntelligenceManager] = None
+
 
 def get_runtime_manager() -> RuntimeIntelligenceManager:
     global _manager_instance

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional, Protocol
+
 from app.observability.context import ObservabilityContext, get_current_context
 from app.observability.exceptions import AlertConfigurationException
 
@@ -78,7 +79,7 @@ class AlertManager:
             raise AlertConfigurationException(f"Invalid alert level '{level}'. Allowed: INFO, WARNING, CRITICAL")
 
         ctx = context or get_current_context()
-        alert_id = f"alert-{int(time.time()*1000)}-{len(self._alerts)+1}"
+        alert_id = f"alert-{int(time.time() * 1000)}-{len(self._alerts) + 1}"
 
         alert = Alert(
             alert_id=alert_id,

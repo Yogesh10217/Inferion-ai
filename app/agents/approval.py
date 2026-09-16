@@ -4,9 +4,10 @@ Agent Human Approval Controller
 
 import logging
 import time
-from typing import Dict, Any, Optional
-from app.agents.exceptions import ApprovalRequiredException
+from typing import Any, Dict, Optional
+
 from app.agents.agent_state import AgentState, AgentStatus
+from app.agents.exceptions import ApprovalRequiredException
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class ApprovalController:
         req = self._pending_approvals.get(session_id)
         if not req:
             raise ValueError(f"No pending approval request found for session '{session_id}'")
-        
+
         req["status"] = "APPROVED" if approved else "REJECTED"
         req["feedback"] = feedback
         req["responded_at"] = time.time()

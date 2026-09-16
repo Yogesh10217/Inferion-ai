@@ -8,13 +8,11 @@ from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.dependency_validation import DeploymentDependencyValidator
 from app.deployment.models import (
     DependencyStatus,
-    EnvironmentConfig,
     HealthCategory,
     HealthCheckResult,
     HealthStatus,
     SystemHealthReport,
 )
-from app.deployment.observability_configuration import DeploymentObservabilityValidator
 from app.deployment.service_registry import PlatformServiceRegistry
 
 

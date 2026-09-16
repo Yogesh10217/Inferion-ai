@@ -1,20 +1,20 @@
 """Knowledge Evidence Management Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.evidence import (
-    EvidenceReference,
+    EvidenceIntegrity,
     EvidenceMetadata,
+    EvidenceReference,
     EvidenceSourceReference,
     EvidenceStrength,
-    EvidenceIntegrity,
 )
 from app.platform_contracts.fingerprinting import FingerprintGenerator
-from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 
 class KnowledgeEvidenceStrength(str, Enum):

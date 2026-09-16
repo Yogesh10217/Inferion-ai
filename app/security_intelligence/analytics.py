@@ -1,6 +1,6 @@
 """Tenant-Scoped Security Analytics Subsystem (Phase 5.32)."""
 
-from app.platform_contracts.analytics import PlatformReport, PlatformInsight, AnalyticsMetric, AnalyticsPeriod
+from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformInsight, PlatformReport
 
 
 class SecurityAnalyticsEngine:

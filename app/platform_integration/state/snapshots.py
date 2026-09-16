@@ -1,16 +1,13 @@
 """Platform Integration Snapshot Manager adopting PlatformSnapshot Pattern (Phase 5.58)."""
 
-import hashlib
-import json
 import logging
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
 
 from app.platform_contracts.snapshots import (
     PlatformSnapshot,
-    SnapshotMetadata,
     SnapshotFactory,
 )
 

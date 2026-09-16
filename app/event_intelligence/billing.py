@@ -1,12 +1,9 @@
 """Event Cost Attribution Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 from decimal import Decimal
-import uuid
+from typing import Any, Dict, Optional
 
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
-from app.finops.manager import FinOpsManager
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 
 class EventBillingTracker:

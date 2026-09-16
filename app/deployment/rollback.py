@@ -5,7 +5,6 @@ from typing import Any, Dict, List, Optional
 
 from app.deployment.models import (
     DeploymentIdentity,
-    DeploymentState,
     PlatformReadinessClassification,
     RollbackEvidence,
     RollbackPlan,
@@ -16,7 +15,7 @@ from app.deployment.models import (
 
 class RollbackStrategyEngine:
     """Generates structured rollback plans and manages deployment safety state.
-    
+
     Produces ROLLBACK_STRATEGY_READY classification without executing actual runtime rollback.
     """
 
@@ -151,8 +150,8 @@ class RollbackStrategyEngine:
         container_instance: Any = None,
     ) -> Dict[str, Any]:
         """Executes actual simulated rollback by restoring a previously validated immutable deployment artifact."""
-        from app.deployment.container_validation import ContainerValidationEngine
         from app.core.container import ServiceContainer
+        from app.deployment.container_validation import ContainerValidationEngine
         from app.deployment.service_registry import PlatformServiceRegistry
 
         prev_ref = previous_reference or (previous_identity.canonical_fingerprint() if previous_identity else "NO_PREVIOUS_DEPLOYMENT_REFERENCE")
@@ -190,7 +189,7 @@ class RollbackStrategyEngine:
 
         # Perform simulated restoration of previous container/image
         restored_identity = previous_identity
-        
+
         # Verify ServiceContainer 9-manager singleton invariant after restart
         svc_container = container_instance or ServiceContainer()
         mgr_status = PlatformServiceRegistry.validate_platform_managers(svc_container)
@@ -219,4 +218,3 @@ class RollbackStrategyEngine:
             "readiness_classification": readiness_class,
             "message": "Simulated rollback executed successfully. Restored previous immutable deployment artifact and verified runtime health.",
         }
-

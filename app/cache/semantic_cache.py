@@ -5,9 +5,9 @@ Computes text embeddings for prompt similarity matching to return cached respons
 when prompt similarity exceeds threshold (default: 0.95).
 """
 
-from typing import List, Optional, Tuple
 import math
 import time
+from typing import List, Optional, Tuple
 
 from app.schemas.inference_response import InferenceResponse
 

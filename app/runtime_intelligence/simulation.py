@@ -4,7 +4,6 @@ import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +45,7 @@ class RuntimeSimulationEngine:
             adaptation_action=adaptation_action,
             workload_multiplier=workload_multiplier,
         )
-        
+
         # Simulate deltas deterministically
         lat_delta = -15.0 if "SCALE" in adaptation_action.upper() else 10.0
         err_delta = -0.02 if "SCALE" in adaptation_action.upper() else 0.01

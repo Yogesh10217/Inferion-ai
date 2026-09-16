@@ -1,7 +1,8 @@
 """Control effectiveness engine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, Optional
+
 from app.continuous_assurance.models import (
     ControlEffectivenessAssessment,
     ControlEffectivenessStatus,

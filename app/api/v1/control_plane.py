@@ -1,16 +1,16 @@
 """FastAPI Router for Enterprise Control Plane (/v1/control-plane)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.control_plane.manager import ControlPlaneManager
-from app.control_plane.tenant import TenantStatus
-from app.control_plane.workspace import WorkspaceEnvironment
-from app.control_plane.resource_registry import ResourceType
 from app.control_plane.configuration import ConfigurationScope
+from app.control_plane.exceptions import ApprovalRequiredException, ControlPlaneException
+from app.control_plane.manager import ControlPlaneManager
 from app.control_plane.policy_manager import PolicyTargetType
-from app.control_plane.exceptions import ControlPlaneException, ApprovalRequiredException
+from app.control_plane.resource_registry import ResourceType
+from app.control_plane.workspace import WorkspaceEnvironment
 
 router = APIRouter(prefix="/v1/control-plane", tags=["control-plane"])
 

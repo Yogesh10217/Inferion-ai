@@ -1,10 +1,10 @@
 """Automated Circular Dependency & Contract Architecture Validator (Phase 5.30)."""
 
-import sys
-import os
 import ast
 import logging
-from typing import Dict, Any, List, Set
+import os
+import sys
+from typing import Dict, List, Set
 
 from app.platform_contracts.exceptions import CircularDependencyException
 
@@ -117,7 +117,6 @@ class CircularDependencyValidator:
         "app.platform_integration",
         "app.platform_hardening",
     }
-
 
     @classmethod
     def validate_platform_contracts_isolation(cls, contracts_dir_path: str) -> bool:

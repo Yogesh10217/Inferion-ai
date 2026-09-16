@@ -1,9 +1,10 @@
 """Cross-domain operational correlation across model, service, infrastructure, data, and security domains."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import List
+
 from pydantic import BaseModel, Field
 
 

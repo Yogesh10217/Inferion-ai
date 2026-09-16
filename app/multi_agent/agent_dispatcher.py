@@ -3,9 +3,9 @@ Agent Task Event Dispatcher
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
-from app.multi_agent.agent_messaging import MessageBus, AgentMessage, MessageType
+from app.multi_agent.agent_messaging import AgentMessage, MessageBus, MessageType
 
 logger = logging.getLogger(__name__)
 

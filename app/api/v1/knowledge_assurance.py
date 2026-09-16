@@ -1,15 +1,13 @@
 """FastAPI REST API endpoints for Phase 5.46 Knowledge Assurance platform."""
 
-from typing import Any, Dict, List, Optional
-from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from typing import Any, Dict, List
+
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
 from app.knowledge_assurance.exceptions import (
     CrossTenantKnowledgeAssuranceException,
-    KnowledgeAssuranceException,
-    KnowledgeContextNotFoundException,
     KnowledgeReferenceNotFoundException,
-    KnowledgeSourceNotFoundException,
 )
 from app.knowledge_assurance.manager import KnowledgeAssuranceManager
 

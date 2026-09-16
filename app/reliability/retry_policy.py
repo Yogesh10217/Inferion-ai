@@ -4,9 +4,8 @@ Phase 5.70 - Retry Policy Module.
 Implements bounded retry policies (MAX_ATTEMPTS, FIXED_DELAY, EXPONENTIAL_BACKOFF) with deterministic backoff calculation and infinite loop prevention.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-import math
 from typing import Any, Dict, List, Optional
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel

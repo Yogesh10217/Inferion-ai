@@ -3,6 +3,7 @@ Canonical Subsystem Registry for the 8 Enterprise AI Platforms.
 """
 
 from typing import Dict, List, Optional
+
 from app.platform_hardening.models import (
     IntegrationHealthStatus,
     SubsystemIntegrationStatus,

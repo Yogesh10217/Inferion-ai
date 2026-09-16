@@ -1,15 +1,16 @@
 """Architecture Governance & Policy Evaluation Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
-from app.governance_platform.risk import RiskManager
 from app.approvals.approval_engine import ApprovalEngine
 from app.architecture_platform.impact import ImpactAnalysis, ImpactSeverity
+from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
+from app.governance_platform.risk import RiskManager
 
 
 class ArchitecturePolicyDecisionType(str, Enum):
@@ -66,7 +67,7 @@ class ArchitectureGovernanceEngine:
         action_type = impact_analysis.action_type
 
         factors = [f"Blast radius severity: {severity.value}", f"Affected nodes: {affected_count}", f"Action type: {action_type}"]
-        
+
         if severity in (ImpactSeverity.HIGH, ImpactSeverity.CRITICAL) or action_type in ("REMOVE", "MIGRATE", "REPLACE") or affected_count >= 5:
             risk_score = 85.0
             risk_level = "HIGH" if severity == ImpactSeverity.HIGH or action_type == "REMOVE" else "CRITICAL"
@@ -76,7 +77,6 @@ class ArchitectureGovernanceEngine:
         else:
             risk_score = 20.0
             risk_level = "LOW"
-
 
         risk_assessment = ArchitectureRiskAssessment(
             tenant_id=tenant_id,

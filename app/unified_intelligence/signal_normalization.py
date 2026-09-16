@@ -3,8 +3,8 @@
 import logging
 import uuid
 
-from app.unified_intelligence.normalization_contracts import UnifiedDomainInput, NormalizedSignal
 from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.unified_intelligence.normalization_contracts import NormalizedSignal, UnifiedDomainInput
 
 logger = logging.getLogger(__name__)
 

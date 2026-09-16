@@ -1,243 +1,243 @@
 """Knowledge Assurance Module Public Exports."""
 
-from app.knowledge_assurance.exceptions import (
-    KnowledgeAssuranceException,
-    CrossTenantKnowledgeAssuranceException,
-    KnowledgeReferenceNotFoundException,
-    KnowledgeContextNotFoundException,
-    KnowledgeSourceNotFoundException,
-    KnowledgeProvenanceNotFoundException,
-    KnowledgeConflictNotFoundException,
-    KnowledgeTrustNotFoundException,
-    KnowledgeEvidenceNotFoundException,
-    KnowledgeInvestigationNotFoundException,
-    KnowledgeActionBlockedException,
-    HighRiskKnowledgeActionRequiresApprovalException,
-    ImmutableKnowledgeRecordException,
-    KnowledgeContextAssemblyException,
-    KnowledgeVerificationException,
+from app.knowledge_assurance.analytics import (
+    KnowledgeAnalyticsManager,
+    KnowledgeAnalyticsReport,
+    KnowledgeAssuranceAnalyticsEngine,
+    KnowledgeInsight,
+    KnowledgeTrend,
 )
-from app.knowledge_assurance.knowledge_references import (
-    KnowledgeReference,
-    KnowledgeReferenceType,
-    KnowledgeReferenceStatus,
-    KnowledgeReferenceClassification,
-    KnowledgeReferenceMetadata,
-    KnowledgeReferenceManager,
+from app.knowledge_assurance.assurance import (
+    KnowledgeAssuranceAssessment,
+    KnowledgeAssuranceDimension,
+    KnowledgeAssuranceFactor,
+    KnowledgeAssuranceScore,
+    KnowledgeContinuousAssuranceManager,
 )
-from app.knowledge_assurance.sources import (
-    KnowledgeSource,
-    KnowledgeSourceType,
-    KnowledgeSourceStatus,
-    KnowledgeSourceAuthority,
-    KnowledgeSourceReliability,
-    KnowledgeSourceManager,
+from app.knowledge_assurance.billing import (
+    KnowledgeBillingTracker,
+    KnowledgeCostDimension,
+    KnowledgeCostEvent,
+)
+from app.knowledge_assurance.confidence import (
+    ConfidenceAssessment,
+    ConfidenceFactor,
+    ConfidenceLevel,
+    KnowledgeConfidence,
+    KnowledgeConfidenceManager,
+)
+from app.knowledge_assurance.conflicts import (
+    ConflictEvidence,
+    ConflictSeverity,
+    ConflictStatus,
+    KnowledgeConflict,
+    KnowledgeConflictManager,
+    KnowledgeConflictType,
+)
+from app.knowledge_assurance.consistency import (
+    ConsistencyDimension,
+    ConsistencyFinding,
+    ConsistencyScore,
+    KnowledgeConsistencyAssessment,
+    KnowledgeConsistencyManager,
 )
 from app.knowledge_assurance.context import (
-    KnowledgeContext,
-    ContextType,
-    ContextScope,
     ContextPriority,
+    ContextScope,
     ContextStatus,
+    ContextType,
+    KnowledgeContext,
     KnowledgeContextManager,
 )
 from app.knowledge_assurance.context_assembly import (
-    ContextAssemblyRequest,
-    ContextAssemblyPlan,
-    ContextAssemblyResult,
     ContextAssemblyEvidence,
     ContextAssemblyManager,
-)
-from app.knowledge_assurance.semantic_context import (
-    SemanticContext,
-    SemanticConcept,
-    SemanticRelationship,
-    SemanticSimilarity,
-    SemanticContextAssessment,
-    SemanticContextManager,
-)
-from app.knowledge_assurance.knowledge_graph import (
-    KnowledgeGraph,
-    KnowledgeGraphNode,
-    KnowledgeGraphEdge,
-    KnowledgeRelationship,
-    KnowledgeTraversal,
-    KnowledgeGraphManager,
-)
-from app.knowledge_assurance.provenance import (
-    KnowledgeProvenance,
-    ProvenanceSource,
-    ProvenanceChain,
-    ProvenanceEvidence,
-    ProvenanceStatus,
-    KnowledgeProvenanceManager,
-)
-from app.knowledge_assurance.freshness import (
-    KnowledgeFreshness,
-    FreshnessStatus,
-    FreshnessPolicy,
-    FreshnessAssessment,
-    KnowledgeFreshnessManager,
-)
-from app.knowledge_assurance.trust import (
-    KnowledgeTrustScore,
-    KnowledgeTrustDimension,
-    KnowledgeTrustFactor,
-    KnowledgeTrustAssessment,
-    KnowledgeTrustEngine,
-)
-from app.knowledge_assurance.confidence import (
-    KnowledgeConfidence,
-    ConfidenceLevel,
-    ConfidenceFactor,
-    ConfidenceAssessment,
-    KnowledgeConfidenceManager,
-)
-from app.knowledge_assurance.relevance import (
-    KnowledgeRelevance,
-    RelevanceDimension,
-    RelevanceScore,
-    RelevanceAssessment,
-    KnowledgeRelevanceManager,
-)
-from app.knowledge_assurance.conflicts import (
-    KnowledgeConflict,
-    KnowledgeConflictType,
-    ConflictSeverity,
-    ConflictStatus,
-    ConflictEvidence,
-    KnowledgeConflictManager,
-)
-from app.knowledge_assurance.consistency import (
-    KnowledgeConsistencyAssessment,
-    ConsistencyDimension,
-    ConsistencyScore,
-    ConsistencyFinding,
-    KnowledgeConsistencyManager,
-)
-from app.knowledge_assurance.duplication import (
-    KnowledgeDuplicate,
-    DuplicateType,
-    DuplicateSimilarity,
-    DuplicateAssessment,
-    KnowledgeDuplicationManager,
-)
-from app.knowledge_assurance.gaps import (
-    KnowledgeGap,
-    KnowledgeGapType,
-    GapSeverity,
-    GapImpact,
-    KnowledgeGapRecommendation,
-    KnowledgeGapManager,
-)
-from app.knowledge_assurance.coverage import (
-    KnowledgeCoverage,
-    CoverageDimension,
-    CoverageScore,
-    CoverageAssessment,
-    KnowledgeCoverageManager,
+    ContextAssemblyPlan,
+    ContextAssemblyRequest,
+    ContextAssemblyResult,
 )
 from app.knowledge_assurance.correlation import (
-    KnowledgeCorrelation,
-    CorrelationType,
-    CorrelationEvidence,
     CorrelationConfidence,
+    CorrelationEvidence,
+    CorrelationType,
+    KnowledgeCorrelation,
     KnowledgeCorrelationManager,
 )
-from app.knowledge_assurance.signals import (
-    KnowledgeSignal,
-    KnowledgeSignalType,
-    KnowledgeSignalSource,
-    KnowledgeSignalSeverity,
-    KnowledgeSignalManager,
+from app.knowledge_assurance.coverage import (
+    CoverageAssessment,
+    CoverageDimension,
+    CoverageScore,
+    KnowledgeCoverage,
+    KnowledgeCoverageManager,
 )
 from app.knowledge_assurance.decision_context import (
-    DecisionKnowledgeContext,
     DecisionContextEvidence,
-    DecisionContextTrust,
-    DecisionContextRecommendation,
     DecisionContextManager,
-)
-from app.knowledge_assurance.governance import (
-    KnowledgeGovernanceEngine,
-    KnowledgeGovernanceRequest,
-    KnowledgeGovernanceResult,
-    KnowledgeGovernanceContext,
-)
-from app.knowledge_assurance.risk import (
-    KnowledgeRiskProfile,
-    KnowledgeRiskDimension,
-    KnowledgeRiskAssessment,
-    KnowledgeRiskFactor,
-    KnowledgeRiskManager,
-)
-from app.knowledge_assurance.investigations import (
-    KnowledgeInvestigation,
-    KnowledgeFinding,
-    InvestigationEvidence,
-    InvestigationStatus,
-    KnowledgeInvestigationManager,
-)
-from app.knowledge_assurance.remediation import (
-    KnowledgeRemediationPlan,
-    KnowledgeRemediationAction,
-    KnowledgeRemediationPriority,
-    KnowledgeRemediationStatus,
-    KnowledgeRemediationManager,
+    DecisionContextRecommendation,
+    DecisionContextTrust,
+    DecisionKnowledgeContext,
 )
 from app.knowledge_assurance.delegation import (
-    KnowledgeDelegationPlan,
     KnowledgeDelegationAction,
-    KnowledgeDelegationStatus,
     KnowledgeDelegationManager,
+    KnowledgeDelegationPlan,
+    KnowledgeDelegationStatus,
 )
-from app.knowledge_assurance.verification import (
-    KnowledgeVerification,
-    VerificationCheck,
-    VerificationStatus,
-    VerificationEvidence,
-    KnowledgeVerificationManager,
+from app.knowledge_assurance.duplication import (
+    DuplicateAssessment,
+    DuplicateSimilarity,
+    DuplicateType,
+    KnowledgeDuplicate,
+    KnowledgeDuplicationManager,
 )
 from app.knowledge_assurance.evidence import (
     KnowledgeEvidence,
     KnowledgeEvidenceBundle,
     KnowledgeEvidenceIntegrity,
-    KnowledgeEvidenceReference,
     KnowledgeEvidenceManager,
+    KnowledgeEvidenceReference,
 )
-from app.knowledge_assurance.assurance import (
-    KnowledgeAssuranceScore,
-    KnowledgeAssuranceDimension,
-    KnowledgeAssuranceFactor,
-    KnowledgeAssuranceAssessment,
-    KnowledgeContinuousAssuranceManager,
+from app.knowledge_assurance.exceptions import (
+    CrossTenantKnowledgeAssuranceException,
+    HighRiskKnowledgeActionRequiresApprovalException,
+    ImmutableKnowledgeRecordException,
+    KnowledgeActionBlockedException,
+    KnowledgeAssuranceException,
+    KnowledgeConflictNotFoundException,
+    KnowledgeContextAssemblyException,
+    KnowledgeContextNotFoundException,
+    KnowledgeEvidenceNotFoundException,
+    KnowledgeInvestigationNotFoundException,
+    KnowledgeProvenanceNotFoundException,
+    KnowledgeReferenceNotFoundException,
+    KnowledgeSourceNotFoundException,
+    KnowledgeTrustNotFoundException,
+    KnowledgeVerificationException,
+)
+from app.knowledge_assurance.freshness import (
+    FreshnessAssessment,
+    FreshnessPolicy,
+    FreshnessStatus,
+    KnowledgeFreshness,
+    KnowledgeFreshnessManager,
+)
+from app.knowledge_assurance.gaps import (
+    GapImpact,
+    GapSeverity,
+    KnowledgeGap,
+    KnowledgeGapManager,
+    KnowledgeGapRecommendation,
+    KnowledgeGapType,
+)
+from app.knowledge_assurance.governance import (
+    KnowledgeGovernanceContext,
+    KnowledgeGovernanceEngine,
+    KnowledgeGovernanceRequest,
+    KnowledgeGovernanceResult,
+)
+from app.knowledge_assurance.investigations import (
+    InvestigationEvidence,
+    InvestigationStatus,
+    KnowledgeFinding,
+    KnowledgeInvestigation,
+    KnowledgeInvestigationManager,
+)
+from app.knowledge_assurance.knowledge_graph import (
+    KnowledgeGraph,
+    KnowledgeGraphEdge,
+    KnowledgeGraphManager,
+    KnowledgeGraphNode,
+    KnowledgeRelationship,
+    KnowledgeTraversal,
+)
+from app.knowledge_assurance.knowledge_references import (
+    KnowledgeReference,
+    KnowledgeReferenceClassification,
+    KnowledgeReferenceManager,
+    KnowledgeReferenceMetadata,
+    KnowledgeReferenceStatus,
+    KnowledgeReferenceType,
+)
+from app.knowledge_assurance.learning import (
+    KnowledgeLearningManager,
+    KnowledgeLearningPattern,
+    KnowledgeLearningRecommendation,
+    KnowledgeLearningRecord,
+)
+from app.knowledge_assurance.manager import KnowledgeAssuranceManager
+from app.knowledge_assurance.observability import KnowledgeAssuranceMetrics
+from app.knowledge_assurance.provenance import (
+    KnowledgeProvenance,
+    KnowledgeProvenanceManager,
+    ProvenanceChain,
+    ProvenanceEvidence,
+    ProvenanceSource,
+    ProvenanceStatus,
+)
+from app.knowledge_assurance.relevance import (
+    KnowledgeRelevance,
+    KnowledgeRelevanceManager,
+    RelevanceAssessment,
+    RelevanceDimension,
+    RelevanceScore,
+)
+from app.knowledge_assurance.remediation import (
+    KnowledgeRemediationAction,
+    KnowledgeRemediationManager,
+    KnowledgeRemediationPlan,
+    KnowledgeRemediationPriority,
+    KnowledgeRemediationStatus,
+)
+from app.knowledge_assurance.repositories import TenantIsolatedRepository
+from app.knowledge_assurance.risk import (
+    KnowledgeRiskAssessment,
+    KnowledgeRiskDimension,
+    KnowledgeRiskFactor,
+    KnowledgeRiskManager,
+    KnowledgeRiskProfile,
+)
+from app.knowledge_assurance.semantic_context import (
+    SemanticConcept,
+    SemanticContext,
+    SemanticContextAssessment,
+    SemanticContextManager,
+    SemanticRelationship,
+    SemanticSimilarity,
+)
+from app.knowledge_assurance.signals import (
+    KnowledgeSignal,
+    KnowledgeSignalManager,
+    KnowledgeSignalSeverity,
+    KnowledgeSignalSource,
+    KnowledgeSignalType,
 )
 from app.knowledge_assurance.snapshots import (
     KnowledgeAssuranceSnapshot,
-    KnowledgeSnapshotStatus,
     KnowledgeAssuranceSnapshotManager,
+    KnowledgeSnapshotStatus,
 )
-from app.knowledge_assurance.learning import (
-    KnowledgeLearningRecord,
-    KnowledgeLearningPattern,
-    KnowledgeLearningRecommendation,
-    KnowledgeLearningManager,
+from app.knowledge_assurance.sources import (
+    KnowledgeSource,
+    KnowledgeSourceAuthority,
+    KnowledgeSourceManager,
+    KnowledgeSourceReliability,
+    KnowledgeSourceStatus,
+    KnowledgeSourceType,
 )
-from app.knowledge_assurance.analytics import (
-    KnowledgeAssuranceAnalyticsEngine,
-    KnowledgeAnalyticsReport,
-    KnowledgeInsight,
-    KnowledgeTrend,
-    KnowledgeAnalyticsManager,
+from app.knowledge_assurance.trust import (
+    KnowledgeTrustAssessment,
+    KnowledgeTrustDimension,
+    KnowledgeTrustEngine,
+    KnowledgeTrustFactor,
+    KnowledgeTrustScore,
 )
-from app.knowledge_assurance.observability import KnowledgeAssuranceMetrics
-from app.knowledge_assurance.billing import (
-    KnowledgeCostEvent,
-    KnowledgeCostDimension,
-    KnowledgeBillingTracker,
+from app.knowledge_assurance.verification import (
+    KnowledgeVerification,
+    KnowledgeVerificationManager,
+    VerificationCheck,
+    VerificationEvidence,
+    VerificationStatus,
 )
-from app.knowledge_assurance.repositories import TenantIsolatedRepository
-from app.knowledge_assurance.manager import KnowledgeAssuranceManager
 
 __all__ = [
     "KnowledgeAssuranceException",

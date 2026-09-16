@@ -1,8 +1,7 @@
 """Monitoring window definitions and policies for Continuous Assurance (Phase 5.54)."""
 
-from enum import Enum
 from dataclasses import dataclass
-from typing import Optional
+from enum import Enum
 
 
 class MonitoringWindowType(str, Enum):

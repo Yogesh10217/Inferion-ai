@@ -1,16 +1,17 @@
 """Operational Runbook Intelligence Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
     CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
     ImmutableResilienceRecordException,
+    ResilienceResourceNotFoundException,
 )
 
 
@@ -103,10 +104,10 @@ class RunbookManager:
         rb = self._runbooks.get(runbook_id)
         if not rb:
             raise ResilienceResourceNotFoundException(runbook_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, rb.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, rb.tenant_id)
-            
+
         return rb

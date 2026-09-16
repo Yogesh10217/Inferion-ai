@@ -1,7 +1,7 @@
 """Evidence lineage graph for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 

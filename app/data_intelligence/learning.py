@@ -1,11 +1,10 @@
 """Advisory data learning (Phase 5.43)."""
 
 import uuid
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
 
-from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
+from pydantic import BaseModel, Field
 
 
 class DataLearningRecord(BaseModel):
@@ -75,7 +74,7 @@ class DataLearningManager:
         recommendation_id: Optional[str] = None,
     ) -> DataLearningRecommendation:
         rec_id = recommendation_id or f"dlrec-rec-{uuid.uuid4().hex[:8]}"
-        
+
         # Enforce advisory safeguards: auto_execute is strictly False
         rec = DataLearningRecommendation(
             recommendation_id=rec_id,

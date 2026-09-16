@@ -1,8 +1,9 @@
 """Cross-Platform Context Assembly Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
 from app.event_intelligence.events import EnterpriseEvent

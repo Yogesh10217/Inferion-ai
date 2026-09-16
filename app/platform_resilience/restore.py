@@ -1,17 +1,18 @@
 """Controlled Restore Planning Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
+from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
     CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
     RecoveryVerificationFailedException,
+    ResilienceResourceNotFoundException,
 )
 
 
@@ -96,10 +97,10 @@ class RestoreManager:
         plan = self._plans.get(plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

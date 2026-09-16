@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from app.core.container import ServiceContainer
 from app.deployment.configuration import RuntimeConfigurationManager

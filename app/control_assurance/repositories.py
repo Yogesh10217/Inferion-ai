@@ -1,8 +1,9 @@
 """Tenant-Scoped Repository Interfaces (Phase 5.38)."""
 
-from typing import Dict, Any, Optional, List
-from app.platform_contracts.tenant import TenantAccessGuard
+from typing import Any, Dict, Optional
+
 from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class ControlAssuranceRepository:

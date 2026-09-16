@@ -1,4 +1,3 @@
-import asyncio
 import sys
 import time
 from collections import OrderedDict
@@ -49,11 +48,11 @@ class MemoryCacheBackend(BaseCacheBackend):
             if self.max_memory_bytes:
                 self._current_memory_bytes -= sys.getsizeof(old_val)
             self._store.move_to_end(key)
-        
+
         self._store[key] = (value, expires_at)
         if self.max_memory_bytes:
             self._current_memory_bytes += sys.getsizeof(value) + sys.getsizeof(key)
-        
+
         self._evict_lru_if_needed()
 
     async def delete(self, key: str) -> bool:

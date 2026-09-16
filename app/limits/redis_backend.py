@@ -1,19 +1,14 @@
+import logging
 import time
 import uuid
-import logging
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import redis.asyncio as aioredis
 from redis.exceptions import RedisError
 
 from app.limits.counter_backend import CounterBackend
 from app.limits.memory_backend import MemoryCounterBackend
-from app.limits.redis_lua_scripts import (
-    SLIDING_WINDOW_LUA,
-    TOKEN_BUCKET_LUA,
-    FIXED_WINDOW_LUA,
-    ACQUIRE_LEASE_LUA
-)
+from app.limits.redis_lua_scripts import ACQUIRE_LEASE_LUA, FIXED_WINDOW_LUA, SLIDING_WINDOW_LUA, TOKEN_BUCKET_LUA
 from app.services.metrics_service import MetricsService
 
 logger = logging.getLogger(__name__)
@@ -24,16 +19,17 @@ class RedisCounterBackend(CounterBackend):
     Redis-backed rate limiting with circuit breaker to memory fallback.
     Executes atomic Lua scripts.
     """
+
     def __init__(self, redis_url: str, metrics: MetricsService):
         self.redis_url = redis_url
         self.metrics = metrics
         self.redis: Optional[aioredis.Redis] = None
         self.fallback = MemoryCounterBackend()
-        
+
         self.fallback_active = False
         self.last_fallback_time = 0.0
         self.fallback_duration = 30.0  # Retry Redis after 30s
-        
+
         # Pre-loaded scripts
         self._script_sliding: Optional[aioredis.client.Script] = None
         self._script_token: Optional[aioredis.client.Script] = None
@@ -48,7 +44,7 @@ class RedisCounterBackend(CounterBackend):
                 self.fallback_active = False
             else:
                 return None
-                
+
         if self.redis is None:
             try:
                 self.redis = aioredis.from_url(self.redis_url, decode_responses=True)
@@ -59,7 +55,7 @@ class RedisCounterBackend(CounterBackend):
             except RedisError as e:
                 self._trigger_fallback(e)
                 return None
-                
+
         return self.redis
 
     def _trigger_fallback(self, exc: Exception) -> None:
@@ -77,7 +73,7 @@ class RedisCounterBackend(CounterBackend):
         redis_client = await self._get_redis()
         if redis_client is None:
             return await self.fallback.check_and_increment_sliding_window(key, limit, window_seconds)
-            
+
         try:
             res = await self._script_sliding(keys=[key], args=[self._now_ms(), window_seconds * 1000, limit])
             return res[0] == 1, res[1]
@@ -89,12 +85,12 @@ class RedisCounterBackend(CounterBackend):
         redis_client = await self._get_redis()
         if redis_client is None:
             return await self.fallback.check_and_decrement_token_bucket(key, capacity, refill_time_seconds)
-            
+
         try:
             tokens_key = f"{key}:tokens"
             ts_key = f"{key}:ts"
             res = await self._script_token(
-                keys=[tokens_key, ts_key], 
+                keys=[tokens_key, ts_key],
                 args=[capacity, refill_time_seconds * 1000, 1, self._now_ms()]
             )
             return res[0] == 1, res[1]
@@ -106,7 +102,7 @@ class RedisCounterBackend(CounterBackend):
         redis_client = await self._get_redis()
         if redis_client is None:
             return await self.fallback.check_and_increment_fixed_window(key, limit, window_seconds)
-            
+
         try:
             res = await self._script_fixed(keys=[key], args=[limit, window_seconds])
             return res[0] == 1, res[1]
@@ -118,7 +114,7 @@ class RedisCounterBackend(CounterBackend):
         redis_client = await self._get_redis()
         if redis_client is None:
             return await self.fallback.acquire_lease(scope_key, limit, ttl_seconds)
-            
+
         try:
             lease_id = str(uuid.uuid4())
             res = await self._script_lease(keys=[scope_key], args=[limit, ttl_seconds, lease_id, self._now_ms()])
@@ -132,7 +128,7 @@ class RedisCounterBackend(CounterBackend):
         if redis_client is None:
             await self.fallback.release_lease(scope_key, lease_id)
             return
-            
+
         try:
             await redis_client.hdel(scope_key, lease_id)
         except RedisError:

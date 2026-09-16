@@ -1,9 +1,9 @@
 """Reproducibility record generator for Reliability Intelligence (Phase 5.55)."""
 
-import logging
 import hashlib
 import json
-from typing import Dict, Any
+import logging
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

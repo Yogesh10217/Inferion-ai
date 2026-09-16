@@ -2,8 +2,7 @@
 
 import logging
 from dataclasses import dataclass, field
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
+from typing import Dict, List, Optional
 
 from app.platform_integration.models import PlatformAssurancePosture
 from app.platform_integration.providers import PlatformProviderResult

@@ -1,11 +1,10 @@
 """Initial 10 Production Data Connector Implementations."""
 
 import logging
-import json
 import time
-from typing import Dict, Any, Optional, List, Tuple
-from app.data_fabric.connector import DataConnector, ConnectorCapabilities, ConnectorMetadata
-from app.data_fabric.data_source import DataSource
+from typing import Any, Dict, List, Optional, Tuple
+
+from app.data_fabric.connector import ConnectorCapabilities, ConnectorMetadata, DataConnector
 
 logger = logging.getLogger(__name__)
 

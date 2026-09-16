@@ -1,10 +1,7 @@
 """Tenant-Scoped Event Intelligence Analytics Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 
-from app.platform_contracts.analytics import PlatformReport, PlatformInsight, AnalyticsMetric, AnalyticsPeriod
+from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformInsight, PlatformReport
 
 
 class EventAnalyticsEngine:

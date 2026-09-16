@@ -1,9 +1,9 @@
 import uuid
 from datetime import datetime, timezone
-from typing import List, Optional, Any
+from typing import Any, List, Optional
 
-from sqlalchemy import String, DateTime, ForeignKey, JSON, Integer, Float, Text
-from sqlalchemy.orm import relationship, mapped_column, Mapped
+from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 
@@ -22,10 +22,10 @@ class KnowledgeBase(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     workspace_id: Mapped[str] = mapped_column(String, index=True, nullable=False)
     organization_id: Mapped[str] = mapped_column(String, index=True, nullable=False)
-    
+
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
@@ -41,20 +41,20 @@ class KnowledgeDocument(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     knowledge_base_id: Mapped[str] = mapped_column(ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     name: Mapped[str] = mapped_column(String, nullable=False)
     content_uri: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    
+
     # Soft delete & lifecycle
-    status: Mapped[str] = mapped_column(String, default="ACTIVE", index=True) # ACTIVE, ARCHIVED, PURGED
+    status: Mapped[str] = mapped_column(String, default="ACTIVE", index=True)  # ACTIVE, ARCHIVED, PURGED
     archived_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     archived_by: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     purged_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     purged_by: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    
+
     metadata_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
@@ -70,11 +70,11 @@ class KnowledgeChunk(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     document_id: Mapped[str] = mapped_column(ForeignKey("knowledge_documents.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
     text_content: Mapped[str] = mapped_column(Text, nullable=False)
     metadata_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    
+
     page_number: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     start_offset: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     end_offset: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
@@ -83,7 +83,7 @@ class KnowledgeChunk(Base):
     chunk_hash: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     parent_chunk: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     document: Mapped["KnowledgeDocument"] = relationship(back_populates="chunks")
@@ -98,10 +98,10 @@ class EmbeddingRecord(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     chunk_id: Mapped[str] = mapped_column(ForeignKey("knowledge_chunks.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     model_name: Mapped[str] = mapped_column(String, nullable=False)
     vector: Mapped[Any] = mapped_column(JSON, nullable=False)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     chunk: Mapped["KnowledgeChunk"] = relationship(back_populates="embedding_records")
@@ -116,7 +116,7 @@ class RetrievalSession(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     workspace_id: Mapped[str] = mapped_column(String, index=True, nullable=False)
     user_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    
+
     query_text: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
@@ -132,7 +132,7 @@ class Citation(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     session_id: Mapped[str] = mapped_column(ForeignKey("retrieval_sessions.id", ondelete="CASCADE"), index=True, nullable=False)
     chunk_id: Mapped[str] = mapped_column(ForeignKey("knowledge_chunks.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
@@ -147,10 +147,10 @@ class IndexJob(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     knowledge_base_id: Mapped[str] = mapped_column(ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False)
-    
-    status: Mapped[str] = mapped_column(String, default="PENDING") # PENDING, IN_PROGRESS, COMPLETED, FAILED
+
+    status: Mapped[str] = mapped_column(String, default="PENDING")  # PENDING, IN_PROGRESS, COMPLETED, FAILED
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     started_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

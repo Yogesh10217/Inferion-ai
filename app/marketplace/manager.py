@@ -1,13 +1,13 @@
 """Master Marketplace Manager unifying publishing, review, and installation pipelines."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
-from app.marketplace.publisher import PublisherManager
+from app.marketplace.marketplace_installation import MarketplaceInstallationManager
 from app.marketplace.marketplace_registry import MarketplaceRegistry
 from app.marketplace.marketplace_review import MarketplaceReviewEngine
-from app.marketplace.marketplace_installation import MarketplaceInstallationManager
 from app.marketplace.metrics import MarketplaceMetricsCollector
+from app.marketplace.publisher import PublisherManager
 
 logger = logging.getLogger(__name__)
 

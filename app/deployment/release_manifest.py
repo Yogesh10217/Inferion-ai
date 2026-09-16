@@ -2,15 +2,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 from app.deployment.container_validation import ContainerValidationEngine
-from app.deployment.exceptions import ConfigurationValidationError
-from app.deployment.models import DeploymentEnvironment, DeploymentIdentity, EnvironmentConfig, PlatformReadinessClassification
-from app.deployment.secrets import SecretsSanitizer
+from app.deployment.models import DeploymentEnvironment, DeploymentIdentity
 
 
 @dataclass

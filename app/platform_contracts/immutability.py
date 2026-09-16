@@ -1,9 +1,10 @@
 """Immutable Resource Contract & Validator (Phase 5.30)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Optional
+
+from pydantic import BaseModel
 
 from app.platform_contracts.exceptions import ImmutableMutationException
 

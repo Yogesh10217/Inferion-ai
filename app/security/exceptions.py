@@ -1,6 +1,7 @@
 """Domain exception hierarchy for Enterprise Security & Identity."""
 
 from typing import Any, Dict, Optional
+
 from app.core.exceptions import AppException
 
 

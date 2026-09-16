@@ -1,6 +1,7 @@
 import hashlib
 from abc import ABC, abstractmethod
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
+
 from .trace_context import SpanContext
 
 

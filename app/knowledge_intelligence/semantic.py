@@ -1,11 +1,10 @@
 """Semantic Intelligence Layer Subsystem (Phase 5.35)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
 
-from app.platform_contracts.redaction import SensitiveDataSanitizer
+from pydantic import BaseModel, Field
 
 
 class SemanticEntity(BaseModel):

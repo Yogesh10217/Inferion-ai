@@ -1,9 +1,9 @@
-from typing import Any, Dict
-from app.knowledge.pipeline import PipelineStage, DocumentContext
+from app.knowledge.pipeline import DocumentContext, PipelineStage
+
 
 class MetadataExtractionStage(PipelineStage):
     """Automatically extracts metadata from the document before chunking."""
-    
+
     async def process(self, context: DocumentContext) -> DocumentContext:
         """Extracts metadata like Title, Author, Language, Dates, etc."""
         # Mock metadata extraction logic
@@ -16,7 +16,7 @@ class MetadataExtractionStage(PipelineStage):
             "tags": ["auto-generated"],
             "classification": "general"
         }
-        
+
         # Merge with existing metadata
         context.metadata.update(extracted_metadata)
         return context

@@ -1,12 +1,12 @@
 """Knowledge Contradiction Analysis Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.knowledge_intelligence.exceptions import CrossTenantKnowledgeAccessException
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 

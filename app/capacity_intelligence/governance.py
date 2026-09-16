@@ -1,9 +1,10 @@
 """Capacity governance engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any
-from app.capacity_intelligence.models import CapacityGovernanceOutcome
+from typing import Any, Dict
+
 from app.capacity_intelligence.exceptions import HighRiskCapacityActionRequiresApprovalException
+from app.capacity_intelligence.models import CapacityGovernanceOutcome
 
 logger = logging.getLogger(__name__)
 

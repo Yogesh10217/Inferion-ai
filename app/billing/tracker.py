@@ -25,4 +25,5 @@ class BillingTracker:
     def track_indexing_duration(self, duration: float):
         self.indexing_duration_seconds += duration
 
+
 tracker = BillingTracker()

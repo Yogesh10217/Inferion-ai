@@ -1,17 +1,18 @@
 """Unified Policy Evaluator & Multi-Subsystem Policy Orchestration Engine."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.security.authorization import AuthorizationEngine
-from app.data_fabric.governance import DataGovernanceEngine
-from app.mlops.governance import MLOpsGovernanceEngine
-from app.finops.governance import FinOpsGovernanceEngine
 from app.control_plane.policy_manager import PolicyManager
+from app.data_fabric.governance import DataGovernanceEngine
+from app.finops.governance import FinOpsGovernanceEngine
+from app.mlops.governance import MLOpsGovernanceEngine
+from app.security.authorization import AuthorizationEngine
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +102,6 @@ class UnifiedPolicyEvaluator:
                 evidence.append({"source": "DataGovernanceEngine", "classification": getattr(d_res, "classification", "RESTRICTED")})
             except Exception as e:
                 logger.warning(f"DataGovernance check failed: {e}")
-
 
         # 3. Decision aggregation
         if violations:

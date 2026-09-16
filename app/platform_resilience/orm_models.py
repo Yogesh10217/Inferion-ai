@@ -1,8 +1,9 @@
 """Production SQLAlchemy ORM Models for Platform Resilience Subsystem (Phase 5.37)."""
 
-from sqlalchemy import Column, String, DateTime, Float, Boolean, Integer, JSON, Text
-from sqlalchemy.orm import declarative_base
 from datetime import datetime, timezone
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, String
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 

@@ -1,5 +1,7 @@
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+
 from app.observability.metrics_mapper import MetricsMapper
+
 
 class PrometheusExporter:
     """Exports Prometheus metrics via the text format."""

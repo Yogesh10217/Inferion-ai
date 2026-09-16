@@ -1,8 +1,9 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from .lifecycle import DocumentState, transition_document_state
 from .models import KnowledgeDocument
-from .lifecycle import transition_document_state, DocumentState
+
 
 async def get_next_version(session: AsyncSession, knowledge_base_id: str, document_name: str) -> int:
     """
@@ -18,16 +19,16 @@ async def get_next_version(session: AsyncSession, knowledge_base_id: str, docume
     )
     result = await session.execute(stmt)
     latest_doc = result.scalar_one_or_none()
-    
+
     if not latest_doc:
         return 1
     return latest_doc.version + 1
 
 
 async def archive_previous_versions(
-    session: AsyncSession, 
-    knowledge_base_id: str, 
-    document_name: str, 
+    session: AsyncSession,
+    knowledge_base_id: str,
+    document_name: str,
     current_version: int,
     user_id: str
 ):
@@ -43,6 +44,6 @@ async def archive_previous_versions(
     )
     result = await session.execute(stmt)
     documents = result.scalars().all()
-    
+
     for doc in documents:
         transition_document_state(doc, DocumentState.ARCHIVED, user_id=user_id)

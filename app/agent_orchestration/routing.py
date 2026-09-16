@@ -1,17 +1,14 @@
 """Capability-Aware Agent Routing Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.agent_orchestration.agents import AgentManager, AgentType
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.agent_orchestration.agents import AgentManager, EnterpriseAgent, AgentType
-from app.agent_orchestration.exceptions import (
-    AgentNotFoundException,
-    CrossTenantAgentAccessException,
-)
 
 
 class RoutingStrategy(str, Enum):
@@ -76,7 +73,7 @@ class AgentRouter:
     def route_task(self, req: AgentRoutingRequest) -> RoutingDecision:
         # Get active agents for tenant
         all_agents = self.agent_manager.list_agents(tenant_id=req.tenant_id)
-        
+
         candidates: List[AgentRoutingCandidate] = []
         for agent in all_agents:
             # Match capabilities

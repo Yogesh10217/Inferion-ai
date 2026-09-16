@@ -3,14 +3,14 @@ Reusable Workflow State Machine Subsystem.
 Validates allowed workflow state transitions, terminal states, recovery states, and audit trails.
 """
 
-from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
-from app.autonomous_assurance.workflows import AutonomousWorkflow, WorkflowStatus
 from app.autonomous_assurance.exceptions import (
-    WorkflowStateTransitionException,
     ImmutableAutonomousAssuranceRecordException,
+    WorkflowStateTransitionException,
 )
+from app.autonomous_assurance.workflows import AutonomousWorkflow, WorkflowStatus
 
 # Strict transition graph
 VALID_WORKFLOW_TRANSITIONS: Dict[WorkflowStatus, List[WorkflowStatus]] = {

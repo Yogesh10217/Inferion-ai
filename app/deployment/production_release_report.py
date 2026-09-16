@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-from app.deployment.production_readiness import ProductionReadinessEvaluator
 from app.deployment.production_release_checklist import ProductionReleaseChecklistEvaluator
 from app.deployment.production_smoke_test import ProductionSmokeTestPlanEvaluator
 from app.deployment.release_governance import ProductionReleaseDecisionEngine

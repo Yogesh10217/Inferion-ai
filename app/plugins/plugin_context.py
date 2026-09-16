@@ -1,6 +1,7 @@
 import logging
 from typing import Any, Dict
 
+
 class PluginContext:
     def __init__(self, plugin_id: str, permissions: list, event_bus: Any):
         self.plugin_id = plugin_id
@@ -8,7 +9,7 @@ class PluginContext:
         self._event_bus = event_bus
         self.logger = logging.getLogger(f"plugin.{plugin_id}")
         self.settings: Dict[str, Any] = {}
-        
+
     def check_permission(self, action: str, resource: str):
         for p in self._permissions:
             if p.action == action and (p.resource == resource or p.resource == "*"):

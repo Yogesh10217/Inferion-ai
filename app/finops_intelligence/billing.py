@@ -1,12 +1,14 @@
 """FinOps Intelligence Billing Integration (Phase 5.42)."""
 
-from typing import Dict, Any, Optional, List
+import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
-import uuid
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory as PlatformCostCategory
+from app.finops.cost_ledger import CostCategory as PlatformCostCategory
+from app.finops.cost_ledger import UnifiedCostLedger
 
 
 class FinOpsCostEvent(BaseModel):

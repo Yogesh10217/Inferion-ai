@@ -1,25 +1,25 @@
 """Master Data Fabric Manager unifying sources, connectors, ingestion, sync, catalog, governance, and lineage."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
-from app.data_fabric.data_source import DataSourceManager
-from app.data_fabric.connector import ConnectorRegistry, ConnectorFactory
-from app.data_fabric.connectors import register_all_initial_connectors
-from app.data_fabric.schema_discovery import SchemaDiscoveryEngine
-from app.data_fabric.ingestion import DataIngestionEngine
-from app.data_fabric.normalization import DataNormalizer
-from app.data_fabric.sync import DataSyncManager
-from app.data_fabric.change_detection import ChangeDetector
-from app.data_fabric.catalog import DataCatalog
-from app.data_fabric.governance import DataGovernanceEngine
-from app.data_fabric.data_security import SensitiveDataDetector, RedactionEngine
-from app.data_fabric.quality import DataQualityEngine
-from app.data_fabric.lineage import DataLineageManager
-from app.data_fabric.rag_integration import DataSourceKnowledgeAdapter, KnowledgeSyncManager
 from app.data_fabric.agent_integration import AgentDataFabricAdapter
-from app.data_fabric.observability import DataFabricMetricsCollector
 from app.data_fabric.billing import DataFabricBillingTracker
+from app.data_fabric.catalog import DataCatalog
+from app.data_fabric.change_detection import ChangeDetector
+from app.data_fabric.connector import ConnectorFactory, ConnectorRegistry
+from app.data_fabric.connectors import register_all_initial_connectors
+from app.data_fabric.data_security import RedactionEngine, SensitiveDataDetector
+from app.data_fabric.data_source import DataSourceManager
+from app.data_fabric.governance import DataGovernanceEngine
+from app.data_fabric.ingestion import DataIngestionEngine
+from app.data_fabric.lineage import DataLineageManager
+from app.data_fabric.normalization import DataNormalizer
+from app.data_fabric.observability import DataFabricMetricsCollector
+from app.data_fabric.quality import DataQualityEngine
+from app.data_fabric.rag_integration import DataSourceKnowledgeAdapter, KnowledgeSyncManager
+from app.data_fabric.schema_discovery import SchemaDiscoveryEngine
+from app.data_fabric.sync import DataSyncManager
 
 logger = logging.getLogger(__name__)
 

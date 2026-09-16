@@ -3,9 +3,10 @@ Workflow Confidence Subsystem.
 Computes deterministic confidence metrics based on evidence quality, signal consistency, and plan completeness.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 

@@ -1,9 +1,9 @@
 """Decision Learning & Pattern Intelligence Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.decision_intelligence.outcomes import DecisionOutcome
@@ -34,7 +34,7 @@ class DecisionLearningManager:
 
     def process_outcome_learning(self, tenant_id: str, outcome: DecisionOutcome) -> DecisionLearningRecord:
         if outcome.actual_value_usd > outcome.expected_value_usd:
-            insight = f"Decision '{outcome.decision_id}' exceeded value expectations by {((outcome.actual_value_usd - outcome.expected_value_usd)/outcome.expected_value_usd)*100:.1f}%."
+            insight = f"Decision '{outcome.decision_id}' exceeded value expectations by {((outcome.actual_value_usd - outcome.expected_value_usd) / outcome.expected_value_usd) * 100:.1f}%."
             fb = 95.0
         else:
             insight = f"Decision '{outcome.decision_id}' achieved {outcome.status.value} status."

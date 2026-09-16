@@ -1,12 +1,11 @@
 """Cross-domain knowledge correlation across decisions, incidents, controls, models, and costs."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Dict, List
 
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
+from pydantic import BaseModel, Field
 
 
 class CorrelationType(str, Enum):

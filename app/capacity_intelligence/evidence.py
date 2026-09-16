@@ -3,9 +3,10 @@
 import hashlib
 import json
 import logging
-from typing import Dict, Any, Optional
-from app.capacity_intelligence.models import CapacityEvidenceBundle
+from typing import Any, Dict, Optional
+
 from app.capacity_intelligence.exceptions import ImmutableCapacityIntelligenceRecordException
+from app.capacity_intelligence.models import CapacityEvidenceBundle
 from app.capacity_intelligence.repositories import EvidenceRepository
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 

@@ -2,12 +2,11 @@
 Multi-Agent Team Simulation & Dynamics Engine
 """
 
-import time
-import asyncio
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict
 
-from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext
+from app.multi_agent.agent_team import AgentTeam
 
 logger = logging.getLogger(__name__)
 

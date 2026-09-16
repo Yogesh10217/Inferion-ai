@@ -7,19 +7,19 @@ class SystemRoles:
 class SystemPermissions:
     # Inference permissions
     INFERENCE_GENERATE = "inference:generate"
-    
+
     # Model management permissions
     MODELS_READ = "models:read"
     MODELS_MANAGE = "models:manage"
-    
+
     # API Key permissions
     API_KEYS_READ = "api_keys:read"
     API_KEYS_MANAGE = "api_keys:manage"
-    
+
     # Admin permissions
     USERS_MANAGE = "users:manage"
     ROLES_MANAGE = "roles:manage"
-    
+
     # Metrics
     METRICS_READ = "metrics:read"
 

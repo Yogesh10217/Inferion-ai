@@ -74,4 +74,3 @@ class DatabaseDependencyValidator:
                 details=details,
                 error_message=f"TCP connection to {host}:{port} failed: {str(exc)}",
             )
-

@@ -2,7 +2,8 @@
 Tool Definition & Schema Models
 """
 
-from typing import Dict, Any, List, Optional, Callable, Awaitable
+from typing import Any, List, Optional
+
 from pydantic import BaseModel, Field
 
 

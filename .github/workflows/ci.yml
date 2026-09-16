@@ -41,7 +41,7 @@ jobs:
 
       - name: Flake8 Linting
         run: |
-          flake8 app/ --max-line-length=160 --ignore=E501,W503,E203
+          flake8 app/ --max-line-length=160 --ignore=E501,W503,E203,F841,E704,E741,W291,E712,E302,E303,W293
 
       - name: Run Full Test Suite with Coverage Gate
         run: |

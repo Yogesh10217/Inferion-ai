@@ -1,8 +1,10 @@
 import asyncio
-import time
 import logging
-from typing import Callable, Any, Optional
-from prometheus_client import Counter, Histogram, Gauge
+import time
+from typing import Any, Callable, Optional
+
+from prometheus_client import Counter, Gauge, Histogram
+
 from .exceptions import PluginExecutionError, PluginPermissionError
 
 logger = logging.getLogger(__name__)

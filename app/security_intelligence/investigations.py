@@ -1,15 +1,16 @@
 """Investigation Management Subsystem (Phase 5.32)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.fingerprinting import FingerprintGenerator
-from app.security_intelligence.exceptions import ImmutableSecurityRecordException, CrossTenantSecurityAccessException
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.security_intelligence.exceptions import CrossTenantSecurityAccessException, ImmutableSecurityRecordException
 
 
 class InvestigationStatus(str, Enum):

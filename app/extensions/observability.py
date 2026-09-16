@@ -1,8 +1,9 @@
 """Extension Observability Tracing & Metrics Collector."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

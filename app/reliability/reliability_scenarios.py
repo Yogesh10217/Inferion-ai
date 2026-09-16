@@ -5,9 +5,9 @@ Evaluates 14 canonical reliability failure scenarios across SIMULATION, CONTAINE
 Preserves execution mode in evidence.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

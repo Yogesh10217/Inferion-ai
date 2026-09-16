@@ -2,6 +2,7 @@
 
 import logging
 from typing import List
+
 from app.runtime_intelligence.models import RuntimeRecommendation
 from app.runtime_intelligence.repositories import RuntimeRecommendationRepository
 

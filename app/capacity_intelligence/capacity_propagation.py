@@ -1,7 +1,7 @@
 """Capacity propagation engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 logger = logging.getLogger(__name__)
 

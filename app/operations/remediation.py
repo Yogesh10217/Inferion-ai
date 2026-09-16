@@ -1,15 +1,16 @@
 """Autonomous Remediation Engine with Strict Approval Engine Gating and Auto-Rollback."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.approvals.approval_engine import ApprovalEngine
 from app.operations.exceptions import RemediationFailedException
-from app.operations.runbooks import RunbookManager, RunbookMode, RunbookStep
+from app.operations.runbooks import RunbookManager, RunbookMode
 
 logger = logging.getLogger(__name__)
 

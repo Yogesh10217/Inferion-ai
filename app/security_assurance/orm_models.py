@@ -1,7 +1,7 @@
 """ORM Models for Security Assurance Entities."""
 
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 

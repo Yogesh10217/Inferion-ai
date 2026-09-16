@@ -6,12 +6,11 @@ Attributes knowledge assurance computation costs using UnifiedCostLedger without
 import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
-from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
 
 
 class KnowledgeCostDimension(BaseModel):

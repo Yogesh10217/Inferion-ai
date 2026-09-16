@@ -1,7 +1,7 @@
 """Cross-Phase Analytics and Reporting (Phase 5.58)."""
 
-from typing import Dict, Any, List
 from datetime import datetime, timezone
+from typing import Any, Dict
 
 from app.platform_integration.models import PlatformAssurancePosture
 

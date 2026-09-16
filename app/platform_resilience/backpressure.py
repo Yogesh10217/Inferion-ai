@@ -1,13 +1,13 @@
 """Overload Protection Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_resilience.exceptions import CrossTenantResilienceAccessException
 
 
 class BackpressureLevel(str, Enum):

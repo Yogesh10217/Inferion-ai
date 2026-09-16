@@ -1,13 +1,8 @@
 """Connector Framework & External SaaS Adapters."""
 
-from abc import ABC, abstractmethod
 import logging
-from typing import Dict, Any, Optional, List
-from pydantic import BaseModel, Field
-
-from app.data_fabric.connector import ConnectorRegistry as DataFabricConnectorRegistry
-
-
+from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

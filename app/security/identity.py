@@ -1,7 +1,8 @@
 """Enterprise Identity Models."""
 
-from typing import Dict, List, Optional, Any, Set
 from enum import Enum
+from typing import Any, Dict, List, Optional, Set
+
 from pydantic import BaseModel, Field
 
 

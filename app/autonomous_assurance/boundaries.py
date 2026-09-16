@@ -4,12 +4,13 @@ Defines explicit execution safety boundaries: AUTONOMOUS_ALLOWED, APPROVAL_REQUI
 """
 
 from enum import Enum
-from typing import Dict, Any, Optional, List
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel
 
 from app.autonomous_assurance.exceptions import (
-    WorkflowBoundaryViolationException,
     HighRiskAutonomousActionRequiresApprovalException,
+    WorkflowBoundaryViolationException,
 )
 
 

@@ -1,10 +1,10 @@
 """Process Analytics, Bottleneck Detection & Automation Rate Intelligence Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
+import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
 
-from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
 from app.finops.manager import FinOpsManager

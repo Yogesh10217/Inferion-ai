@@ -1,26 +1,26 @@
 """Master IntegrationManager Orchestrator Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
 
-from app.integrations.integration import Integration, IntegrationStatus, IntegrationType
-from app.integrations.registry import IntegrationRegistry
-from app.integrations.credentials import CredentialBroker, CredentialReference
-from app.integrations.webhooks import WebhookManager, WebhookEndpoint, WebhookDelivery
-from app.integrations.events import IntegrationEventRouter, IntegrationEvent
-from app.integrations.transformation import TransformationPipeline, FieldMapping
-from app.integrations.automation import AutomationManager, AutomationDefinition, TriggerType, ActionType
-from app.integrations.plugins import PluginManager, PluginManifest, Plugin
-from app.integrations.marketplace import IntegrationMarketplace
-from app.integrations.resilience import IntegrationResilienceManager
-from app.integrations.governance import IntegrationGovernanceEngine, IntegrationAccessDecision
-from app.integrations.security import IntegrationSecurityEngine
 from app.integrations.agent_integration import AgentIntegrationAdapter
-from app.integrations.workflow_integration import WorkflowIntegrationAdapter
-from app.integrations.knowledge_integration import KnowledgeIntegrationAdapter
 from app.integrations.analytics import IntegrationAnalyticsEngine
-from app.integrations.observability import IntegrationMetricsCollector
+from app.integrations.automation import AutomationManager
 from app.integrations.billing import IntegrationBillingTracker
+from app.integrations.credentials import CredentialBroker
+from app.integrations.events import IntegrationEventRouter
+from app.integrations.governance import IntegrationGovernanceEngine
+from app.integrations.integration import Integration, IntegrationType
+from app.integrations.knowledge_integration import KnowledgeIntegrationAdapter
+from app.integrations.marketplace import IntegrationMarketplace
+from app.integrations.observability import IntegrationMetricsCollector
+from app.integrations.plugins import PluginManager
+from app.integrations.registry import IntegrationRegistry
+from app.integrations.resilience import IntegrationResilienceManager
+from app.integrations.security import IntegrationSecurityEngine
+from app.integrations.transformation import TransformationPipeline
+from app.integrations.webhooks import WebhookManager
+from app.integrations.workflow_integration import WorkflowIntegrationAdapter
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,10 @@
 """Extension Permission Engine blocking capability escalation and enforcing scope isolation."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.extensions.extension import Extension
+from typing import Any, Dict, Optional
+
 from app.extensions.exceptions import ExtensionSecurityViolationException
+from app.extensions.extension import Extension
 
 logger = logging.getLogger(__name__)
 

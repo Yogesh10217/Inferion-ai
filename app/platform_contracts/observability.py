@@ -1,8 +1,7 @@
 """Observability Conventions & Prometheus Naming Rules (Phase 5.30)."""
 
 import re
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Dict
 
 
 class MetricNameValidator:

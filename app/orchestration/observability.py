@@ -1,10 +1,9 @@
 """Process Orchestration Prometheus Metrics Collector."""
 
 import logging
-from typing import Dict, Any, Optional
 
 try:
-    from prometheus_client import Counter, Histogram, Gauge
+    from prometheus_client import Counter, Histogram
     PROMETHEUS_AVAILABLE = True
 except ImportError:
     PROMETHEUS_AVAILABLE = False

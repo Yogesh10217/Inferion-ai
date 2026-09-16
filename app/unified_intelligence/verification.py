@@ -4,21 +4,22 @@ Delegation Verification Engine for Phase 5.51 Enterprise AI Unified Intelligence
 Verifies the execution results and post-delegation status of delegated requests.
 """
 
-from typing import Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, Optional
 
+from app.platform_contracts.delegation import DelegationRequest
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
-from app.platform_contracts.delegation import DelegationRequest
 
 
 class UnifiedVerificationResult:
     """
     Verification outcome for a delegated action.
     """
+
     def __init__(
         self,
         verification_id: str,
@@ -53,6 +54,7 @@ class DelegationVerificationEngine:
     """
     Verifies that delegated actions succeeded and achieved expected cross-domain stability.
     """
+
     def __init__(self):
         pass
 

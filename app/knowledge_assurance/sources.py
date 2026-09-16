@@ -1,14 +1,15 @@
 """Knowledge source intelligence for evaluating authority, reliability, and freshness."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_assurance.exceptions import (
-    KnowledgeSourceNotFoundException,
     CrossTenantKnowledgeAssuranceException,
+    KnowledgeSourceNotFoundException,
 )
 
 

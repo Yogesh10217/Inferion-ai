@@ -1,19 +1,19 @@
 """Execution Lifecycle Management Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
 from app.agent_orchestration.delegation import AgentDelegationManager
 from app.agent_orchestration.exceptions import (
     AgentExecutionNotFoundException,
     CrossTenantAgentAccessException,
-    AgentExecutionBlockedException,
 )
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentExecutionStatus(str, Enum):
@@ -96,7 +96,7 @@ class AgentExecutionManager:
         execution_id: Optional[str] = None,
     ) -> AgentExecution:
         eid = execution_id or f"exec_{uuid.uuid4().hex[:12]}"
-        
+
         steps = []
         delegations = []
 
@@ -140,7 +140,7 @@ class AgentExecutionManager:
         execution = self._executions.get(execution_id)
         if not execution:
             raise AgentExecutionNotFoundException(execution_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, execution.tenant_id)
         except Exception:

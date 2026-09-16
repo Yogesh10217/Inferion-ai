@@ -1,20 +1,21 @@
 """FastAPI REST API Router for Phase 5.22 Enterprise AI Application Platform."""
 
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
-from app.application_platform.manager import ApplicationPlatformManager
-from app.application_platform.application import ApplicationType, ApplicationStatus, ApplicationConfiguration
-from app.application_platform.interactions import InteractionType
-from app.application_platform.feedback import FeedbackType
+from app.application_platform.application import ApplicationConfiguration, ApplicationStatus, ApplicationType
 from app.application_platform.exceptions import (
     ApplicationNotFoundException,
     ApplicationVersionNotFoundException,
-    ImmutableVersionException,
     ExecutionCancelledException,
     GovernanceBlockedException,
 )
+from app.application_platform.feedback import FeedbackType
+from app.application_platform.interactions import InteractionType
+from app.application_platform.manager import ApplicationPlatformManager
+from app.application_platform.runtime import ApplicationRuntime
 
 router = APIRouter(prefix="/v1/applications", tags=["Application Platform"])
 

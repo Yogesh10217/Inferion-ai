@@ -1,12 +1,13 @@
 """Knowledge / RAG Platform Integration Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from pydantic import BaseModel, Field
+from typing import List, Optional
+
+from pydantic import BaseModel
 
 from app.data_fabric.data_source import DataSource
-from app.data_fabric.normalization import NormalizedRecord
 from app.data_fabric.lineage import DataLineageManager
+from app.data_fabric.normalization import NormalizedRecord
 
 logger = logging.getLogger(__name__)
 

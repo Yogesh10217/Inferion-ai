@@ -1,12 +1,12 @@
 """Cross-Domain Identity Signals."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 

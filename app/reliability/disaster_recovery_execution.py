@@ -7,7 +7,7 @@ Production execution remains strictly blocked unless an explicit real production
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

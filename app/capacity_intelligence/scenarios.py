@@ -1,6 +1,7 @@
 """What-if capacity scenario engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
+
 from app.capacity_intelligence.models import CapacityScenario
 
 logger = logging.getLogger(__name__)

@@ -1,13 +1,12 @@
 """Operational remediation planning producing DelegationRequests without direct system mutation."""
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
-from app.operations_assurance.exceptions import OperationalRemediationBlockedException, HighRiskOperationalActionRequiresApprovalException
+from app.platform_contracts.delegation import DelegationRequest, DelegationStatus, DelegationTarget
 
 
 class RemediationPlan(BaseModel):

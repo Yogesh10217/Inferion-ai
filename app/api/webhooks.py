@@ -1,11 +1,11 @@
 from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.dependencies import require_admin
-from app.auth.models import User
-from app.core.database import async_session_maker, get_db_session
+from app.core.database import get_db_session
 from app.events import (
     DeadLetterQueue,
     DeliveryService,

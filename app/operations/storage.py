@@ -1,10 +1,10 @@
 """Telemetry Data Retention & Tier Storage Manager."""
 
-from datetime import datetime, timezone
-from enum import Enum
 import logging
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Dict
+
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

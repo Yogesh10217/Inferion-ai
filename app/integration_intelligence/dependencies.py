@@ -1,12 +1,10 @@
 """Integration Dependency Intelligence (Phase 5.40)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Dict, List, Set
 
-from app.integration_intelligence.exceptions import CrossTenantIntegrationAccessException
+from pydantic import BaseModel, Field
 
 
 class DependencyImpact(str, Enum):
@@ -63,10 +61,10 @@ class IntegrationDependencyManager:
         impact: DependencyImpact = DependencyImpact.MEDIUM,
     ) -> IntegrationDependency:
         graph = self.get_or_create_graph(tenant_id)
-        
+
         src_node = DependencyNode(node_id=source_system_id, tenant_id=tenant_id, node_type="SYSTEM", name=source_system_id)
         tgt_node = DependencyNode(node_id=target_system_id, tenant_id=tenant_id, node_type="SYSTEM", name=target_system_id)
-        
+
         graph.nodes[source_system_id] = src_node
         graph.nodes[target_system_id] = tgt_node
 

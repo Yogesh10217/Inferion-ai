@@ -1,6 +1,7 @@
 """Uncertainty intelligence engine for Continuous Assurance (Phase 5.54)."""
 
-from typing import Dict, Any, List
+from typing import Any, Dict
+
 
 class UncertaintyCategory:
     INSUFFICIENT_DATA = "INSUFFICIENT_DATA"

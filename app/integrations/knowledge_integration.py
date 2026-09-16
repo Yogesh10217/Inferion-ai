@@ -1,7 +1,7 @@
 """Knowledge Platform Integration Adapter."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Optional
 
 from app.knowledge_platform.manager import KnowledgePlatformManager
 

@@ -1,7 +1,7 @@
 """Prometheus Metrics Collector for Developer Platform."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Optional
 
 from app.observability.metrics import ObservabilityMetrics
 

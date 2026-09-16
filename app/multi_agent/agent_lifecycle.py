@@ -2,9 +2,8 @@
 Agent Team Lifecycle State Management
 """
 
-from typing import Dict, Any, Optional
 from enum import Enum
-from pydantic import BaseModel, Field
+from typing import Dict
 
 
 class TeamStatus(str, Enum):

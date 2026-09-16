@@ -3,15 +3,17 @@ Agent Events Publisher
 """
 
 import logging
-from typing import Dict, Any, Optional
-from app.events.event_serializer import EventEnvelope
-from app.events.event_bus import IEventBus, InMemoryEventBus
+from typing import Any, Dict, Optional
+
 from app.agents.agent_context import AgentContext
+from app.events.event_bus import IEventBus, InMemoryEventBus
+from app.events.event_serializer import EventEnvelope
 
 logger = logging.getLogger(__name__)
 
 # Global or default EventBus instance
 _global_event_bus: Optional[IEventBus] = None
+
 
 def get_event_bus() -> IEventBus:
     global _global_event_bus
@@ -19,9 +21,11 @@ def get_event_bus() -> IEventBus:
         _global_event_bus = InMemoryEventBus()
     return _global_event_bus
 
+
 def set_event_bus(bus: IEventBus) -> None:
     global _global_event_bus
     _global_event_bus = bus
+
 
 async def emit_agent_event(
     event_type: str,

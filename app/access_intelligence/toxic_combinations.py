@@ -1,12 +1,11 @@
 """Toxic Combination & Segregation of Duties (SoD) Analysis (Phase 5.39)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
 
-from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceException
+from pydantic import BaseModel, Field
 
 
 class ToxicCombinationSeverity(str, Enum):

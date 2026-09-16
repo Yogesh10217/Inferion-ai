@@ -1,10 +1,11 @@
 """Retry Manager with Exponential Backoff, Full Jitter & Token Retry Budget."""
 
-import time
-import random
 import asyncio
 import logging
-from typing import Callable, Any, Optional, List, Type
+import random
+import time
+from typing import Any, Callable, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,6 @@ class RetryBudget:
             self.tokens -= 1.0
             return True
         return False
-
 
 
 class RetryManager:

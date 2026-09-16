@@ -3,8 +3,9 @@ Consensus & Voting Engine for Multi-Agent Decision Making
 """
 
 import logging
-from typing import Dict, Any, List, Optional
 from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.multi_agent.exceptions import ConsensusFailedError

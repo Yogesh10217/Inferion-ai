@@ -1,7 +1,8 @@
 """Control validation engine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from app.continuous_assurance.models import ControlEffectivenessAssessment
 
 logger = logging.getLogger(__name__)

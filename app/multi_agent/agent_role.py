@@ -2,8 +2,9 @@
 Agent Roles Definition Layer
 """
 
-from typing import Dict, Any, List, Optional
 from enum import Enum
+from typing import List
+
 from pydantic import BaseModel, Field
 
 

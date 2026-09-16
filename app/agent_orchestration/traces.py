@@ -1,19 +1,20 @@
 """Immutable Agent Execution Traces Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.platform_contracts.fingerprinting import FingerprintGenerator
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
 from app.agent_orchestration.exceptions import (
-    ImmutableAgentExecutionException,
     CrossTenantAgentAccessException,
+    ImmutableAgentExecutionException,
 )
+from app.platform_contracts.fingerprinting import FingerprintGenerator
+from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.platform_contracts.snapshots import SnapshotFactory
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class TraceStatus(str, Enum):
@@ -104,7 +105,7 @@ class AgentTraceManager:
         if not trace:
             # Return blank trace fallback
             return AgentTrace(trace_id=trace_id, tenant_id=tenant_id, agent_id="unknown", task_id="unknown")
-            
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, trace.tenant_id)
         except Exception:

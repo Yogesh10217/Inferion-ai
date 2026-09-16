@@ -1,11 +1,10 @@
 """Capacity Planning & Infrastructure Scaling Intelligence Subsystem."""
 
-from datetime import datetime, timezone
-from decimal import Decimal
-import uuid
 import logging
+import uuid
+from datetime import datetime, timezone
+from typing import List
 
-from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,8 @@
 """Developer SDK Consistency Validator across Python, TypeScript, Go, and Java."""
 
 import logging
-from typing import Dict, Any, List
+from typing import List
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

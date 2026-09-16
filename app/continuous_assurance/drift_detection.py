@@ -1,12 +1,13 @@
 """Continuous drift detection engine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict
+
 from app.continuous_assurance.models import (
     AssuranceDrift,
-    DriftType,
     DriftSeverity,
     DriftStatus,
+    DriftType,
 )
 from app.continuous_assurance.repositories import DriftRepository
 

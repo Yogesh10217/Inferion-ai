@@ -1,17 +1,18 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Request
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 
-from app.core.database import get_db_session
-from app.auth.models import User
-from app.auth.dependencies import get_current_user
+from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.auth.auth_service import AuthService
-from app.auth.permissions import SystemPermissions
-from app.tenant.models import Organization, Membership, Workspace
-from app.tenant.schemas import OrganizationCreate, OrganizationUpdate, OrganizationResponse, MembershipCreate, MembershipResponse
+from app.auth.dependencies import get_current_user
+from app.auth.models import User
+from app.core.database import get_db_session
+from app.tenant.models import Membership, Organization
+from app.tenant.schemas import OrganizationCreate, OrganizationResponse, OrganizationUpdate
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
+
 
 @router.post("", response_model=OrganizationResponse, status_code=201)
 async def create_organization(
@@ -33,7 +34,7 @@ async def create_organization(
     # Assign creator as Owner (Assuming we have a mechanism to fetch OWNER role_id; for now, stub)
     # Ideally, we look up the Owner role ID from the DB
     from app.auth.models import Role
-    stmt_role = select(Role).where(Role.name == "Admin") # Or 'Owner'
+    stmt_role = select(Role).where(Role.name == "Admin")  # Or 'Owner'
     res_role = await db.execute(stmt_role)
     owner_role = res_role.scalars().first()
     role_id = owner_role.id if owner_role else "stub-role-id"
@@ -45,10 +46,10 @@ async def create_organization(
         status="active"
     )
     db.add(membership)
-    
+
     ip_address = request.client.host if request and request.client else None
     await AuthService.log_audit_event(
-        db, "organization_created", 
+        db, "organization_created",
         organization_id=org.id,
         actor_id=current_user.id,
         resource_type="Organization",
@@ -132,7 +133,7 @@ async def update_organization(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "organization_updated", 
+        db, "organization_updated",
         organization_id=org.id,
         actor_id=current_user.id,
         resource_type="Organization",
@@ -164,10 +165,10 @@ async def delete_organization(
         raise HTTPException(status_code=404, detail="Organization not found")
 
     await db.delete(org)
-    
+
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "organization_deleted", 
+        db, "organization_deleted",
         organization_id=org.id,
         actor_id=current_user.id,
         resource_type="Organization",

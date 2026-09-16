@@ -1,11 +1,9 @@
 """REST API Router for Enterprise AI Platform Resilience (Phase 5.37)."""
 
-from fastapi import APIRouter, HTTPException, Depends, Header, Query
-from typing import Dict, Any, Optional, List
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 
-from app.platform_resilience.manager import PlatformResilienceManager
 from app.platform_resilience.exceptions import PlatformResilienceException
+from app.platform_resilience.manager import PlatformResilienceManager
 
 router = APIRouter(prefix="/v1/resilience", tags=["Platform Resilience"])
 

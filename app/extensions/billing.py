@@ -1,8 +1,9 @@
 """Extension Usage & Cost Attribution Tracker."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.control_plane.usage_manager import ControlPlaneUsageManager

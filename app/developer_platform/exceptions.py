@@ -1,6 +1,7 @@
 """Developer Platform Exception Hierarchy."""
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 from app.core.exceptions import AppException
 
 
@@ -49,4 +50,3 @@ class DeveloperPermissionDeniedException(DeveloperPlatformException):
 class EventSubscriptionNotFoundException(DeveloperPlatformException):
     def __init__(self, sub_id: str) -> None:
         super().__init__(message=f"Event subscription '{sub_id}' not found", code="EVENT_SUBSCRIPTION_NOT_FOUND", status_code=404)
-

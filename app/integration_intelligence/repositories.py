@@ -1,6 +1,7 @@
 """Tenant-Scoped Repositories for Integration Intelligence (Phase 5.40)."""
 
-from typing import Dict, Any, Optional, List, Generic, TypeVar
+from typing import Any, Dict, Generic, List, TypeVar
+
 from app.integration_intelligence.exceptions import CrossTenantIntegrationAccessException
 
 T = TypeVar("T")
@@ -29,9 +30,25 @@ class TenantScopedIntegrationRepository(Generic[T]):
         return [v for k, v in self._store.items() if k.startswith(prefix)]
 
 
-class IntegrationRepository(TenantScopedIntegrationRepository[Any]): pass
-class ConnectorRepository(TenantScopedIntegrationRepository[Any]): pass
-class WorkflowRepository(TenantScopedIntegrationRepository[Any]): pass
-class ExecutionRepository(TenantScopedIntegrationRepository[Any]): pass
-class FailureRepository(TenantScopedIntegrationRepository[Any]): pass
-class InvestigationRepository(TenantScopedIntegrationRepository[Any]): pass
+class IntegrationRepository(TenantScopedIntegrationRepository[Any]):
+    pass
+
+
+class ConnectorRepository(TenantScopedIntegrationRepository[Any]):
+    pass
+
+
+class WorkflowRepository(TenantScopedIntegrationRepository[Any]):
+    pass
+
+
+class ExecutionRepository(TenantScopedIntegrationRepository[Any]):
+    pass
+
+
+class FailureRepository(TenantScopedIntegrationRepository[Any]):
+    pass
+
+
+class InvestigationRepository(TenantScopedIntegrationRepository[Any]):
+    pass

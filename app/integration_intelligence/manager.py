@@ -1,34 +1,33 @@
 """Master Integration Intelligence Manager (Phase 5.40)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import logging
+from typing import Any, Dict
 
-from app.integration_intelligence.connectors import ConnectorManager, ConnectorType, ConnectorCapability
-from app.integration_intelligence.endpoints import EndpointManager, EndpointType, EndpointProtocol
-from app.integration_intelligence.workflows import WorkflowManager, WorkflowType, WorkflowTrigger, WorkflowStep
-from app.integration_intelligence.mapping import IntegrationMappingManager, MappingRule, MappingTransformation
-from app.integration_intelligence.orchestration import IntegrationOrchestrationManager, IntegrationPlanStep
-from app.integration_intelligence.routing import IntegrationRoutingManager, RoutingStrategy
-from app.integration_intelligence.dependencies import IntegrationDependencyManager, DependencyImpact
-from app.integration_intelligence.execution import IntegrationExecutionManager, IntegrationExecutionStatus
-from app.integration_intelligence.retries import RetryManager, RetryPolicy
-from app.integration_intelligence.failures import IntegrationFailureManager, FailureType, FailureSeverity
-from app.integration_intelligence.recovery import IntegrationRecoveryManager, RecoveryStep
-from app.integration_intelligence.compensation import CompensationManager, CompensationStep
-from app.integration_intelligence.transactions import TransactionCoordinator, TransactionConsistency
-from app.integration_intelligence.governance import IntegrationGovernanceEngine, IntegrationGovernanceStatus
-from app.integration_intelligence.risk import IntegrationRiskManager
-from app.integration_intelligence.security import IntegrationSecurityManager
-from app.integration_intelligence.data_governance import IntegrationDataGovernanceManager, IntegrationDataClassification
-from app.integration_intelligence.verification import IntegrationVerificationManager, VerificationCheck
-from app.integration_intelligence.evidence import IntegrationEvidenceManager
-from app.integration_intelligence.investigations import IntegrationInvestigationManager
-from app.integration_intelligence.observability import IntegrationMetricsCollector
 from app.integration_intelligence.analytics import IntegrationAnalyticsEngine
-from app.integration_intelligence.trust import IntegrationTrustEngine
-from app.integration_intelligence.learning import IntegrationLearningManager
 from app.integration_intelligence.billing import IntegrationBillingTracker
+from app.integration_intelligence.compensation import CompensationManager
+from app.integration_intelligence.connectors import ConnectorCapability, ConnectorManager, ConnectorType
+from app.integration_intelligence.data_governance import IntegrationDataClassification, IntegrationDataGovernanceManager
+from app.integration_intelligence.dependencies import DependencyImpact, IntegrationDependencyManager
+from app.integration_intelligence.endpoints import EndpointManager, EndpointProtocol, EndpointType
+from app.integration_intelligence.evidence import IntegrationEvidenceManager
+from app.integration_intelligence.execution import IntegrationExecutionManager, IntegrationExecutionStatus
+from app.integration_intelligence.failures import IntegrationFailureManager
+from app.integration_intelligence.governance import IntegrationGovernanceEngine
+from app.integration_intelligence.investigations import IntegrationInvestigationManager
+from app.integration_intelligence.learning import IntegrationLearningManager
+from app.integration_intelligence.mapping import IntegrationMappingManager, MappingRule
+from app.integration_intelligence.observability import IntegrationMetricsCollector
+from app.integration_intelligence.orchestration import IntegrationOrchestrationManager, IntegrationPlanStep
+from app.integration_intelligence.recovery import IntegrationRecoveryManager
+from app.integration_intelligence.retries import RetryManager
+from app.integration_intelligence.risk import IntegrationRiskManager
+from app.integration_intelligence.routing import IntegrationRoutingManager, RoutingStrategy
+from app.integration_intelligence.security import IntegrationSecurityManager
+from app.integration_intelligence.transactions import TransactionCoordinator
+from app.integration_intelligence.trust import IntegrationTrustEngine
+from app.integration_intelligence.verification import IntegrationVerificationManager, VerificationCheck
+from app.integration_intelligence.workflows import WorkflowManager, WorkflowStep, WorkflowTrigger, WorkflowType
 
 logger = logging.getLogger(__name__)
 

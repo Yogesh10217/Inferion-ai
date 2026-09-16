@@ -5,20 +5,19 @@ Coordinated multi-domain assurance evaluation combining domain assurance assessm
 into a unified enterprise assurance posture with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from app.unified_intelligence.exceptions import (
-    InvalidUnifiedIntelligenceInputException
-)
 from app.unified_intelligence.domains import IntelligenceDomain
+from app.unified_intelligence.exceptions import InvalidUnifiedIntelligenceInputException
 
 
 class UnifiedAssurancePosture:
     """
     Unified multi-domain assurance posture representation.
     """
+
     def __init__(
         self,
         posture_id: str,
@@ -56,6 +55,7 @@ class CrossDomainAssuranceCoordinator:
     """
     Coordinates and synthesizes assurance postures across domain intelligence providers.
     """
+
     def __init__(self):
         pass
 

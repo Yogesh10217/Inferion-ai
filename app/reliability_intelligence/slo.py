@@ -2,7 +2,7 @@
 
 import logging
 import uuid
-from typing import Dict, Any, Optional
+
 from app.reliability_intelligence.models import ServiceLevelObjective
 from app.reliability_intelligence.repositories import SLORepository
 

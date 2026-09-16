@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
-from datetime import datetime, timezone, timedelta
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from sqlalchemy import select, update
-from app.auth.models import APIKey
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.admin.exceptions import ResourceNotFoundException
+from app.auth.models import APIKey
+
 
 class APIKeyAdminService:
     def __init__(self, db: AsyncSession):
@@ -18,7 +21,7 @@ class APIKeyAdminService:
         stmt = stmt.limit(limit).offset(offset)
         result = await self.db.execute(stmt)
         return result.scalars().all()
-        
+
     async def get_api_key(self, api_key_id: str) -> APIKey:
         key = await self.db.get(APIKey, api_key_id)
         if not key:
@@ -42,13 +45,13 @@ class APIKeyAdminService:
     async def bulk_revoke(self, user_id: Optional[str] = None, org_id: Optional[str] = None) -> int:
         if not user_id and not org_id:
             raise ValueError("Must specify user_id or org_id for bulk revocation")
-        
+
         stmt = update(APIKey).values(revoked_at=datetime.now(timezone.utc)).where(APIKey.revoked_at.is_(None))
         if user_id:
             stmt = stmt.where(APIKey.user_id == user_id)
         if org_id:
             stmt = stmt.where(APIKey.organization_id == org_id)
-            
+
         result = await self.db.execute(stmt)
         await self.db.commit()
         return result.rowcount

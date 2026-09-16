@@ -1,14 +1,19 @@
 """Event Resolution Lifecycle Subsystem (Phase 5.34)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.event_intelligence.exceptions import (
+    CrossTenantEventAccessException,
+    EventResolutionException,
+    ImmutableEventRecordException,
+)
 from app.platform_contracts.fingerprinting import FingerprintGenerator
-from app.event_intelligence.exceptions import EventResolutionException, ImmutableEventRecordException, CrossTenantEventAccessException
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 
 
 class EventResolutionStatus(str, Enum):

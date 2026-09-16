@@ -1,9 +1,10 @@
 """Integration Event Routing & Subscription Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.events.event_dispatcher import EventDispatcher
@@ -30,7 +31,6 @@ class IntegrationEventRouter:
 
     def __init__(self, event_dispatcher: Optional[EventDispatcher] = None) -> None:
         self.event_dispatcher = event_dispatcher
-
 
     def route_event(self, event: IntegrationEvent) -> Dict[str, Any]:
         logger.info(f"[INTEGRATION EVENT ROUTER] Routed event '{event.event_id}' ({event.event_type}) for tenant '{event.tenant_id}'")

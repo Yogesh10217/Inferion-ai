@@ -1,15 +1,16 @@
 """AI Asset Retirement Subsystem (Phase 5.33)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
+from app.ai_lifecycle_platform.exceptions import CrossTenantLifecycleAccessException, ImmutableLifecycleRecordException
 from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.fingerprinting import FingerprintGenerator
-from app.ai_lifecycle_platform.exceptions import ImmutableLifecycleRecordException, CrossTenantLifecycleAccessException
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 
 
 class RetirementStatus(str, Enum):

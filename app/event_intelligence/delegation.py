@@ -1,11 +1,12 @@
 """Delegated Execution Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
+from app.platform_contracts.delegation import DelegationRequest, DelegationStatus, DelegationTarget
 
 
 class EventDelegationReference(BaseModel):
@@ -21,7 +22,6 @@ class EventDelegationPlan(BaseModel):
     delegation_request: DelegationRequest
     status: DelegationStatus = DelegationStatus.CREATED
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
 
 
 class EventDelegationManager:

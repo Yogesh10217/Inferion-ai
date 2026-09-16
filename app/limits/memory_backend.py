@@ -1,7 +1,7 @@
 import asyncio
 import time
 import uuid
-from typing import Tuple, Dict, List
+from typing import Dict, List, Tuple
 
 from app.limits.counter_backend import CounterBackend
 
@@ -11,14 +11,15 @@ class MemoryCounterBackend(CounterBackend):
     In-memory rate limiting and lease tracking using asyncio locks.
     Used for local development or as a fallback circuit-breaker for Redis.
     """
+
     def __init__(self):
         self._lock = asyncio.Lock()
-        
+
         # Data structures for limits
         self._sliding_windows: Dict[str, List[float]] = {}
         self._token_buckets: Dict[str, Tuple[float, float]] = {}  # key -> (tokens, last_refreshed)
         self._fixed_windows: Dict[str, Tuple[int, float]] = {}  # key -> (count, expires_at)
-        
+
         # Leases: key -> {lease_id: expires_at}
         self._leases: Dict[str, Dict[str, float]] = {}
 
@@ -30,10 +31,10 @@ class MemoryCounterBackend(CounterBackend):
         async with self._lock:
             if key not in self._sliding_windows:
                 self._sliding_windows[key] = []
-            
+
             # Clean up old timestamps
             self._sliding_windows[key] = [t for t in self._sliding_windows[key] if now - t <= window_seconds]
-            
+
             count = len(self._sliding_windows[key])
             if count < limit:
                 self._sliding_windows[key].append(now)
@@ -43,16 +44,16 @@ class MemoryCounterBackend(CounterBackend):
     async def check_and_decrement_token_bucket(self, key: str, capacity: int, refill_time_seconds: int) -> Tuple[bool, int]:
         now = self._now()
         refill_rate = capacity / refill_time_seconds
-        
+
         async with self._lock:
             if key not in self._token_buckets:
                 self._token_buckets[key] = (float(capacity), now)
-                
+
             last_tokens, last_refreshed = self._token_buckets[key]
-            
+
             delta = max(0.0, now - last_refreshed)
             filled_tokens = min(float(capacity), last_tokens + (delta * refill_rate))
-            
+
             if filled_tokens >= 1.0:
                 new_tokens = filled_tokens - 1.0
                 self._token_buckets[key] = (new_tokens, now)
@@ -81,22 +82,22 @@ class MemoryCounterBackend(CounterBackend):
     async def acquire_lease(self, scope_key: str, limit: int, ttl_seconds: int) -> Tuple[bool, str]:
         now = self._now()
         lease_id = str(uuid.uuid4())
-        
+
         async with self._lock:
             if scope_key not in self._leases:
                 self._leases[scope_key] = {}
-                
+
             # Clean expired
             active_leases = {
-                lid: expires for lid, expires in self._leases[scope_key].items() 
+                lid: expires for lid, expires in self._leases[scope_key].items()
                 if expires > now
             }
-            
+
             if len(active_leases) < limit:
                 active_leases[lease_id] = now + ttl_seconds
                 self._leases[scope_key] = active_leases
                 return True, lease_id
-                
+
             self._leases[scope_key] = active_leases
             return False, ""
 

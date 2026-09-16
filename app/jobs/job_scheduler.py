@@ -2,11 +2,12 @@
 
 import asyncio
 import logging
-from typing import Dict, Any, Callable, Optional, List
 from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel
 
-from app.jobs.job import Job, JobPriority, JobMetadata
+from app.jobs.job import Job, JobMetadata, JobPriority
 from app.jobs.job_queue import JobQueue
 
 logger = logging.getLogger(__name__)

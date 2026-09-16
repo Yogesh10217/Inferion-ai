@@ -1,10 +1,10 @@
 """Pure Python Domain Models and Enums for Phase 5.58 Platform Integration Fabric."""
 
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
 
 
 class IntegrationPlatform(str, Enum):

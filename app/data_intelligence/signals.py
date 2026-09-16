@@ -1,12 +1,12 @@
 """Data signal intelligence (Phase 5.43)."""
 
 import uuid
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 

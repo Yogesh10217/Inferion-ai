@@ -5,18 +5,17 @@ Tracks tenant resource consumption, signal ingestion units, situation processing
 and cross-domain reasoning metrics for accurate billing and quota enforcement.
 """
 
-from typing import Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
 
-from app.unified_intelligence.exceptions import (
-    InvalidUnifiedIntelligenceInputException
-)
+from app.unified_intelligence.exceptions import InvalidUnifiedIntelligenceInputException
 
 
 class UnifiedBillingRecord:
     """
     Billing consumption snapshot for a tenant.
     """
+
     def __init__(
         self,
         tenant_id: str,
@@ -51,6 +50,7 @@ class IntelligenceBillingEngine:
     """
     Manages tenant usage metering for cross-domain intelligence operations.
     """
+
     def __init__(self):
         self._tenant_usage: Dict[str, UnifiedBillingRecord] = {}
 

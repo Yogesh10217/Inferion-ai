@@ -1,14 +1,14 @@
 """Provider-Agnostic Connector Framework Interface & Registry."""
 
+import logging
 from abc import ABC, abstractmethod
 from enum import Enum
-import logging
-from typing import Dict, Any, Optional, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
 from app.data_fabric.data_source import DataSource
-from app.data_fabric.exceptions import ConnectorNotFoundException, ConnectorAuthenticationError
+from app.data_fabric.exceptions import ConnectorNotFoundException
 
 logger = logging.getLogger(__name__)
 
@@ -45,48 +45,38 @@ class DataConnector(ABC):
     @abstractmethod
     async def connect(self) -> bool:
         """Establish connection to external data source."""
-        pass
 
     @abstractmethod
     async def disconnect(self) -> None:
         """Close external connection."""
-        pass
 
     @abstractmethod
     async def validate(self) -> bool:
         """Test credentials and connection health."""
-        pass
 
     @abstractmethod
     async def discover_schema(self) -> Dict[str, Any]:
         """Inspect and return schema structure."""
 
-        pass
-
     @abstractmethod
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         """Fetch records from data source."""
-        pass
 
     @abstractmethod
     async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Fetch records updated since cursor."""
-        pass
 
     @abstractmethod
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
         """Extract CDC event stream."""
-        pass
 
     @abstractmethod
     async def checkpoint(self) -> str:
         """Generate state checkpoint cursor."""
-        pass
 
     @abstractmethod
     async def restore_checkpoint(self, checkpoint_id: str) -> None:
         """Restore cursor position from checkpoint."""
-        pass
 
 
 class ConnectorRegistry:
@@ -113,7 +103,7 @@ class ConnectorRegistry:
             raise ConnectorNotFoundException(connector_type)
         return meta
 
-    def list_connectors() -> List[ConnectorMetadata]:
+    def list_connectors(self) -> List[ConnectorMetadata]:
         return list(self._metadata.values())
 
 

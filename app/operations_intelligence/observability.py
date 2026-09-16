@@ -1,14 +1,14 @@
 """Operations Intelligence Observability & Prometheus Metrics (Phase 5.41)."""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 
 
 class OperationsMetricsCollector:
     """Collects Prometheus metrics for Operations Intelligence using `ai_operations_*` prefix.
-    
+
     NEVER exposes secrets, tokens, credentials, or sensitive incident metadata.
     """
 

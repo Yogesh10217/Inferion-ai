@@ -1,12 +1,11 @@
 """Immutable Data Lineage Tracking Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from app.data_governance.exceptions import DataLineageException, CrossTenantDataAccessException
+from pydantic import BaseModel, Field
 
 
 class LineageNodeType(str, Enum):
@@ -149,7 +148,6 @@ class DataLineageManager:
         events = [ev for ev in full_lineage.events if ev.source in relevant_nodes or ev.target in relevant_nodes]
 
         return DataLineage(tenant_id=tenant_id, nodes=nodes, edges=edges, events=events)
-
 
     def calculate_lineage_completeness(self, asset_id: str, tenant_id: str) -> float:
         """Calculate lineage completeness score (0.0 to 100.0)."""

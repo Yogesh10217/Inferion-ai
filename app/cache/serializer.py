@@ -1,5 +1,3 @@
-import json
-from typing import Any
 
 from app.schemas.inference_response import InferenceResponse
 

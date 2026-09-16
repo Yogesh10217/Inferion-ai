@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel
-from typing import Dict, List, Optional, Any
+from typing import Optional
 
-from app.tracing.tracer import get_tracer_provider, TracerProvider
-from app.tracing.sampling import TraceIdRatioBasedSampler, AlwaysOnSampler, AlwaysOffSampler
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+
+from app.tracing.sampling import AlwaysOffSampler, AlwaysOnSampler, TraceIdRatioBasedSampler
+from app.tracing.tracer import TracerProvider, get_tracer_provider
 
 router = APIRouter(prefix="/v1/tracing", tags=["tracing"])
 

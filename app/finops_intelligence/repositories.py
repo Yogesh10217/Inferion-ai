@@ -1,12 +1,13 @@
 """Tenant-Scoped Repositories for FinOps Intelligence (Phase 5.42)."""
 
-from typing import Dict, Any, Optional, List
-from app.finops_intelligence.exceptions import CrossTenantFinOpsIntelligenceException
-from app.finops_intelligence.cost_intelligence import CostIntelligenceRecord
-from app.finops_intelligence.budgets import Budget
+from typing import Dict, List
+
 from app.finops_intelligence.allocation import CostAllocation
-from app.finops_intelligence.optimization import OptimizationRecommendation
+from app.finops_intelligence.budgets import Budget
+from app.finops_intelligence.cost_intelligence import CostIntelligenceRecord
+from app.finops_intelligence.exceptions import CrossTenantFinOpsIntelligenceException
 from app.finops_intelligence.investigations import FinOpsInvestigation
+from app.finops_intelligence.optimization import OptimizationRecommendation
 
 
 class BaseTenantRepository:

@@ -1,14 +1,13 @@
 """SQLAlchemy Production ORM Models for Access Intelligence Subsystem (Phase 5.39)."""
 
 from datetime import datetime, timezone
+
 from sqlalchemy import (
-    Column,
-    String,
-    Boolean,
-    Float,
-    Integer,
-    DateTime,
     JSON,
+    Boolean,
+    Column,
+    DateTime,
+    String,
     Text,
 )
 from sqlalchemy.orm import declarative_base

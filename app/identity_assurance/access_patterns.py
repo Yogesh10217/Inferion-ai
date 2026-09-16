@@ -1,9 +1,10 @@
 """Access Behavior Intelligence."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException

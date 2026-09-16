@@ -1,9 +1,9 @@
 """Lifecycle Monitoring Integration Subsystem (Phase 5.33)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from enum import Enum
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from app.reliability_platform.manager import ReliabilityPlatformManager

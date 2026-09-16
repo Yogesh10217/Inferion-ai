@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
+
 from app.observability.context import ObservabilityContext, get_current_context
 
 logger = logging.getLogger(__name__)

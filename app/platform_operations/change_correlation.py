@@ -1,14 +1,13 @@
 """Change Correlation & Change Intelligence Engine."""
 
-from datetime import datetime, timezone, timedelta
-from enum import Enum
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.control_plane.change_history import ChangeHistoryTracker
-
 
 logger = logging.getLogger(__name__)
 

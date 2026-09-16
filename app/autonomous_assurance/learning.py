@@ -4,9 +4,10 @@ Generates advisory workflow optimization recommendations based on historical exe
 MANDATORY PLATFORM INVARIANT: auto_execute = False. Learning MUST NOT execute actions.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import math
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
@@ -132,7 +132,7 @@ class AnomalyDetector:
                 baseline_value=round(baseline_error_rate, 4),
                 threshold=round(baseline_error_rate * 3.0, 4),
                 component=component,
-                message=f"Failure rate spike in {component}: {current_error_rate*100:.1f}% error rate exceeds threshold {baseline_error_rate*3*100:.1f}%.",
+                message=f"Failure rate spike in {component}: {current_error_rate * 100:.1f}% error rate exceeds threshold {baseline_error_rate * 3 * 100:.1f}%.",
             )
             self._detected_anomalies.append(evt)
             return evt

@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from app.core.container import ServiceContainer
 from app.deployment.configuration import RuntimeConfigurationManager
-from app.deployment.dependency_validation import DeploymentDependencyValidator
 from app.deployment.diagnostics import DeploymentDiagnosticsEngine
 from app.deployment.environment import EnvironmentManager
 from app.deployment.environment_isolation import EnvironmentIsolationGuard
@@ -92,7 +91,6 @@ class DeploymentPlatformManager:
 
     def validate_release(self, validation_run: Optional[Any] = None) -> DeploymentReleaseValidationResult:
         return self.release_validator.validate_release_readiness(validation_run=validation_run)
-
 
     def get_secret(self, key: str, default: Optional[str] = None) -> Optional[str]:
         return self.secret_provider.get_secret(key, default)

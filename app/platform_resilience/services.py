@@ -1,17 +1,19 @@
 """Enterprise Resilience Service Registry Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.reliability_platform.services import ServiceTier, ServiceManager as ReliabilityServiceManager
 from app.platform_resilience.exceptions import (
-    ResilienceResourceNotFoundException,
     CrossTenantResilienceAccessException,
+    ResilienceResourceNotFoundException,
 )
+from app.reliability_platform.services import ServiceManager as ReliabilityServiceManager
+from app.reliability_platform.services import ServiceTier
 
 
 class ServiceCriticality(str, Enum):
@@ -50,7 +52,7 @@ class ResilienceService(BaseModel):
 
 class ResilienceServiceManager:
     """Enterprise resilience service registry coordinating service resilience metadata.
-    
+
     Reuses existing ReliabilityServiceManager for underlying service tier alignment.
     """
 
@@ -81,7 +83,7 @@ class ResilienceServiceManager:
             dependencies=dependencies or [],
         )
         self._services[svc.service_id] = svc
-        
+
         # Align with reliability platform tiering
         try:
             rel_tier = ServiceTier[tier.value]
@@ -95,12 +97,12 @@ class ResilienceServiceManager:
         svc = self._services.get(service_id)
         if not svc:
             raise ResilienceResourceNotFoundException(service_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, svc.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, svc.tenant_id)
-            
+
         return svc
 
     def list_services(self, tenant_id: str) -> List[ResilienceService]:

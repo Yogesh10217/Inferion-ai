@@ -1,8 +1,8 @@
 """Usage Analytics Generator for Tenant, Org, Workspace, and Cost Reports."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict, Optional
 
 from app.control_plane.usage_manager import ControlPlaneUsageManager
 

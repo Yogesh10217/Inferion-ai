@@ -4,6 +4,7 @@ Thread-safe, tenant-isolated repositories for Platform Hardening, Audits & Certi
 
 from threading import RLock
 from typing import Dict, List, Optional
+
 from app.platform_hardening.exceptions import (
     CrossTenantPlatformHardeningException,
     ImmutablePlatformAuditRecordException,
@@ -11,8 +12,8 @@ from app.platform_hardening.exceptions import (
 from app.platform_hardening.models import (
     CertificationEvidence,
     IntegrationHealth,
-    PlatformAuditResult,
     PlatformAuditFinding,
+    PlatformAuditResult,
     PlatformCertification,
     RemediationRecommendation,
 )

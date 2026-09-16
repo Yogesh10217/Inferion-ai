@@ -3,11 +3,12 @@ Knowledge Integration Adapter (Phase 5.0 Bridge)
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.knowledge.search import SearchEngine
-from app.knowledge.context_builder import ContextBuilder
-from app.knowledge.citation_engine import CitationEngine
+from typing import Any, Dict, Optional
+
 from app.agents.agent_context import AgentContext
+from app.knowledge.citation_engine import CitationEngine
+from app.knowledge.context_builder import ContextBuilder
+from app.knowledge.search import SearchEngine
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ class KnowledgeAdapter:
             results = await self.search_engine.hybrid_search(
                 query=query, top_k=top_k, filter=filter_expr
             )
-            
+
             docs_data = [
                 {
                     "id": doc.id,
@@ -42,10 +43,10 @@ class KnowledgeAdapter:
                 }
                 for doc in results
             ]
-            
+
             formatted_context = self.context_builder.build_context(docs_data)
             cited_text = self.citation_engine.format_citations(formatted_context, docs_data)
-            
+
             return {
                 "query": query,
                 "documents": docs_data,

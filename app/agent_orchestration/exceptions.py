@@ -1,6 +1,5 @@
 """Domain Exceptions for Enterprise AI Agent Orchestration Platform (Phase 5.36)."""
 
-from typing import Optional
 from app.platform_contracts.exceptions import CrossTenantAccessException
 
 
@@ -14,7 +13,7 @@ class AgentOrchestrationException(Exception):
 
 class CrossTenantAgentAccessException(CrossTenantAccessException, AgentOrchestrationException):
     """Raised when cross-tenant agent resource access is attempted.
-    
+
     CRITICAL: Must leak ZERO metadata (no resource existence, agent names, task IDs, timestamps, or state).
     """
 

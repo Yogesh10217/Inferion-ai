@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from app.deployment.secrets import SecretsSanitizer
 from app.operations.incident_management import Incident, IncidentSeverity

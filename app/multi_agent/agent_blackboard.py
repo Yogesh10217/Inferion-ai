@@ -2,13 +2,12 @@
 Shared Blackboard Architecture for Team Collaboration
 """
 
-import time
-import threading
 import logging
-from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+import threading
+import time
+from typing import Any, Dict, List, Optional, Tuple
 
-from app.multi_agent.exceptions import BlackboardError
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 

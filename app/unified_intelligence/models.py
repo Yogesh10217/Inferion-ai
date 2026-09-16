@@ -4,9 +4,9 @@ Domain Entity Data Models for Phase 5.51 Enterprise AI Unified Intelligence.
 Defines internal domain entities separate from API schemas and SQLAlchemy ORM models.
 """
 
-from typing import List, Dict, Any
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Dict, List
 
 from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.situation_awareness import SituationSeverity, SituationStatus

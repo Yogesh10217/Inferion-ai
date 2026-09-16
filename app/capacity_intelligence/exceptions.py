@@ -1,7 +1,9 @@
 """Tenant-safe exception hierarchy for Capacity Intelligence (Phase 5.56)."""
 
+
 class CapacityIntelligenceException(Exception):
     """Base exception for all Capacity Intelligence errors."""
+
     def __init__(self, message: str = "Capacity Intelligence processing error"):
         super().__init__(message)
 
@@ -11,6 +13,7 @@ class CrossTenantCapacityIntelligenceException(CapacityIntelligenceException):
 
     Zero metadata leakage: no tenant ID, resource ID, or existence details exposed.
     """
+
     def __init__(self):
         super().__init__("Access denied")
 

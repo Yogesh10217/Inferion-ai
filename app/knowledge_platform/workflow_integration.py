@@ -1,7 +1,7 @@
 """Workflow Knowledge Adapter & Execution Insight Integration."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Optional
 
 from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeType
 from app.knowledge_platform.retrieval import RetrievalPipeline, RetrievalRequest, RetrievalResult

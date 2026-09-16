@@ -1,13 +1,14 @@
 """Financial Risk Intelligence (Phase 5.42)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.finops_intelligence.exceptions import CrossTenantFinOpsIntelligenceException
-from app.governance_platform.risk import RiskManager, RiskLevel
+from app.governance_platform.risk import RiskManager
 
 
 class FinOpsRiskDimension(str, Enum):

@@ -1,11 +1,12 @@
 """Master continuous assurance engine (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, Optional
+
 from app.continuous_assurance.models import (
+    AssuranceLifecycleState,
     ContinuousAssuranceAssessment,
     ContinuousAssuranceScore,
-    AssuranceLifecycleState,
 )
 from app.continuous_assurance.providers import ContinuousAssuranceProviderRegistry
 from app.continuous_assurance.repositories import ContinuousAssuranceRepository

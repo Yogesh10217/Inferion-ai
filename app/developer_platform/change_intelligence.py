@@ -1,7 +1,7 @@
 """Change Impact & Release Risk Intelligence Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from app.control_plane.change_history import ChangeHistoryTracker
 

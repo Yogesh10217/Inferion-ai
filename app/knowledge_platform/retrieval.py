@@ -1,19 +1,19 @@
 """Advanced Retrieval & Pre-Retrieval Authorization Pipeline."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.knowledge.retriever import Retriever
-from app.knowledge.reranker import BaseReranker
+from app.identity.access_control import AccessContext, AccessControlManager
 from app.knowledge.citation_engine import CitationEngine
-
-from app.identity.access_control import AccessControlManager, AccessContext, AccessDecisionType
+from app.knowledge.reranker import BaseReranker
+from app.knowledge.retriever import Retriever
 from app.knowledge_platform.exceptions import KnowledgeAccessDeniedException
-from app.knowledge_platform.knowledge import KnowledgeItem, KnowledgeManager
+from app.knowledge_platform.knowledge import KnowledgeManager
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,6 @@ class RetrievalPipeline:
         self.reranker = reranker
         self.citation_engine = citation_engine or CitationEngine()
 
-
     def execute_retrieval(self, req: RetrievalRequest) -> RetrievalResult:
         # 1. Pre-Retrieval Authorization Check
         ctx = AccessContext(
@@ -123,5 +122,3 @@ class RetrievalPipeline:
 
 class HybridRetriever(RetrievalPipeline):
     """Hybrid Retriever wrapper."""
-    pass
-

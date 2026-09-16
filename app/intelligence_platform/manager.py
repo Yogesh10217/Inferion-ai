@@ -1,26 +1,37 @@
 """Master Enterprise Intelligence Manager."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import List, Optional
 
-from app.intelligence_platform.signals import IntelligenceSignalManager, SignalSource, SignalType, SignalClassification, SignalConfidence
-from app.intelligence_platform.context import ContextBuilder, IntelligenceContext
-from app.intelligence_platform.insights import InsightManager, InsightType, InsightSeverity, Insight
-from app.intelligence_platform.forecasting import ForecastEngine, ForecastType, ForecastHorizon, Forecast
-from app.intelligence_platform.simulation import SimulationEngine, SimulationScenario, SimulationInput, SimulationResult
-from app.intelligence_platform.decisions import DecisionManager, DecisionCriteria, DecisionOption, DecisionSnapshot, Decision, DecisionStatus
-from app.intelligence_platform.optimization import OptimizationEngine, OptimizationObjective, OptimizationConstraint, OptimizationCandidate, OptimizationResult
-from app.intelligence_platform.recommendations import RecommendationManager, RecommendationType, RecommendationPriority, RecommendationStatus, Recommendation
-from app.intelligence_platform.explainability import ExplainabilityEngine, RecommendationExplanation
-from app.intelligence_platform.human_decisions import DecisionApprovalManager, ReviewAction, DecisionReviewer, DecisionReview
-from app.intelligence_platform.execution import DecisionExecutionManager, ExecutionTarget, DecisionExecution
-from app.intelligence_platform.outcomes import OutcomeEvaluator, DecisionOutcomeMeasurement
-from app.intelligence_platform.learning import ContinuousLearningManager, LearningInsight
-from app.intelligence_platform.governance import IntelligenceGovernanceEngine, IntelligencePolicyDecision
-from app.intelligence_platform.trust import IntelligenceTrustEngine
-from app.intelligence_platform.analytics import IntelligenceAnalyticsEngine, IntelligenceReport
-from app.intelligence_platform.observability import IntelligenceMetricsCollector
+from app.intelligence_platform.analytics import IntelligenceAnalyticsEngine
 from app.intelligence_platform.billing import IntelligenceBillingTracker
+from app.intelligence_platform.context import ContextBuilder
+from app.intelligence_platform.decisions import (
+    DecisionCriteria,
+    DecisionManager,
+    DecisionOption,
+    DecisionSnapshot,
+    DecisionStatus,
+)
+from app.intelligence_platform.execution import DecisionExecution, DecisionExecutionManager, ExecutionTarget
+from app.intelligence_platform.explainability import ExplainabilityEngine
+from app.intelligence_platform.forecasting import ForecastEngine, ForecastType
+from app.intelligence_platform.governance import IntelligenceGovernanceEngine
+from app.intelligence_platform.human_decisions import DecisionApprovalManager, DecisionReviewer, ReviewAction
+from app.intelligence_platform.insights import InsightManager, InsightType
+from app.intelligence_platform.learning import ContinuousLearningManager
+from app.intelligence_platform.observability import IntelligenceMetricsCollector
+from app.intelligence_platform.optimization import OptimizationCandidate, OptimizationEngine, OptimizationObjective
+from app.intelligence_platform.outcomes import OutcomeEvaluator
+from app.intelligence_platform.recommendations import (
+    Recommendation,
+    RecommendationManager,
+    RecommendationStatus,
+    RecommendationType,
+)
+from app.intelligence_platform.signals import IntelligenceSignalManager
+from app.intelligence_platform.simulation import SimulationEngine, SimulationInput, SimulationScenario
+from app.intelligence_platform.trust import IntelligenceTrustEngine
 
 logger = logging.getLogger(__name__)
 

@@ -1,14 +1,15 @@
 """Lifecycle Reproducibility Snapshots Subsystem (Phase 5.33)."""
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.ai_lifecycle_platform.exceptions import CrossTenantLifecycleAccessException, ImmutableLifecycleRecordException
 from app.platform_contracts.fingerprinting import FingerprintGenerator
-from app.ai_lifecycle_platform.exceptions import ImmutableLifecycleRecordException, CrossTenantLifecycleAccessException
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class LifecycleSnapshot(BaseModel):

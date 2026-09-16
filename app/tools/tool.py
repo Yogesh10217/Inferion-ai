@@ -4,8 +4,9 @@ Tool Definition Layer & Base Abstract Class for Enterprise Tool Calling Platform
 
 import abc
 import asyncio
-from typing import Dict, Any, List, Optional
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.tools.tool_context import ToolContext
@@ -102,7 +103,6 @@ class BaseTool(abc.ABC):
     @abc.abstractmethod
     async def execute_async(self, parameters: Dict[str, Any], context: ToolContext) -> ToolResult:
         """Asynchronously execute tool with parameters and context."""
-        pass
 
     def execute(self, parameters: Dict[str, Any], context: ToolContext) -> ToolResult:
         """Synchronously execute tool (wraps execute_async)."""

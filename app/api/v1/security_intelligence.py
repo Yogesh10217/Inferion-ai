@@ -1,17 +1,18 @@
 """REST API Router for Enterprise AI Security Intelligence Platform (Phase 5.32)."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
-from app.security_intelligence.manager import SecurityIntelligenceManager
-from app.security_intelligence.assets import SecurityAssetType, SecurityAssetCriticality
-from app.security_intelligence.signals import SecuritySignalType, SecuritySignalSeverity
-from app.security_intelligence.threats import ThreatType, ThreatSeverity
-from app.security_intelligence.ai_threats import AIThreatType, AIThreatSeverity
-from app.security_intelligence.vulnerabilities import VulnerabilitySeverity
+from app.security_intelligence.ai_threats import AIThreatSeverity, AIThreatType
+from app.security_intelligence.assets import SecurityAssetCriticality, SecurityAssetType
 from app.security_intelligence.incidents import SecurityIncidentSeverity
+from app.security_intelligence.manager import SecurityIntelligenceManager
 from app.security_intelligence.remediation import SecurityRemediationPriority
+from app.security_intelligence.signals import SecuritySignalSeverity, SecuritySignalType
+from app.security_intelligence.threats import ThreatSeverity, ThreatType
+from app.security_intelligence.vulnerabilities import VulnerabilitySeverity
 
 router = APIRouter(prefix="/v1/security", tags=["security-intelligence"])
 mgr = SecurityIntelligenceManager()
@@ -153,8 +154,8 @@ async def plan_remediation(
     req: RemediationPlanRequest,
     tenant_id: str = Query(..., description="Tenant ID"),
 ):
-    from app.security_intelligence.remediation import SecurityRemediationAction
     from app.platform_contracts.delegation import DelegationTarget
+    from app.security_intelligence.remediation import SecurityRemediationAction
 
     action = SecurityRemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name=req.action_name, priority=req.priority)
 

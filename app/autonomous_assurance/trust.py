@@ -3,9 +3,10 @@ Workflow Trust Evaluation Subsystem.
 Evaluates trust scores and trust bands for workflow execution targets.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 

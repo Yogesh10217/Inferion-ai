@@ -3,7 +3,8 @@ REST API endpoints for Platform Hardening, Integration Audits & Certification.
 """
 
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, status
+
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 
 from app.platform_hardening.exceptions import CrossTenantPlatformHardeningException
 from app.platform_hardening.manager import PlatformHardeningManager
@@ -81,7 +82,7 @@ def trigger_platform_audit(
                 auto_execute=r.auto_execute,
                 created_at=r.created_at,
             )
-            for f in res.remediations
+            for r in res.remediations
         ]
 
         cert_schema = None
@@ -115,7 +116,7 @@ def trigger_platform_audit(
             started_at=res.started_at,
             completed_at=res.completed_at,
         )
-    except CrossTenantPlatformHardeningException as e:
+    except CrossTenantPlatformHardeningException:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

@@ -3,25 +3,34 @@ Operations, Observability, SRE, and Incident Management package for Enterprise A
 Phase 5.68 canonical operations module.
 """
 
-from app.operations.observability_engine import ObservabilityEngine, RuntimeObservation, ObservationStatus, ObservationResult
+from app.operations.alert_deduplication import AlertDeduplicationEngine, AlertFingerprint
+from app.operations.alerting import Alert, AlertEngine, AlertSeverity, AlertStatus
+from app.operations.anomaly_detection import Anomaly, AnomalySeverity, AnomalyType, RuleBasedAnomalyDetector
+from app.operations.deployment_health import DeploymentHealthCorrelator, DeploymentHealthResult
+from app.operations.error_budget import ErrorBudget, ErrorBudgetEvaluator, ErrorBudgetResult, ErrorBudgetStatus
+from app.operations.incident_detection import IncidentDetectionEngine
+from app.operations.incident_escalation import EscalationResult, IncidentEscalationEngine, NotificationReadiness
+from app.operations.incident_management import Incident, IncidentManager, IncidentSeverity, IncidentStatus
+from app.operations.incident_state_machine import IllegalStateTransitionError, IncidentState, IncidentStateMachine
+from app.operations.observability_engine import (
+    ObservabilityEngine,
+    ObservationResult,
+    ObservationStatus,
+    RuntimeObservation,
+)
+from app.operations.operational_certification import (
+    OperationalCertificationEngine,
+    OperationalCertificationResult,
+    OperationalCertificationStatus,
+)
+from app.operations.operational_dashboard import OperationalDashboardSnapshot
+from app.operations.operational_evidence import OperationalEvidence, OperationalEvidenceCollector
+from app.operations.operations_orchestrator import OperationsOrchestrator
+from app.operations.post_incident import PostIncidentReport, PostIncidentReportGenerator
+from app.operations.prometheus_observability import PrometheusObservabilityAdapter, PrometheusRuntimeStatus
+from app.operations.recovery_decision import RecoveryDecision, RecoveryDecisionEngine, RecoveryRecommendation
 from app.operations.sli import ServiceLevelIndicator, SLIEvaluator, SLIResult, SLIType
 from app.operations.slo import ServiceLevelObjective, SLOEvaluator, SLOResult, SLOStatus
-from app.operations.error_budget import ErrorBudget, ErrorBudgetEvaluator, ErrorBudgetResult, ErrorBudgetStatus
-from app.operations.anomaly_detection import RuleBasedAnomalyDetector, Anomaly, AnomalyType, AnomalySeverity
-from app.operations.alerting import AlertEngine, Alert, AlertSeverity, AlertStatus
-from app.operations.alert_deduplication import AlertDeduplicationEngine, AlertFingerprint
-from app.operations.incident_management import IncidentManager, Incident, IncidentSeverity, IncidentStatus
-from app.operations.incident_state_machine import IncidentStateMachine, IncidentState, IllegalStateTransitionError
-from app.operations.incident_detection import IncidentDetectionEngine
-from app.operations.incident_escalation import IncidentEscalationEngine, EscalationResult, NotificationReadiness
-from app.operations.recovery_decision import RecoveryDecisionEngine, RecoveryDecision, RecoveryRecommendation
-from app.operations.deployment_health import DeploymentHealthCorrelator, DeploymentHealthResult
-from app.operations.prometheus_observability import PrometheusObservabilityAdapter, PrometheusRuntimeStatus
-from app.operations.operational_dashboard import OperationalDashboardSnapshot
-from app.operations.operational_evidence import OperationalEvidenceCollector, OperationalEvidence
-from app.operations.operational_certification import OperationalCertificationEngine, OperationalCertificationResult, OperationalCertificationStatus
-from app.operations.operations_orchestrator import OperationsOrchestrator
-from app.operations.post_incident import PostIncidentReportGenerator, PostIncidentReport
 from app.operations.sre_metrics import SREMetricsCalculator, SREMetricsResult
 
 __all__ = [

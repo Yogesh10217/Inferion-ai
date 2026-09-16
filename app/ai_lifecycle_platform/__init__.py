@@ -1,214 +1,188 @@
 """Enterprise AI Model, Agent, Dataset & Lifecycle Governance Platform Exports (Phase 5.33)."""
 
-from app.ai_lifecycle_platform.exceptions import (
-    AILifecycleException,
-    CrossTenantLifecycleAccessException,
-    AIAssetNotFoundException,
-    DatasetNotFoundException,
-    ModelNotFoundException,
-    AgentNotFoundException,
-    EvaluationNotFoundException,
-    InvalidLifecycleTransitionException,
-    ImmutableLifecycleRecordException,
-    InvalidPromotionException,
-    EvaluationGateFailedException,
-    HighRiskReleaseRequiresApprovalException,
-    ArtifactIntegrityException,
-    LifecycleDelegationBlockedException,
-)
-
-from app.ai_lifecycle_platform.assets import (
-    AIAsset,
-    AIAssetType,
-    AIAssetStatus,
-    AIAssetManager,
-)
-
-from app.ai_lifecycle_platform.datasets import (
-    Dataset,
-    DatasetVersion,
-    DatasetClassification,
-    DatasetStatus,
-    DatasetLineageReference,
-    DatasetManager,
-)
-
-from app.ai_lifecycle_platform.models import (
-    AIModel,
-    ModelVersion,
-    ModelType,
-    ModelFramework,
-    ModelStatus,
-    ModelLifecycleStage,
-    ModelArtifactReference,
-    ModelManager,
-)
-
 from app.ai_lifecycle_platform.agents import (
-    AIAgent,
-    AgentVersion,
-    AgentType,
     AgentAutonomyLevel,
-    AgentStatus,
     AgentCapabilityReference,
-    AgentToolReference,
     AgentManager,
+    AgentStatus,
+    AgentToolReference,
+    AgentType,
+    AgentVersion,
+    AIAgent,
 )
-
-from app.ai_lifecycle_platform.lineage import (
-    AssetLineage,
-    LineageNode,
-    LineageEdge,
-    LineageRelationshipType,
-    LineageGraph,
-    LineageManager,
+from app.ai_lifecycle_platform.analytics import (
+    LifecycleAnalyticsEngine,
 )
-
 from app.ai_lifecycle_platform.artifacts import (
     AIArtifact,
-    ArtifactType,
-    ArtifactReference,
     ArtifactIntegrity,
-    ArtifactStatus,
     ArtifactManager,
+    ArtifactReference,
+    ArtifactStatus,
+    ArtifactType,
 )
-
-from app.ai_lifecycle_platform.evaluations import (
-    EvaluationSuite,
-    EvaluationDefinition,
-    EvaluationRun,
-    EvaluationResult,
-    EvaluationMetric,
-    EvaluationStatus,
-    EvaluationManager,
+from app.ai_lifecycle_platform.assets import (
+    AIAsset,
+    AIAssetManager,
+    AIAssetStatus,
+    AIAssetType,
 )
-
-from app.ai_lifecycle_platform.gates import (
-    LifecycleGate,
-    GateType,
-    GateStatus,
-    GateEvaluation,
-    GateRequirement,
-    LifecycleGateManager,
+from app.ai_lifecycle_platform.billing import (
+    LifecycleBillingTracker,
 )
-
-from app.ai_lifecycle_platform.promotion import (
-    PromotionRequest,
-    PromotionDecision,
-    PromotionStatus,
-    PromotionTarget,
-    PromotionManager,
+from app.ai_lifecycle_platform.datasets import (
+    Dataset,
+    DatasetClassification,
+    DatasetLineageReference,
+    DatasetManager,
+    DatasetStatus,
+    DatasetVersion,
 )
-
-from app.ai_lifecycle_platform.releases import (
-    AIRelease,
-    ReleaseCandidate,
-    ReleaseStatus,
-    ReleaseRisk,
-    ReleaseManager,
-)
-
 from app.ai_lifecycle_platform.deployment import (
-    DeploymentPlan,
-    DeploymentTarget,
-    DeploymentStatus,
-    DeploymentVerification,
     DeploymentManager,
+    DeploymentPlan,
+    DeploymentStatus,
+    DeploymentTarget,
+    DeploymentVerification,
 )
-
-from app.ai_lifecycle_platform.monitoring import (
-    AIAssetHealth,
-    ModelHealth,
-    AgentHealth,
-    LifecycleMonitoringRule,
-    LifecycleSignal,
-    LifecycleMonitoringManager,
-)
-
 from app.ai_lifecycle_platform.drift import (
     DriftDetection,
-    DriftType,
-    DriftSeverity,
-    DriftStatus,
     DriftEvidence,
     DriftManager,
+    DriftSeverity,
+    DriftStatus,
+    DriftType,
 )
-
-from app.ai_lifecycle_platform.rollback import (
-    RollbackRequest,
-    RollbackPlan,
-    RollbackDecision,
-    RollbackStatus,
-    RollbackManager,
+from app.ai_lifecycle_platform.evaluations import (
+    EvaluationDefinition,
+    EvaluationManager,
+    EvaluationMetric,
+    EvaluationResult,
+    EvaluationRun,
+    EvaluationStatus,
+    EvaluationSuite,
 )
-
-from app.ai_lifecycle_platform.retirement import (
-    RetirementRequest,
-    RetirementPlan,
-    RetirementStatus,
-    RetirementReason,
-    RetirementManager,
-)
-
-from app.ai_lifecycle_platform.risk import (
-    LifecycleRiskProfile,
-    LifecycleRiskDimension,
-    LifecycleRiskAssessment,
-    LifecycleRiskManager,
-)
-
-from app.ai_lifecycle_platform.trust import (
-    LifecycleTrustScore,
-    LifecycleTrustDimension,
-    LifecycleTrustEngine,
-)
-
-from app.ai_lifecycle_platform.governance import (
-    LifecycleGovernanceEngine,
-)
-
 from app.ai_lifecycle_platform.evidence import (
     LifecycleEvidence,
     LifecycleEvidenceBundle,
     LifecycleEvidenceIntegrity,
     LifecycleEvidenceManager,
 )
-
+from app.ai_lifecycle_platform.exceptions import (
+    AgentNotFoundException,
+    AIAssetNotFoundException,
+    AILifecycleException,
+    ArtifactIntegrityException,
+    CrossTenantLifecycleAccessException,
+    DatasetNotFoundException,
+    EvaluationGateFailedException,
+    EvaluationNotFoundException,
+    HighRiskReleaseRequiresApprovalException,
+    ImmutableLifecycleRecordException,
+    InvalidLifecycleTransitionException,
+    InvalidPromotionException,
+    LifecycleDelegationBlockedException,
+    ModelNotFoundException,
+)
+from app.ai_lifecycle_platform.gates import (
+    GateEvaluation,
+    GateRequirement,
+    GateStatus,
+    GateType,
+    LifecycleGate,
+    LifecycleGateManager,
+)
+from app.ai_lifecycle_platform.governance import (
+    LifecycleGovernanceEngine,
+)
+from app.ai_lifecycle_platform.learning import (
+    LifecycleLearningManager,
+    LifecycleLearningRecord,
+    LifecyclePattern,
+    LifecycleRecommendation,
+)
+from app.ai_lifecycle_platform.lineage import (
+    AssetLineage,
+    LineageEdge,
+    LineageGraph,
+    LineageManager,
+    LineageNode,
+    LineageRelationshipType,
+)
+from app.ai_lifecycle_platform.manager import (
+    AILifecyclePlatformManager,
+)
+from app.ai_lifecycle_platform.models import (
+    AIModel,
+    ModelArtifactReference,
+    ModelFramework,
+    ModelLifecycleStage,
+    ModelManager,
+    ModelStatus,
+    ModelType,
+    ModelVersion,
+)
+from app.ai_lifecycle_platform.monitoring import (
+    AgentHealth,
+    AIAssetHealth,
+    LifecycleMonitoringManager,
+    LifecycleMonitoringRule,
+    LifecycleSignal,
+    ModelHealth,
+)
+from app.ai_lifecycle_platform.observability import (
+    LifecycleMetricsCollector,
+)
+from app.ai_lifecycle_platform.promotion import (
+    PromotionDecision,
+    PromotionManager,
+    PromotionRequest,
+    PromotionStatus,
+    PromotionTarget,
+)
+from app.ai_lifecycle_platform.releases import (
+    AIRelease,
+    ReleaseCandidate,
+    ReleaseManager,
+    ReleaseRisk,
+    ReleaseStatus,
+)
+from app.ai_lifecycle_platform.repositories import (
+    AgentRepository,
+    AIAssetRepository,
+    DatasetRepository,
+    LifecycleRepository,
+    ModelRepository,
+    ReleaseRepository,
+)
+from app.ai_lifecycle_platform.retirement import (
+    RetirementManager,
+    RetirementPlan,
+    RetirementReason,
+    RetirementRequest,
+    RetirementStatus,
+)
+from app.ai_lifecycle_platform.risk import (
+    LifecycleRiskAssessment,
+    LifecycleRiskDimension,
+    LifecycleRiskManager,
+    LifecycleRiskProfile,
+)
+from app.ai_lifecycle_platform.rollback import (
+    RollbackDecision,
+    RollbackManager,
+    RollbackPlan,
+    RollbackRequest,
+    RollbackStatus,
+)
 from app.ai_lifecycle_platform.snapshots import (
     LifecycleSnapshot,
     LifecycleSnapshotManager,
 )
-
-from app.ai_lifecycle_platform.learning import (
-    LifecycleLearningRecord,
-    LifecyclePattern,
-    LifecycleRecommendation,
-    LifecycleLearningManager,
-)
-
-from app.ai_lifecycle_platform.analytics import (
-    LifecycleAnalyticsEngine,
-)
-
-from app.ai_lifecycle_platform.observability import (
-    LifecycleMetricsCollector,
-)
-
-from app.ai_lifecycle_platform.billing import (
-    LifecycleBillingTracker,
-)
-
-from app.ai_lifecycle_platform.repositories import (
-    LifecycleRepository,
-    AIAssetRepository,
-    DatasetRepository,
-    ModelRepository,
-    AgentRepository,
-    ReleaseRepository,
-)
-
-from app.ai_lifecycle_platform.manager import (
-    AILifecyclePlatformManager,
+from app.ai_lifecycle_platform.trust import (
+    LifecycleTrustDimension,
+    LifecycleTrustEngine,
+    LifecycleTrustScore,
 )
 
 __all__ = [

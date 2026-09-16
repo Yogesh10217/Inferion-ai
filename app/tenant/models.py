@@ -1,9 +1,9 @@
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 from typing import List, Optional
 
-from sqlalchemy import String, DateTime, ForeignKey, JSON
-from sqlalchemy.orm import relationship, mapped_column, Mapped
+from sqlalchemy import JSON, DateTime, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 

@@ -1,10 +1,10 @@
 """Centralized Platform Resource Inventory & Registry."""
 
 import logging
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-import uuid
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.control_plane.exceptions import ResourceNotFoundException
@@ -618,30 +618,6 @@ class ResourceType(str, Enum):
     PLATFORM_HARDENING_EVIDENCE = "PLATFORM_HARDENING_EVIDENCE"
     PLATFORM_HARDENING_SNAPSHOT = "PLATFORM_HARDENING_SNAPSHOT"
     PLATFORM_RELEASE_GATE = "PLATFORM_RELEASE_GATE"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class PlatformResource(BaseModel):

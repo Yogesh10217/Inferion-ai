@@ -1,12 +1,13 @@
 """Immutable Financial Snapshots (Phase 5.42)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
 from app.finops_intelligence.exceptions import CrossTenantFinOpsIntelligenceException
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.platform_contracts.snapshots import SnapshotFactory
 
 
 class FinOpsSnapshot(BaseModel):

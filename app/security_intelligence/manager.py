@@ -1,31 +1,39 @@
 """Master SecurityIntelligenceManager Orchestrator Subsystem (Phase 5.32)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
 
-from app.security_intelligence.assets import SecurityAssetManager, SecurityAssetType, SecurityAssetCriticality
-from app.security_intelligence.attack_surface import AttackSurfaceManager, AttackSurfaceEntry
-from app.security_intelligence.signals import SecuritySignalManager, SecuritySignalType, SecuritySignalSeverity
-from app.security_intelligence.threats import ThreatManager, ThreatType, ThreatSeverity
-from app.security_intelligence.ai_threats import AIThreatManager, AIThreatType, AIThreatSeverity
-from app.security_intelligence.vulnerabilities import VulnerabilityManager, VulnerabilitySeverity, VulnerabilityStatus
-from app.security_intelligence.correlation import SecurityCorrelationManager
-from app.security_intelligence.attack_paths import AttackPathAnalyzer
-from app.security_intelligence.incidents import SecurityIncidentManager, SecurityIncidentStatus, SecurityIncidentSeverity
-from app.security_intelligence.impact import SecurityImpactAnalyzer
-from app.security_intelligence.risk import SecurityRiskManager
-from app.security_intelligence.governance import SecurityGovernanceEngine
-from app.security_intelligence.remediation import SecurityRemediationManager, SecurityRemediationAction, SecurityRemediationPriority
-from app.security_intelligence.posture import SecurityPostureManager
-from app.security_intelligence.trust import SecurityTrustEngine
-from app.security_intelligence.evidence import SecurityEvidenceManager, SecurityEvidence
-from app.security_intelligence.investigations import InvestigationManager, InvestigationFinding
-from app.security_intelligence.learning import SecurityLearningManager
-from app.security_intelligence.analytics import SecurityAnalyticsEngine
-from app.security_intelligence.observability import SecurityMetricsCollector
-from app.security_intelligence.billing import SecurityBillingTracker
-from app.security_intelligence.repositories import SecurityRepository
 from app.platform_contracts.delegation import DelegationTarget
+from app.security_intelligence.ai_threats import AIThreatManager, AIThreatSeverity, AIThreatType
+from app.security_intelligence.analytics import SecurityAnalyticsEngine
+from app.security_intelligence.assets import SecurityAssetCriticality, SecurityAssetManager, SecurityAssetType
+from app.security_intelligence.attack_paths import AttackPathAnalyzer
+from app.security_intelligence.attack_surface import AttackSurfaceEntry, AttackSurfaceManager
+from app.security_intelligence.billing import SecurityBillingTracker
+from app.security_intelligence.correlation import SecurityCorrelationManager
+from app.security_intelligence.evidence import SecurityEvidence, SecurityEvidenceManager
+from app.security_intelligence.governance import SecurityGovernanceEngine
+from app.security_intelligence.impact import SecurityImpactAnalyzer
+from app.security_intelligence.incidents import (
+    SecurityIncidentManager,
+    SecurityIncidentSeverity,
+    SecurityIncidentStatus,
+)
+from app.security_intelligence.investigations import InvestigationFinding, InvestigationManager
+from app.security_intelligence.learning import SecurityLearningManager
+from app.security_intelligence.observability import SecurityMetricsCollector
+from app.security_intelligence.posture import SecurityPostureManager
+from app.security_intelligence.remediation import (
+    SecurityRemediationAction,
+    SecurityRemediationManager,
+    SecurityRemediationPriority,
+)
+from app.security_intelligence.repositories import SecurityRepository
+from app.security_intelligence.risk import SecurityRiskManager
+from app.security_intelligence.signals import SecuritySignalManager, SecuritySignalSeverity, SecuritySignalType
+from app.security_intelligence.threats import ThreatManager, ThreatSeverity, ThreatType
+from app.security_intelligence.trust import SecurityTrustEngine
+from app.security_intelligence.vulnerabilities import VulnerabilityManager, VulnerabilitySeverity, VulnerabilityStatus
 
 logger = logging.getLogger(__name__)
 

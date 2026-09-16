@@ -5,9 +5,9 @@ Evaluates backup configuration, retention policy, backup integrity, restore read
 Preserves Truthfulness Boundary: Backup readiness does NOT imply PRODUCTION_BACKUP_EXECUTED.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

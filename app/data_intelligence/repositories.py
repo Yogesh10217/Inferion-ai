@@ -1,19 +1,20 @@
 """Tenant-scoped repositories for Data Intelligence Platform (Phase 5.43)."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, List
+
+from app.data_intelligence.anomalies import DataAnomaly
+from app.data_intelligence.datasets import DatasetReference
+from app.data_intelligence.evidence import DataEvidenceBundle
 from app.data_intelligence.exceptions import (
     CrossTenantDataIntelligenceException,
-    DatasetNotFoundException,
-    DataSourceNotFoundException,
     DataAnomalyNotFoundException,
     DataIncidentNotFoundException,
+    DatasetNotFoundException,
+    DataSourceNotFoundException,
     ImmutableDataRecordException,
 )
-from app.data_intelligence.datasets import DatasetReference
-from app.data_intelligence.sources import DataSource
-from app.data_intelligence.anomalies import DataAnomaly
 from app.data_intelligence.incidents import DataIncident
-from app.data_intelligence.evidence import DataEvidenceBundle
+from app.data_intelligence.sources import DataSource
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 

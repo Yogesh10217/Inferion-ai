@@ -3,8 +3,10 @@ Agent Profile Configuration Model
 """
 
 import uuid
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
+
 from app.multi_agent.agent_role import AgentRole, RoleType
 
 

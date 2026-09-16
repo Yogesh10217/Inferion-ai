@@ -1,11 +1,10 @@
 """Operational Trust Intelligence (Phase 5.41)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
-from app.operations_intelligence.exceptions import CrossTenantOperationsAccessException
 from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence
 
 

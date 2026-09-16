@@ -4,7 +4,9 @@ Memory Database Persistence Models (SQLAlchemy)
 
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, DateTime, Text, JSON, Index
+
+from sqlalchemy import JSON, Column, DateTime, Float, Index, String, Text
+
 from app.core.database import Base
 
 

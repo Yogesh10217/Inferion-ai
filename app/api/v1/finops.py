@@ -1,14 +1,14 @@
 """FastAPI Router for FinOps & Financial Intelligence Platform (/v1/finops/*)."""
 
 from decimal import Decimal
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.finops.manager import FinOpsManager
-from app.finops.budgets import BudgetScope, BudgetPeriod, BudgetAction
-from app.finops.cost_ledger import CostCategory
+from app.finops.budgets import BudgetAction, BudgetPeriod, BudgetScope
 from app.finops.exceptions import FinOpsException
+from app.finops.manager import FinOpsManager
 
 router = APIRouter(prefix="/v1/finops", tags=["finops"])
 

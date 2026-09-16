@@ -29,4 +29,3 @@ async def ready(service: HealthService = Depends(get_health_service)) -> dict:
 async def live(service: HealthService = Depends(get_health_service)) -> dict:
     """Return liveness information for the service."""
     return await service.get_health_status(endpoint="live")
-

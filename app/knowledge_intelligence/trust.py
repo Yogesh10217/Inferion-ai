@@ -1,18 +1,20 @@
 """Knowledge Trust Evaluation Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.trust import (
     TrustAssessment,
     TrustBand,
     TrustConfidence,
+)
+from app.platform_contracts.trust import (
     TrustDimension as ContractTrustDimension,
 )
-from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 
 class KnowledgeTrustDimension(str, Enum):
@@ -55,7 +57,7 @@ class KnowledgeTrustEngine:
         contradiction_count: int = 0,
     ) -> KnowledgeTrustScore:
         factors = []
-        
+
         fresh_score = 95.0 if is_fresh else 40.0
         factors.append(KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.FRESHNESS, score=fresh_score, reasoning="Freshness check"))
 

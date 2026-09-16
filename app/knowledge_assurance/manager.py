@@ -4,7 +4,7 @@ Master KnowledgeAssuranceManager that coordinates all knowledge lifecycle, trust
 assurance, governance, context assembly, and correlation sub-managers.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.knowledge_assurance.analytics import KnowledgeAnalyticsManager
 from app.knowledge_assurance.assurance import KnowledgeContinuousAssuranceManager

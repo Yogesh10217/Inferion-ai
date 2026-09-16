@@ -1,8 +1,8 @@
 """Snapshot manager for Reliability Intelligence (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any
-from app.reliability_intelligence.models import ReliabilitySnapshot, ReliabilityAssessment
+
+from app.reliability_intelligence.models import ReliabilityAssessment, ReliabilitySnapshot
 
 logger = logging.getLogger(__name__)
 

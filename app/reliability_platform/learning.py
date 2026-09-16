@@ -1,12 +1,10 @@
 """Tenant-Isolated Reliability Learning Subsystem (Phase 5.31)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Dict, List
 
-from app.platform_contracts.tenant import TenantIsolationValidator
+from pydantic import BaseModel, Field
 
 
 class ReliabilityPattern(BaseModel):

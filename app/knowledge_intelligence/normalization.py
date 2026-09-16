@@ -1,11 +1,12 @@
 """Knowledge Normalization Subsystem (Phase 5.35)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.knowledge_intelligence.knowledge import KnowledgeItem, KnowledgeClassification, KnowledgeType
+from app.knowledge_intelligence.knowledge import KnowledgeItem
 from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
@@ -38,7 +39,7 @@ class KnowledgeNormalizer:
 
     def normalize(self, tenant_id: str, knowledge_item: KnowledgeItem) -> KnowledgeNormalizationResult:
         sanitized_attrs = SensitiveDataSanitizer.sanitize(knowledge_item.metadata.attributes)
-        
+
         canonical_title = knowledge_item.metadata.title.strip()
         canonical_type = knowledge_item.knowledge_type.value
         canonical_classification = knowledge_item.classification.value

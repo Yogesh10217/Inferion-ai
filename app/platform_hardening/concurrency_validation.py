@@ -5,6 +5,7 @@ Tests concurrent requests, evidence writes, delegations, and repository access u
 
 import concurrent.futures
 from typing import Callable, List, Tuple
+
 from app.platform_hardening.models import (
     ConcurrencyValidationResult,
     PlatformAuditFinding,
@@ -29,7 +30,7 @@ class PlatformConcurrencyValidationEngine:
                 for f in concurrent.futures.as_completed(futures, timeout=5.0):
                     try:
                         results.append(f.result())
-                    except Exception as e:
+                    except Exception:
                         races_detected += 1
 
         except concurrent.futures.TimeoutError:

@@ -1,17 +1,17 @@
 """Developer Events & Webhooks Platform with HMAC SHA-256 signing and DLQ."""
 
-import logging
-import hmac
 import hashlib
-import time
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
+import hmac
+import logging
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.developer_platform.exceptions import EventSubscriptionNotFoundException
+from app.jobs.job_queue import Job, JobQueue
 from app.resilience.circuit_breaker import CircuitBreakerRegistry
-from app.jobs.job_queue import JobQueue, Job
 
 logger = logging.getLogger(__name__)
 

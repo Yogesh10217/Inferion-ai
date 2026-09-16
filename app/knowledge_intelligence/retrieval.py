@@ -1,18 +1,17 @@
 """Governed Knowledge Retrieval Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_intelligence.exceptions import (
     CrossTenantKnowledgeAccessException,
-    KnowledgeRetrievalBlockedException,
     KnowledgeAccessDeniedException,
 )
-from app.knowledge_intelligence.knowledge import KnowledgeItem, KnowledgeClassification
-from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.knowledge_intelligence.knowledge import KnowledgeClassification, KnowledgeItem
 
 
 class RetrievalStrategy(str, Enum):

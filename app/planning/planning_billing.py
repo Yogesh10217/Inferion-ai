@@ -2,9 +2,9 @@
 Planning Billing and Resource Usage Tracker
 """
 
-import threading
 import logging
-from typing import Dict, Any, Optional
+import threading
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

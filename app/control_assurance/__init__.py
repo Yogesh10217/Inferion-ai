@@ -2,90 +2,110 @@
 Phase 5.38 — Enterprise AI Continuous Control Assurance, Policy Intelligence & Compliance Automation Package.
 """
 
-from app.control_assurance.exceptions import (
-    ControlAssuranceException,
-    CrossTenantControlAssuranceAccessException,
-    ControlNotFoundException,
-    ControlEvaluationNotFoundException,
-    AssuranceViolationNotFoundException,
-    ControlEvidenceNotFoundException,
-    InvalidControlTransitionException,
-    ControlPolicyViolationException,
-    ControlEvaluationBlockedException,
-    ControlRemediationBlockedException,
-    ImmutableAssuranceRecordException,
-    ControlIntegrityException,
-    ControlAttestationException,
-    HighRiskControlOverrideRequiresApprovalException,
+from app.control_assurance.analytics import (
+    ControlAssuranceAnalyticsEngine,
+    ControlAssuranceInsight,
+    ControlAssuranceReport,
 )
-from app.control_assurance.controls import (
-    ControlManager,
-    Control,
-    ControlType,
-    ControlCategory,
-    ControlCriticality,
-    ControlStatus,
-    ControlScope,
-    ControlDefinition,
+from app.control_assurance.assurance import (
+    AssuranceAssessment,
+    AssuranceBand,
+    AssuranceDimension,
+    AssuranceFinding,
+    AssuranceManager,
+    AssuranceScore,
 )
-from app.control_assurance.frameworks import (
-    ControlFrameworkManager,
-    ControlFramework,
-    FrameworkType,
-    FrameworkVersion,
-    FrameworkControlMapping,
-    FrameworkRequirementReference,
+from app.control_assurance.attestation import (
+    AttestationEvidence,
+    AttestationScope,
+    AttestationStatus,
+    ControlAttestation,
+    ControlAttestationManager,
 )
-from app.control_assurance.scope import (
-    ControlScopeResolver,
-    ScopeType,
-    ScopeTarget,
-    ControlScopeDefinition,
-    ScopeResolution,
+from app.control_assurance.audit import (
+    ControlAssuranceAuditEvent,
+    ControlAssuranceAuditManager,
 )
-from app.control_assurance.signals import (
-    ControlSignalManager,
-    ControlSignal,
-    ControlSignalType,
-    ControlSignalSource,
-    ControlSignalSeverity,
-    ControlSignalReference,
-)
-from app.control_assurance.evaluation import (
-    ControlEvaluationManager,
-    ControlEvaluation,
-    ControlEvaluationStatus,
-    ControlEvaluationResult,
-    ControlEvaluationFinding,
-)
+from app.control_assurance.billing import ControlAssuranceBillingTracker, ControlAssuranceCostEvent
 from app.control_assurance.continuous_monitoring import (
     ContinuousMonitoringManager,
+    ControlMonitoringSession,
     MonitoringPolicy,
     MonitoringSchedule,
     MonitoringStatus,
-    ControlMonitoringSession,
+)
+from app.control_assurance.controls import (
+    Control,
+    ControlCategory,
+    ControlCriticality,
+    ControlDefinition,
+    ControlManager,
+    ControlScope,
+    ControlStatus,
+    ControlType,
+)
+from app.control_assurance.correlation import (
+    ControlCorrelation,
+    ControlCorrelationGroup,
+    ControlCorrelationManager,
+    ControlCorrelationType,
+    CorrelationConfidence,
+)
+from app.control_assurance.delegation import (
+    ControlDelegationAction,
+    ControlDelegationManager,
+    ControlDelegationPlan,
+    ControlDelegationStatus,
+)
+from app.control_assurance.evaluation import (
+    ControlEvaluation,
+    ControlEvaluationFinding,
+    ControlEvaluationManager,
+    ControlEvaluationResult,
+    ControlEvaluationStatus,
 )
 from app.control_assurance.evidence import (
-    ControlEvidenceManager,
     ControlEvidence,
     ControlEvidenceBundle,
     ControlEvidenceIntegrity,
+    ControlEvidenceManager,
     EvidenceValidationResult,
 )
-from app.control_assurance.violations import (
-    ControlViolationManager,
-    ControlViolation,
-    ViolationSeverity,
-    ViolationStatus,
-    ViolationImpact,
-    ViolationFinding,
+from app.control_assurance.exceptions import (
+    AssuranceViolationNotFoundException,
+    ControlAssuranceException,
+    ControlAttestationException,
+    ControlEvaluationBlockedException,
+    ControlEvaluationNotFoundException,
+    ControlEvidenceNotFoundException,
+    ControlIntegrityException,
+    ControlNotFoundException,
+    ControlPolicyViolationException,
+    ControlRemediationBlockedException,
+    CrossTenantControlAssuranceAccessException,
+    HighRiskControlOverrideRequiresApprovalException,
+    ImmutableAssuranceRecordException,
+    InvalidControlTransitionException,
 )
-from app.control_assurance.correlation import (
-    ControlCorrelationManager,
-    ControlCorrelation,
-    ControlCorrelationGroup,
-    ControlCorrelationType,
-    CorrelationConfidence,
+from app.control_assurance.exceptions_management import (
+    ControlExceptionApproval,
+    ControlExceptionJustification,
+    ControlExceptionManager,
+    ControlExceptionRequest,
+    ControlExceptionStatus,
+)
+from app.control_assurance.frameworks import (
+    ControlFramework,
+    ControlFrameworkManager,
+    FrameworkControlMapping,
+    FrameworkRequirementReference,
+    FrameworkType,
+    FrameworkVersion,
+)
+from app.control_assurance.governance import (
+    ControlGovernanceContext,
+    ControlGovernanceEngine,
+    ControlGovernanceRequirement,
 )
 from app.control_assurance.impact import (
     ControlImpactAnalyzer,
@@ -93,53 +113,54 @@ from app.control_assurance.impact import (
     ControlImpactDimension,
     ControlImpactSeverity,
 )
-from app.control_assurance.risk import (
-    ControlRiskManager,
-    ControlRiskProfile,
-    ControlRiskDimension,
-    ControlRiskAssessment,
+from app.control_assurance.learning import (
+    ControlLearningManager,
+    ControlLearningRecord,
+    ControlPattern,
+    ControlRecommendation,
 )
+from app.control_assurance.manager import ControlAssuranceManager
+from app.control_assurance.observability import ControlAssuranceMetricsCollector
 from app.control_assurance.policy_intelligence import (
-    PolicyIntelligenceManager,
     ControlPolicyContext,
-    PolicyControlMapping,
     PolicyConflict,
+    PolicyControlMapping,
+    PolicyIntelligenceManager,
     PolicyInterpretation,
 )
-from app.control_assurance.exceptions_management import (
-    ControlExceptionManager,
-    ControlExceptionRequest,
-    ControlExceptionStatus,
-    ControlExceptionJustification,
-    ControlExceptionApproval,
-)
-from app.control_assurance.attestation import (
-    ControlAttestationManager,
-    ControlAttestation,
-    AttestationStatus,
-    AttestationScope,
-    AttestationEvidence,
-)
 from app.control_assurance.remediation import (
+    ControlRemediationAction,
     ControlRemediationManager,
     ControlRemediationPlan,
-    ControlRemediationAction,
     RemediationPriority,
     RemediationStatus,
 )
-from app.control_assurance.verification import (
-    ControlVerificationManager,
-    ControlVerification,
-    VerificationCheck,
-    VerificationResult,
+from app.control_assurance.repositories import ControlAssuranceRepository
+from app.control_assurance.risk import (
+    ControlRiskAssessment,
+    ControlRiskDimension,
+    ControlRiskManager,
+    ControlRiskProfile,
 )
-from app.control_assurance.assurance import (
-    AssuranceManager,
-    AssuranceAssessment,
-    AssuranceDimension,
-    AssuranceBand,
-    AssuranceFinding,
-    AssuranceScore,
+from app.control_assurance.scope import (
+    ControlScopeDefinition,
+    ControlScopeResolver,
+    ScopeResolution,
+    ScopeTarget,
+    ScopeType,
+)
+from app.control_assurance.signals import (
+    ControlSignal,
+    ControlSignalManager,
+    ControlSignalReference,
+    ControlSignalSeverity,
+    ControlSignalSource,
+    ControlSignalType,
+)
+from app.control_assurance.snapshots import (
+    AssuranceSnapshotMetadata,
+    ControlAssuranceSnapshot,
+    ControlAssuranceSnapshotManager,
 )
 from app.control_assurance.trust import (
     ControlAssuranceTrustEngine,
@@ -147,42 +168,20 @@ from app.control_assurance.trust import (
     ControlTrustDimension,
     ControlTrustFactor,
 )
-from app.control_assurance.governance import (
-    ControlGovernanceEngine,
-    ControlGovernanceContext,
-    ControlGovernanceRequirement,
-    ControlGovernanceDecision,
+from app.control_assurance.verification import (
+    ControlVerification,
+    ControlVerificationManager,
+    VerificationCheck,
+    VerificationResult,
 )
-from app.control_assurance.delegation import (
-    ControlDelegationManager,
-    ControlDelegationPlan,
-    ControlDelegationAction,
-    ControlDelegationStatus,
+from app.control_assurance.violations import (
+    ControlViolation,
+    ControlViolationManager,
+    ViolationFinding,
+    ViolationImpact,
+    ViolationSeverity,
+    ViolationStatus,
 )
-from app.control_assurance.snapshots import (
-    ControlAssuranceSnapshotManager,
-    ControlAssuranceSnapshot,
-    AssuranceSnapshotMetadata,
-)
-from app.control_assurance.audit import (
-    ControlAssuranceAuditManager,
-    ControlAssuranceAuditEvent,
-)
-from app.control_assurance.learning import (
-    ControlLearningManager,
-    ControlLearningRecord,
-    ControlPattern,
-    ControlRecommendation,
-)
-from app.control_assurance.analytics import (
-    ControlAssuranceAnalyticsEngine,
-    ControlAssuranceReport,
-    ControlAssuranceInsight,
-)
-from app.control_assurance.observability import ControlAssuranceMetricsCollector
-from app.control_assurance.billing import ControlAssuranceBillingTracker, ControlAssuranceCostEvent
-from app.control_assurance.repositories import ControlAssuranceRepository
-from app.control_assurance.manager import ControlAssuranceManager
 
 __all__ = [
     "ControlAssuranceException",

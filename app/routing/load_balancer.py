@@ -13,7 +13,7 @@ class LoadBalancer:
     def get_instance(self, provider_id: str) -> ProviderInstance:
         """Get the next healthy instance for the given provider."""
         healthy_instances = self._pool.get_healthy_instances(provider_id)
-        
+
         if not healthy_instances:
             # Fallback: check if ANY instances exist, even if unhealthy, just to give a better error
             all_instances = self._pool.get_instances(provider_id)

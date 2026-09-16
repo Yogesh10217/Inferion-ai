@@ -3,9 +3,10 @@ Multi-Dimensional Impact Assessment Subsystem.
 Evaluates operational, security, financial, and compliance impact vectors for candidate decision options.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 

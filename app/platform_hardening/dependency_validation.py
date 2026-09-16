@@ -3,9 +3,9 @@ Platform Dependency Validation Engine.
 Constructs module dependency graphs and enforces layer boundary isolation & contract protection.
 """
 
-import ast
 import os
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set
+
 from app.platform_hardening.code_analysis import PlatformCodeAnalysisEngine
 from app.platform_hardening.models import (
     DependencyValidationResult,

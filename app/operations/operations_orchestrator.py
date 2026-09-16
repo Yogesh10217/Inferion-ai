@@ -8,7 +8,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from app.deployment.secrets import SecretsSanitizer
 from app.operations.alert_deduplication import AlertDeduplicationEngine
 from app.operations.alerting import Alert, AlertEngine
 from app.operations.anomaly_detection import Anomaly, RuleBasedAnomalyDetector
@@ -16,7 +15,7 @@ from app.operations.deployment_health import DeploymentHealthCorrelator, Deploym
 from app.operations.error_budget import ErrorBudgetEvaluator, ErrorBudgetResult
 from app.operations.incident_detection import DetectionResult, IncidentDetectionEngine
 from app.operations.incident_escalation import EscalationResult, IncidentEscalationEngine
-from app.operations.incident_management import Incident, IncidentManager
+from app.operations.incident_management import IncidentManager
 from app.operations.observability_engine import ObservabilityEngine, ObservationResult
 from app.operations.operational_certification import (
     OperationalCertificationEngine,

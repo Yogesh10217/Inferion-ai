@@ -1,12 +1,12 @@
 """Enterprise data evidence management (Phase 5.43)."""
 
 import uuid
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import (
-    ImmutableDataRecordException,
     CrossTenantDataIntelligenceException,
 )
 from app.platform_contracts.fingerprinting import FingerprintGenerator

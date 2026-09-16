@@ -1,12 +1,13 @@
 """Schema Discovery & Metadata Engine."""
 
-from datetime import datetime, timezone
 import logging
-from typing import Dict, Any, Optional, List
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.data_fabric.data_source import DataSource
 from app.data_fabric.connector import ConnectorFactory
+from app.data_fabric.data_source import DataSource
 
 logger = logging.getLogger(__name__)
 

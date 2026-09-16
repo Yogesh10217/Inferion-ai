@@ -1,10 +1,9 @@
 """Tenant-Scoped Intelligence Analytics Engine."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
+import uuid
+from datetime import datetime, timezone
 
-from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

@@ -1,8 +1,9 @@
 """Quota Manager for Resource Allocations & Multi-Tenant Consumption."""
 
 import logging
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
 from app.security.exceptions import QuotaExceededError

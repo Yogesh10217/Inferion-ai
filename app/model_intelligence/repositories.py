@@ -1,9 +1,10 @@
 """Tenant-Isolated Repositories for Model Intelligence (Phase 5.44)."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from app.platform_contracts.redaction import SensitiveDataSanitizer
+from typing import Any, Dict, List
+
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ModelReferenceNotFoundException
+from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 logger = logging.getLogger(__name__)
 

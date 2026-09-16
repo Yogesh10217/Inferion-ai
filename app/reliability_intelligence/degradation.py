@@ -1,7 +1,7 @@
 """Safe degradation planning engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List
+
 from app.reliability_intelligence.models import DegradationPlan, DegradationStrategy
 
 logger = logging.getLogger(__name__)

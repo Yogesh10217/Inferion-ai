@@ -1,15 +1,17 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 from ..vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
+
 class PineconeStore(VectorStore):
     """Pinecone implementation of the VectorStore interface."""
-    
+
     def __init__(self, api_key: str, environment: str):
         """Initialize the Pinecone store.
-        
+
         Args:
             api_key: Pinecone API key.
             environment: Pinecone environment.
@@ -25,10 +27,10 @@ class PineconeStore(VectorStore):
         # Mock implementation
 
     async def search(
-        self, 
-        query_vector: List[float], 
-        collection_name: str, 
-        top_k: int = 10, 
+        self,
+        query_vector: List[float],
+        collection_name: str,
+        top_k: int = 10,
         filter_expr: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """Search Pinecone index for similar vectors."""

@@ -1,15 +1,16 @@
 """Synchronization & Change Data Capture Engine."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.data_fabric.data_source import DataSource, DataSourceManager
-from app.data_fabric.ingestion import DataIngestionEngine, IngestionRequest, IngestionMode
+from app.data_fabric.data_source import DataSourceManager
 from app.data_fabric.exceptions import DataSynchronizationError
+from app.data_fabric.ingestion import DataIngestionEngine, IngestionMode, IngestionRequest
 
 logger = logging.getLogger(__name__)
 

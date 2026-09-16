@@ -1,7 +1,9 @@
 """SQLAlchemy Persistence Models for Platform Integration (Phase 5.58)."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, DateTime, Text, JSON
+
+from sqlalchemy import JSON, Column, DateTime, Float, String, Text
+
 from app.core.database import Base
 
 

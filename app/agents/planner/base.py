@@ -3,7 +3,8 @@ Base Abstract Planner Interface
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List
+
 from app.agents.agent_context import AgentContext
 from app.agents.tools.schemas import ToolDefinition
 
@@ -21,4 +22,3 @@ class BasePlanner(ABC):
         Generates structured execution plan steps.
         Each step dict: {"id": str, "description": str, "tool": str, "tool_input": dict}
         """
-        pass

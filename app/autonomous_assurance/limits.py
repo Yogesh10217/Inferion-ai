@@ -3,8 +3,9 @@ Workflow Budget & Execution Limits Subsystem (Addition #2).
 Prevents runaway workflows by enforcing maximum steps, delegation attempts, recovery attempts, execution duration, and approval wait times.
 """
 
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
+
+from pydantic import BaseModel
 
 from app.autonomous_assurance.exceptions import WorkflowLimitExceededException
 

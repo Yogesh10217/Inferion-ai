@@ -41,6 +41,7 @@ class UnifiedObservabilityEngine:
     """
     Manages telemetry, logging, and Prometheus metrics for the Unified Intelligence platform.
     """
+
     def record_signal_processed(self, tenant_id: str, domain: str) -> None:
         if PROMETHEUS_AVAILABLE:
             try:

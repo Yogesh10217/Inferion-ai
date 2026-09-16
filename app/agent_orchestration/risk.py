@@ -1,14 +1,14 @@
 """Agent Risk Composition Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.risk import RiskReference, RiskAssessmentReference
 from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentRiskDimension(str, Enum):
@@ -114,7 +114,7 @@ class AgentRiskManager:
         ass = self._assessments.get(risk_id)
         if not ass:
             return AgentRiskAssessment(risk_id=risk_id, tenant_id=tenant_id, agent_id="unknown", task_id="unknown")
-            
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, ass.tenant_id)
         except Exception:

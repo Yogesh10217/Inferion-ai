@@ -1,33 +1,33 @@
 """Master AILifecyclePlatformManager Orchestrator Subsystem (Phase 5.33)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
 
-from app.ai_lifecycle_platform.assets import AIAssetManager, AIAsset, AIAssetType
-from app.ai_lifecycle_platform.datasets import DatasetManager, Dataset, DatasetClassification
-from app.ai_lifecycle_platform.models import ModelManager, AIModel, ModelType, ModelFramework, ModelLifecycleStage
-from app.ai_lifecycle_platform.agents import AgentManager, AIAgent, AgentType, AgentAutonomyLevel
-from app.ai_lifecycle_platform.lineage import LineageManager, LineageGraph, LineageRelationshipType
-from app.ai_lifecycle_platform.artifacts import ArtifactManager, AIArtifact, ArtifactType
-from app.ai_lifecycle_platform.evaluations import EvaluationManager, EvaluationSuite, EvaluationRun
-from app.ai_lifecycle_platform.gates import LifecycleGateManager, LifecycleGate, GateType, GateStatus
-from app.ai_lifecycle_platform.promotion import PromotionManager, PromotionRequest, PromotionTarget, PromotionStatus
-from app.ai_lifecycle_platform.releases import ReleaseManager, AIRelease, ReleaseStatus, ReleaseRisk
-from app.ai_lifecycle_platform.deployment import DeploymentManager, DeploymentPlan, DeploymentTarget
-from app.ai_lifecycle_platform.monitoring import LifecycleMonitoringManager, AIAssetHealth
-from app.ai_lifecycle_platform.drift import DriftManager, DriftDetection, DriftType, DriftSeverity
-from app.ai_lifecycle_platform.rollback import RollbackManager, RollbackRequest, RollbackPlan
-from app.ai_lifecycle_platform.retirement import RetirementManager, RetirementRequest, RetirementReason, RetirementStatus
-from app.ai_lifecycle_platform.risk import LifecycleRiskManager, LifecycleRiskAssessment
-from app.ai_lifecycle_platform.trust import LifecycleTrustEngine, LifecycleTrustScore
-from app.ai_lifecycle_platform.governance import LifecycleGovernanceEngine, GovernanceDecision
-from app.ai_lifecycle_platform.evidence import LifecycleEvidenceManager, LifecycleEvidenceBundle, LifecycleEvidence
-from app.ai_lifecycle_platform.snapshots import LifecycleSnapshotManager, LifecycleSnapshot
-from app.ai_lifecycle_platform.learning import LifecycleLearningManager, LifecycleLearningRecord
-from app.ai_lifecycle_platform.analytics import LifecycleAnalyticsEngine, PlatformReport
-from app.ai_lifecycle_platform.observability import LifecycleMetricsCollector
+from app.ai_lifecycle_platform.agents import AgentAutonomyLevel, AgentManager, AgentType
+from app.ai_lifecycle_platform.analytics import LifecycleAnalyticsEngine
+from app.ai_lifecycle_platform.artifacts import ArtifactManager, ArtifactType
+from app.ai_lifecycle_platform.assets import AIAssetManager
 from app.ai_lifecycle_platform.billing import LifecycleBillingTracker
+from app.ai_lifecycle_platform.datasets import DatasetClassification, DatasetManager
+from app.ai_lifecycle_platform.deployment import DeploymentManager, DeploymentTarget
+from app.ai_lifecycle_platform.drift import DriftManager, DriftSeverity, DriftType
+from app.ai_lifecycle_platform.evaluations import EvaluationManager
+from app.ai_lifecycle_platform.evidence import LifecycleEvidence, LifecycleEvidenceManager
+from app.ai_lifecycle_platform.gates import GateType, LifecycleGateManager
+from app.ai_lifecycle_platform.governance import LifecycleGovernanceEngine
+from app.ai_lifecycle_platform.learning import LifecycleLearningManager
+from app.ai_lifecycle_platform.lineage import LineageManager, LineageRelationshipType
+from app.ai_lifecycle_platform.models import ModelFramework, ModelManager, ModelType
+from app.ai_lifecycle_platform.monitoring import LifecycleMonitoringManager
+from app.ai_lifecycle_platform.observability import LifecycleMetricsCollector
+from app.ai_lifecycle_platform.promotion import PromotionManager, PromotionStatus, PromotionTarget
+from app.ai_lifecycle_platform.releases import ReleaseManager, ReleaseRisk
 from app.ai_lifecycle_platform.repositories import LifecycleRepository
+from app.ai_lifecycle_platform.retirement import RetirementManager, RetirementReason
+from app.ai_lifecycle_platform.risk import LifecycleRiskManager
+from app.ai_lifecycle_platform.rollback import RollbackManager
+from app.ai_lifecycle_platform.snapshots import LifecycleSnapshotManager
+from app.ai_lifecycle_platform.trust import LifecycleTrustEngine
 
 logger = logging.getLogger(__name__)
 

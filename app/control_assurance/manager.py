@@ -1,46 +1,44 @@
 """Master ControlAssuranceManager Orchestrator Subsystem (Phase 5.38)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
 
-from app.platform_contracts.tenant import TenantAccessGuard
+from app.control_assurance.analytics import ControlAssuranceAnalyticsEngine
+from app.control_assurance.assurance import AssuranceDimension, AssuranceFinding, AssuranceManager
+from app.control_assurance.attestation import ControlAttestationManager
+from app.control_assurance.audit import ControlAssuranceAuditManager
+from app.control_assurance.billing import ControlAssuranceBillingTracker
+from app.control_assurance.continuous_monitoring import ContinuousMonitoringManager
+from app.control_assurance.controls import ControlCategory, ControlCriticality, ControlManager
+from app.control_assurance.correlation import ControlCorrelationManager
+from app.control_assurance.delegation import ControlDelegationManager
+from app.control_assurance.evaluation import ControlEvaluationManager
+from app.control_assurance.evidence import ControlEvidenceManager
+from app.control_assurance.exceptions_management import ControlExceptionManager
+from app.control_assurance.frameworks import ControlFrameworkManager
+from app.control_assurance.governance import ControlGovernanceEngine
+from app.control_assurance.impact import ControlImpactAnalyzer
+from app.control_assurance.learning import ControlLearningManager
+from app.control_assurance.observability import ControlAssuranceMetricsCollector
+from app.control_assurance.policy_intelligence import PolicyIntelligenceManager
+from app.control_assurance.remediation import ControlRemediationManager
+from app.control_assurance.repositories import ControlAssuranceRepository
+from app.control_assurance.risk import ControlRiskManager
+from app.control_assurance.scope import ControlScopeResolver, ScopeTarget
+from app.control_assurance.signals import (
+    ControlSignalManager,
+    ControlSignalSeverity,
+    ControlSignalSource,
+    ControlSignalType,
+)
+from app.control_assurance.snapshots import ControlAssuranceSnapshotManager
+from app.control_assurance.trust import ControlAssuranceTrustEngine
+from app.control_assurance.verification import ControlVerificationManager
+from app.control_assurance.violations import ControlViolationManager, ViolationSeverity, ViolationStatus
+from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.platform_contracts.idempotency import IdempotencyManager
 from app.platform_contracts.snapshots import SnapshotFactory
-from app.platform_contracts.fingerprinting import FingerprintGenerator
-
-from app.control_assurance.exceptions import (
-    ControlAssuranceException,
-    CrossTenantControlAssuranceAccessException,
-    ControlNotFoundException,
-    HighRiskControlOverrideRequiresApprovalException,
-)
-from app.control_assurance.controls import ControlManager, ControlCategory, ControlType, ControlCriticality, Control
-from app.control_assurance.frameworks import ControlFrameworkManager, FrameworkType
-from app.control_assurance.scope import ControlScopeResolver, ScopeTarget
-from app.control_assurance.signals import ControlSignalManager, ControlSignalType, ControlSignalSource, ControlSignalSeverity
-from app.control_assurance.evaluation import ControlEvaluationManager, ControlEvaluationStatus
-from app.control_assurance.continuous_monitoring import ContinuousMonitoringManager
-from app.control_assurance.evidence import ControlEvidenceManager
-from app.control_assurance.violations import ControlViolationManager, ViolationSeverity, ViolationStatus
-from app.control_assurance.correlation import ControlCorrelationManager, ControlCorrelationType
-from app.control_assurance.impact import ControlImpactAnalyzer, ControlImpactDimension
-from app.control_assurance.risk import ControlRiskManager
-from app.control_assurance.policy_intelligence import PolicyIntelligenceManager
-from app.control_assurance.exceptions_management import ControlExceptionManager
-from app.control_assurance.attestation import ControlAttestationManager
-from app.control_assurance.remediation import ControlRemediationManager
-from app.control_assurance.verification import ControlVerificationManager
-from app.control_assurance.assurance import AssuranceManager, AssuranceFinding, AssuranceDimension
-from app.control_assurance.trust import ControlAssuranceTrustEngine
-from app.control_assurance.governance import ControlGovernanceEngine
-from app.control_assurance.delegation import ControlDelegationManager
-from app.control_assurance.snapshots import ControlAssuranceSnapshotManager
-from app.control_assurance.audit import ControlAssuranceAuditManager
-from app.control_assurance.learning import ControlLearningManager
-from app.control_assurance.analytics import ControlAssuranceAnalyticsEngine
-from app.control_assurance.observability import ControlAssuranceMetricsCollector
-from app.control_assurance.billing import ControlAssuranceBillingTracker
-from app.control_assurance.repositories import ControlAssuranceRepository
+from app.platform_contracts.tenant import TenantAccessGuard
 
 logger = logging.getLogger(__name__)
 

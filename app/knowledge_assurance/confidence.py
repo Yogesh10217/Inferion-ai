@@ -1,12 +1,11 @@
 """Knowledge confidence intelligence considering reliability, freshness, and evidence quality."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
 
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
+from pydantic import BaseModel, Field
 
 
 class ConfidenceLevel(str, Enum):

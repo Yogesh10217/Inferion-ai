@@ -1,8 +1,9 @@
 """Contract Semantic Versioning & Compatibility Subsystem (Phase 5.30)."""
 
 from enum import Enum
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
+
+from pydantic import BaseModel
 
 from app.platform_contracts.exceptions import ContractVersionException
 

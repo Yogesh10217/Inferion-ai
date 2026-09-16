@@ -1,12 +1,13 @@
 """Knowledge Billing Attribution Subsystem (Phase 5.35)."""
 
-from typing import Dict, Any, Optional
+import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
-import uuid
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 
 class KnowledgeCostEvent(BaseModel):

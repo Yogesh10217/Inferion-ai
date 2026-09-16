@@ -1,11 +1,11 @@
 """AI Release Governance & Policy Enforcement Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.mlops.evaluation import EvaluationResult
-from app.mlops.exceptions import GovernanceViolationException
 
 logger = logging.getLogger(__name__)
 

@@ -1,12 +1,10 @@
 """Platform Integration Governance Evaluation Engine (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List
 
 from app.platform_integration.models import (
-    RiskLevel,
     GovernanceDecision,
-    CrossPhaseRecommendation,
+    RiskLevel,
 )
 
 logger = logging.getLogger(__name__)

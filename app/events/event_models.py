@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -23,7 +23,7 @@ class WebhookEndpoint(Base):
     enabled: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
     event_types: Mapped[List[str]] = mapped_column(JSON, default=list)
     retry_policy: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
@@ -62,7 +62,7 @@ class WebhookDelivery(Base):
     response_body: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     is_replay: Mapped[bool] = mapped_column(Boolean, default=False)
     delivered_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 

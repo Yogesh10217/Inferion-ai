@@ -1,16 +1,15 @@
 """FastAPI Router for Enterprise AI Data Intelligence Platform (Phase 5.43)."""
 
-from typing import Dict, Any, Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Query
+from typing import Dict, Optional
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.data_intelligence.manager import DataIntelligenceManager
 from app.data_intelligence.exceptions import (
-    DataIntelligenceException,
     CrossTenantDataIntelligenceException,
     DatasetNotFoundException,
-    DataSourceNotFoundException,
 )
+from app.data_intelligence.manager import DataIntelligenceManager
 
 router = APIRouter(prefix="/v1/data", tags=["Data Intelligence"])
 _mgr = DataIntelligenceManager()
@@ -108,7 +107,7 @@ async def validate_data(dataset_id: str, tenant_id: str = "global"):
 
 @router.post("/anomalies")
 async def detect_anomaly(req: AnomalyDetectRequest):
-    from app.data_intelligence.anomalies import DataAnomalyType, DataAnomalySeverity
+    from app.data_intelligence.anomalies import DataAnomalySeverity, DataAnomalyType
     anom = _mgr.anomaly_manager.detect_anomaly(
         dataset_id=req.dataset_id,
         tenant_id=req.tenant_id,

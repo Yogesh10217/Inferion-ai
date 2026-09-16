@@ -1,14 +1,15 @@
 """Security Evidence References Subsystem (Phase 5.32)."""
 
-from typing import Dict, Any, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.fingerprinting import FingerprintGenerator
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.security_intelligence.exceptions import ImmutableSecurityRecordException, CrossTenantSecurityAccessException
+from app.security_intelligence.exceptions import CrossTenantSecurityAccessException, ImmutableSecurityRecordException
 
 
 class SecurityEvidence(BaseModel):

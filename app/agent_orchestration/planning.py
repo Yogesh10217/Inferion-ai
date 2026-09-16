@@ -1,17 +1,18 @@
 """Agent Planning Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.decision_intelligence.manager import DecisionIntelligenceManager
 from app.agent_orchestration.exceptions import (
     AgentPlanNotFoundException,
     CrossTenantAgentAccessException,
 )
+from app.decision_intelligence.manager import DecisionIntelligenceManager
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class PlanStepType(str, Enum):
@@ -107,7 +108,7 @@ class AgentPlanningEngine:
         plan_id: Optional[str] = None,
     ) -> AgentPlan:
         pid = plan_id or f"plan_{uuid.uuid4().hex[:12]}"
-        
+
         # Formulate deterministic baseline plan steps
         default_targets = target_systems or ["PLATFORM_OPERATIONS"]
         steps = [
@@ -192,10 +193,10 @@ class AgentPlanningEngine:
         plan = self._plans.get(plan_id)
         if not plan:
             raise AgentPlanNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

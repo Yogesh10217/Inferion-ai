@@ -2,18 +2,19 @@
 FastAPI Router for Autonomous Planning, Reasoning & Self-Improvement (/v1/plans)
 """
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
+from typing import Dict, Optional
 
-from app.planning.planner import Planner
+from fastapi import APIRouter, HTTPException, status
+from pydantic import BaseModel
+
+from app.learning.learning_engine import LearningEngine
+from app.planning.exceptions import ResourcePlanningError
 from app.planning.execution_plan import ExecutionPlan
 from app.planning.governance import PlanningGovernanceEngine
+from app.planning.planner import Planner
 from app.planning.planning_billing import PlanningBillingTracker
-from app.planning.exceptions import ResourcePlanningError, PlanValidationError
 from app.reasoning.reasoning_engine import ReasoningEngine
 from app.simulation.simulator import ExecutionSimulator
-from app.learning.learning_engine import LearningEngine
 
 router = APIRouter(prefix="/v1/plans", tags=["planning"])
 

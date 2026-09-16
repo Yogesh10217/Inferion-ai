@@ -1,10 +1,11 @@
 """Savings Verification & Empirical Post-Optimization Measurement Engine."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, List
+
 from pydantic import BaseModel, Field, field_validator
 
 logger = logging.getLogger(__name__)

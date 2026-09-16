@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-import time
 import logging
 from typing import Any, Dict, List, Optional
-from app.tracing.tracer import get_tracer, Span as OTelSpan
-from app.tracing.trace_context import SpanContext as OTelSpanContext
+
 from app.observability.context import ObservabilityContext, get_current_context, set_current_context
-from app.observability.exceptions import TraceNotFoundException, SpanNotFoundException
+from app.observability.exceptions import SpanNotFoundException, TraceNotFoundException
+from app.tracing.trace_context import SpanContext as OTelSpanContext
+from app.tracing.tracer import Span as OTelSpan
+from app.tracing.tracer import get_tracer
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +120,7 @@ class TracingManager:
 
         parent_otel_ctx = OTelSpanContext(trace_id=child_ctx.trace_id, span_id=p_span_id)
         span = self.tracer.start_span(name, parent_context=parent_otel_ctx, attributes=attrs)
-        
+
         self._active_spans[span.context.span_id] = span
         set_current_context(child_ctx)
         return span
@@ -148,7 +149,6 @@ class TracingManager:
             if span_id in self._completed_spans:
                 return self._completed_spans[span_id]
             raise SpanNotFoundException(span_id)
-
 
         if attributes:
             active_span.set_attributes(attributes)

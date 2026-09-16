@@ -1,8 +1,11 @@
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+
 from app.auth.models import AuditEvent
+
 
 class AuditAdminService:
     def __init__(self, db: AsyncSession):
@@ -54,7 +57,7 @@ class AuditAdminService:
     ) -> List[AuditEvent]:
         stmt = select(AuditEvent)
         conditions = []
-        
+
         if organization_id:
             conditions.append(AuditEvent.organization_id == organization_id)
         if workspace_id:
@@ -75,10 +78,10 @@ class AuditAdminService:
             conditions.append(AuditEvent.timestamp >= start_time)
         if end_time:
             conditions.append(AuditEvent.timestamp <= end_time)
-            
+
         if conditions:
             stmt = stmt.where(and_(*conditions))
-            
+
         stmt = stmt.order_by(AuditEvent.timestamp.desc()).limit(limit).offset(offset)
         result = await self.db.execute(stmt)
         return result.scalars().all()

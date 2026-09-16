@@ -4,12 +4,10 @@ import os
 import socket
 import time
 from typing import Any, Dict, Optional
+from urllib.parse import urlparse
 
 from app.deployment.models import DependencyCategory, DependencyStatus, DependencyValidationResult
 
-
-
-from urllib.parse import urlparse
 
 class CacheDependencyValidator:
     """Validates Redis / memory cache backend connectivity and health via real socket probes."""
@@ -70,5 +68,3 @@ class CacheDependencyValidator:
                 details=details,
                 error_message=f"TCP connection to Redis ({host}:{port}) failed: {str(exc)}",
             )
-
-

@@ -4,10 +4,10 @@ Phase 5.70 - Circuit Breaker Module.
 Canonical CircuitBreaker state machine implementation (CLOSED, OPEN, HALF_OPEN) with failure tracking and illegal transition protection.
 """
 
+import time
 from dataclasses import dataclass, field
 from enum import Enum
-import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

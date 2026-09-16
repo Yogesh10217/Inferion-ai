@@ -1,16 +1,17 @@
 """Webhook Platform, Signature Verification & Event Delivery Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
-import logging
 import json
-from typing import Dict, Any, Optional, List
+import logging
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.events.webhook_service import WebhookService as BaseWebhookService
-from app.events.signature_service import SignatureService
 from app.events.dead_letter_queue import DeadLetterQueue
-from app.integrations.exceptions import WebhookSignatureException, DuplicateWebhookException
+from app.events.signature_service import SignatureService
+from app.events.webhook_service import WebhookService as BaseWebhookService
+from app.integrations.exceptions import DuplicateWebhookException, WebhookSignatureException
 
 logger = logging.getLogger(__name__)
 

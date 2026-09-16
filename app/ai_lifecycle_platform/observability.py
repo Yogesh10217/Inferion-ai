@@ -1,8 +1,8 @@
 """Prometheus Lifecycle Observability Subsystem (Phase 5.33)."""
 
 import logging
-from typing import Dict, Any, Optional
-from prometheus_client import Counter, Gauge
+
+from prometheus_client import Counter
 
 from app.platform_contracts.observability import SafeMetricLabelSanitizer
 

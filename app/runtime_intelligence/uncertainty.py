@@ -1,7 +1,7 @@
 """Runtime uncertainty assessment for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

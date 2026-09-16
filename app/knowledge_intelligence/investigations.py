@@ -1,13 +1,13 @@
 """Knowledge Investigation Management Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
-from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class KnowledgeInvestigationStatus(str, Enum):

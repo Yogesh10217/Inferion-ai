@@ -1,8 +1,9 @@
 """SQLAlchemy Database ORM Models for AI Lifecycle Platform (Phase 5.33)."""
 
-from sqlalchemy import Column, String, Float, DateTime, JSON, Text, Boolean
-from sqlalchemy.orm import declarative_base
 from datetime import datetime, timezone
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, String, Text
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 

@@ -1,13 +1,14 @@
 """Immutable decision snapshots reusing PlatformSnapshot and SnapshotFactory primitives."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, Optional
-import uuid
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 from app.decision_governance.exceptions import CrossTenantDecisionGovernanceException
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class DecisionSnapshotStatus(str, Enum):

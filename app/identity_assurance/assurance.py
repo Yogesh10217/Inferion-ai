@@ -1,9 +1,10 @@
 """Continuous Identity Assurance Engine."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException
@@ -74,8 +75,8 @@ class IdentityAssuranceEngine:
         status = (
             AssuranceStatus.EXCELLENT if avg_score >= 0.90
             else (AssuranceStatus.GOOD if avg_score >= 0.75
-            else (AssuranceStatus.MARGINAL if avg_score >= 0.60
-            else (AssuranceStatus.POOR if avg_score >= 0.40 else AssuranceStatus.CRITICAL)))
+                  else (AssuranceStatus.MARGINAL if avg_score >= 0.60
+                        else (AssuranceStatus.POOR if avg_score >= 0.40 else AssuranceStatus.CRITICAL)))
         )
 
         score_obj = IdentityAssuranceScore(

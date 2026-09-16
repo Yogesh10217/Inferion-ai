@@ -1,17 +1,17 @@
 """Knowledge Governance, Pre-Retrieval Policy & Masking Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
-from app.security.authorization import AuthorizationEngine
+from app.approvals.approval_engine import ApprovalEngine
 from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
 from app.governance_platform.risk import RiskManager
-from app.approvals.approval_engine import ApprovalEngine
-
+from app.security.authorization import AuthorizationEngine
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +84,5 @@ class KnowledgeGovernanceEngine:
             )
             logger.info(f"[GOVERNANCE ENGINE] Knowledge access REQUIRES_APPROVAL for identity '{identity_id}' -> Request '{appr.request_id}'")
             return dec
-
 
         return KnowledgeAccessDecision(identity_id=identity_id, tenant_id=tenant_id, policy_decision=PolicyDecisionType.ALLOW)

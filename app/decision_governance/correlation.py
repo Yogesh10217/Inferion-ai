@@ -1,13 +1,13 @@
 """Cross-domain signal correlation intelligence for decision context synthesis."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.decision_governance.signals import DecisionSignal
-from app.decision_governance.exceptions import CrossTenantDecisionGovernanceException
 
 
 class CorrelationType(str, Enum):

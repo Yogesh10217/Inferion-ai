@@ -1,13 +1,13 @@
 """FastAPI REST API Router for Phase 5.17 Identity, Access & Zero-Trust Platform."""
 
-from typing import Dict, Any, Optional, List
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
-from app.identity.manager import IdentitySecurityManager
-from app.identity.identity import IdentityType
 from app.identity.authentication import AuthenticationMethod
-from app.identity.access_control import AccessContext
+from app.identity.identity import IdentityType
+from app.identity.manager import IdentitySecurityManager
 from app.identity.privileged_access import PrivilegedRole
 
 router = APIRouter(prefix="/v1/identity", tags=["Identity Platform"])

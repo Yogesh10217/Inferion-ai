@@ -5,13 +5,12 @@ Aggregates enterprise cross-domain metrics, situation distributions, risk trends
 and intelligence performance stats with tenant isolation.
 """
 
-from typing import List, Dict, Any, Optional
 from datetime import datetime
-
+from typing import Any, Dict, List, Optional
 
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
 
 
@@ -19,6 +18,7 @@ class UnifiedAnalyticsSummary:
     """
     Analytics summary data object for unified intelligence.
     """
+
     def __init__(
         self,
         tenant_id: str,
@@ -61,6 +61,7 @@ class CrossDomainAnalyticsEngine:
     """
     Computes cross-domain intelligence analytics summaries for executive dashboard views.
     """
+
     def __init__(self):
         pass
 

@@ -2,10 +2,10 @@
 Agent Session Storage & History Persistence Manager
 """
 
-import uuid
 import logging
-import time
-from typing import Dict, Any, Optional, List
+import uuid
+from typing import Dict, List, Optional
+
 from app.agents.agent_state import AgentState, AgentStatus
 
 logger = logging.getLogger(__name__)

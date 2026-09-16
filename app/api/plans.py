@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends
 from typing import List
 
-from app.core.container import ServiceContainer
+from fastapi import APIRouter, Depends
+
 from app.api.dependencies import get_container
 from app.billing.schemas import SubscriptionPlanOut
-from app.auth.middleware import require_roles
+from app.core.container import ServiceContainer
 
 router = APIRouter(prefix="/plans", tags=["Billing Plans"])
+
 
 @router.get("", response_model=List[SubscriptionPlanOut])
 async def list_plans(container: ServiceContainer = Depends(get_container)):

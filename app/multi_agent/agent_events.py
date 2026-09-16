@@ -2,9 +2,9 @@
 Multi-Agent Event Registry and Dispatcher
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional, Callable
+import time
+from typing import Any, Callable, Dict, List
 
 logger = logging.getLogger(__name__)
 

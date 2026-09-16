@@ -4,7 +4,7 @@ import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 

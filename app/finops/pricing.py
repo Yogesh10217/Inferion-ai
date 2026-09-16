@@ -1,14 +1,12 @@
 """Versioned Pricing Catalog Subsystem with Decimal Precision."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
-import uuid
-import logging
+from typing import Any, Dict
 
-from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field, field_validator
-
-from app.finops.exceptions import PricingNotFoundException
 
 logger = logging.getLogger(__name__)
 

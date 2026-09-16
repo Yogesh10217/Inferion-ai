@@ -1,62 +1,55 @@
 """Thin Platform Integration Manager Facade (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import List, Optional
 
-from app.platform_integration.models import (
-    IntegrationPlatform,
-    TraceContext,
-    CrossPhaseSignal,
-    CrossPhaseFinding,
-    CrossPhaseAssessment,
-    CrossPhaseCorrelation,
-    CrossPhaseRecommendation,
-    PlatformAssurancePosture,
-    CrossPhaseVerificationResult,
-    GovernanceDecision,
-    RiskLevel,
-)
 from app.platform_contracts.delegation import DelegationRequest
-from app.platform_integration.providers import (
-    PlatformIntegrationProviderRegistry,
-    PlatformProviderResult,
-)
+from app.platform_integration.analytics import PlatformIntegrationAnalytics
+from app.platform_integration.assurance.assurance_fabric import CrossPhaseAssuranceEngine
+from app.platform_integration.assurance.confidence import CrossPhaseConfidenceEngine
+from app.platform_integration.assurance.uncertainty import CrossPhaseUncertaintyEngine
 from app.platform_integration.context.builder import (
-    BoundedContextPolicy,
     PlatformIntegrationContext,
     PlatformIntegrationContextBuilder,
 )
 from app.platform_integration.context.propagation import ContextPropagationEngine
-from app.platform_integration.correlation.dependency_graph import CrossPhaseDependencyGraph
 from app.platform_integration.correlation.correlation_engine import CrossPhaseCorrelationEngine
-from app.platform_integration.correlation.risk_propagation import CrossPhaseRiskPropagationEngine, RiskPropagationPolicy
+from app.platform_integration.correlation.dependency_graph import CrossPhaseDependencyGraph
+from app.platform_integration.correlation.risk_propagation import CrossPhaseRiskPropagationEngine
+from app.platform_integration.delegation.coordinator import CrossPhaseDelegationCoordinator
+from app.platform_integration.delegation.recommendations import CrossPhaseRecommendationEngine
+from app.platform_integration.delegation.verification import CrossPhaseVerificationEngine
 from app.platform_integration.events.coordinator import EventCoordinator
-from app.platform_integration.assurance.assurance_fabric import CrossPhaseAssuranceEngine, AssuranceWeightPolicy
-from app.platform_integration.assurance.confidence import CrossPhaseConfidenceEngine, ConfidenceAssessment
-from app.platform_integration.assurance.uncertainty import CrossPhaseUncertaintyEngine, UncertaintyQuantification
+from app.platform_integration.exceptions import (
+    IntegrationContextNotFoundException,
+)
+from app.platform_integration.governance.approvals import PlatformIntegrationApprovalManager
+from app.platform_integration.governance.governance import PlatformIntegrationGovernanceEngine
 from app.platform_integration.investigation.engine import CrossPhaseInvestigationEngine, CrossPhaseInvestigationResult
 from app.platform_integration.investigation.explainability import PlatformIntegrationExplainabilityEngine
 from app.platform_integration.lineage.graph import LineageGraph, LineageNode, LineageNodeType
-from app.platform_integration.governance.governance import PlatformIntegrationGovernanceEngine
-from app.platform_integration.governance.approvals import PlatformIntegrationApprovalManager
-from app.platform_integration.delegation.recommendations import CrossPhaseRecommendationEngine
-from app.platform_integration.delegation.coordinator import CrossPhaseDelegationCoordinator
-from app.platform_integration.delegation.verification import CrossPhaseVerificationEngine
-from app.platform_integration.state.evidence import CrossPhaseEvidenceManager
-from app.platform_integration.state.snapshots import PlatformIntegrationSnapshotManager, PlatformIntegrationSnapshotRecord
-from app.platform_integration.state.idempotency import PlatformIntegrationIdempotencyManager
+from app.platform_integration.models import (
+    CrossPhaseCorrelation,
+    CrossPhaseRecommendation,
+    CrossPhaseVerificationResult,
+    PlatformAssurancePosture,
+    TraceContext,
+)
+from app.platform_integration.observability import PlatformIntegrationObservability
+from app.platform_integration.providers import (
+    PlatformIntegrationProviderRegistry,
+)
 from app.platform_integration.repositories import (
-    IntegrationContextRepository,
     CorrelationRepository,
+    IntegrationContextRepository,
     InvestigationRepository,
     RecommendationRepository,
 )
-from app.platform_integration.observability import PlatformIntegrationObservability
-from app.platform_integration.analytics import PlatformIntegrationAnalytics
-from app.platform_integration.exceptions import (
-    CrossTenantPlatformIntegrationException,
-    IntegrationContextNotFoundException,
+from app.platform_integration.state.evidence import CrossPhaseEvidenceManager
+from app.platform_integration.state.idempotency import PlatformIntegrationIdempotencyManager
+from app.platform_integration.state.snapshots import (
+    PlatformIntegrationSnapshotManager,
+    PlatformIntegrationSnapshotRecord,
 )
 
 logger = logging.getLogger(__name__)

@@ -51,16 +51,6 @@ async_session_maker = async_sessionmaker(
 Base = declarative_base()
 
 # Import all models to ensure they are registered with Base
-import app.auth.models
-import app.tenant.models
-import app.limits.models
-import app.billing.models
-import app.admin.models
-import app.events.event_models
-import app.knowledge.models
-import app.observability.models
-import app.registry.models
-import app.mlops.models
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -85,7 +75,7 @@ async def init_db() -> None:
         dir_name = os.path.dirname(db_path)
         if dir_name:
             os.makedirs(dir_name, exist_ok=True)
-            
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created.")

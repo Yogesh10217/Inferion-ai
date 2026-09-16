@@ -1,7 +1,7 @@
 """Capacity assessment engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Optional
+
 from app.capacity_intelligence.models import CapacityAssessment, CapacityStatus
 from app.capacity_intelligence.repositories import CapacityAssessmentRepository
 

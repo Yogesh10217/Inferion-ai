@@ -2,9 +2,11 @@
 REST Tool Executor Adapter
 """
 
-import httpx
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
+import httpx
+
 from app.agents.agent_context import AgentContext
 
 logger = logging.getLogger(__name__)

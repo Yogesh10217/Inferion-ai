@@ -2,9 +2,10 @@
 Autonomous Execution Audit Logger
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ class ExecutionAuditLogger:
         tenant_id: str = "default_tenant",
         details: Optional[Dict[str, Any]] = None,
     ) -> AuditEntry:
-        aid = f"audit_{int(time.time()*1000)}"
+        aid = f"audit_{int(time.time() * 1000)}"
         entry = AuditEntry(
             audit_id=aid,
             execution_id=execution_id,

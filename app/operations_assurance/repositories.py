@@ -1,7 +1,8 @@
 """Tenant-isolated, thread-safe repositories for Operations Assurance entities."""
 
 import threading
-from typing import Dict, Any, List, Optional, TypeVar, Generic
+from typing import Dict, Generic, List, Optional, TypeVar
+
 from pydantic import BaseModel
 
 from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException

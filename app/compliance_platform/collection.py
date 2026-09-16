@@ -1,12 +1,13 @@
 """Evidence Collection Orchestration Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.compliance_platform.evidence import EvidenceManager, Evidence, EvidenceType, EvidenceSource
+from app.compliance_platform.evidence import Evidence, EvidenceManager, EvidenceSource, EvidenceType
 
 
 class CollectionTriggerType(str, Enum):

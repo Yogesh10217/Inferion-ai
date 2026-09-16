@@ -1,12 +1,16 @@
 """Operational recommendation intelligence (Advisory only - auto_execute=False mandatory)."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, OperationalRecommendationNotFoundException
+from app.operations_assurance.exceptions import (
+    CrossTenantOperationsAssuranceException,
+    OperationalRecommendationNotFoundException,
+)
 
 
 class OperationalRecommendationType(str, Enum):

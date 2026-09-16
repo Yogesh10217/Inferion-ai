@@ -2,37 +2,41 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+from app.admin import (
+    APIKeyAdminService,
+    AuditAdminService,
+    HealthAdminService,
+    OrganizationAdminService,
+    ReportAdminService,
+    SubscriptionAdminService,
+    SystemAdminService,
+    UserAdminService,
+    WorkspaceAdminService,
+)
+from app.billing.budget_service import BudgetService
+from app.billing.invoice_service import InvoiceService
+from app.billing.plan_service import PlanService, SubscriptionService
+from app.billing.pricing_service import PricingService
 from app.core.config import Settings, get_settings
+from app.core.database import async_session_maker
 from app.core.logger import get_logger, setup_logging
+from app.limits.memory_backend import MemoryCounterBackend
+from app.limits.quota_service import QuotaService
+from app.limits.rate_limit_service import RateLimitService
+from app.limits.redis_backend import RedisCounterBackend
+from app.limits.usage_service import UsageService
+from app.observability.metrics_mapper import MetricsMapper
+from app.observability.prometheus_exporter import PrometheusExporter
+from app.observability.prometheus_registry import PrometheusRegistry
 from app.providers.provider_factory import ProviderFactory
 from app.registry.db_registry import DatabaseModelRegistry
 from app.routing.model_strategy import ModelBasedRoutingStrategy
 from app.routing.request_router import RequestRouter
+from app.services.health_service import HealthService
 from app.services.inference_service import DefaultInferenceService
 from app.services.metrics_service import MetricsService
-from app.services.health_service import HealthService
-from app.services.streaming_manager import StreamingManager
 from app.services.request_scheduler import RequestScheduler
-from app.observability.prometheus_registry import PrometheusRegistry
-from app.observability.metrics_mapper import MetricsMapper
-from app.observability.prometheus_exporter import PrometheusExporter
-from app.core.database import async_session_maker
-
-from app.limits.memory_backend import MemoryCounterBackend
-from app.limits.redis_backend import RedisCounterBackend
-from app.limits.rate_limit_service import RateLimitService
-from app.limits.quota_service import QuotaService
-from app.limits.usage_service import UsageService
-
-from app.billing.pricing_service import PricingService
-from app.billing.plan_service import PlanService, SubscriptionService
-from app.billing.budget_service import BudgetService
-from app.billing.invoice_service import InvoiceService
-from app.admin import (
-    OrganizationAdminService, WorkspaceAdminService, UserAdminService,
-    APIKeyAdminService, SubscriptionAdminService, AuditAdminService,
-    ReportAdminService, HealthAdminService, SystemAdminService
-)
+from app.services.streaming_manager import StreamingManager
 
 
 class ServiceContainer:
@@ -69,13 +73,13 @@ class ServiceContainer:
         self.metrics_service = MetricsService()
 
         # Initialize Provider Pool and Load Balancer
-        from app.routing.provider_pool import ProviderPool, ProviderInstance
-        from app.routing.load_balancer import LoadBalancer
-        from app.routing.load_balancing_policy import get_policy, LoadBalancingStrategy
         from app.routing.failover_policy import FailoverPolicy
+        from app.routing.load_balancer import LoadBalancer
+        from app.routing.load_balancing_policy import LoadBalancingStrategy, get_policy
+        from app.routing.provider_pool import ProviderInstance, ProviderPool
 
         self.provider_pool = ProviderPool()
-        
+
         # Populate ProviderPool with backward-compatible defaults from ProviderFactory
         for provider_name in self.provider_factory.list_providers():
             try:
@@ -94,7 +98,7 @@ class ServiceContainer:
         policy_enum = LoadBalancingStrategy(self.settings.load_balancing_policy)
         self.load_balancing_policy = get_policy(policy_enum)
         self.load_balancer = LoadBalancer(pool=self.provider_pool, policy=self.load_balancing_policy)
-        
+
         self.failover_policy = FailoverPolicy(load_balancer=self.load_balancer)
 
         # Initialize Cache
@@ -121,12 +125,11 @@ class ServiceContainer:
         )
 
         # Initialize batching
-        from app.services.batching.batch_config import BatchConfig
-        from app.services.batching.batch_policy import BatchPolicy
-        from app.services.batching.batch_executor import BatchExecutor
+        from app.resilience import BulkheadRegistry, CircuitBreakerRegistry
         from app.services.batching.batch_collector import BatchCollector
-
-        from app.resilience import CircuitBreakerRegistry, BulkheadRegistry
+        from app.services.batching.batch_config import BatchConfig
+        from app.services.batching.batch_executor import BatchExecutor
+        from app.services.batching.batch_policy import BatchPolicy
         from app.services.dead_letter_queue import DeadLetterQueue
 
         self.circuit_breaker_registry = CircuitBreakerRegistry()
@@ -141,7 +144,7 @@ class ServiceContainer:
         )
         self.batch_policy = BatchPolicy(config=self.batch_config)
         self.batch_executor = BatchExecutor(
-            failover_policy=self.failover_policy, 
+            failover_policy=self.failover_policy,
             metrics=self.metrics_service,
             cache_manager=self.cache_manager,
             circuit_breaker_registry=self.circuit_breaker_registry,
@@ -184,7 +187,7 @@ class ServiceContainer:
         self.subscription_service = SubscriptionService(session_factory=async_session_maker)
         self.budget_service = BudgetService(session_factory=async_session_maker, metrics_service=self.metrics_service)
         self.invoice_service = InvoiceService(session_factory=async_session_maker, pricing_service=self.pricing_service, metrics=self.metrics_service)
-        
+
         # Admin Services
         self.organization_admin_service = OrganizationAdminService(async_session_maker)
         self.workspace_admin_service = WorkspaceAdminService(async_session_maker)
@@ -240,20 +243,20 @@ class ServiceContainer:
             self.prometheus_exporter = None
 
         # Phase 5.9 — Reliability, Security & Infrastructure Platform
-        from app.security import (
-            AuthenticationManager, AuthorizationEngine, APIKeyManager, SecretManager
-        )
-        from app.governance import (
-            RateLimiter, QuotaManager, ResourceGovernanceEngine
-        )
-        from app.resilience import (
-            CircuitBreakerRegistry, RetryManager, BulkheadRegistry, TimeoutManager, FallbackManager
-        )
-        from app.jobs import JobQueue, WorkerPool, JobScheduler
-        from app.persistence import DatabaseHealthMonitor, TransactionManager, BackupManager, RestoreManager
         from app.cache.distributed_lock import DistributedLockManager
-        from app.reliability import SystemHealthManager, GracefulShutdownManager
         from app.config import ConfigurationValidator
+        from app.governance import QuotaManager, RateLimiter, ResourceGovernanceEngine
+        from app.jobs import JobQueue, JobScheduler, WorkerPool
+        from app.persistence import BackupManager, DatabaseHealthMonitor, RestoreManager, TransactionManager
+        from app.reliability import GracefulShutdownManager, SystemHealthManager
+        from app.resilience import (
+            BulkheadRegistry,
+            CircuitBreakerRegistry,
+            FallbackManager,
+            RetryManager,
+            TimeoutManager,
+        )
+        from app.security import APIKeyManager, AuthenticationManager, AuthorizationEngine, SecretManager
 
         self.authentication_manager = AuthenticationManager(secret_key=self.settings.jwt_secret)
         self.authorization_engine = AuthorizationEngine()
@@ -325,10 +328,10 @@ class ServiceContainer:
         from app.identity.manager import IdentitySecurityManager
         self.identity_security_manager = IdentitySecurityManager()
 
-        from app.orchestration.manager import OrchestrationManager
-        from app.knowledge_platform.manager import KnowledgePlatformManager
-        from app.integrations.manager import IntegrationManager
         from app.developer_platform.manager import DeveloperPlatformManager
+        from app.integrations.manager import IntegrationManager
+        from app.knowledge_platform.manager import KnowledgePlatformManager
+        from app.orchestration.manager import OrchestrationManager
         self.orchestration_manager = OrchestrationManager()
         self.knowledge_platform_manager = KnowledgePlatformManager()
         self.integration_manager = IntegrationManager()
@@ -382,17 +385,13 @@ class ServiceContainer:
         from app.event_intelligence.manager import EventIntelligenceManager
         self.event_intelligence_manager = EventIntelligenceManager()
 
-
-
-
-
         # Phase 5.30 Shared Platform Contract Utilities
+        from app.platform_contracts.adapters import PlatformContractAdapter
         from app.platform_contracts.fingerprinting import FingerprintGenerator
-        from app.platform_contracts.tenant import TenantAccessGuard
         from app.platform_contracts.idempotency import IdempotencyManager
         from app.platform_contracts.redaction import SensitiveDataSanitizer
         from app.platform_contracts.snapshots import SnapshotFactory
-        from app.platform_contracts.adapters import PlatformContractAdapter
+        from app.platform_contracts.tenant import TenantAccessGuard
 
         self.fingerprint_generator = FingerprintGenerator()
         self.tenant_access_guard = TenantAccessGuard()
@@ -495,19 +494,3 @@ class ServiceContainer:
         # Phase 5.60 Enterprise AI Production Deployment Platform Manager
         from app.deployment.manager import DeploymentPlatformManager
         self.deployment_manager = DeploymentPlatformManager(container=self)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

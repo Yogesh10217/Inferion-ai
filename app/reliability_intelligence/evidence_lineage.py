@@ -1,7 +1,7 @@
 """Evidence lineage graph for Reliability Intelligence (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 

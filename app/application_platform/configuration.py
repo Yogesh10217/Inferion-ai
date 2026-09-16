@@ -6,16 +6,15 @@ HIGH or CRITICAL production config changes require ApprovalEngine authorization.
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.security.secrets import SecretManager
-
 from app.approvals.approval_engine import ApprovalEngine
-from app.application_platform.exceptions import ApplicationPlatformException
+from app.security.secrets import SecretManager
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +79,7 @@ class ConfigurationManager:
         updated_by: str = "system",
     ) -> EnvironmentConfiguration:
         key = f"{tenant_id}:{application_id}:{environment.value}"
-        
+
         cfg = EnvironmentConfiguration(
             application_id=application_id,
             tenant_id=tenant_id,

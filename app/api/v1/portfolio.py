@@ -1,25 +1,15 @@
 """REST API Endpoints for Enterprise AI Portfolio Platform (Phase 5.28)."""
 
-from typing import Dict, Any, Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, status
+from typing import Any, Dict, Optional
 
+from fastapi import APIRouter, Depends, Header, HTTPException, status
+
+from app.portfolio_platform.exceptions import (
+    FundingDecisionException,
+)
+from app.portfolio_platform.investment import InvestmentRisk
 from app.portfolio_platform.manager import PortfolioPlatformManager
 from app.portfolio_platform.strategy import StrategyHorizon
-from app.portfolio_platform.opportunities import OpportunitySource, OpportunityType
-from app.portfolio_platform.initiatives import InitiativeType, InitiativePriority
-from app.portfolio_platform.business_cases import CostEstimate, BenefitEstimate
-from app.portfolio_platform.investment import InvestmentRisk, InvestmentType
-from app.portfolio_platform.funding import FundingSource
-from app.portfolio_platform.value import ValueDimension
-from app.portfolio_platform.benefits import BenefitType
-from app.portfolio_platform.exceptions import (
-    PortfolioNotFoundException,
-    InitiativeNotFoundException,
-    BusinessCaseNotFoundException,
-    InvestmentNotFoundException,
-    FundingDecisionException,
-    StrategyAlignmentException,
-)
 
 router = APIRouter(prefix="/v1/portfolio", tags=["portfolio-platform"])
 mgr = PortfolioPlatformManager()

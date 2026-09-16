@@ -1,15 +1,16 @@
 """Enterprise Intelligence Context Assembly."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.knowledge_platform.manager import KnowledgePlatformManager
-from app.intelligence_platform.signals import IntelligenceSignal
 from app.intelligence_platform.exceptions import ContextAssemblyException
+from app.intelligence_platform.signals import IntelligenceSignal
+from app.knowledge_platform.manager import KnowledgePlatformManager
 
 logger = logging.getLogger(__name__)
 

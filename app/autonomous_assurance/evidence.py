@@ -5,16 +5,17 @@ Seals workflow evidence using SHA-256 integrity hashes with mandatory sensitive 
 
 import hashlib
 import json
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.redaction import SensitiveDataSanitizer
 from app.autonomous_assurance.exceptions import (
-    ImmutableAutonomousAssuranceRecordException,
     CrossTenantAutonomousAssuranceException,
+    ImmutableAutonomousAssuranceRecordException,
 )
+from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 
 class AutonomousEvidenceBundle(BaseModel):

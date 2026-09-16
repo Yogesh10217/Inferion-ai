@@ -1,6 +1,6 @@
-from typing import Optional
-from .plugin_manifest import PluginManifest
 from .plugin_context import PluginContext
+from .plugin_manifest import PluginManifest
+
 
 class Plugin:
     def __init__(self, manifest: PluginManifest, context: PluginContext):
@@ -23,14 +23,18 @@ class Plugin:
     async def on_uninstall(self):
         pass
 
+
 class InferencePlugin(Plugin):
     pass
+
 
 class AuthenticationPlugin(Plugin):
     pass
 
+
 class WebhookPlugin(Plugin):
     pass
+
 
 class ProviderPlugin(Plugin):
     pass

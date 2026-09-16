@@ -1,7 +1,8 @@
 """Runtime health engine for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 from app.runtime_intelligence.models import RuntimeHealthAssessment, RuntimeHealthStatus
 from app.runtime_intelligence.repositories import RuntimeHealthRepository
 

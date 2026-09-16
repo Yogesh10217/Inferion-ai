@@ -1,16 +1,17 @@
 """Governed Tool Usage Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
     AgentToolAccessDeniedException,
     CrossTenantAgentAccessException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentToolType(str, Enum):
@@ -114,12 +115,12 @@ class AgentToolGovernanceManager:
         tool = self._tools.get(tool_id)
         if not tool:
             raise AgentToolAccessDeniedException(f"Tool '{tool_id}' not found.")
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, tool.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, tool.tenant_id)
-            
+
         return tool
 
     def authorize_tool_invocation(

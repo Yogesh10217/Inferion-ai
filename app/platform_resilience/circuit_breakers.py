@@ -1,15 +1,14 @@
 """Circuit Breaker Intelligence Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
-    CrossTenantResilienceAccessException,
-    CircuitBreakerOpenException,
     InvalidFailoverTransitionException,
 )
 
@@ -70,21 +69,21 @@ class CircuitBreakerManager:
     def record_failure(self, tenant_id: str, target_service_id: str) -> CircuitBreakerPolicy:
         cb = self.get_or_create_breaker(tenant_id, target_service_id)
         cb.consecutive_failures += 1
-        
+
         if cb.state == CircuitBreakerState.CLOSED and cb.consecutive_failures >= cb.failure_threshold:
             self.transition_state(cb, CircuitBreakerState.OPEN, "Failure threshold reached")
         elif cb.state == CircuitBreakerState.HALF_OPEN:
             self.transition_state(cb, CircuitBreakerState.OPEN, "Failure during half-open trial")
-            
+
         return cb
 
     def record_success(self, tenant_id: str, target_service_id: str) -> CircuitBreakerPolicy:
         cb = self.get_or_create_breaker(tenant_id, target_service_id)
         cb.consecutive_failures = 0
-        
+
         if cb.state == CircuitBreakerState.HALF_OPEN:
             self.transition_state(cb, CircuitBreakerState.CLOSED, "Successful call during half-open state")
-            
+
         return cb
 
     def transition_state(self, breaker: CircuitBreakerPolicy, target_state: CircuitBreakerState, reason: str) -> None:
@@ -97,7 +96,7 @@ class CircuitBreakerManager:
 
     def evaluate_circuit_breaker(self, tenant_id: str, target_service_id: str) -> CircuitBreakerAssessment:
         cb = self.get_or_create_breaker(tenant_id, target_service_id)
-        
+
         if cb.state == CircuitBreakerState.OPEN:
             # Check if recovery time elapsed -> move to HALF_OPEN
             elapsed = (datetime.now(timezone.utc) - cb.updated_at).total_seconds()

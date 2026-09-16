@@ -1,14 +1,13 @@
 """Control Assurance Risk Composition Subsystem (Phase 5.38)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.governance_platform.risk import RiskManager
-from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class ControlRiskDimension(str, Enum):

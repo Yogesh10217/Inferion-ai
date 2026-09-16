@@ -1,10 +1,10 @@
 """Runtime Lifecycle State Machine for Phase 5.57 Runtime Intelligence."""
 
 import logging
-from enum import Enum
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Set, Dict, List, Optional
+from enum import Enum
+from typing import Dict, List, Set
 
 from app.runtime_intelligence.exceptions import InvalidRuntimeStateTransitionException
 

@@ -1,17 +1,18 @@
 """Operational Investigation Lifecycle & Snapshot Generation (Phase 5.41)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.operations_intelligence.exceptions import (
     CrossTenantOperationsAccessException,
-    InvalidAccessStateTransitionException,
     ImmutableOperationsRecordException,
+    InvalidAccessStateTransitionException,
 )
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.platform_contracts.snapshots import SnapshotFactory
 
 
 class InvestigationStatus(str, Enum):

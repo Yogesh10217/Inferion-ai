@@ -1,12 +1,10 @@
 """Operational Dependency Intelligence (Phase 5.41)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Dict, List, Set
 
-from app.operations_intelligence.exceptions import CrossTenantOperationsAccessException
+from pydantic import BaseModel, Field
 
 
 class DependencyImpact(str, Enum):

@@ -3,10 +3,10 @@ Supervisor Agent for Team Execution Monitoring, Failure Handling, and Approval E
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.multi_agent.agent_team import AgentTeam
+from typing import Any, Dict, List, Optional
+
 from app.multi_agent.agent_messaging import AgentMessage, MessageType
-from app.multi_agent.exceptions import SupervisorEscalationError
+from app.multi_agent.agent_team import AgentTeam
 
 logger = logging.getLogger(__name__)
 

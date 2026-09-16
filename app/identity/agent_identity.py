@@ -1,10 +1,10 @@
 """AI Agent Identity & Delegated Authorization Scope Boundary Subsystem."""
 
-from datetime import datetime, timezone
-from enum import Enum
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.identity.exceptions import AgentBoundaryViolationException

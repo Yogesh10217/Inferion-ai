@@ -1,9 +1,12 @@
-from typing import List, Optional
 from datetime import datetime, timezone
+from typing import List
+
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, func
+
+from app.admin.exceptions import InvalidOperationException, ResourceNotFoundException
 from app.tenant.models import Organization
-from app.admin.exceptions import ResourceNotFoundException, InvalidOperationException
+
 
 class OrganizationAdminService:
     def __init__(self, db: AsyncSession):
@@ -32,7 +35,7 @@ class OrganizationAdminService:
             raise InvalidOperationException("Cannot suspend an archived organization.")
         if org.status == "suspended":
             return org
-            
+
         org.status = "suspended"
         org.suspended_at = datetime.now(timezone.utc)
         org.suspended_by = actor_id
@@ -46,7 +49,7 @@ class OrganizationAdminService:
             raise InvalidOperationException("Cannot reactivate an archived organization.")
         if org.status == "active":
             return org
-            
+
         org.status = "active"
         org.suspended_at = None
         org.suspended_by = None
@@ -58,7 +61,7 @@ class OrganizationAdminService:
         org = await self.get_organization(org_id)
         if org.status == "archived":
             return org
-            
+
         org.status = "archived"
         org.archived_at = datetime.now(timezone.utc)
         await self.db.commit()

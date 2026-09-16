@@ -1,22 +1,22 @@
-import os
 import logging
-from typing import Dict, List, Optional, Any
+import os
+from typing import Any, Dict, List, Optional
 
+from .exceptions import PluginLifecycleError, PluginLoadError
 from .plugin import Plugin
-from .plugin_manifest import PluginManifest
 from .plugin_context import PluginContext
-from .plugin_registry import PluginRegistry
-from .plugin_lifecycle import PluginLifecycleManager, PluginState
-from .plugin_loader import PluginLoader
-from .plugin_store import LocalFilesystemStore
 from .plugin_execution import (
-    PluginExecutor,
-    PLUGIN_LOAD_TOTAL,
-    PLUGIN_ENABLED_TOTAL,
     PLUGIN_DISABLED_TOTAL,
+    PLUGIN_ENABLED_TOTAL,
+    PLUGIN_LOAD_TOTAL,
+    PluginExecutor,
 )
 from .plugin_hooks import PluginHook
-from .exceptions import PluginError, PluginLoadError, PluginLifecycleError
+from .plugin_lifecycle import PluginLifecycleManager
+from .plugin_loader import PluginLoader
+from .plugin_manifest import PluginManifest
+from .plugin_registry import PluginRegistry
+from .plugin_store import LocalFilesystemStore
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +93,7 @@ class PluginManager:
         plugin = plugin_class(manifest, context)
         await self.lifecycle.initialize(plugin)
         self.registry.register(plugin)
-        
+
         # Enable if persistence record specifies enabled
         rec = self.registry.get_record(plugin_id)
         if rec and rec.enabled:

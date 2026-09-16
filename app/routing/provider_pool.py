@@ -8,7 +8,7 @@ from app.routing.provider_health import ProviderHealthMonitor
 @dataclass
 class ProviderInstance:
     """Represents a specific, routable instance of a provider."""
-    
+
     provider_id: str
     instance_id: str
     provider: BaseProvider
@@ -31,7 +31,7 @@ class ProviderPool:
         """Register a new provider instance."""
         if instance.provider_id not in self._instances:
             self._instances[instance.provider_id] = []
-            
+
         # Avoid duplicate registration
         existing = [inst for inst in self._instances[instance.provider_id] if inst.instance_id == instance.instance_id]
         if not existing:
@@ -41,7 +41,7 @@ class ProviderPool:
         """Remove a provider instance."""
         if provider_id in self._instances:
             self._instances[provider_id] = [
-                inst for inst in self._instances[provider_id] 
+                inst for inst in self._instances[provider_id]
                 if inst.instance_id != instance_id
             ]
 

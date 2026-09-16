@@ -5,12 +5,10 @@ Validates recovery history, state transition sequence, evidence integrity, times
 Audit failures block reliability certification.
 """
 
-from dataclasses import dataclass, field
-from enum import Enum
 import hashlib
 import json
-import time
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
 from app.reliability.reliability_evidence import ReliabilityEvidence, ReliabilityEvidenceLevel
 

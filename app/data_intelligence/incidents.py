@@ -1,12 +1,13 @@
 """Data incident lifecycle management (Phase 5.43)."""
 
 import uuid
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.data_intelligence.exceptions import DataIncidentNotFoundException, CrossTenantDataIntelligenceException
+from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException, DataIncidentNotFoundException
 
 
 class DataIncidentSeverity(str, Enum):

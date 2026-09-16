@@ -1,14 +1,15 @@
 """REST API Router for Enterprise AI Event Intelligence Platform (Phase 5.34)."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
-from app.event_intelligence.manager import EventIntelligenceManager
-from app.event_intelligence.events import EventCategory, EventType, EventSeverity
 from app.event_intelligence.automation import AutomationAction
-from app.event_intelligence.response import ResponseTarget
+from app.event_intelligence.events import EventCategory, EventSeverity, EventType
+from app.event_intelligence.manager import EventIntelligenceManager
 from app.event_intelligence.resolution import EventResolutionStatus
+from app.event_intelligence.response import ResponseTarget
 
 router = APIRouter(prefix="/v1/events", tags=["event-intelligence"])
 mgr = EventIntelligenceManager()

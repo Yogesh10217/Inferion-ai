@@ -1,9 +1,10 @@
 """Delegated Identity Actions."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException

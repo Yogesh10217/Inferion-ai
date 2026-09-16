@@ -1,9 +1,10 @@
 """Knowledge Source Registry Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_intelligence.exceptions import (
@@ -25,7 +26,6 @@ class KnowledgeSourceType(str, Enum):
     EXTERNAL_REFERENCE = "EXTERNAL_REFERENCE"
     ARCHITECTURE_PLATFORM = "ARCHITECTURE_PLATFORM"
     PORTFOLIO_PLATFORM = "PORTFOLIO_PLATFORM"
-
 
 
 class KnowledgeSourceStatus(str, Enum):

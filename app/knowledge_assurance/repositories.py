@@ -6,7 +6,8 @@ Enforces strict cross-tenant isolation and immutability rules.
 
 import hashlib
 import json
-from typing import Dict, List, Optional, TypeVar, Generic
+from typing import Dict, Generic, List, TypeVar
+
 from pydantic import BaseModel
 
 from app.knowledge_assurance.exceptions import (
@@ -15,7 +16,6 @@ from app.knowledge_assurance.exceptions import (
     KnowledgeReferenceNotFoundException,
 )
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-
 
 T = TypeVar("T", bound=BaseModel)
 

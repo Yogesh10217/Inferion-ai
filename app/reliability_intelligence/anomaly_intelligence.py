@@ -1,7 +1,7 @@
 """Reliability anomaly detection engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class ReliabilityAnomalyEngine:
             anomalies.append({
                 "anomaly_type": "THRESHOLD_ERROR_RATE",
                 "severity": "HIGH",
-                "message": f"Error rate threshold breached: {err_rate*100:.2f}%",
+                "message": f"Error rate threshold breached: {err_rate * 100:.2f}%",
             })
         if p99 > 1000.0:
             anomalies.append({

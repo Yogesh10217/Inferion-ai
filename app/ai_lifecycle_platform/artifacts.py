@@ -1,13 +1,14 @@
 """Artifact Integrity & References Subsystem (Phase 5.33)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.ai_lifecycle_platform.exceptions import ArtifactIntegrityException, CrossTenantLifecycleAccessException
+from app.platform_contracts.fingerprinting import FingerprintGenerator
 
 
 class ArtifactType(str, Enum):

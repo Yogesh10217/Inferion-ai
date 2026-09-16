@@ -5,8 +5,7 @@ Parses Python files in app/ into AST representations and constructs file, functi
 
 import ast
 import os
-from typing import Dict, List, Optional, Set, Tuple
-from app.platform_hardening.models import PlatformAuditFinding, PlatformAuditSeverity
+from typing import Dict, List, Optional, Tuple
 
 
 class CodeFileSummary:

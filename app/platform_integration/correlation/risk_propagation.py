@@ -1,13 +1,11 @@
 """Cross-Phase Risk Propagation Engine with Configurable Policy (Phase 5.58)."""
 
 import logging
-from dataclasses import dataclass, field
-from typing import Dict, Any, List, Set, Optional
-from datetime import datetime, timezone
-import uuid
+from dataclasses import dataclass
+from typing import List, Optional, Set
 
-from app.platform_integration.models import RiskLevel
 from app.platform_integration.correlation.dependency_graph import CrossPhaseDependencyGraph
+from app.platform_integration.models import RiskLevel
 
 logger = logging.getLogger(__name__)
 

@@ -1,11 +1,11 @@
 from fastapi import Request
+from sqlalchemy import select
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
-from sqlalchemy import select
 
+from app.auth.models import APIKey, User
 from app.core.config import get_settings
 from app.core.database import async_session_maker
-from app.auth.models import User, APIKey
 from app.tenant.models import Membership, WorkspaceMembership
 
 settings = get_settings()

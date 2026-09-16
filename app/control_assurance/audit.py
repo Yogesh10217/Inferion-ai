@@ -1,13 +1,13 @@
 """Control Assurance Audit Integration Subsystem (Phase 5.38)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
+from app.platform_contracts.audit import AdministrativeAuditLedger
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.audit import PlatformAuditEvent, AuditResourceReference, AuditActorReference, AdministrativeAuditLedger
-from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
 
 
 class ControlAssuranceAuditEvent(BaseModel):

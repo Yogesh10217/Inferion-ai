@@ -1,16 +1,15 @@
 """Integration Resilience, Idempotency & Saga Compensation Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.resilience.circuit_breaker import CircuitBreaker
-from app.resilience.retry import RetryManager
-from app.resilience.timeout import TimeoutManager
 from app.resilience.fallback import FallbackManager
+from app.resilience.retry import RetryManager
 
 logger = logging.getLogger(__name__)
 

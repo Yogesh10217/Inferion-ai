@@ -1,7 +1,7 @@
 """FinOps Observability & Prometheus Metrics Integration."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

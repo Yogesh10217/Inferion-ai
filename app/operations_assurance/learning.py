@@ -1,12 +1,10 @@
 """Advisory operational learning with mandatory auto_execute = False enforcement."""
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException
+from pydantic import BaseModel, Field
 
 
 class OperationalLearningPattern(BaseModel):

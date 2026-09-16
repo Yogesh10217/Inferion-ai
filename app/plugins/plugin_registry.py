@@ -1,8 +1,9 @@
 import json
-import time
 import os
 import threading
-from typing import Dict, List, Optional, Any
+import time
+from typing import Any, Dict, List, Optional
+
 from .plugin import Plugin
 
 

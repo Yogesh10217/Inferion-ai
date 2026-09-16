@@ -1,6 +1,7 @@
 from typing import Optional
-from .tracer import get_tracer, Span
+
 from .trace_attributes import TraceAttributes
+from .tracer import Span, get_tracer
 
 
 class SpanFactory:

@@ -3,8 +3,9 @@ Agent Session Checkpoint & Recovery Manager
 """
 
 import logging
-from typing import Dict, Any, Optional
 import time
+from typing import Any, Dict, Optional
+
 from app.agents.agent_state import AgentState
 from app.agents.exceptions import CheckpointError
 

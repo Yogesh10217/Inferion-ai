@@ -2,15 +2,15 @@
 Agent Team Core Data Structures & Orchestrator Class
 """
 
-import uuid
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import uuid
 from enum import Enum
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.multi_agent.agent_role import AgentRole, RoleType
 from app.multi_agent.agent_profile import AgentProfile
+from app.multi_agent.agent_role import AgentRole, RoleType
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ class AgentTeam:
         elif team_type == TeamType.COMPLIANCE:
             team.add_member(AgentProfile(name="Compliance Lead", role=AgentRole.get_preset_role(RoleType.COMPLIANCE_OFFICER)))
             team.add_member(AgentProfile(name="Auditor", role=AgentRole.get_preset_role(RoleType.REVIEWER)))
-        else: # Support / Analysis / Custom
+        else:  # Support / Analysis / Custom
             team.add_member(AgentProfile(name="Team Lead", role=AgentRole.get_preset_role(RoleType.MANAGER)))
             team.add_member(AgentProfile(name="Primary Worker", role=AgentRole.get_preset_role(RoleType.EXECUTOR)))
 

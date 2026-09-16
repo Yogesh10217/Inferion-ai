@@ -1,13 +1,15 @@
 import asyncio
 import logging
-from typing import Callable, Awaitable
+from typing import Awaitable, Callable
+
 from app.knowledge.pipeline import DocumentContext
 
 logger = logging.getLogger(__name__)
 
+
 class IndexScheduler:
     """Background scheduling system for document indexing."""
-    
+
     def __init__(self, pipeline_runner_func: Callable[[DocumentContext], Awaitable[DocumentContext]]):
         self.queue: asyncio.Queue[DocumentContext] = asyncio.Queue()
         self.pipeline_runner_func = pipeline_runner_func

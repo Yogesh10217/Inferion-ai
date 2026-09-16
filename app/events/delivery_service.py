@@ -1,12 +1,12 @@
 import asyncio
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Optional
 
 import httpx
 
 from app.events.event_models import WebhookDelivery, WebhookEndpoint
-from app.events.event_serializer import EventEnvelope, EventSerializer
+from app.events.event_serializer import EventEnvelope
 from app.events.event_storage import EventStorage
 from app.events.retry_policy import RetryPolicy
 from app.events.signature_service import SignatureService

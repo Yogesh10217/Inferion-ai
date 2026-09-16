@@ -1,22 +1,22 @@
 """REST API Router for Enterprise AI Agent Orchestration Platform (Phase 5.36)."""
 
+from typing import List, Optional
+
 from fastapi import APIRouter, HTTPException, Query, status
-from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
-from app.agent_orchestration.manager import AgentOrchestrationManager
-from app.agent_orchestration.agents import AgentType, AgentRole, AgentStatus
-from app.agent_orchestration.tasks import AgentTaskType, AgentTaskPriority
-from app.agent_orchestration.collaboration import CollaborationType, AgentParticipant
+from app.agent_orchestration.agents import AgentRole, AgentType
+from app.agent_orchestration.collaboration import AgentParticipant, CollaborationType
 from app.agent_orchestration.exceptions import (
-    CrossTenantAgentAccessException,
-    AgentNotFoundException,
-    AgentTaskNotFoundException,
     AgentAutonomyViolationException,
     AgentCapabilityViolationException,
+    AgentNotFoundException,
     AgentToolAccessDeniedException,
+    CrossTenantAgentAccessException,
     HighRiskAgentActionRequiresApprovalException,
 )
+from app.agent_orchestration.manager import AgentOrchestrationManager
+from app.agent_orchestration.tasks import AgentTaskPriority, AgentTaskType
 
 router = APIRouter(prefix="/v1/agents", tags=["Agent Orchestration"])
 manager = AgentOrchestrationManager()

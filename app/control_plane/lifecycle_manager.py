@@ -1,9 +1,10 @@
 """Resource Lifecycle State Machine with Transition Hooks & Validation."""
 
 import logging
-from enum import Enum
-from typing import Dict, Any, Optional, List, Callable
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Callable, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.control_plane.exceptions import LifecycleException

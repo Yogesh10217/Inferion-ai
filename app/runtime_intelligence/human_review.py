@@ -3,12 +3,13 @@
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-from app.runtime_intelligence.models import RuntimeHumanReviewState
+from typing import Any, Dict, Optional
+
 from app.runtime_intelligence.exceptions import (
     CrossTenantRuntimeIntelligenceException,
     RuntimeIntelligenceException,
 )
+from app.runtime_intelligence.models import RuntimeHumanReviewState
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 """Repository Abstractions for Decision Intelligence Platform."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
 
 from app.decision_intelligence.decisions import EnterpriseDecision
 

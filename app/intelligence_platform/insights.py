@@ -1,13 +1,14 @@
 """Structured Evidence-Backed Insights Engine."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.intelligence_platform.context import IntelligenceContext, ContextEvidence
+from app.intelligence_platform.context import IntelligenceContext
 from app.intelligence_platform.exceptions import IntelligenceException
 
 logger = logging.getLogger(__name__)

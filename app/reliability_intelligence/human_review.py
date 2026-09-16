@@ -2,6 +2,7 @@
 
 from app.reliability_intelligence.models import ReliabilityHumanReviewState
 
+
 class ReliabilityHumanReviewLifecycle:
     """Manages human review lifecycle state machine."""
 

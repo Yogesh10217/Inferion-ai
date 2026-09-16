@@ -1,18 +1,19 @@
-from typing import List, Any, Optional
-import jwt
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, status, Request
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from pydantic import BaseModel
+from typing import List, Optional
 
-from app.core.database import get_db_session
-from app.auth.auth_service import AuthService
-from app.auth.jwt_service import JWTService
+import jwt
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.auth.api_key_service import APIKeyService
-from app.auth.models import User, APIKey, Session
+from app.auth.auth_service import AuthService
 from app.auth.dependencies import get_current_user
+from app.auth.jwt_service import JWTService
+from app.auth.models import APIKey, User
+from app.core.database import get_db_session
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -28,7 +29,7 @@ class UserOut(BaseModel):
     username: str
     email: str
     is_admin: bool
-    
+
     model_config = {"from_attributes": True}
 
 
@@ -43,7 +44,7 @@ class APIKeyOut(BaseModel):
     created_at: datetime
     expires_at: datetime | None
     last_used_at: datetime | None
-    
+
     model_config = {"from_attributes": True}
 
 
@@ -63,7 +64,7 @@ async def login(
 ):
     ip_address = request.client.host if request.client else None
     user = await AuthService.authenticate_user(db, form_data.username, form_data.password, ip_address)
-    
+
     org_id = user.default_organization_id
     if not org_id:
         from app.tenant.models import Membership
@@ -76,7 +77,7 @@ async def login(
 
     access_token = JWTService.create_access_token(data={"sub": user.id})
     session = await AuthService.create_user_session(db, user, organization_id=org_id)
-    
+
     return Token(
         access_token=access_token,
         refresh_token=session.raw_token,
@@ -93,14 +94,14 @@ async def refresh_token(
         payload = JWTService.verify_token(request.refresh_token)
         if payload.get("type") != "refresh":
             raise HTTPException(status_code=400, detail="Invalid token type")
-            
+
         user_id = payload.get("sub")
         # In a real app we'd verify the refresh_token_hash matches a valid session in DB
         # For brevity here we just issue a new access token if the refresh token is valid and unexpired
         access_token = JWTService.create_access_token(data={"sub": user_id})
         return Token(
             access_token=access_token,
-            refresh_token=request.refresh_token, # keep same refresh token for now
+            refresh_token=request.refresh_token,  # keep same refresh token for now
             token_type="bearer"
         )
     except Exception:
@@ -147,21 +148,21 @@ async def create_api_key(
         hashed_key=hashed_key,
     )
     db.add(api_key)
-    
+
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "api_key_created", 
-        organization_id=org_id, 
+        db, "api_key_created",
+        organization_id=org_id,
         workspace_id=ws_id,
-        actor_id=current_user.id, 
+        actor_id=current_user.id,
         resource_type="APIKey",
-        ip_address=ip_address, 
+        ip_address=ip_address,
         details=f"Key name: {key_data.name}"
     )
-    
+
     await db.commit()
     await db.refresh(api_key)
-    
+
     out = APIKeyCreateOut.model_validate(api_key)
     out.raw_key = raw_key
     return out
@@ -187,23 +188,23 @@ async def revoke_api_key(
     stmt = select(APIKey).where(APIKey.id == key_id, APIKey.user_id == current_user.id)
     result = await db.execute(stmt)
     api_key = result.scalar_one_or_none()
-    
+
     if not api_key:
         raise HTTPException(status_code=404, detail="API Key not found")
-        
+
     api_key.revoked_at = datetime.now(timezone.utc)
-    
+
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "api_key_revoked", 
-        organization_id=api_key.organization_id, 
+        db, "api_key_revoked",
+        organization_id=api_key.organization_id,
         workspace_id=api_key.workspace_id,
-        actor_id=current_user.id, 
+        actor_id=current_user.id,
         resource_type="APIKey",
         resource_id=api_key.id,
         ip_address=ip_address
     )
-    
+
     await db.commit()
     return {"detail": "API Key revoked"}
 
@@ -235,7 +236,7 @@ async def sso_callback(
         algorithm="HS256"
     )
     session_data = manager.process_id_token(provider_id=provider_id, id_token=mock_id_token)
-    
+
     access_token = JWTService.create_access_token(
         data={"sub": session_data.sub, "email": session_data.email, "role": session_data.role}
     )
@@ -247,4 +248,3 @@ async def sso_callback(
         "token_type": "bearer",
         "user": session_data.model_dump(),
     }
-

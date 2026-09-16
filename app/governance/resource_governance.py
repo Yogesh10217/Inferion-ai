@@ -1,18 +1,18 @@
 """Resource Governance Engine enforcing system-wide compute & memory budgets."""
 
-import os
 import logging
+
 try:
     import psutil
 except ImportError:
     psutil = None
 
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, Optional
 
+from pydantic import BaseModel
 
-from app.governance.rate_limiter import RateLimiter, RateLimitPolicy, RateLimitResult
 from app.governance.quota_manager import QuotaManager
+from app.governance.rate_limiter import RateLimiter, RateLimitPolicy
 from app.security.exceptions import SecurityPolicyViolation
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,6 @@ class ResourceGovernanceEngine:
             cpu_pct = 10.0
             mem_pct = 20.0
 
-
         if cpu_pct > self.limits.max_cpu_percent:
             raise SecurityPolicyViolation(f"System CPU usage too high ({cpu_pct:.1f}% > {self.limits.max_cpu_percent}%)")
 
@@ -90,7 +89,7 @@ class ResourceGovernanceEngine:
         # 3. Quota check & reservation
         workers_delta = 1 if requires_worker else 0
         kwargs = {"requests": 1, "tokens": estimated_tokens, "cost": estimated_cost, "concurrent_delta": 1, "workers_delta": workers_delta}
-        
+
         if component in ["agent", "agent_execution"]:
             kwargs["agent_executions"] = 1
         elif component in ["workflow", "dag"]:

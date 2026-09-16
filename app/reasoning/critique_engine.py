@@ -3,7 +3,8 @@ Self-Critique and Hallucination Detection Engine
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

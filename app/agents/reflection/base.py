@@ -3,7 +3,8 @@ Base Reflection Engine Interface
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from app.agents.agent_context import AgentContext
 
 
@@ -24,4 +25,3 @@ class BaseReflection(ABC):
             "revised_plan": Optional[List[Dict[str, Any]]]
         }
         """
-        pass

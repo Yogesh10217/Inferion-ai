@@ -1,19 +1,19 @@
 """REST API Endpoints for Enterprise AI Architecture & Digital Twin Platform (Phase 5.26)."""
 
-from typing import Dict, Any, Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, status
+from typing import Any, Dict, Optional
 
-from app.architecture_platform.manager import ArchitecturePlatformManager
-from app.architecture_platform.nodes import ArchitectureNodeType, ArchitectureNodeStatus
-from app.architecture_platform.dependencies import DependencyType, DependencyStrength
-from app.architecture_platform.change_management import ArchitectureChangeType, ArchitectureChangeStatus
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
+
+from app.architecture_platform.change_management import ArchitectureChangeType
+from app.architecture_platform.dependencies import DependencyStrength, DependencyType
 from app.architecture_platform.exceptions import (
-    ArchitectureNodeNotFoundException,
     ArchitectureChangeNotFoundException,
+    ArchitectureNodeNotFoundException,
     CrossTenantArchitectureAccessException,
     ImmutableTopologySnapshotException,
-    ImmutableArchitectureDecisionException,
 )
+from app.architecture_platform.manager import ArchitecturePlatformManager
+from app.architecture_platform.nodes import ArchitectureNodeType
 
 router = APIRouter(prefix="/v1/architecture", tags=["architecture-platform"])
 mgr = ArchitecturePlatformManager()

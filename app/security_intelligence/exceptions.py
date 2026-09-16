@@ -1,6 +1,6 @@
 """Domain Exceptions for Enterprise AI Security Intelligence Platform (Phase 5.32)."""
 
-from app.platform_contracts.exceptions import PlatformContractException, CrossTenantAccessException
+from app.platform_contracts.exceptions import CrossTenantAccessException, PlatformContractException
 
 
 class SecurityIntelligenceException(PlatformContractException):

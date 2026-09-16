@@ -1,13 +1,14 @@
 """Tenant-Scoped Repositories for Knowledge Intelligence Platform (Phase 5.35)."""
 
-from typing import Dict, Any, Optional, List
-from app.platform_contracts.repositories import TenantScopedRepository
+from typing import Dict, List, Optional
+
+from app.knowledge_intelligence.investigations import KnowledgeInvestigation
 from app.knowledge_intelligence.knowledge import KnowledgeItem
-from app.knowledge_intelligence.sources import KnowledgeSource
+from app.knowledge_intelligence.memory import OrganizationalMemory
 from app.knowledge_intelligence.provenance import ProvenanceRecord
 from app.knowledge_intelligence.relationships import KnowledgeRelationship
-from app.knowledge_intelligence.investigations import KnowledgeInvestigation
-from app.knowledge_intelligence.memory import OrganizationalMemory
+from app.knowledge_intelligence.sources import KnowledgeSource
+from app.platform_contracts.repositories import TenantScopedRepository
 
 
 class KnowledgeRepository(TenantScopedRepository[KnowledgeItem]):

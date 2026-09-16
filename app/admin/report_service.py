@@ -1,10 +1,13 @@
 import uuid
-from typing import List, Optional
 from datetime import datetime, timezone
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List, Optional
+
 from sqlalchemy import select
-from app.admin.models import ReportJob
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.admin.exceptions import ResourceNotFoundException
+from app.admin.models import ReportJob
+
 
 class ReportAdminService:
     def __init__(self, db: AsyncSession):
@@ -22,7 +25,7 @@ class ReportAdminService:
         self.db.add(job)
         await self.db.commit()
         await self.db.refresh(job)
-        # Note: In a production system, this is where we would trigger a background task (e.g. Celery, ARQ, or asyncio.create_task) 
+        # Note: In a production system, this is where we would trigger a background task (e.g. Celery, ARQ, or asyncio.create_task)
         # to actually process the report and update the job status later.
         return job
 

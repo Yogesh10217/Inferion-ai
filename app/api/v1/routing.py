@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 
 from app.routing.decision_engine import DecisionEngine
-from app.routing.routing_policy import RoutingPolicy
 from app.routing.routing_context import RoutingContext
+from app.routing.routing_policy import RoutingPolicy
 
 router = APIRouter(prefix="/v1/routing", tags=["routing"])
 

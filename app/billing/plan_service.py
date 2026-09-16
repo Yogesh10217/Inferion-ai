@@ -1,10 +1,10 @@
-from typing import Optional, List
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from datetime import datetime
+from typing import List, Optional
 
-from app.billing.models import SubscriptionPlan, OrganizationSubscription
+from sqlalchemy import select
+
 from app.billing.exceptions import InvalidPlanException
+from app.billing.models import OrganizationSubscription, SubscriptionPlan
+
 
 class PlanService:
     def __init__(self, session_factory):
@@ -67,7 +67,7 @@ class SubscriptionService:
             )
             existing_res = await db.execute(existing_stmt)
             existing = existing_res.scalars().first()
-            
+
             if existing:
                 existing.status = "canceled"
                 db.add(existing)

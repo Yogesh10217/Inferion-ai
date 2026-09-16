@@ -1,124 +1,124 @@
 """Enterprise AI Application Platform, Runtime & Experience Layer (Phase 5.22)."""
 
+from app.application_platform.analytics import (
+    ApplicationAnalyticsEngine,
+    ApplicationMetric,
+    ApplicationReport,
+    ExperienceMetric,
+    UsageInsight,
+)
+from app.application_platform.application import (
+    Application,
+    ApplicationConfiguration,
+    ApplicationLifecycle,
+    ApplicationRegistry,
+    ApplicationStatus,
+    ApplicationType,
+    ApplicationVersion,
+)
+from app.application_platform.billing import (
+    ApplicationBillingTracker,
+    ApplicationExecutionCostEvent,
+)
+from app.application_platform.composition import (
+    ApplicationComponent,
+    ApplicationComposition,
+    ApplicationCompositionManager,
+    ComponentBinding,
+    ComponentType,
+)
+from app.application_platform.configuration import (
+    ApplicationEnvironment,
+    ConfigurationManager,
+    ConfigurationVersion,
+    EnvironmentConfiguration,
+)
+from app.application_platform.deployment import (
+    ApplicationDeployment,
+    DeploymentManager,
+    DeploymentStatus,
+    DeploymentStrategy,
+    RollbackPolicy,
+)
 from app.application_platform.exceptions import (
-    ApplicationPlatformException,
     ApplicationNotFoundException,
+    ApplicationPlatformException,
     ApplicationVersionNotFoundException,
+    ConsentDeniedException,
+    DeploymentFailedException,
+    ExecutionCancelledException,
+    GovernanceBlockedException,
     ImmutableVersionException,
     InvalidLifecycleTransitionException,
-    ConsentDeniedException,
-    ExecutionCancelledException,
-    DeploymentFailedException,
-    GovernanceBlockedException,
+)
+from app.application_platform.features import (
+    ExperimentState,
+    FeatureExperiment,
+    FeatureFlag,
+    FeatureManager,
+    FeatureState,
+    FeatureTargetingRule,
+    FeatureVariant,
+)
+from app.application_platform.feedback import (
+    ApplicationFeedback,
+    FeedbackManager,
+    FeedbackSignal,
+    FeedbackType,
+    ImprovementRecommendation,
+)
+from app.application_platform.governance import (
+    ApplicationGovernanceEngine,
+    ApplicationPolicyDecision,
+    ApplicationRiskAssessment,
+    OutputPolicyEvaluator,
+    OutputSafetyDecision,
+    ResponseTransformation,
+)
+from app.application_platform.human_experience import (
+    EscalationPolicy,
+    EscalationReason,
+    ExperienceAction,
+    HumanEscalation,
+    HumanExperienceManager,
+)
+from app.application_platform.interactions import (
+    Conversation,
+    ConversationState,
+    Interaction,
+    InteractionManager,
+    InteractionType,
+)
+from app.application_platform.manager import ApplicationPlatformManager
+from app.application_platform.observability import (
+    ApplicationMetricsCollector,
+    ApplicationTelemetrySpan,
+)
+from app.application_platform.personalization import (
+    ConsentScope,
+    ConsentStatus,
+    ExperienceContext,
+    PersonalizationConsent,
+    PersonalizationEngine,
+    PersonalizationProfile,
 )
 from app.application_platform.repositories import (
     ApplicationRepository,
     InMemoryApplicationRepository,
     SQLAlchemyApplicationRepository,
 )
-from app.application_platform.application import (
-    Application,
-    ApplicationVersion,
-    ApplicationConfiguration,
-    ApplicationType,
-    ApplicationStatus,
-    ApplicationLifecycle,
-    ApplicationRegistry,
-)
-from app.application_platform.composition import (
-    ApplicationComposition,
-    ApplicationComponent,
-    ComponentBinding,
-    ComponentType,
-    ApplicationCompositionManager,
-)
-from app.application_platform.deployment import (
-    ApplicationDeployment,
-    DeploymentStrategy,
-    DeploymentStatus,
-    RollbackPolicy,
-    DeploymentManager,
-)
-from app.application_platform.runtime import (
-    ApplicationRuntime,
-    ApplicationExecution,
-    ExecutionContext,
-    RuntimeState,
-    ApplicationRuntimeManager,
-)
-from app.application_platform.configuration import (
-    ApplicationEnvironment,
-    EnvironmentConfiguration,
-    ConfigurationVersion,
-    ConfigurationManager,
-)
-from app.application_platform.features import (
-    FeatureFlag,
-    FeatureVariant,
-    FeatureTargetingRule,
-    FeatureExperiment,
-    FeatureState,
-    ExperimentState,
-    FeatureManager,
-)
-from app.application_platform.personalization import (
-    PersonalizationConsent,
-    ConsentScope,
-    ConsentStatus,
-    PersonalizationProfile,
-    ExperienceContext,
-    PersonalizationEngine,
-)
-from app.application_platform.interactions import (
-    Interaction,
-    Conversation,
-    ConversationState,
-    InteractionType,
-    InteractionManager,
-)
-from app.application_platform.human_experience import (
-    ExperienceAction,
-    HumanEscalation,
-    EscalationPolicy,
-    EscalationReason,
-    HumanExperienceManager,
-)
-from app.application_platform.governance import (
-    ApplicationGovernanceEngine,
-    ApplicationPolicyDecision,
-    OutputPolicyEvaluator,
-    OutputSafetyDecision,
-    ResponseTransformation,
-    ApplicationRiskAssessment,
-)
-from app.application_platform.analytics import (
-    ApplicationAnalyticsEngine,
-    ApplicationMetric,
-    ExperienceMetric,
-    UsageInsight,
-    ApplicationReport,
-)
-from app.application_platform.feedback import (
-    ApplicationFeedback,
-    FeedbackType,
-    FeedbackSignal,
-    ImprovementRecommendation,
-    FeedbackManager,
-)
 from app.application_platform.resilience import (
     ApplicationResilienceManager,
-    RuntimeFallback,
     DegradationStrategy,
+    RuntimeFallback,
 )
-from app.application_platform.observability import (
-    ApplicationMetricsCollector,
-    ApplicationTelemetrySpan,
+from app.application_platform.runtime import (
+    ApplicationExecution,
+    ApplicationRuntime,
+    ApplicationRuntimeManager,
+    ExecutionContext,
+    RuntimeState,
 )
-from app.application_platform.billing import (
-    ApplicationExecutionCostEvent,
-    ApplicationBillingTracker,
-)
-from app.application_platform.manager import ApplicationPlatformManager
 
 __all__ = [
     "ApplicationPlatformException",

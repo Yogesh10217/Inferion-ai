@@ -1,51 +1,49 @@
 """Master DataIntelligenceManager (Phase 5.43)."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict
 
-from app.data_intelligence.datasets import DatasetIntelligenceManager, DatasetReference, DatasetType, DatasetClassificationReference, DatasetMetadata
-from app.data_intelligence.sources import DataSourceManager, DataSource, DataSourceType, DataSourceCapability
-from app.data_intelligence.profiling import DataProfilingManager, DataProfile
-from app.data_intelligence.quality import DataQualityManager, DataQualityResult, DataQualityDimension, DataQualityStatus
-from app.data_intelligence.validation import DataValidationManager, DataValidationResult, ValidationType
-from app.data_intelligence.anomalies import DataAnomalyManager, DataAnomaly, DataAnomalyType, DataAnomalySeverity, DataAnomalyStatus
-from app.data_intelligence.drift import DataDriftManager, DataDrift, DriftType, DriftAssessment
-from app.data_intelligence.freshness import DataFreshnessManager, FreshnessAssessment, FreshnessStatus
-from app.data_intelligence.lineage import DataLineageManager, DataLineage, LineageNode, LineageRelationship, LineageType
-from app.data_intelligence.lineage_graph import DataLineageGraphManager, LineageTraversalResult, TraversalDirection
-from app.data_intelligence.schema import SchemaManager, DatasetSchema, SchemaField, SchemaAssessment
-from app.data_intelligence.schema_evolution import SchemaEvolutionManager, SchemaEvolutionRequest, SchemaEvolutionPlan
-from app.data_intelligence.pipelines import DataPipelineManager, DataPipeline, PipelineAssessment
-from app.data_intelligence.pipeline_reliability import PipelineReliabilityManager, PipelineReliabilityAssessment
-from app.data_intelligence.dependencies import DataDependencyManager, DependencyAssessment, DependencyType
-from app.data_intelligence.impact import DataImpactManager, DataImpactAssessment
-from app.data_intelligence.incidents import DataIncidentManager, DataIncident, DataIncidentSeverity, DataIncidentStatus
-from app.data_intelligence.investigations import DataInvestigationManager, DataInvestigation, InvestigationStatus
-from app.data_intelligence.remediation import DataRemediationManager, DataRemediationPlan, DataRemediationAction, DataRemediationPriority, DataRemediationStatus
-from app.data_intelligence.governance import DataIntelligenceGovernanceEngine, DataGovernanceDecision, DataGovernanceDecisionStatus
-from app.data_intelligence.delegation import DataDelegationManager, DataDelegationPlan, DataDelegationAction
-from app.data_intelligence.verification import DataVerificationManager, DataVerification, VerificationStatus
-from app.data_intelligence.evidence import DataEvidenceManager, DataEvidence, DataEvidenceBundle
-from app.data_intelligence.trust import DatasetTrustEngine, DatasetTrustScore
-from app.data_intelligence.risk import DataRiskManager, DataRiskAssessment
-from app.data_intelligence.correlation import DataCorrelationManager, DataCorrelation, CorrelationType
-from app.data_intelligence.signals import DataSignalManager, DataSignal, DataSignalType, DataSignalSource
-from app.data_intelligence.snapshots import DataIntelligenceSnapshotManager, DataIntelligenceSnapshot
-from app.data_intelligence.learning import DataLearningManager, DataLearningRecord, DataLearningRecommendation
-from app.data_intelligence.analytics import DataIntelligenceAnalyticsEngine, DataIntelligenceReport
-from app.data_intelligence.observability import DataIntelligenceMetricsCollector
+from app.data_intelligence.analytics import DataIntelligenceAnalyticsEngine
+from app.data_intelligence.anomalies import DataAnomalyManager, DataAnomalySeverity, DataAnomalyType
 from app.data_intelligence.billing import DataIntelligenceBillingTracker
+from app.data_intelligence.correlation import CorrelationType, DataCorrelationManager
+from app.data_intelligence.datasets import DatasetIntelligenceManager, DatasetType
+from app.data_intelligence.delegation import DataDelegationManager
+from app.data_intelligence.dependencies import DataDependencyManager, DependencyType
+from app.data_intelligence.drift import DataDriftManager, DriftType
+from app.data_intelligence.evidence import DataEvidenceManager
+from app.data_intelligence.freshness import DataFreshnessManager
+from app.data_intelligence.governance import DataIntelligenceGovernanceEngine
+from app.data_intelligence.impact import DataImpactManager
+from app.data_intelligence.incidents import DataIncidentManager, DataIncidentSeverity
+from app.data_intelligence.investigations import DataInvestigationManager
+from app.data_intelligence.learning import DataLearningManager
+from app.data_intelligence.lineage import DataLineageManager, LineageType
+from app.data_intelligence.lineage_graph import DataLineageGraphManager
+from app.data_intelligence.observability import DataIntelligenceMetricsCollector
+from app.data_intelligence.pipeline_reliability import PipelineReliabilityManager
+from app.data_intelligence.pipelines import DataPipelineManager
+from app.data_intelligence.profiling import DataProfilingManager
+from app.data_intelligence.quality import DataQualityDimension, DataQualityManager
+from app.data_intelligence.remediation import DataRemediationAction, DataRemediationManager, DataRemediationPriority
 from app.data_intelligence.repositories import (
+    DataAnomalyRepository,
+    DataEvidenceRepository,
+    DataIncidentRepository,
     DatasetRepository,
     DataSourceRepository,
-    DataAnomalyRepository,
-    DataIncidentRepository,
-    DataEvidenceRepository,
 )
-from app.platform_contracts.trust import TrustAssessment
-from app.platform_contracts.analytics import PlatformReport
-from app.platform_contracts.delegation import DelegationRequest
+from app.data_intelligence.risk import DataRiskManager
+from app.data_intelligence.schema import SchemaField, SchemaManager
+from app.data_intelligence.schema_evolution import SchemaEvolutionManager
+from app.data_intelligence.signals import DataSignalManager, DataSignalSource, DataSignalType
+from app.data_intelligence.snapshots import DataIntelligenceSnapshotManager
+from app.data_intelligence.sources import DataSourceManager, DataSourceType
+from app.data_intelligence.trust import DatasetTrustEngine
+from app.data_intelligence.validation import DataValidationManager, ValidationType
+from app.data_intelligence.verification import DataVerificationManager
 from app.platform_contracts.idempotency import IdempotencyManager
+from app.platform_contracts.trust import TrustAssessment
 
 logger = logging.getLogger(__name__)
 

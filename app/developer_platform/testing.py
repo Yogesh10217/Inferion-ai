@@ -1,9 +1,9 @@
 """Software Test Intelligence Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

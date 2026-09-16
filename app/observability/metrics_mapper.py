@@ -1,7 +1,7 @@
 import time
-from typing import Any
-from app.services.metrics_service import MetricsService
+
 from app.observability.prometheus_registry import PrometheusRegistry
+from app.services.metrics_service import MetricsService
 
 
 class MetricsMapper:
@@ -24,13 +24,13 @@ class MetricsMapper:
         self._last_batches_dispatched = 0
         self._last_requests_batched = 0
         self._last_single_fallbacks = 0
-        
+
         # Billing state tracking
         self._last_budget_violations = 0
         self._last_budget_warnings = 0
         self._last_invoice_count = 0
         self._last_provider_costs: dict[str, float] = {}
-        
+
         self._last_cache_writes = 0
         self._last_cache_evictions = 0
         self._last_cache_hits = 0
@@ -73,7 +73,7 @@ class MetricsMapper:
 
         # --- Scheduler Metrics ---
         self.registry.scheduler_queue_depth.set(summary.get("queue_depth", 0))
-        
+
         current_sched = summary.get("scheduler_throughput", 0)
         self.registry.scheduler_processed_total.inc(current_sched - self._last_scheduler_processed)
         self._last_scheduler_processed = current_sched
@@ -81,7 +81,7 @@ class MetricsMapper:
         # --- Batching Metrics ---
         self.registry.batching_active_batches.set(summary.get("active_batches", 0))
         self.registry.batching_largest_batch.set(summary.get("largest_observed_batch", 0))
-        
+
         # total_batches_dispatched and batched counts
         # Because we need raw counts directly for counter calculation
         current_batches_dispatched = getattr(self.metrics, "_total_batches_dispatched", 0)
@@ -125,7 +125,7 @@ class MetricsMapper:
             parts = instance_id.split("::")
             prov_id = parts[0] if len(parts) > 1 else "unknown"
             inst_id = parts[1] if len(parts) > 1 else instance_id
-            
+
             last_count = self._last_provider_requests.get(instance_id, 0)
             self.registry.provider_requests_total.labels(provider_id=prov_id, instance_id=inst_id).inc(count - last_count)
             self._last_provider_requests[instance_id] = count
@@ -134,7 +134,7 @@ class MetricsMapper:
             parts = key.split("::")
             prov_id = parts[0] if len(parts) > 1 else "unknown"
             inst_id = parts[1] if len(parts) > 1 else key
-            
+
             last_count = self._last_provider_failures.get(key, 0)
             self.registry.provider_failures_total.labels(provider_id=prov_id, instance_id=inst_id).inc(count - last_count)
             self._last_provider_failures[key] = count
@@ -149,16 +149,16 @@ class MetricsMapper:
 
         for lat in events.get("request_latencies", []):
             self.registry.api_request_duration_seconds.observe(lat / 1000.0)
-            
+
         for lat in events.get("scheduler_wait_times", []):
             self.registry.scheduler_wait_duration_seconds.observe(lat / 1000.0)
-            
+
         for lat in events.get("batch_dispatch_delays", []):
             self.registry.batching_dispatch_delay_seconds.observe(lat / 1000.0)
-            
+
         for lat in events.get("cache_lookup_latencies", []):
             self.registry.cache_lookup_latency_seconds.observe(lat / 1000.0)
-            
+
         for lat in events.get("cache_write_latencies", []):
             self.registry.cache_write_latency_seconds.observe(lat / 1000.0)
 
@@ -167,7 +167,7 @@ class MetricsMapper:
 
         # --- Rate Limiting & Quotas ---
         limits_summary = self.metrics.get_limits_summary()
-        
+
         current_rl_reqs = limits_summary.get("rate_limit_requests", 0)
         self.registry.rate_limit_requests_total.inc(current_rl_reqs - self._last_rate_limit_requests)
         self._last_rate_limit_requests = current_rl_reqs
@@ -190,7 +190,7 @@ class MetricsMapper:
 
         # Sync Billing Metrics
         billing_summary = self.metrics.get_billing_summary()
-        
+
         if billing_summary["budget_violations"] > self._last_budget_violations:
             self.registry.budget_exceeded_total.inc(billing_summary["budget_violations"] - self._last_budget_violations)
             self._last_budget_violations = billing_summary["budget_violations"]
@@ -198,16 +198,16 @@ class MetricsMapper:
         if billing_summary["budget_warnings"] > self._last_budget_warnings:
             self.registry.budget_warnings_total.inc(billing_summary["budget_warnings"] - self._last_budget_warnings)
             self._last_budget_warnings = billing_summary["budget_warnings"]
-            
+
         if billing_summary["invoice_generation_count"] > self._last_invoice_count:
             self.registry.invoice_generation_total.inc(billing_summary["invoice_generation_count"] - self._last_invoice_count)
             self._last_invoice_count = billing_summary["invoice_generation_count"]
-            
+
         self.registry.monthly_recurring_revenue.set(billing_summary["mrr"])
-        
+
         for plan_id, count in billing_summary["active_subscriptions"].items():
             self.registry.subscription_plan_total.labels(plan_id=plan_id).set(count)
-            
+
         for provider, cost in billing_summary["provider_costs"].items():
             last_cost = self._last_provider_costs.get(provider, 0.0)
             if cost > last_cost:
@@ -224,7 +224,7 @@ class MetricsMapper:
         # --- Event & Webhook Metrics ---
         if hasattr(self.metrics, "get_event_summary"):
             event_summary = self.metrics.get_event_summary()
-            
+
             for ev_type, count in event_summary.get("events_by_type", {}).items():
                 last_count = self._last_events_by_type.get(ev_type, 0)
                 if count > last_count:
@@ -250,6 +250,6 @@ class MetricsMapper:
 
         # --- Admin System Stats ---
         # Fetching stats from SystemAdminService would ideally happen here, but since MetricsMapper
-        # is synchronous and decoupled from DB session, we will expose an endpoint to trigger stat 
+        # is synchronous and decoupled from DB session, we will expose an endpoint to trigger stat
         # collection, or rely on an async background task to update the metrics periodically.
         # Alternatively, the admin endpoints themselves will increment the counters when actions happen.

@@ -4,18 +4,18 @@ Constructs formal DelegationRequest contracts for downstream execution platforms
 NEVER mutates external infrastructure directly.
 """
 
-from enum import Enum
 import logging
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
 from app.autonomous_assurance.exceptions import (
-    DelegationCoordinationException,
     HighRiskAutonomousActionRequiresApprovalException,
 )
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 logger = logging.getLogger(__name__)
 

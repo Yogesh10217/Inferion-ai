@@ -1,13 +1,14 @@
 """Agent Coordination Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class CoordinationStrategy(str, Enum):
@@ -105,7 +106,7 @@ class AgentCoordinationManager:
         if not plan:
             # Fallback plan
             return AgentCoordinationPlan(coordination_id=coordination_id, tenant_id=tenant_id)
-            
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:

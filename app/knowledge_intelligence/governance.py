@@ -1,22 +1,20 @@
 """Knowledge Governance Orchestration Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.governance import (
-    GovernanceDecision,
-    GovernanceDecisionStatus,
-    GovernanceDecisionReason,
-    PolicyReference,
-)
+from app.approvals.approval_engine import ApprovalEngine
 from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
 from app.governance_platform.risk import RiskManager
-from app.approvals.approval_engine import ApprovalEngine
 from app.orchestration.human_tasks import HumanTaskManager
-
+from app.platform_contracts.governance import (
+    GovernanceDecisionReason,
+    GovernanceDecisionStatus,
+)
 
 
 class KnowledgeGovernanceStatus(str, Enum):
@@ -93,7 +91,6 @@ class KnowledgeGovernanceEngine:
                 requires_approval=True,
                 approval_request_id=req.request_id,
             )
-
 
         reason = GovernanceDecisionReason(code="POLICY_PASSED", message="Knowledge action permitted.", severity="INFO")
         return KnowledgeGovernanceDecision(

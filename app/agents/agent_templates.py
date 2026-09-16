@@ -3,6 +3,7 @@ Pre-configured Agent Templates
 """
 
 from typing import Dict
+
 from app.agents.agent_config import AgentConfig
 
 AGENT_TEMPLATES: Dict[str, AgentConfig] = {

@@ -2,8 +2,9 @@
 
 import hashlib
 import logging
-from typing import Dict, Any, Optional
-from app.control_plane.feature_management import FeatureManager, FeatureFlagConfiguration
+from typing import Optional
+
+from app.control_plane.feature_management import FeatureManager
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,9 @@
 """Secure Credential Broker & SecretManager Integration."""
 
 import logging
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
+
+from pydantic import BaseModel
 
 from app.security.secrets import SecretManager
 

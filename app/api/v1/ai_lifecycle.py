@@ -1,18 +1,19 @@
 """REST API Router for Enterprise AI Lifecycle Platform (Phase 5.33)."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict
+
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
-from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
+from app.ai_lifecycle_platform.agents import AgentAutonomyLevel, AgentType
 from app.ai_lifecycle_platform.assets import AIAssetType
 from app.ai_lifecycle_platform.datasets import DatasetClassification
-from app.ai_lifecycle_platform.models import ModelType, ModelFramework
-from app.ai_lifecycle_platform.agents import AgentType, AgentAutonomyLevel
+from app.ai_lifecycle_platform.drift import DriftSeverity, DriftType
 from app.ai_lifecycle_platform.gates import GateType
+from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
+from app.ai_lifecycle_platform.models import ModelFramework, ModelType
 from app.ai_lifecycle_platform.promotion import PromotionTarget
 from app.ai_lifecycle_platform.releases import ReleaseRisk
-from app.ai_lifecycle_platform.drift import DriftType, DriftSeverity
 from app.ai_lifecycle_platform.retirement import RetirementReason
 
 router = APIRouter(prefix="/v1/ai-lifecycle", tags=["ai-lifecycle"])

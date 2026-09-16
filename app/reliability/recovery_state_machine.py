@@ -4,9 +4,9 @@ Phase 5.70 - Recovery State Machine Module.
 Enforces valid recovery lifecycle state transitions, maintains immutable transition history, and emits evidence.
 """
 
+import time
 from dataclasses import dataclass, field
 from enum import Enum
-import time
 from typing import Any, Dict, List, Optional
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceCollector, ReliabilityEvidenceLevel
@@ -32,8 +32,6 @@ class RecoveryState(str, Enum):
 
 class IllegalRecoveryTransitionError(Exception):
     """Raised when an invalid state transition is attempted in the recovery state machine."""
-
-    pass
 
 
 @dataclass

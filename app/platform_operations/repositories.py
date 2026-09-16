@@ -1,7 +1,7 @@
 """Persistence repository abstractions for Platform Operations."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
 
 
 class PlatformOperationsRepository(ABC):

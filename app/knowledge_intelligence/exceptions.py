@@ -3,7 +3,6 @@
 
 class KnowledgeIntelligenceException(Exception):
     """Base exception for all Knowledge Intelligence errors."""
-    pass
 
 
 class CrossTenantKnowledgeAccessException(KnowledgeIntelligenceException):
@@ -32,32 +31,26 @@ class KnowledgeSourceNotFoundException(KnowledgeIntelligenceException):
 
 class KnowledgeProvenanceException(KnowledgeIntelligenceException):
     """Raised when provenance chain validation or lookup fails."""
-    pass
 
 
 class KnowledgeIntegrityException(KnowledgeIntelligenceException):
     """Raised when SHA-256 integrity validation fails for a knowledge artifact."""
-    pass
 
 
 class KnowledgeAccessDeniedException(KnowledgeIntelligenceException):
     """Raised when access to a knowledge resource is denied by policy or authorization."""
-    pass
 
 
 class KnowledgeRetrievalBlockedException(KnowledgeIntelligenceException):
     """Raised when knowledge retrieval is blocked by governance rules."""
-    pass
 
 
 class KnowledgePolicyViolationException(KnowledgeIntelligenceException):
     """Raised when a knowledge action violates governance policies."""
-    pass
 
 
 class KnowledgeGraphException(KnowledgeIntelligenceException):
     """Raised when an error occurs during knowledge graph traversal or manipulation."""
-    pass
 
 
 class KnowledgeRelationshipNotFoundException(KnowledgeIntelligenceException):
@@ -78,19 +71,15 @@ class ImmutableKnowledgeRecordException(KnowledgeIntelligenceException):
 
 class KnowledgeRecommendationBlockedException(KnowledgeIntelligenceException):
     """Raised when a recommendation action is blocked by governance."""
-    pass
 
 
 class KnowledgeDelegationBlockedException(KnowledgeIntelligenceException):
     """Raised when knowledge action delegation fails or is blocked."""
-    pass
 
 
 class KnowledgeEvidenceValidationException(KnowledgeIntelligenceException):
     """Raised when knowledge evidence validation fails."""
-    pass
 
 
 class KnowledgeLearningException(KnowledgeIntelligenceException):
     """Raised when an error occurs during knowledge learning or pattern extraction."""
-    pass

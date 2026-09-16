@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import logging
 from typing import Optional
-from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, REGISTRY
+
+from prometheus_client import REGISTRY, CollectorRegistry, Counter, Gauge, Histogram
 
 logger = logging.getLogger(__name__)
 

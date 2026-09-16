@@ -1,7 +1,8 @@
 """Failure propagation analysis engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import List
+
 from app.reliability_intelligence.models import FailurePropagationPath
 
 logger = logging.getLogger(__name__)

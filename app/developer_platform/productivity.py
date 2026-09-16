@@ -1,10 +1,9 @@
 """Developer Productivity & DORA Delivery Metrics Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,8 @@
 """Attack Surface Analyzer & Profiles."""
 
-from typing import Dict, Any, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 from app.security_assurance.asset_inventory import SecurityAssetInventory

@@ -2,7 +2,8 @@
 Memory Classification Engine: Type Detection, Importance & Retention Policy Selection
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 from app.memory.memory_types import MemoryType, RetentionPolicy
 
 

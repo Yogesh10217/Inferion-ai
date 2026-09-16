@@ -1,15 +1,15 @@
 """Cost Anomaly & Runaway Execution Detection Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from decimal import Decimal
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, List, Optional
+
 from pydantic import BaseModel, Field, field_validator
 
 from app.observability.anomaly_detection import AnomalyDetector as BaseAnomalyDetector
-
 
 logger = logging.getLogger(__name__)
 

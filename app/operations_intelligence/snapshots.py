@@ -1,12 +1,13 @@
 """Immutable Operational Snapshots (Phase 5.41)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
 from app.operations_intelligence.exceptions import CrossTenantOperationsAccessException
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.platform_contracts.snapshots import SnapshotFactory
 
 
 class OperationalSnapshot(BaseModel):

@@ -4,24 +4,24 @@ Coordinates all 15 application platform sub-managers into a unified application 
 """
 
 import logging
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, Optional
 
-from app.application_platform.repositories import ApplicationRepository, InMemoryApplicationRepository
-from app.application_platform.application import ApplicationRegistry, ApplicationType, ApplicationStatus
-from app.application_platform.composition import ApplicationCompositionManager
-from app.application_platform.deployment import DeploymentManager
-from app.application_platform.runtime import ApplicationRuntimeManager, ApplicationRuntime, ExecutionContext, ApplicationExecution
-from app.application_platform.configuration import ConfigurationManager
-from app.application_platform.features import FeatureManager
-from app.application_platform.personalization import PersonalizationEngine
-from app.application_platform.interactions import InteractionManager
-from app.application_platform.human_experience import HumanExperienceManager
-from app.application_platform.governance import ApplicationGovernanceEngine
 from app.application_platform.analytics import ApplicationAnalyticsEngine
-from app.application_platform.feedback import FeedbackManager
-from app.application_platform.resilience import ApplicationResilienceManager
-from app.application_platform.observability import ApplicationMetricsCollector
+from app.application_platform.application import ApplicationRegistry
 from app.application_platform.billing import ApplicationBillingTracker
+from app.application_platform.composition import ApplicationCompositionManager
+from app.application_platform.configuration import ConfigurationManager
+from app.application_platform.deployment import DeploymentManager
+from app.application_platform.features import FeatureManager
+from app.application_platform.feedback import FeedbackManager
+from app.application_platform.governance import ApplicationGovernanceEngine
+from app.application_platform.human_experience import HumanExperienceManager
+from app.application_platform.interactions import InteractionManager
+from app.application_platform.observability import ApplicationMetricsCollector
+from app.application_platform.personalization import PersonalizationEngine
+from app.application_platform.repositories import ApplicationRepository, InMemoryApplicationRepository
+from app.application_platform.resilience import ApplicationResilienceManager
+from app.application_platform.runtime import ApplicationRuntimeManager
 
 logger = logging.getLogger(__name__)
 

@@ -2,15 +2,16 @@
 FastAPI Router for Enterprise Multi-Agent Collaboration Platform (/v1/teams)
 """
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.multi_agent.agent_team import AgentTeam, TeamConfiguration, TeamExecutionContext, TeamType
+from app.multi_agent.agent_coordinator import MultiAgentCoordinator
 from app.multi_agent.agent_profile import AgentProfile
 from app.multi_agent.agent_role import AgentRole, RoleType
-from app.multi_agent.agent_coordinator import MultiAgentCoordinator
-from app.multi_agent.exceptions import TeamNotFoundException, RolePermissionDenied
+from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext, TeamType
+from app.multi_agent.exceptions import RolePermissionDenied
 
 router = APIRouter(prefix="/v1/teams", tags=["teams"])
 

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
+
 from app.observability.context import ObservabilityContext, get_current_context
 from app.observability.exceptions import ExecutionNotFoundException, ReplayNotAvailableException
 from app.observability.logging import sanitize_value
@@ -73,7 +74,7 @@ class ExecutionReplayManager:
         """Capture deterministic execution state into a snapshot."""
         ctx = context or get_current_context()
         snapshot_id = f"snap-{execution_id}"
-        
+
         # Redact sensitive parameters prior to storing snapshot
         sanitized_inputs = sanitize_value("inputs", inputs)
         sanitized_output = sanitize_value("output", original_output) if original_output else None

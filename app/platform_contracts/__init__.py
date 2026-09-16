@@ -1,159 +1,139 @@
 """Enterprise AI Platform Shared Contracts & Primitives Exports (Phase 5.30)."""
 
-from app.platform_contracts.exceptions import (
-    PlatformContractException,
-    CrossTenantAccessException,
-    ImmutableMutationException,
-    IdempotencyConflictException,
-    InvalidLifecycleTransitionException,
-    CircularDependencyException,
-    ContractVersionException,
+from app.platform_contracts.adapters import (
+    ApprovalReferenceAdapter,
+    DelegationAdapter,
+    EvidenceReferenceAdapter,
+    GovernanceDecisionAdapter,
+    PlatformContractAdapter,
+    RiskReferenceAdapter,
+    SnapshotAdapter,
+    TrustAssessmentAdapter,
 )
-
-from app.platform_contracts.versioning import (
-    ContractVersion,
-    ContractCompatibility,
-    ContractVersionRange,
-    ContractCompatibilityValidator,
+from app.platform_contracts.analytics import (
+    AnalyticsDimension,
+    AnalyticsMetric,
+    AnalyticsPeriod,
+    PlatformInsight,
+    PlatformReport,
 )
-
-from app.platform_contracts.tenant import (
-    TenantScopedResource,
-    TenantContext,
-    TenantReference,
-    TenantIsolationValidator,
-    TenantAccessGuard,
-)
-
-from app.platform_contracts.immutability import (
-    ImmutableResource,
-    ImmutableResourceState,
-    ImmutableResourceValidator,
-)
-
-from app.platform_contracts.fingerprinting import (
-    Fingerprint,
-    FingerprintAlgorithm,
-    FingerprintGenerator,
-    CanonicalSerializer,
-    FingerprintValidationResult,
-)
-
-from app.platform_contracts.snapshots import (
-    PlatformSnapshot,
-    SnapshotReference,
-    SnapshotVersion,
-    SnapshotMetadata,
-    SnapshotFactory,
-    SnapshotValidator,
-)
-
-from app.platform_contracts.idempotency import (
-    IdempotencyKey,
-    IdempotencyRecord,
-    IdempotencyStatus,
-    IdempotencyManager,
-)
-
-from app.platform_contracts.redaction import (
-    RedactionPolicy,
-    RedactionRule,
-    RedactionResult,
-    SensitiveDataSanitizer,
-)
-
-from app.platform_contracts.evidence import (
-    EvidenceReference,
-    EvidenceMetadata,
-    EvidenceIntegrity,
-    EvidenceStrength,
-    EvidenceSourceReference,
-)
-
-from app.platform_contracts.trust import (
-    TrustAssessment,
-    TrustDimension,
-    TrustEvidence,
-    TrustBand,
-    TrustConfidence,
-    TrustAssessmentVersion,
-)
-
-from app.platform_contracts.risk import (
-    RiskReference,
-    RiskAssessmentReference,
-    RiskEvidenceReference,
-)
-
-from app.platform_contracts.governance import (
-    GovernanceDecision,
-    GovernanceDecisionStatus,
-    GovernanceDecisionReason,
-    PolicyReference,
-)
-
 from app.platform_contracts.approvals import (
     ApprovalReference,
     ApprovalRequirement,
     ApprovalStatusReference,
 )
-
-from app.platform_contracts.delegation import (
-    DelegationRequest,
-    DelegationTarget,
-    DelegationStatus,
-    DelegationResult,
-    DelegationReference,
-)
-
-from app.platform_contracts.lifecycle import (
-    LifecycleState,
-    LifecycleTransition,
-    LifecycleMachine,
-)
-
-from app.platform_contracts.adapters import (
-    PlatformContractAdapter,
-    TrustAssessmentAdapter,
-    SnapshotAdapter,
-    GovernanceDecisionAdapter,
-    RiskReferenceAdapter,
-    ApprovalReferenceAdapter,
-    EvidenceReferenceAdapter,
-    DelegationAdapter,
-)
-
 from app.platform_contracts.audit import (
-    PlatformAuditEvent,
+    AuditActorReference,
     AuditEventType,
     AuditReference,
-    AuditActorReference,
     AuditResourceReference,
+    PlatformAuditEvent,
 )
-
-from app.platform_contracts.analytics import (
-    PlatformReport,
-    PlatformInsight,
-    AnalyticsMetric,
-    AnalyticsDimension,
-    AnalyticsPeriod,
+from app.platform_contracts.delegation import (
+    DelegationReference,
+    DelegationRequest,
+    DelegationResult,
+    DelegationStatus,
+    DelegationTarget,
 )
-
+from app.platform_contracts.evidence import (
+    EvidenceIntegrity,
+    EvidenceMetadata,
+    EvidenceReference,
+    EvidenceSourceReference,
+    EvidenceStrength,
+)
+from app.platform_contracts.exceptions import (
+    CircularDependencyException,
+    ContractVersionException,
+    CrossTenantAccessException,
+    IdempotencyConflictException,
+    ImmutableMutationException,
+    InvalidLifecycleTransitionException,
+    PlatformContractException,
+)
+from app.platform_contracts.fingerprinting import (
+    CanonicalSerializer,
+    Fingerprint,
+    FingerprintAlgorithm,
+    FingerprintGenerator,
+    FingerprintValidationResult,
+)
+from app.platform_contracts.governance import (
+    GovernanceDecision,
+    GovernanceDecisionReason,
+    GovernanceDecisionStatus,
+    PolicyReference,
+)
+from app.platform_contracts.idempotency import (
+    IdempotencyKey,
+    IdempotencyManager,
+    IdempotencyRecord,
+    IdempotencyStatus,
+)
+from app.platform_contracts.immutability import (
+    ImmutableResource,
+    ImmutableResourceState,
+    ImmutableResourceValidator,
+)
+from app.platform_contracts.lifecycle import (
+    LifecycleMachine,
+    LifecycleState,
+    LifecycleTransition,
+)
 from app.platform_contracts.observability import (
     MetricNameValidator,
     SafeMetricLabelSanitizer,
 )
-
+from app.platform_contracts.redaction import (
+    RedactionPolicy,
+    RedactionResult,
+    RedactionRule,
+    SensitiveDataSanitizer,
+)
+from app.platform_contracts.repositories import (
+    ImmutableRepository,
+    Repository,
+    TenantScopedRepository,
+    VersionedRepository,
+)
+from app.platform_contracts.risk import (
+    RiskAssessmentReference,
+    RiskEvidenceReference,
+    RiskReference,
+)
+from app.platform_contracts.snapshots import (
+    PlatformSnapshot,
+    SnapshotFactory,
+    SnapshotMetadata,
+    SnapshotReference,
+    SnapshotValidator,
+    SnapshotVersion,
+)
+from app.platform_contracts.tenant import (
+    TenantAccessGuard,
+    TenantContext,
+    TenantIsolationValidator,
+    TenantReference,
+    TenantScopedResource,
+)
+from app.platform_contracts.trust import (
+    TrustAssessment,
+    TrustAssessmentVersion,
+    TrustBand,
+    TrustConfidence,
+    TrustDimension,
+    TrustEvidence,
+)
 from app.platform_contracts.validation import (
     CircularDependencyValidator,
     DependencyGraph,
 )
-
-from app.platform_contracts.repositories import (
-    Repository,
-    TenantScopedRepository,
-    ImmutableRepository,
-    VersionedRepository,
+from app.platform_contracts.versioning import (
+    ContractCompatibility,
+    ContractCompatibilityValidator,
+    ContractVersion,
+    ContractVersionRange,
 )
 
 __all__ = [

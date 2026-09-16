@@ -1,12 +1,10 @@
 """Shared Approval Reference Contract (Phase 5.30)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional
 from datetime import datetime, timezone
-import uuid
-from pydantic import BaseModel, Field
+from enum import Enum
+from typing import Optional
 
-from app.approvals.approval_engine import ApprovalEngine
+from pydantic import BaseModel, Field
 
 
 class ApprovalStatusReference(str, Enum):

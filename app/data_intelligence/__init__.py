@@ -1,76 +1,191 @@
 """Enterprise AI Data Intelligence Platform (Phase 5.43)."""
 
-from app.data_intelligence.exceptions import (
-    DataIntelligenceException,
-    CrossTenantDataIntelligenceException,
-    DatasetNotFoundException,
-    DataSourceNotFoundException,
-    DataQualityRuleNotFoundException,
-    DataQualityEvaluationException,
-    DataAnomalyNotFoundException,
-    DataIncidentNotFoundException,
-    DataLineageNotFoundException,
-    SchemaEvolutionException,
-    DataDriftException,
-    DatasetTrustException,
-    DataRemediationBlockedException,
-    HighRiskDataActionRequiresApprovalException,
-    ImmutableDataRecordException,
+from app.data_intelligence.analytics import (
+    DataIntelligenceAnalyticsEngine,
+    DataIntelligenceInsight,
+    DataIntelligenceReport,
+)
+from app.data_intelligence.anomalies import (
+    DataAnomaly,
+    DataAnomalyEvidence,
+    DataAnomalyManager,
+    DataAnomalySeverity,
+    DataAnomalyStatus,
+    DataAnomalyType,
+)
+from app.data_intelligence.billing import DataIntelligenceBillingTracker
+from app.data_intelligence.correlation import (
+    CorrelationEvidence,
+    CorrelationType,
+    DataCorrelation,
+    DataCorrelationManager,
 )
 from app.data_intelligence.datasets import (
-    DatasetIntelligenceManager,
-    DatasetReference,
-    DatasetType,
-    DatasetStatus,
     DatasetClassificationReference,
+    DatasetIntelligenceManager,
     DatasetMetadata,
     DatasetProfile,
+    DatasetReference,
+    DatasetStatus,
+    DatasetType,
 )
-from app.data_intelligence.sources import (
-    DataSourceManager,
-    DataSource,
-    DataSourceType,
-    DataSourceStatus,
-    DataSourceCapability,
+from app.data_intelligence.delegation import (
+    DataDelegationAction,
+    DataDelegationManager,
+    DataDelegationPlan,
+    DataDelegationStatus,
 )
-from app.data_intelligence.profiling import DataProfilingManager, DataProfile, ProfileDimension, ProfileMetric, ProfileResult
-from app.data_intelligence.quality import DataQualityManager, DataQualityRule, DataQualityDimension, DataQualityScore, DataQualityResult, DataQualityStatus
-from app.data_intelligence.validation import DataValidationManager, DataValidationRule, DataValidationResult, ValidationType, ValidationStatus
-from app.data_intelligence.anomalies import DataAnomalyManager, DataAnomaly, DataAnomalyType, DataAnomalySeverity, DataAnomalyStatus, DataAnomalyEvidence
-from app.data_intelligence.drift import DataDriftManager, DataDrift, DriftType, DriftSeverity, DriftAssessment
-from app.data_intelligence.freshness import DataFreshnessManager, DataFreshness, FreshnessStatus, FreshnessPolicy, FreshnessAssessment
-from app.data_intelligence.lineage import DataLineageManager, DataLineage, LineageNode, LineageRelationship, LineageType, LineageEvidence
-from app.data_intelligence.lineage_graph import DataLineageGraphManager, DataLineageGraph, LineageTraversalResult, TraversalDirection
-from app.data_intelligence.schema import SchemaManager, DatasetSchema, SchemaField, SchemaVersion, SchemaCompatibility, SchemaAssessment
-from app.data_intelligence.schema_evolution import SchemaEvolutionManager, SchemaEvolutionRequest, SchemaEvolutionPlan, SchemaEvolutionRisk, SchemaEvolutionStatus
-from app.data_intelligence.pipelines import DataPipelineManager, DataPipeline, PipelineStatus, PipelineHealth, PipelineExecutionReference, PipelineAssessment
-from app.data_intelligence.pipeline_reliability import PipelineReliabilityManager, PipelineReliabilityAssessment, PipelineFailure, PipelineReliabilityScore
-from app.data_intelligence.dependencies import DataDependencyManager, DataDependency, DependencyType, DependencyImpact, DependencyAssessment
-from app.data_intelligence.impact import DataImpactManager, DataImpactAssessment, DataImpactDimension
-from app.data_intelligence.incidents import DataIncidentManager, DataIncident, DataIncidentSeverity, DataIncidentStatus
-from app.data_intelligence.investigations import DataInvestigationManager, DataInvestigation, DataFinding, InvestigationEvidence, InvestigationStatus
-from app.data_intelligence.remediation import DataRemediationManager, DataRemediationPlan, DataRemediationAction, DataRemediationPriority, DataRemediationStatus
-from app.data_intelligence.governance import DataIntelligenceGovernanceEngine, DataGovernanceDecision, DataGovernanceDecisionStatus
-from app.data_intelligence.delegation import DataDelegationManager, DataDelegationPlan, DataDelegationAction, DataDelegationStatus
-from app.data_intelligence.verification import DataVerificationManager, DataVerification, VerificationCheck, VerificationStatus
-from app.data_intelligence.evidence import DataEvidenceManager, DataEvidence, DataEvidenceBundle, DataEvidenceIntegrity
-from app.data_intelligence.trust import DatasetTrustEngine, DatasetTrustScore, DatasetTrustDimension, DatasetTrustFactor
-from app.data_intelligence.risk import DataRiskManager, DataRiskProfile, DataRiskDimension, DataRiskAssessment
-from app.data_intelligence.correlation import DataCorrelationManager, DataCorrelation, CorrelationType, CorrelationEvidence
-from app.data_intelligence.signals import DataSignalManager, DataSignal, DataSignalType, DataSignalSource
-from app.data_intelligence.snapshots import DataIntelligenceSnapshotManager, DataIntelligenceSnapshot
-from app.data_intelligence.learning import DataLearningManager, DataLearningRecord, DataLearningPattern, DataLearningRecommendation
-from app.data_intelligence.analytics import DataIntelligenceAnalyticsEngine, DataIntelligenceReport, DataIntelligenceInsight
-from app.data_intelligence.observability import DataIntelligenceMetricsCollector
-from app.data_intelligence.billing import DataIntelligenceBillingTracker
-from app.data_intelligence.repositories import (
-    DatasetRepository,
-    DataSourceRepository,
-    DataAnomalyRepository,
-    DataIncidentRepository,
-    DataEvidenceRepository,
+from app.data_intelligence.dependencies import (
+    DataDependency,
+    DataDependencyManager,
+    DependencyAssessment,
+    DependencyImpact,
+    DependencyType,
+)
+from app.data_intelligence.drift import DataDrift, DataDriftManager, DriftAssessment, DriftSeverity, DriftType
+from app.data_intelligence.evidence import DataEvidence, DataEvidenceBundle, DataEvidenceIntegrity, DataEvidenceManager
+from app.data_intelligence.exceptions import (
+    CrossTenantDataIntelligenceException,
+    DataAnomalyNotFoundException,
+    DataDriftException,
+    DataIncidentNotFoundException,
+    DataIntelligenceException,
+    DataLineageNotFoundException,
+    DataQualityEvaluationException,
+    DataQualityRuleNotFoundException,
+    DataRemediationBlockedException,
+    DatasetNotFoundException,
+    DatasetTrustException,
+    DataSourceNotFoundException,
+    HighRiskDataActionRequiresApprovalException,
+    ImmutableDataRecordException,
+    SchemaEvolutionException,
+)
+from app.data_intelligence.freshness import (
+    DataFreshness,
+    DataFreshnessManager,
+    FreshnessAssessment,
+    FreshnessPolicy,
+    FreshnessStatus,
+)
+from app.data_intelligence.governance import (
+    DataGovernanceDecision,
+    DataGovernanceDecisionStatus,
+    DataIntelligenceGovernanceEngine,
+)
+from app.data_intelligence.impact import DataImpactAssessment, DataImpactDimension, DataImpactManager
+from app.data_intelligence.incidents import DataIncident, DataIncidentManager, DataIncidentSeverity, DataIncidentStatus
+from app.data_intelligence.investigations import (
+    DataFinding,
+    DataInvestigation,
+    DataInvestigationManager,
+    InvestigationEvidence,
+    InvestigationStatus,
+)
+from app.data_intelligence.learning import (
+    DataLearningManager,
+    DataLearningPattern,
+    DataLearningRecommendation,
+    DataLearningRecord,
+)
+from app.data_intelligence.lineage import (
+    DataLineage,
+    DataLineageManager,
+    LineageEvidence,
+    LineageNode,
+    LineageRelationship,
+    LineageType,
+)
+from app.data_intelligence.lineage_graph import (
+    DataLineageGraph,
+    DataLineageGraphManager,
+    LineageTraversalResult,
+    TraversalDirection,
 )
 from app.data_intelligence.manager import DataIntelligenceManager
+from app.data_intelligence.observability import DataIntelligenceMetricsCollector
+from app.data_intelligence.pipeline_reliability import (
+    PipelineFailure,
+    PipelineReliabilityAssessment,
+    PipelineReliabilityManager,
+    PipelineReliabilityScore,
+)
+from app.data_intelligence.pipelines import (
+    DataPipeline,
+    DataPipelineManager,
+    PipelineAssessment,
+    PipelineExecutionReference,
+    PipelineHealth,
+    PipelineStatus,
+)
+from app.data_intelligence.profiling import (
+    DataProfile,
+    DataProfilingManager,
+    ProfileDimension,
+    ProfileMetric,
+    ProfileResult,
+)
+from app.data_intelligence.quality import (
+    DataQualityDimension,
+    DataQualityManager,
+    DataQualityResult,
+    DataQualityRule,
+    DataQualityScore,
+    DataQualityStatus,
+)
+from app.data_intelligence.remediation import (
+    DataRemediationAction,
+    DataRemediationManager,
+    DataRemediationPlan,
+    DataRemediationPriority,
+    DataRemediationStatus,
+)
+from app.data_intelligence.repositories import (
+    DataAnomalyRepository,
+    DataEvidenceRepository,
+    DataIncidentRepository,
+    DatasetRepository,
+    DataSourceRepository,
+)
+from app.data_intelligence.risk import DataRiskAssessment, DataRiskDimension, DataRiskManager, DataRiskProfile
+from app.data_intelligence.schema import (
+    DatasetSchema,
+    SchemaAssessment,
+    SchemaCompatibility,
+    SchemaField,
+    SchemaManager,
+    SchemaVersion,
+)
+from app.data_intelligence.schema_evolution import (
+    SchemaEvolutionManager,
+    SchemaEvolutionPlan,
+    SchemaEvolutionRequest,
+    SchemaEvolutionRisk,
+    SchemaEvolutionStatus,
+)
+from app.data_intelligence.signals import DataSignal, DataSignalManager, DataSignalSource, DataSignalType
+from app.data_intelligence.snapshots import DataIntelligenceSnapshot, DataIntelligenceSnapshotManager
+from app.data_intelligence.sources import (
+    DataSource,
+    DataSourceCapability,
+    DataSourceManager,
+    DataSourceStatus,
+    DataSourceType,
+)
+from app.data_intelligence.trust import DatasetTrustDimension, DatasetTrustEngine, DatasetTrustFactor, DatasetTrustScore
+from app.data_intelligence.validation import (
+    DataValidationManager,
+    DataValidationResult,
+    DataValidationRule,
+    ValidationStatus,
+    ValidationType,
+)
+from app.data_intelligence.verification import (
+    DataVerification,
+    DataVerificationManager,
+    VerificationCheck,
+    VerificationStatus,
+)
 
 __all__ = [
     "DataIntelligenceException",

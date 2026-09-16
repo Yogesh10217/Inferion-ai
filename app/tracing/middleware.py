@@ -1,9 +1,9 @@
 from fastapi import Request
-
 from starlette.middleware.base import BaseHTTPMiddleware
-from .tracer import get_tracer
+
 from .context_propagation import ContextPropagator
 from .trace_attributes import TraceAttributes
+from .tracer import get_tracer
 
 
 class TracingMiddleware(BaseHTTPMiddleware):

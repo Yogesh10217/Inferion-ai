@@ -1,12 +1,12 @@
 """Operational analytics generating OperationsReport, OperationsInsight, and PlatformReport primitives."""
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.analytics import PlatformReport, PlatformInsight, AnalyticsPeriod, AnalyticsMetric
+from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformInsight, PlatformReport
 
 
 class OperationsInsight(BaseModel):

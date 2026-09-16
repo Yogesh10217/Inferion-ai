@@ -1,9 +1,9 @@
 """Comprehensive System & Dependency Health Aggregator."""
 
-import time
 import logging
-from typing import Dict, Any, Optional
+import time
 from enum import Enum
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

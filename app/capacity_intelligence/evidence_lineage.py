@@ -1,7 +1,7 @@
 """Capacity evidence lineage tracker for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

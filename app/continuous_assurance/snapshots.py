@@ -1,11 +1,12 @@
 """Snapshot management for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import List
+
 from app.continuous_assurance.models import (
-    ContinuousAssuranceSnapshot,
-    ContinuousAssuranceAssessment,
     AssuranceDrift,
+    ContinuousAssuranceAssessment,
+    ContinuousAssuranceSnapshot,
 )
 from app.continuous_assurance.repositories import SnapshotRepository
 

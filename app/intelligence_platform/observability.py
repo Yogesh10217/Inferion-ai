@@ -1,10 +1,9 @@
 """Prometheus Observability Metrics Collector for Intelligence Platform."""
 
 import logging
-from typing import Dict, Any, Optional
 
 try:
-    from prometheus_client import Counter, Gauge, Histogram
+    from prometheus_client import Counter, Gauge
 
     SIGNALS_TOTAL = Counter("ai_intelligence_signals_total", "Total intelligence signals ingested", ["tenant_id", "source"])
     INSIGHTS_TOTAL = Counter("ai_intelligence_insights_total", "Total insights generated", ["tenant_id", "insight_type"])

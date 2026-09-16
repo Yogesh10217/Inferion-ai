@@ -1,14 +1,12 @@
 """Event Deduplication & Idempotency Protection Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
-from pydantic import BaseModel, Field
+from typing import Dict, Optional
 
+from pydantic import BaseModel
+
+from app.event_intelligence.events import EnterpriseEvent
 from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.platform_contracts.idempotency import IdempotencyManager
-from app.event_intelligence.events import EnterpriseEvent
-from app.event_intelligence.exceptions import DuplicateEventException
 
 
 class EventFingerprint(BaseModel):

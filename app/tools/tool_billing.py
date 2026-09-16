@@ -2,9 +2,9 @@
 Tool Billing and Usage Accounting Tracker
 """
 
-import threading
 import logging
-from typing import Dict, Any
+import threading
+from typing import Any, Dict
 
 from app.tools.tool_context import ToolContext
 from app.tools.tool_result import ToolResult

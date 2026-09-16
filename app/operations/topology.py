@@ -1,14 +1,12 @@
 """Service Topology & Directed Dependency Intelligence Engine."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
+from typing import Any, Dict, List, Optional, Set
 
-import uuid
-import logging
-from typing import Dict, Any, Optional, List, Set
 from pydantic import BaseModel, Field
-
-from app.services.health_service import HealthService
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +32,6 @@ class ServiceNodeType(str, Enum):
     QUEUE = "QUEUE"
     WORKER = "WORKER"
     EXTERNAL_API = "EXTERNAL_API"
-
 
 
 class ServiceNode(BaseModel):
@@ -68,7 +65,6 @@ class TopologyManager:
         self.health_service = health_service
         self._nodes: Dict[str, ServiceNode] = {}
         self._dependencies: List[ServiceDependency] = []
-
 
     def register_node(self, node_id: str, name: str, node_type: str, tenant_id: str = "global") -> ServiceNode:
         node = ServiceNode(node_id=node_id, name=name, node_type=node_type, tenant_id=tenant_id)

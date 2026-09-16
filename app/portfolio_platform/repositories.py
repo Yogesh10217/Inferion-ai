@@ -1,11 +1,9 @@
 """Repository Abstractions for Portfolio Platform."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
 
 from app.portfolio_platform.strategy import EnterpriseStrategy
-from app.portfolio_platform.initiatives import AIInitiative
-from app.portfolio_platform.portfolio import Portfolio
 
 
 class StrategyRepository(ABC):

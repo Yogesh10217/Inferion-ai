@@ -3,8 +3,8 @@
 import hashlib
 import json
 import logging
-from typing import Dict, Any
-from app.runtime_intelligence.models import RuntimeSignal, NormalizedRuntimeSignal
+
+from app.runtime_intelligence.models import NormalizedRuntimeSignal, RuntimeSignal
 
 logger = logging.getLogger(__name__)
 

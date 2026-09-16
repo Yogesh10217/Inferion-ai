@@ -2,171 +2,146 @@
 Phase 5.37 — Enterprise AI Platform Production Resilience, Scalability, Disaster Recovery & Operational Hardening Package.
 """
 
-from app.platform_resilience.exceptions import (
-    PlatformResilienceException,
-    CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
-    CapacityLimitExceededException,
-    InvalidFailoverTransitionException,
-    DisasterRecoveryBlockedException,
-    RecoveryPlanNotFoundException,
-    RecoveryVerificationFailedException,
-    ResiliencePolicyViolationException,
-    ImmutableResilienceRecordException,
-    ResilienceDelegationBlockedException,
-    HighRiskRecoveryRequiresApprovalException,
-    DependencyFailureException,
-    CircuitBreakerOpenException,
-    BulkheadCapacityExceededException,
-)
-from app.platform_resilience.services import (
-    ResilienceServiceManager,
-    ResilienceService,
-    ServiceCriticality,
-    ServiceAvailabilityTarget,
-    ServiceDependencyReference,
-)
-from app.platform_resilience.dependencies import (
-    DependencyManager,
-    DependencyNode,
-    DependencyEdge,
-    DependencyGraph,
-    DependencyType,
-    DependencyCriticality,
-    DependencyHealth,
-    DependencyFailureImpact,
-)
-from app.platform_resilience.capacity import (
-    CapacityManager,
-    CapacityProfile,
-    CapacityMetric,
-    CapacityThreshold,
-    CapacityForecast,
-    CapacityStatus,
-    CapacityAssessment,
-)
-from app.platform_resilience.scaling import (
-    ScalingManager,
-    ScalingPolicy,
-    ScalingTrigger,
-    ScalingDirection,
-    ScalingPlan,
-    ScalingAction,
-    ScalingStatus,
+from app.platform_resilience.analytics import (
+    ResilienceAnalyticsEngine,
+    ResilienceInsight,
+    ResilienceReport,
 )
 from app.platform_resilience.backpressure import (
+    BackpressureAction,
+    BackpressureAssessment,
+    BackpressureLevel,
     BackpressureManager,
     BackpressurePolicy,
     BackpressureSignal,
-    BackpressureLevel,
-    BackpressureAction,
-    BackpressureAssessment,
 )
-from app.platform_resilience.load_shedding import (
-    LoadSheddingManager,
-    LoadSheddingPolicy,
-    LoadSheddingRule,
-    LoadSheddingPlan,
-    LoadSheddingPriority,
-    LoadSheddingStatus,
+from app.platform_resilience.backup import (
+    BackupIntegrity,
+    BackupManager,
+    BackupPolicy,
+    BackupReference,
+    BackupStatus,
+    BackupVerification,
 )
-from app.platform_resilience.rate_limiting import (
-    RateLimitManager,
-    RateLimitPolicy,
-    RateLimitScope,
-    RateLimitWindow,
-    RateLimitAssessment,
-    RateLimitViolation,
+from app.platform_resilience.billing import ResilienceBillingTracker, ResilienceCostEvent
+from app.platform_resilience.bulkheads import (
+    BulkheadAssessment,
+    BulkheadCapacity,
+    BulkheadManager,
+    BulkheadPartition,
+    BulkheadPolicy,
+    BulkheadStatus,
+)
+from app.platform_resilience.capacity import (
+    CapacityAssessment,
+    CapacityForecast,
+    CapacityManager,
+    CapacityMetric,
+    CapacityProfile,
+    CapacityStatus,
+    CapacityThreshold,
+)
+from app.platform_resilience.chaos import (
+    ChaosExperimentManager,
+    ExperimentResult,
+    ExperimentRisk,
+    ExperimentScenario,
+    ExperimentScope,
+    ExperimentStatus,
+    ResilienceExperiment,
 )
 from app.platform_resilience.circuit_breakers import (
-    CircuitBreakerManager,
-    CircuitBreakerState,
-    CircuitBreakerPolicy,
     CircuitBreakerAssessment,
+    CircuitBreakerManager,
+    CircuitBreakerPolicy,
+    CircuitBreakerState,
     CircuitBreakerTransition,
 )
-from app.platform_resilience.bulkheads import (
-    BulkheadManager,
-    BulkheadPolicy,
-    BulkheadPartition,
-    BulkheadCapacity,
-    BulkheadStatus,
-    BulkheadAssessment,
-)
 from app.platform_resilience.degradation import (
-    GracefulDegradationManager,
-    DegradationLevel,
-    DegradationPolicy,
-    DegradationPlan,
     DegradationCapability,
+    DegradationLevel,
+    DegradationPlan,
+    DegradationPolicy,
     DegradationStatus,
+    GracefulDegradationManager,
 )
-from app.platform_resilience.failover import (
-    FailoverManager,
-    FailoverRequest,
-    FailoverPlan,
-    FailoverTarget,
-    FailoverStatus,
-    FailoverDecision,
-    FailoverVerification,
+from app.platform_resilience.dependencies import (
+    DependencyCriticality,
+    DependencyEdge,
+    DependencyFailureImpact,
+    DependencyGraph,
+    DependencyHealth,
+    DependencyManager,
+    DependencyNode,
+    DependencyType,
 )
 from app.platform_resilience.disaster_recovery import (
     DisasterRecoveryManager,
     DisasterRecoveryPlan,
     DisasterRecoveryScenario,
-    RecoveryPriority,
-    RecoveryObjective,
     DisasterRecoveryStatus,
+    RecoveryObjective,
+    RecoveryPriority,
 )
-from app.platform_resilience.backup import (
-    BackupManager,
-    BackupPolicy,
-    BackupReference,
-    BackupVerification,
-    BackupIntegrity,
-    BackupStatus,
+from app.platform_resilience.evidence import (
+    ResilienceEvidence,
+    ResilienceEvidenceBundle,
+    ResilienceEvidenceIntegrity,
+    ResilienceEvidenceManager,
 )
-from app.platform_resilience.restore import (
-    RestoreManager,
-    RestoreRequest,
-    RestorePlan,
-    RestoreTarget,
-    RestoreVerification,
-    RestoreStatus,
+from app.platform_resilience.exceptions import (
+    BulkheadCapacityExceededException,
+    CapacityLimitExceededException,
+    CircuitBreakerOpenException,
+    CrossTenantResilienceAccessException,
+    DependencyFailureException,
+    DisasterRecoveryBlockedException,
+    HighRiskRecoveryRequiresApprovalException,
+    ImmutableResilienceRecordException,
+    InvalidFailoverTransitionException,
+    PlatformResilienceException,
+    RecoveryPlanNotFoundException,
+    RecoveryVerificationFailedException,
+    ResilienceDelegationBlockedException,
+    ResiliencePolicyViolationException,
+    ResilienceResourceNotFoundException,
 )
-from app.platform_resilience.recovery import (
-    RecoveryManager,
-    RecoveryPlan,
-    RecoveryStep,
-    RecoveryStatus,
-    RecoveryVerification,
-    RecoveryEvidence,
+from app.platform_resilience.failover import (
+    FailoverDecision,
+    FailoverManager,
+    FailoverPlan,
+    FailoverRequest,
+    FailoverStatus,
+    FailoverTarget,
+    FailoverVerification,
 )
-from app.platform_resilience.regional import (
-    RegionalResilienceManager,
-    RegionReference,
-    RegionHealth,
-    RegionCapacity,
-    RegionalStrategy,
-    RegionalResiliencePlan,
-    RegionalFailoverAssessment,
+from app.platform_resilience.governance import (
+    ResilienceGovernanceDecision,
+    ResilienceGovernanceEngine,
 )
-from app.platform_resilience.chaos import (
-    ChaosExperimentManager,
-    ResilienceExperiment,
-    ExperimentScenario,
-    ExperimentScope,
-    ExperimentRisk,
-    ExperimentStatus,
-    ExperimentResult,
+from app.platform_resilience.learning import (
+    ResilienceLearningManager,
+    ResilienceLearningRecord,
+    ResiliencePattern,
+    ResilienceRecommendation,
 )
-from app.platform_resilience.runbooks import (
-    RunbookManager,
-    OperationalRunbook,
-    RunbookStep,
-    RunbookTrigger,
-    RunbookStatus,
-    RunbookExecutionPlan,
+from app.platform_resilience.load_shedding import (
+    LoadSheddingManager,
+    LoadSheddingPlan,
+    LoadSheddingPolicy,
+    LoadSheddingPriority,
+    LoadSheddingRule,
+    LoadSheddingStatus,
+)
+from app.platform_resilience.manager import PlatformResilienceManager
+from app.platform_resilience.observability import ResilienceMetricsCollector
+from app.platform_resilience.rate_limiting import (
+    RateLimitAssessment,
+    RateLimitManager,
+    RateLimitPolicy,
+    RateLimitScope,
+    RateLimitViolation,
+    RateLimitWindow,
 )
 from app.platform_resilience.readiness import (
     ProductionReadinessManager,
@@ -176,53 +151,78 @@ from app.platform_resilience.readiness import (
     ReadinessScore,
     ReadinessStatus,
 )
+from app.platform_resilience.recovery import (
+    RecoveryEvidence,
+    RecoveryManager,
+    RecoveryPlan,
+    RecoveryStatus,
+    RecoveryStep,
+    RecoveryVerification,
+)
+from app.platform_resilience.regional import (
+    RegionalFailoverAssessment,
+    RegionalResilienceManager,
+    RegionalResiliencePlan,
+    RegionalStrategy,
+    RegionCapacity,
+    RegionHealth,
+    RegionReference,
+)
+from app.platform_resilience.repositories import PlatformResilienceRepository
+from app.platform_resilience.restore import (
+    RestoreManager,
+    RestorePlan,
+    RestoreRequest,
+    RestoreStatus,
+    RestoreTarget,
+    RestoreVerification,
+)
+from app.platform_resilience.risk import (
+    ResilienceRiskAssessment,
+    ResilienceRiskDimension,
+    ResilienceRiskManager,
+    ResilienceRiskProfile,
+)
+from app.platform_resilience.runbooks import (
+    OperationalRunbook,
+    RunbookExecutionPlan,
+    RunbookManager,
+    RunbookStatus,
+    RunbookStep,
+    RunbookTrigger,
+)
+from app.platform_resilience.scaling import (
+    ScalingAction,
+    ScalingDirection,
+    ScalingManager,
+    ScalingPlan,
+    ScalingPolicy,
+    ScalingStatus,
+    ScalingTrigger,
+)
+from app.platform_resilience.services import (
+    ResilienceService,
+    ResilienceServiceManager,
+    ServiceAvailabilityTarget,
+    ServiceCriticality,
+    ServiceDependencyReference,
+)
+from app.platform_resilience.snapshots import (
+    ResilienceSnapshot,
+    ResilienceSnapshotManager,
+)
+from app.platform_resilience.trust import (
+    ResilienceTrustDimension,
+    ResilienceTrustEngine,
+    ResilienceTrustScore,
+)
 from app.platform_resilience.verification import (
-    ResilienceVerificationManager,
     ResilienceVerification,
+    ResilienceVerificationManager,
     VerificationCheck,
     VerificationResult,
     VerificationStatus,
 )
-from app.platform_resilience.governance import (
-    ResilienceGovernanceEngine,
-    ResilienceGovernanceDecision,
-)
-from app.platform_resilience.risk import (
-    ResilienceRiskManager,
-    ResilienceRiskProfile,
-    ResilienceRiskDimension,
-    ResilienceRiskAssessment,
-)
-from app.platform_resilience.trust import (
-    ResilienceTrustEngine,
-    ResilienceTrustScore,
-    ResilienceTrustDimension,
-)
-from app.platform_resilience.evidence import (
-    ResilienceEvidenceManager,
-    ResilienceEvidence,
-    ResilienceEvidenceBundle,
-    ResilienceEvidenceIntegrity,
-)
-from app.platform_resilience.snapshots import (
-    ResilienceSnapshotManager,
-    ResilienceSnapshot,
-)
-from app.platform_resilience.learning import (
-    ResilienceLearningManager,
-    ResilienceLearningRecord,
-    ResiliencePattern,
-    ResilienceRecommendation,
-)
-from app.platform_resilience.analytics import (
-    ResilienceAnalyticsEngine,
-    ResilienceReport,
-    ResilienceInsight,
-)
-from app.platform_resilience.observability import ResilienceMetricsCollector
-from app.platform_resilience.billing import ResilienceBillingTracker, ResilienceCostEvent
-from app.platform_resilience.repositories import PlatformResilienceRepository
-from app.platform_resilience.manager import PlatformResilienceManager
 
 __all__ = [
     "PlatformResilienceException",

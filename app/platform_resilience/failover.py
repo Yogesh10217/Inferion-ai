@@ -1,18 +1,19 @@
 """Controlled Failover Orchestration Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
+from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
     CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
-    InvalidFailoverTransitionException,
     HighRiskRecoveryRequiresApprovalException,
+    InvalidFailoverTransitionException,
+    ResilienceResourceNotFoundException,
 )
 
 
@@ -110,7 +111,7 @@ class FailoverManager:
             rollback_reference_id=f"rollback_{uuid.uuid4().hex[:8]}",
         )
         self._plans[plan.plan_id] = plan
-        
+
         # State machine transition: REQUESTED -> ASSESSING -> GOVERNED
         self.transition_status(plan, FailoverStatus.ASSESSING)
         self.transition_status(plan, FailoverStatus.GOVERNED)
@@ -123,7 +124,7 @@ class FailoverManager:
 
     def approve_and_delegate_failover(self, plan_id: str, tenant_id: str) -> FailoverPlan:
         plan = self.get_plan(plan_id, tenant_id)
-        
+
         self.transition_status(plan, FailoverStatus.APPROVED)
 
         # Create DelegationRequest
@@ -139,7 +140,7 @@ class FailoverManager:
             requester_id="failover_manager",
         )
         plan.delegation_id = del_req.delegation_id
-        
+
         self.transition_status(plan, FailoverStatus.DELEGATED)
         self.transition_status(plan, FailoverStatus.EXECUTING)
         self.transition_status(plan, FailoverStatus.VERIFYING)
@@ -151,7 +152,7 @@ class FailoverManager:
         current = plan.status
         if target_status not in self.VALID_TRANSITIONS.get(current, set()):
             raise InvalidFailoverTransitionException(current.value, target_status.value)
-        
+
         plan.status = target_status
         plan.updated_at = datetime.now(timezone.utc)
 
@@ -159,10 +160,10 @@ class FailoverManager:
         plan = self._plans.get(plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

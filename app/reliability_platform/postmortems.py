@@ -1,13 +1,14 @@
 """Postmortem & Incident Review Subsystem (Phase 5.31)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.fingerprinting import FingerprintGenerator
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
 from app.platform_contracts.tenant import TenantIsolationValidator
 from app.reliability_platform.exceptions import ImmutableReliabilityRecordException
 

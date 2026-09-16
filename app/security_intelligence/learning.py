@@ -1,8 +1,9 @@
 """Tenant-Scoped Security Learning Subsystem (Phase 5.32)."""
 
-from typing import Dict, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 

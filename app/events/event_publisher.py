@@ -1,5 +1,5 @@
-from typing import Any, Dict, Optional
 import logging
+from typing import Any, Dict, Optional
 
 from app.events.event_bus import IEventBus
 from app.events.event_registry import EventRegistry

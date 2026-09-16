@@ -3,7 +3,8 @@
 import hashlib
 import json
 import threading
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 
 class ContinuousAssuranceIdempotencyManager:
     """Prevents duplicate verification operations, drift events, alerts, recommendations, and delegations."""

@@ -1,11 +1,10 @@
 """Event Classification Subsystem (Phase 5.34)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+
 from pydantic import BaseModel, Field
 
-from app.event_intelligence.events import EnterpriseEvent, EventSeverity, EventCategory
+from app.event_intelligence.events import EnterpriseEvent, EventCategory, EventSeverity
 
 
 class ClassificationConfidence(BaseModel):

@@ -3,9 +3,9 @@ Governance and Security Engine for Autonomous Multi-Agent Teams
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext
+
 from app.multi_agent.agent_profile import AgentProfile
+from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext
 from app.multi_agent.exceptions import RolePermissionDenied
 
 logger = logging.getLogger(__name__)

@@ -2,12 +2,13 @@
 Enterprise Memory Subsystem REST API Router (/v1/memory)
 """
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, Header
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
 
-from app.memory.memory_manager import MemoryManager
+from fastapi import APIRouter, Depends, Header, HTTPException
+from pydantic import BaseModel
+
 from app.memory.exceptions import MemoryNotFoundError, TenantMemoryIsolationError
+from app.memory.memory_manager import MemoryManager
 
 router = APIRouter(prefix="/v1/memory", tags=["Memory"])
 

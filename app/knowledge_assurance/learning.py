@@ -6,8 +6,8 @@ MANDATORY: auto_execute = False is strictly enforced on all learning recommendat
 
 import uuid
 from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_assurance.exceptions import (

@@ -2,8 +2,9 @@
 
 import logging
 import uuid
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, Optional, List
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
+
 from app.runtime_intelligence.exceptions import (
     CrossTenantRuntimeIntelligenceException,
     RuntimeIntelligenceException,

@@ -1,11 +1,9 @@
 """Repository Abstractions for Compliance Platform."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
 
 from app.compliance_platform.frameworks import ComplianceFramework
-from app.compliance_platform.controls import ComplianceControl
-from app.compliance_platform.evidence import Evidence
 
 
 class ComplianceFrameworkRepository(ABC):

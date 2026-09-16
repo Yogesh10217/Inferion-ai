@@ -1,7 +1,8 @@
 """SQLAlchemy ORM models for Reliability Intelligence (Phase 5.55)."""
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, Boolean, DateTime, JSON, Text, Index
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, Index, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

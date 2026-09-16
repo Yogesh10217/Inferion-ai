@@ -1,18 +1,16 @@
 """Dynamic Graph-Based Cross-Phase Investigation Engine (Phase 5.58)."""
 
 import logging
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import List, Optional
 
-from app.platform_integration.models import (
-    IntegrationPlatform,
-    TraceContext,
-    CrossPhaseFinding,
-    CrossPhaseSignal,
-)
 from app.platform_integration.correlation.dependency_graph import CrossPhaseDependencyGraph
+from app.platform_integration.models import (
+    CrossPhaseFinding,
+    TraceContext,
+)
 from app.platform_integration.providers import PlatformIntegrationProviderRegistry, PlatformProviderResult
 
 logger = logging.getLogger(__name__)

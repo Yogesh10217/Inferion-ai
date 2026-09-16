@@ -2,9 +2,10 @@
 Negotiation Engine for Agent Disagreement Resolution
 """
 
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.multi_agent.exceptions import NegotiationFailedError

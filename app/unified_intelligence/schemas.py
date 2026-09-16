@@ -4,8 +4,9 @@ Pydantic API Schemas for Phase 5.51 Enterprise AI Unified Intelligence.
 Defines request/response payload validation schemas separate from domain entities and ORM models.
 """
 
-from typing import List, Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 

@@ -1,9 +1,10 @@
 """Runtime anomaly detector for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import List, Dict, Any, Optional
-from app.runtime_intelligence.models import RuntimeAnomaly, RuntimeAnomalySeverity
+from typing import Any, Dict, List, Optional
+
 from app.runtime_intelligence.baseline import BaselineManager
+from app.runtime_intelligence.models import RuntimeAnomaly, RuntimeAnomalySeverity
 
 logger = logging.getLogger(__name__)
 

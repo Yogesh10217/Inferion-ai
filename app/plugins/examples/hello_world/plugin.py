@@ -1,5 +1,6 @@
 from app.plugins.plugin import Plugin
 
+
 class HelloWorldPlugin(Plugin):
     async def on_initialize(self):
         self.context.logger.info("HelloWorldPlugin initialized")

@@ -2,8 +2,8 @@
 Profile Memory (Tier 4): User Preferences, Style, and Personalization Traits
 """
 
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 
 class UserProfile:

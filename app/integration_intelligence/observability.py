@@ -1,14 +1,14 @@
 """Integration Intelligence Observability & Prometheus Metrics (Phase 5.40)."""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 
 
 class IntegrationMetricsCollector:
     """Collects Prometheus metrics for Integration Intelligence using `ai_integration_*` prefix.
-    
+
     NEVER exposes secrets, raw authorization tokens, or sensitive identity/payload metadata.
     """
 

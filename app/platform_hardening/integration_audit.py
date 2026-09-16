@@ -3,7 +3,8 @@ Cross-Phase Integration Audit Engine.
 Executes end-to-end integration audits across all 8 upper intelligence platforms.
 """
 
-from typing import Dict, List, Tuple
+from typing import List, Tuple
+
 from app.platform_hardening.models import (
     IntegrationHealth,
     IntegrationHealthStatus,

@@ -22,13 +22,14 @@ from app.deployment.models import (
     DeploymentAuthorizationStatus,
     ProductionDeploymentState,
     ProgressiveDeliveryStrategy,
-    RollbackTrigger,
 )
 from app.deployment.production_deployment_state_machine import ProductionDeploymentStateMachine
-from app.deployment.production_runtime_certification import ProductionRuntimeCertification, ProductionRuntimeCertificationEngine
+from app.deployment.production_runtime_certification import (
+    ProductionRuntimeCertification,
+    ProductionRuntimeCertificationEngine,
+)
 from app.deployment.production_smoke_test_executor import ProductionSmokeTestExecutor
 from app.deployment.progressive_delivery import ProgressiveDeliveryEngine
-from app.deployment.rollback import RollbackStrategyEngine
 from app.deployment.secrets import SecretsSanitizer
 from app.deployment.traffic_validation import TrafficValidationEngine
 

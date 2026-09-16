@@ -1,13 +1,13 @@
 """Identity Assurance Analytics Engine."""
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.identity_assurance.exceptions import CrossTenantIdentityAssuranceException
-from app.platform_contracts.analytics import PlatformReport, PlatformInsight, AnalyticsPeriod, AnalyticsMetric
+from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformReport
 
 
 class IdentityAssuranceInsight(BaseModel):

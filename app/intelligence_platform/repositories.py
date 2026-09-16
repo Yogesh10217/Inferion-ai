@@ -1,10 +1,11 @@
 """Repository abstractions for Intelligence Platform."""
 
-from typing import Dict, Any, Optional, List
-from app.intelligence_platform.signals import IntelligenceSignal
-from app.intelligence_platform.insights import Insight
+from typing import Dict, Optional
+
 from app.intelligence_platform.decisions import Decision
+from app.intelligence_platform.insights import Insight
 from app.intelligence_platform.recommendations import Recommendation
+from app.intelligence_platform.signals import IntelligenceSignal
 
 
 class PlatformIntelligenceRepository:

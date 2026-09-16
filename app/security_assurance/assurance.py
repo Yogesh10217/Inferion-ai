@@ -1,9 +1,8 @@
 """Security Assurance Engine."""
 
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 

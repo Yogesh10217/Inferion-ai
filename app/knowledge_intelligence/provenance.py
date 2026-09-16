@@ -1,15 +1,14 @@
 """Knowledge Provenance Engine Subsystem (Phase 5.35)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_intelligence.exceptions import (
     CrossTenantKnowledgeAccessException,
-    KnowledgeProvenanceException,
-    KnowledgeIntegrityException,
 )
 from app.platform_contracts.fingerprinting import FingerprintGenerator
 from app.platform_contracts.redaction import SensitiveDataSanitizer

@@ -1,13 +1,14 @@
 """FastAPI Router for Marketplace Platform (/v1/marketplace)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
+from typing import Any, Dict, Optional
 
-from app.marketplace.manager import MarketplaceManager
-from app.marketplace.marketplace_item import MarketplaceItem, MarketplaceCategory, ItemLifecycle
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+
 from app.extensions.extension import ExtensionManifest
 from app.marketplace.exceptions import MarketplaceException
+from app.marketplace.manager import MarketplaceManager
+from app.marketplace.marketplace_item import ItemLifecycle, MarketplaceCategory, MarketplaceItem
 
 router = APIRouter(prefix="/v1/marketplace", tags=["marketplace"])
 

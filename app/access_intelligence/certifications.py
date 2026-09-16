@@ -1,17 +1,17 @@
 """Access Certification Governance (Phase 5.39)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 import hashlib
+import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.access_intelligence.exceptions import (
-    AccessCertificationNotFoundException,
     CrossTenantAccessIntelligenceException,
-    InvalidAccessStateTransitionException,
     ImmutableAccessRecordException,
+    InvalidAccessStateTransitionException,
 )
 
 
@@ -97,7 +97,7 @@ class AccessCertificationManager:
         cert.status = CertificationStatus.FINALIZED
         cert.is_finalized = True
         cert.finalized_at = datetime.now(timezone.utc)
-        
+
         # Calculate SHA-256 fingerprint for immutable certification record
         raw_data = f"{cert.certification_id}:{cert.tenant_id}:{cert.decision}:{cert.finalized_at.isoformat()}"
         cert.fingerprint = hashlib.sha256(raw_data.encode("utf-8")).hexdigest()

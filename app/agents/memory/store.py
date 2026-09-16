@@ -3,7 +3,7 @@ Pluggable Memory Storage Backend
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, Optional
 
 
 class IMemoryStore(ABC):

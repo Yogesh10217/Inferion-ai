@@ -1,14 +1,15 @@
 """Enterprise Model Trust Scoring Engine (Phase 5.44)."""
 
 import logging
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
+from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ModelTrustNotFoundException
 from app.platform_contracts.trust import TrustAssessment
-from app.model_intelligence.exceptions import ModelTrustNotFoundException, CrossTenantModelIntelligenceException
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,8 @@ class ModelTrustEngine:
 
         ts = ModelTrustScore(overall_score=overall, trust_level=level, factors=factors)
 
-        from app.platform_contracts.trust import TrustBand, TrustDimension as PlatformTrustDimension
+        from app.platform_contracts.trust import TrustBand
+        from app.platform_contracts.trust import TrustDimension as PlatformTrustDimension
         band = TrustBand.HIGH_TRUST if overall >= 90.0 else (TrustBand.TRUSTED if overall >= 70.0 else TrustBand.UNTRUSTED)
 
         pta = TrustAssessment(

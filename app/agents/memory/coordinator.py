@@ -2,10 +2,11 @@
 Unified Memory Coordinator
 """
 
-from typing import Dict, Any, Optional
-from app.agents.memory.working import WorkingMemory
+from typing import Optional
+
 from app.agents.memory.conversation import ConversationMemory
 from app.agents.memory.store import IMemoryStore, InMemoryStore
+from app.agents.memory.working import WorkingMemory
 
 
 class MemoryCoordinator:

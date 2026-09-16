@@ -4,9 +4,9 @@ Phase 5.70 - Availability Engine Module.
 Evaluates system uptime, service health, dependency availability, degraded operation, and recovery periods.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 

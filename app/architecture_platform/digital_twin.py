@@ -1,12 +1,13 @@
 """Reference-Based Enterprise AI System Digital Twin Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict
+
 from pydantic import BaseModel, Field
 
-from app.architecture_platform.exceptions import DigitalTwinSynchronizationException, CrossTenantArchitectureAccessException
+from app.architecture_platform.exceptions import DigitalTwinSynchronizationException
 
 
 class TwinSynchronizationStatus(str, Enum):

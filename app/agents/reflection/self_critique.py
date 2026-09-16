@@ -3,9 +3,10 @@ Self-Critique Reflection Strategy
 """
 
 import logging
-from typing import Dict, Any, List
-from app.agents.reflection.base import BaseReflection
+from typing import Any, Dict, List
+
 from app.agents.agent_context import AgentContext
+from app.agents.reflection.base import BaseReflection
 
 logger = logging.getLogger(__name__)
 

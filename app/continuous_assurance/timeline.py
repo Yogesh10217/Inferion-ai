@@ -3,7 +3,7 @@
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, Any, List
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 

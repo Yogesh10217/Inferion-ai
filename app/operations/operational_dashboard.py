@@ -6,8 +6,7 @@ Provides unified snapshot models for telemetry visualizers, dashboards, and diag
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from app.deployment.secrets import SecretsSanitizer
 

@@ -1,9 +1,10 @@
 """Unified Trust Assessment Contract (Phase 5.30)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -30,7 +31,6 @@ class TrustDimension(BaseModel):
 class TrustEvidence(BaseModel):
     evidence_id: str
     description: str
-
 
 
 class TrustAssessment(BaseModel):

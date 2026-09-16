@@ -1,17 +1,18 @@
 """Controlled Resilience Experiment Governance Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
+from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
     CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
     HighRiskRecoveryRequiresApprovalException,
+    ResilienceResourceNotFoundException,
 )
 
 
@@ -69,7 +70,7 @@ class ResilienceExperiment(BaseModel):
 
 class ChaosExperimentManager:
     """Controlled Resilience Experiment Governance Manager.
-    
+
     Ensures chaos experiments never directly disrupt infrastructure, requiring approval and delegation.
     """
 
@@ -123,10 +124,10 @@ class ChaosExperimentManager:
         exp = self._experiments.get(experiment_id)
         if not exp:
             raise ResilienceResourceNotFoundException(experiment_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, exp.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, exp.tenant_id)
-            
+
         return exp

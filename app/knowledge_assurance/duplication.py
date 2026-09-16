@@ -1,12 +1,11 @@
 """Knowledge duplication intelligence for detecting redundant and overlapping knowledge."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
 
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
+from pydantic import BaseModel, Field
 
 
 class DuplicateType(str, Enum):

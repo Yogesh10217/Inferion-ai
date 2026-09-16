@@ -2,22 +2,21 @@
 Memory Subsystem Service Layer: Core Business Logic Implementation
 """
 
-from typing import Dict, Any, List, Optional
-from app.memory.memory_store import MemoryStore, MemoryItemRecord
-from app.memory.memory_types import MemoryType, RetentionPolicy
-from app.memory.memory_classifier import MemoryClassifier
-from app.memory.memory_extractor import MemoryExtractor
-from app.memory.memory_retriever import MemoryRetriever
-from app.memory.memory_ranker import MemoryRanker
-from app.memory.memory_compressor import MemoryCompressor
-from app.memory.memory_summarizer import MemorySummarizer
-from app.memory.memory_analytics import MemoryAnalyticsService
-from app.memory.profile_memory import ProfileMemory
-from app.memory.session_memory import SessionMemory
-from app.memory.working_memory import WorkingMemory
+from typing import Dict, List, Optional
+
 from app.memory.conversation_memory import ConversationMemory
 from app.memory.episodic_memory import EpisodicMemory
+from app.memory.memory_analytics import MemoryAnalyticsService
+from app.memory.memory_classifier import MemoryClassifier
+from app.memory.memory_compressor import MemoryCompressor
+from app.memory.memory_extractor import MemoryExtractor
+from app.memory.memory_retriever import MemoryRetriever
+from app.memory.memory_store import MemoryItemRecord, MemoryStore
+from app.memory.memory_summarizer import MemorySummarizer
+from app.memory.profile_memory import ProfileMemory
 from app.memory.semantic_memory import SemanticMemory
+from app.memory.session_memory import SessionMemory
+from app.memory.working_memory import WorkingMemory
 
 
 class MemoryService:

@@ -1,8 +1,8 @@
+import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
-import uuid
 
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.events.event_models import DeadLetterEvent, WebhookDelivery, WebhookEndpoint, WebhookEvent

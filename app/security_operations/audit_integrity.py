@@ -5,9 +5,9 @@ Verifies audit trail chain continuity, fingerprint hashes, and detects record ta
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer

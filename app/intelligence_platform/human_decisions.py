@@ -1,15 +1,16 @@
 """Human Decision Collaboration & Approval Integration."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.approvals.approval_engine import ApprovalEngine
-from app.intelligence_platform.recommendations import Recommendation, RecommendationStatus
 from app.intelligence_platform.exceptions import IntelligenceException
+from app.intelligence_platform.recommendations import Recommendation
 
 logger = logging.getLogger(__name__)
 

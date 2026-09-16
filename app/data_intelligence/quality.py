@@ -1,15 +1,15 @@
 """Enterprise data quality intelligence (Phase 5.43)."""
 
 import uuid
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import (
-    DataQualityRuleNotFoundException,
-    DataQualityEvaluationException,
     CrossTenantDataIntelligenceException,
+    DataQualityEvaluationException,
 )
 
 
@@ -110,7 +110,7 @@ class DataQualityManager:
         observations: Optional[Dict[DataQualityDimension, float]] = None,
     ) -> DataQualityResult:
         rules = self.list_rules(dataset_id, tenant_id)
-        
+
         # Deterministic evaluation using provided observations or default thresholds
         dim_scores: Dict[DataQualityDimension, DataQualityScore] = {}
         total_passed = 0
@@ -122,7 +122,7 @@ class DataQualityManager:
         for dim in DataQualityDimension:
             dim_val = obs.get(dim, 0.98)
             dim_rules = [r for r in rules if r.dimension == dim]
-            
+
             passed = 0
             failed = 0
             if dim_rules:

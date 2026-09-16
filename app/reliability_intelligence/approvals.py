@@ -1,7 +1,8 @@
 """Reliability approval engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
+
 from app.reliability_intelligence.models import ReliabilityHumanReviewState
 
 logger = logging.getLogger(__name__)

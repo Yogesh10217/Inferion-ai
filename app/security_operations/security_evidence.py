@@ -5,13 +5,13 @@ Collects, sanitizes, and seals security evidence payloads with SHA-256 fingerpri
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
 import hashlib
 import json
+import uuid
+from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict
-import uuid
 
 from app.deployment.secrets import SecretsSanitizer
 

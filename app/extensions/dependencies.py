@@ -2,11 +2,12 @@
 
 import logging
 import re
-from typing import Dict, Any, List, Set, Optional
+from typing import Dict, List, Set
+
 from pydantic import BaseModel, Field
 
-from app.extensions.extension import ExtensionManifest
 from app.extensions.exceptions import ExtensionDependencyConflictException
+from app.extensions.extension import ExtensionManifest
 
 logger = logging.getLogger(__name__)
 

@@ -1,21 +1,19 @@
 import re
 from datetime import datetime, timezone
-from typing import Optional
+from functools import wraps
 
-from fastapi import Request
+from fastapi import HTTPException, Request
+from sqlalchemy import select
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
-from sqlalchemy import select
-from functools import wraps
-from fastapi import HTTPException
 
+from app.auth.api_key_service import APIKeyService
+from app.auth.exceptions import AuthException
+from app.auth.jwt_service import JWTService
+from app.auth.models import APIKey
+from app.auth.rbac import RBACService
 from app.core.config import get_settings
 from app.core.database import async_session_maker
-from app.auth.jwt_service import JWTService
-from app.auth.api_key_service import APIKeyService
-from app.auth.models import APIKey, User
-from app.auth.exceptions import AuthException
-from app.auth.rbac import RBACService
 
 settings = get_settings()
 
@@ -30,22 +28,6 @@ PUBLIC_PATHS = [
     re.compile(r"^(?:/api)?(?:/v1)?/redoc/?$"),
     re.compile(r"^(?:/api)?(?:/v1)?/auth/login/?$"),
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class AuthenticationMiddleware(BaseHTTPMiddleware):
@@ -85,10 +67,10 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
                     if not api_key:
                         return JSONResponse(status_code=401, content={"detail": "Invalid API Key"})
-                    
+
                     if api_key.revoked_at:
                         return JSONResponse(status_code=401, content={"detail": "API Key has been revoked"})
-                    
+
                     if api_key.expires_at and api_key.expires_at < datetime.now(timezone.utc):
                         return JSONResponse(status_code=401, content={"detail": "API Key has expired"})
 
@@ -104,10 +86,10 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 payload = JWTService.verify_token(token)
                 request.state.user_id = payload.get("sub")
                 request.state.auth_method = "jwt"
-                
+
         except AuthException as e:
             return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
-        except Exception as e:
+        except Exception:
             return JSONResponse(status_code=401, content={"detail": "Authentication failed"})
 
         return await call_next(request)
@@ -139,6 +121,7 @@ class AuthorizationMiddleware(BaseHTTPMiddleware):
             request.state.permissions = set()
 
         return await call_next(request)
+
 
 def require_roles(roles: list[str]):
     def decorator(func):
@@ -185,4 +168,3 @@ def require_roles(roles: list[str]):
             return await func(*args, **kwargs)
         return wrapper
     return decorator
-

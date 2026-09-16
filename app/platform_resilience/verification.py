@@ -1,13 +1,14 @@
 """Recovery and Resilience Verification Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_resilience.exceptions import CrossTenantResilienceAccessException, RecoveryVerificationFailedException
+from app.platform_resilience.exceptions import RecoveryVerificationFailedException
 
 
 class VerificationStatus(str, Enum):
@@ -38,7 +39,7 @@ class ResilienceVerification(BaseModel):
 
 class ResilienceVerificationManager:
     """Recovery and Resilience Verification Manager.
-    
+
     Verifies recovery success, dependency health, data integrity references, and expected service state.
     """
 
@@ -58,7 +59,7 @@ class ResilienceVerificationManager:
             VerificationCheck(check_name="Data Integrity Check", is_passed=not force_failure),
             VerificationCheck(check_name="Service Endpoint Health", is_passed=not force_failure),
         ]
-        
+
         all_passed = all(c.is_passed for c in chk_list) and not force_failure
         status = VerificationStatus.PASSED if all_passed else VerificationStatus.FAILED
 

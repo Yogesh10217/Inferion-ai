@@ -1,5 +1,5 @@
-import time
 import asyncio
+import time
 from dataclasses import dataclass
 from typing import Optional
 
@@ -36,7 +36,7 @@ class ProviderHealthMonitor:
 
         # Simple rolling average
         self._latencies: list[float] = []
-        
+
         self._lock = asyncio.Lock()
 
     def is_healthy(self) -> bool:
@@ -45,13 +45,13 @@ class ProviderHealthMonitor:
         # Since GIL protects simple reads/writes, and this is just returning a bool, we approximate.
         if self._consecutive_failures < self.failure_threshold:
             return True
-            
+
         # In cooldown/recovery period
         if self._last_failure_time is not None:
             if time.time() - self._last_failure_time > self.recovery_time_s:
                 # Cooldown expired, allow retry
                 return True
-                
+
         return False
 
     async def record_active(self) -> None:
@@ -66,7 +66,7 @@ class ProviderHealthMonitor:
             self._consecutive_failures = 0
             self._consecutive_successes += 1
             self._last_success_time = time.time()
-            
+
             self._latencies.append(latency_ms)
             if len(self._latencies) > self.latency_window_size:
                 self._latencies.pop(0)

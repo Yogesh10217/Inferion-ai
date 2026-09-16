@@ -5,8 +5,8 @@ from app.core.logger import get_logger
 from app.services.batching.batch_entry import Batch, BatchKey
 from app.services.batching.batch_executor import BatchExecutor
 from app.services.batching.batch_policy import BatchPolicy
-from app.services.request_scheduler import QueueEntry
 from app.services.metrics_service import MetricsService
+from app.services.request_scheduler import QueueEntry
 
 logger = get_logger("app.batching.collector")
 

@@ -1,9 +1,10 @@
 """Root Cause Hypothesis Subsystem (Phase 5.31)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantIsolationValidator

@@ -2,12 +2,13 @@
 Plan Execution Simulator Engine
 """
 
-import time
 import logging
-from typing import Dict, Any
+import time
+from typing import Any, Dict
+
 from app.planning.execution_plan import ExecutionPlan
-from app.simulation.scenario_generator import ScenarioGenerator
 from app.simulation.risk_engine import RiskEngine
+from app.simulation.scenario_generator import ScenarioGenerator
 
 logger = logging.getLogger(__name__)
 

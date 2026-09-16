@@ -1,9 +1,9 @@
 """Continuous Portfolio Learning & Intelligence Feedback Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.portfolio_platform.outcomes import InitiativeOutcome
@@ -32,7 +32,7 @@ class PortfolioLearningManager:
 
     def process_outcome_learning(self, tenant_id: str, outcome: InitiativeOutcome) -> PortfolioRecommendation:
         if outcome.actual_cost_usd > outcome.expected_cost_usd * 1.2:
-            sug = f"Adjust cost estimation multiplier for initiative '{outcome.initiative_id}' due to {outcome.actual_cost_usd/outcome.expected_cost_usd:.2f}x overrun."
+            sug = f"Adjust cost estimation multiplier for initiative '{outcome.initiative_id}' due to {outcome.actual_cost_usd / outcome.expected_cost_usd:.2f}x overrun."
             target = "COST_ESTIMATION"
         elif outcome.actual_benefit_usd > outcome.expected_benefit_usd * 1.2:
             sug = f"Upweight prioritization score for high-performing category of initiative '{outcome.initiative_id}'."

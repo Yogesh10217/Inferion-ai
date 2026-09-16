@@ -2,9 +2,10 @@
 WebSocket Inference Streaming Endpoint.
 """
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-import json
 import asyncio
+import json
+
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 router = APIRouter(tags=["websocket"])
 

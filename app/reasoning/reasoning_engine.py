@@ -3,11 +3,12 @@ Chain-of-Thought & Multi-Path Reasoning Engine
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.reasoning.tree_of_thoughts import TreeOfThoughtsEngine
-from app.reasoning.reflection_engine import ReflectionEngine
+from typing import Any, Dict, List
+
 from app.reasoning.critique_engine import CritiqueEngine
 from app.reasoning.decision_engine import PlanningDecisionEngine, StrategyOption
+from app.reasoning.reflection_engine import ReflectionEngine
+from app.reasoning.tree_of_thoughts import TreeOfThoughtsEngine
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +32,9 @@ class ReasoningEngine:
             # Chain of Thought
             steps = [
                 f"Step 1: Understand the objective '{prompt}'",
-                f"Step 2: Identify constraints and required resources",
-                f"Step 3: Formulate execution plan and verify safety boundaries",
-                f"Step 4: Execute actions and synthesize final answer",
+                "Step 2: Identify constraints and required resources",
+                "Step 3: Formulate execution plan and verify safety boundaries",
+                "Step 4: Execute actions and synthesize final answer",
             ]
             confidence = 0.95
 

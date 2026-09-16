@@ -8,6 +8,7 @@ import json
 import uuid
 from datetime import datetime, timezone
 from typing import Dict, Optional
+
 from app.platform_hardening.exceptions import ImmutablePlatformAuditRecordException
 from app.platform_hardening.models import CertificationEvidence
 

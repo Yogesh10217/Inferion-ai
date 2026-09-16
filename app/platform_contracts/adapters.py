@@ -1,16 +1,20 @@
 """Domain Compatibility Adapters Subsystem (Phase 5.30)."""
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
-
-from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence
-from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotMetadata, SnapshotFactory
-from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionStatus, GovernanceDecisionReason
-from app.platform_contracts.risk import RiskAssessmentReference, RiskReference, RiskLevel
+from typing import Any, Dict, Optional
 
 from app.platform_contracts.approvals import ApprovalReference, ApprovalStatusReference
-from app.platform_contracts.evidence import EvidenceReference, EvidenceMetadata, EvidenceSourceReference, EvidenceStrength, EvidenceIntegrity
-from app.platform_contracts.delegation import DelegationReference, DelegationTarget, DelegationStatus
+from app.platform_contracts.delegation import DelegationReference, DelegationStatus, DelegationTarget
+from app.platform_contracts.evidence import (
+    EvidenceIntegrity,
+    EvidenceMetadata,
+    EvidenceReference,
+    EvidenceSourceReference,
+    EvidenceStrength,
+)
+from app.platform_contracts.governance import GovernanceDecision, GovernanceDecisionReason, GovernanceDecisionStatus
+from app.platform_contracts.risk import RiskAssessmentReference, RiskLevel
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.platform_contracts.trust import TrustAssessment, TrustBand, TrustConfidence
 
 
 class TrustAssessmentAdapter:
@@ -50,7 +54,6 @@ class TrustAssessmentAdapter:
             confidence=TrustConfidence.HIGH,
             version=version,
         )
-
 
 
 class SnapshotAdapter:

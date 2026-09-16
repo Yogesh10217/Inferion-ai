@@ -1,9 +1,10 @@
-from typing import List, Set, Optional
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional, Set
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.auth.models import User, Role, Permission
+from app.auth.models import Role, User
 from app.tenant.models import Membership, WorkspaceMembership
 
 
@@ -25,12 +26,12 @@ class RBACService:
             return set()
 
         permissions = set()
-        
+
         # 1. Global / System roles
         for role in user.roles:
             for perm in role.permissions:
                 permissions.add(perm.name)
-                
+
         # 2. Organization roles
         if organization_id:
             stmt_mem = (
@@ -46,7 +47,7 @@ class RBACService:
                 if role:
                     for perm in role.permissions:
                         permissions.add(perm.name)
-                        
+
         # 3. Workspace roles
         if workspace_id:
             stmt_ws = (
@@ -62,7 +63,7 @@ class RBACService:
                 if role:
                     for perm in role.permissions:
                         permissions.add(perm.name)
-        
+
         return permissions
 
     @staticmethod
@@ -93,4 +94,3 @@ class RBACService:
             if mem and mem.status == "active" and mem.role_id:
                 roles.add(mem.role_id)
         return roles
-

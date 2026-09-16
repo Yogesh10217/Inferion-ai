@@ -1,11 +1,10 @@
 """Authorization Engine for Policy, RBAC & Isolation Enforcement."""
 
 import logging
-from typing import Dict, Any, List, Optional, Union
+from typing import Any, Dict, List, Optional
+
+from app.security.exceptions import AuthorizationError, PermissionDeniedError, TenantAccessDeniedError
 from app.security.identity import Identity
-from app.security.exceptions import (
-    PermissionDeniedError, TenantAccessDeniedError, AuthorizationError
-)
 
 logger = logging.getLogger(__name__)
 

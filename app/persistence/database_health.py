@@ -1,8 +1,9 @@
 """Database Health Monitor tracking connectivity, pool metrics, and query latency."""
 
-import time
 import logging
-from typing import Dict, Any, Optional
+import time
+from typing import Any, Dict, Optional
+
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 

@@ -5,10 +5,10 @@ Classifies security threats and issues non-auto-executing recommendations (auto_
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from enum import Enum
 import hashlib
 import json
+from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Dict
 
 from app.deployment.secrets import SecretsSanitizer

@@ -9,15 +9,15 @@ Provides OutputPolicyEvaluator for final response safety checkpointing prior to 
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.finops.governance import FinOpsGovernanceEngine
 from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
 from app.governance_platform.risk import RiskManager
-from app.finops.governance import FinOpsGovernanceEngine
 from app.identity.manager import IdentitySecurityManager
 
 logger = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ class OutputPolicyEvaluator:
         metadata: Optional[Dict[str, Any]] = None,
     ) -> ResponseTransformation:
         meta = metadata or {}
-        
+
         # Check for harmful/blocked patterns
         lowered = output_text.lower()
         if "malicious_payload_override" in lowered or "leak_system_secret" in lowered:

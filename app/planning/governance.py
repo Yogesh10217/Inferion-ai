@@ -3,9 +3,10 @@ Governance Engine for Autonomous Planning & Execution
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.planning.execution_plan import ExecutionPlan
+from typing import List, Optional
+
 from app.planning.exceptions import ResourcePlanningError
+from app.planning.execution_plan import ExecutionPlan
 
 logger = logging.getLogger(__name__)
 

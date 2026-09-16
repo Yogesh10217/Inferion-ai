@@ -3,9 +3,10 @@ Decision Investigations Subsystem.
 Supports deep-dive diagnostic investigations into decision context, anomalies, or unexpected recommendation outcomes.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.decision_intelligence.exceptions import DecisionInvestigationNotFoundException

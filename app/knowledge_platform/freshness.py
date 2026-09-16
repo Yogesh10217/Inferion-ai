@@ -1,10 +1,10 @@
 """Knowledge Freshness & Data Fabric CDC Event Integration Subsystem."""
 
+import logging
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeStatus

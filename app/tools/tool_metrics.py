@@ -2,7 +2,7 @@
 Prometheus Metrics Declarations for Enterprise Tool Calling Subsystem
 """
 
-from prometheus_client import Counter, Histogram, Gauge
+from prometheus_client import Counter, Gauge, Histogram
 
 tool_calls_total = Counter(
     "tool_calls_total",

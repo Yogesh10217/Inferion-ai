@@ -1,27 +1,19 @@
 """REST API Endpoints for Enterprise AI Compliance Platform (Phase 5.27)."""
 
-from typing import Dict, Any, Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, status
+from typing import Any, Dict, Optional
 
-from app.compliance_platform.manager import CompliancePlatformManager
-from app.compliance_platform.frameworks import FrameworkType
-from app.compliance_platform.requirements import RequirementScope
-from app.compliance_platform.controls import ControlType, ControlCategory, ControlImplementation
-from app.compliance_platform.evidence import EvidenceType
-from app.compliance_platform.findings import FindingStatus, FindingSeverity, FindingCategory
-from app.compliance_platform.remediation import RemediationPriority
+from fastapi import APIRouter, Depends, Header, HTTPException, status
+
 from app.compliance_platform.assurance import AssuranceConclusion
+from app.compliance_platform.controls import ControlCategory, ControlImplementation, ControlType
+from app.compliance_platform.evidence import EvidenceType
 from app.compliance_platform.exceptions import (
-    ComplianceFrameworkNotFoundException,
-    ComplianceRequirementNotFoundException,
-    ControlNotFoundException,
-    EvidenceNotFoundException,
-    ComplianceAssessmentException,
     ComplianceFindingException,
-    ComplianceRemediationException,
-    ImmutableEvidenceBundleException,
-    ImmutableAssuranceReportException,
+    EvidenceNotFoundException,
 )
+from app.compliance_platform.findings import FindingStatus
+from app.compliance_platform.frameworks import FrameworkType
+from app.compliance_platform.manager import CompliancePlatformManager
 
 router = APIRouter(prefix="/v1/compliance", tags=["compliance-platform"])
 mgr = CompliancePlatformManager()
@@ -254,4 +246,3 @@ async def delete_user_data(user_id: str):
     service = GDPRService()
     record = await service.erase_user_data(user_id)
     return record.model_dump()
-

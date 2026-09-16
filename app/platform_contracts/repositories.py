@@ -1,7 +1,7 @@
 """Shared Repository Contract Interfaces (Phase 5.30)."""
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List, Generic, TypeVar
+from typing import Generic, List, Optional, TypeVar
 
 T = TypeVar("T")
 

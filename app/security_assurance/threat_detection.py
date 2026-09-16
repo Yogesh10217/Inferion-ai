@@ -1,11 +1,10 @@
 """Threat Detector & Detection Rules Engine."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
+from typing import List, Optional
 
-from app.security_assurance.threats import SecurityThreatStore, SecurityThreat, ThreatType, ThreatSeverity
 from app.security_assurance.threat_indicators import ThreatIndicatorManager
+from app.security_assurance.threats import SecurityThreat, SecurityThreatStore, ThreatSeverity, ThreatType
 
 logger = logging.getLogger(__name__)
 

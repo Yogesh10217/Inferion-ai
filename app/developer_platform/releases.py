@@ -1,9 +1,10 @@
 """Software Release Intelligence & Management Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional
+import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.operations.manager import OperationsManager

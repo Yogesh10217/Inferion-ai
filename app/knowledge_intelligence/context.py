@@ -1,8 +1,9 @@
 """Knowledge Context Assembly Subsystem (Phase 5.35)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_intelligence.exceptions import CrossTenantKnowledgeAccessException

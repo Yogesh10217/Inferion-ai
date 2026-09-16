@@ -1,12 +1,11 @@
 """Enterprise Rate Limiter with Token Bucket & Sliding Window Algorithms."""
 
-import time
 import logging
-from typing import Dict, Any, Optional, List
+import time
 from enum import Enum
-from pydantic import BaseModel, Field
+from typing import Dict, List, Optional
 
-from app.security.exceptions import RateLimitExceededError
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -59,16 +58,26 @@ class RateLimiter:
         policy_prefix: str = "rate",
     ) -> str:
         parts = [policy_prefix]
-        if tenant_id: parts.append(f"t:{tenant_id}")
-        if organization_id: parts.append(f"o:{organization_id}")
-        if workspace_id: parts.append(f"w:{workspace_id}")
-        if user_id: parts.append(f"u:{user_id}")
-        if api_key_id: parts.append(f"k:{api_key_id}")
-        if ip_address: parts.append(f"ip:{ip_address}")
-        if endpoint: parts.append(f"ep:{endpoint}")
-        if model: parts.append(f"m:{model}")
-        if tool: parts.append(f"tl:{tool}")
-        if worker: parts.append(f"wk:{worker}")
+        if tenant_id:
+            parts.append(f"t:{tenant_id}")
+        if organization_id:
+            parts.append(f"o:{organization_id}")
+        if workspace_id:
+            parts.append(f"w:{workspace_id}")
+        if user_id:
+            parts.append(f"u:{user_id}")
+        if api_key_id:
+            parts.append(f"k:{api_key_id}")
+        if ip_address:
+            parts.append(f"ip:{ip_address}")
+        if endpoint:
+            parts.append(f"ep:{endpoint}")
+        if model:
+            parts.append(f"m:{model}")
+        if tool:
+            parts.append(f"tl:{tool}")
+        if worker:
+            parts.append(f"wk:{worker}")
         return ":".join(parts)
 
     def check(

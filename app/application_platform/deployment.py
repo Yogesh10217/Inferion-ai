@@ -7,14 +7,15 @@ Provides dedicated release capabilities:
 """
 
 import logging
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.approvals.approval_engine import ApprovalEngine
 from app.application_platform.exceptions import DeploymentFailedException
+from app.approvals.approval_engine import ApprovalEngine
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +129,6 @@ class DeploymentManager:
                     raise DeploymentFailedException(
                         f"Deployment '{deployment_id}' cannot proceed; approval is '{req.status.value}'."
                     )
-
 
         dep.status = DeploymentStatus.SUCCESSFUL
         dep.updated_at = datetime.now(timezone.utc)

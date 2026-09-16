@@ -1,16 +1,17 @@
 """Enterprise Agent Registry Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
     AgentNotFoundException,
     CrossTenantAgentAccessException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentType(str, Enum):
@@ -128,12 +129,12 @@ class AgentManager:
         agent = self._agents.get(agent_id)
         if not agent:
             raise AgentNotFoundException(agent_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, agent.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, agent.tenant_id)
-        
+
         return agent
 
     def list_agents(

@@ -1,17 +1,17 @@
 """Disaster Recovery Governance Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
 from app.platform_resilience.exceptions import (
     CrossTenantResilienceAccessException,
-    ResilienceResourceNotFoundException,
     InvalidFailoverTransitionException,
-    DisasterRecoveryBlockedException,
+    ResilienceResourceNotFoundException,
 )
 
 
@@ -109,18 +109,18 @@ class DisasterRecoveryManager:
 
     def activate_dr_plan(self, dr_plan_id: str, tenant_id: str) -> DisasterRecoveryPlan:
         plan = self.get_dr_plan(dr_plan_id, tenant_id)
-        
+
         if plan.status == DisasterRecoveryStatus.PLANNED:
             self.transition_status(plan, DisasterRecoveryStatus.READY)
-            
+
         self.transition_status(plan, DisasterRecoveryStatus.ACTIVATED)
         self.transition_status(plan, DisasterRecoveryStatus.RECOVERING)
         self.transition_status(plan, DisasterRecoveryStatus.VERIFYING)
-        
+
         # Evaluate RTO & RPO compliance
         plan.objective.observed_rto_minutes = 8.5
         plan.objective.observed_rpo_minutes = 2.0
-        
+
         self.transition_status(plan, DisasterRecoveryStatus.COMPLETED)
         return plan
 
@@ -128,10 +128,10 @@ class DisasterRecoveryManager:
         plan = self._dr_plans.get(dr_plan_id)
         if not plan:
             raise ResilienceResourceNotFoundException(dr_plan_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, plan.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, plan.tenant_id)
-            
+
         return plan

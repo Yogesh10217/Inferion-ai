@@ -3,6 +3,7 @@
 
 class PortfolioException(Exception):
     """Base exception for all portfolio platform errors."""
+
     def __init__(self, message: str, tenant_id: str = "global", details: dict | None = None) -> None:
         super().__init__(message)
         self.message = message

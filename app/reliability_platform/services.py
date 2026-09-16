@@ -1,13 +1,13 @@
 """Reliability Service Registry & Scope Management Subsystem (Phase 5.31)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.reliability_platform.exceptions import ServiceNotFoundException, CrossTenantReliabilityAccessException
-from app.platform_contracts.tenant import TenantIsolationValidator
+from app.reliability_platform.exceptions import CrossTenantReliabilityAccessException, ServiceNotFoundException
 
 
 class ServiceTier(str, Enum):
@@ -66,7 +66,6 @@ class ServiceManager:
         if tenant_id != "global" and svc.tenant_id != "global" and tenant_id != svc.tenant_id:
             raise CrossTenantReliabilityAccessException(tenant_id, svc.tenant_id)
         return svc
-
 
     def list_services(self, tenant_id: str) -> List[ReliabilityService]:
         return [svc for svc in self._services.values() if svc.tenant_id == tenant_id]

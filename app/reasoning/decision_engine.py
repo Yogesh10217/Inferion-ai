@@ -3,7 +3,8 @@ Planning & Strategy Decision Engine
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

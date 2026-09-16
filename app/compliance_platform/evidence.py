@@ -2,16 +2,17 @@
 
 import hashlib
 import json
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.compliance_platform.exceptions import (
+    CrossTenantComplianceAccessException,
     EvidenceNotFoundException,
     ImmutableEvidenceBundleException,
-    CrossTenantComplianceAccessException,
 )
 
 
@@ -75,7 +76,6 @@ class Evidence(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
     def sanitize_metadata(self) -> None:
-
         """Sanitize sensitive keys or secrets in evidence metadata."""
         secret_keys = {"password", "secret", "token", "api_key", "credentials", "private_key", "ssn"}
         sanitized = {}
@@ -115,7 +115,7 @@ class EvidenceManager:
     ) -> Evidence:
         eid = f"ev_{uuid.uuid4().hex[:12]}"
         meta = metadata or {}
-        
+
         # Calculate SHA-256 integrity hash from canonical metadata & references
         canonical_str = json.dumps({"tenant_id": tenant_id, "subject_id": subject_id, "ref": source_reference, "type": evidence_type.value}, sort_keys=True)
         hash_val = hashlib.sha256(canonical_str.encode("utf-8")).hexdigest()

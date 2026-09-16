@@ -3,7 +3,8 @@ SQLAlchemy ORM models for Platform Hardening persistence.
 """
 
 from datetime import datetime, timezone
-from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String, Text, JSON
+
+from sqlalchemy import JSON, Column, DateTime, Float, Integer, String, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

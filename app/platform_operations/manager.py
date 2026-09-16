@@ -1,32 +1,28 @@
 """Master Coordinator for Platform Operations & Autonomous Reliability Engine."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Optional
 
-from app.platform_operations.repositories import PlatformOperationsRepository, InMemoryPlatformOperationsRepository
+from app.platform_operations.analytics import OperationalAnalyticsEngine
+from app.platform_operations.anomalies import AnomalyDetector
+from app.platform_operations.autonomous_operations import AutonomousOperationsEngine
+from app.platform_operations.billing import PlatformOperationsBillingTracker
+from app.platform_operations.capacity import CapacityManager
+from app.platform_operations.change_correlation import ChangeIntelligenceEngine
+from app.platform_operations.correlation import CorrelationEngine
+from app.platform_operations.diagnosis import RootCauseAnalyzer
+from app.platform_operations.impact import ImpactAnalyzer
+from app.platform_operations.incident_intelligence import IncidentIntelligenceEngine
+from app.platform_operations.learning import OperationalLearningManager
+from app.platform_operations.observability import PlatformOperationsMetricsCollector
+from app.platform_operations.remediation import RemediationPlanner
+from app.platform_operations.repositories import InMemoryPlatformOperationsRepository, PlatformOperationsRepository
 from app.platform_operations.services import ServiceCatalogManager
 from app.platform_operations.signals import SignalManager
-from app.platform_operations.correlation import CorrelationEngine
-from app.platform_operations.impact import ImpactAnalyzer
 from app.platform_operations.slo import SLOManager
-from app.platform_operations.anomalies import AnomalyDetector
-from app.platform_operations.incident_intelligence import IncidentIntelligenceEngine
-from app.platform_operations.diagnosis import RootCauseAnalyzer
-from app.platform_operations.remediation import RemediationPlanner
-from app.platform_operations.autonomous_operations import AutonomousOperationsEngine
 from app.platform_operations.verification import RemediationVerifier
-from app.platform_operations.change_correlation import ChangeIntelligenceEngine
-from app.platform_operations.capacity import CapacityManager
-from app.platform_operations.learning import OperationalLearningManager
-from app.platform_operations.analytics import OperationalAnalyticsEngine
-from app.platform_operations.observability import PlatformOperationsMetricsCollector
-from app.platform_operations.billing import PlatformOperationsBillingTracker
 
 # Integrated platform managers
-from app.operations.incidents import IncidentManager
-from app.governance_platform.risk import RiskManager
-from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
-from app.approvals.approval_engine import ApprovalEngine
 
 
 logger = logging.getLogger(__name__)

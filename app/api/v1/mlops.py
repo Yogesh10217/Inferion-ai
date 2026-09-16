@@ -1,13 +1,14 @@
 """FastAPI Router for MLOps Platform (/v1/mlops/*)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.mlops.manager import MLOpsManager
-from app.mlops.registry import AIAssetType, AIAssetStatus
-from app.mlops.deployment import DeploymentEnvironment, DeploymentStatus
+from app.mlops.deployment import DeploymentEnvironment
 from app.mlops.exceptions import MLOpsException
+from app.mlops.manager import MLOpsManager
+from app.mlops.registry import AIAssetType
 
 router = APIRouter(prefix="/v1/mlops", tags=["mlops"])
 
@@ -205,4 +206,3 @@ async def create_fine_tuning_job(payload: Dict[str, Any]):
     dataset_uri = payload.get("dataset_uri", "s3://datasets/train.jsonl")
     job = service.create_job(model=model, dataset_uri=dataset_uri, hyperparameters=payload.get("hyperparameters"))
     return job.model_dump()
-

@@ -1,13 +1,13 @@
 """Control Assurance Cost Attribution Subsystem (Phase 5.38)."""
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.finops.manager import FinOpsManager
-from app.control_assurance.exceptions import CrossTenantControlAssuranceAccessException
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class ControlAssuranceCostEvent(BaseModel):

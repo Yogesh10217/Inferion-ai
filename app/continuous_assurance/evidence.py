@@ -1,11 +1,12 @@
 """Immutable evidence bundle management for Continuous Assurance (Phase 5.54)."""
 
-import logging
 import hashlib
 import json
-from typing import Dict, Any, List
-from app.continuous_assurance.models import ContinuousAssuranceEvidenceBundle
+import logging
+from typing import List
+
 from app.continuous_assurance.exceptions import ImmutableContinuousAssuranceRecordException
+from app.continuous_assurance.models import ContinuousAssuranceEvidenceBundle
 from app.continuous_assurance.repositories import EvidenceRepository
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 

@@ -1,7 +1,8 @@
 """Agent Extension Adapters for Custom Agents, Planning & Team Templates."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.agents.agent import Agent
@@ -53,5 +54,3 @@ class AgentExtensionAdapter:
         self.agent_registry.register_agent(agent.agent_id, cfg)
         logger.info(f"[AGENT EXTENSION] Registered custom agent template '{template.name}' (Agent ID: {agent.agent_id})")
         return agent
-
-

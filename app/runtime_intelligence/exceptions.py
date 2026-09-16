@@ -1,7 +1,9 @@
 """Tenant-safe exception hierarchy for Runtime Intelligence (Phase 5.57)."""
 
+
 class RuntimeIntelligenceException(Exception):
     """Base exception for all Runtime Intelligence errors."""
+
     def __init__(self, message: str = "Runtime Intelligence processing error"):
         super().__init__(message)
 
@@ -11,6 +13,7 @@ class CrossTenantRuntimeIntelligenceException(RuntimeIntelligenceException):
 
     Zero metadata leakage: no tenant ID, resource ID, or existence details exposed.
     """
+
     def __init__(self):
         super().__init__("Access denied")
 
@@ -67,7 +70,7 @@ class RuntimeRecommendationNotFoundException(RuntimeIntelligenceException):
 
 class HighRiskRuntimeActionRequiresApprovalException(RuntimeIntelligenceException):
     def __init__(self, action_name: str = ""):
-        super().__init__(f"High-risk runtime action requires explicit human approval before execution")
+        super().__init__("High-risk runtime action requires explicit human approval before execution")
 
 
 class ImmutableRuntimeIntelligenceRecordException(RuntimeIntelligenceException):
@@ -106,4 +109,3 @@ class RuntimeConcurrencyConflictException(RuntimeIntelligenceException):
 class RuntimeIntelligenceLimitExceededException(RuntimeIntelligenceException):
     def __init__(self, limit_name: str = ""):
         super().__init__(f"Runtime intelligence execution limit exceeded: {limit_name}")
-

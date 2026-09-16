@@ -1,73 +1,71 @@
 """Thin manager orchestrator for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, Optional
 
+from app.continuous_assurance.adaptive_controls import AdaptiveControlEngine
+from app.continuous_assurance.analytics import ContinuousAssuranceAnalytics
+from app.continuous_assurance.anomaly_detection import RuntimeAnomalyDetectionEngine
+from app.continuous_assurance.approvals import ContinuousAssuranceApprovalEngine
+from app.continuous_assurance.assurance import ContinuousAssuranceEngine
+from app.continuous_assurance.baseline import BaselineEngine
+from app.continuous_assurance.behavior_analysis import RuntimeBehaviorAnalyzer
+from app.continuous_assurance.billing import ContinuousAssuranceBillingTracker
+from app.continuous_assurance.confidence import ContinuousAssuranceConfidenceEngine
+from app.continuous_assurance.continuous_monitoring import ContinuousMonitoringEngine
+from app.continuous_assurance.control_effectiveness import ControlEffectivenessEngine
+from app.continuous_assurance.control_validation import ControlValidationEngine
+from app.continuous_assurance.coordination import ContinuousAssuranceCoordinator
+from app.continuous_assurance.delegation import ContinuousAssuranceDelegationCoordinator
+from app.continuous_assurance.drift_detection import ContinuousDriftDetectionEngine
+from app.continuous_assurance.escalation import ContinuousAssuranceEscalationEngine
+from app.continuous_assurance.evidence import ContinuousAssuranceEvidenceManager
+from app.continuous_assurance.evidence_lineage import EvidenceLineageGraph
+from app.continuous_assurance.explainability import ContinuousAssuranceExplainabilityEngine
+from app.continuous_assurance.feedback import ContinuousAssuranceFeedbackEngine
+from app.continuous_assurance.feedback_loop_control import FeedbackLoopController
+from app.continuous_assurance.governance import ContinuousAssuranceGovernanceEngine
+from app.continuous_assurance.idempotency import ContinuousAssuranceIdempotencyManager
+from app.continuous_assurance.impact import ContinuousAssuranceImpactEngine
+from app.continuous_assurance.learning import ContinuousAssuranceLearningEngine
+from app.continuous_assurance.models import (
+    AdaptiveControlRecommendation,
+    AssuranceDrift,
+    ContinuousAssuranceAssessment,
+    ContinuousVerificationResult,
+    ControlEffectivenessAssessment,
+    RuntimeObservation,
+)
+from app.continuous_assurance.observability import ContinuousAssuranceMetricsCollector
+from app.continuous_assurance.observation_normalization import RuntimeObservationNormalizer
+from app.continuous_assurance.policy_drift import PolicyDriftAnalyzer
 from app.continuous_assurance.providers import (
     ContinuousAssuranceProviderRegistry,
     MockContinuousAssuranceProvider,
 )
+from app.continuous_assurance.recommendations import ContinuousAssuranceRecommendationEngine
+from app.continuous_assurance.recovery_assurance import RecoveryAssuranceEngine
+from app.continuous_assurance.remediation import ContinuousAssuranceRemediationPlanner
 from app.continuous_assurance.repositories import (
-    RuntimeObservationRepository,
     ContinuousAssuranceRepository,
     ControlEffectivenessRepository,
     DriftRepository,
-    VerificationRepository,
-    RecommendationRepository,
     EvidenceRepository,
+    RecommendationRepository,
+    RuntimeObservationRepository,
     SnapshotRepository,
+    VerificationRepository,
 )
-from app.continuous_assurance.runtime_observations import RuntimeObservationManager
-from app.continuous_assurance.observation_normalization import RuntimeObservationNormalizer
-from app.continuous_assurance.continuous_monitoring import ContinuousMonitoringEngine
-from app.continuous_assurance.assurance import ContinuousAssuranceEngine
-from app.continuous_assurance.control_effectiveness import ControlEffectivenessEngine
-from app.continuous_assurance.control_validation import ControlValidationEngine
-from app.continuous_assurance.drift_detection import ContinuousDriftDetectionEngine
-from app.continuous_assurance.policy_drift import PolicyDriftAnalyzer
-from app.continuous_assurance.risk_drift import RiskDriftAnalyzer
-from app.continuous_assurance.trust_drift import TrustDriftAnalyzer
-from app.continuous_assurance.behavior_analysis import RuntimeBehaviorAnalyzer
-from app.continuous_assurance.anomaly_detection import RuntimeAnomalyDetectionEngine
-from app.continuous_assurance.baseline import BaselineEngine
-from app.continuous_assurance.verification import ContinuousVerificationEngine
-from app.continuous_assurance.feedback import ContinuousAssuranceFeedbackEngine
-from app.continuous_assurance.feedback_loop_control import FeedbackLoopController
-from app.continuous_assurance.adaptive_controls import AdaptiveControlEngine
-from app.continuous_assurance.recommendations import ContinuousAssuranceRecommendationEngine
-from app.continuous_assurance.governance import ContinuousAssuranceGovernanceEngine
-from app.continuous_assurance.approvals import ContinuousAssuranceApprovalEngine
-from app.continuous_assurance.escalation import ContinuousAssuranceEscalationEngine
-from app.continuous_assurance.coordination import ContinuousAssuranceCoordinator
-from app.continuous_assurance.remediation import ContinuousAssuranceRemediationPlanner
-from app.continuous_assurance.delegation import ContinuousAssuranceDelegationCoordinator
-from app.continuous_assurance.recovery_assurance import RecoveryAssuranceEngine
-from app.continuous_assurance.evidence import ContinuousAssuranceEvidenceManager
-from app.continuous_assurance.evidence_lineage import EvidenceLineageGraph
-from app.continuous_assurance.explainability import ContinuousAssuranceExplainabilityEngine
-from app.continuous_assurance.confidence import ContinuousAssuranceConfidenceEngine
-from app.continuous_assurance.uncertainty import ContinuousAssuranceUncertaintyAssessment
-from app.continuous_assurance.trust import ContinuousAssuranceTrustEngine
-from app.continuous_assurance.risk import ContinuousAssuranceRiskEngine
-from app.continuous_assurance.impact import ContinuousAssuranceImpactEngine
-from app.continuous_assurance.timeline import ContinuousAssuranceTimeline
-from app.continuous_assurance.snapshots import SnapshotManager
 from app.continuous_assurance.reproducibility import ContinuousAssuranceReproducibilityRecord
-from app.continuous_assurance.learning import ContinuousAssuranceLearningEngine
-from app.continuous_assurance.analytics import ContinuousAssuranceAnalytics
-from app.continuous_assurance.observability import ContinuousAssuranceMetricsCollector
-from app.continuous_assurance.billing import ContinuousAssuranceBillingTracker
-from app.continuous_assurance.idempotency import ContinuousAssuranceIdempotencyManager
-from app.continuous_assurance.models import (
-    RuntimeObservation,
-    ContinuousAssuranceAssessment,
-    ControlEffectivenessAssessment,
-    AssuranceDrift,
-    ContinuousVerificationResult,
-    AdaptiveControlRecommendation,
-    ContinuousAssuranceEvidenceBundle,
-    ContinuousAssuranceSnapshot,
-)
+from app.continuous_assurance.risk import ContinuousAssuranceRiskEngine
+from app.continuous_assurance.risk_drift import RiskDriftAnalyzer
+from app.continuous_assurance.runtime_observations import RuntimeObservationManager
+from app.continuous_assurance.snapshots import SnapshotManager
+from app.continuous_assurance.timeline import ContinuousAssuranceTimeline
+from app.continuous_assurance.trust import ContinuousAssuranceTrustEngine
+from app.continuous_assurance.trust_drift import TrustDriftAnalyzer
+from app.continuous_assurance.uncertainty import ContinuousAssuranceUncertaintyAssessment
+from app.continuous_assurance.verification import ContinuousVerificationEngine
 
 logger = logging.getLogger(__name__)
 

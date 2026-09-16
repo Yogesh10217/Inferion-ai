@@ -1,7 +1,8 @@
 """Runtime correlation engine for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List
+
 from app.runtime_intelligence.models import RuntimeCorrelation
 
 logger = logging.getLogger(__name__)

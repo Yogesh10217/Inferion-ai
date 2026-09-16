@@ -1,12 +1,11 @@
 """Data Lineage Manager & Lineage Graph Engine."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
-from pydantic import BaseModel, Field
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
-from app.data_fabric.exceptions import LineageError
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 

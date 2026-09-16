@@ -1,10 +1,11 @@
 """Security Trust Engine Subsystem (Phase 5.32)."""
 
 from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.trust import TrustAssessment
 from app.platform_contracts.adapters import TrustAssessmentAdapter
+from app.platform_contracts.trust import TrustAssessment
 
 
 class SecurityTrustDimension(BaseModel):

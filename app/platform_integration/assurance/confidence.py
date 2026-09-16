@@ -1,7 +1,7 @@
 """Cross-Phase Confidence Assessment Engine (Phase 5.58)."""
 
 from dataclasses import dataclass
-from typing import Dict, Any, List
+from typing import Dict
 
 from app.platform_integration.providers import PlatformProviderResult
 

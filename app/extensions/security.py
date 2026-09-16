@@ -1,14 +1,14 @@
 """Extension Security Engine with SHA-256 package integrity and signature verification."""
 
-import logging
 import hashlib
-from typing import Dict, Any, List, Optional
+import logging
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.extensions.extension import ExtensionManifest
-from app.extensions.exceptions import ExtensionSecurityViolationException
 from app.approvals.approval_engine import ApprovalEngine
-from app.approvals.approval_policies import RiskLevel
+from app.extensions.exceptions import ExtensionSecurityViolationException
+from app.extensions.extension import ExtensionManifest
 
 logger = logging.getLogger(__name__)
 

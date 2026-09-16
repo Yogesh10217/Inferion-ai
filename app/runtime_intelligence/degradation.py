@@ -2,6 +2,7 @@
 
 import logging
 from typing import List, Optional
+
 from app.runtime_intelligence.models import RuntimeDegradation
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ class RuntimeDegradationEngine:
         historical_scores: Optional[List[float]] = None,
     ) -> RuntimeDegradation:
         scores = historical_scores or [0.95, 0.90, 0.82, 0.75]
-        
+
         if len(scores) >= 2:
             initial = scores[0]
             latest = scores[-1]

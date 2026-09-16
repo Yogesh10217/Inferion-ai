@@ -4,8 +4,7 @@ Classifies workflow failure modes and routes failure resolution paths.
 """
 
 from enum import Enum
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
 
 
 class FailureClassification(str, Enum):

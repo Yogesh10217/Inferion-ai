@@ -1,14 +1,14 @@
 """FinOps Observability & Prometheus Metrics (Phase 5.42)."""
 
-from typing import Dict, Any, Optional
 import logging
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 
 
 class FinOpsMetricsCollector:
     """Collects Prometheus metrics for FinOps Intelligence using `ai_finops_*` prefix.
-    
+
     NEVER exposes secrets, API keys, or sensitive billing metadata.
     """
 

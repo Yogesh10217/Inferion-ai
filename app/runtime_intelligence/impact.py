@@ -1,7 +1,7 @@
 """Runtime impact assessment engine for Runtime Intelligence (Phase 5.57)."""
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

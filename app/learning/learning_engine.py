@@ -3,9 +3,10 @@ Learning Engine for Autonomous Continuous Self-Improvement
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.learning.pattern_detector import PatternDetector, ExecutionPattern
-from app.learning.optimization_engine import OptimizationEngine, OptimizationRecommendation
+from typing import Any, Dict, Optional
+
+from app.learning.optimization_engine import OptimizationEngine
+from app.learning.pattern_detector import PatternDetector
 from app.memory.memory_service import MemoryService
 
 logger = logging.getLogger(__name__)

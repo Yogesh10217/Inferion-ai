@@ -2,29 +2,28 @@
 Autonomous Execution Engine for Continuous & Goal-Driven Digital Workers
 """
 
-import time
-import asyncio
 import logging
-from typing import Dict, Any, List, Optional
+import time
+from typing import Any, Dict, Optional
 
-from app.autonomy.state_machine import ExecutionStateMachine, ExecutionState
-from app.autonomy.task_scheduler import TaskScheduler
-from app.autonomy.event_engine import EventEngine, AutonomyEvent, AutonomyEventType
 from app.autonomy.checkpoint_manager import CheckpointManager
-from app.autonomy.execution_governance import ExecutionGovernanceEngine
+from app.autonomy.event_engine import AutonomyEvent, AutonomyEventType, EventEngine
 from app.autonomy.execution_audit import ExecutionAuditLogger
+from app.autonomy.execution_governance import ExecutionGovernanceEngine
 from app.autonomy.execution_metrics import (
-    autonomous_runs_total,
+    autonomous_checkpoints_total,
+    autonomous_cost_total,
+    autonomous_execution_duration_seconds,
+    autonomous_recoveries_total,
     autonomous_runs_active,
     autonomous_runs_completed,
     autonomous_runs_failed,
-    autonomous_execution_duration_seconds,
-    autonomous_checkpoints_total,
-    autonomous_recoveries_total,
-    autonomous_cost_total,
+    autonomous_runs_total,
 )
-from app.planning.planner import Planner
+from app.autonomy.state_machine import ExecutionState, ExecutionStateMachine
+from app.autonomy.task_scheduler import TaskScheduler
 from app.multi_agent.agent_coordinator import MultiAgentCoordinator
+from app.planning.planner import Planner
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +56,7 @@ class AutonomousExecutionEngine:
         execution_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Execute a goal autonomously through Think -> Reason -> Plan -> Simulate -> Collaborate -> Execute -> Reflect -> Operate pipeline."""
-        eid = execution_id or f"auto_exec_{int(time.time()*1000)}"
+        eid = execution_id or f"auto_exec_{int(time.time() * 1000)}"
         sm = ExecutionStateMachine(execution_id=eid)
         self.active_state_machines[eid] = sm
         start_time = time.time()

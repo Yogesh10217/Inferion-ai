@@ -5,10 +5,10 @@ Enforces deterministic security rules and actions (ALLOW, WARN, BLOCK, MANUAL_RE
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from enum import Enum
 import hashlib
 import json
+from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer

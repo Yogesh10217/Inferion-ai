@@ -9,10 +9,11 @@ Manages multi-turn conversation state:
 
 import logging
 import re
-from enum import Enum
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -123,7 +124,7 @@ class InteractionManager:
             self._conversations[key] = conv
 
         conv = self._conversations[key]
-        
+
         sanitized_in = self.sanitize_text(user_input)
         sanitized_out = self.sanitize_text(system_response)
 

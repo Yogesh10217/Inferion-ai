@@ -1,9 +1,9 @@
 """Event Causality Analysis Subsystem (Phase 5.34)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from enum import Enum
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.event_intelligence.events import EnterpriseEvent

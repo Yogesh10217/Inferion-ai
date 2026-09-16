@@ -1,6 +1,5 @@
 import hashlib
 import json
-from typing import Any
 
 from app.schemas.request import InferenceRequest
 
@@ -34,8 +33,8 @@ class CacheKeyBuilder:
 
         # Create deterministic JSON string (sorted keys)
         serialized = json.dumps(components, sort_keys=True, separators=(",", ":"))
-        
+
         # Hash the string
         hash_digest = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
-        
+
         return f"{cls.PREFIX}:{provider_id}:{model_id}:{hash_digest}"

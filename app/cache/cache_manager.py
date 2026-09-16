@@ -44,7 +44,7 @@ class CacheManager:
         except Exception as exc:
             logger.warning(f"Cache get failed for key {key}: {exc}")
             raw_value = None
-            
+
         latency_ms = (time.monotonic() - start_time) * 1000.0
         self._metrics.record_cache_lookup_latency(latency_ms)
 
@@ -133,4 +133,3 @@ class CacheManager:
         """Check if key exists in cache."""
         val = await self.get(key, tenant_id=tenant_id, namespace=namespace)
         return val is not None
-

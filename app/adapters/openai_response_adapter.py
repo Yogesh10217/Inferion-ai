@@ -4,7 +4,8 @@ import time
 from typing import Any
 
 from app.schemas.inference_response import InferenceResponse
-from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage as OpenAIUsage
+from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice
+from app.schemas.response import Usage as OpenAIUsage
 
 
 class OpenAIResponseAdapter:
@@ -67,4 +68,4 @@ def format_sse_event(*, data: str = "", event: str | None = None, comment: str |
         lines.append(f"event: {event}")
     if data:
         lines.append(f"data: {data}")
-    return (f"\n".join(lines) + "\n\n").encode("utf-8")
+    return ("\n".join(lines) + "\n\n").encode("utf-8")

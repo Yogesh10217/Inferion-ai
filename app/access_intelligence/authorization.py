@@ -1,12 +1,13 @@
 """Governed Authorization Intelligence (Phase 5.39)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceException, AccessPolicyViolationException
+from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceException
 
 
 class AuthorizationDecisionOutcome(str, Enum):
@@ -89,7 +90,7 @@ class AuthorizationManager:
         self._requests[req.request_id] = req
 
         is_high_risk = context.get("is_high_risk", False) or action.upper() in ["DELETE", "GRANT_ADMIN", "DISABLE_AUDIT"]
-        
+
         if override_outcome:
             outcome = override_outcome
             reason = f"Explicit authorization outcome {override_outcome.value} requested."

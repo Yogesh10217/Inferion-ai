@@ -6,11 +6,10 @@ Correlates deployment identity, artifact digest, progressive traffic %, SLOs, er
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer
-from app.operations.error_budget import ErrorBudgetResult, ErrorBudgetStatus
+from app.operations.error_budget import ErrorBudgetResult
 from app.operations.incident_management import Incident
 from app.operations.observability_engine import ObservationResult
 from app.operations.slo import SLOResult, SLOStatus

@@ -1,9 +1,10 @@
 """Operational risk intelligence across Availability, Reliability, Capacity, Security, Data, Model, Financial, and Business dimensions using RiskManager."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.governance_platform.risk import RiskManager

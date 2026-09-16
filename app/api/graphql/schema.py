@@ -2,9 +2,10 @@
 GraphQL Schema & Router implementation for Inferion AI Platform.
 """
 
+from typing import Optional
+
 from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import Optional
 
 router = APIRouter(tags=["graphql"])
 

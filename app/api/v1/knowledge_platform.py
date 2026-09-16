@@ -1,18 +1,16 @@
 """REST API Router for Phase 5.19 Enterprise Knowledge, Context Engineering & Organizational Intelligence Platform."""
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from typing import Dict, Any, Optional, List
-from pydantic import BaseModel, Field
+from typing import Any, Optional
 
-from app.knowledge_platform.manager import KnowledgePlatformManager
-from app.knowledge_platform.knowledge import KnowledgeType, KnowledgeStatus
-from app.knowledge_platform.retrieval import RetrievalStrategy
+from fastapi import APIRouter, HTTPException, Query, status
+from pydantic import BaseModel
+
+from app.knowledge_platform.conflicts import ConflictResolutionStrategy
 from app.knowledge_platform.context import ContextStrategy
-from app.knowledge_platform.compression import CompressionStrategy
-from app.knowledge_platform.memory import MemoryType, MemoryScope
-from app.knowledge_platform.knowledge_graph import KnowledgeNodeType, KnowledgeRelationship
-from app.knowledge_platform.conflicts import ConflictType, ConflictResolutionStrategy
-from app.knowledge_platform.learning import KnowledgeFeedbackType
+from app.knowledge_platform.knowledge import KnowledgeType
+from app.knowledge_platform.manager import KnowledgePlatformManager
+from app.knowledge_platform.memory import MemoryScope, MemoryType
+from app.knowledge_platform.retrieval import RetrievalStrategy
 
 router = APIRouter(prefix="/v1/knowledge_platform", tags=["knowledge_platform"])
 _global_manager = KnowledgePlatformManager()

@@ -5,11 +5,11 @@ Manages incident entities, severity classification (P1-P4), and integrates with 
 
 from __future__ import annotations
 
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
-import uuid
 
 from app.deployment.secrets import SecretsSanitizer
 from app.operations.incident_state_machine import IncidentState, IncidentStateMachine

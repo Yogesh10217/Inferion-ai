@@ -1,14 +1,14 @@
 """Enterprise Budget Governance (Phase 5.42)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.finops_intelligence.exceptions import (
     CrossTenantFinOpsIntelligenceException,
-    BudgetExceededException,
 )
 
 
@@ -21,7 +21,7 @@ class BudgetPeriod(str, Enum):
 class BudgetThreshold(str, Enum):
     WARNING = "WARNING"      # 75%
     CRITICAL = "CRITICAL"    # 90%
-    HARD_LIMIT = "HARD_LIMIT" # 100%
+    HARD_LIMIT = "HARD_LIMIT"  # 100%
 
 
 class BudgetStatus(str, Enum):

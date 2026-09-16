@@ -2,7 +2,7 @@
 Prometheus Metrics Declarations for Multi-Agent Platform
 """
 
-from prometheus_client import Counter, Histogram, Gauge
+from prometheus_client import Counter, Gauge, Histogram
 
 agent_team_runs_total = Counter(
     "agent_team_runs_total",

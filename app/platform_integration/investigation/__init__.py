@@ -1,9 +1,9 @@
 """Investigation Package Init."""
 from app.platform_integration.investigation.engine import (
-    InvestigationTimelineEntry,
-    InvestigationEvidenceBundle,
-    CrossPhaseInvestigationResult,
     CrossPhaseInvestigationEngine,
+    CrossPhaseInvestigationResult,
+    InvestigationEvidenceBundle,
+    InvestigationTimelineEntry,
 )
 from app.platform_integration.investigation.explainability import PlatformIntegrationExplainabilityEngine
 

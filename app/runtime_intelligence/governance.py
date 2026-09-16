@@ -2,9 +2,10 @@
 
 import logging
 import uuid
-from typing import Dict, Any, Optional
-from app.runtime_intelligence.models import RuntimeGovernanceOutcome
+from typing import Any, Dict, Optional
+
 from app.runtime_intelligence.exceptions import HighRiskRuntimeActionRequiresApprovalException
+from app.runtime_intelligence.models import RuntimeGovernanceOutcome
 
 logger = logging.getLogger(__name__)
 

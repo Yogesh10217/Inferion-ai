@@ -15,39 +15,39 @@ Governance components into a unified execution flow:
 - Truthfulness boundary protection for unexecuted live production claims
 """
 
+import hashlib
+import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
-import hashlib
-import json
 
-from app.deployment.secrets import get_secrets_sanitizer
 from app.core.container import ServiceContainer
-from app.security_operations.security_posture import SecurityPostureEvaluator, SecurityPostureResult
-from app.security_operations.security_policy_engine import SecurityPolicyEngine, SecurityPolicyResult
-from app.security_operations.vulnerability_management import VulnerabilityManager
-from app.security_operations.dependency_security import DependencySecurityEvaluator
-from app.security_operations.container_security import ContainerSecurityEvaluator
-from app.security_operations.secret_security import SecretSecurityEvaluator
+from app.deployment.secrets import get_secrets_sanitizer
+from app.security_operations.api_security import APISecurityEvaluator
+from app.security_operations.audit_integrity import AuditIntegrityEngine
+from app.security_operations.audit_log import SecurityAuditLogger
 from app.security_operations.authentication_security import AuthenticationSecurityEvaluator
 from app.security_operations.authorization_security import AuthorizationSecurityEvaluator
-from app.security_operations.api_security import APISecurityEvaluator
-from app.security_operations.security_event_detection import SecurityEventDetector
-from app.security_operations.security_threat_classifier import SecurityThreatClassifier
 from app.security_operations.compliance_governance import ComplianceGovernanceEngine, ComplianceResult
-from app.security_operations.audit_log import SecurityAuditLogger
-from app.security_operations.audit_integrity import AuditIntegrityEngine
-from app.security_operations.security_risk_engine import SecurityRiskEngine, RiskAssessment
-from app.security_operations.security_exception_management import SecurityExceptionManager
-from app.security_operations.security_evidence import SecurityEvidenceCollector, SecurityEvidence
+from app.security_operations.container_security import ContainerSecurityEvaluator
+from app.security_operations.dependency_security import DependencySecurityEvaluator
+from app.security_operations.secret_security import SecretSecurityEvaluator
 from app.security_operations.security_certification import SecurityCertificationEngine, SecurityCertificationResult
-from app.security_operations.security_metrics import SecurityMetricsCalculator, SecurityMetricsResult
 from app.security_operations.security_dashboard import SecurityDashboard, SecurityDashboardSnapshot
+from app.security_operations.security_event_detection import SecurityEventDetector
+from app.security_operations.security_evidence import SecurityEvidence, SecurityEvidenceCollector
+from app.security_operations.security_exception_management import SecurityExceptionManager
+from app.security_operations.security_metrics import SecurityMetricsCalculator, SecurityMetricsResult
+from app.security_operations.security_policy_engine import SecurityPolicyEngine, SecurityPolicyResult
+from app.security_operations.security_posture import SecurityPostureEvaluator, SecurityPostureResult
+from app.security_operations.security_risk_engine import RiskAssessment, SecurityRiskEngine
+from app.security_operations.security_threat_classifier import SecurityThreatClassifier
+from app.security_operations.vulnerability_management import VulnerabilityManager
 
 # Import Phase 5.68 Incident & Alert engines if available
 try:
-    from app.operations.incident_management import IncidentManager
     from app.operations.alert_engine import AlertEngine
+    from app.operations.incident_management import IncidentManager
     SRE_AVAILABLE = True
 except ImportError:
     SRE_AVAILABLE = False

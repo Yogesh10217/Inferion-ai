@@ -85,7 +85,6 @@ class ContainerValidationEngine:
             return False, f"Ambiguous or forbidden image tag '{image_tag}' rejected in PRODUCTION environment"
         return True, "Image tag is production-safe"
 
-
     @classmethod
     def validate_container_environment(cls, image_tag: str = "enterprise-ai-platform:5.61", is_production: bool = False) -> Dict[str, Any]:
         in_container = os.path.exists("/.dockerenv") or os.getenv("CONTAINERIZED", "false").lower() in ("true", "1")
@@ -111,4 +110,3 @@ class ContainerValidationEngine:
             "image_tag_message": tag_msg,
             "artifact_integrity": ArtifactIntegrityStatus.VALID.value if dockerfile_present else ArtifactIntegrityStatus.UNKNOWN.value,
         }
-

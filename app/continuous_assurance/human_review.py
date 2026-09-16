@@ -2,6 +2,7 @@
 
 from app.continuous_assurance.models import HumanReviewState
 
+
 class HumanReviewLifecycle:
     """Manages human review lifecycle state machine."""
 

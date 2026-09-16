@@ -2,9 +2,10 @@
 Tree of Thoughts (ToT) Branching & Reasoning Search Engine
 """
 
-import uuid
 import logging
-from typing import Dict, Any, List, Optional
+import uuid
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
@@ -49,7 +50,7 @@ class TreeOfThoughtsEngine:
                     is_pruned = score < self.min_score_threshold
                     child = ThoughtNode(
                         parent_id=parent_id,
-                        thought_content=f"Path branch {b+1} depth {depth}: evaluate strategy {chr(65+b)}",
+                        thought_content=f"Path branch {b + 1} depth {depth}: evaluate strategy {chr(65 + b)}",
                         score=score,
                         is_pruned=is_pruned,
                     )

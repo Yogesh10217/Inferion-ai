@@ -4,15 +4,15 @@ from __future__ import annotations
 
 import contextvars
 import uuid
-from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, Generator, Optional
 from contextlib import contextmanager
+from dataclasses import asdict, dataclass, field
+from typing import Any, Dict, Generator, Optional
 
 
 @dataclass
 class ObservabilityContext:
     """Unified context holding correlation and execution parameters across all platform layers.
-    
+
     Propagates across Request -> Agent -> Workflow -> Tool -> MCP -> Multi-Agent Team -> Planning -> Autonomous Execution.
     """
 
@@ -98,7 +98,6 @@ class ObservabilityContext:
             workspace_id=norm.get("x-workspace-id"),
             correlation_id=norm.get("x-correlation-id"),
         )
-
 
     def copy_with_span(self, new_span_id: Optional[str] = None) -> ObservabilityContext:
         """Create a child context preserving trace context."""

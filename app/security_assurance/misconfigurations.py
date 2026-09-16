@@ -1,8 +1,9 @@
 """Misconfiguration Detection Engine."""
 
-from typing import Dict, Any, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
 from app.security_assurance.asset_inventory import SecurityAssetInventory

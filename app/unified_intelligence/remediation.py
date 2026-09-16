@@ -4,21 +4,22 @@ Cross-Domain Remediation Coordinator Engine for Phase 5.51 Enterprise AI Unified
 Coordinates execution of cross-domain remediation plans, maintaining isolation and safety gates.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from app.unified_intelligence.coordination import CoordinationPlan
 from app.unified_intelligence.exceptions import (
     CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException
+    InvalidUnifiedIntelligenceInputException,
 )
-from app.unified_intelligence.coordination import CoordinationPlan
 
 
 class RemediationActionResult:
     """
     Result of a cross-domain remediation action step execution.
     """
+
     def __init__(
         self,
         action_id: str,
@@ -53,6 +54,7 @@ class CrossDomainRemediationCoordinator:
     """
     Coordinates remediation steps across domain subsystems via standardized delegation requests.
     """
+
     def __init__(self):
         pass
 

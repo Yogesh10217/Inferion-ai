@@ -35,12 +35,6 @@ class EnvironmentManager:
         else:
             db_url = raw_db_url or "sqlite:///./app.db"
 
-
-
-
-
-
-        
         config = EnvironmentConfig(
             environment=env,
             application_name=os.getenv("APP_NAME", "Enterprise-AI-Platform"),
@@ -85,14 +79,10 @@ class EnvironmentManager:
                 "example_secret", "super-secret-key-change-in-production"
             ]
 
-
             jwt_secret = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or "prod_secure_key_hash_8849"
             if any(unsafe in jwt_secret.lower() for unsafe in unsafe_secrets):
                 raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Production environment contains an unsafe fallback/canary secret")
 
-
-
             db_user_pass = config.database_url.split("@")[0] if "@" in config.database_url else ""
             if any(unsafe in db_user_pass.lower() for unsafe in ["postgres:postgres", "admin:admin", "root:root", "user:pass"]):
                 raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Default database credentials rejected in PRODUCTION environment")
-

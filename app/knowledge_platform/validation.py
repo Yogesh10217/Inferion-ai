@@ -1,9 +1,10 @@
 """Knowledge Validation & Quality Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_platform.knowledge import KnowledgeItem, KnowledgeStatus

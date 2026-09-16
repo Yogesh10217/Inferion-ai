@@ -1,14 +1,15 @@
 """Governed Agent Context Assembly Subsystem (Phase 5.36)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
 from app.agent_orchestration.exceptions import CrossTenantAgentAccessException
+from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
+from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentContextItem(BaseModel):
@@ -140,10 +141,10 @@ class AgentContextManager:
         if not ctx:
             # Generate empty context fallback
             return AgentContext(context_id=context_id, tenant_id=tenant_id, agent_id="unknown", task_id="unknown")
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, ctx.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, ctx.tenant_id)
-            
+
         return ctx

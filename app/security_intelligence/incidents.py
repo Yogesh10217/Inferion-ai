@@ -1,19 +1,20 @@
 """Security Incident Lifecycle Management Subsystem (Phase 5.32)."""
 
-from enum import Enum
-from typing import Dict, Any, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
-from app.security_intelligence.exceptions import (
-    SecurityIncidentNotFoundException,
-    InvalidSecurityIncidentTransitionException,
-    ImmutableSecurityRecordException,
-    CrossTenantSecurityAccessException,
-)
-from app.platform_contracts.lifecycle import LifecycleMachine, LifecycleTransition
 from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.platform_contracts.lifecycle import LifecycleMachine, LifecycleTransition
+from app.security_intelligence.exceptions import (
+    CrossTenantSecurityAccessException,
+    ImmutableSecurityRecordException,
+    InvalidSecurityIncidentTransitionException,
+    SecurityIncidentNotFoundException,
+)
 
 
 class SecurityIncidentStatus(str, Enum):

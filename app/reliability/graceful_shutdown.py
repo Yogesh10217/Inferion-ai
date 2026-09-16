@@ -1,9 +1,9 @@
 """Graceful Shutdown Manager for Coordinated Platform Drain & Teardown."""
 
-import time
-import logging
 import asyncio
-from typing import List, Callable, Optional, Dict, Any
+import logging
+import time
+from typing import Any, Callable, Dict, List
 
 logger = logging.getLogger(__name__)
 

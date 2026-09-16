@@ -1,13 +1,14 @@
 """Enterprise Event Model Subsystem (Phase 5.34)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.event_intelligence.exceptions import CrossTenantEventAccessException, EventNotFoundException
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.event_intelligence.exceptions import EventNotFoundException, CrossTenantEventAccessException
 
 
 class EventCategory(str, Enum):

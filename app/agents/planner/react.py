@@ -3,9 +3,10 @@ ReAct (Reason + Act) Interleaved Planner Strategy
 """
 
 import logging
-from typing import Dict, Any, List
-from app.agents.planner.base import BasePlanner
+from typing import Any, Dict, List
+
 from app.agents.agent_context import AgentContext
+from app.agents.planner.base import BasePlanner
 from app.agents.tools.schemas import ToolDefinition
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class ReActPlanner(BasePlanner):
     ) -> List[Dict[str, Any]]:
         step_num = len(execution_history) + 1
         goal_lower = goal.lower()
-        
+
         # Decide next action based on available tools and goal keywords
         if "calculator" in available_tools and any(kw in goal_lower for kw in ["calc", "math", "+", "-", "*", "/"]):
             return [{

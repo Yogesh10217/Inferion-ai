@@ -5,9 +5,10 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, Optional
+from typing import Any, Dict
 
 from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.runtime_intelligence.models import NormalizedRuntimeSignal
 
 
 class RuntimeSignalCategory(str, Enum):
@@ -39,16 +40,13 @@ class RuntimeDomainInput:
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
-from app.runtime_intelligence.models import NormalizedRuntimeSignal
-
-
 class RuntimeSignalNormalizerEngine:
     """Sanitizes, normalizes, and computes SHA-256 fingerprints for provider signals."""
 
     @classmethod
     def normalize_input(cls, domain_input: RuntimeDomainInput) -> NormalizedRuntimeSignal:
         sanitized = SensitiveDataSanitizer.sanitize(domain_input.raw_payload)
-        
+
         fingerprint_data = {
             "tenant_id": domain_input.tenant_id,
             "source_domain": domain_input.source_domain,

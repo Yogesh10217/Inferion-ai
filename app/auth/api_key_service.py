@@ -1,5 +1,5 @@
-import secrets
 import hashlib
+import secrets
 from typing import Tuple
 
 from app.core.config import get_settings
@@ -18,11 +18,11 @@ class APIKeyService:
         # Generate random bytes and encode as urlsafe base64
         random_part = secrets.token_urlsafe(settings.api_key_length)
         raw_key = f"{prefix}_{random_part}"
-        
+
         # We store the hash of the raw_key using SHA-256
         # (Since it's high entropy, SHA-256 is sufficient and fast compared to bcrypt)
         hashed_key = hashlib.sha256(raw_key.encode()).hexdigest()
-        
+
         return raw_key, prefix, hashed_key
 
     @staticmethod

@@ -1,9 +1,10 @@
 """Deterministic data validation intelligence (Phase 5.43)."""
 
 import uuid
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
@@ -88,7 +89,7 @@ class DataValidationManager:
         data_sample: Optional[List[Dict[str, Any]]] = None,
     ) -> DataValidationResult:
         rules = [r for r in self._rules.values() if r.dataset_id == dataset_id and r.tenant_id == tenant_id]
-        
+
         failures = []
         passed = 0
         failed = 0

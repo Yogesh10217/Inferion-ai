@@ -1,7 +1,8 @@
 """Pydantic v2 API Schemas for Platform Integration (Phase 5.58)."""
 
-from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel
 
 
 class ContextBuildRequest(BaseModel):

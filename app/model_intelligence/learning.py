@@ -1,12 +1,11 @@
 """Advisory Model Intelligence Learning (Phase 5.44)."""
 
 import logging
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timezone
+from typing import Dict, List
 
-from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 

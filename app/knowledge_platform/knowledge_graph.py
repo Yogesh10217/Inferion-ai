@@ -1,10 +1,11 @@
 """Knowledge Graph & Relationship Intelligence Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_platform.exceptions import KnowledgeGraphException
@@ -97,7 +98,7 @@ class KnowledgeGraphManager:
         weight: float = 1.0,
     ) -> KnowledgeEdge:
         if source_node_id not in self._nodes or target_node_id not in self._nodes:
-            raise KnowledgeGraphException(f"Source or target node not found in graph")
+            raise KnowledgeGraphException("Source or target node not found in graph")
 
         edge = KnowledgeEdge(
             source_node_id=source_node_id,

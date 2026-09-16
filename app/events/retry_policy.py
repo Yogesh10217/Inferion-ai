@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
 import random
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 

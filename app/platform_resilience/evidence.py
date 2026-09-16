@@ -1,17 +1,16 @@
 """Resilience Evidence Bundles Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-import uuid
 import hashlib
 import json
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.evidence import EvidenceReference, EvidenceMetadata, EvidenceSourceReference, EvidenceStrength, EvidenceIntegrity
 from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.platform_resilience.exceptions import CrossTenantResilienceAccessException, ImmutableResilienceRecordException
+from app.platform_contracts.tenant import TenantAccessGuard
+from app.platform_resilience.exceptions import ImmutableResilienceRecordException
 
 
 class ResilienceEvidenceIntegrity(BaseModel):

@@ -1,13 +1,14 @@
 """Progressive Delivery & Traffic Scaling Subsystem."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.mlops.deployment import DeploymentManager, DeploymentStatus, DeploymentEnvironment
+from app.mlops.deployment import DeploymentManager, DeploymentStatus
 
 logger = logging.getLogger(__name__)
 

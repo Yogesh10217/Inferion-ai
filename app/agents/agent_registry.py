@@ -3,7 +3,8 @@ Agent Definition Repository & Registry
 """
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict
+
 from app.agents.agent_config import AgentConfig
 from app.agents.exceptions import AgentNotFoundError
 

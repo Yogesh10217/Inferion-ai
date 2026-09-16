@@ -3,6 +3,7 @@
 import logging
 import threading
 from typing import Set
+
 from app.runtime_intelligence.exceptions import RuntimeConcurrencyConflictException
 
 logger = logging.getLogger(__name__)

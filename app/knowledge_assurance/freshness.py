@@ -1,12 +1,11 @@
 """Knowledge freshness intelligence evaluating decay, volatility, and SLA compliance."""
 
-from datetime import datetime, timezone, timedelta
-from enum import Enum
-from typing import Dict, Any, List, Optional
 import uuid
-from pydantic import BaseModel, Field
+from datetime import datetime, timedelta, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
+from pydantic import BaseModel, Field
 
 
 class FreshnessStatus(str, Enum):

@@ -1,15 +1,17 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 from ..vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
+
 class WeaviateStore(VectorStore):
     """Weaviate implementation of the VectorStore interface."""
-    
+
     def __init__(self, url: str, api_key: Optional[str] = None):
         """Initialize the Weaviate store.
-        
+
         Args:
             url: Weaviate server URL.
             api_key: Weaviate API key (optional).
@@ -25,10 +27,10 @@ class WeaviateStore(VectorStore):
         # Mock implementation
 
     async def search(
-        self, 
-        query_vector: List[float], 
-        collection_name: str, 
-        top_k: int = 10, 
+        self,
+        query_vector: List[float],
+        collection_name: str,
+        top_k: int = 10,
         filter_expr: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """Search Weaviate for similar vectors."""

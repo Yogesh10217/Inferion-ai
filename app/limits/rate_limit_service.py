@@ -1,11 +1,11 @@
 import logging
-from typing import Tuple
 
 from app.limits.counter_backend import CounterBackend
 from app.limits.exceptions import RateLimitExceededException
 from app.services.metrics_service import MetricsService
 
 logger = logging.getLogger(__name__)
+
 
 class RateLimitService:
     def __init__(self, backend: CounterBackend, metrics: MetricsService, default_strategy: str = "sliding_window"):
@@ -20,9 +20,9 @@ class RateLimitService:
         """
         strategy = strategy or self.default_strategy
         key = f"ratelimit:{strategy}:{scope_id}"
-        
+
         allowed = True
-        
+
         if strategy == "sliding_window":
             allowed, _ = await self.backend.check_and_increment_sliding_window(key, limit, window_seconds)
         elif strategy == "token_bucket":
@@ -32,9 +32,9 @@ class RateLimitService:
         else:
             logger.warning(f"Unknown rate limit strategy: {strategy}, falling back to fixed_window")
             allowed, _ = await self.backend.check_and_increment_fixed_window(key, limit, window_seconds)
-            
+
         self.metrics.record_rate_limit_check(allowed)
-        
+
         if not allowed:
             raise RateLimitExceededException(f"Rate limit exceeded for scope {scope_id}")
 
@@ -44,11 +44,11 @@ class RateLimitService:
         """
         key = f"concurrency:{scope_id}"
         allowed, lease_id = await self.backend.acquire_lease(key, limit, ttl_seconds)
-        
+
         if not allowed:
             self.metrics.record_rate_limit_check(False)
             raise RateLimitExceededException(f"Concurrent request limit exceeded for scope {scope_id}")
-            
+
         return lease_id
 
     async def release_concurrency_lease(self, scope_id: str, lease_id: str) -> None:

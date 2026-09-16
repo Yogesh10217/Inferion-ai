@@ -1,14 +1,15 @@
 """Controlled Promotion Workflow Subsystem (Phase 5.33)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
+from app.ai_lifecycle_platform.exceptions import EvaluationGateFailedException, InvalidPromotionException
+from app.ai_lifecycle_platform.gates import GateEvaluation, GateStatus
 from app.approvals.approval_engine import ApprovalEngine
-from app.ai_lifecycle_platform.exceptions import InvalidPromotionException, HighRiskReleaseRequiresApprovalException, EvaluationGateFailedException
-from app.ai_lifecycle_platform.gates import GateStatus, GateEvaluation
 
 
 class PromotionTarget(str, Enum):

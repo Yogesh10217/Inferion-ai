@@ -1,14 +1,15 @@
 """Tenant-Scoped Portfolio Analytics Subsystem."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.portfolio_platform.strategy import StrategyManager
+from app.portfolio_platform.funding import FundingManager
 from app.portfolio_platform.initiatives import InitiativeManager
 from app.portfolio_platform.investment import InvestmentManager
-from app.portfolio_platform.funding import FundingManager
+from app.portfolio_platform.strategy import StrategyManager
 from app.portfolio_platform.trust import PortfolioTrustEngine
 
 

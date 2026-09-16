@@ -1,7 +1,8 @@
 """Tenant-isolated thread-safe repositories for Decision Governance entities."""
 
 import threading
-from typing import Dict, Any, List, Optional, TypeVar, Generic
+from typing import Dict, Generic, List, TypeVar
+
 from pydantic import BaseModel
 
 from app.decision_governance.exceptions import CrossTenantDecisionGovernanceException, DecisionNotFoundException

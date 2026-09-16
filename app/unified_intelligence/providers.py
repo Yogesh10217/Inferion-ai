@@ -1,11 +1,11 @@
 """Domain Intelligence Provider Interface & Provider Registry (Decoupled Architecture)."""
 
 import logging
-from typing import Dict, Any, List, Optional, Protocol, runtime_checkable
-from datetime import datetime, timezone
 from abc import ABC, abstractmethod
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
 
-from app.unified_intelligence.domains import IntelligenceDomain, DomainHealth
+from app.unified_intelligence.domains import DomainHealth, IntelligenceDomain
 
 logger = logging.getLogger(__name__)
 

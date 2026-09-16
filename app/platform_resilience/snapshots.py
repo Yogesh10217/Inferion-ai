@@ -1,12 +1,13 @@
 """Recovery and Resilience Snapshots Subsystem (Phase 5.37)."""
 
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
+from app.platform_contracts.snapshots import SnapshotFactory
 from app.platform_contracts.tenant import TenantAccessGuard
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
 from app.platform_resilience.exceptions import CrossTenantResilienceAccessException, ResilienceResourceNotFoundException
 
 
@@ -60,10 +61,10 @@ class ResilienceSnapshotManager:
         snap = self._snapshots.get(snapshot_id)
         if not snap:
             raise ResilienceResourceNotFoundException(snapshot_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, snap.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, snap.tenant_id)
-            
+
         return snap

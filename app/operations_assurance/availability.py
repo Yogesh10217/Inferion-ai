@@ -1,12 +1,11 @@
 """Availability intelligence evaluating service availability, dependency availability, SLO performance, and SLA compliance."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
-from pydantic import BaseModel, Field
+from typing import Dict, Optional
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException
+from pydantic import BaseModel, Field
 
 
 class SloStatus(str, Enum):

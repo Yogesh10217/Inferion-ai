@@ -3,12 +3,13 @@ Dynamic Tool Registry
 """
 
 import logging
-from typing import Dict, Any, Optional, Callable, Awaitable
-from app.agents.tools.schemas import ToolDefinition, ToolParameter
+from typing import Any, Awaitable, Callable, Dict
+
+from app.agents.exceptions import ToolNotFoundError
 from app.agents.tools.builtin import BUILTIN_TOOLS
 from app.agents.tools.python import execute_python_code
+from app.agents.tools.schemas import ToolDefinition, ToolParameter
 from app.agents.tools.shell import execute_shell_command
-from app.agents.exceptions import ToolNotFoundError
 
 logger = logging.getLogger(__name__)
 

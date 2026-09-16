@@ -3,10 +3,10 @@ Agent Router for Target Resolution & Capability-Based Route Matching
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from app.multi_agent.agent_team import AgentTeam
-from app.multi_agent.agent_messaging import AgentMessage, MessageType
+from typing import Optional
+
 from app.multi_agent.agent_role import RoleType
+from app.multi_agent.agent_team import AgentTeam
 
 logger = logging.getLogger(__name__)
 

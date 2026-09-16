@@ -1,11 +1,11 @@
 """Pipeline reliability intelligence (Phase 5.43)."""
 
 import uuid
-from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
 from app.data_intelligence.pipelines import DataPipelineManager, PipelineHealth
 
 

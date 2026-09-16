@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+
 from app.core.container import ServiceContainer
 from app.registry.model_metadata import ModelMetadata
 

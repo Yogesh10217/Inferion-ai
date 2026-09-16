@@ -1,12 +1,12 @@
 """FastAPI Router for Extension Framework (/v1/extensions)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel, Field
+from typing import Any, Dict, Optional
 
-from app.extensions.manager import ExtensionManager
-from app.extensions.extension import ExtensionVersion, ExtensionManifest
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+
 from app.extensions.exceptions import ExtensionFrameworkException
+from app.extensions.manager import ExtensionManager
 
 router = APIRouter(prefix="/v1/extensions", tags=["extensions"])
 

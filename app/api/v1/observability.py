@@ -3,19 +3,19 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, Header, Query, status
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
-from app.observability.manager import ObservabilityManager
 from app.observability.context import ObservabilityContext
 from app.observability.exceptions import (
-    ObservabilityException,
-    TraceNotFoundException,
+    AlertConfigurationException,
     ExecutionNotFoundException,
     ReplayNotAvailableException,
     SLAValidationException,
-    AlertConfigurationException,
+    TraceNotFoundException,
 )
+from app.observability.manager import ObservabilityManager
 
 router = APIRouter(tags=["Observability & Operations"])
 

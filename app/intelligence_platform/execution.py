@@ -1,19 +1,20 @@
 """Delegation-Only Decision Execution Adapter."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.orchestration.manager import OrchestrationManager
-from app.platform_operations.manager import PlatformOperationsManager
-from app.integrations.manager import IntegrationManager
 from app.application_platform.manager import ApplicationPlatformManager
 from app.developer_platform.manager import DeveloperPlatformManager
-from app.intelligence_platform.recommendations import Recommendation, RecommendationStatus
+from app.integrations.manager import IntegrationManager
 from app.intelligence_platform.exceptions import IntelligenceException
+from app.intelligence_platform.recommendations import Recommendation, RecommendationStatus
+from app.orchestration.manager import OrchestrationManager
+from app.platform_operations.manager import PlatformOperationsManager
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +78,6 @@ class DecisionExecutionManager:
         if recommendation.status not in (RecommendationStatus.APPROVED, RecommendationStatus.VALIDATED, RecommendationStatus.GENERATED, RecommendationStatus.EXECUTING):
             raise IntelligenceException(f"Cannot execute recommendation '{recommendation.recommendation_id}' with status {recommendation.status.value}")
 
-
         delegated_ref: Optional[str] = None
 
         if target == ExecutionTarget.PLATFORM_OPERATIONS:
@@ -114,11 +114,9 @@ class DecisionExecutionManager:
             verification=ExecutionVerification(is_verified=True, verification_message=f"Delegated to {target_name} ({delegated_ref})"),
         )
 
-
         self._executions[exec_obj.execution_id] = exec_obj
         logger.info(f"[EXECUTION DELEGATOR] Delegated recommendation '{recommendation.recommendation_id}' to {target_name} (Ref: '{delegated_ref}')")
         return exec_obj
-
 
     def get_execution(self, execution_id: str, tenant_id: str) -> DecisionExecution:
         exc = self._executions.get(execution_id)

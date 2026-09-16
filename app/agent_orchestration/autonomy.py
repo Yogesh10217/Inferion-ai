@@ -1,16 +1,16 @@
 """Bounded Autonomy Management Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
-    AgentAutonomyViolationException,
     CrossTenantAgentAccessException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentAutonomyLevel(str, Enum):
@@ -104,12 +104,12 @@ class AgentAutonomyManager:
         if not policy:
             # Fallback default
             return AgentAutonomyPolicy(policy_id=policy_id, tenant_id=tenant_id, agent_id="default")
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, policy.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, policy.tenant_id)
-            
+
         return policy
 
     def evaluate_action_autonomy(

@@ -1,8 +1,7 @@
 """Continuous verification engine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-import hashlib
-from typing import Dict, Any
+
 from app.continuous_assurance.models import (
     ContinuousVerificationResult,
     VerificationStatus,

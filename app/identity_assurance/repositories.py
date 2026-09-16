@@ -1,12 +1,12 @@
 """Tenant-Isolated Repositories for Identity Assurance."""
 
 import threading
-from typing import Dict, Any, List, Optional, TypeVar, Generic
+from typing import Dict, Generic, List, Optional, TypeVar
+
 from pydantic import BaseModel
 
 from app.identity_assurance.exceptions import (
     CrossTenantIdentityAssuranceException,
-    IdentityNotFoundException,
 )
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 

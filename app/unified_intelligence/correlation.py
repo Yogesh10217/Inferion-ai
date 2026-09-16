@@ -1,13 +1,14 @@
 """Cross-Domain Correlation Engine for Phase 5.51 Enterprise AI Unified Intelligence."""
 
-from enum import Enum
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.unified_intelligence.domains import IntelligenceDomain
 from app.unified_intelligence.context_fusion import UnifiedContext
+from app.unified_intelligence.domains import IntelligenceDomain
 
 
 class CorrelationType(str, Enum):

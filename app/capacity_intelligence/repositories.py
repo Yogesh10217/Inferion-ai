@@ -1,24 +1,23 @@
 """Thread-safe, tenant-isolated repositories for Capacity Intelligence (Phase 5.56)."""
 
 import threading
-from typing import Dict, List, Optional
-from app.capacity_intelligence.models import (
-    ResourceProfile,
-    CapacityTelemetry,
-    CapacityAssessment,
-    CapacityForecast,
-    Bottleneck,
-    CapacityRecommendation,
-    CapacityEvidenceBundle,
-)
+from typing import Dict, List
+
 from app.capacity_intelligence.exceptions import (
-    CrossTenantCapacityIntelligenceException,
-    ResourceProfileNotFoundException,
     CapacityAssessmentNotFoundException,
     CapacityForecastNotFoundException,
-    BottleneckNotFoundException,
-    CapacityRecommendationNotFoundException,
     CapacityIntelligenceException,
+    CrossTenantCapacityIntelligenceException,
+    ResourceProfileNotFoundException,
+)
+from app.capacity_intelligence.models import (
+    Bottleneck,
+    CapacityAssessment,
+    CapacityEvidenceBundle,
+    CapacityForecast,
+    CapacityRecommendation,
+    CapacityTelemetry,
+    ResourceProfile,
 )
 
 

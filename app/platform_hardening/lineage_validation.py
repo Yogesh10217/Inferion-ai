@@ -4,6 +4,7 @@ Validates DAG integrity of intelligence lineage edges across platform entities.
 """
 
 from typing import Dict, List, Set, Tuple
+
 from app.platform_hardening.models import (
     LineageValidationResult,
     PlatformAuditFinding,

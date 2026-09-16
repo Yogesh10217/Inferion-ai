@@ -1,7 +1,8 @@
 """Failure classification and pattern analysis engine (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict
+
 from app.reliability_intelligence.models import FailureClassification
 
 logger = logging.getLogger(__name__)

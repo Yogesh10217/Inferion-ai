@@ -1,18 +1,19 @@
 """Assurance Violation Lifecycle Subsystem (Phase 5.38)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.control_assurance.exceptions import (
     AssuranceViolationNotFoundException,
-    InvalidControlTransitionException,
-    ImmutableAssuranceRecordException,
     CrossTenantControlAssuranceAccessException,
+    ImmutableAssuranceRecordException,
+    InvalidControlTransitionException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class ViolationSeverity(str, Enum):

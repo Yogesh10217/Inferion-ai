@@ -1,26 +1,25 @@
 """Thread-safe, tenant-isolated repositories for Runtime Intelligence (Phase 5.57)."""
 
 import threading
-from typing import Dict, List, Optional, Any
-from app.runtime_intelligence.models import (
-    RuntimeSignal,
-    RuntimeContext,
-    RuntimeHealthAssessment,
-    RuntimeAnomaly,
-    RuntimeDrift,
-    RuntimeRecommendation,
-    RuntimeEvidenceBundle,
-    RuntimeSnapshot,
-)
+from typing import Any, Dict, List
+
 from app.runtime_intelligence.exceptions import (
     CrossTenantRuntimeIntelligenceException,
-    RuntimeIntelligenceException,
-    RuntimeSignalNotFoundException,
-    RuntimeHealthNotFoundException,
     RuntimeAnomalyNotFoundException,
     RuntimeDriftNotFoundException,
+    RuntimeHealthNotFoundException,
+    RuntimeIntelligenceException,
     RuntimeRecommendationNotFoundException,
-    ImmutableRuntimeIntelligenceRecordException,
+    RuntimeSignalNotFoundException,
+)
+from app.runtime_intelligence.models import (
+    RuntimeAnomaly,
+    RuntimeContext,
+    RuntimeDrift,
+    RuntimeEvidenceBundle,
+    RuntimeHealthAssessment,
+    RuntimeRecommendation,
+    RuntimeSignal,
 )
 
 

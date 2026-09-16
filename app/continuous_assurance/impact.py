@@ -1,7 +1,7 @@
 """Multi-dimensional impact assessment engine for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

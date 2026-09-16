@@ -7,10 +7,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from app.deployment.secrets import SecretsSanitizer
-from app.operations.slo import SLOResult, SLOStatus, SLIType
+from app.operations.slo import SLIType, SLOResult
 
 
 class ErrorBudgetStatus(str, Enum):

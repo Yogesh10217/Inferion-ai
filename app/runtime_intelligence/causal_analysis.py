@@ -2,6 +2,7 @@
 
 import logging
 from typing import List, Optional
+
 from app.runtime_intelligence.models import RuntimeCausalHypothesis
 
 logger = logging.getLogger(__name__)

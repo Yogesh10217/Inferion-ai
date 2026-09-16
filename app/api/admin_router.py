@@ -1,14 +1,24 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Path
-from typing import List, Dict, Any, Optional
-from datetime import datetime
-from pydantic import BaseModel
+from typing import Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.database import get_db_session
-from app.admin import SystemAdminService, HealthAdminService, UserAdminService, OrganizationAdminService, WorkspaceAdminService, APIKeyAdminService, SubscriptionAdminService, AuditAdminService, ReportAdminService
+
+from app.admin import (
+    APIKeyAdminService,
+    AuditAdminService,
+    HealthAdminService,
+    OrganizationAdminService,
+    ReportAdminService,
+    SubscriptionAdminService,
+    SystemAdminService,
+    UserAdminService,
+    WorkspaceAdminService,
+)
+from app.admin.exceptions import InvalidOperationException, ResourceNotFoundException
 from app.auth.dependencies import require_admin
 from app.auth.models import User
-from app.admin.exceptions import ResourceNotFoundException, InvalidOperationException
+from app.core.database import get_db_session
 
 # Use a single router for all admin routes, prefixed with /admin and enforcing the "admin" role globally.
 # This ensures that ONLY platform administrators can access these endpoints.
@@ -20,12 +30,14 @@ admin_router = APIRouter(
 
 # ----------------- SYSTEM & HEALTH -----------------
 
+
 @admin_router.get("/system")
 async def get_system_stats(
     db: AsyncSession = Depends(get_db_session)
 ):
     """Retrieve overarching platform statistics."""
     return await SystemAdminService(db).get_system_stats()
+
 
 @admin_router.get("/health")
 async def get_admin_health(
@@ -36,6 +48,7 @@ async def get_admin_health(
 
 # ----------------- USERS -----------------
 
+
 @admin_router.get("/users")
 async def list_users(
     limit: int = Query(100),
@@ -45,8 +58,10 @@ async def list_users(
     users = await UserAdminService(db).list_users(limit=limit, offset=offset)
     return [{"id": u.id, "username": u.username, "email": u.email, "is_active": u.is_active} for u in users]
 
+
 class UserUpdate(BaseModel):
     is_active: bool
+
 
 @admin_router.patch("/users/{user_id}")
 async def update_user(
@@ -65,6 +80,7 @@ async def update_user(
 
 # ----------------- ORGANIZATIONS -----------------
 
+
 @admin_router.get("/organizations")
 async def list_organizations(
     limit: int = Query(100),
@@ -74,9 +90,11 @@ async def list_organizations(
     orgs = await OrganizationAdminService(db).list_organizations(limit=limit, offset=offset)
     return [{"id": o.id, "name": o.name, "slug": o.slug, "status": o.status} for o in orgs]
 
+
 class OrganizationUpdate(BaseModel):
-    status: str # active, suspended, archived
+    status: str  # active, suspended, archived
     actor_id: Optional[str] = None
+
 
 @admin_router.patch("/organizations/{org_id}")
 async def update_organization(
@@ -102,6 +120,7 @@ async def update_organization(
 
 # ----------------- WORKSPACES -----------------
 
+
 @admin_router.get("/workspaces")
 async def list_workspaces(
     organization_id: Optional[str] = Query(None),
@@ -111,6 +130,7 @@ async def list_workspaces(
 ):
     ws = await WorkspaceAdminService(db).list_workspaces(organization_id=organization_id, limit=limit, offset=offset)
     return [{"id": w.id, "name": w.name, "organization_id": w.organization_id} for w in ws]
+
 
 @admin_router.patch("/workspaces/{workspace_id}")
 async def update_workspace(
@@ -126,6 +146,7 @@ async def update_workspace(
 
 # ----------------- API KEYS -----------------
 
+
 @admin_router.get("/api-keys")
 async def list_api_keys(
     user_id: Optional[str] = Query(None),
@@ -137,9 +158,11 @@ async def list_api_keys(
     keys = await APIKeyAdminService(db).list_api_keys(user_id=user_id, org_id=organization_id, limit=limit, offset=offset)
     return [{"id": k.id, "prefix": k.prefix, "revoked_at": k.revoked_at, "expires_at": k.expires_at} for k in keys]
 
+
 class APIKeyUpdate(BaseModel):
-    action: str # revoke, expire
+    action: str  # revoke, expire
     grace_period_days: int = 0
+
 
 @admin_router.patch("/api-keys/{api_key_id}")
 async def update_api_key(
@@ -160,6 +183,7 @@ async def update_api_key(
 
 # ----------------- SUBSCRIPTIONS -----------------
 
+
 @admin_router.get("/subscriptions")
 async def list_subscriptions(
     organization_id: Optional[str] = Query(None),
@@ -172,6 +196,7 @@ async def list_subscriptions(
     return [{"id": s.id, "organization_id": s.organization_id, "status": s.status} for s in subs]
 
 # ----------------- AUDIT & REPORTS -----------------
+
 
 @admin_router.get("/audit")
 async def search_audit_events(
@@ -193,14 +218,15 @@ async def search_audit_events(
     )
     return [
         {
-            "id": e.id, 
-            "action": e.action, 
-            "actor_id": e.actor_id, 
+            "id": e.id,
+            "action": e.action,
+            "actor_id": e.actor_id,
             "organization_id": e.organization_id,
             "severity": e.severity,
             "timestamp": e.timestamp
         } for e in events
     ]
+
 
 @admin_router.post("/reports")
 async def create_report(
@@ -212,6 +238,7 @@ async def create_report(
     job = await ReportAdminService(db).create_report_job(type=type, created_by=user.id)
     return {"job_id": job.id, "status": job.status}
 
+
 @admin_router.get("/reports")
 async def list_reports(
     limit: int = Query(100),
@@ -222,6 +249,7 @@ async def list_reports(
     return [{"id": j.id, "type": j.type, "status": j.status, "created_at": j.created_at} for j in jobs]
 
 # ----------------- DEAD-LETTER QUEUE -----------------
+
 
 @admin_router.get("/dlq")
 async def get_dead_letter_queue():

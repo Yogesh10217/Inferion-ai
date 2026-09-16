@@ -1,14 +1,15 @@
 """Continuous Intelligence Learning with Feedback Poisoning Resistance."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from datetime import datetime, timezone
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.knowledge_platform.manager import KnowledgePlatformManager
-from app.intelligence_platform.outcomes import DecisionOutcomeMeasurement
 from app.intelligence_platform.exceptions import IntelligenceException
+from app.intelligence_platform.outcomes import DecisionOutcomeMeasurement
+from app.knowledge_platform.manager import KnowledgePlatformManager
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
-import hmac
 import hashlib
+import hmac
 import time
 from typing import Dict, Optional
+
 from app.events.exceptions import InvalidSignatureException
 
 
@@ -81,7 +81,7 @@ class SignatureService:
         # Try primary secret
         expected_sig = cls.generate_signature(primary_secret, timestamp, payload)
         primary_sig = expected_sig.split("v1=")[-1]
-        
+
         if hmac.compare_digest(received_sig, primary_sig):
             return True
 

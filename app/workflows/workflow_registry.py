@@ -2,9 +2,10 @@
 Workflow Registry for Definitions & Templates
 """
 
-from typing import Dict, Any, List, Optional
-from app.workflows.workflow import WorkflowDefinition
+from typing import Any, Dict, List, Optional
+
 from app.workflows.templates import WorkflowTemplates
+from app.workflows.workflow import WorkflowDefinition
 
 
 class WorkflowRegistry:

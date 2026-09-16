@@ -1,12 +1,13 @@
 """Point-in-time operational state snapshots using PlatformSnapshot and SnapshotFactory primitives."""
 
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, ImmutableOperationalRecordException
-from app.platform_contracts.snapshots import SnapshotFactory, PlatformSnapshot
+from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException
+from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
 
 
 class OperationalAssuranceSnapshot(BaseModel):

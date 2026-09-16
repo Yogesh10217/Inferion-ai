@@ -1,8 +1,9 @@
 """Directed Resource Dependency Graph for Impact Analysis & Deletion Safety."""
 
 import logging
-from typing import Dict, Any, List, Set, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Set
+
+from pydantic import BaseModel
 
 from app.control_plane.exceptions import ConfigurationConflictException, LifecycleException
 

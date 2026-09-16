@@ -1,39 +1,38 @@
 """Master DecisionIntelligenceManager Orchestrator Subsystem."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
 
-from app.decision_intelligence.providers import DecisionIntelligenceProviderRegistry, ProviderRegistry, IntelligenceDomain
-from app.decision_intelligence.context import DecisionContextManager, DecisionContextBuilder, DecisionContextType, DecisionScope, DecisionPriority
-from app.decision_intelligence.evidence import DecisionEvidenceManager, EvidenceReference, EvidenceStrength, EvidenceReliability
-from app.decision_intelligence.scenarios import ScenarioManager, ScenarioType, ScenarioAssumption, ScenarioVariable
-from app.decision_intelligence.constraints import ConstraintManager, DecisionConstraint, ConstraintType, ConstraintSeverity
-from app.decision_intelligence.alternatives import AlternativeManager, AlternativeScore
-from app.decision_intelligence.decision_options import DecisionOptionsRegistry, DecisionOption
-from app.decision_intelligence.tradeoffs import TradeoffAnalyzer, Tradeoff, TradeoffDimension, TradeoffSeverity
-from app.decision_intelligence.recommendations import RecommendationEngine, RecommendationType, DecisionRecommendation
-from app.decision_intelligence.scoring import DecisionScoringEngine, DecisionScoreDimension
-from app.decision_intelligence.risk import DecisionRiskManager, DecisionRiskDimension
-from app.decision_intelligence.trust import DecisionTrustEngine, DecisionTrustDimension
-from app.decision_intelligence.governance import DecisionGovernanceEngine, DecisionGovernanceStatus
-from app.decision_intelligence.decisions import DecisionManager, EnterpriseDecision, DecisionType, DecisionLifecycleState, DecisionStatus
-from app.decision_intelligence.delegation import DecisionDelegationManager, DelegationTarget
-from app.decision_intelligence.outcomes import DecisionOutcomeManager, OutcomeStatus
-from app.decision_intelligence.learning import DecisionLearningManager
-from app.decision_intelligence.analytics import DecisionAnalyticsEngine, DecisionReport
-from app.decision_intelligence.observability import DecisionMetricsCollector
+from app.decision_intelligence.alternatives import AlternativeManager
+from app.decision_intelligence.analytics import DecisionAnalyticsEngine
+from app.decision_intelligence.approvals import DecisionApprovalManager
+from app.decision_intelligence.assurance import DecisionAssuranceEngine
 from app.decision_intelligence.billing import DecisionBillingTracker
-from app.decision_intelligence.repositories import InMemoryDecisionRepository
-from app.decision_intelligence.uncertainty import DecisionUncertaintyEngine, DecisionUncertaintyAssessment
-from app.decision_intelligence.reproducibility import DecisionReproducibilityEngine, DecisionReproducibilityRecord
-from app.decision_intelligence.simulation import DecisionSimulationEngine, DecisionSimulationResult
-from app.decision_intelligence.approvals import DecisionApprovalManager, DecisionApprovalRecord
+from app.decision_intelligence.constraints import ConstraintManager
+from app.decision_intelligence.context import DecisionContextBuilder, DecisionContextManager, DecisionContextType
+from app.decision_intelligence.decision_options import DecisionOptionsRegistry
+from app.decision_intelligence.decisions import DecisionLifecycleState, DecisionManager, DecisionType
+from app.decision_intelligence.delegation import DecisionDelegationManager, DelegationTarget
+from app.decision_intelligence.evidence import DecisionEvidenceManager, EvidenceReference, EvidenceStrength
+from app.decision_intelligence.governance import DecisionGovernanceEngine
 from app.decision_intelligence.human_review import DecisionHumanReviewEngine
 from app.decision_intelligence.investigations import DecisionInvestigationEngine
+from app.decision_intelligence.learning import DecisionLearningManager
+from app.decision_intelligence.observability import DecisionMetricsCollector
+from app.decision_intelligence.outcomes import DecisionOutcomeManager
+from app.decision_intelligence.providers import DecisionIntelligenceProviderRegistry
+from app.decision_intelligence.recommendations import RecommendationEngine
 from app.decision_intelligence.remediation import DecisionRemediationEngine
-from app.decision_intelligence.verification import DecisionVerificationEngine
-from app.decision_intelligence.assurance import DecisionAssuranceEngine
+from app.decision_intelligence.reproducibility import DecisionReproducibilityEngine
+from app.decision_intelligence.risk import DecisionRiskManager
+from app.decision_intelligence.scenarios import ScenarioManager
+from app.decision_intelligence.scoring import DecisionScoringEngine
+from app.decision_intelligence.simulation import DecisionSimulationEngine
 from app.decision_intelligence.snapshots import DecisionSnapshotStore
+from app.decision_intelligence.tradeoffs import TradeoffAnalyzer
+from app.decision_intelligence.trust import DecisionTrustEngine
+from app.decision_intelligence.uncertainty import DecisionUncertaintyEngine
+from app.decision_intelligence.verification import DecisionVerificationEngine
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +92,7 @@ class DecisionIntelligenceManager:
 
         # 1. Decision Creation & State: PROPOSED
         dec = self.decision_manager.create_decision(tenant_id, title, decision_type)
-        
+
         # Transition: PROPOSED -> ANALYZING
         dec.transition_to(DecisionLifecycleState.ANALYZING, reason="Assembling cross-domain context")
 
@@ -156,7 +155,7 @@ class DecisionIntelligenceManager:
         risk_prof = self.risk_manager.evaluate_decision_risk(tenant_id, ctx.context_id, architecture_risk=20.0, compliance_risk=20.0)
         trust_score = self.trust_engine.calculate_trust_score(tenant_id, ctx.context_id, architecture_trust=90.0, compliance_trust=90.0)
         uncert = self.uncertainty_engine.assess_uncertainty(dec.decision_id, tenant_id, evidence_quality_score=ev_col.quality_score)
-        
+
         sim_result = self.simulation_engine.simulate_decision_options(
             decision_id=dec.decision_id,
             tenant_id=tenant_id,

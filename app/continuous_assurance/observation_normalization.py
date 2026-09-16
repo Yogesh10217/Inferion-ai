@@ -1,8 +1,8 @@
 """Runtime observation normalizer for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Any
-from app.continuous_assurance.models import RuntimeObservation, NormalizedRuntimeObservation
+
+from app.continuous_assurance.models import NormalizedRuntimeObservation, RuntimeObservation
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 logger = logging.getLogger(__name__)

@@ -2,30 +2,30 @@
 Core Execution Engine for Enterprise Tool Calling & MCP Platform
 """
 
-import time
 import asyncio
 import logging
-from typing import Dict, Any, List, Optional, AsyncGenerator
+import time
+from typing import Any, AsyncGenerator, Dict, List, Optional
 
+from app.tools.exceptions import (
+    ToolApprovalRequiredException,
+    ToolTimeoutException,
+)
 from app.tools.tool import RetryPolicy
-from app.tools.tool_context import ToolContext
-from app.tools.tool_result import ToolResult, ToolExecutionStatus
-from app.tools.tool_registry import ToolRegistry
-from app.tools.tool_validator import ToolValidator
-from app.tools.tool_permissions import ToolPermissionEngine
 from app.tools.tool_audit import ToolAuditLogger
 from app.tools.tool_billing import ToolBillingTracker
-from app.tools.exceptions import (
-    ToolTimeoutException,
-    ToolApprovalRequiredException,
-)
+from app.tools.tool_context import ToolContext
 from app.tools.tool_metrics import (
-    tool_calls_total,
-    tool_failures_total,
-    tool_duration_seconds,
-    tool_cost_total,
     tool_active_executions,
+    tool_calls_total,
+    tool_cost_total,
+    tool_duration_seconds,
+    tool_failures_total,
 )
+from app.tools.tool_permissions import ToolPermissionEngine
+from app.tools.tool_registry import ToolRegistry
+from app.tools.tool_result import ToolExecutionStatus, ToolResult
+from app.tools.tool_validator import ToolValidator
 
 # OpenTelemetry optional import fallback
 try:

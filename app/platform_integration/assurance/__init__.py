@@ -8,8 +8,8 @@ from app.platform_integration.assurance.confidence import (
     CrossPhaseConfidenceEngine,
 )
 from app.platform_integration.assurance.uncertainty import (
-    UncertaintyQuantification,
     CrossPhaseUncertaintyEngine,
+    UncertaintyQuantification,
 )
 
 __all__ = [

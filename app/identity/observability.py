@@ -1,7 +1,6 @@
 """Identity & Access Management Prometheus Metrics Collector."""
 
 import logging
-from typing import Dict, Any, Optional
 
 try:
     from prometheus_client import Counter, Gauge

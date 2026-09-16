@@ -1,14 +1,15 @@
 """Tenant-Scoped Repositories for Operations Intelligence (Phase 5.41)."""
 
-from typing import Dict, Any, Optional, List
-from app.operations_intelligence.exceptions import CrossTenantOperationsAccessException
-from app.operations_intelligence.services import OperationalService
-from app.operations_intelligence.incidents import OperationalIncident
-from app.operations_intelligence.major_incidents import MajorIncident
+from typing import Dict, List
+
 from app.operations_intelligence.alerts import OperationalAlert
-from app.operations_intelligence.problems import OperationalProblem
-from app.operations_intelligence.known_errors import KnownError
+from app.operations_intelligence.exceptions import CrossTenantOperationsAccessException
+from app.operations_intelligence.incidents import OperationalIncident
 from app.operations_intelligence.investigations import OperationalInvestigation
+from app.operations_intelligence.known_errors import KnownError
+from app.operations_intelligence.major_incidents import MajorIncident
+from app.operations_intelligence.problems import OperationalProblem
+from app.operations_intelligence.services import OperationalService
 
 
 class BaseTenantRepository:

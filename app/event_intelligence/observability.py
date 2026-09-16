@@ -1,7 +1,7 @@
 """Prometheus Event Observability Subsystem (Phase 5.34)."""
 
 import logging
-from typing import Dict, Any, Optional
+
 from prometheus_client import Counter, Histogram
 
 from app.platform_contracts.observability import SafeMetricLabelSanitizer

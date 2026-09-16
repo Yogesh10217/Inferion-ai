@@ -1,8 +1,9 @@
 """Defensive Analytical Attack Graph Model."""
 
 import logging
-from typing import Dict, List, Set, Optional
-from pydantic import BaseModel, Field
+from typing import Dict, List, Set
+
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

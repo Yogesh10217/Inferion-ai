@@ -2,7 +2,7 @@
 Memory Platform Analytics & Storage Metrics Aggregator
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class MemoryAnalyticsService:

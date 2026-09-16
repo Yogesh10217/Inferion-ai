@@ -1,15 +1,17 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
 from ..vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
+
 class MilvusStore(VectorStore):
     """Milvus implementation of the VectorStore interface."""
-    
+
     def __init__(self, host: str, port: int, user: str = "", password: str = ""):
         """Initialize the Milvus store.
-        
+
         Args:
             host: Milvus server host.
             port: Milvus server port.
@@ -29,10 +31,10 @@ class MilvusStore(VectorStore):
         # Mock implementation
 
     async def search(
-        self, 
-        query_vector: List[float], 
-        collection_name: str, 
-        top_k: int = 10, 
+        self,
+        query_vector: List[float],
+        collection_name: str,
+        top_k: int = 10,
         filter_expr: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """Search Milvus for similar vectors."""

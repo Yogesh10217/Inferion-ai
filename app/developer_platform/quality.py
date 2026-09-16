@@ -1,9 +1,9 @@
 """Software Quality Gates & Policy Enforcement Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional
+import uuid
+from datetime import datetime, timezone
+
 from pydantic import BaseModel, Field
 
 from app.developer_platform.exceptions import QualityGateViolationException

@@ -1,32 +1,31 @@
 """FastAPI REST API Router for Reliability Intelligence (Phase 5.55)."""
 
 import logging
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Header, status
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, status
 
 from app.reliability_intelligence.manager import ReliabilityIntelligenceManager
 from app.reliability_intelligence.schemas import (
-    ServiceHealthRequest,
-    ServiceHealthResponse,
-    ReliabilityAssessmentRequest,
-    ReliabilityAssessmentResponse,
-    SLORequest,
-    SLOResponse,
+    ChaosProposalRequest,
+    ChaosProposalResponse,
+    DegradationPlanRequest,
+    DegradationPlanResponse,
     ErrorBudgetResponse,
+    GovernanceRequest,
+    GovernanceResponse,
     PredictionRequest,
     PredictionResponse,
     PropagationRequest,
     PropagationResponse,
-    ResilienceAssessmentRequest,
-    ResilienceAssessmentResponse,
-    DegradationPlanRequest,
-    DegradationPlanResponse,
     RecoveryPlanRequest,
     RecoveryPlanResponse,
-    ChaosProposalRequest,
-    ChaosProposalResponse,
-    GovernanceRequest,
-    GovernanceResponse,
+    ReliabilityAssessmentRequest,
+    ReliabilityAssessmentResponse,
+    ServiceHealthRequest,
+    ServiceHealthResponse,
+    SLORequest,
+    SLOResponse,
 )
 
 logger = logging.getLogger(__name__)
@@ -34,6 +33,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/v1/reliability", tags=["Reliability Intelligence"])
 
 _manager_instance: Optional[ReliabilityIntelligenceManager] = None
+
 
 def get_reliability_manager() -> ReliabilityIntelligenceManager:
     global _manager_instance

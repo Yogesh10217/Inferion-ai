@@ -1,12 +1,12 @@
 """MCP Package Ecosystem integrating Model Context Protocol servers."""
 
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.tools.mcp.registry import MCPRegistry
 from app.tools.mcp.server import MCPServer
-
 
 logger = logging.getLogger(__name__)
 
@@ -48,4 +48,3 @@ class MCPPackageManager:
         self.mcp_registry.register_server(package.package_id, server)
         logger.info(f"[MCP PACKAGE MANAGER] Registered MCP server package '{package.manifest.package_name}' (ID: {package.package_id})")
         return server
-

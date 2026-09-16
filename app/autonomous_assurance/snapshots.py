@@ -3,13 +3,14 @@ Autonomous Workflow Snapshot Subsystem.
 Captures point-in-time workflow state snapshots for auditability and historic playback.
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.snapshots import SnapshotFactory
 from app.autonomous_assurance.exceptions import CrossTenantAutonomousAssuranceException
+from app.platform_contracts.snapshots import SnapshotFactory
 
 
 class AutonomousWorkflowSnapshot(BaseModel):

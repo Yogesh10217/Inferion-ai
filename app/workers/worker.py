@@ -2,14 +2,15 @@
 Digital Worker Instance Architecture
 """
 
-import uuid
-import time
 import logging
-from typing import Dict, Any, List, Optional
+import time
+import uuid
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.workers.worker_templates import WorkerTemplateType
 from app.autonomy.execution_engine import AutonomousExecutionEngine
+from app.workers.worker_templates import WorkerTemplateType
 
 logger = logging.getLogger(__name__)
 

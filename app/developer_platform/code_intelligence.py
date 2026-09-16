@@ -1,9 +1,9 @@
 """Code Intelligence, Service Discovery & Context Indexing Subsystem."""
 
-from datetime import datetime, timezone
-import uuid
 import logging
-from typing import Dict, Any, Optional, List
+import uuid
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 from app.knowledge_platform.manager import KnowledgePlatformManager

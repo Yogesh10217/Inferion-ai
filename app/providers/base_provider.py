@@ -8,9 +8,6 @@ from app.schemas.inference_response import InferenceResponse
 from app.schemas.request import InferenceRequest
 
 
-
-
-
 @dataclass(slots=True)
 class ProviderModel:
     """Represents a model exposed by a provider."""

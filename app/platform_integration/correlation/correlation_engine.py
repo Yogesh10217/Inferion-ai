@@ -1,15 +1,13 @@
 """Cross-Phase Signal Correlation Engine (Phase 5.58)."""
 
 import logging
-from typing import Dict, Any, List, Optional
 import uuid
-from datetime import datetime, timezone
+from typing import List
 
 from app.platform_integration.models import (
-    CrossPhaseSignal,
-    CrossPhaseCorrelation,
-    IntegrationPlatform,
     CausalRelationshipStatus,
+    CrossPhaseCorrelation,
+    CrossPhaseSignal,
 )
 
 logger = logging.getLogger(__name__)

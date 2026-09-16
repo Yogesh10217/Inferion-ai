@@ -1,12 +1,16 @@
 """Operational incident lifecycle state machine and manager."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, OperationalIncidentNotFoundException
+from app.operations_assurance.exceptions import (
+    CrossTenantOperationsAssuranceException,
+    OperationalIncidentNotFoundException,
+)
 
 
 class OperationalIncidentState(str, Enum):

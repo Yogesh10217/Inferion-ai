@@ -4,19 +4,18 @@ Cross-Domain Snapshot Generator for Phase 5.51 Enterprise AI Unified Intelligenc
 Captures consolidated cross-domain state snapshots using platform contract abstractions.
 """
 
-from typing import Dict, Any
 import uuid
+from typing import Any, Dict
 
-from app.unified_intelligence.exceptions import (
-    InvalidUnifiedIntelligenceInputException
-)
 from app.platform_contracts.snapshots import PlatformSnapshot, SnapshotFactory
+from app.unified_intelligence.exceptions import InvalidUnifiedIntelligenceInputException
 
 
 class UnifiedSnapshotGenerator:
     """
     Generates enterprise multi-domain state snapshots with cryptographic integrity verification.
     """
+
     def __init__(self):
         pass
 

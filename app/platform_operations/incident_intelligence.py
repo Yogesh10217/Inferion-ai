@@ -1,14 +1,15 @@
 """Incident Intelligence & Enrichment Engine."""
 
-from datetime import datetime, timezone
 import logging
-from typing import Dict, Any, Optional, List
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations.incidents import IncidentManager, Incident, IncidentSeverity, IncidentStatus, TimelineEvent
-from app.platform_operations.signals import OperationalSignal
-from app.platform_operations.impact import ImpactAssessment
+from app.operations.incidents import Incident, IncidentManager, IncidentSeverity, TimelineEvent
 from app.platform_operations.anomalies import Anomaly
+from app.platform_operations.impact import ImpactAssessment
+from app.platform_operations.signals import OperationalSignal
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +73,6 @@ class IncidentIntelligenceEngine:
                 actor="IncidentIntelligenceEngine",
             )
         )
-
 
         context = IncidentContext(
             incident_id=inc.incident_id,

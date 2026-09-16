@@ -1,9 +1,10 @@
 """Human & Automated Compliance Attestations Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone, timedelta
 import uuid
+from datetime import datetime, timedelta, timezone
+from enum import Enum
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 from app.compliance_platform.exceptions import AttestationExpiredException, CrossTenantComplianceAccessException

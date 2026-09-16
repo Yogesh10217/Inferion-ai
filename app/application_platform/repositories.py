@@ -7,10 +7,8 @@ Provides explicit interfaces for persistence:
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone
-
-from app.application_platform.exceptions import ApplicationNotFoundException
+from typing import Any, Dict, List, Optional
 
 
 class ApplicationRepository(ABC):

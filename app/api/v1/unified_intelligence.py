@@ -3,18 +3,17 @@ FastAPI REST API endpoints for Phase 5.51 Enterprise AI Unified Intelligence Pla
 """
 
 from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 
-from app.unified_intelligence.exceptions import (
-    CrossTenantUnifiedIntelligenceException,
-    InvalidUnifiedIntelligenceInputException,
-    HighRiskUnifiedActionRequiresApprovalException,
-    ImmutableUnifiedIntelligenceRecordException
-)
 from app.unified_intelligence.domains import IntelligenceDomain
-from app.unified_intelligence.normalization_contracts import UnifiedDomainInput
+from app.unified_intelligence.exceptions import (
+    HighRiskUnifiedActionRequiresApprovalException,
+    InvalidUnifiedIntelligenceInputException,
+)
 from app.unified_intelligence.manager import UnifiedIntelligenceManager
+from app.unified_intelligence.normalization_contracts import UnifiedDomainInput
 
 router = APIRouter(prefix="/v1/intelligence", tags=["Unified Intelligence"])
 

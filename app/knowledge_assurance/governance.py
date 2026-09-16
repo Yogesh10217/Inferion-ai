@@ -1,17 +1,15 @@
 """Knowledge governance engine composing policy, risk, approval, and task primitives."""
 
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
-from app.knowledge_assurance.exceptions import CrossTenantKnowledgeAssuranceException
-
-
 from app.approvals.approval_engine import ApprovalEngine
-from app.governance_platform.risk import RiskManager
 from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator
+from app.governance_platform.risk import RiskManager
 from app.orchestration.human_tasks import HumanTaskManager
 
 

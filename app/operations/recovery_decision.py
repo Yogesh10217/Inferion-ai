@@ -10,10 +10,10 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer
-from app.operations.alerting import Alert, AlertSeverity
+from app.operations.alerting import Alert
 from app.operations.error_budget import ErrorBudgetResult, ErrorBudgetStatus
 from app.operations.incident_management import Incident, IncidentSeverity
-from app.operations.slo import SLOResult, SLOStatus
+from app.operations.slo import SLOResult
 
 
 class RecoveryRecommendation(str, Enum):

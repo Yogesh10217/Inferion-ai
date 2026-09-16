@@ -5,13 +5,13 @@ Evaluates SLI results against defined SLO targets and warning thresholds.
 
 from __future__ import annotations
 
+import logging
+import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
-
-import logging
 from typing import Any, Dict, List, Optional
-import uuid
+
 from pydantic import BaseModel, Field
 
 from app.deployment.secrets import SecretsSanitizer

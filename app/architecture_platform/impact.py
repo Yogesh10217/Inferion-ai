@@ -1,9 +1,10 @@
 """Blast Radius & Change Impact Analysis Subsystem."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import List
+
 from pydantic import BaseModel, Field
 
 from app.architecture_platform.dependencies import DependencyManager
@@ -60,7 +61,6 @@ class ImpactAnalysis(BaseModel):
 ArchitectureImpact = ImpactAnalysis
 
 
-
 class ImpactAnalyzer:
     """Analyzes transitive blast radius and multidimensional change impact."""
 
@@ -75,7 +75,6 @@ class ImpactAnalyzer:
         direct_nodes = [target_node_id]
         transitive_nodes = list(set(downstream) | set(upstream))
         total_affected = len(direct_nodes) + len(transitive_nodes)
-
 
         if total_affected >= 10:
             severity = ImpactSeverity.CRITICAL

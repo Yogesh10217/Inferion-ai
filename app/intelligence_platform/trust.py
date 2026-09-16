@@ -1,15 +1,16 @@
 """Intelligence Trust Scoring Engine & Trust x Risk Matrix Evaluator."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Dict
+
 from pydantic import BaseModel, Field
 
-from app.intelligence_platform.context import IntelligenceContext
-from app.intelligence_platform.governance import IntelligencePolicyDecision, DecisionRiskAssessment
 from app.governance_platform.risk import RiskLevel
+from app.intelligence_platform.context import IntelligenceContext
+from app.intelligence_platform.governance import IntelligencePolicyDecision
 
 logger = logging.getLogger(__name__)
 

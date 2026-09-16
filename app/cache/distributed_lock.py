@@ -1,10 +1,9 @@
 """Distributed Lock Manager with Owner & Lease Expiration Safety."""
 
-import time
 import logging
-import asyncio
+import time
 import uuid
-from typing import Dict, Any, Optional
+from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 

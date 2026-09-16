@@ -6,12 +6,8 @@ Validates SHA-256 integrity, previous-hash linkage, and tamper protection across
 import hashlib
 import json
 from typing import Dict, List, Tuple
-from app.platform_hardening.exceptions import (
-    CrossTenantPlatformHardeningException,
-    EvidenceIntegrityException,
-)
+
 from app.platform_hardening.models import (
-    CertificationEvidence,
     PlatformAuditFinding,
     PlatformAuditSeverity,
 )

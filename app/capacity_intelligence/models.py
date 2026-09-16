@@ -1,10 +1,10 @@
 """Pure Python domain models for Capacity Intelligence (Phase 5.56)."""
 
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, Any, List, Optional
-import uuid
+from typing import Any, Dict, List, Optional
 
 
 class CapacityLifecycleState(str, Enum):
@@ -339,5 +339,3 @@ class CapacitySnapshot:
     snapshot_id: str = field(default_factory=lambda: f"csnap-{uuid.uuid4().hex[:12]}")
     snapshot_fingerprint: str = ""
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-
-

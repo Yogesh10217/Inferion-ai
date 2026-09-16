@@ -1,14 +1,15 @@
 """Root Cause Analysis (RCA) Engine with Multi-Signal Temporal & Topology Correlation."""
 
+import logging
+import uuid
 from datetime import datetime, timezone
 from enum import Enum
-import uuid
-import logging
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.observability.failure_analysis import FailureAnalyzer as BaseFailureAnalyzer
-from app.operations.topology import TopologyManager, TopologyImpactAnalysis
+from app.operations.topology import TopologyManager
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +86,7 @@ class RootCauseAnalysisEngine:
                         role=CauseRole.CONTRIBUTING_FACTOR,
                         confidence_score=0.75,
                         evidence=[f"Recent change '{chg.get('change_type', 'CONFIG_CHANGE')}' executed at {chg.get('timestamp')}"],
-                        description=f"Deployment/Configuration change correlated with metric regression",
+                        description="Deployment/Configuration change correlated with metric regression",
                     )
                 )
 

@@ -2,7 +2,8 @@
 Memory Provider & Store Registry
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict
+
 from app.memory.memory_store import MemoryStore
 from app.memory.memory_vector_store import MemoryVectorStore
 

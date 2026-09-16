@@ -3,9 +3,10 @@ Zero-Shot Direct Planner Strategy
 """
 
 import logging
-from typing import Dict, Any, List
-from app.agents.planner.base import BasePlanner
+from typing import Any, Dict, List
+
 from app.agents.agent_context import AgentContext
+from app.agents.planner.base import BasePlanner
 from app.agents.tools.schemas import ToolDefinition
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class ZeroShotPlanner(BasePlanner):
     ) -> List[Dict[str, Any]]:
         tool_names = list(available_tools.keys())
         selected_tool = tool_names[0] if tool_names else None
-        
+
         return [
             {
                 "id": "step_1",

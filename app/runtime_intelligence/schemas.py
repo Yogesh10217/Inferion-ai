@@ -1,7 +1,8 @@
 """Pydantic request/response schemas for Runtime Intelligence (Phase 5.57)."""
 
-from typing import Dict, Any, List, Optional
 from datetime import datetime
+from typing import Any, Dict, List
+
 from pydantic import BaseModel, Field
 
 

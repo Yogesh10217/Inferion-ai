@@ -1,8 +1,9 @@
 """Unified Platform Snapshot Metadata Contract (Phase 5.30)."""
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.fingerprinting import FingerprintGenerator

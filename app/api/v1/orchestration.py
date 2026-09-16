@@ -1,14 +1,14 @@
 """FastAPI REST API Router for Phase 5.18 Enterprise Orchestration Platform."""
 
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
+from app.orchestration.case_management import CasePriority, CaseType
+from app.orchestration.human_tasks import TaskPriority
 from app.orchestration.manager import OrchestrationManager
 from app.orchestration.workflow import WorkflowStep
-from app.orchestration.case_management import CaseType, CasePriority
-from app.orchestration.human_tasks import TaskPriority
-from app.orchestration.decisions import DecisionRule
 
 router = APIRouter(prefix="/v1/orchestration", tags=["Orchestration Platform"])
 

@@ -2,12 +2,16 @@
 
 import hashlib
 import json
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
 import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.operations_assurance.exceptions import CrossTenantOperationsAssuranceException, ImmutableOperationalRecordException
+from app.operations_assurance.exceptions import (
+    CrossTenantOperationsAssuranceException,
+    ImmutableOperationalRecordException,
+)
 from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 

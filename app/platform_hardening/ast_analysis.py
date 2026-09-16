@@ -4,7 +4,7 @@ Inspects AST nodes for stub patterns, pass statements, constant returns, and man
 """
 
 import ast
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 
 class ASTNodeFinding:

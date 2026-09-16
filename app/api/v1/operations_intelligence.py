@@ -1,16 +1,14 @@
 """REST API Endpoints for Operations Intelligence Platform (Phase 5.41)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Query, status
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List
 
-from app.operations_intelligence.manager import OperationsIntelligenceManager
+from fastapi import APIRouter, HTTPException, Query, status
+from pydantic import BaseModel
+
 from app.operations_intelligence.exceptions import (
     CrossTenantOperationsAccessException,
-    OperationalServiceNotFoundException,
-    IncidentNotFoundException,
-    HighRiskOperationRequiresApprovalException,
 )
+from app.operations_intelligence.manager import OperationsIntelligenceManager
 
 router = APIRouter(prefix="/v1/operations", tags=["Operations Intelligence"])
 _mgr = OperationsIntelligenceManager()

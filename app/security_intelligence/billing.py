@@ -1,6 +1,6 @@
 """Security Financial Cost Attribution Subsystem (Phase 5.32)."""
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from app.finops.cost_ledger import UnifiedCostLedger
 

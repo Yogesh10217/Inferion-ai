@@ -2,7 +2,8 @@
 
 import asyncio
 import logging
-from typing import Dict, Any, Callable, Optional
+from typing import Any, Callable, Dict, Optional
+
 from pydantic import BaseModel
 
 from app.core.exceptions import AppException

@@ -2,9 +2,9 @@
 Multi-Agent Team Billing and Cost Attribution Tracker
 """
 
-import threading
 import logging
-from typing import Dict, Any, List, Optional
+import threading
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

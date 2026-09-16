@@ -1,8 +1,11 @@
-from typing import Dict, Any
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
+from typing import Any, Dict
+
 import redis.asyncio as redis
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.config import get_settings
+
 
 class HealthAdminService:
     def __init__(self, db: AsyncSession):
@@ -28,7 +31,7 @@ class HealthAdminService:
     async def _check_database(self) -> Dict[str, Any]:
         try:
             await self.db.execute(text("SELECT 1"))
-            return {"status": "healthy", "latency_ms": 1} # Dummy latency for now
+            return {"status": "healthy", "latency_ms": 1}  # Dummy latency for now
         except Exception as e:
             return {"status": "unhealthy", "error": str(e)}
 

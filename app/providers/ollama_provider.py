@@ -2,15 +2,15 @@ from __future__ import annotations
 
 import asyncio
 import json
+from datetime import datetime, timezone
 from typing import Any, AsyncIterator
+
 import httpx
 
-from datetime import datetime, timezone
-
+from app.core.exceptions import ProviderUnavailableException
 from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import ChatMessage, InferenceRequest
-from app.core.exceptions import ProviderUnavailableException
 
 
 class OllamaProvider(BaseProvider):
@@ -132,10 +132,10 @@ class OllamaProvider(BaseProvider):
                 **kwargs
             )
         model_name = request.model
-        
+
         # Check if we should use mock/simulation fallback or real client
         is_mock = self.base_url == "mock" or (request.metadata and request.metadata.get("mock") is True)
-        
+
         if is_mock:
             prompt_text = self._extract_prompt(request)
             text = f"[ollama:{model_name}] {prompt_text}"
@@ -166,7 +166,7 @@ class OllamaProvider(BaseProvider):
             "messages": messages,
             "stream": True,
         }
-        
+
         options = {}
         if request.temperature is not None:
             options["temperature"] = request.temperature
@@ -180,7 +180,7 @@ class OllamaProvider(BaseProvider):
             options["frequency_penalty"] = request.frequency_penalty
         if request.presence_penalty is not None:
             options["presence_penalty"] = request.presence_penalty
-            
+
         if options:
             payload["options"] = options
 
@@ -205,7 +205,7 @@ class OllamaProvider(BaseProvider):
                             text = message.get("content", "")
                             done = chunk_data.get("done", False)
                             done_reason = chunk_data.get("done_reason")
-                            
+
                             usage = Usage()
                             if done:
                                 prompt_tokens = chunk_data.get("prompt_eval_count", 0)
@@ -287,4 +287,3 @@ class OllamaProvider(BaseProvider):
         except Exception:
             pass
         return defaults
-

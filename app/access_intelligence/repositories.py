@@ -1,6 +1,7 @@
 """Tenant-Scoped Repositories for Access Intelligence (Phase 5.39)."""
 
-from typing import Dict, Any, Optional, List, TypeVar, Generic
+from typing import Dict, Generic, List, TypeVar
+
 from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceException
 
 T = TypeVar("T")

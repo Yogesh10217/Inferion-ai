@@ -1,7 +1,7 @@
 """Reliability capacity impact engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 

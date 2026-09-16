@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 import logging
 import re
-import time
 from typing import Any, Dict, Optional
+
 from app.observability.context import get_current_context
 
 # Sensitive key patterns for automatic secret redaction
@@ -66,7 +66,6 @@ class StructuredLogger:
         ctx = get_current_context()
         from datetime import datetime, timezone
         now = datetime.now(timezone.utc).isoformat()
-
 
         payload: Dict[str, Any] = {
             "timestamp": now,

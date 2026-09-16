@@ -1,17 +1,18 @@
 """Agent Runtime Governance Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
-    AgentRuntimeLimitExceededException,
     AgentBudgetExceededException,
+    AgentRuntimeLimitExceededException,
     CrossTenantAgentAccessException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class RuntimeStatus(str, Enum):
@@ -99,7 +100,7 @@ class AgentRuntimeManager:
         if not sess:
             # Fallback
             return AgentRuntimeSession(session_id=session_id, tenant_id=tenant_id, agent_id="unknown", execution_id="unknown")
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, sess.tenant_id)
         except Exception:

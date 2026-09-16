@@ -6,7 +6,6 @@ Evaluates end-to-end operational health, SRE readiness, and produces canonical o
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
@@ -14,7 +13,7 @@ from app.deployment.secrets import SecretsSanitizer
 from app.operations.alerting import Alert, AlertSeverity
 from app.operations.deployment_health import DeploymentHealthResult
 from app.operations.error_budget import ErrorBudgetResult, ErrorBudgetStatus
-from app.operations.incident_management import Incident, IncidentSeverity
+from app.operations.incident_management import Incident
 from app.operations.observability_engine import ObservationResult
 from app.operations.operational_evidence import OperationalEvidence
 from app.operations.slo import SLOResult, SLOStatus

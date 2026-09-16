@@ -56,7 +56,7 @@ class WebhookService:
         """Rotate endpoint secret. Sets current secret to secondary_secret for dual-secret verification."""
         endpoint = await self.get_endpoint(endpoint_id)
         next_secret = new_secret or secrets.token_hex(24)
-        
+
         return await self.storage.update_endpoint(
             endpoint_id,
             secret=next_secret,

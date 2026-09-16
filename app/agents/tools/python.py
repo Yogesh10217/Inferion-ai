@@ -2,10 +2,11 @@
 Python Code Interpreter Tool
 """
 
-import sys
 import io
 import logging
-from typing import Dict, Any
+import sys
+from typing import Any, Dict
+
 from app.agents.agent_context import AgentContext
 
 logger = logging.getLogger(__name__)
@@ -19,10 +20,10 @@ async def execute_python_code(code: str, context: AgentContext) -> Dict[str, Any
     old_stderr = sys.stderr
     redirected_output = sys.stdout = io.StringIO()
     redirected_error = sys.stderr = io.StringIO()
-    
+
     local_scope: Dict[str, Any] = {}
     error_msg = None
-    
+
     try:
         exec(code, {"__builtins__": __builtins__}, local_scope)
     except Exception as e:
@@ -33,7 +34,7 @@ async def execute_python_code(code: str, context: AgentContext) -> Dict[str, Any
 
     stdout_val = redirected_output.getvalue()
     stderr_val = redirected_error.getvalue()
-    
+
     return {
         "stdout": stdout_val,
         "stderr": stderr_val,

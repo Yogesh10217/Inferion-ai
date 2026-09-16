@@ -4,6 +4,7 @@ Calculates empirical, weighted platform readiness scores backed by actual audit 
 """
 
 from typing import Dict, List
+
 from app.platform_hardening.models import (
     PlatformAuditFinding,
     PlatformAuditSeverity,

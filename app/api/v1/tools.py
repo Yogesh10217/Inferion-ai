@@ -2,20 +2,34 @@
 FastAPI Router for Enterprise Tool Calling & MCP Platform (/v1/tools)
 """
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Depends, status, Request
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
+from app.tools.builtin.agent_tool import AgentTool
+from app.tools.builtin.http_tool import HTTPTool
+from app.tools.builtin.knowledge_tool import KnowledgeTool
+from app.tools.builtin.memory_tool import MemoryTool
+from app.tools.builtin.python_tool import PythonTool
+from app.tools.builtin.shell_tool import ShellTool
+from app.tools.builtin.sql_tool import SQLTool
+from app.tools.builtin.workflow_tool import WorkflowTool
+from app.tools.exceptions import (
+    ToolNotFoundException,
+    ToolPermissionDenied,
+    ToolValidationError,
+)
+from app.tools.integrations.confluence_tool import ConfluenceTool
+from app.tools.integrations.email_tool import EmailTool
+from app.tools.integrations.github_tool import GitHubTool
+from app.tools.integrations.jira_tool import JiraTool
+from app.tools.integrations.notion_tool import NotionTool
+from app.tools.integrations.slack_tool import SlackTool
+from app.tools.tool import ToolCategory, ToolMetadata
 from app.tools.tool_context import ToolContext
 from app.tools.tool_factory import ToolFactory
 from app.tools.tool_manager import ToolManager
-from app.tools.exceptions import (
-    ToolNotFoundException,
-    ToolValidationError,
-    ToolPermissionDenied,
-    ToolApprovalRequiredException,
-)
 
 router = APIRouter(prefix="/v1/tools", tags=["tools"])
 
@@ -23,20 +37,6 @@ router = APIRouter(prefix="/v1/tools", tags=["tools"])
 _global_tool_manager = ToolManager()
 
 # Pre-register builtins
-from app.tools.builtin.python_tool import PythonTool
-from app.tools.builtin.http_tool import HTTPTool
-from app.tools.builtin.sql_tool import SQLTool
-from app.tools.builtin.shell_tool import ShellTool
-from app.tools.builtin.knowledge_tool import KnowledgeTool
-from app.tools.builtin.memory_tool import MemoryTool
-from app.tools.builtin.workflow_tool import WorkflowTool
-from app.tools.builtin.agent_tool import AgentTool
-from app.tools.integrations.github_tool import GitHubTool
-from app.tools.integrations.slack_tool import SlackTool
-from app.tools.integrations.email_tool import EmailTool
-from app.tools.integrations.jira_tool import JiraTool
-from app.tools.integrations.notion_tool import NotionTool
-from app.tools.integrations.confluence_tool import ConfluenceTool
 
 
 def _init_builtins():
@@ -46,6 +46,7 @@ def _init_builtins():
         GitHubTool(), SlackTool(), EmailTool(), JiraTool(), NotionTool(), ConfluenceTool()
     ]:
         _global_tool_manager.register_tool(t, tenant_id="global")
+
 
 _init_builtins()
 
@@ -84,6 +85,7 @@ async def register_tool(
         requires_approval=data.requires_approval,
         tenant_id=data.tenant_id,
     )
+
     def dummy_handler(**kwargs):
         return {"status": "success", "input": kwargs}
 

@@ -1,17 +1,18 @@
 """Agent Task Management Subsystem (Phase 5.36)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List, Set
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set
+
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.tenant import TenantAccessGuard
 from app.agent_orchestration.exceptions import (
     AgentTaskNotFoundException,
     CrossTenantAgentAccessException,
     InvalidAgentExecutionTransitionException,
 )
+from app.platform_contracts.tenant import TenantAccessGuard
 
 
 class AgentTaskType(str, Enum):
@@ -33,7 +34,7 @@ class AgentTaskStatus(str, Enum):
     EXECUTING = "EXECUTING"
     VERIFYING = "VERIFYING"
     COMPLETED = "COMPLETED"
-    
+
     # Terminal / Exception States
     BLOCKED = "BLOCKED"
     FAILED = "FAILED"
@@ -99,7 +100,7 @@ class AgentTaskManager:
         AgentTaskStatus.READY: {AgentTaskStatus.EXECUTING, AgentTaskStatus.CANCELLED},
         AgentTaskStatus.EXECUTING: {AgentTaskStatus.VERIFYING, AgentTaskStatus.BLOCKED, AgentTaskStatus.FAILED, AgentTaskStatus.ESCALATED, AgentTaskStatus.CANCELLED},
         AgentTaskStatus.VERIFYING: {AgentTaskStatus.COMPLETED, AgentTaskStatus.FAILED, AgentTaskStatus.ESCALATED},
-        
+
         # Terminal states can transition to ESCALATED or RECOVERY
         AgentTaskStatus.BLOCKED: {AgentTaskStatus.ESCALATED, AgentTaskStatus.CANCELLED, AgentTaskStatus.VALIDATING},
         AgentTaskStatus.FAILED: {AgentTaskStatus.ESCALATED, AgentTaskStatus.CANCELLED, AgentTaskStatus.VALIDATING},
@@ -146,12 +147,12 @@ class AgentTaskManager:
         task = self._tasks.get(task_id)
         if not task:
             raise AgentTaskNotFoundException(task_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, task.tenant_id)
         except Exception:
             raise CrossTenantAgentAccessException(tenant_id, task.tenant_id)
-            
+
         return task
 
     def list_tasks(

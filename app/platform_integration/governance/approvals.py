@@ -1,10 +1,10 @@
 """Human Approval Ledger and Verification for Cross-Phase Actions (Phase 5.58)."""
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, Optional
 import uuid
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,9 @@
 from typing import Optional
-from app.routing.routing_strategy import RoutingStrategy
+
 from app.registry.model_metadata import ModelMetadata
 from app.routing.request_router import RoutingRequest
+from app.routing.routing_strategy import RoutingStrategy
+
 from .decision_engine import DecisionEngine
 from .routing_context import RoutingContext
 

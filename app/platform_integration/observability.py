@@ -1,6 +1,6 @@
 """Prometheus Metrics Instrumentation for Platform Integration (Phase 5.58)."""
 
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class PlatformIntegrationObservability:

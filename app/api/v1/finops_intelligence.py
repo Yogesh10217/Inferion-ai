@@ -1,15 +1,11 @@
 """REST API Endpoints for FinOps Intelligence Platform (Phase 5.42)."""
 
-from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, Query, status
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List
+
+from fastapi import APIRouter, Query, status
+from pydantic import BaseModel
 
 from app.finops_intelligence.manager import FinOpsIntelligenceManager
-from app.finops_intelligence.exceptions import (
-    CrossTenantFinOpsIntelligenceException,
-    BudgetNotFoundException,
-    HighRiskOptimizationRequiresApprovalException,
-)
 
 router = APIRouter(prefix="/v1/finops", tags=["FinOps Intelligence"])
 _mgr = FinOpsIntelligenceManager()

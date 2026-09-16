@@ -1,12 +1,12 @@
 """Lifecycle Risk Composition Subsystem (Phase 5.33)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
-from app.governance_platform.risk import RiskManager, RiskCategory, RiskFactor, RiskSeverity, RiskAssessment
+from app.governance_platform.risk import RiskAssessment, RiskCategory, RiskFactor, RiskManager, RiskSeverity
 
 
 class LifecycleRiskDimension(BaseModel):

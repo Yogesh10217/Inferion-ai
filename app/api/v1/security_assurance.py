@@ -1,24 +1,21 @@
 """FastAPI REST API endpoints for Phase 5.50 Security Assurance platform."""
 
 from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
+from app.security_assurance.assets import SecurityAssetType, SecurityCriticality
 from app.security_assurance.exceptions import (
     CrossTenantSecurityAssuranceException,
-    SecurityAssetNotFoundException,
-    SecurityThreatNotFoundException,
-    SecurityVulnerabilityNotFoundException,
-    SecurityIncidentNotFoundException,
     HighRiskSecurityActionRequiresApprovalException,
-    ImmutableSecurityRecordException,
     SecretsExposureException,
+    SecurityAssetNotFoundException,
 )
-from app.security_assurance.assets import SecurityAssetType, SecurityCriticality
-from app.security_assurance.threats import ThreatType, ThreatSeverity
-from app.security_assurance.vulnerabilities import VulnerabilitySeverity
 from app.security_assurance.incidents import SecurityIncidentSeverity
 from app.security_assurance.manager import SecurityAssuranceManager
+from app.security_assurance.threats import ThreatSeverity, ThreatType
+from app.security_assurance.vulnerabilities import VulnerabilitySeverity
 
 router = APIRouter(prefix="/v1/security", tags=["Security Assurance"])
 

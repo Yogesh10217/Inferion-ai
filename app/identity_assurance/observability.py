@@ -1,7 +1,7 @@
 """Prometheus Observability for Identity Assurance Platform."""
 
-from typing import Dict, Any, List, Optional
 import logging
+from typing import Dict
 
 logger = logging.getLogger(__name__)
 

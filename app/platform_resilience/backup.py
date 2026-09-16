@@ -1,9 +1,10 @@
 """Backup Governance Subsystem (Phase 5.37)."""
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 from app.platform_contracts.tenant import TenantAccessGuard
@@ -78,10 +79,10 @@ class BackupManager:
         bak = self._backups.get(backup_id)
         if not bak:
             raise ResilienceResourceNotFoundException(backup_id)
-        
+
         try:
             self.tenant_guard.enforce_isolation(tenant_id, bak.tenant_id)
         except Exception:
             raise CrossTenantResilienceAccessException(tenant_id, bak.tenant_id)
-            
+
         return bak

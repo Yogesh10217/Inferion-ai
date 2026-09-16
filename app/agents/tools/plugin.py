@@ -3,9 +3,10 @@ Plugin Tool Adapter
 """
 
 import logging
-from typing import Dict, Any
-from app.agents.tools.schemas import ToolDefinition
+from typing import Any, Dict
+
 from app.agents.agent_context import AgentContext
+from app.agents.tools.schemas import ToolDefinition
 
 logger = logging.getLogger(__name__)
 
