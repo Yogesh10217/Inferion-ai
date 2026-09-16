@@ -55,7 +55,7 @@ class HealthService:
             settings = get_settings()
             if settings.cache_backend.lower() != "redis" and settings.rate_limit_backend.lower() != "redis":
                 return {"status": "disabled", "message": "Redis not configured for cache or rate limiting"}
-            
+
             import redis.asyncio as aioredis
             client = aioredis.from_url(settings.redis_url, socket_timeout=2.0)
             await client.ping()
@@ -84,7 +84,7 @@ class HealthService:
         provider_health_list = await self.check_providers_health()
 
         all_providers_healthy = all(p.status == "healthy" for p in provider_health_list)
-        
+
         if db_health["status"] != "healthy":
             overall_status = "unhealthy"
         elif not all_providers_healthy or redis_health["status"] == "degraded":

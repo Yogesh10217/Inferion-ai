@@ -48,6 +48,7 @@ jobs:
         run: |
           cd sdk/typescript
           npm ci
+          npm run build
           npm test
       - name: Publish to npm
         if: startsWith(github.ref, 'refs/tags/v')
