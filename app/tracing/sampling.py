@@ -53,7 +53,7 @@ class TraceIdRatioBasedSampler(Sampler):
         if self.ratio <= 0.0:
             return SamplingResult(False)
         # Deterministic hashing of trace_id
-        val = int(hashlib.md5(trace_id.encode()).hexdigest(), 16) % 10000
+        val = int(hashlib.md5(trace_id.encode(), usedforsecurity=False).hexdigest(), 16) % 10000
         sampled = (val / 10000.0) < self.ratio
         return SamplingResult(sampled)
 

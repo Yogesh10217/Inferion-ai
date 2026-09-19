@@ -73,7 +73,7 @@ class DeploymentPlatformManager:
         if self.startup_manager.state == StartupState.INITIALIZED:
             try:
                 self.startup()
-            except Exception:
+            except Exception:  # nosec B110
                 pass
         probe = DeploymentReadinessProbe(
             config_manager=self.config_manager,

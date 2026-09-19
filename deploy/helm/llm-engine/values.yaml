@@ -108,3 +108,18 @@ healthCheck:
       port: 8000
     initialDelaySeconds: 5
     periodSeconds: 5
+
+observability:
+  serviceMonitor:
+    enabled: true
+  podMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
+
+networkPolicy:
+  enabled: true
+
+priorityClass:
+  create: true
+  value: 100000

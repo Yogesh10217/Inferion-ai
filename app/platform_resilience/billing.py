@@ -51,7 +51,7 @@ class ResilienceBillingTracker:
                 category="RESILIENCE_OPERATIONS",
                 description=f"Resilience {operation_type} for {resource_id}",
             )
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         return event

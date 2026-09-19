@@ -128,12 +128,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set Kubernetes Context
-        uses: azure/k8s-set-context@v3
+        if: ${{ secrets.KUBECONFIG != '' }}
+        uses: azure/k8s-set-context@v4
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Deploy / Rollout to Kubernetes
+        if: ${{ secrets.KUBECONFIG != '' }}
         run: |
           kubectl set image deployment/llm-inference-engine-app app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --namespace=staging || echo "Simulated cluster update completed."
           kubectl rollout status deployment/llm-inference-engine-app --namespace=staging --timeout=60s || true

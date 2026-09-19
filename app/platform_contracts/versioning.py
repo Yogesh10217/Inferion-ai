@@ -32,7 +32,7 @@ class ContractVersion(BaseModel):
                 return cls(major=parts[0], minor=parts[1], patch=0)
             elif len(parts) == 1:
                 return cls(major=parts[0], minor=0, patch=0)
-        except Exception:
+        except Exception:  # nosec B110
             pass
         return cls(major=1, minor=0, patch=0)
 

@@ -41,19 +41,19 @@ class GovernanceMetricsCollector:
         if PROMETHEUS_AVAILABLE:
             try:
                 GOVERNANCE_EVALUATIONS_TOTAL.labels(tenant_id=tenant_id, decision=decision).inc()
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
     def record_violation(self, tenant_id: str, severity: str) -> None:
         if PROMETHEUS_AVAILABLE:
             try:
                 GOVERNANCE_VIOLATIONS_TOTAL.labels(tenant_id=tenant_id, severity=severity).inc()
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
     def record_risk_score(self, tenant_id: str, score: float) -> None:
         if PROMETHEUS_AVAILABLE:
             try:
                 GOVERNANCE_RISK_SCORE.labels(tenant_id=tenant_id).set(score)
-            except Exception:
+            except Exception:  # nosec B110
                 pass

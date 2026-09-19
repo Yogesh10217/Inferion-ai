@@ -52,7 +52,7 @@ class SlackTool(BaseTool):
         token = self.bot_token or context.custom_headers.get("x-slack-token") or "mock_token"
 
         try:
-            if self.bot_token and self.bot_token != "mock_token":
+            if self.bot_token and self.bot_token != "mock_token":  # nosec B105
                 async with httpx.AsyncClient(timeout=15.0) as client:
                     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
                     if action == "post_message":

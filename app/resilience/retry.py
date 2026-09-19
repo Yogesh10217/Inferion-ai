@@ -77,7 +77,7 @@ class RetryManager:
         delay = policy.initial_interval_seconds * (policy.backoff_multiplier ** (attempt - 1))
         delay = min(delay, policy.max_interval_seconds)
         if policy.use_jitter:
-            delay = random.uniform(0.5 * delay, 1.5 * delay)
+            delay = random.uniform(0.5 * delay, 1.5 * delay)  # nosec B311
         return delay
 
     async def execute_async(self, func: Callable, policy: Optional[RetryPolicy] = None, *args, **kwargs) -> Any:

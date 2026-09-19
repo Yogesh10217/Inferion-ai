@@ -67,7 +67,7 @@ class AgentBillingTracker:
                 cost_amount=cost_dollars,
                 category=dimension.value,
             )
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         self._events.append(event)

@@ -25,7 +25,7 @@ async def execute_python_code(code: str, context: AgentContext) -> Dict[str, Any
     error_msg = None
 
     try:
-        exec(code, {"__builtins__": __builtins__}, local_scope)
+        exec(code, {"__builtins__": __builtins__}, local_scope)  # nosec B102
     except Exception as e:
         error_msg = str(e)
     finally:

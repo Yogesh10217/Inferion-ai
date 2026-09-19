@@ -75,7 +75,7 @@ class AzureOpenAIProvider(BaseProvider):
                 req_url, data=payload, headers={"api-key": self.api_key, "Content-Type": "application/json"}
             )
 
-            with urllib.request.urlopen(req, timeout=5.0) as resp:
+            with urllib.request.urlopen(req, timeout=5.0) as resp:  # nosec B310
                 data = json.loads(resp.read().decode("utf-8"))
                 text_content = data["choices"][0]["message"]["content"]
                 raw_usage = data.get("usage", {})

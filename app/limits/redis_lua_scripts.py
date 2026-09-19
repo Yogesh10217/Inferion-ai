@@ -38,7 +38,7 @@ end
 # ARGV[2] - refill_time_ms (time to refill full capacity)
 # ARGV[3] - requested tokens (default 1)
 # ARGV[4] - current timestamp in ms
-TOKEN_BUCKET_LUA = """
+TOKEN_BUCKET_LUA = """  # nosec B105
 local tokens_key = KEYS[1]
 local timestamp_key = KEYS[2]
 local capacity = tonumber(ARGV[1])
@@ -79,7 +79,7 @@ if allowed then
 else
     return {0, math.floor(new_tokens)}
 end
-"""
+"""  # nosec B105
 
 # Fixed Window
 # KEYS[1] - counter key

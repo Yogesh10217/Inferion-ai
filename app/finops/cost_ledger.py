@@ -18,7 +18,7 @@ def _now() -> datetime:
 
 class CostCategory(str, Enum):
     MODEL_INFERENCE = "MODEL_INFERENCE"
-    TOKEN_USAGE = "TOKEN_USAGE"
+    TOKEN_USAGE = "TOKEN_USAGE"  # nosec B105
     EMBEDDING = "EMBEDDING"
     RERANKING = "RERANKING"
     AGENT_EXECUTION = "AGENT_EXECUTION"

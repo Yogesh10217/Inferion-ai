@@ -179,7 +179,7 @@ class FeatureManager:
 
             user_id = context.get("user_id", "anonymous")
             hash_input = f"{tenant_id}:{user_id}:{exp.experiment_id}"
-            hash_val = int(hashlib.md5(hash_input.encode("utf-8")).hexdigest(), 16) % 100
+            hash_val = int(hashlib.md5(hash_input.encode("utf-8"), usedforsecurity=False).hexdigest(), 16) % 100
 
             # Assign variant based on hash value
             assigned_variant = exp.variants[0] if exp.variants else None

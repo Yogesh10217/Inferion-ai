@@ -54,7 +54,7 @@ class RepositoryIsolationValidationEngine:
                 except CrossTenantPlatformHardeningException:
                     # PASS: Exception correctly raised
                     pass
-                except Exception:
+                except Exception:  # nosec B110
                     # Generic error or None is acceptable, but exception is preferred
                     pass
 

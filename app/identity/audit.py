@@ -66,7 +66,7 @@ class IdentityAuditManager:
                     target=resource_id,
                     details={"outcome": outcome, "tenant_id": tenant_id},
                 )
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
         logger.info(

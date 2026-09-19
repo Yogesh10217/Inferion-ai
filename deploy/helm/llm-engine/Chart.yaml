@@ -4,6 +4,7 @@ description: Production Helm chart for LLM Inference Engine AI Gateway
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
+icon: https://raw.githubusercontent.com/Yogesh10217/Inferion-ai/main/logo.png
 keywords:
   - llm
   - ai-gateway

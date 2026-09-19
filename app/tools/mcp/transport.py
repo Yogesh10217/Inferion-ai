@@ -77,7 +77,7 @@ class StdioTransport(MCPTransport):
             try:
                 self.process.terminate()
                 await self.process.wait()
-            except Exception:
+            except Exception:  # nosec B110
                 pass
         self._connected = False
 

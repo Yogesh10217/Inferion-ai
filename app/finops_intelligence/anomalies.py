@@ -12,7 +12,7 @@ from app.finops_intelligence.exceptions import CrossTenantFinOpsIntelligenceExce
 
 class CostAnomalyType(str, Enum):
     SPENDING_SPIKE = "SPENDING_SPIKE"
-    TOKEN_BURST = "TOKEN_BURST"
+    TOKEN_BURST = "TOKEN_BURST"  # nosec B105
     UNUSUAL_MODEL_USAGE = "UNUSUAL_MODEL_USAGE"
     RUNAWAY_AGENT_COST = "RUNAWAY_AGENT_COST"
     DUPLICATE_BILLING = "DUPLICATE_BILLING"

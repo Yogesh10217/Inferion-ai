@@ -28,7 +28,7 @@ class DataClassification(str, Enum):
     PII = "PII"
     FINANCIAL = "FINANCIAL"
     HEALTH = "HEALTH"
-    SECRET = "SECRET"
+    SECRET = "SECRET"  # nosec B105
 
 
 class DataPolicy(BaseModel):

@@ -33,12 +33,12 @@ class OrchestrationMetricsCollector:
         if PROMETHEUS_AVAILABLE:
             try:
                 ORCH_EXECUTIONS_TOTAL.labels(tenant_id=tenant_id, status=status).inc()
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
     def record_human_task(self, tenant_id: str, status: str) -> None:
         if PROMETHEUS_AVAILABLE:
             try:
                 ORCH_HUMAN_TASKS_TOTAL.labels(tenant_id=tenant_id, status=status).inc()
-            except Exception:
+            except Exception:  # nosec B110
                 pass

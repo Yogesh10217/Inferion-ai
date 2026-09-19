@@ -88,7 +88,7 @@ class ResilienceServiceManager:
         try:
             rel_tier = ServiceTier[tier.value]
             self.reliability_service_manager.register_service(tenant_id, service_name, rel_tier)
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         return svc

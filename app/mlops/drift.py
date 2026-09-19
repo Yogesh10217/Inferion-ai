@@ -76,7 +76,7 @@ class DriftDetector:
             try:
                 dep = self.deployment_manager.get_deployment(deployment_id)
                 dep.status = DeploymentStatus.DEGRADED
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
             logger.warning(

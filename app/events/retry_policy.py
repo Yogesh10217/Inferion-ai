@@ -27,7 +27,7 @@ class RetryPolicy:
         # Apply jitter
         if self.jitter_ratio > 0:
             jitter_range = interval * self.jitter_ratio
-            interval = interval + random.uniform(-jitter_range, jitter_range)
+            interval = interval + random.uniform(-jitter_range, jitter_range)  # nosec B311
 
         return max(0.0, interval)
 

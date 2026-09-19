@@ -50,7 +50,7 @@ class IdentityMetricsCollector:
                 IDENTITY_AUTH_TOTAL.labels(tenant_id=tenant_id, status=status).inc()
                 if not success:
                     IDENTITY_AUTH_FAILED_TOTAL.labels(tenant_id=tenant_id).inc()
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
     def record_authorization(self, tenant_id: str, decision: str) -> None:
@@ -59,5 +59,5 @@ class IdentityMetricsCollector:
                 IDENTITY_AUTHZ_TOTAL.labels(tenant_id=tenant_id, decision=decision).inc()
                 if decision != "ALLOW":
                     IDENTITY_AUTHZ_DENIED_TOTAL.labels(tenant_id=tenant_id).inc()
-            except Exception:
+            except Exception:  # nosec B110
                 pass

@@ -114,7 +114,7 @@ class RootCauseAnalyzer:
                             suggested_remediations=["RETRY", "FALLBACK", "CIRCUIT_BREAKER"],
                         )
                         hypotheses.append(hyp)
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
         # 3. Fallback General Anomaly Hypothesis

@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class MilvusStore(VectorStore):
     """Milvus implementation of the VectorStore interface."""
 
-    def __init__(self, host: str, port: int, user: str = "", password: str = ""):
+    def __init__(self, host: str, port: int, user: str = "", password: str = ""):  # nosec B107
         """Initialize the Milvus store.
 
         Args:

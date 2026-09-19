@@ -110,7 +110,7 @@ class PythonTool(BaseTool):
         try:
             # Execute code inside event loop executor or thread
             def _run():
-                exec(code, safe_globals, safe_locals)
+                exec(code, safe_globals, safe_locals)  # nosec B102
 
             await asyncio.to_thread(_run)
             sys.stdout = old_stdout

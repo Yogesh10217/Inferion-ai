@@ -114,7 +114,7 @@ class DependencyManager:
                 source_node_id=source_service,
                 target_node_id=target_service,
             )
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         return edge

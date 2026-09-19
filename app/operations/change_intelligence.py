@@ -60,7 +60,7 @@ class ChangeCorrelationEngine:
                     actor_id=actor,
                     tenant_id=tenant_id,
                 )
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
         logger.info(

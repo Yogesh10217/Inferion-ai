@@ -67,7 +67,7 @@ class GitHubTool(BaseTool):
 
         # Real HTTP call if token available or mock response
         try:
-            if self.api_token and self.api_token != "mock_token":
+            if self.api_token and self.api_token != "mock_token":  # nosec B105
                 async with httpx.AsyncClient(timeout=15.0) as client:
                     if action == "get_repo":
                         resp = await client.get(f"https://api.github.com/repos/{owner}/{repo}", headers=headers)

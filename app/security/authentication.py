@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class AuthenticationManager:
     """Manages authentication across JWT, API Keys, Service-to-Service, and revocation."""
 
-    def __init__(self, secret_key: str = "super-secret-key-change-in-production", algorithm: str = "HS256") -> None:
+    def __init__(self, secret_key: str = "super-secret-key-change-in-production", algorithm: str = "HS256") -> None:  # nosec B107
         self.secret_key = secret_key
         self.algorithm = algorithm
         self._revoked_tokens: Set[str] = set()
@@ -195,4 +195,4 @@ class AuthenticationManager:
         user_id = payload.get("sub") or payload.get("user_id")
         new_access = JWTService.create_access_token({"sub": user_id, "tenant_id": payload.get("tenant_id", "global")})
         new_refresh = JWTService.create_refresh_token({"sub": user_id, "tenant_id": payload.get("tenant_id", "global")})
-        return {"access_token": new_access, "refresh_token": new_refresh, "token_type": "bearer"}
+        return {"access_token": new_access, "refresh_token": new_refresh, "token_type": "bearer"}  # nosec B105

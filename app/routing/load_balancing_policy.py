@@ -74,7 +74,7 @@ class RandomPolicy(LoadBalancingPolicy):
         if not instances:
             raise ValueError("No healthy instances available.")
 
-        return random.choice(instances)
+        return random.choice(instances)  # nosec B311
 
 
 def get_policy(strategy: LoadBalancingStrategy) -> LoadBalancingPolicy:

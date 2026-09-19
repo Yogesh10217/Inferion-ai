@@ -17,13 +17,13 @@ def get_deployment_manager(request: Request) -> DeploymentPlatformManager:
         manager = DeploymentPlatformManager(container=container)
         try:
             manager.startup()
-        except Exception:
+        except Exception:  # nosec B110
             pass
         request.app.state.deployment_manager = manager
     elif request.app.state.deployment_manager.startup_manager.state == StartupState.INITIALIZED:
         try:
             request.app.state.deployment_manager.startup()
-        except Exception:
+        except Exception:  # nosec B110
             pass
     return request.app.state.deployment_manager
 

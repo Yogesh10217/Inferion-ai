@@ -71,7 +71,7 @@ class ChangeIntelligenceEngine:
                 previous_state=None,
                 new_state={"version_or_value": version_or_value},
             )
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         logger.info(

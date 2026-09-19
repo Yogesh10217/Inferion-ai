@@ -12,7 +12,7 @@ class ChunkingStrategy(Enum):
     RECURSIVE = "recursive"
     SENTENCE = "sentence"
     SEMANTIC = "semantic"
-    TOKEN_AWARE = "token_aware"
+    TOKEN_AWARE = "token_aware"  # nosec B105
 
 
 class ChunkingStage(PipelineStage):

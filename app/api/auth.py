@@ -77,7 +77,7 @@ async def login(
     access_token = JWTService.create_access_token(data={"sub": user.id})
     session = await AuthService.create_user_session(db, user, organization_id=org_id)
 
-    return Token(access_token=access_token, refresh_token=session.raw_token, token_type="bearer")
+    return Token(access_token=access_token, refresh_token=session.raw_token, token_type="bearer")  # nosec B106
 
 
 @router.post("/refresh", response_model=Token)
@@ -94,7 +94,7 @@ async def refresh_token(request: RefreshTokenRequest, db: AsyncSession = Depends
         return Token(
             access_token=access_token,
             refresh_token=request.refresh_token,  # keep same refresh token for now
-            token_type="bearer",
+            token_type="bearer",  # nosec B106
         )
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
@@ -235,6 +235,6 @@ async def sso_callback(
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
-        "token_type": "bearer",
+        "token_type": "bearer",  # nosec B105
         "user": session_data.model_dump(),
     }

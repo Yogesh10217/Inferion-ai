@@ -17,7 +17,7 @@ def _now() -> datetime:
 
 class AuthenticationType(str, Enum):
     API_KEY = "API_KEY"
-    BEARER_TOKEN = "BEARER_TOKEN"
+    BEARER_TOKEN = "BEARER_TOKEN"  # nosec B105
     OAUTH2 = "OAUTH2"
     SERVICE_ACCOUNT = "SERVICE_ACCOUNT"
     BASIC_AUTH = "BASIC_AUTH"

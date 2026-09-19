@@ -307,6 +307,6 @@ class OllamaProvider(BaseProvider):
                                 )
                             )
                     return models if models else defaults
-        except Exception:
+        except Exception:  # nosec B110
             pass
         return defaults

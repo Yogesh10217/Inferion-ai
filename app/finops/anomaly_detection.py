@@ -20,7 +20,7 @@ def _now() -> datetime:
 
 class AnomalyType(str, Enum):
     COST_SPIKE = "COST_SPIKE"
-    TOKEN_SPIKE = "TOKEN_SPIKE"
+    TOKEN_SPIKE = "TOKEN_SPIKE"  # nosec B105
     REQUEST_SPIKE = "REQUEST_SPIKE"
     RUNAWAY_AGENT = "RUNAWAY_AGENT"
     RUNAWAY_WORKFLOW = "RUNAWAY_WORKFLOW"

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import subprocess
+import subprocess  # nosec B404
 from typing import Any, Dict
 
 from app.deployment.models import ArtifactIntegrityStatus, DependencyStatus
@@ -13,7 +13,7 @@ class DockerPreflightValidator:
     @classmethod
     def check_docker_daemon(cls) -> Dict[str, Any]:
         try:
-            res = subprocess.run(["docker", "info"], capture_output=True, text=True, timeout=5)
+            res = subprocess.run(["docker", "info"], capture_output=True, text=True, timeout=5)  # nosec B603 B607 B404
             if res.returncode == 0:
                 return {
                     "available": True,

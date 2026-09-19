@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class RateLimitAlgorithm(str, Enum):
-    TOKEN_BUCKET = "token_bucket"
+    TOKEN_BUCKET = "token_bucket"  # nosec B105
     SLIDING_WINDOW = "sliding_window"
 
 

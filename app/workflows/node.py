@@ -297,7 +297,7 @@ class ConditionNode(BaseNode):
         # Safe evaluation of boolean expression
         try:
             # ponytail: simple eval in isolated dict for condition expressions
-            eval_result = bool(eval(expr, {"__builtins__": {}}, variables))
+            eval_result = bool(eval(expr, {"__builtins__": {}}, variables))  # nosec B307
         except Exception:
             eval_result = False
 

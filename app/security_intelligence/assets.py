@@ -28,7 +28,7 @@ class SecurityAssetType(str, Enum):
     TOOL = "TOOL"
     CLOUD_RESOURCE = "CLOUD_RESOURCE"
     IDENTITY = "IDENTITY"
-    SECRET_REFERENCE = "SECRET_REFERENCE"
+    SECRET_REFERENCE = "SECRET_REFERENCE"  # nosec B105
 
 
 class SecurityAssetCriticality(str, Enum):

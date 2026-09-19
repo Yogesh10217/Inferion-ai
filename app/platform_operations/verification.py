@@ -63,7 +63,7 @@ class RemediationVerifier:
             if svc.health == ServiceHealth.UNHEALTHY:
                 svc_health_passed = False
                 svc_details = f"Service '{svc.name}' is still UNHEALTHY post-remediation."
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         check1 = VerificationCheck(

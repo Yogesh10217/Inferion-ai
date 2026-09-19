@@ -80,7 +80,7 @@ class VaultSecretProvider(SecretProvider):
             req = urllib.request.Request(
                 req_url, headers={"X-Vault-Token": self.vault_token, "Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req, timeout=3.0) as resp:
+            with urllib.request.urlopen(req, timeout=3.0) as resp:  # nosec B310
                 data = json.loads(resp.read().decode("utf-8"))
                 secret_val = data.get("data", {}).get("data", {}).get("value")
                 if secret_val:
@@ -109,7 +109,7 @@ class VaultSecretProvider(SecretProvider):
                 headers={"X-Vault-Token": self.vault_token, "Content-Type": "application/json"},
                 method="POST",
             )
-            with urllib.request.urlopen(req, timeout=3.0):
+            with urllib.request.urlopen(req, timeout=3.0):  # nosec B310
                 pass
         except Exception as e:
             logger.warning(f"Vault write failed for key '{key}': {e}")
@@ -215,7 +215,7 @@ class SecretManager:
         for pattern in SECRET_PATTERNS:
             try:
                 result = pattern.sub("[REDACTED_SECRET]", result)
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
         return result

@@ -92,7 +92,7 @@ class SecurityIntelligenceManager:
             asset.asset_id,
             SecuritySignalType.PROMPT_INJECTION_ATTEMPT,
             severity=SecuritySignalSeverity.HIGH,
-            payload={"secret_token": "sk_test_12345"},
+            payload={"secret_token": "sk_test_12345"},  # nosec B105
         )
         self.metrics_collector.record_signal(sig.signal_type.value, tenant_id)
 

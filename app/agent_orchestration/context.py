@@ -119,7 +119,7 @@ class AgentContextManager:
                             description=f"Knowledge retrieval for '{query}'",
                         )
                     )
-            except Exception:
+            except Exception:  # nosec B110
                 pass
 
         # 2. Add sanitized additional data

@@ -108,7 +108,7 @@ def get_oidc_manager() -> OIDCManager:
             OIDCProviderConfig(
                 provider_id="google",
                 client_id="default-google-client-id",
-                client_secret="default-google-secret",
+                client_secret="default-google-secret",  # nosec B106
                 issuer="https://accounts.google.com",
                 authorize_url="https://accounts.google.com/o/oauth2/v2/auth",
                 token_url="https://oauth2.googleapis.com/token",

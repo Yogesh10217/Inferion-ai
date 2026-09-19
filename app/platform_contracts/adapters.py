@@ -33,7 +33,7 @@ class TrustAssessmentAdapter:
         if band_str:
             try:
                 band = TrustBand(band_str)
-            except Exception:
+            except Exception:  # nosec B110
                 pass
         if not band:
             if score >= 90.0:

@@ -20,11 +20,11 @@ def _now() -> datetime:
 
 class CredentialType(str, Enum):
     API_KEY = "API_KEY"
-    SERVICE_TOKEN = "SERVICE_TOKEN"
-    CLIENT_SECRET = "CLIENT_SECRET"
+    SERVICE_TOKEN = "SERVICE_TOKEN"  # nosec B105
+    CLIENT_SECRET = "CLIENT_SECRET"  # nosec B105
     CERTIFICATE = "CERTIFICATE"
     SIGNING_KEY = "SIGNING_KEY"
-    WEBHOOK_SECRET = "WEBHOOK_SECRET"
+    WEBHOOK_SECRET = "WEBHOOK_SECRET"  # nosec B105
 
 
 class CredentialStatus(str, Enum):

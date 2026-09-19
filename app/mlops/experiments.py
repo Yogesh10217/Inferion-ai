@@ -126,7 +126,7 @@ class ExperimentManager:
 
         import hashlib
 
-        h = int(hashlib.md5(f"{experiment_id}:{request_id}".encode()).hexdigest(), 16)
+        h = int(hashlib.md5(f"{experiment_id}:{request_id}".encode(), usedforsecurity=False).hexdigest(), 16)
         bucket = (h % 10000) / 100.0  # Float 0.00 - 99.99
 
         cumulative = 0.0

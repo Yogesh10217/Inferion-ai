@@ -15,7 +15,7 @@ from app.compliance_platform.requirements import RequirementManager
 
 
 class AssessmentResult(str, Enum):
-    PASS = "PASS"
+    PASS = "PASS"  # nosec B105
     WARN = "WARN"
     FAIL = "FAIL"
     NOT_APPLICABLE = "NOT_APPLICABLE"

@@ -36,7 +36,7 @@ class Edge:
 
         try:
             # Safe evaluation for simple expressions
-            return bool(eval(self.condition, {"__builtins__": {}}, combined_env))
+            return bool(eval(self.condition, {"__builtins__": {}}, combined_env))  # nosec B307
         except Exception:
             return False
 

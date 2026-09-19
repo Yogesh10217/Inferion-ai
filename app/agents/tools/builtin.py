@@ -26,7 +26,7 @@ async def execute_calculator(expression: str, context: AgentContext) -> Dict[str
     for name in code.co_names:
         if name not in allowed_names:
             raise ValueError(f"Use of name '{name}' is not allowed in calculator")
-    result = eval(code, {"__builtins__": {}}, allowed_names)
+    result = eval(code, {"__builtins__": {}}, allowed_names)  # nosec B307
     return {"expression": expression, "result": result}
 
 

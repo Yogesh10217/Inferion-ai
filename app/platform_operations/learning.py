@@ -64,7 +64,7 @@ class OperationalLearningManager:
                 source_type="INCIDENT_POSTMORTEM",
             )
             knowledge_item_id = k_item.item_id
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
         insight = PostIncidentInsight(

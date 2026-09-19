@@ -39,7 +39,7 @@ class KnowledgeReferenceClassification(str, Enum):
     INTERNAL = "INTERNAL"
     CONFIDENTIAL = "CONFIDENTIAL"
     RESTRICTED = "RESTRICTED"
-    TOP_SECRET = "TOP_SECRET"
+    TOP_SECRET = "TOP_SECRET"  # nosec B105
 
 
 class KnowledgeReferenceMetadata(BaseModel):

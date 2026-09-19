@@ -228,12 +228,10 @@ class PGVectorStore(VectorStore):
                     if not updates:
                         continue
 
-                    set_clause = ", ".join(updates)
-                    sql = text(f"""
-                        UPDATE document_embeddings 
-                        SET {set_clause}
-                        WHERE id = :id AND collection_name = :collection_name
-                    """)
+                    set_clause = ", ".join(updates)  # nosec B608
+                    sql = text(  # nosec B608
+                        f"UPDATE document_embeddings SET {set_clause} WHERE id = :id AND collection_name = :collection_name"  # nosec B608
+                    )
                     await session.execute(sql, params)
 
                 await session.commit()

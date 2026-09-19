@@ -60,7 +60,7 @@ class PluginRegistry:
                             installed_at=rec_data.get("installed_at"),
                             health_status=rec_data.get("health_status", "healthy"),
                         )
-                except Exception:
+                except Exception:  # nosec B110
                     pass
 
     def _save_persistence(self):
@@ -70,7 +70,7 @@ class PluginRegistry:
                     data = {pid: rec.to_dict() for pid, rec in self._records.items()}
                     with open(self._persistence_file, "w", encoding="utf-8") as f:
                         json.dump(data, f, indent=2)
-                except Exception:
+                except Exception:  # nosec B110
                     pass
 
     def register(self, plugin: Plugin, enabled: Optional[bool] = None):
