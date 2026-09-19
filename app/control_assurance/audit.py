@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field
 
-from app.platform_contracts.audit import AdministrativeAuditLedger
+from app.control_plane.admin_audit import AdministrativeAuditLedger
 from app.platform_contracts.tenant import TenantAccessGuard
 
 

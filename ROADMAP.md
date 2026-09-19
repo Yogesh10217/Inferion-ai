@@ -27,11 +27,11 @@ As a senior software architecture assessment, this document tracks completed fea
 ## 🎯 Detailed Pending Roadmap to 1.0 Release
 
 ### Phase 1: Interactive Enterprise Control Plane Web Dashboard (High Priority)
-- [ ] **API Key & Tenant Management UI**: Add visual interface for creating/revoking API keys, managing workspace quotas, and configuring RBAC roles.
-- [ ] **Live Routing Tracer Visualizer**: Build interactive UI to view real-time 9-stage routing decisions, provider latencies, and circuit breaker states.
-- [ ] **Agent & Workflow Playground**: Visual canvas to design DAG workflows, monitor step-by-step agent executions, and approve pending human-in-the-loop actions.
-- [ ] **RAG & Knowledge Base Manager**: Drag-and-drop document upload interface, chunk inspection, and embedding search sandbox.
-- [ ] **FinOps Cost & Usage Dashboard**: Interactive charts (Recharts/Chart.js) for model spending, usage trends, and invoice generation.
+- [x] **API Key & Tenant Management UI**: Add visual interface for creating/revoking API keys, managing workspace quotas, and configuring RBAC roles.
+- [x] **Live Routing Tracer Visualizer**: Build interactive UI to view real-time 9-stage routing decisions, provider latencies, and circuit breaker states.
+- [x] **Agent & Workflow Playground**: Visual canvas to design DAG workflows, monitor step-by-step agent executions, and approve pending human-in-the-loop actions.
+- [x] **RAG & Knowledge Base Manager**: Drag-and-drop document upload interface, chunk inspection, and embedding search sandbox.
+- [x] **FinOps Cost & Usage Dashboard**: Interactive charts (Recharts/Chart.js) for model spending, usage trends, and invoice generation.
 
 ### Phase 2: Live Cloud Provider Integrations & Credentials Hardening
 - [ ] **Full Native Adapters**: Expand live production testing for Anthropic Claude 3.5, AWS Bedrock, Azure OpenAI, Cohere, and HuggingFace Inference Endpoints.
@@ -43,7 +43,7 @@ As a senior software architecture assessment, this document tracks completed fea
 - [ ] **Redis Cluster Support**: Validate multi-region Redis cluster failover for distributed rate limiting.
 
 ### Phase 4: Production Hardening & Benchmarking
-- [ ] **Concurrency & Stress Benchmarks**: Execute Locust / K6 load tests for 10,000+ RPS sustained throughput and record benchmark whitepaper.
+- [x] **Concurrency & Stress Benchmarks**: Execute Locust / K6 load tests for 10,000+ RPS sustained throughput and record benchmark whitepaper ([BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md)).
 - [ ] **SOC 2 & Compliance Attestation Package**: Finalize automated compliance evidence exporter scripts and audit log integrity checkers.
 
 ---

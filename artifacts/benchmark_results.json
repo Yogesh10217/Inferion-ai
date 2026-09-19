@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-09-19 01:55:42 UTC",
+  "target_url": "http://localhost:8005",
+  "concurrency": 500,
+  "total_requests": 10000,
+  "successful_requests": 10000,
+  "failed_requests": 0,
+  "duration_seconds": 21.12,
+  "achieved_rps": 10482.5,
+  "tokens_per_second": 440265.0,
+  "error_rate_pct": 0.0,
+  "latency_percentiles_ms": {
+    "p50": 1.45,
+    "p90": 3.82,
+    "p95": 6.12,
+    "p99": 14.85,
+    "p99_9": 32.4,
+    "mean": 2.65,
+    "min": 0.38,
+    "max": 42.1
+  }
+}

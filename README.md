@@ -68,8 +68,7 @@
 ### 🟡 Pending Items for v1.0 Release (What's Remaining)
 
 1. 💻 **Interactive Control Plane Web UI (Next.js Admin Dashboard)**
-   - *Current Status*: The `frontend/` directory contains a Next.js marketing landing page.
-   - *Pending*: Development of the interactive admin dashboard UI for key management, visual routing tracer, agent execution sandbox, RAG document visualizer, and FinOps cost charts.
+   - *Status*: ✅ **Completed**. Production Next.js 15 App Router admin control plane built at `/dashboard` featuring Overview, Routing Tracer, Agent Sandbox, API Key Governance, RAG Visualizer, 6-Tier Memory, FinOps Cost Analytics, Tenants & Orgs, Plugin Registry, and Settings.
 2. 🔑 **Secret Manager & Production Provider Credentials Integration**
    - *Current Status*: OpenAI and Ollama local providers integrated; mock/simulation fallbacks for extended providers.
    - *Pending*: Vault/AWS KMS integration for key rotation, and end-to-end integration validation for live Anthropic, AWS Bedrock, and Azure OpenAI production keys.
@@ -77,8 +76,7 @@
    - *Current Status*: Docker Compose (`docker-compose.yml`) and Terraform basic modules (`infra/terraform/`) exist.
    - *Pending*: Complete end-to-end validation of Helm charts (`deploy/helm`) and automated PostgreSQL/Redis high-availability cluster failover scripts.
 4. ⚡ **High-Concurrency Load & Stress Testing**
-   - *Current Status*: Unit & simulation load tests exist.
-   - *Pending*: Production Locust / K6 benchmarking suite targeting 10,000+ RPS sustained load to publish official latency benchmark reports.
+   - *Status*: ✅ **Completed**. Production Locust (`FastHttpUser`) and K6 load testing suite targeting 10,000+ RPS sustained throughput. Published official whitepaper: [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md).
 
 *Track full milestone details in [ROADMAP.md](ROADMAP.md).*
 
