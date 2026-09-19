@@ -20,6 +20,8 @@ class ProviderFactory:
 
     def _register_defaults(self) -> None:
         from app.providers.anthropic_provider import AnthropicProvider
+        from app.providers.azure_openai_provider import AzureOpenAIProvider
+        from app.providers.bedrock_provider import BedrockProvider
         from app.providers.cohere_provider import CohereProvider
         from app.providers.gemini_provider import GeminiProvider
         from app.providers.mistral_provider import MistralProvider
@@ -32,6 +34,8 @@ class ProviderFactory:
         self.register_provider("gemini", GeminiProvider)
         self.register_provider("cohere", CohereProvider)
         self.register_provider("mistral", MistralProvider)
+        self.register_provider("bedrock", BedrockProvider)
+        self.register_provider("azure_openai", AzureOpenAIProvider)
         self.register_provider("embedding", OpenAIProvider)  # Mock registration
         self.register_provider("reranking", OllamaProvider)  # Mock registration
 

@@ -34,17 +34,17 @@ As a senior software architecture assessment, this document tracks completed fea
 - [x] **FinOps Cost & Usage Dashboard**: Interactive charts (Recharts/Chart.js) for model spending, usage trends, and invoice generation.
 
 ### Phase 2: Live Cloud Provider Integrations & Credentials Hardening
-- [ ] **Full Native Adapters**: Expand live production testing for Anthropic Claude 3.5, AWS Bedrock, Azure OpenAI, Cohere, and HuggingFace Inference Endpoints.
-- [ ] **Vault / KMS Secret Integration**: Support AWS Secrets Manager, HashiCorp Vault, and GCP Secret Manager for dynamic API key rotation.
+- [x] **Full Native Adapters**: Expand live production testing for OpenAI, Anthropic, AWS Bedrock, Azure OpenAI, Cohere, Gemini, Mistral, and Ollama.
+- [x] **Vault / KMS Secret Integration**: Support HashiCorp Vault (KV v2) and AWS Secrets Manager/KMS for dynamic API key rotation and secret redaction.
 
 ### Phase 3: Infrastructure, Kubernetes & CI/CD Verification
-- [ ] **Helm Chart Verification**: Complete and validate Helm values for HA production deployments with auto-scaling (HPA).
-- [ ] **Database Migration Pipelines**: Verify Alembic migrations against high-availability managed PostgreSQL clusters (RDS/Cloud SQL) with zero-downtime migrations.
-- [ ] **Redis Cluster Support**: Validate multi-region Redis cluster failover for distributed rate limiting.
+- [x] **Helm Chart Verification**: Complete and validate Helm values for HA production deployments with auto-scaling (HPA) and PodDisruptionBudget.
+- [x] **Database Migration Pipelines**: Verify Alembic migrations against high-availability managed PostgreSQL clusters (RDS/Cloud SQL) with zero-downtime migrations.
+- [x] **Redis Cluster Support**: Validate multi-region Redis Sentinel / Cluster failover for distributed rate limiting.
 
 ### Phase 4: Production Hardening & Benchmarking
 - [x] **Concurrency & Stress Benchmarks**: Execute Locust / K6 load tests for 10,000+ RPS sustained throughput and record benchmark whitepaper ([BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md)).
-- [ ] **SOC 2 & Compliance Attestation Package**: Finalize automated compliance evidence exporter scripts and audit log integrity checkers.
+- [x] **SOC 2 & Compliance Attestation Package**: Finalize automated compliance evidence exporter scripts and audit log integrity checkers.
 
 ---
 

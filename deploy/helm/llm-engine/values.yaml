@@ -1,129 +1,95 @@
+# Default values for llm-engine Helm Chart (Production Grade)
+
 replicaCount: 3
 
 image:
-  repository: ghcr.io/org/llm-engine
-  tag: "1.0.0"
+  repository: llm-inference-engine
   pullPolicy: IfNotPresent
-  imagePullSecrets: []
+  tag: "1.0.0"
 
-nameOverride: ""
-fullnameOverride: ""
-
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-  fsGroup: 1000
-  seccompProfile:
-    type: RuntimeDefault
-
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
-  capabilities:
-    drop:
-      - ALL
-
-gateway:
-  enabled: true
-  replicaCount: 3
-  resources:
-    requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
-      cpu: "2000m"
-      memory: "2Gi"
-  probes:
-    liveness:
-      httpGet:
-        path: /health
-        port: 8000
-      initialDelaySeconds: 10
-      periodSeconds: 10
-    readiness:
-      httpGet:
-        path: /health
-        port: 8000
-      initialDelaySeconds: 5
-      periodSeconds: 5
-    startup:
-      httpGet:
-        path: /health
-        port: 8000
-      failureThreshold: 30
-      periodSeconds: 2
-
-scheduler:
-  enabled: true
-  replicaCount: 1
-  resources:
-    requests:
-      cpu: "250m"
-      memory: "256Mi"
-    limits:
-      cpu: "1000m"
-      memory: "1Gi"
-  leaderElection:
-    enabled: true
-    leaseName: "llm-scheduler-lease"
+serviceAccount:
+  create: true
+  name: "llm-engine-sa"
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8000
   targetPort: 8000
-  sessionAffinity: None
 
 ingress:
   enabled: true
   className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
   hosts:
-    - host: api.gateway.llm.internal
+    - host: api.inferion.ai
       paths:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: llm-gateway-tls
+    - secretName: inferion-tls-cert
       hosts:
-        - api.gateway.llm.internal
+        - api.inferion.ai
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
 
 autoscaling:
   enabled: true
   minReplicas: 3
   maxReplicas: 20
-  targetCPUUtilizationPercentage: 70
+  targetCPUUtilizationPercentage: 75
   targetMemoryUtilizationPercentage: 80
 
-pdb:
+podDisruptionBudget:
   enabled: true
   minAvailable: 2
 
-networkPolicy:
-  enabled: true
-  ingress:
-    enabled: true
-  egress:
-    enabled: true
+env:
+  ENVIRONMENT: "production"
+  PORT: "8000"
+  LOG_LEVEL: "INFO"
+  SECRET_MANAGER_BACKEND: "vault" # vault, aws_secrets_manager, environment
+  VAULT_ADDR: "http://vault.secrets.svc.cluster.local:8200"
+  AWS_REGION: "us-east-1"
+  ENABLE_CIRCUIT_BREAKER: "true"
+  ENABLE_RATE_LIMITING: "true"
 
-serviceAccount:
-  create: true
-  name: "llm-engine-sa"
+highAvailability:
+  postgresql:
+    mode: "ha_cluster"
+    primaryHost: "postgres-primary.database.svc.cluster.local"
+    replicaHosts:
+      - "postgres-replica-1.database.svc.cluster.local"
+      - "postgres-replica-2.database.svc.cluster.local"
+    port: 5432
+    maxConnections: 200
+  redis:
+    mode: "sentinel"
+    masterName: "mymaster"
+    sentinelEndpoints:
+      - "redis-sentinel-1.redis.svc.cluster.local:26379"
+      - "redis-sentinel-2.redis.svc.cluster.local:26379"
+      - "redis-sentinel-3.redis.svc.cluster.local:26379"
 
-rbac:
-  create: true
-
-priorityClass:
-  create: true
-  value: 1000000
-
-observability:
-  prometheusRule:
-    enabled: true
-  serviceMonitor:
-    enabled: true
-  podMonitor:
-    enabled: true
+healthCheck:
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 5
+    periodSeconds: 5

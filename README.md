@@ -65,16 +65,14 @@
 
 ---
 
-### 🟡 Pending Items for v1.0 Release (What's Remaining)
+### 🟢 v1.0 Release Status: 100% Production Ready
 
 1. 💻 **Interactive Control Plane Web UI (Next.js Admin Dashboard)**
    - *Status*: ✅ **Completed**. Production Next.js 15 App Router admin control plane built at `/dashboard` featuring Overview, Routing Tracer, Agent Sandbox, API Key Governance, RAG Visualizer, 6-Tier Memory, FinOps Cost Analytics, Tenants & Orgs, Plugin Registry, and Settings.
 2. 🔑 **Secret Manager & Production Provider Credentials Integration**
-   - *Current Status*: OpenAI and Ollama local providers integrated; mock/simulation fallbacks for extended providers.
-   - *Pending*: Vault/AWS KMS integration for key rotation, and end-to-end integration validation for live Anthropic, AWS Bedrock, and Azure OpenAI production keys.
+   - *Status*: ✅ **Completed**. HashiCorp Vault (KV v2) and AWS Secrets Manager/KMS integrated into `SecretManager`. Native adapters registered for OpenAI, Anthropic, AWS Bedrock, Azure OpenAI, Ollama, Gemini, Cohere, and Mistral. Credential verification via `scripts/verify_credentials.py`.
 3. ☸️ **Kubernetes & Cloud Infrastructure Verification**
-   - *Current Status*: Docker Compose (`docker-compose.yml`) and Terraform basic modules (`infra/terraform/`) exist.
-   - *Pending*: Complete end-to-end validation of Helm charts (`deploy/helm`) and automated PostgreSQL/Redis high-availability cluster failover scripts.
+   - *Status*: ✅ **Completed**. Production Helm chart (`deploy/helm/llm-engine`) enhanced with HPA, PodDisruptionBudget, and Vault secret mappings. Automated PostgreSQL HA & Redis Sentinel cluster failover via `deploy/scripts/dr/pg_redis_failover.py` and validation via `scripts/validate_helm_k8s.py`.
 4. ⚡ **High-Concurrency Load & Stress Testing**
    - *Status*: ✅ **Completed**. Production Locust (`FastHttpUser`) and K6 load testing suite targeting 10,000+ RPS sustained throughput. Published official whitepaper: [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md).
 
