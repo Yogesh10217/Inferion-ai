@@ -21,7 +21,10 @@ class ImmutableSecurityRecordException(SecurityIntelligenceException):
     """Raised when mutation is attempted on a finalized security evidence bundle or investigation snapshot."""
 
     def __init__(self, record_id: str):
-        super().__init__(f"Security record '{record_id}' is finalized and immutable.", code="IMMUTABLE_SECURITY_RECORD_MUTATION_DENIED")
+        super().__init__(
+            f"Security record '{record_id}' is finalized and immutable.",
+            code="IMMUTABLE_SECURITY_RECORD_MUTATION_DENIED",
+        )
 
 
 class SecurityThreatNotFoundException(SecurityIntelligenceException):
@@ -56,7 +59,10 @@ class InvalidSecurityIncidentTransitionException(SecurityIntelligenceException):
     """Raised when an invalid security incident state transition is requested."""
 
     def __init__(self, current_status: str, target_status: str):
-        super().__init__(f"Invalid security incident transition from '{current_status}' to '{target_status}'.", code="INVALID_SECURITY_INCIDENT_TRANSITION")
+        super().__init__(
+            f"Invalid security incident transition from '{current_status}' to '{target_status}'.",
+            code="INVALID_SECURITY_INCIDENT_TRANSITION",
+        )
 
 
 class SecurityPolicyViolationException(SecurityIntelligenceException):
@@ -91,4 +97,7 @@ class HighRiskSecurityActionRequiresApprovalException(SecurityIntelligenceExcept
     """Raised when high or critical risk remediation actions are executed without human approval."""
 
     def __init__(self, action_id: str):
-        super().__init__(f"High-risk remediation action '{action_id}' requires explicit human approval.", code="HIGH_RISK_SECURITY_ACTION_APPROVAL_REQUIRED")
+        super().__init__(
+            f"High-risk remediation action '{action_id}' requires explicit human approval.",
+            code="HIGH_RISK_SECURITY_ACTION_APPROVAL_REQUIRED",
+        )

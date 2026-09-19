@@ -132,5 +132,7 @@ class DecisionSimulationEngine:
         if not res:
             raise DecisionNotFoundException(f"Simulation result for decision '{decision_id}' not found.")
         if res.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantDecisionIntelligenceException(f"Unauthorized cross-tenant access to simulation result for decision '{decision_id}'")
+            raise CrossTenantDecisionIntelligenceException(
+                f"Unauthorized cross-tenant access to simulation result for decision '{decision_id}'"
+            )
         return res

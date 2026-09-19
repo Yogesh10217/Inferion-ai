@@ -82,12 +82,19 @@ class TopologyManager:
         self._topologies[tenant_id][environment] = top
         return top
 
-    def create_snapshot(self, tenant_id: str, environment: str = "production", description: str = "Snapshot") -> TopologySnapshot:
+    def create_snapshot(
+        self, tenant_id: str, environment: str = "production", description: str = "Snapshot"
+    ) -> TopologySnapshot:
         top = self.build_topology(tenant_id, environment)
 
         # Generate deterministic SHA-256 fingerprint from canonical architecture state
-        sorted_nodes = sorted([{"id": n.node_id, "type": n.node_type.value, "status": n.status.value} for n in top.nodes.values()], key=lambda x: x["id"])
-        canonical_json = json.dumps({"tenant_id": tenant_id, "environment": environment, "nodes": sorted_nodes}, sort_keys=True)
+        sorted_nodes = sorted(
+            [{"id": n.node_id, "type": n.node_type.value, "status": n.status.value} for n in top.nodes.values()],
+            key=lambda x: x["id"],
+        )
+        canonical_json = json.dumps(
+            {"tenant_id": tenant_id, "environment": environment, "nodes": sorted_nodes}, sort_keys=True
+        )
         fingerprint = hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
 
         snapshot = TopologySnapshot(
@@ -107,7 +114,9 @@ class TopologyManager:
         if not snap:
             raise ImmutableTopologySnapshotException(snapshot_id=snapshot_id, tenant_id=tenant_id)
         if snap.tenant_id != tenant_id and tenant_id != "system":
-            raise CrossTenantArchitectureAccessException(request_tenant=tenant_id, target_tenant=snap.tenant_id, resource_id=snapshot_id)
+            raise CrossTenantArchitectureAccessException(
+                request_tenant=tenant_id, target_tenant=snap.tenant_id, resource_id=snapshot_id
+            )
         return snap
 
     def list_snapshots(self, tenant_id: str, environment: Optional[str] = None) -> List[TopologySnapshot]:

@@ -84,7 +84,9 @@ class HallucinationManager:
         )
 
         self._assessments[assessment.assessment_id] = assessment
-        logger.info(f"[HALLUCINATION INTELLIGENCE] Analyzed {model_id} (Tenant: {tenant_id}) Rate: {rate:.2%} Critical: {has_crit}")
+        logger.info(
+            f"[HALLUCINATION INTELLIGENCE] Analyzed {model_id} (Tenant: {tenant_id}) Rate: {rate:.2%} Critical: {has_crit}"
+        )
         return assessment
 
     def create_finding(

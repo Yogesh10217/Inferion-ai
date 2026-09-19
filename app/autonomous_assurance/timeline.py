@@ -32,7 +32,14 @@ class WorkflowTimelineEngine:
     def __init__(self) -> None:
         self._timelines: Dict[str, AutonomousWorkflowTimeline] = {}
 
-    def add_event(self, workflow_id: str, tenant_id: str, event_type: str, description: str, metadata: Optional[Dict[str, Any]] = None) -> WorkflowTimelineEvent:
+    def add_event(
+        self,
+        workflow_id: str,
+        tenant_id: str,
+        event_type: str,
+        description: str,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> WorkflowTimelineEvent:
         if workflow_id not in self._timelines:
             self._timelines[workflow_id] = AutonomousWorkflowTimeline(workflow_id=workflow_id, tenant_id=tenant_id)
 

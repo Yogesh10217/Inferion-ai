@@ -61,14 +61,18 @@ class SimulationStrategy(ABC):
     """Abstract interface for simulation strategies."""
 
     @abstractmethod
-    def run_simulation(self, tenant_id: str, scenario: SimulationScenario, input_params: SimulationInput, context: IntelligenceContext) -> SimulationResult:
+    def run_simulation(
+        self, tenant_id: str, scenario: SimulationScenario, input_params: SimulationInput, context: IntelligenceContext
+    ) -> SimulationResult:
         pass
 
 
 class DeterministicSimulationStrategy(SimulationStrategy):
     """Deterministic simulation strategy evaluating simulated delta metrics."""
 
-    def run_simulation(self, tenant_id: str, scenario: SimulationScenario, input_params: SimulationInput, context: IntelligenceContext) -> SimulationResult:
+    def run_simulation(
+        self, tenant_id: str, scenario: SimulationScenario, input_params: SimulationInput, context: IntelligenceContext
+    ) -> SimulationResult:
         act = input_params.action_type.upper()
 
         if "ROLLBACK" in act:
@@ -122,7 +126,9 @@ class SimulationEngine:
         self.strategy = strategy or DeterministicSimulationStrategy()
         self._simulations: Dict[str, SimulationResult] = {}
 
-    def simulate(self, tenant_id: str, scenario: SimulationScenario, input_params: SimulationInput, context: IntelligenceContext) -> SimulationResult:
+    def simulate(
+        self, tenant_id: str, scenario: SimulationScenario, input_params: SimulationInput, context: IntelligenceContext
+    ) -> SimulationResult:
         if not tenant_id:
             raise SimulationException("Tenant ID is required for simulation.")
 
@@ -132,7 +138,9 @@ class SimulationEngine:
             raise SimulationException("Simulation MUST NEVER execute in production directly!")
 
         self._simulations[res.simulation_id] = res
-        logger.info(f"[SIMULATION ENGINE] Executed non-production simulation '{res.simulation_id}' for tenant '{tenant_id}'")
+        logger.info(
+            f"[SIMULATION ENGINE] Executed non-production simulation '{res.simulation_id}' for tenant '{tenant_id}'"
+        )
         return res
 
     def get_simulation(self, simulation_id: str, tenant_id: str) -> SimulationResult:

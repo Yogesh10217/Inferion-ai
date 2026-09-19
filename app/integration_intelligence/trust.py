@@ -39,7 +39,9 @@ class IntegrationTrustEngine:
         recent_failures_count: int = 0,
     ) -> TrustAssessment:
         failure_penalty = min(recent_failures_count * 15.0, 50.0)
-        base = (connector_reliability_score + verification_success_score + security_posture_score + evidence_integrity_score) / 4.0
+        base = (
+            connector_reliability_score + verification_success_score + security_posture_score + evidence_integrity_score
+        ) / 4.0
         final_score = max(0.0, round(base - failure_penalty, 2))
 
         if final_score >= 90.0:

@@ -48,6 +48,7 @@ from app.security_operations.vulnerability_management import VulnerabilityManage
 try:
     from app.operations.alert_engine import AlertEngine
     from app.operations.incident_management import IncidentManager
+
     SRE_AVAILABLE = True
 except ImportError:
     SRE_AVAILABLE = False
@@ -58,6 +59,7 @@ except ImportError:
 @dataclass
 class SecurityOperationsResult:
     """Consolidated result of a full Security Operations evaluation."""
+
     timestamp: str
     is_certified: bool
     certification_decision: str
@@ -81,29 +83,31 @@ class SecurityOperationsResult:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        return get_secrets_sanitizer().sanitize_dict({
-            "timestamp": self.timestamp,
-            "is_certified": self.is_certified,
-            "certification_decision": self.certification_decision,
-            "posture_score": self.posture_score,
-            "posture_status": self.posture_status,
-            "policy_action": self.policy_action,
-            "risk_level": self.risk_level,
-            "compliance_score": self.compliance_score,
-            "audit_integrity_passed": self.audit_integrity_passed,
-            "is_production": self.is_production,
-            "unexecuted_claims": self.unexecuted_claims,
-            "posture": self.posture_result.to_dict(),
-            "policy": self.policy_result.to_dict(),
-            "compliance": self.compliance_result.to_dict(),
-            "risk": self.risk_assessment.to_dict(),
-            "certification": self.certification_result.to_dict(),
-            "metrics": self.metrics_result.to_dict(),
-            "dashboard": self.dashboard_snapshot.to_dict(),
-            "evidence": self.evidence.to_dict(),
-            "fingerprint": self.fingerprint,
-            "metadata": self.metadata,
-        })
+        return get_secrets_sanitizer().sanitize_dict(
+            {
+                "timestamp": self.timestamp,
+                "is_certified": self.is_certified,
+                "certification_decision": self.certification_decision,
+                "posture_score": self.posture_score,
+                "posture_status": self.posture_status,
+                "policy_action": self.policy_action,
+                "risk_level": self.risk_level,
+                "compliance_score": self.compliance_score,
+                "audit_integrity_passed": self.audit_integrity_passed,
+                "is_production": self.is_production,
+                "unexecuted_claims": self.unexecuted_claims,
+                "posture": self.posture_result.to_dict(),
+                "policy": self.policy_result.to_dict(),
+                "compliance": self.compliance_result.to_dict(),
+                "risk": self.risk_assessment.to_dict(),
+                "certification": self.certification_result.to_dict(),
+                "metrics": self.metrics_result.to_dict(),
+                "dashboard": self.dashboard_snapshot.to_dict(),
+                "evidence": self.evidence.to_dict(),
+                "fingerprint": self.fingerprint,
+                "metadata": self.metadata,
+            }
+        )
 
 
 class SecurityOperationsOrchestrator:

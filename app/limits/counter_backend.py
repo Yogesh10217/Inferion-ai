@@ -13,7 +13,9 @@ class CounterBackend(ABC):
         """
 
     @abstractmethod
-    async def check_and_decrement_token_bucket(self, key: str, capacity: int, refill_time_seconds: int) -> Tuple[bool, int]:
+    async def check_and_decrement_token_bucket(
+        self, key: str, capacity: int, refill_time_seconds: int
+    ) -> Tuple[bool, int]:
         """
         Evaluate a token bucket rate limit. Refill rate is capacity / refill_time_seconds.
         Returns (is_allowed, remaining).

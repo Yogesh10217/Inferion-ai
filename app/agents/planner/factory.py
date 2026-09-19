@@ -17,7 +17,7 @@ class PlannerFactory:
         "zeroshot": ZeroShotPlanner,
         "react": ReActPlanner,
         "plan_execute": PlanExecutePlanner,
-        "tree_of_thought": TreeOfThoughtPlanner
+        "tree_of_thought": TreeOfThoughtPlanner,
     }
 
     @classmethod

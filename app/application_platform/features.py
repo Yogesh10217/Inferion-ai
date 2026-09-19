@@ -170,7 +170,12 @@ class FeatureManager:
         if flag.state == FeatureState.EXPERIMENT and flag.experiment:
             exp = flag.experiment
             if exp.state in {ExperimentState.PAUSED, ExperimentState.ROLLED_BACK}:
-                return {"feature_key": feature_key, "enabled": False, "variant": "control", "reason": f"EXPERIMENT_{exp.state.value}"}
+                return {
+                    "feature_key": feature_key,
+                    "enabled": False,
+                    "variant": "control",
+                    "reason": f"EXPERIMENT_{exp.state.value}",
+                }
 
             user_id = context.get("user_id", "anonymous")
             hash_input = f"{tenant_id}:{user_id}:{exp.experiment_id}"
@@ -213,6 +218,11 @@ class FeatureManager:
             if rule.environments and env not in rule.environments:
                 return {"feature_key": feature_key, "enabled": False, "reason": "ENV_NOT_TARGETED"}
 
-            return {"feature_key": feature_key, "enabled": True, "variant": "targeted", "reason": "TARGETING_RULE_MATCH"}
+            return {
+                "feature_key": feature_key,
+                "enabled": True,
+                "variant": "targeted",
+                "reason": "TARGETING_RULE_MATCH",
+            }
 
         return {"feature_key": feature_key, "enabled": flag.default_value, "reason": "DEFAULT"}

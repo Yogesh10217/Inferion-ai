@@ -19,14 +19,16 @@ class ProductionSmokeTestExecutionResult:
     executed_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status.value,
-            "passed": self.passed,
-            "passed_tests": self.passed_tests,
-            "failed_tests": self.failed_tests,
-            "blocking_reasons": self.blocking_reasons,
-            "executed_at": self.executed_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status.value,
+                "passed": self.passed,
+                "passed_tests": self.passed_tests,
+                "failed_tests": self.failed_tests,
+                "blocking_reasons": self.blocking_reasons,
+                "executed_at": self.executed_at,
+            }
+        )
 
 
 class ProductionSmokeTestExecutor:

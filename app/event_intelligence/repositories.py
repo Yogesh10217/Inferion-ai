@@ -12,7 +12,15 @@ class EventRepository(TenantScopedRepository[Any]):
         self._store: Dict[str, Any] = {}
 
     def save(self, entity: Any) -> Any:
-        eid = getattr(entity, "event_id", getattr(entity, "group_id", getattr(entity, "plan_id", getattr(entity, "investigation_id", getattr(entity, "resolution_id", None)))))
+        eid = getattr(
+            entity,
+            "event_id",
+            getattr(
+                entity,
+                "group_id",
+                getattr(entity, "plan_id", getattr(entity, "investigation_id", getattr(entity, "resolution_id", None))),
+            ),
+        )
         if eid:
             self._store[eid] = entity
         return entity

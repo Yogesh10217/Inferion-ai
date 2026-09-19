@@ -194,7 +194,9 @@ class RequestScheduler:
             # we always have a BatchCollector and LoadBalancer in the pipeline.
             # To avoid breaking tests, we just raise an error if this fallback is hit in Phase 2.3
             # Or we could fetch it via a static method, but let's just let it fail or remove fallback.
-            raise NotImplementedError("Direct fallback execution is deprecated in Phase 2.3. Use BatchCollector -> LoadBalancer.")
+            raise NotImplementedError(
+                "Direct fallback execution is deprecated in Phase 2.3. Use BatchCollector -> LoadBalancer."
+            )
 
         except Exception as exc:
             if entry.is_streaming:

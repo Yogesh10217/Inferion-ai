@@ -79,7 +79,9 @@ class DecisionScoringEngine:
             model_version=self.scoring_model.version,
         )
 
-    def calculate_score(self, tenant_id: str, context_id: str, risk_score: float = 20.0, trust_score: float = 90.0) -> DecisionScore:
+    def calculate_score(
+        self, tenant_id: str, context_id: str, risk_score: float = 20.0, trust_score: float = 90.0
+    ) -> DecisionScore:
         dim_scores = {
             DecisionScoreDimension.RISK: max(0.0, 100.0 - risk_score),
             DecisionScoreDimension.TRUST: trust_score,

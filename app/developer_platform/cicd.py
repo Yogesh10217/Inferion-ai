@@ -35,15 +35,17 @@ class Pipeline(BaseModel):
     project_id: str
     name: str
     tenant_id: str = "global"
-    stages: List[PipelineStage] = Field(default_factory=lambda: [
-        PipelineStage(name="VALIDATE"),
-        PipelineStage(name="TEST"),
-        PipelineStage(name="SECURITY_SCAN"),
-        PipelineStage(name="BUILD"),
-        PipelineStage(name="PACKAGE"),
-        PipelineStage(name="DEPLOY"),
-        PipelineStage(name="VERIFY"),
-    ])
+    stages: List[PipelineStage] = Field(
+        default_factory=lambda: [
+            PipelineStage(name="VALIDATE"),
+            PipelineStage(name="TEST"),
+            PipelineStage(name="SECURITY_SCAN"),
+            PipelineStage(name="BUILD"),
+            PipelineStage(name="PACKAGE"),
+            PipelineStage(name="DEPLOY"),
+            PipelineStage(name="VERIFY"),
+        ]
+    )
     created_at: datetime = Field(default_factory=_now)
 
 

@@ -89,7 +89,9 @@ class OpportunityManager:
         if not opp:
             raise KeyError(f"Opportunity '{opportunity_id}' not found.")
         if opp.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=opp.tenant_id, resource_id=opportunity_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=opp.tenant_id, resource_id=opportunity_id
+            )
         return opp
 
     def qualify_opportunity(self, opportunity_id: str, tenant_id: str, is_qualified: bool = True) -> AIOpportunity:

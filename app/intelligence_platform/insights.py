@@ -114,7 +114,9 @@ class InsightManager:
         )
 
         self._insights[ins.insight_id] = ins
-        logger.info(f"[INSIGHT MANAGER] Generated {insight_type.value} insight '{ins.insight_id}' for tenant '{tenant_id}'")
+        logger.info(
+            f"[INSIGHT MANAGER] Generated {insight_type.value} insight '{ins.insight_id}' for tenant '{tenant_id}'"
+        )
         return ins
 
     def get_insight(self, insight_id: str, tenant_id: str) -> Insight:

@@ -30,8 +30,10 @@ from app.tools.tool_validator import ToolValidator
 # OpenTelemetry optional import fallback
 try:
     from opentelemetry import trace
+
     tracer = trace.get_tracer("app.tools.executor")
 except ImportError:
+
     class DummySpan:
         def __enter__(self):
             return self
@@ -141,7 +143,9 @@ class ToolExecutor:
                             await asyncio.sleep(delay)
                             delay *= retry_policy.backoff_factor
                     except asyncio.TimeoutError:
-                        last_exception = ToolTimeoutException(f"Tool '{tool_name}' timed out after {tool.metadata.timeout}s")
+                        last_exception = ToolTimeoutException(
+                            f"Tool '{tool_name}' timed out after {tool.metadata.timeout}s"
+                        )
                         if attempt < max_attempts:
                             await asyncio.sleep(delay)
                             delay *= retry_policy.backoff_factor
@@ -164,8 +168,14 @@ class ToolExecutor:
 
                 elapsed = time.time() - start_time
                 if not result or not result.is_success():
-                    error_msg = str(last_exception) if last_exception else (result.error if result else "Execution failed")
-                    status_val = ToolExecutionStatus.TIMEOUT if isinstance(last_exception, ToolTimeoutException) else ToolExecutionStatus.FAILED
+                    error_msg = (
+                        str(last_exception) if last_exception else (result.error if result else "Execution failed")
+                    )
+                    status_val = (
+                        ToolExecutionStatus.TIMEOUT
+                        if isinstance(last_exception, ToolTimeoutException)
+                        else ToolExecutionStatus.FAILED
+                    )
                     result = ToolResult(
                         execution_id=ctx.execution_id,
                         tool_name=tool_name,

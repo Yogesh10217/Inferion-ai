@@ -34,7 +34,9 @@ class DecisionModelRegistry:
     def __init__(self) -> None:
         self._models: Dict[str, DecisionModelConfig] = {}
 
-    def register_model(self, tenant_id: str, name: str, version: str = "1.0.0", weights: Optional[Dict[str, float]] = None) -> DecisionModelConfig:
+    def register_model(
+        self, tenant_id: str, name: str, version: str = "1.0.0", weights: Optional[Dict[str, float]] = None
+    ) -> DecisionModelConfig:
         config = DecisionModelConfig(tenant_id=tenant_id, name=name, version=version, weights=weights or {})
         self._models[config.model_id] = config
         return config

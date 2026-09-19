@@ -261,7 +261,6 @@ __all__ = [
     "EventPatternDetector",
     "AutomationTrigger",
     "AutomationCondition",
-
     "AutomationAction",
     "AutomationPlan",
     "AutomationStatus",

@@ -16,7 +16,7 @@ class ChromaStore(VectorStore):
         host: Optional[str] = None,
         port: Optional[int] = None,
         max_retries: int = 3,
-        base_backoff: float = 1.0
+        base_backoff: float = 1.0,
     ):
         """Initialize the Chroma store.
 
@@ -53,7 +53,7 @@ class ChromaStore(VectorStore):
                 if attempt == self.max_retries - 1:
                     logger.error(f"Chroma operation failed after {self.max_retries} attempts: {e}")
                     raise
-                wait_time = self.base_backoff * (2 ** attempt)
+                wait_time = self.base_backoff * (2**attempt)
                 logger.warning(f"Chroma database operation failed: {e}. Retrying in {wait_time}s...")
                 await asyncio.sleep(wait_time)
 
@@ -75,12 +75,7 @@ class ChromaStore(VectorStore):
             metadatas = [item.get("metadata", {}) or None for item in embeddings]
             documents = [item.get("metadata", {}).get("text", "") for item in embeddings]
 
-            await collection.add(
-                ids=ids,
-                embeddings=embs,
-                metadatas=metadatas,
-                documents=documents
-            )
+            await collection.add(ids=ids, embeddings=embs, metadatas=metadatas, documents=documents)
 
         await self._execute_with_retry(_do_add)
 
@@ -89,7 +84,7 @@ class ChromaStore(VectorStore):
         query_vector: List[float],
         collection_name: str,
         top_k: int = 10,
-        filter_expr: Optional[Dict[str, Any]] = None
+        filter_expr: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """Search Chroma for similar vectors."""
         logger.info(f"Searching Chroma collection '{collection_name}' for top {top_k} results")
@@ -105,21 +100,19 @@ class ChromaStore(VectorStore):
                 else:
                     where_filter = {"$and": [{k: v} for k, v in filter_expr.items()]}
 
-            results = await collection.query(
-                query_embeddings=[query_vector],
-                n_results=top_k,
-                where=where_filter
-            )
+            results = await collection.query(query_embeddings=[query_vector], n_results=top_k, where=where_filter)
 
             # Formatting results
             formatted_results = []
             if results and results["ids"] and len(results["ids"]) > 0:
                 for idx in range(len(results["ids"][0])):
-                    formatted_results.append({
-                        "id": results["ids"][0][idx],
-                        "score": 1.0 - results["distances"][0][idx] if results["distances"] else 0.0,
-                        "metadata": results["metadatas"][0][idx] if results["metadatas"] else {}
-                    })
+                    formatted_results.append(
+                        {
+                            "id": results["ids"][0][idx],
+                            "score": 1.0 - results["distances"][0][idx] if results["distances"] else 0.0,
+                            "metadata": results["metadatas"][0][idx] if results["metadatas"] else {},
+                        }
+                    )
 
             return formatted_results
 
@@ -151,7 +144,9 @@ class ChromaStore(VectorStore):
             ids = [item["id"] for item in embeddings]
             embs = [item.get("embedding") for item in embeddings]
             metadatas = [item.get("metadata") for item in embeddings]
-            documents = [item.get("metadata", {}).get("text", "") if item.get("metadata") else None for item in embeddings]
+            documents = [
+                item.get("metadata", {}).get("text", "") if item.get("metadata") else None for item in embeddings
+            ]
 
             # Chroma allows partial updates with `update` if the keys are passed, else they remain unchanged
             # Remove None values to avoid overriding existing data with Nones
@@ -181,10 +176,9 @@ class ChromaStore(VectorStore):
             formatted_results = []
             if results and results["ids"]:
                 for idx, record_id in enumerate(results["ids"]):
-                    formatted_results.append({
-                        "id": record_id,
-                        "metadata": results["metadatas"][idx] if results["metadatas"] else {}
-                    })
+                    formatted_results.append(
+                        {"id": record_id, "metadata": results["metadatas"][idx] if results["metadatas"] else {}}
+                    )
 
             return formatted_results
 
@@ -193,9 +187,11 @@ class ChromaStore(VectorStore):
     async def health(self) -> bool:
         """Check the health of the Chroma connection."""
         try:
+
             async def _do_health():
                 await self.client.heartbeat()
                 return True
+
             return await self._execute_with_retry(_do_health)
         except Exception as e:
             logger.error(f"Chroma health check failed: {e}")

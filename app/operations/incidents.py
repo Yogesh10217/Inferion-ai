@@ -79,7 +79,9 @@ class IncidentManager:
             timeline=[TimelineEvent(description=f"Incident '{title}' detected and opened.")],
         )
         self._incidents[inc.incident_id] = inc
-        logger.warning(f"[INCIDENT MANAGER] Created incident '{inc.incident_id}' ({severity.value}) on tenant '{tenant_id}': {title}")
+        logger.warning(
+            f"[INCIDENT MANAGER] Created incident '{inc.incident_id}' ({severity.value}) on tenant '{tenant_id}': {title}"
+        )
         return inc
 
     def update_status(self, incident_id: str, new_status: IncidentStatus, notes: str = "") -> Incident:
@@ -105,7 +107,9 @@ class IncidentManager:
             raise IncidentNotFoundException(incident_id)
         return inc
 
-    def list_incidents(self, tenant_id: Optional[str] = None, status: Optional[IncidentStatus] = None) -> List[Incident]:
+    def list_incidents(
+        self, tenant_id: Optional[str] = None, status: Optional[IncidentStatus] = None
+    ) -> List[Incident]:
         res = list(self._incidents.values())
         if tenant_id:
             res = [i for i in res if i.tenant_id == tenant_id]

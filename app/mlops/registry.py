@@ -111,6 +111,7 @@ class AIAssetRegistry:
     def _persist_async(self, coro):
         try:
             import asyncio
+
             loop = asyncio.get_running_loop()
             loop.create_task(coro)
         except RuntimeError:
@@ -182,7 +183,9 @@ class AIAssetRegistry:
                 await session.commit()
 
         self._persist_async(_db_register())
-        logger.info(f"[AI ASSET REGISTRY] Registered asset '{asset.name}' (ID: {asset.asset_id}, Type: {asset.asset_type.value}, Tenant: {tenant_id})")
+        logger.info(
+            f"[AI ASSET REGISTRY] Registered asset '{asset.name}' (ID: {asset.asset_id}, Type: {asset.asset_type.value}, Tenant: {tenant_id})"
+        )
         return asset
 
     def create_version(
@@ -243,7 +246,9 @@ class AIAssetRegistry:
                 await session.commit()
 
         self._persist_async(_db_create_ver())
-        logger.info(f"[AI ASSET REGISTRY] Created version '{version_number}' for asset '{asset.name}' (Hash: {ver.configuration_hash[:8]}...)")
+        logger.info(
+            f"[AI ASSET REGISTRY] Created version '{version_number}' for asset '{asset.name}' (Hash: {ver.configuration_hash[:8]}...)"
+        )
         return ver
 
     def get_asset(self, asset_id: str) -> AIAsset:
@@ -307,7 +312,9 @@ class AIAssetRegistry:
                     await session.commit()
 
         self._persist_async(_db_promote())
-        logger.info(f"[AI ASSET REGISTRY] Promoted version '{version_number}' of asset '{asset.name}' to '{target_status.value}' (Immutable: {ver.is_immutable})")
+        logger.info(
+            f"[AI ASSET REGISTRY] Promoted version '{version_number}' of asset '{asset.name}' to '{target_status.value}' (Immutable: {ver.is_immutable})"
+        )
         return ver
 
     def rollback_version(self, asset_id: str, target_version_number: str) -> AIAssetVersion:

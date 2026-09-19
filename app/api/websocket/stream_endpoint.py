@@ -24,11 +24,13 @@ async def websocket_stream_endpoint(websocket: WebSocket):
                 # Stream token chunks back over WebSocket
                 tokens = [f"Token-{i} " for i in range(1, 6)]
                 for tok in tokens:
-                    await websocket.send_json({
-                        "object": "chat.completion.chunk",
-                        "model": model,
-                        "delta": {"content": tok},
-                    })
+                    await websocket.send_json(
+                        {
+                            "object": "chat.completion.chunk",
+                            "model": model,
+                            "delta": {"content": tok},
+                        }
+                    )
                     await asyncio.sleep(0.05)
 
                 await websocket.send_json({"event": "DONE", "model": model})

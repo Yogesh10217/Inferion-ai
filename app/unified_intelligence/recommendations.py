@@ -31,12 +31,12 @@ class UnifiedRecommendation:
         description: str,
         target_domains: List[IntelligenceDomain],
         action_type: str,  # REMEDIATION, ISOLATION, CONFIGURATION, AUDIT, THROTTLING
-        priority: str,     # CRITICAL, HIGH, MEDIUM, LOW
+        priority: str,  # CRITICAL, HIGH, MEDIUM, LOW
         risk_reduction_score: float,
         requires_human_approval: bool,
         confidence_score: float,
         evidence_ids: List[str],
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.recommendation_id = recommendation_id
         self.tenant_id = tenant_id
@@ -66,7 +66,7 @@ class UnifiedRecommendation:
             "requires_human_approval": self.requires_human_approval,
             "confidence_score": round(self.confidence_score, 4),
             "evidence_ids": self.evidence_ids,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -79,9 +79,7 @@ class UnifiedRecommendationEngine:
         pass
 
     def generate_recommendations_for_situation(
-        self,
-        tenant_id: str,
-        situation: EnterpriseSituation
+        self, tenant_id: str, situation: EnterpriseSituation
     ) -> List[UnifiedRecommendation]:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -107,7 +105,7 @@ class UnifiedRecommendationEngine:
                 risk_reduction_score=0.75,
                 requires_human_approval=True,
                 confidence_score=situation.confidence_score * 0.9,
-                evidence_ids=situation.evidence_references
+                evidence_ids=situation.evidence_references,
             )
         )
 
@@ -125,7 +123,7 @@ class UnifiedRecommendationEngine:
                 risk_reduction_score=0.45,
                 requires_human_approval=False,
                 confidence_score=situation.confidence_score,
-                evidence_ids=situation.evidence_references
+                evidence_ids=situation.evidence_references,
             )
         )
 

@@ -46,11 +46,17 @@ class DataFabricManager:
         self.lineage_manager = DataLineageManager()
         self.rag_adapter = DataSourceKnowledgeAdapter(lineage_manager=self.lineage_manager)
         self.rag_sync_manager = KnowledgeSyncManager(adapter=self.rag_adapter)
-        self.agent_adapter = AgentDataFabricAdapter(source_manager=self.source_manager, governance_engine=self.governance_engine, lineage_manager=self.lineage_manager)
+        self.agent_adapter = AgentDataFabricAdapter(
+            source_manager=self.source_manager,
+            governance_engine=self.governance_engine,
+            lineage_manager=self.lineage_manager,
+        )
         self.metrics_collector = DataFabricMetricsCollector()
         self.billing_tracker = DataFabricBillingTracker()
 
-        logger.info("[DATA FABRIC MASTER] DataFabricManager initialized cleanly with all initial 10 production connectors & governance modules")
+        logger.info(
+            "[DATA FABRIC MASTER] DataFabricManager initialized cleanly with all initial 10 production connectors & governance modules"
+        )
 
     def get_summary(self) -> Dict[str, Any]:
         """Aggregate Data Fabric status summary."""

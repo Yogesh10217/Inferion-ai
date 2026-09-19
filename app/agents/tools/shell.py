@@ -17,19 +17,15 @@ async def execute_shell_command(command: str, context: AgentContext, timeout_sec
     """
     try:
         proc = await asyncio.create_subprocess_shell(
-            command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            command, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
-        stdout_data, stderr_data = await asyncio.wait_for(
-            proc.communicate(), timeout=timeout_seconds
-        )
+        stdout_data, stderr_data = await asyncio.wait_for(proc.communicate(), timeout=timeout_seconds)
         return {
             "command": command,
             "stdout": stdout_data.decode("utf-8", errors="replace"),
             "stderr": stderr_data.decode("utf-8", errors="replace"),
             "exit_code": proc.returncode,
-            "success": proc.returncode == 0
+            "success": proc.returncode == 0,
         }
     except asyncio.TimeoutError:
         return {
@@ -37,13 +33,7 @@ async def execute_shell_command(command: str, context: AgentContext, timeout_sec
             "stdout": "",
             "stderr": f"Execution timed out after {timeout_seconds} seconds",
             "exit_code": -1,
-            "success": False
+            "success": False,
         }
     except Exception as e:
-        return {
-            "command": command,
-            "stdout": "",
-            "stderr": str(e),
-            "exit_code": -1,
-            "success": False
-        }
+        return {"command": command, "stdout": "", "stderr": str(e), "exit_code": -1, "success": False}

@@ -39,10 +39,12 @@ class TransactionManager:
                         res = await self._execute_session(new_session, func)
                         return res
                     except Exception as exc:
-                        logger.warning(f"[TRANSACTION ROLLBACK] Transaction attempt {attempt}/{max_retries} failed: {exc}")
+                        logger.warning(
+                            f"[TRANSACTION ROLLBACK] Transaction attempt {attempt}/{max_retries} failed: {exc}"
+                        )
                         if attempt >= max_retries:
                             raise exc
-                        await asyncio.sleep(0.1 * (2 ** attempt))
+                        await asyncio.sleep(0.1 * (2**attempt))
 
     async def _execute_session(self, session: Optional[AsyncSession], func: Callable) -> Any:
         if asyncio.iscoroutinefunction(func):

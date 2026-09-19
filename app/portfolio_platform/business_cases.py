@@ -125,7 +125,9 @@ class BusinessCaseManager:
         if not bc:
             raise BusinessCaseNotFoundException(business_case_id=business_case_id, tenant_id=tenant_id)
         if bc.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=bc.tenant_id, resource_id=business_case_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=bc.tenant_id, resource_id=business_case_id
+            )
         return bc
 
     def get_by_initiative(self, initiative_id: str, tenant_id: str) -> Optional[BusinessCase]:

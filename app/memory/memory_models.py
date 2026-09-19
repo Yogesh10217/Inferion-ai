@@ -26,7 +26,9 @@ class MemoryRecordModel(Base):
     status = Column(String(32), default="ACTIVE")
     embedding_id = Column(String(128), nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+    )
     expires_at = Column(DateTime, nullable=True, index=True)
 
     __table_args__ = (
@@ -72,7 +74,9 @@ class ProfileMemoryModel(Base):
     workspace_id = Column(String(64), nullable=True, index=True)
     user_id = Column(String(64), nullable=False, index=True, unique=True)
     profile_data = Column(JSON, nullable=False)
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+    )
 
 
 class SessionMemoryModel(Base):

@@ -43,12 +43,9 @@ class ApprovalDecisionRequest(BaseModel):
 
 def get_agent_context(
     x_organization_id: str = Header(default="default_org", alias="X-Organization-Id"),
-    x_workspace_id: Optional[str] = Header(default="default_workspace", alias="X-Workspace-Id")
+    x_workspace_id: Optional[str] = Header(default="default_workspace", alias="X-Workspace-Id"),
 ) -> AgentContext:
-    return AgentContext(
-        organization_id=x_organization_id,
-        workspace_id=x_workspace_id
-    )
+    return AgentContext(organization_id=x_organization_id, workspace_id=x_workspace_id)
 
 
 @router.post("", response_model=Dict[str, Any])
@@ -79,11 +76,7 @@ async def delete_agent(agent_id: str):
 
 
 @router.post("/{agent_id}/run", response_model=Dict[str, Any])
-async def run_agent(
-    agent_id: str,
-    req: RunAgentRequest,
-    context: AgentContext = Depends(get_agent_context)
-):
+async def run_agent(agent_id: str, req: RunAgentRequest, context: AgentContext = Depends(get_agent_context)):
     try:
         state = await _agent_manager.run_agent(agent_id, req.prompt, context)
         return {"status": "success", "session": state.model_dump()}
@@ -99,7 +92,7 @@ async def run_agent(
 async def resume_session(
     session_id: str,
     approval: Optional[ApprovalDecisionRequest] = None,
-    context: AgentContext = Depends(get_agent_context)
+    context: AgentContext = Depends(get_agent_context),
 ):
     try:
         app_dec = approval.approved if approval else None
@@ -110,10 +103,7 @@ async def resume_session(
 
 
 @router.post("/sessions/{session_id}/cancel", response_model=Dict[str, Any])
-async def cancel_session(
-    session_id: str,
-    context: AgentContext = Depends(get_agent_context)
-):
+async def cancel_session(session_id: str, context: AgentContext = Depends(get_agent_context)):
     try:
         state = await _agent_manager.cancel_session(session_id, context=context)
         return {"status": "success", "session": state.model_dump()}

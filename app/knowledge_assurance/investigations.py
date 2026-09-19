@@ -137,9 +137,7 @@ class KnowledgeInvestigationManager:
         inv.updated_at = datetime.now(timezone.utc)
         return finding
 
-    def conclude_investigation(
-        self, tenant_id: str, investigation_id: str
-    ) -> KnowledgeInvestigation:
+    def conclude_investigation(self, tenant_id: str, investigation_id: str) -> KnowledgeInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         inv.status = InvestigationStatus.CONCLUDED
         now = datetime.now(timezone.utc)
@@ -173,9 +171,7 @@ class KnowledgeInvestigationManager:
     def list_investigations(
         self, tenant_id: str, target_resource_id: Optional[str] = None
     ) -> List[KnowledgeInvestigation]:
-        results = [
-            inv for inv in self._investigations.values() if inv.tenant_id == tenant_id
-        ]
+        results = [inv for inv in self._investigations.values() if inv.tenant_id == tenant_id]
         if target_resource_id:
             results = [inv for inv in results if inv.target_resource_id == target_resource_id]
         return results

@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class PlatformProviderResult:
     """Standardized provider execution result preserving confidence and latency."""
+
     platform: str
     status: str  # SUCCESS, DEGRADED, FAILED
     data: Dict[str, Any]

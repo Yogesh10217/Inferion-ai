@@ -72,8 +72,12 @@ class TopologyManager:
         logger.info(f"[TOPOLOGY] Registered node '{node_id}' ({node_type}) for tenant '{tenant_id}'")
         return node
 
-    def add_dependency(self, source_id: str, target_id: str, dependency_type: str = "HARD", tenant_id: str = "global") -> ServiceDependency:
-        dep = ServiceDependency(source_id=source_id, target_id=target_id, dependency_type=dependency_type, tenant_id=tenant_id)
+    def add_dependency(
+        self, source_id: str, target_id: str, dependency_type: str = "HARD", tenant_id: str = "global"
+    ) -> ServiceDependency:
+        dep = ServiceDependency(
+            source_id=source_id, target_id=target_id, dependency_type=dependency_type, tenant_id=tenant_id
+        )
         self._dependencies.append(dep)
         logger.info(f"[TOPOLOGY] Added dependency '{source_id}' -> '{target_id}' ({dependency_type})")
         return dep
@@ -99,7 +103,9 @@ class TopologyManager:
                         queue.append(dep.source_id)
 
         blast_score = len(affected) * 1.5
-        crit_deps = [dep.target_id for dep in self._dependencies if dep.source_id in affected and dep.dependency_type == "HARD"]
+        crit_deps = [
+            dep.target_id for dep in self._dependencies if dep.source_id in affected and dep.dependency_type == "HARD"
+        ]
 
         analysis = TopologyImpactAnalysis(
             root_node_id=failed_node_id,
@@ -107,7 +113,9 @@ class TopologyManager:
             blast_radius_score=float(blast_score),
             critical_dependencies=list(set(crit_deps)),
         )
-        logger.info(f"[TOPOLOGY] Analyzed impact for '{failed_node_id}': Blast score = {blast_score}, Affected = {len(affected)} nodes")
+        logger.info(
+            f"[TOPOLOGY] Analyzed impact for '{failed_node_id}': Blast score = {blast_score}, Affected = {len(affected)} nodes"
+        )
         return analysis
 
     def list_nodes(self, tenant_id: Optional[str] = None) -> List[ServiceNode]:

@@ -15,7 +15,11 @@ class ArchitectureNodeNotFoundException(ArchitectureException):
     """Raised when an architecture node is not found."""
 
     def __init__(self, node_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Architecture node '{node_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id, details={"node_id": node_id})
+        super().__init__(
+            f"Architecture node '{node_id}' not found for tenant '{tenant_id}'.",
+            tenant_id=tenant_id,
+            details={"node_id": node_id},
+        )
 
 
 class ArchitectureDependencyException(ArchitectureException):
@@ -34,7 +38,11 @@ class ArchitectureChangeNotFoundException(ArchitectureException):
     """Raised when a requested architecture change proposal cannot be found."""
 
     def __init__(self, change_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Architecture change '{change_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id, details={"change_id": change_id})
+        super().__init__(
+            f"Architecture change '{change_id}' not found for tenant '{tenant_id}'.",
+            tenant_id=tenant_id,
+            details={"change_id": change_id},
+        )
 
 
 class ArchitectureDriftException(ArchitectureException):
@@ -68,14 +76,20 @@ class ImmutableTopologySnapshotException(ArchitectureException):
     """Raised when attempting to mutate a finalized topology snapshot."""
 
     def __init__(self, snapshot_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Immutability Invariant Violation: Finalized topology snapshot '{snapshot_id}' cannot be modified.", tenant_id=tenant_id)
+        super().__init__(
+            f"Immutability Invariant Violation: Finalized topology snapshot '{snapshot_id}' cannot be modified.",
+            tenant_id=tenant_id,
+        )
 
 
 class ImmutableArchitectureDecisionException(ArchitectureException):
     """Raised when attempting to mutate a finalized Architecture Decision Record (ADR)."""
 
     def __init__(self, decision_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Immutability Invariant Violation: Finalized architecture decision record '{decision_id}' cannot be modified.", tenant_id=tenant_id)
+        super().__init__(
+            f"Immutability Invariant Violation: Finalized architecture decision record '{decision_id}' cannot be modified.",
+            tenant_id=tenant_id,
+        )
 
 
 class ArchitectureChangeIdempotencyException(ArchitectureException):

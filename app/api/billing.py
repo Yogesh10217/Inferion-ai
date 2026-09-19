@@ -16,7 +16,7 @@ router = APIRouter(prefix="/billing", tags=["Billing"])
 async def list_invoices(
     request: Request,
     status: Optional[str] = Query(None, description="Filter by status"),
-    container: ServiceContainer = Depends(get_container)
+    container: ServiceContainer = Depends(get_container),
 ):
     """List invoices for the current organization."""
     org_id = request.state.organization_id
@@ -35,7 +35,7 @@ async def generate_invoice_manually(
     organization_id: str,
     start_time: datetime,
     end_time: datetime,
-    container: ServiceContainer = Depends(get_container)
+    container: ServiceContainer = Depends(get_container),
 ):
     """Manually trigger invoice generation. (Admin only)"""
     # Generate timezone aware dates if needed

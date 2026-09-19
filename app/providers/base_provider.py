@@ -32,12 +32,25 @@ class BaseProvider(ABC):
         return request.messages[-1].content
 
     @abstractmethod
-    async def generate(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> InferenceResponse:
+    async def generate(
+        self,
+        *,
+        request: InferenceRequest | None = None,
+        model: str | None = None,
+        prompt: str | None = None,
+        **kwargs: Any,
+    ) -> InferenceResponse:
         """Generate a completion from the provider and return a normalized response."""
         raise NotImplementedError
 
     @abstractmethod
-    async def stream(self, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[InferenceResponse]:
+    async def stream(
+        self,
+        request: InferenceRequest | None = None,
+        model: str | None = None,
+        prompt: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncIterator[InferenceResponse]:
         """Stream normalized InferenceResponse chunks from the provider."""
         raise NotImplementedError
 

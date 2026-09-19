@@ -109,7 +109,9 @@ async def get_incident(id: str, mgr: OperationsManager = Depends(get_operations)
 async def get_root_cause(id: str, mgr: OperationsManager = Depends(get_operations)):
     try:
         inc = mgr.incident_manager.get_incident(id)
-        rca = mgr.rca_engine.analyze_incident(incident_id=id, failed_resource_id=inc.primary_resource_id or "service_gateway", tenant_id=inc.tenant_id)
+        rca = mgr.rca_engine.analyze_incident(
+            incident_id=id, failed_resource_id=inc.primary_resource_id or "service_gateway", tenant_id=inc.tenant_id
+        )
         return {"root_cause_analysis": rca.model_dump()}
     except OperationsException as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)

@@ -53,7 +53,11 @@ class DecisionDelegationManager:
         delegation_requests: List[DelegationRequest] = []
 
         for act in actions:
-            target_enum = DelegationTarget.ORCHESTRATION if act.target_type in ["WORKFLOW", "ORCHESTRATION"] else DelegationTarget.PLATFORM_OPERATIONS
+            target_enum = (
+                DelegationTarget.ORCHESTRATION
+                if act.target_type in ["WORKFLOW", "ORCHESTRATION"]
+                else DelegationTarget.PLATFORM_OPERATIONS
+            )
             req = DelegationRequest(
                 tenant_id=tenant_id,
                 target=target_enum,

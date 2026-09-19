@@ -56,10 +56,14 @@ class ResourceGovernanceEngine:
             mem_pct = 20.0
 
         if cpu_pct > self.limits.max_cpu_percent:
-            raise SecurityPolicyViolation(f"System CPU usage too high ({cpu_pct:.1f}% > {self.limits.max_cpu_percent}%)")
+            raise SecurityPolicyViolation(
+                f"System CPU usage too high ({cpu_pct:.1f}% > {self.limits.max_cpu_percent}%)"
+            )
 
         if mem_pct > self.limits.max_memory_percent:
-            raise SecurityPolicyViolation(f"System memory usage too high ({mem_pct:.1f}% > {self.limits.max_memory_percent}%)")
+            raise SecurityPolicyViolation(
+                f"System memory usage too high ({mem_pct:.1f}% > {self.limits.max_memory_percent}%)"
+            )
 
         return {
             "status": "healthy",
@@ -88,7 +92,13 @@ class ResourceGovernanceEngine:
 
         # 3. Quota check & reservation
         workers_delta = 1 if requires_worker else 0
-        kwargs = {"requests": 1, "tokens": estimated_tokens, "cost": estimated_cost, "concurrent_delta": 1, "workers_delta": workers_delta}
+        kwargs = {
+            "requests": 1,
+            "tokens": estimated_tokens,
+            "cost": estimated_cost,
+            "concurrent_delta": 1,
+            "workers_delta": workers_delta,
+        }
 
         if component in ["agent", "agent_execution"]:
             kwargs["agent_executions"] = 1

@@ -109,5 +109,7 @@ class ImpactAnalyzer:
             estimated_blast_radius_score=blast_radius,
             evidence=evidence,
         )
-        logger.info(f"[IMPACT ANALYZER] Calculated impact for service {service_id}: {level.value} (Blast radius: {blast_radius})")
+        logger.info(
+            f"[IMPACT ANALYZER] Calculated impact for service {service_id}: {level.value} (Blast radius: {blast_radius})"
+        )
         return assessment

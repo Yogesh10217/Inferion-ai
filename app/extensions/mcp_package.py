@@ -46,5 +46,7 @@ class MCPPackageManager:
         )
 
         self.mcp_registry.register_server(package.package_id, server)
-        logger.info(f"[MCP PACKAGE MANAGER] Registered MCP server package '{package.manifest.package_name}' (ID: {package.package_id})")
+        logger.info(
+            f"[MCP PACKAGE MANAGER] Registered MCP server package '{package.manifest.package_name}' (ID: {package.package_id})"
+        )
         return server

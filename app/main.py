@@ -123,11 +123,13 @@ async def lifespan(app: FastAPI):
 
         # Initialize plugins
         from app.plugins import PluginManager
+
         container.plugin_manager = PluginManager()
         await container.plugin_manager.initialize()
 
         # Initialize Deployment Platform Manager & Execute Startup State Machine
         from app.deployment.manager import DeploymentPlatformManager
+
         app.state.deployment_manager = DeploymentPlatformManager(container=container)
         app.state.deployment_manager.startup()
 
@@ -174,9 +176,15 @@ def create_app() -> FastAPI:
         for origin in cors_origins:
             clean_o = str(origin).strip()
             if not clean_o or clean_o == "*":
-                raise ValueError("CORS_POLICY_VIOLATION: Wildcard origin '*' or empty origin rejected in PRODUCTION environment")
-            if clean_o.lower().startswith("http://") and not (clean_o.lower().startswith("http://localhost") or clean_o.lower().startswith("http://127.0.0.1")):
-                raise ValueError(f"CORS_POLICY_VIOLATION: Unsafe HTTP origin '{clean_o}' rejected in PRODUCTION environment")
+                raise ValueError(
+                    "CORS_POLICY_VIOLATION: Wildcard origin '*' or empty origin rejected in PRODUCTION environment"
+                )
+            if clean_o.lower().startswith("http://") and not (
+                clean_o.lower().startswith("http://localhost") or clean_o.lower().startswith("http://127.0.0.1")
+            ):
+                raise ValueError(
+                    f"CORS_POLICY_VIOLATION: Unsafe HTTP origin '{clean_o}' rejected in PRODUCTION environment"
+                )
 
     app = FastAPI(
         title=settings.app_name,
@@ -189,11 +197,15 @@ def create_app() -> FastAPI:
     )
     app.state.container = container
 
-    app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+    app.add_middleware(
+        CORSMiddleware, allow_origins=cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
+    )
 
     # Auth Middlewares
     app.add_middleware(BudgetMiddleware, budget_service=container.budget_service)
-    app.add_middleware(RateLimitMiddleware, rate_limit_service=container.rate_limit_service, quota_service=container.quota_service)
+    app.add_middleware(
+        RateLimitMiddleware, rate_limit_service=container.rate_limit_service, quota_service=container.quota_service
+    )
     app.add_middleware(AuthorizationMiddleware)
     app.add_middleware(TenantMiddleware)
     app.add_middleware(AuthenticationMiddleware)
@@ -276,6 +288,7 @@ def create_app() -> FastAPI:
 
     from app.api.graphql.schema import router as graphql_router
     from app.api.websocket.stream_endpoint import router as ws_stream_router
+
     app.include_router(ws_stream_router)
     app.include_router(graphql_router)
 
@@ -298,6 +311,7 @@ def create_app() -> FastAPI:
 
         # Plugins
         from app.plugins.plugin_api import router as plugins_router
+
         app.include_router(plugins_router, prefix=settings.api_prefix)
 
     if settings.prometheus_enabled:

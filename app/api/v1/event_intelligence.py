@@ -120,7 +120,9 @@ async def evaluate_automation(
     tenant_id: str = Query(..., description="Tenant ID"),
 ):
     evt = mgr.event_manager.get_event(req.event_id, tenant_id)
-    gov_dec = mgr.governance_engine.evaluate_automation_governance(tenant_id, req.event_id, is_high_risk=req.is_high_risk)
+    gov_dec = mgr.governance_engine.evaluate_automation_governance(
+        tenant_id, req.event_id, is_high_risk=req.is_high_risk
+    )
     plan = mgr.automation_manager.create_automation_plan(evt, action=req.action, requires_approval=req.is_high_risk)
     return {"governance_decision": gov_dec.model_dump(), "automation_plan": plan.model_dump()}
 
@@ -141,6 +143,7 @@ async def respond_to_event(
     tenant_id: str = Query(..., description="Tenant ID"),
 ):
     from app.event_intelligence.response import EventResponseAction
+
     act = EventResponseAction(target=req.target, action_type=req.action_type)
     plan = mgr.response_manager.create_response_plan(tenant_id, event_id, [act])
     return plan.model_dump()
@@ -153,8 +156,12 @@ async def resolve_event(
     tenant_id: str = Query(..., description="Tenant ID"),
 ):
     res = mgr.resolution_manager.create_resolution(tenant_id, event_id)
-    res = mgr.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.INVESTIGATING)
-    res = mgr.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.RESPONSE_PLANNED)
+    res = mgr.resolution_manager.transition_resolution(
+        res.resolution_id, tenant_id, EventResolutionStatus.INVESTIGATING
+    )
+    res = mgr.resolution_manager.transition_resolution(
+        res.resolution_id, tenant_id, EventResolutionStatus.RESPONSE_PLANNED
+    )
     res = mgr.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.DELEGATED)
     res = mgr.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.VERIFYING)
     final_res = mgr.resolution_manager.transition_resolution(res.resolution_id, tenant_id, req.target_status)

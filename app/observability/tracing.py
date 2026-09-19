@@ -59,13 +59,15 @@ class TracingManager:
         """Initialize a top-level trace."""
         ctx = context or get_current_context()
         attrs = attributes or {}
-        attrs.update({
-            "tenant_id": ctx.tenant_id,
-            "organization_id": ctx.organization_id,
-            "workspace_id": ctx.workspace_id,
-            "execution_id": ctx.execution_id,
-            "user_id": ctx.user_id,
-        })
+        attrs.update(
+            {
+                "tenant_id": ctx.tenant_id,
+                "organization_id": ctx.organization_id,
+                "workspace_id": ctx.workspace_id,
+                "execution_id": ctx.execution_id,
+                "user_id": ctx.user_id,
+            }
+        )
         # Remove None values
         attrs = {k: v for k, v in attrs.items() if v is not None}
 
@@ -107,15 +109,17 @@ class TracingManager:
 
         child_ctx = ctx.copy_with_span()
         attrs = attributes or {}
-        attrs.update({
-            "tenant_id": child_ctx.tenant_id,
-            "organization_id": child_ctx.organization_id,
-            "workspace_id": child_ctx.workspace_id,
-            "execution_id": child_ctx.execution_id,
-            "agent_id": child_ctx.agent_id,
-            "workflow_id": child_ctx.workflow_id,
-            "worker_id": child_ctx.worker_id,
-        })
+        attrs.update(
+            {
+                "tenant_id": child_ctx.tenant_id,
+                "organization_id": child_ctx.organization_id,
+                "workspace_id": child_ctx.workspace_id,
+                "execution_id": child_ctx.execution_id,
+                "agent_id": child_ctx.agent_id,
+                "workflow_id": child_ctx.workflow_id,
+                "worker_id": child_ctx.worker_id,
+            }
+        )
         attrs = {k: v for k, v in attrs.items() if v is not None}
 
         parent_otel_ctx = OTelSpanContext(trace_id=child_ctx.trace_id, span_id=p_span_id)

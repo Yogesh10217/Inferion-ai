@@ -9,9 +9,7 @@ logger = logging.getLogger(__name__)
 class CapacityApprovalCoordinator:
     """Coordinates approval workflows for high-risk capacity actions."""
 
-    def request_approval(
-        self, tenant_id: str, action_name: str, risk_level: str = "HIGH"
-    ) -> Dict[str, Any]:
+    def request_approval(self, tenant_id: str, action_name: str, risk_level: str = "HIGH") -> Dict[str, Any]:
         req = {
             "tenant_id": tenant_id,
             "action_name": action_name,

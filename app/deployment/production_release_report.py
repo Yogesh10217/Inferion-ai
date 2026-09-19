@@ -21,24 +21,24 @@ class ProductionReleaseReport:
     generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "report_title": self.report_title,
-            "release_decision": self.release_decision,
-            "readiness_summary": self.readiness_summary,
-            "checklist_summary": self.checklist_summary,
-            "smoke_test_plan": self.smoke_test_plan,
-            "truthfulness_matrix": self.truthfulness_matrix,
-            "generated_at": self.generated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "report_title": self.report_title,
+                "release_decision": self.release_decision,
+                "readiness_summary": self.readiness_summary,
+                "checklist_summary": self.checklist_summary,
+                "smoke_test_plan": self.smoke_test_plan,
+                "truthfulness_matrix": self.truthfulness_matrix,
+                "generated_at": self.generated_at,
+            }
+        )
 
 
 class ProductionReleaseReportGenerator:
     """Generates the final canonical Production Release Certification Report."""
 
     @classmethod
-    def generate_report(
-        cls, external_evidence: Optional[Dict[str, Any]] = None
-    ) -> ProductionReleaseReport:
+    def generate_report(cls, external_evidence: Optional[Dict[str, Any]] = None) -> ProductionReleaseReport:
         decision_engine = ProductionReleaseDecisionEngine()
         dec_res = decision_engine.evaluate_release_decision(external_evidence)
 

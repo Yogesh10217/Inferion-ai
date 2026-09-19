@@ -49,9 +49,15 @@ class CommunicationManager:
         audience: CommunicationAudience = CommunicationAudience.INTERNAL_OPS,
     ) -> OperationalCommunication:
         import re
+
         sanitized_msg = raw_message
         # Sanitize sensitive patterns in text string
-        sanitized_msg = re.sub(r"(password|secret|token|api_key|credential)['\"\s:=]+['\"]?([^'\"\s]+)['\"]?", r"\1: '[REDACTED]'", sanitized_msg, flags=re.IGNORECASE)
+        sanitized_msg = re.sub(
+            r"(password|secret|token|api_key|credential)['\"\s:=]+['\"]?([^'\"\s]+)['\"]?",
+            r"\1: '[REDACTED]'",
+            sanitized_msg,
+            flags=re.IGNORECASE,
+        )
         sanitized_dict = self.sanitizer.sanitize({"password": raw_message})
 
         comm = OperationalCommunication(

@@ -62,7 +62,9 @@ async def register_developer(data: RegisterDeveloperSchema, mgr: DeveloperPlatfo
 
 
 @router.get("/v1/developers/me")
-async def get_current_developer(developer_id: str = "dev_default", mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
+async def get_current_developer(
+    developer_id: str = "dev_default", mgr: DeveloperPlatformManager = Depends(get_dev_platform)
+):
     try:
         dev = mgr.developer_manager.get_developer(developer_id)
         return {"developer": dev.model_dump()}
@@ -86,7 +88,11 @@ async def create_project(data: CreateProjectSchema, mgr: DeveloperPlatformManage
 
 
 @router.get("/v1/developers/projects")
-async def list_projects(tenant_id: Optional[str] = None, developer_id: Optional[str] = None, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
+async def list_projects(
+    tenant_id: Optional[str] = None,
+    developer_id: Optional[str] = None,
+    mgr: DeveloperPlatformManager = Depends(get_dev_platform),
+):
     projs = mgr.project_manager.list_projects(tenant_id=tenant_id, developer_id=developer_id)
     return {"projects": [p.model_dump() for p in projs]}
 
@@ -101,7 +107,9 @@ async def get_project(id: str, mgr: DeveloperPlatformManager = Depends(get_dev_p
 
 
 @router.patch("/v1/developers/projects/{id}")
-async def transition_project(id: str, data: TransitionProjectSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
+async def transition_project(
+    id: str, data: TransitionProjectSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)
+):
     try:
         proj = mgr.project_manager.transition_lifecycle(id, data.target_state)
         return {"status": "updated", "project": proj.model_dump()}
@@ -111,7 +119,9 @@ async def transition_project(id: str, data: TransitionProjectSchema, mgr: Develo
 
 # Event & Webhook Endpoints
 @router.post("/v1/events/subscriptions", status_code=status.HTTP_201_CREATED)
-async def create_subscription(data: CreateSubscriptionSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
+async def create_subscription(
+    data: CreateSubscriptionSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)
+):
     sub = mgr.event_engine.create_subscription(
         developer_id=data.developer_id,
         target_url=data.target_url,
@@ -122,7 +132,11 @@ async def create_subscription(data: CreateSubscriptionSchema, mgr: DeveloperPlat
 
 
 @router.get("/v1/events/subscriptions")
-async def list_subscriptions(tenant_id: Optional[str] = None, developer_id: Optional[str] = None, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
+async def list_subscriptions(
+    tenant_id: Optional[str] = None,
+    developer_id: Optional[str] = None,
+    mgr: DeveloperPlatformManager = Depends(get_dev_platform),
+):
     subs = mgr.event_engine.list_subscriptions(tenant_id=tenant_id, developer_id=developer_id)
     return {"subscriptions": [s.model_dump() for s in subs]}
 

@@ -99,7 +99,9 @@ class DeveloperEventEngine:
         logger.info(f"[EVENT ENGINE] Deleted subscription '{subscription_id}'")
         return True
 
-    def list_subscriptions(self, tenant_id: Optional[str] = None, developer_id: Optional[str] = None) -> List[WebhookSubscription]:
+    def list_subscriptions(
+        self, tenant_id: Optional[str] = None, developer_id: Optional[str] = None
+    ) -> List[WebhookSubscription]:
         res = list(self._subscriptions.values())
         if tenant_id:
             res = [s for s in res if s.tenant_id in (tenant_id, "global")]
@@ -116,8 +118,11 @@ class DeveloperEventEngine:
         """Dispatch event to all matching active webhook subscriptions."""
         deliveries = []
         matching = [
-            s for s in self._subscriptions.values()
-            if s.is_active and s.tenant_id in (event.tenant_id, "global") and (event.event_type in s.event_types or "*" in s.event_types)
+            s
+            for s in self._subscriptions.values()
+            if s.is_active
+            and s.tenant_id in (event.tenant_id, "global")
+            and (event.event_type in s.event_types or "*" in s.event_types)
         ]
 
         for sub in matching:
@@ -126,7 +131,9 @@ class DeveloperEventEngine:
 
         return deliveries
 
-    def _deliver_to_subscription(self, sub: WebhookSubscription, event: DeveloperEvent, attempt: int = 1) -> DeliveryRecord:
+    def _deliver_to_subscription(
+        self, sub: WebhookSubscription, event: DeveloperEvent, attempt: int = 1
+    ) -> DeliveryRecord:
         """Simulate secure delivery with HMAC signature generation and DLQ backup on failure."""
         payload_str = str(event.payload).encode("utf-8")
         sig = self.sign_payload(payload_str, sub.secret_key)
@@ -136,13 +143,27 @@ class DeveloperEventEngine:
         if not cb.allow_request():
             logger.warning(f"[EVENT ENGINE] Circuit breaker OPEN for webhook '{sub.subscription_id}', routing to DLQ")
             self._route_to_dlq(sub, event, "Circuit breaker OPEN")
-            rec = DeliveryRecord(subscription_id=sub.subscription_id, event_id=event.event_id, status_code=503, success=False, attempt=attempt, signature=sig)
+            rec = DeliveryRecord(
+                subscription_id=sub.subscription_id,
+                event_id=event.event_id,
+                status_code=503,
+                success=False,
+                attempt=attempt,
+                signature=sig,
+            )
             self._delivery_logs.append(rec)
             return rec
 
         # Successful simulation delivery
         cb.record_success()
-        rec = DeliveryRecord(subscription_id=sub.subscription_id, event_id=event.event_id, status_code=200, success=True, attempt=attempt, signature=sig)
+        rec = DeliveryRecord(
+            subscription_id=sub.subscription_id,
+            event_id=event.event_id,
+            status_code=200,
+            success=True,
+            attempt=attempt,
+            signature=sig,
+        )
         self._delivery_logs.append(rec)
 
         logger.info(f"[EVENT ENGINE] Delivered event '{event.event_type}' to '{sub.target_url}' (Sig: {sig[:8]}...)")

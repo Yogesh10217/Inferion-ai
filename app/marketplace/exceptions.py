@@ -23,9 +23,15 @@ class PublisherNotFoundException(MarketplaceException):
 
 class InvalidItemLifecycleTransition(MarketplaceException):
     def __init__(self, current: str, target: str):
-        super().__init__(f"Invalid marketplace item transition from '{current}' to '{target}'", code="INVALID_ITEM_LIFECYCLE", status_code=409)
+        super().__init__(
+            f"Invalid marketplace item transition from '{current}' to '{target}'",
+            code="INVALID_ITEM_LIFECYCLE",
+            status_code=409,
+        )
 
 
 class MarketplaceReviewRejectedException(MarketplaceException):
     def __init__(self, item_id: str, reason: str):
-        super().__init__(f"Marketplace item '{item_id}' review rejected: {reason}", code="REVIEW_REJECTED", status_code=422)
+        super().__init__(
+            f"Marketplace item '{item_id}' review rejected: {reason}", code="REVIEW_REJECTED", status_code=422
+        )

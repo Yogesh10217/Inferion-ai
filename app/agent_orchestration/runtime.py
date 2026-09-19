@@ -99,7 +99,9 @@ class AgentRuntimeManager:
         sess = self._sessions.get(session_id)
         if not sess:
             # Fallback
-            return AgentRuntimeSession(session_id=session_id, tenant_id=tenant_id, agent_id="unknown", execution_id="unknown")
+            return AgentRuntimeSession(
+                session_id=session_id, tenant_id=tenant_id, agent_id="unknown", execution_id="unknown"
+            )
 
         try:
             self.tenant_guard.enforce_isolation(tenant_id, sess.tenant_id)
@@ -145,7 +147,7 @@ class AgentRuntimeManager:
                 dimension="recursion_depth",
                 current_value=sess.recent_action_hashes[-4:],
                 limit_value=3,
-                message=f"Infinite loop detected: Action '{action_name}' repeated 4 times consecutively."
+                message=f"Infinite loop detected: Action '{action_name}' repeated 4 times consecutively.",
             )
             sess.violations.append(v)
             raise AgentRuntimeLimitExceededException(v.message)
@@ -158,7 +160,7 @@ class AgentRuntimeManager:
                 dimension="max_invocations",
                 current_value=sess.step_count,
                 limit_value=sess.limit.max_invocations,
-                message=f"Maximum step count ({sess.limit.max_invocations}) exceeded."
+                message=f"Maximum step count ({sess.limit.max_invocations}) exceeded.",
             )
             sess.violations.append(v)
             raise AgentRuntimeLimitExceededException(v.message)
@@ -171,7 +173,7 @@ class AgentRuntimeManager:
                 dimension="max_cost_dollars",
                 current_value=sess.consumed_cost,
                 limit_value=sess.limit.max_cost_dollars,
-                message=f"Financial cost budget ${sess.limit.max_cost_dollars:.2f} exceeded."
+                message=f"Financial cost budget ${sess.limit.max_cost_dollars:.2f} exceeded.",
             )
             sess.violations.append(v)
             raise AgentBudgetExceededException(v.message)

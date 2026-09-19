@@ -137,7 +137,11 @@ class DataCatalogManager:
                 continue
             if asset_type and entry.asset_type != asset_type:
                 continue
-            if q in entry.asset_name.lower() or q in entry.metadata.description.lower() or any(q in t.lower() for t in entry.metadata.tags):
+            if (
+                q in entry.asset_name.lower()
+                or q in entry.metadata.description.lower()
+                or any(q in t.lower() for t in entry.metadata.tags)
+            ):
                 results.append(entry)
         return results
 

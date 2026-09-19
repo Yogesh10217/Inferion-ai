@@ -31,22 +31,26 @@ class PatternDetector:
         successes = [ep for ep in history_episodes if ep.get("status") == "completed"]
 
         if len(failures) > 2:
-            patterns.append(ExecutionPattern(
-                pattern_id="pat_recurring_timeout",
-                pattern_type="failure",
-                confidence=0.88,
-                description=f"Detected {len(failures)} step timeouts across episodes",
-                actionable_recommendation="Increase step timeout limit to 30s or pre-cache tool results",
-            ))
+            patterns.append(
+                ExecutionPattern(
+                    pattern_id="pat_recurring_timeout",
+                    pattern_type="failure",
+                    confidence=0.88,
+                    description=f"Detected {len(failures)} step timeouts across episodes",
+                    actionable_recommendation="Increase step timeout limit to 30s or pre-cache tool results",
+                )
+            )
 
         if len(successes) > 0:
-            patterns.append(ExecutionPattern(
-                pattern_id="pat_high_success_dag",
-                pattern_type="success",
-                confidence=0.95,
-                description=f"High execution success rate ({len(successes)} episodes completed cleanly)",
-                actionable_recommendation="Save DAG task structure as reusable workflow template",
-            ))
+            patterns.append(
+                ExecutionPattern(
+                    pattern_id="pat_high_success_dag",
+                    pattern_type="success",
+                    confidence=0.95,
+                    description=f"High execution success rate ({len(successes)} episodes completed cleanly)",
+                    actionable_recommendation="Save DAG task structure as reusable workflow template",
+                )
+            )
 
         logger.info(f"[PATTERN DETECTOR] Identified {len(patterns)} execution patterns")
         return patterns

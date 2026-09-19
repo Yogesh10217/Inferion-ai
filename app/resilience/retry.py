@@ -20,7 +20,13 @@ class RetryPolicy(BaseModel):
     backoff_multiplier: float = 2.0
     use_jitter: bool = True
     retryable_exceptions: List[str] = Field(
-        default_factory=lambda: ["TimeoutError", "ConnectionError", "ProviderError", "HTTPError", "RateLimitExceededError"]
+        default_factory=lambda: [
+            "TimeoutError",
+            "ConnectionError",
+            "ProviderError",
+            "HTTPError",
+            "RateLimitExceededError",
+        ]
     )
 
 
@@ -94,7 +100,9 @@ class RetryManager:
                     raise exc
 
                 delay = self.calculate_delay(attempt, pol)
-                logger.info(f"[RETRY] Attempt {attempt}/{pol.max_attempts} failed with {type(exc).__name__}. Retrying in {delay:.2f}s...")
+                logger.info(
+                    f"[RETRY] Attempt {attempt}/{pol.max_attempts} failed with {type(exc).__name__}. Retrying in {delay:.2f}s..."
+                )
                 await asyncio.sleep(delay)
 
         if last_exc:

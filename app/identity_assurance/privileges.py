@@ -61,9 +61,7 @@ class PrivilegeIntelligenceManager:
         identity_id: str,
         privileges: Optional[List[PrivilegeReference]] = None,
     ) -> PrivilegeAssessment:
-        priv_list = privileges or [
-            PrivilegeReference(name="data:read", privilege_type=PrivilegeType.READ)
-        ]
+        priv_list = privileges or [PrivilegeReference(name="data:read", privilege_type=PrivilegeType.READ)]
         has_admin = any(p.privilege_type == PrivilegeType.ADMIN for p in priv_list)
         excessive = len(priv_list) > 20 or (has_admin and len(priv_list) > 10)
         concentrated = len([p for p in priv_list if p.is_sensitive]) > 3

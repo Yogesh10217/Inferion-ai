@@ -13,10 +13,7 @@ logger = logging.getLogger(__name__)
 
 class SelfCritiqueReflection(BaseReflection):
     async def reflect(
-        self,
-        goal: str,
-        execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        self, goal: str, execution_history: List[Dict[str, Any]], context: AgentContext
     ) -> Dict[str, Any]:
         failed_steps = [s for s in execution_history if s.get("status") == "FAILED"]
         if failed_steps:
@@ -29,13 +26,13 @@ class SelfCritiqueReflection(BaseReflection):
                         "id": "retry_step_1",
                         "description": f"Retry step after failure analysis: {failed_steps[0].get('error')}",
                         "tool": failed_steps[0].get("tool"),
-                        "tool_input": failed_steps[0].get("tool_input", {})
+                        "tool_input": failed_steps[0].get("tool_input", {}),
                     }
-                ]
+                ],
             }
         return {
             "is_valid": True,
             "critique": "Trajectory self-critique passed with clean execution.",
             "retry_recommended": False,
-            "revised_plan": None
+            "revised_plan": None,
         }

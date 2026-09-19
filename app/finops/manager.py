@@ -54,7 +54,9 @@ class FinOpsManager:
         self.data_fabric_adapter = DataFabricCostAdapter(ledger=self.cost_ledger)
         self.mlops_adapter = MLOpsCostAdapter(ledger=self.cost_ledger)
 
-        logger.info("[FINOPS MANAGER] Master FinOpsManager initialized with all 15 financial intelligence domain subsystems and adapters")
+        logger.info(
+            "[FINOPS MANAGER] Master FinOpsManager initialized with all 15 financial intelligence domain subsystems and adapters"
+        )
 
     def get_summary(self) -> Dict[str, Any]:
         total_cost = self.cost_ledger.get_total_cost()

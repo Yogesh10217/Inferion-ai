@@ -41,7 +41,9 @@ class DelegationPlan(BaseModel):
     @property
     def request_id(self) -> str:
         if self.delegation_request:
-            req_id = getattr(self.delegation_request, "delegation_id", getattr(self.delegation_request, "request_id", None))
+            req_id = getattr(
+                self.delegation_request, "delegation_id", getattr(self.delegation_request, "request_id", None)
+            )
             if req_id and req_id.startswith("del_req_"):
                 return req_id
         clean_id = self.delegation_id[8:] if self.delegation_id.startswith("autodel_") else self.delegation_id
@@ -90,7 +92,9 @@ class AutonomousDelegationCoordinator:
             delegation_request=req,
         )
         self._delegations[workflow_id] = plan
-        logger.info(f"[DELEGATION COORDINATOR] Produced DelegationRequest '{req.delegation_id}' for workflow '{workflow_id}'. Zero direct execution.")
+        logger.info(
+            f"[DELEGATION COORDINATOR] Produced DelegationRequest '{req.delegation_id}' for workflow '{workflow_id}'. Zero direct execution."
+        )
         return plan
 
     def get_delegation(self, workflow_id: str) -> Optional[DelegationPlan]:

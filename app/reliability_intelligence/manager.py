@@ -129,14 +129,30 @@ class ReliabilityIntelligenceManager:
         logger.info("Initialized ReliabilityIntelligenceManager with specialized engines")
 
     def _register_default_providers(self) -> None:
-        domains = ["operations", "security", "identity", "continuous", "autonomous", "unified", "decision", "policy", "control", "risk", "trust"]
+        domains = [
+            "operations",
+            "security",
+            "identity",
+            "continuous",
+            "autonomous",
+            "unified",
+            "decision",
+            "policy",
+            "control",
+            "risk",
+            "trust",
+        ]
         for domain in domains:
             self.provider_registry.register_provider(domain, MockReliabilityIntelligenceProvider(domain=domain))
 
     # Service Health
-    def evaluate_service_health(self, tenant_id: str, service_id: str, raw_metrics: Optional[Dict[str, Any]] = None) -> ServiceHealthAssessment:
+    def evaluate_service_health(
+        self, tenant_id: str, service_id: str, raw_metrics: Optional[Dict[str, Any]] = None
+    ) -> ServiceHealthAssessment:
         sh = self.health_engine.evaluate_service_health(tenant_id, service_id, raw_metrics)
-        self.timeline.record_event(tenant_id, "SERVICE_HEALTH_EVALUATED", f"Health status for '{service_id}': {sh.status.value}")
+        self.timeline.record_event(
+            tenant_id, "SERVICE_HEALTH_EVALUATED", f"Health status for '{service_id}': {sh.status.value}"
+        )
         self.observability.increment("ai_reliability_intelligence_health_score")
         self.billing.record_usage(tenant_id, "HEALTH_EVALUATION")
         return sh
@@ -144,26 +160,45 @@ class ReliabilityIntelligenceManager:
     # Master Reliability
     def evaluate_reliability(self, tenant_id: str, scope: Optional[str] = None) -> ReliabilityAssessment:
         ass = self.master_reliability_engine.evaluate_reliability(tenant_id, scope)
-        self.timeline.record_event(tenant_id, "RELIABILITY_EVALUATED", f"Reliability score: {ass.score.overall_score:.4f}")
+        self.timeline.record_event(
+            tenant_id, "RELIABILITY_EVALUATED", f"Reliability score: {ass.score.overall_score:.4f}"
+        )
         self.observability.increment("ai_reliability_intelligence_reliability_score")
         return ass
 
     # SLO & Budget
-    def create_slo(self, tenant_id: str, service_id: str, indicator_type: str = "AVAILABILITY", target_percentage: float = 99.9) -> ServiceLevelObjective:
+    def create_slo(
+        self, tenant_id: str, service_id: str, indicator_type: str = "AVAILABILITY", target_percentage: float = 99.9
+    ) -> ServiceLevelObjective:
         return self.slo_engine.create_slo(tenant_id, service_id, indicator_type, target_percentage)
 
-    def evaluate_error_budget(self, tenant_id: str, slo_id: str, total_minutes: float = 43.2, burn_rate: float = 1.0) -> ErrorBudget:
+    def evaluate_error_budget(
+        self, tenant_id: str, slo_id: str, total_minutes: float = 43.2, burn_rate: float = 1.0
+    ) -> ErrorBudget:
         return self.error_budget_engine.evaluate_error_budget(tenant_id, slo_id, total_minutes, burn_rate)
 
     # Failure Prediction
-    def predict_failure(self, tenant_id: str, service_id: str, recent_error_rate: float = 0.05, capacity_utilization: float = 0.85, horizon_minutes: int = 60) -> FailurePrediction:
-        pred = self.failure_prediction_engine.predict_failure(tenant_id, service_id, recent_error_rate, capacity_utilization, horizon_minutes)
-        self.timeline.record_event(tenant_id, "FAILURE_PREDICTED", f"Predicted failure probability for '{service_id}': {pred.probability:.2f}")
+    def predict_failure(
+        self,
+        tenant_id: str,
+        service_id: str,
+        recent_error_rate: float = 0.05,
+        capacity_utilization: float = 0.85,
+        horizon_minutes: int = 60,
+    ) -> FailurePrediction:
+        pred = self.failure_prediction_engine.predict_failure(
+            tenant_id, service_id, recent_error_rate, capacity_utilization, horizon_minutes
+        )
+        self.timeline.record_event(
+            tenant_id, "FAILURE_PREDICTED", f"Predicted failure probability for '{service_id}': {pred.probability:.2f}"
+        )
         self.observability.increment("ai_reliability_intelligence_failure_predictions_total")
         return pred
 
     # Failure Propagation
-    def analyze_propagation(self, tenant_id: str, origin_service: str, downstream_services: List[str]) -> FailurePropagationPath:
+    def analyze_propagation(
+        self, tenant_id: str, origin_service: str, downstream_services: List[str]
+    ) -> FailurePropagationPath:
         return self.failure_propagation_engine.analyze_propagation(tenant_id, origin_service, downstream_services)
 
     # Degradation & Recovery
@@ -174,13 +209,17 @@ class ReliabilityIntelligenceManager:
         return self.recovery_engine.plan_recovery(tenant_id, service_id, strategy)
 
     # Chaos Governance
-    def propose_chaos_experiment(self, tenant_id: str, experiment_name: str, target_service: str, hypothesis: str) -> ChaosExperimentProposal:
+    def propose_chaos_experiment(
+        self, tenant_id: str, experiment_name: str, target_service: str, hypothesis: str
+    ) -> ChaosExperimentProposal:
         return self.chaos_governance.propose_chaos_experiment(tenant_id, experiment_name, target_service, hypothesis)
 
     # Delegation & Governance
     def evaluate_governance(self, tenant_id: str, action_type: str, risk_level: str = "MEDIUM") -> Dict[str, Any]:
         return self.governance_engine.evaluate_governance(tenant_id, action_type, risk_level)
 
-    def create_delegation(self, tenant_id: str, action_name: str, parameters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def create_delegation(
+        self, tenant_id: str, action_name: str, parameters: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         self.governance_engine.enforce_approval_check(tenant_id, action_name, is_approved=True)
         return self.delegation_coordinator.create_delegation_request(tenant_id, action_name, parameters)

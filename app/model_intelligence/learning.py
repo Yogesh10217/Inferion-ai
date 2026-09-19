@@ -76,7 +76,9 @@ class ModelLearningManager:
         )
 
         self._records[rec_id] = record
-        logger.info(f"[MODEL LEARNING] Generated advisory recommendation {rec_id} for model {target_model_id} (auto_execute=False)")
+        logger.info(
+            f"[MODEL LEARNING] Generated advisory recommendation {rec_id} for model {target_model_id} (auto_execute=False)"
+        )
         return record
 
     def list_records(self, tenant_id: str) -> List[ModelLearningRecord]:

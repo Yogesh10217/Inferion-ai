@@ -20,7 +20,7 @@ class VectorStore(ABC):
         query_vector: List[float],
         collection_name: str,
         top_k: int = 10,
-        filter_expr: Optional[Dict[str, Any]] = None
+        filter_expr: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """Search the vector store for similar vectors.
 

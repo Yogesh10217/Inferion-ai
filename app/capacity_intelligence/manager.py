@@ -274,7 +274,9 @@ class CapacityIntelligenceManager:
         prof.capacity_unit = capacity_unit
         prof.registered_at = datetime.now(timezone.utc)
         self.resource_repo.save(prof)
-        self.timeline.record_event(tenant_id, "RESOURCE_REGISTERED", f"Registered resource '{resource_id}' ({resource_type})")
+        self.timeline.record_event(
+            tenant_id, "RESOURCE_REGISTERED", f"Registered resource '{resource_id}' ({resource_type})"
+        )
         return prof
 
     def ingest_telemetry(
@@ -294,8 +296,14 @@ class CapacityIntelligenceManager:
     def analyze_workload(
         self, tenant_id: str, workload_type: str, historical_samples: List[float]
     ) -> WorkloadAnalysisResult:
-        trend = "GROWING" if (len(historical_samples) >= 2 and historical_samples[-1] > historical_samples[0]) else "STEADY"
-        p2a = (max(historical_samples) / (sum(historical_samples) / len(historical_samples))) if historical_samples else 1.0
+        trend = (
+            "GROWING" if (len(historical_samples) >= 2 and historical_samples[-1] > historical_samples[0]) else "STEADY"
+        )
+        p2a = (
+            (max(historical_samples) / (sum(historical_samples) / len(historical_samples)))
+            if historical_samples
+            else 1.0
+        )
         return WorkloadAnalysisResult(
             workload_id=f"wl-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,
@@ -305,9 +313,7 @@ class CapacityIntelligenceManager:
         )
 
     # Assessment & Forecasting
-    def assess_capacity(
-        self, tenant_id: str, resource_id: str, scope: str = "RESOURCE"
-    ) -> CapacityAssessment:
+    def assess_capacity(self, tenant_id: str, resource_id: str, scope: str = "RESOURCE") -> CapacityAssessment:
         ass = self.assessment_engine.assess_capacity(tenant_id, resource_id, consumed_pct=65.0)
         ass.resource_id = resource_id
         ass.utilization_rate = 0.65
@@ -317,9 +323,7 @@ class CapacityIntelligenceManager:
         self.observability.increment("ai_capacity_intelligence_assessments_total")
         return ass
 
-    def forecast_capacity(
-        self, tenant_id: str, resource_id: str, horizon_days: int = 30
-    ) -> CapacityForecast:
+    def forecast_capacity(self, tenant_id: str, resource_id: str, horizon_days: int = 30) -> CapacityForecast:
         fore = self.forecast_engine.forecast_capacity(tenant_id, resource_id, 65.0, 1.2, horizon_days)
         fore.resource_id = resource_id
         fore.horizon_days = horizon_days
@@ -330,9 +334,7 @@ class CapacityIntelligenceManager:
         return fore
 
     # Demand & Saturation
-    def predict_demand(
-        self, tenant_id: str, workload_type: str, time_horizon_hours: int = 24
-    ) -> DemandPrediction:
+    def predict_demand(self, tenant_id: str, workload_type: str, time_horizon_hours: int = 24) -> DemandPrediction:
         dp = self.demand_engine.predict_demand(tenant_id, workload_type, 200.0, 25.0)
         dp.workload_type = workload_type
         dp.time_horizon_hours = time_horizon_hours
@@ -341,9 +343,7 @@ class CapacityIntelligenceManager:
         dp.predicted_at = datetime.now(timezone.utc)
         return dp
 
-    def analyze_saturation(
-        self, tenant_id: str, resource_id: str
-    ) -> SaturationAssessment:
+    def analyze_saturation(self, tenant_id: str, resource_id: str) -> SaturationAssessment:
         sat = self.saturation_engine.predict_saturation(tenant_id, resource_id, 75.0)
         sat.resource_id = resource_id
         sat.saturation_level = 0.75
@@ -361,9 +361,7 @@ class CapacityIntelligenceManager:
         )
 
     # Bottlenecks & Optimization
-    def detect_bottlenecks(
-        self, tenant_id: str, system_scope: str = "GLOBAL"
-    ) -> BottleneckDetectionResult:
+    def detect_bottlenecks(self, tenant_id: str, system_scope: str = "GLOBAL") -> BottleneckDetectionResult:
         bot = Bottleneck(
             tenant_id=tenant_id,
             resource_id="res-gpu-cluster-1",
@@ -441,9 +439,7 @@ class CapacityIntelligenceManager:
         scen.bottleneck_predicted = True
         return scen
 
-    def generate_recommendations(
-        self, tenant_id: str, resource_id: str
-    ) -> List[CapacityRecommendation]:
+    def generate_recommendations(self, tenant_id: str, resource_id: str) -> List[CapacityRecommendation]:
         rec = CapacityRecommendation(
             tenant_id=tenant_id,
             target_resource_id=resource_id,
@@ -455,9 +451,7 @@ class CapacityIntelligenceManager:
         return [rec]
 
     # Governance & Delegation
-    def evaluate_governance(
-        self, tenant_id: str, action: str, risk_level: Any = "MEDIUM"
-    ) -> Dict[str, Any]:
+    def evaluate_governance(self, tenant_id: str, action: str, risk_level: Any = "MEDIUM") -> Dict[str, Any]:
         risk_str = str(risk_level.value if hasattr(risk_level, "value") else risk_level).upper()
         req_appr = risk_str in ["HIGH", "CRITICAL"]
         decision = GovernanceDecision.REQUIRE_APPROVAL.value if req_appr else GovernanceDecision.ALLOW.value
@@ -480,7 +474,11 @@ class CapacityIntelligenceManager:
     ) -> CapacityDelegationRecord:
         risk_enum = RiskLevel(risk_level.value if hasattr(risk_level, "value") else risk_level)
         requires_appr = risk_enum in [RiskLevel.HIGH, RiskLevel.CRITICAL] and not is_approved
-        status = DelegationStatus.PENDING_APPROVAL if requires_appr else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
+        status = (
+            DelegationStatus.PENDING_APPROVAL
+            if requires_appr
+            else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
+        )
 
         del_rec = CapacityDelegationRecord(
             delegation_id=f"cdel-{uuid.uuid4().hex[:12]}",
@@ -535,9 +533,7 @@ class CapacityIntelligenceManager:
         )
 
     # Evidence & Snapshots
-    def create_evidence_bundle(
-        self, tenant_id: str, records: List[Dict[str, Any]]
-    ) -> CapacityEvidenceBundle:
+    def create_evidence_bundle(self, tenant_id: str, records: List[Dict[str, Any]]) -> CapacityEvidenceBundle:
         eb = self.evidence_manager.create_evidence_bundle(tenant_id, records)
         self._evidence_bundles[eb.bundle_id] = eb
         return eb

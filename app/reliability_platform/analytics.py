@@ -1,6 +1,5 @@
 """Tenant-Scoped Reliability Analytics Subsystem (Phase 5.31)."""
 
-
 from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformInsight, PlatformReport
 
 
@@ -14,7 +13,11 @@ class ReliabilityAnalyticsEngine:
             AnalyticsMetric(metric_name="slo_achievement_pct", metric_value=99.95),
         ]
         insights = [
-            PlatformInsight(title="High Reliability", description="Service error budgets are intact across all critical services.", impact_level="LOW"),
+            PlatformInsight(
+                title="High Reliability",
+                description="Service error budgets are intact across all critical services.",
+                impact_level="LOW",
+            ),
         ]
 
         return PlatformReport(

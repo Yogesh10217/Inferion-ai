@@ -20,8 +20,7 @@ class QuotaService:
         """Evaluate quotas for a specific scope."""
         # Find policy for this scope
         stmt = select(QuotaPolicy).filter(
-            getattr(QuotaPolicy, f"{scope_type}_id") == scope_id,
-            QuotaPolicy.enabled == True
+            getattr(QuotaPolicy, f"{scope_type}_id") == scope_id, QuotaPolicy.enabled == True
         )
         result = await session.execute(stmt)
         policy = result.scalar_one_or_none()
@@ -52,7 +51,7 @@ class QuotaService:
             w_stmt = select(QuotaWindow).filter(
                 QuotaWindow.scope_id == window_scope,
                 QuotaWindow.window_id == date_str,
-                QuotaWindow.metric_type == "tokens"
+                QuotaWindow.metric_type == "tokens",
             )
             w_result = await session.execute(w_stmt)
             window = w_result.scalar_one_or_none()
@@ -66,7 +65,7 @@ class QuotaService:
             w_stmt = select(QuotaWindow).filter(
                 QuotaWindow.scope_id == window_scope,
                 QuotaWindow.window_id == date_str,
-                QuotaWindow.metric_type == "requests"
+                QuotaWindow.metric_type == "requests",
             )
             w_result = await session.execute(w_stmt)
             window = w_result.scalar_one_or_none()
@@ -80,13 +79,14 @@ class QuotaService:
         organization_id: str,
         workspace_id: Optional[str] = None,
         api_key_id: Optional[str] = None,
-        user_id: Optional[str] = None
+        user_id: Optional[str] = None,
     ) -> None:
         """
         Evaluate quotas hierarchically: Org -> Workspace -> API Key -> User.
         Fails fast if an upper-level quota is exceeded.
         """
         import datetime
+
         date_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
 
         async with self.session_factory() as session:

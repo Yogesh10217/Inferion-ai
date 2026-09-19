@@ -6,7 +6,9 @@ from app.limits.models import UsageRecord
 class CostCalculator:
 
     @staticmethod
-    def calculate_cost(usage: UsageRecord, rule: PricingRule, discount_pct: float = 0.0, tax_pct: float = 0.0) -> CostBreakdown:
+    def calculate_cost(
+        usage: UsageRecord, rule: PricingRule, discount_pct: float = 0.0, tax_pct: float = 0.0
+    ) -> CostBreakdown:
         """Calculate the cost of a single usage record."""
         # Note: UsageRecord might not track input vs output tokens natively in Phase 3.3.
         # If total tokens is all we have, we'll apply an average or        # For simplicity, if we don't have separate input/output tokens in UsageRecord
@@ -36,5 +38,5 @@ class CostCalculator:
             discount=round(discount, 6),
             tax=round(tax, 6),
             total=round(total, 6),
-            currency=rule.currency
+            currency=rule.currency,
         )

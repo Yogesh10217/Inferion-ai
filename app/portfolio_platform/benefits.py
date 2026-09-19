@@ -92,7 +92,9 @@ class BenefitsManager:
         if not b:
             raise BenefitsRealizationException(f"Benefit '{benefit_id}' not found.")
         if b.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=b.tenant_id, resource_id=benefit_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=b.tenant_id, resource_id=benefit_id
+            )
         return b
 
     def list_benefits_for_initiative(self, tenant_id: str, initiative_id: str) -> List[Benefit]:

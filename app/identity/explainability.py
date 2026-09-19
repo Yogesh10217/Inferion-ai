@@ -30,7 +30,9 @@ class AuthorizationExplanation(BaseModel):
 class ExplainabilityEngine:
     """Generates deterministic, evidence-backed explanations for authorization decisions without LLM hallucination."""
 
-    def explain_access_decision(self, action: str, context: AccessContext, decision: AccessDecision) -> AuthorizationExplanation:
+    def explain_access_decision(
+        self, action: str, context: AccessContext, decision: AccessDecision
+    ) -> AuthorizationExplanation:
         factors = [
             f"Identity Role: {context.role}",
             f"Data Classification: {context.data_classification}",
@@ -52,5 +54,7 @@ class ExplainabilityEngine:
             required_assurance=decision.required_assurance,
             approval_request_id=decision.approval_request_id,
         )
-        logger.info(f"[IDENTITY EXPLAINABILITY] Generated explanation for decision '{decision.decision_id}': Outcome = {outcome}")
+        logger.info(
+            f"[IDENTITY EXPLAINABILITY] Generated explanation for decision '{decision.decision_id}': Outcome = {outcome}"
+        )
         return expl

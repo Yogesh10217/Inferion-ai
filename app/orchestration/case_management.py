@@ -94,7 +94,9 @@ class CaseManager:
         )
         self._cases[case.case_id] = case
         self.add_timeline_event(case.case_id, "CASE_CREATED", f"Case '{title}' created")
-        logger.info(f"[CASE MANAGER] Created case '{case.case_id}' ('{title}', {case_type.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[CASE MANAGER] Created case '{case.case_id}' ('{title}', {case_type.value}) for tenant '{tenant_id}'"
+        )
         return case
 
     def update_status(self, case_id: str, new_status: CaseStatus, reason: str = "") -> Case:
@@ -104,7 +106,9 @@ class CaseManager:
         if new_status in (CaseStatus.RESOLVED, CaseStatus.CLOSED):
             case.resolved_at = _now()
 
-        self.add_timeline_event(case_id, f"STATUS_UPDATED_{new_status.value}", reason or f"Status updated to {new_status.value}")
+        self.add_timeline_event(
+            case_id, f"STATUS_UPDATED_{new_status.value}", reason or f"Status updated to {new_status.value}"
+        )
         logger.info(f"[CASE MANAGER] Case '{case_id}' status updated -> {new_status.value}")
         return case
 

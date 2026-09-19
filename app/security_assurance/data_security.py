@@ -19,7 +19,9 @@ class DataExfiltrationRiskAssessment(BaseModel):
 class DataSecurityEngine:
     """Evaluates data security posture and exfiltration risks."""
 
-    def assess_dataset_security(self, tenant_id: str, dataset_id: str, sensitive_types: List[str]) -> DataExfiltrationRiskAssessment:
+    def assess_dataset_security(
+        self, tenant_id: str, dataset_id: str, sensitive_types: List[str]
+    ) -> DataExfiltrationRiskAssessment:
         risk_score = min(100.0, len(sensitive_types) * 25.0)
         return DataExfiltrationRiskAssessment(
             tenant_id=tenant_id,

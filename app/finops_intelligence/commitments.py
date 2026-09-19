@@ -65,7 +65,9 @@ class CommitmentManager:
         self._recommendations[rec.recommendation_id] = rec
         return rec
 
-    def approve_commitment(self, tenant_id: str, recommendation_id: str, approval_id: str = "appr_cmt_99") -> CommitmentRecommendation:
+    def approve_commitment(
+        self, tenant_id: str, recommendation_id: str, approval_id: str = "appr_cmt_99"
+    ) -> CommitmentRecommendation:
         rec = self.get_recommendation(tenant_id, recommendation_id)
         rec.approval_id = approval_id
         return rec

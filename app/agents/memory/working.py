@@ -13,10 +13,7 @@ class WorkingMemory(BaseModel):
     variables: Dict[str, Any] = Field(default_factory=dict)
 
     def add_step(self, step_name: str, result: Any) -> None:
-        self.scratchpad.append({
-            "step_name": step_name,
-            "result": result
-        })
+        self.scratchpad.append({"step_name": step_name, "result": result})
 
     def set_variable(self, name: str, val: Any) -> None:
         self.variables[name] = val

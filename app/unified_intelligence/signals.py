@@ -62,7 +62,7 @@ class UnifiedSignal(BaseModel):
             severity=normalized.severity,
             sanitized_payload=normalized.sanitized_payload,
             confidence_score=normalized.confidence_score,
-            risk_score=normalized.risk_score
+            risk_score=normalized.risk_score,
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,7 +70,7 @@ class UnifiedSignal(BaseModel):
             "signal_id": self.signal_id,
             "correlation_id": self.correlation_id,
             "tenant_id": self.tenant_id,
-            "domain": self.domain.value if hasattr(self.domain, 'value') else str(self.domain),
+            "domain": self.domain.value if hasattr(self.domain, "value") else str(self.domain),
             "entity_reference": self.source_reference,
             "source_reference": self.source_reference,
             "signal_type": self.signal_type,
@@ -78,7 +78,7 @@ class UnifiedSignal(BaseModel):
             "confidence_score": round(self.confidence_score, 4),
             "risk_score": round(self.risk_score, 4),
             "sanitized_payload": self.sanitized_payload,
-            "created_at": self.timestamp.isoformat()
+            "created_at": self.timestamp.isoformat(),
         }
 
 

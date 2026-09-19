@@ -29,5 +29,7 @@ class KnowledgeAnalyticsEngine:
 
     def generate_insight(self, tenant_id: str = "global") -> KnowledgeAnalyticsInsight:
         insight = KnowledgeAnalyticsInsight(tenant_id=tenant_id)
-        logger.info(f"[KNOWLEDGE ANALYTICS] Generated insight for tenant '{tenant_id}': Success Rate = {insight.retrieval_success_rate}%")
+        logger.info(
+            f"[KNOWLEDGE ANALYTICS] Generated insight for tenant '{tenant_id}': Success Rate = {insight.retrieval_success_rate}%"
+        )
         return insight

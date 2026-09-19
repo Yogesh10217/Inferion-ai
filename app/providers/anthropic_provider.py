@@ -45,7 +45,9 @@ class AnthropicProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> InferenceResponse:
-        request_obj = request or InferenceRequest(model=model or "claude-3-5-sonnet-20241022", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "claude-3-5-sonnet-20241022", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "claude-3-5-sonnet-20241022"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -116,7 +118,9 @@ class AnthropicProvider(BaseProvider):
 
                     latency_ms = (time.perf_counter() - start_time) * 1000.0
                     if response.status_code != 200:
-                        raise ProviderUnavailableException(f"Anthropic error status {response.status_code}: {response.text}")
+                        raise ProviderUnavailableException(
+                            f"Anthropic error status {response.status_code}: {response.text}"
+                        )
 
                     resp_json = response.json()
                     content_blocks = resp_json.get("content", [])
@@ -154,7 +158,9 @@ class AnthropicProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> AsyncIterator[InferenceResponse]:
-        request_obj = request or InferenceRequest(model=model or "claude-3-5-sonnet-20241022", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "claude-3-5-sonnet-20241022", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "claude-3-5-sonnet-20241022"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -184,7 +190,9 @@ class AnthropicProvider(BaseProvider):
             "anthropic-version": "2023-06-01",
             "content-type": "application/json",
         }
-        messages_payload = [{"role": msg.role, "content": msg.content} for msg in request_obj.messages if msg.role != "system"]
+        messages_payload = [
+            {"role": msg.role, "content": msg.content} for msg in request_obj.messages if msg.role != "system"
+        ]
         payload = {
             "model": model_name,
             "max_tokens": request_obj.max_tokens or 1024,
@@ -239,7 +247,22 @@ class AnthropicProvider(BaseProvider):
 
     async def list_models(self) -> list[ProviderModel]:
         return [
-            ProviderModel(id="claude-3-5-sonnet-20241022", provider="anthropic", description="Anthropic Claude 3.5 Sonnet", context_window=200000),
-            ProviderModel(id="claude-3-5-haiku-20241022", provider="anthropic", description="Anthropic Claude 3.5 Haiku", context_window=200000),
-            ProviderModel(id="claude-3-opus-20240229", provider="anthropic", description="Anthropic Claude 3 Opus", context_window=200000),
+            ProviderModel(
+                id="claude-3-5-sonnet-20241022",
+                provider="anthropic",
+                description="Anthropic Claude 3.5 Sonnet",
+                context_window=200000,
+            ),
+            ProviderModel(
+                id="claude-3-5-haiku-20241022",
+                provider="anthropic",
+                description="Anthropic Claude 3.5 Haiku",
+                context_window=200000,
+            ),
+            ProviderModel(
+                id="claude-3-opus-20240229",
+                provider="anthropic",
+                description="Anthropic Claude 3 Opus",
+                context_window=200000,
+            ),
         ]

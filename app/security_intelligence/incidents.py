@@ -96,7 +96,9 @@ class SecurityIncidentManager:
             title=title,
             severity=severity,
         )
-        inc.timeline.append(SecurityIncidentTimelineEvent(status=SecurityIncidentStatus.DETECTED, message="Security incident detected"))
+        inc.timeline.append(
+            SecurityIncidentTimelineEvent(status=SecurityIncidentStatus.DETECTED, message="Security incident detected")
+        )
         self._incidents[inc.incident_id] = inc
         return inc
 

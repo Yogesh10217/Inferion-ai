@@ -107,7 +107,9 @@ class WorkflowDefinitionManager:
             description=description,
         )
         self._definitions[wf_def.workflow_id] = wf_def
-        logger.info(f"[WORKFLOW DEFINITION] Created workflow definition '{wf_def.workflow_id}' ({name}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[WORKFLOW DEFINITION] Created workflow definition '{wf_def.workflow_id}' ({name}) for tenant '{tenant_id}'"
+        )
         return wf_def
 
     def publish_definition(self, workflow_id: str) -> WorkflowDefinition:

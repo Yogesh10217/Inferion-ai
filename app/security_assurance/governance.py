@@ -42,7 +42,9 @@ class SecurityGovernanceEngine:
         approved_by: Optional[str] = None,
     ) -> SecurityGovernanceResult:
         if is_high_risk and not approved_by:
-            logger.warning(f"[SECURITY GOVERNANCE] High-risk action '{action}' on '{target_resource_id}' requires human approval.")
+            logger.warning(
+                f"[SECURITY GOVERNANCE] High-risk action '{action}' on '{target_resource_id}' requires human approval."
+            )
             return SecurityGovernanceResult(
                 request_id=f"gov-req-{uuid.uuid4().hex[:8]}",
                 tenant_id=tenant_id,

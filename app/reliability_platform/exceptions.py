@@ -49,11 +49,15 @@ class ImmutableReliabilityRecordException(ReliabilityPlatformException):
     """Raised when mutation is attempted on a closed incident timeline or finalized postmortem."""
 
     def __init__(self, record_id: str):
-        super().__init__(f"Reliability record '{record_id}' is finalized and immutable.", code="IMMUTABLE_RECORD_MUTATION_DENIED")
+        super().__init__(
+            f"Reliability record '{record_id}' is finalized and immutable.", code="IMMUTABLE_RECORD_MUTATION_DENIED"
+        )
 
 
 class SLOBreachException(ReliabilityPlatformException):
     """Raised when an SLO budget exhaustion threshold is breached."""
 
     def __init__(self, slo_id: str, current_error_budget: float):
-        super().__init__(f"SLO '{slo_id}' error budget breached: remaining budget {current_error_budget}%.", code="SLO_BREACH")
+        super().__init__(
+            f"SLO '{slo_id}' error budget breached: remaining budget {current_error_budget}%.", code="SLO_BREACH"
+        )

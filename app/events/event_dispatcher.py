@@ -56,4 +56,7 @@ class EventDispatcher:
 
                 await webhook_svc.process_published_event(envelope)
         except Exception as exc:
-            logger.error(f"EventDispatcher error processing event {envelope.event_type} ({envelope.event_id}): {exc}", exc_info=True)
+            logger.error(
+                f"EventDispatcher error processing event {envelope.event_type} ({envelope.event_id}): {exc}",
+                exc_info=True,
+            )

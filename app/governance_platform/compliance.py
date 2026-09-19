@@ -76,7 +76,9 @@ class ComplianceManager:
             ComplianceControl(control_id="CC1.1", name="Access Control Policy", status=ComplianceStatus.COMPLIANT),
             ComplianceControl(control_id="CC2.1", name="Audit Evidence Logging", status=ComplianceStatus.COMPLIANT),
             ComplianceControl(control_id="CC6.1", name="Secret Redaction", status=ComplianceStatus.COMPLIANT),
-            ComplianceControl(control_id="CC7.1", name="Incident Response Management", status=ComplianceStatus.PARTIALLY_COMPLIANT),
+            ComplianceControl(
+                control_id="CC7.1", name="Incident Response Management", status=ComplianceStatus.PARTIALLY_COMPLIANT
+            ),
         ]
 
         compliant_count = sum(1 for c in ctrls if c.status == ComplianceStatus.COMPLIANT)
@@ -89,7 +91,11 @@ class ComplianceManager:
         else:
             overall_status = ComplianceStatus.NON_COMPLIANT
 
-        findings = [f"Control '{c.control_id}' ({c.name}) is {c.status.value}" for c in ctrls if c.status != ComplianceStatus.COMPLIANT]
+        findings = [
+            f"Control '{c.control_id}' ({c.name}) is {c.status.value}"
+            for c in ctrls
+            if c.status != ComplianceStatus.COMPLIANT
+        ]
 
         ass = ComplianceAssessment(
             framework=framework,
@@ -100,7 +106,9 @@ class ComplianceManager:
             findings=findings,
         )
         self._assessments[ass.assessment_id] = ass
-        logger.info(f"[COMPLIANCE MANAGER] Assessed framework '{framework.value}' for tenant '{tenant_id}': Score = {score:.1f}% ({overall_status.value})")
+        logger.info(
+            f"[COMPLIANCE MANAGER] Assessed framework '{framework.value}' for tenant '{tenant_id}': Score = {score:.1f}% ({overall_status.value})"
+        )
         return ass
 
     def get_assessment(self, assessment_id: str) -> ComplianceAssessment:

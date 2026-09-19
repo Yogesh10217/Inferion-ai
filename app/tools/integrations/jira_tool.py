@@ -26,7 +26,10 @@ class JiraTool(BaseTool):
             parameters_schema={
                 "type": "object",
                 "properties": {
-                    "action": {"type": "string", "enum": ["create_issue", "update_issue", "search_issue", "add_comment"]},
+                    "action": {
+                        "type": "string",
+                        "enum": ["create_issue", "update_issue", "search_issue", "add_comment"],
+                    },
                     "project_key": {"type": "string", "description": "Jira Project key (e.g. PROJ)"},
                     "issue_key": {"type": "string", "description": "Jira Issue key (e.g. PROJ-123)"},
                     "summary": {"type": "string", "description": "Issue summary/title"},

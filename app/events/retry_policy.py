@@ -10,9 +10,7 @@ class RetryPolicy:
     max_interval_ms: int = 300000  # 5 minutes
     backoff_factor: float = 2.0
     jitter_ratio: float = 0.2
-    retryable_status_codes: List[int] = field(
-        default_factory=lambda: [408, 429, 500, 502, 503, 504]
-    )
+    retryable_status_codes: List[int] = field(default_factory=lambda: [408, 429, 500, 502, 503, 504])
 
     def calculate_delay_ms(self, attempt: int) -> float:
         """

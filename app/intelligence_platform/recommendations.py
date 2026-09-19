@@ -99,8 +99,13 @@ class RecommendationManager:
         if idem_key in self._idempotency_map:
             existing_id = self._idempotency_map[idem_key]
             existing_rec = self._recommendations.get(existing_id)
-            if existing_rec and existing_rec.status not in (RecommendationStatus.EXPIRED, RecommendationStatus.SUPERSEDED):
-                logger.info(f"[RECOMMENDATION MANAGER] Idempotent hit for key '{idem_key}', returning recommendation '{existing_rec.recommendation_id}'")
+            if existing_rec and existing_rec.status not in (
+                RecommendationStatus.EXPIRED,
+                RecommendationStatus.SUPERSEDED,
+            ):
+                logger.info(
+                    f"[RECOMMENDATION MANAGER] Idempotent hit for key '{idem_key}', returning recommendation '{existing_rec.recommendation_id}'"
+                )
                 return existing_rec
 
         expires_at = _now() + timedelta(hours=ttl_hours)
@@ -121,7 +126,9 @@ class RecommendationManager:
 
         self._recommendations[rec.recommendation_id] = rec
         self._idempotency_map[idem_key] = rec.recommendation_id
-        logger.info(f"[RECOMMENDATION MANAGER] Created recommendation '{rec.recommendation_id}' ({recommendation_type.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[RECOMMENDATION MANAGER] Created recommendation '{rec.recommendation_id}' ({recommendation_type.value}) for tenant '{tenant_id}'"
+        )
         return rec
 
     def supersede_recommendation(self, old_rec_id: str, new_rec_id: str, tenant_id: str) -> None:
@@ -148,7 +155,9 @@ class RecommendationManager:
             raise RecommendationNotFoundException(recommendation_id)
         return rec
 
-    def list_recommendations(self, tenant_id: str, status: Optional[RecommendationStatus] = None) -> List[Recommendation]:
+    def list_recommendations(
+        self, tenant_id: str, status: Optional[RecommendationStatus] = None
+    ) -> List[Recommendation]:
         res = [r for r in self._recommendations.values() if r.tenant_id == tenant_id]
         if status:
             res = [r for r in res if r.status == status]

@@ -104,7 +104,13 @@ class FinOpsIntelligenceManager:
         fcst = self.forecast_manager.generate_forecast(tenant_id, [800.0, 950.0, amount_usd], ForecastScenario.BASELINE)
 
         # 4. Anomaly Detection & Optimization
-        anomaly = self.anomaly_manager.detect_anomaly(tenant_id, resource_id, expected_amount_usd=500.0, actual_amount_usd=amount_usd, anomaly_type=CostAnomalyType.SPENDING_SPIKE)
+        anomaly = self.anomaly_manager.detect_anomaly(
+            tenant_id,
+            resource_id,
+            expected_amount_usd=500.0,
+            actual_amount_usd=amount_usd,
+            anomaly_type=CostAnomalyType.SPENDING_SPIKE,
+        )
         if anomaly:
             self.metrics_collector.increment("anomalies_total")
 
@@ -121,28 +127,40 @@ class FinOpsIntelligenceManager:
 
         # 5. Risk & Governance Evaluation
         risk_asm = self.risk_manager.evaluate_risk(tenant_id, resource_id, budget_risk_score=85.0)
-        gov_dec = self.governance_engine.evaluate_governance(tenant_id, "MODEL_RIGHTSIZING", risk_score=risk_asm.profile.overall_risk_score)
+        gov_dec = self.governance_engine.evaluate_governance(
+            tenant_id, "MODEL_RIGHTSIZING", risk_score=risk_asm.profile.overall_risk_score
+        )
 
         # 6. Delegation & Verification
-        action = FinOpsDelegationAction(action_type="DOWNSIZE_RESOURCE", target_resource_id=resource_id, is_high_risk=False)
+        action = FinOpsDelegationAction(
+            action_type="DOWNSIZE_RESOURCE", target_resource_id=resource_id, is_high_risk=False
+        )
         del_plan = self.delegation_manager.create_delegation_plan(tenant_id, opt_rec.optimization_id, [action])
         del_req = self.delegation_manager.execute_delegation(tenant_id, del_plan.plan_id)
 
-        v_chk = VerificationCheck(check_name="Verify Resource Downsize", passed=True, details="Resource downsized successfully")
+        v_chk = VerificationCheck(
+            check_name="Verify Resource Downsize", passed=True, details="Resource downsized successfully"
+        )
         verif = self.verification_manager.verify_action(tenant_id, del_plan.plan_id, [v_chk])
 
         # 7. Investigation & Snapshot
-        inv = self.investigation_manager.open_investigation(tenant_id, f"Investigation for {resource_id}", target_anomaly_id=anomaly.anomaly_id if anomaly else None)
+        inv = self.investigation_manager.open_investigation(
+            tenant_id, f"Investigation for {resource_id}", target_anomaly_id=anomaly.anomaly_id if anomaly else None
+        )
         self.investigation_manager.start_investigating(tenant_id, inv.investigation_id)
         self.investigation_manager.record_finding(tenant_id, inv.investigation_id, "Unoptimized prompt tokens")
         concluded_inv = self.investigation_manager.conclude_investigation(tenant_id, inv.investigation_id)
         self.investigation_repo.save(concluded_inv)
 
-        snap = self.snapshot_manager.capture_snapshot(tenant_id, concluded_inv.investigation_id, "FINOPS_INVESTIGATION", concluded_inv.model_dump(mode="json"))
+        snap = self.snapshot_manager.capture_snapshot(
+            tenant_id, concluded_inv.investigation_id, "FINOPS_INVESTIGATION", concluded_inv.model_dump(mode="json")
+        )
 
         # 8. Evidence & Learning
         bundle = self.evidence_manager.create_bundle(tenant_id, f"Evidence for {resource_id}")
-        self.evidence_manager.add_evidence(tenant_id, bundle.bundle_id, "COST_LEDGER_ENTRY", cost_rec.record_id, {"raw": "cost payload"})
+        self.evidence_manager.add_evidence(
+            tenant_id, bundle.bundle_id, "COST_LEDGER_ENTRY", cost_rec.record_id, {"raw": "cost payload"}
+        )
         finalized_bundle = self.evidence_manager.finalize_bundle(tenant_id, bundle.bundle_id)
 
         learning = self.learning_manager.record_learning(
@@ -156,7 +174,12 @@ class FinOpsIntelligenceManager:
 
         # 9. Analytics & Billing
         self.billing_tracker.record_cost_event(tenant_id, "FINOPS_INTELLIGENCE", 0.01)
-        report = self.analytics_engine.generate_report(tenant_id, total_spend_usd=amount_usd, budget_utilization_pct=bdg_asm.utilization_pct, potential_savings_usd=400.0)
+        report = self.analytics_engine.generate_report(
+            tenant_id,
+            total_spend_usd=amount_usd,
+            budget_utilization_pct=bdg_asm.utilization_pct,
+            potential_savings_usd=400.0,
+        )
 
         return {
             "status": "COMPLETED",

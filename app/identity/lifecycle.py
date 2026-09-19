@@ -42,7 +42,9 @@ class IdentityLifecycleManager:
     def initiate_access_review(self, identity_id: str, role: str, tenant_id: str = "global") -> AccessReview:
         rev = AccessReview(identity_id=identity_id, role=role, tenant_id=tenant_id)
         self._reviews[rev.review_id] = rev
-        logger.info(f"[IDENTITY LIFECYCLE] Initiated access review '{rev.review_id}' for identity '{identity_id}' (Role: {role})")
+        logger.info(
+            f"[IDENTITY LIFECYCLE] Initiated access review '{rev.review_id}' for identity '{identity_id}' (Role: {role})"
+        )
         return rev
 
     def certify_access(self, review_id: str, reviewer_id: str) -> AccessReview:

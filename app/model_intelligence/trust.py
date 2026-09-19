@@ -59,13 +59,24 @@ class ModelTrustEngine:
     ) -> ModelTrustAssessment:
         overall = sum(f.score * f.weight for f in factors) / max(sum(f.weight for f in factors), 1.0)
 
-        level = "VERY_HIGH" if overall >= 90.0 else ("HIGH" if overall >= 75.0 else ("MEDIUM" if overall >= 60.0 else ("LOW" if overall >= 40.0 else "UNTRUSTED")))
+        level = (
+            "VERY_HIGH"
+            if overall >= 90.0
+            else (
+                "HIGH"
+                if overall >= 75.0
+                else ("MEDIUM" if overall >= 60.0 else ("LOW" if overall >= 40.0 else "UNTRUSTED"))
+            )
+        )
 
         ts = ModelTrustScore(overall_score=overall, trust_level=level, factors=factors)
 
         from app.platform_contracts.trust import TrustBand
         from app.platform_contracts.trust import TrustDimension as PlatformTrustDimension
-        band = TrustBand.HIGH_TRUST if overall >= 90.0 else (TrustBand.TRUSTED if overall >= 70.0 else TrustBand.UNTRUSTED)
+
+        band = (
+            TrustBand.HIGH_TRUST if overall >= 90.0 else (TrustBand.TRUSTED if overall >= 70.0 else TrustBand.UNTRUSTED)
+        )
 
         pta = TrustAssessment(
             subject_type="MODEL",
@@ -73,7 +84,10 @@ class ModelTrustEngine:
             tenant_id=tenant_id,
             score=overall,
             band=band,
-            dimensions=[PlatformTrustDimension(dimension_name=f.dimension.value, score=f.score, weight=f.weight) for f in factors],
+            dimensions=[
+                PlatformTrustDimension(dimension_name=f.dimension.value, score=f.score, weight=f.weight)
+                for f in factors
+            ],
         )
 
         assess = ModelTrustAssessment(
@@ -85,7 +99,9 @@ class ModelTrustEngine:
         )
 
         self._assessments[model_id] = assess
-        logger.info(f"[MODEL TRUST ENGINE] Computed trust for model {model_id} (Tenant: {tenant_id}) Score: {overall:.1f} Level: {level}")
+        logger.info(
+            f"[MODEL TRUST ENGINE] Computed trust for model {model_id} (Tenant: {tenant_id}) Score: {overall:.1f} Level: {level}"
+        )
         return assess
 
     def get_trust_assessment(self, model_id: str, tenant_id: str) -> ModelTrustAssessment:

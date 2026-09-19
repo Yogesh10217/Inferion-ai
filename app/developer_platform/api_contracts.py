@@ -24,7 +24,9 @@ class APIContractValidator:
     def __init__(self, approval_engine: Optional[ApprovalEngine] = None) -> None:
         self.approval_engine = approval_engine or ApprovalEngine()
 
-    def compare_contracts(self, old_contract: APIContract, new_contract: APIContract, tenant_id: str = "global") -> Dict[str, Any]:
+    def compare_contracts(
+        self, old_contract: APIContract, new_contract: APIContract, tenant_id: str = "global"
+    ) -> Dict[str, Any]:
         breaking_changes = []
 
         # Check for removed endpoints
@@ -39,7 +41,9 @@ class APIContractValidator:
                 action_type="API_BREAKING_CHANGE",
                 tenant_id=tenant_id,
             )
-            logger.warning(f"[API CONTRACT VALIDATOR] Breaking changes detected for service '{new_contract.service_id}'. Approval requested -> '{appr.request_id}'")
+            logger.warning(
+                f"[API CONTRACT VALIDATOR] Breaking changes detected for service '{new_contract.service_id}'. Approval requested -> '{appr.request_id}'"
+            )
             raise APIContractBreakingChangeException(new_contract.service_id, reason)
 
         return {"is_compatible": True, "breaking_changes": []}

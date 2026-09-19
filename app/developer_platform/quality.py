@@ -39,5 +39,7 @@ class QualityManager:
             logger.warning(f"[QUALITY MANAGER] Quality gate '{gate.gate_id}' FAILED: {reason}")
             raise QualityGateViolationException(gate.gate_id, reason)
 
-        logger.info(f"[QUALITY MANAGER] Quality gate '{gate.gate_id}' PASSED (coverage={coverage_pct}%, bugs={critical_bugs})")
+        logger.info(
+            f"[QUALITY MANAGER] Quality gate '{gate.gate_id}' PASSED (coverage={coverage_pct}%, bugs={critical_bugs})"
+        )
         return True

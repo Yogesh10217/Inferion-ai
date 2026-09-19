@@ -44,12 +44,42 @@ class DecisionTrustEngine:
     ) -> TrustAssessment:
         if not factors:
             factors = [
-                DecisionTrustFactor(dimension=DecisionTrustDimension.ACCURACY, score=0.96, weight=0.2, evidence="High confidence telemetry"),
-                DecisionTrustFactor(dimension=DecisionTrustDimension.TRANSPARENCY, score=0.98, weight=0.2, evidence="Full explainability trail"),
-                DecisionTrustFactor(dimension=DecisionTrustDimension.RELIABILITY, score=0.94, weight=0.15, evidence="Verified outcome metrics"),
-                DecisionTrustFactor(dimension=DecisionTrustDimension.COMPLIANCE, score=1.0, weight=0.15, evidence="Zero policy violations"),
-                DecisionTrustFactor(dimension=DecisionTrustDimension.VERIFIABILITY, score=0.95, weight=0.15, evidence="SHA-256 evidence bundle"),
-                DecisionTrustFactor(dimension=DecisionTrustDimension.RISK_ALIGNMENT, score=0.92, weight=0.15, evidence="Risk profile within tolerance"),
+                DecisionTrustFactor(
+                    dimension=DecisionTrustDimension.ACCURACY,
+                    score=0.96,
+                    weight=0.2,
+                    evidence="High confidence telemetry",
+                ),
+                DecisionTrustFactor(
+                    dimension=DecisionTrustDimension.TRANSPARENCY,
+                    score=0.98,
+                    weight=0.2,
+                    evidence="Full explainability trail",
+                ),
+                DecisionTrustFactor(
+                    dimension=DecisionTrustDimension.RELIABILITY,
+                    score=0.94,
+                    weight=0.15,
+                    evidence="Verified outcome metrics",
+                ),
+                DecisionTrustFactor(
+                    dimension=DecisionTrustDimension.COMPLIANCE,
+                    score=1.0,
+                    weight=0.15,
+                    evidence="Zero policy violations",
+                ),
+                DecisionTrustFactor(
+                    dimension=DecisionTrustDimension.VERIFIABILITY,
+                    score=0.95,
+                    weight=0.15,
+                    evidence="SHA-256 evidence bundle",
+                ),
+                DecisionTrustFactor(
+                    dimension=DecisionTrustDimension.RISK_ALIGNMENT,
+                    score=0.92,
+                    weight=0.15,
+                    evidence="Risk profile within tolerance",
+                ),
             ]
 
         total_weight = sum(f.weight for f in factors)

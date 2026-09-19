@@ -56,9 +56,7 @@ class DeploymentStartupManager:
             val_res = RuntimeConfigurationValidator.validate(self.config)
             if not val_res.valid:
                 error_msg = f"Configuration validation failed: {'; '.join(val_res.errors)}"
-                StructuredLoggingConfigurator.log_event(
-                    logger, logging.ERROR, "CONFIGURATION_INVALID", error_msg
-                )
+                StructuredLoggingConfigurator.log_event(logger, logging.ERROR, "CONFIGURATION_INVALID", error_msg)
                 self.transition_to(StartupState.FAILED)
                 raise StartupLifecycleError(error_msg)
 
@@ -68,9 +66,7 @@ class DeploymentStartupManager:
             dep_healthy = DeploymentDependencyValidator.evaluate_dependency_health(dep_results)
             if not dep_healthy:
                 error_msg = "Required infrastructure dependency validation failed"
-                StructuredLoggingConfigurator.log_event(
-                    logger, logging.ERROR, "DEPENDENCY_UNAVAILABLE", error_msg
-                )
+                StructuredLoggingConfigurator.log_event(logger, logging.ERROR, "DEPENDENCY_UNAVAILABLE", error_msg)
                 self.transition_to(StartupState.FAILED)
                 raise StartupLifecycleError(error_msg)
 

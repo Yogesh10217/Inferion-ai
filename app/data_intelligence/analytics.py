@@ -39,10 +39,14 @@ class DataIntelligenceAnalyticsEngine:
         metrics = [
             AnalyticsMetric(metric_name="quality_trend_avg", metric_value=round(quality_trend_avg, 4)),
             AnalyticsMetric(metric_name="anomalies_total", metric_value=float(anomalies_count)),
-            AnalyticsMetric(metric_name="freshness_sla_compliance_pct", metric_value=round(freshness_sla_compliance_pct, 2)),
+            AnalyticsMetric(
+                metric_name="freshness_sla_compliance_pct", metric_value=round(freshness_sla_compliance_pct, 2)
+            ),
             AnalyticsMetric(metric_name="pipeline_reliability_avg", metric_value=round(pipeline_reliability_avg, 4)),
             AnalyticsMetric(metric_name="avg_dataset_trust_score", metric_value=round(avg_dataset_trust_score, 2)),
-            AnalyticsMetric(metric_name="incident_resolution_rate_pct", metric_value=round(incident_resolution_rate_pct, 2)),
+            AnalyticsMetric(
+                metric_name="incident_resolution_rate_pct", metric_value=round(incident_resolution_rate_pct, 2)
+            ),
         ]
 
         insights = [

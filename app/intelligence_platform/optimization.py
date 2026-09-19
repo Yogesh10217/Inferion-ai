@@ -148,7 +148,9 @@ class OptimizationEngine:
 
         res = self.solver.solve(tenant_id, objective, candidates, constraint or OptimizationConstraint())
         self._results[res.optimization_id] = res
-        logger.info(f"[OPTIMIZATION ENGINE] Executed optimization '{res.optimization_id}' for tenant '{tenant_id}' (Winner: '{res.winning_candidate.name}')")
+        logger.info(
+            f"[OPTIMIZATION ENGINE] Executed optimization '{res.optimization_id}' for tenant '{tenant_id}' (Winner: '{res.winning_candidate.name}')"
+        )
         return res
 
     def get_result(self, optimization_id: str, tenant_id: str) -> OptimizationResult:

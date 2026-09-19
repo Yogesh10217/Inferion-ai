@@ -23,9 +23,11 @@ class RuntimeVerificationEngine:
         verification_id = f"ver_{uuid.uuid4().hex[:12]}"
 
         if expected_state is not None and actual_state is not None:
-            is_success = (expected_state == actual_state)
+            is_success = expected_state == actual_state
             status = "VERIFIED" if is_success else "FAILED"
-            details = "State comparison matched exactly." if is_success else "State mismatch between expected and actual."
+            details = (
+                "State comparison matched exactly." if is_success else "State mismatch between expected and actual."
+            )
             improvement_pct = 0.0 if not is_success else 100.0
         else:
             improved = post_score > pre_score

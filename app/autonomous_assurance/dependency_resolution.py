@@ -89,22 +89,31 @@ class WorkflowDependencyResolver:
 
         return order if order else list(graph.nodes)
 
-    def resolve_execution_order(self, workflow_id: str, tenant_id: str, steps: Optional[List[Any]] = None) -> tuple[List[str], bool]:
+    def resolve_execution_order(
+        self, workflow_id: str, tenant_id: str, steps: Optional[List[Any]] = None
+    ) -> tuple[List[str], bool]:
         if steps is None and hasattr(self, "manager") and self.manager:
             steps = self.manager.get_steps(workflow_id)
 
         if steps:
             # Check for cycles first
             for s in steps:
-                s_deps = [d.required_step_id if hasattr(d, "required_step_id") else d for d in getattr(s, "dependencies", [])]
+                s_deps = [
+                    d.required_step_id if hasattr(d, "required_step_id") else d for d in getattr(s, "dependencies", [])
+                ]
                 if s.step_id in s_deps:
                     raise DependencyCycleException(f"Circular dependency detected for step '{s.step_id}'")
                 for dep_id in s_deps:
                     dep_step = next((x for x in steps if x.step_id == dep_id), None)
                     if dep_step:
-                        ds_deps = [d.required_step_id if hasattr(d, "required_step_id") else d for d in getattr(dep_step, "dependencies", [])]
+                        ds_deps = [
+                            d.required_step_id if hasattr(d, "required_step_id") else d
+                            for d in getattr(dep_step, "dependencies", [])
+                        ]
                         if s.step_id in ds_deps:
-                            raise DependencyCycleException(f"Circular dependency detected between '{s.step_id}' and '{dep_id}'")
+                            raise DependencyCycleException(
+                                f"Circular dependency detected between '{s.step_id}' and '{dep_id}'"
+                            )
 
             # Topological sort
             sorted_steps = []
@@ -114,7 +123,10 @@ class WorkflowDependencyResolver:
                 if step.step_id in visited:
                     return
                 visited.add(step.step_id)
-                s_deps = [d.required_step_id if hasattr(d, "required_step_id") else d for d in getattr(step, "dependencies", [])]
+                s_deps = [
+                    d.required_step_id if hasattr(d, "required_step_id") else d
+                    for d in getattr(step, "dependencies", [])
+                ]
                 for dep_id in s_deps:
                     dep_step = next((x for x in steps if x.step_id == dep_id), None)
                     if dep_step:

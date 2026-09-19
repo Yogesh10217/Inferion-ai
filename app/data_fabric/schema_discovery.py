@@ -56,7 +56,9 @@ class SchemaDiscoveryEngine:
         self._schemas: Dict[str, SchemaDefinition] = {}
         self._history: Dict[str, List[SchemaVersion]] = {}
 
-    async def discover_schema(self, data_source: DataSource, secret_data: Optional[Dict[str, Any]] = None) -> SchemaDefinition:
+    async def discover_schema(
+        self, data_source: DataSource, secret_data: Optional[Dict[str, Any]] = None
+    ) -> SchemaDefinition:
         """Connect to source, infer schema, detect sensitive fields, and record version."""
         connector = self.connector_factory.create_connector(data_source, secret_data=secret_data)
         await connector.connect()
@@ -98,7 +100,9 @@ class SchemaDiscoveryEngine:
         )
         self._history.setdefault(schema_id, []).append(v_record)
 
-        logger.info(f"[SCHEMA DISCOVERY] Discovered schema for source '{data_source.name}' (Version: {new_version}, Fields: {len(fields)})")
+        logger.info(
+            f"[SCHEMA DISCOVERY] Discovered schema for source '{data_source.name}' (Version: {new_version}, Fields: {len(fields)})"
+        )
         return schema_def
 
     def get_schema(self, source_id: str) -> SchemaDefinition:

@@ -60,7 +60,9 @@ class AccessAnalyticsEngine:
                 impact_level="HIGH",
             )
             acc_insights.append(ins)
-            plat_insights.append(PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level))
+            plat_insights.append(
+                PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level)
+            )
 
         if excessive_entitlements_count > 0:
             ins = AccessInsight(
@@ -69,13 +71,19 @@ class AccessAnalyticsEngine:
                 impact_level="MEDIUM",
             )
             acc_insights.append(ins)
-            plat_insights.append(PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level))
+            plat_insights.append(
+                PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level)
+            )
 
         metrics = [
             AnalyticsMetric(metric_name="privileged_identities_count", metric_value=float(privileged_identities_count)),
-            AnalyticsMetric(metric_name="excessive_entitlements_count", metric_value=float(excessive_entitlements_count)),
+            AnalyticsMetric(
+                metric_name="excessive_entitlements_count", metric_value=float(excessive_entitlements_count)
+            ),
             AnalyticsMetric(metric_name="toxic_combinations_count", metric_value=float(toxic_combinations_count)),
-            AnalyticsMetric(metric_name="anomalous_access_events_count", metric_value=float(anomalous_access_events_count)),
+            AnalyticsMetric(
+                metric_name="anomalous_access_events_count", metric_value=float(anomalous_access_events_count)
+            ),
             AnalyticsMetric(metric_name="certification_completion_rate", metric_value=certification_completion_rate),
             AnalyticsMetric(metric_name="remediation_success_rate", metric_value=remediation_success_rate),
             AnalyticsMetric(metric_name="average_risk_score", metric_value=average_risk_score),

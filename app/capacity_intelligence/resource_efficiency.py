@@ -26,5 +26,7 @@ class ResourceEfficiencyEngine:
             efficiency_score=eff_score,
             potential_savings_usd=potential_savings,
         )
-        logger.info(f"Evaluated ResourceEfficiencyAssessment for resource '{resource_id}': Over={is_over}, Under={is_under}")
+        logger.info(
+            f"Evaluated ResourceEfficiencyAssessment for resource '{resource_id}': Over={is_over}, Under={is_under}"
+        )
         return eff

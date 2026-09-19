@@ -19,6 +19,7 @@ class GenericFunctionTool(BaseTool):
 
     async def execute_async(self, parameters: Dict[str, Any], context: ToolContext) -> ToolResult:
         import time
+
         start_time = time.time()
         try:
             if inspect.iscoroutinefunction(self.func):

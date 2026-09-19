@@ -26,7 +26,9 @@ class BudgetService:
             result = await db.execute(stmt)
             return result.scalars().first()
 
-    async def create_or_update_budget(self, org_id: str, workspace_id: Optional[str], hard_limit: float, warning: float = 0.0, critical: float = 0.0) -> Budget:
+    async def create_or_update_budget(
+        self, org_id: str, workspace_id: Optional[str], hard_limit: float, warning: float = 0.0, critical: float = 0.0
+    ) -> Budget:
         async with self.session_factory() as db:
             stmt = select(Budget).where(Budget.organization_id == org_id, Budget.enabled == True)
             if workspace_id:

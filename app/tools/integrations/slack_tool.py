@@ -28,7 +28,10 @@ class SlackTool(BaseTool):
             parameters_schema={
                 "type": "object",
                 "properties": {
-                    "action": {"type": "string", "enum": ["post_message", "list_channels", "get_thread", "upload_file"]},
+                    "action": {
+                        "type": "string",
+                        "enum": ["post_message", "list_channels", "get_thread", "upload_file"],
+                    },
                     "channel": {"type": "string", "description": "Target channel ID or name"},
                     "text": {"type": "string", "description": "Message text"},
                     "thread_ts": {"type": "string", "description": "Thread timestamp for replies"},
@@ -56,7 +59,9 @@ class SlackTool(BaseTool):
                         payload = {"channel": channel, "text": text}
                         if thread_ts:
                             payload["thread_ts"] = thread_ts
-                        resp = await client.post("https://slack.com/api/chat.postMessage", headers=headers, json=payload)
+                        resp = await client.post(
+                            "https://slack.com/api/chat.postMessage", headers=headers, json=payload
+                        )
                     else:
                         resp = await client.get("https://slack.com/api/conversations.list", headers=headers)
 

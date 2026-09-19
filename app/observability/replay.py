@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ExecutionSnapshot:
     """Snapshot containing execution inputs, metadata, and deterministic configuration."""
+
     snapshot_id: str
     execution_id: str
     trace_id: str
@@ -43,6 +44,7 @@ class ExecutionSnapshot:
 @dataclass
 class ReplayComparison:
     """Comparison results between original execution and replayed execution."""
+
     execution_id: str
     replay_id: str
     matched: bool
@@ -108,7 +110,9 @@ class ExecutionReplayManager:
             raise ExecutionNotFoundException(execution_id)
 
         if tenant_id and snapshot.tenant_id != tenant_id:
-            logger.warning(f"Tenant isolation mismatch: requested {tenant_id}, snapshot belongs to {snapshot.tenant_id}")
+            logger.warning(
+                f"Tenant isolation mismatch: requested {tenant_id}, snapshot belongs to {snapshot.tenant_id}"
+            )
             raise ExecutionNotFoundException(execution_id)
 
         return snapshot
@@ -127,10 +131,14 @@ class ExecutionReplayManager:
         if snapshot.is_high_risk and not force_external_effects:
             raise ReplayNotAvailableException(
                 execution_id,
-                "Execution involves high-risk external side-effects. Safe replay mode is active and force_external_effects was not approved."
+                "Execution involves high-risk external side-effects. Safe replay mode is active and force_external_effects was not approved.",
             )
 
-        if user_permissions is not None and "replay:execute" not in user_permissions and "admin" not in user_permissions:
+        if (
+            user_permissions is not None
+            and "replay:execute" not in user_permissions
+            and "admin" not in user_permissions
+        ):
             raise ReplayNotAvailableException(execution_id, "User lacks required 'replay:execute' permission.")
 
         start_time = time.time()
@@ -190,11 +198,13 @@ class ExecutionReplayManager:
 
         if original_status != replayed_status:
             matched = False
-            divergences.append({
-                "type": "STATUS_MISMATCH",
-                "original": original_status,
-                "replayed": replayed_status,
-            })
+            divergences.append(
+                {
+                    "type": "STATUS_MISMATCH",
+                    "original": original_status,
+                    "replayed": replayed_status,
+                }
+            )
 
         if original_output and replayed_output:
             for k, orig_val in original_output.items():
@@ -203,12 +213,14 @@ class ExecutionReplayManager:
                 rep_val = replayed_output.get(k)
                 if orig_val != rep_val:
                     matched = False
-                    divergences.append({
-                        "type": "OUTPUT_DIVERGENCE",
-                        "field": k,
-                        "original": str(orig_val),
-                        "replayed": str(rep_val),
-                    })
+                    divergences.append(
+                        {
+                            "type": "OUTPUT_DIVERGENCE",
+                            "field": k,
+                            "original": str(orig_val),
+                            "replayed": str(rep_val),
+                        }
+                    )
 
         return {
             "execution_id": execution_id,

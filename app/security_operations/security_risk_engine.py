@@ -47,7 +47,9 @@ class SecurityRisk:
             "impact": self.impact,
             "risk_score": self.risk_score,
             "level": self.level.value if isinstance(self.level, Enum) else str(self.level),
-            "policy_action": self.policy_action.value if isinstance(self.policy_action, Enum) else str(self.policy_action),
+            "policy_action": (
+                self.policy_action.value if isinstance(self.policy_action, Enum) else str(self.policy_action)
+            ),
             "details": SecretsSanitizer.sanitize_structure(self.details),
         }
 
@@ -65,19 +67,31 @@ class RiskAssessment:
     def __post_init__(self):
         if not self.fingerprint:
             payload = {
-                "level": self.overall_risk_level.value if isinstance(self.overall_risk_level, Enum) else str(self.overall_risk_level),
+                "level": (
+                    self.overall_risk_level.value
+                    if isinstance(self.overall_risk_level, Enum)
+                    else str(self.overall_risk_level)
+                ),
                 "max_score": self.max_risk_score,
                 "blocking": self.is_blocking,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     @property
     def overall_risk_score(self) -> float:
         return self.max_risk_score
 
     def to_dict(self) -> Dict[str, Any]:
-        lvl_str = self.overall_risk_level.value if isinstance(self.overall_risk_level, Enum) else str(self.overall_risk_level)
-        act_str = self.overall_policy_action.value if isinstance(self.overall_policy_action, Enum) else str(self.overall_policy_action)
+        lvl_str = (
+            self.overall_risk_level.value if isinstance(self.overall_risk_level, Enum) else str(self.overall_risk_level)
+        )
+        act_str = (
+            self.overall_policy_action.value
+            if isinstance(self.overall_policy_action, Enum)
+            else str(self.overall_policy_action)
+        )
         return {
             "overall_risk_level": lvl_str,
             "overall_policy_action": act_str,
@@ -133,30 +147,75 @@ class SecurityRiskEngine:
         if secret_leak_detected:
             score = 1.0 * 1.0
             risks.append(
-                SecurityRisk("R-SEC-01", "SECRET_EXPOSURE", 1.0, 1.0, score, RiskLevel.CRITICAL, RiskPolicyAction.BLOCK, {"leak": True})
+                SecurityRisk(
+                    "R-SEC-01",
+                    "SECRET_EXPOSURE",
+                    1.0,
+                    1.0,
+                    score,
+                    RiskLevel.CRITICAL,
+                    RiskPolicyAction.BLOCK,
+                    {"leak": True},
+                )
             )
 
         if audit_tampered:
             score = 1.0 * 0.95
             risks.append(
-                SecurityRisk("R-AUD-01", "AUDIT_TAMPERING", 1.0, 0.95, score, RiskLevel.CRITICAL, RiskPolicyAction.BLOCK, {"tampered": True})
+                SecurityRisk(
+                    "R-AUD-01",
+                    "AUDIT_TAMPERING",
+                    1.0,
+                    0.95,
+                    score,
+                    RiskLevel.CRITICAL,
+                    RiskPolicyAction.BLOCK,
+                    {"tampered": True},
+                )
             )
 
         if critical_vuln_count > 0:
             score = 0.9 * 0.9
             risks.append(
-                SecurityRisk("R-VULN-01", "CRITICAL_VULNERABILITY", 0.9, 0.9, score, RiskLevel.CRITICAL, RiskPolicyAction.BLOCK, {"count": critical_vuln_count})
+                SecurityRisk(
+                    "R-VULN-01",
+                    "CRITICAL_VULNERABILITY",
+                    0.9,
+                    0.9,
+                    score,
+                    RiskLevel.CRITICAL,
+                    RiskPolicyAction.BLOCK,
+                    {"count": critical_vuln_count},
+                )
             )
 
         if high_vuln_count > 0:
             score = 0.7 * 0.8
             risks.append(
-                SecurityRisk("R-VULN-02", "HIGH_VULNERABILITY", 0.7, 0.8, score, RiskLevel.HIGH, RiskPolicyAction.MANUAL_REVIEW_REQUIRED, {"count": high_vuln_count})
+                SecurityRisk(
+                    "R-VULN-02",
+                    "HIGH_VULNERABILITY",
+                    0.7,
+                    0.8,
+                    score,
+                    RiskLevel.HIGH,
+                    RiskPolicyAction.MANUAL_REVIEW_REQUIRED,
+                    {"count": high_vuln_count},
+                )
             )
 
         if not risks:
             risks.append(
-                SecurityRisk("R-BASELINE", "BASELINE_RISK", 0.1, 0.1, 0.01, RiskLevel.LOW, RiskPolicyAction.ALLOW, {"status": "HEALTHY"})
+                SecurityRisk(
+                    "R-BASELINE",
+                    "BASELINE_RISK",
+                    0.1,
+                    0.1,
+                    0.01,
+                    RiskLevel.LOW,
+                    RiskPolicyAction.ALLOW,
+                    {"status": "HEALTHY"},
+                )
             )
 
         max_score = max(r.risk_score for r in risks)

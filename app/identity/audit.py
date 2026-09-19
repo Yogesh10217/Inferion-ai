@@ -69,10 +69,14 @@ class IdentityAuditManager:
             except Exception:
                 pass
 
-        logger.info(f"[IDENTITY AUDIT] Recorded {event_type} for '{identity_id}' on '{resource_id}': Outcome = {outcome}")
+        logger.info(
+            f"[IDENTITY AUDIT] Recorded {event_type} for '{identity_id}' on '{resource_id}': Outcome = {outcome}"
+        )
         return evt
 
-    def list_events(self, tenant_id: Optional[str] = None, identity_id: Optional[str] = None) -> List[IdentityAuditEvent]:
+    def list_events(
+        self, tenant_id: Optional[str] = None, identity_id: Optional[str] = None
+    ) -> List[IdentityAuditEvent]:
         res = list(self._audit_events)
         if tenant_id:
             res = [r for r in res if r.tenant_id == tenant_id]

@@ -40,9 +40,21 @@ class IntegrationSecurityManager:
     ) -> IntegrationSecurityAssessment:
         risks: List[IntegrationSecurityRisk] = []
         if base_url.startswith("http://") and not base_url.startswith("http://localhost"):
-            risks.append(IntegrationSecurityRisk(category="UNENCRYPTED_ENDPOINT", severity="HIGH", description="Endpoint uses unencrypted HTTP protocol."))
+            risks.append(
+                IntegrationSecurityRisk(
+                    category="UNENCRYPTED_ENDPOINT",
+                    severity="HIGH",
+                    description="Endpoint uses unencrypted HTTP protocol.",
+                )
+            )
         if auth_type.upper() == "NONE":
-            risks.append(IntegrationSecurityRisk(category="WEAK_AUTH", severity="CRITICAL", description="Connector configured with no authentication."))
+            risks.append(
+                IntegrationSecurityRisk(
+                    category="WEAK_AUTH",
+                    severity="CRITICAL",
+                    description="Connector configured with no authentication.",
+                )
+            )
 
         passed = len(risks) == 0
         asm = IntegrationSecurityAssessment(

@@ -31,6 +31,7 @@ router = APIRouter(prefix="/v1/platform-hardening", tags=["Platform Hardening"])
 def get_hardening_manager() -> PlatformHardeningManager:
     # Factory dependency fetching container instance
     from app.core.container import container
+
     return container.platform_hardening_manager
 
 

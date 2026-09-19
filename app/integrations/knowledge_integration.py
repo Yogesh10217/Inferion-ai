@@ -21,5 +21,7 @@ class KnowledgeIntegrationAdapter:
             tenant_id=tenant_id,
             source_system=source_name,
         )
-        logger.info(f"[KNOWLEDGE INTEGRATION ADAPTER] Ingested SaaS content from '{source_name}' -> Item '{item.item_id}'")
+        logger.info(
+            f"[KNOWLEDGE INTEGRATION ADAPTER] Ingested SaaS content from '{source_name}' -> Item '{item.item_id}'"
+        )
         return item.item_id

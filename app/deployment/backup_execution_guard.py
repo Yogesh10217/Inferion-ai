@@ -22,18 +22,20 @@ class BackupGuardResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "backup_status": self.backup_status.value,
-            "restore_status": self.restore_status.value,
-            "backup_ready": self.backup_ready,
-            "restore_ready": self.restore_ready,
-            "encryption_validated": self.encryption_validated,
-            "retention_policy_validated": self.retention_policy_validated,
-            "rto_minutes": self.recovery_time_objective_minutes,
-            "rpo_minutes": self.recovery_point_objective_minutes,
-            "blocking_reasons": self.blocking_reasons,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "backup_status": self.backup_status.value,
+                "restore_status": self.restore_status.value,
+                "backup_ready": self.backup_ready,
+                "restore_ready": self.restore_ready,
+                "encryption_validated": self.encryption_validated,
+                "retention_policy_validated": self.retention_policy_validated,
+                "rto_minutes": self.recovery_time_objective_minutes,
+                "rpo_minutes": self.recovery_point_objective_minutes,
+                "blocking_reasons": self.blocking_reasons,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class BackupExecutionGuard:

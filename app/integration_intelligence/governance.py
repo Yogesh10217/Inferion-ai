@@ -60,11 +60,19 @@ class IntegrationGovernanceEngine:
         reqs: List[IntegrationGovernanceRequirement] = []
 
         if hard_policy_violated or is_blocked:
-            reqs.append(IntegrationGovernanceRequirement(code="HARD_POL_INT", description="Hard policy violation", is_hard_policy=True, satisfied=False))
+            reqs.append(
+                IntegrationGovernanceRequirement(
+                    code="HARD_POL_INT", description="Hard policy violation", is_hard_policy=True, satisfied=False
+                )
+            )
             status = IntegrationGovernanceStatus.BLOCK
             reason = "Hard policy violation or explicit block policy triggered BLOCK status."
         elif requires_approval or risk_score >= 80.0:
-            reqs.append(IntegrationGovernanceRequirement(code="HUMAN_APPR_INT", description="Human approval for high-risk action", satisfied=False))
+            reqs.append(
+                IntegrationGovernanceRequirement(
+                    code="HUMAN_APPR_INT", description="Human approval for high-risk action", satisfied=False
+                )
+            )
             status = IntegrationGovernanceStatus.REQUIRE_APPROVAL
             reason = f"High risk score ({risk_score}) or approval flag triggered REQUIRE_APPROVAL."
         elif risk_score >= 60.0:

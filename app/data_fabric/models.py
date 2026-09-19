@@ -30,7 +30,9 @@ class DataSourceModel(Base):
     status: Mapped[str] = mapped_column(String, default="ACTIVE")
 
     configuration_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    secret_reference: Mapped[Optional[str]] = mapped_column(String, nullable=True)  # Secret ID reference ONLY, NO plain text secrets!
+    secret_reference: Mapped[Optional[str]] = mapped_column(
+        String, nullable=True
+    )  # Secret ID reference ONLY, NO plain text secrets!
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)

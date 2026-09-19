@@ -29,5 +29,7 @@ class IntegrationAnalyticsEngine:
 
     def generate_insight(self, tenant_id: str = "global") -> IntegrationAnalyticsInsight:
         insight = IntegrationAnalyticsInsight(tenant_id=tenant_id)
-        logger.info(f"[INTEGRATION ANALYTICS] Generated insight for tenant '{tenant_id}': Success Rate = {insight.success_rate}%")
+        logger.info(
+            f"[INTEGRATION ANALYTICS] Generated insight for tenant '{tenant_id}': Success Rate = {insight.success_rate}%"
+        )
         return insight

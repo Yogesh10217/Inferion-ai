@@ -41,8 +41,7 @@ class ProviderPool:
         """Remove a provider instance."""
         if provider_id in self._instances:
             self._instances[provider_id] = [
-                inst for inst in self._instances[provider_id]
-                if inst.instance_id != instance_id
+                inst for inst in self._instances[provider_id] if inst.instance_id != instance_id
             ]
 
     def get_instances(self, provider_id: str) -> List[ProviderInstance]:

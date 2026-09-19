@@ -45,7 +45,9 @@ class OperationsAnalyticsEngine:
                 impact_level="CRITICAL",
             )
             op_insights.append(ins)
-            plat_insights.append(PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level))
+            plat_insights.append(
+                PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level)
+            )
 
         metrics = [
             AnalyticsMetric(metric_name="active_services_count", metric_value=float(active_services_count)),

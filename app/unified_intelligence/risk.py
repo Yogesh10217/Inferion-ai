@@ -32,7 +32,7 @@ class UnifiedRiskAssessment:
         top_risk_factors: List[str],
         confidence_score: float,
         recommendations_count: int,
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.assessment_id = assessment_id
         self.tenant_id = tenant_id
@@ -54,7 +54,7 @@ class UnifiedRiskAssessment:
             "top_risk_factors": self.top_risk_factors,
             "confidence_score": round(self.confidence_score, 4),
             "recommendations_count": self.recommendations_count,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -67,10 +67,7 @@ class UnifiedRiskEngine:
         pass
 
     def evaluate_risk(
-        self,
-        tenant_id: str,
-        domain_inputs: List[Any],
-        risk_graph: Optional[RiskPropagationGraph] = None
+        self, tenant_id: str, domain_inputs: List[Any], risk_graph: Optional[RiskPropagationGraph] = None
     ) -> UnifiedRiskAssessment:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -83,13 +80,13 @@ class UnifiedRiskEngine:
         count = 0
 
         for inp in domain_inputs:
-            if hasattr(inp, 'tenant_id') and inp.tenant_id != tenant_id:
+            if hasattr(inp, "tenant_id") and inp.tenant_id != tenant_id:
                 raise CrossTenantUnifiedIntelligenceException(
                     f"Tenant mismatch in risk evaluation: expected {tenant_id}, got {inp.tenant_id}"
                 )
-            domain_val = inp.domain.value if hasattr(inp.domain, 'value') else str(inp.domain)
-            risk = getattr(inp, 'risk_score', 0.5)
-            conf = getattr(inp, 'confidence_score', 0.8)
+            domain_val = inp.domain.value if hasattr(inp.domain, "value") else str(inp.domain)
+            risk = getattr(inp, "risk_score", 0.5)
+            conf = getattr(inp, "confidence_score", 0.8)
             domain_scores.setdefault(domain_val, []).append(risk)
             total_confidence += conf
             count += 1
@@ -135,5 +132,5 @@ class UnifiedRiskEngine:
             domain_risk_scores=avg_domain_scores,
             top_risk_factors=top_factors,
             confidence_score=avg_confidence,
-            recommendations_count=len(top_factors) + 1
+            recommendations_count=len(top_factors) + 1,
         )

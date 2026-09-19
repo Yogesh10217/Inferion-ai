@@ -15,15 +15,19 @@ class ReliabilityAnomalyEngine:
         p99 = metrics.get("p99_latency", 0.0)
 
         if err_rate > 0.05:
-            anomalies.append({
-                "anomaly_type": "THRESHOLD_ERROR_RATE",
-                "severity": "HIGH",
-                "message": f"Error rate threshold breached: {err_rate * 100:.2f}%",
-            })
+            anomalies.append(
+                {
+                    "anomaly_type": "THRESHOLD_ERROR_RATE",
+                    "severity": "HIGH",
+                    "message": f"Error rate threshold breached: {err_rate * 100:.2f}%",
+                }
+            )
         if p99 > 1000.0:
-            anomalies.append({
-                "anomaly_type": "LATENCY_SPIKE",
-                "severity": "MEDIUM",
-                "message": f"P99 latency spike detected: {p99}ms",
-            })
+            anomalies.append(
+                {
+                    "anomaly_type": "LATENCY_SPIKE",
+                    "severity": "MEDIUM",
+                    "message": f"P99 latency spike detected: {p99}ms",
+                }
+            )
         return anomalies

@@ -40,7 +40,9 @@ class OperationsManager:
         self.retention_manager = TelemetryRetentionManager()
         self.metrics_collector = OperationsMetricsCollector()
 
-        logger.info("[OPERATIONS MANAGER] Master OperationsManager initialized with all 15 operational domain subsystems")
+        logger.info(
+            "[OPERATIONS MANAGER] Master OperationsManager initialized with all 15 operational domain subsystems"
+        )
 
     def get_summary(self) -> Dict[str, Any]:
         return {

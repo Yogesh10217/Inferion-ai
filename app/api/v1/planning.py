@@ -101,7 +101,9 @@ async def execute_plan(id: str, data: PlanExecuteSchema):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Plan '{id}' not found")
     plan = _plans_store[id]
     try:
-        PlanningGovernanceEngine.validate_plan_execution(plan, tenant_id=data.tenant_id, workspace_budget_dollars=data.budget_dollars)
+        PlanningGovernanceEngine.validate_plan_execution(
+            plan, tenant_id=data.tenant_id, workspace_budget_dollars=data.budget_dollars
+        )
     except ResourcePlanningError as rpe:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(rpe))
 

@@ -54,9 +54,7 @@ class RuntimeRecoveryIntelligenceEngine:
         logger.info(f"Formulated {len(options)} recovery options for service '{service_id}'")
         return options
 
-    def plan_recovery(
-        self, tenant_id: str, failed_subsystem: str
-    ) -> Dict[str, Any]:
+    def plan_recovery(self, tenant_id: str, failed_subsystem: str) -> Dict[str, Any]:
         """Plans recovery execution sequence."""
         options = self.analyze_recovery_options(tenant_id, failed_subsystem)
         steps = [

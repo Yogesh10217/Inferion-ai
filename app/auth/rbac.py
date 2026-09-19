@@ -10,15 +10,11 @@ from app.tenant.models import Membership, WorkspaceMembership
 
 class RBACService:
     @staticmethod
-    async def get_user_permissions(db: AsyncSession, user_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None) -> Set[str]:
+    async def get_user_permissions(
+        db: AsyncSession, user_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None
+    ) -> Set[str]:
         """Fetch all resolved permissions for a given user scoped to their current tenant context."""
-        stmt = (
-            select(User)
-            .options(
-                selectinload(User.roles).selectinload(Role.permissions)
-            )
-            .where(User.id == user_id)
-        )
+        stmt = select(User).options(selectinload(User.roles).selectinload(Role.permissions)).where(User.id == user_id)
         result = await db.execute(stmt)
         user = result.scalar_one_or_none()
 
@@ -34,9 +30,8 @@ class RBACService:
 
         # 2. Organization roles
         if organization_id:
-            stmt_mem = (
-                select(Membership)
-                .where(Membership.user_id == user_id, Membership.organization_id == organization_id)
+            stmt_mem = select(Membership).where(
+                Membership.user_id == user_id, Membership.organization_id == organization_id
             )
             res_mem = await db.execute(stmt_mem)
             mem = res_mem.scalar_one_or_none()
@@ -50,9 +45,8 @@ class RBACService:
 
         # 3. Workspace roles
         if workspace_id:
-            stmt_ws = (
-                select(WorkspaceMembership)
-                .where(WorkspaceMembership.user_id == user_id, WorkspaceMembership.workspace_id == workspace_id)
+            stmt_ws = select(WorkspaceMembership).where(
+                WorkspaceMembership.user_id == user_id, WorkspaceMembership.workspace_id == workspace_id
             )
             res_ws = await db.execute(stmt_ws)
             ws_mem = res_ws.scalar_one_or_none()
@@ -72,13 +66,11 @@ class RBACService:
         return required_permission in user_permissions
 
     @staticmethod
-    async def get_user_roles(db: AsyncSession, user_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None) -> Set[str]:
+    async def get_user_roles(
+        db: AsyncSession, user_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None
+    ) -> Set[str]:
         """Fetch all assigned role names for a user in their context."""
-        stmt = (
-            select(User)
-            .options(selectinload(User.roles))
-            .where(User.id == user_id)
-        )
+        stmt = select(User).options(selectinload(User.roles)).where(User.id == user_id)
         result = await db.execute(stmt)
         user = result.scalar_one_or_none()
         if not user or not user.is_active:
@@ -88,7 +80,9 @@ class RBACService:
             roles.add("admin")
             roles.add("super_admin")
         if organization_id:
-            stmt_mem = select(Membership).where(Membership.user_id == user_id, Membership.organization_id == organization_id)
+            stmt_mem = select(Membership).where(
+                Membership.user_id == user_id, Membership.organization_id == organization_id
+            )
             res_mem = await db.execute(stmt_mem)
             mem = res_mem.scalar_one_or_none()
             if mem and mem.status == "active" and mem.role_id:

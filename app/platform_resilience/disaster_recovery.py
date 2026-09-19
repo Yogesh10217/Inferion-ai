@@ -45,7 +45,7 @@ class DisasterRecoveryStatus(str, Enum):
 
 class RecoveryObjective(BaseModel):
     rto_minutes: float = 15.0  # Recovery Time Objective
-    rpo_minutes: float = 5.0   # Recovery Point Objective
+    rpo_minutes: float = 5.0  # Recovery Point Objective
     observed_rto_minutes: Optional[float] = None
     observed_rpo_minutes: Optional[float] = None
 

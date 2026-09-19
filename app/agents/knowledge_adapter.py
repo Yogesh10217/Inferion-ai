@@ -19,29 +19,16 @@ class KnowledgeAdapter:
         self.context_builder = ContextBuilder()
         self.citation_engine = CitationEngine()
 
-    async def search_and_build_context(
-        self, query: str, context: AgentContext, top_k: int = 3
-    ) -> Dict[str, Any]:
+    async def search_and_build_context(self, query: str, context: AgentContext, top_k: int = 3) -> Dict[str, Any]:
         """
         Executes hybrid knowledge retrieval and formats citations.
         """
         try:
-            filter_expr = {
-                "organization_id": context.organization_id,
-                "workspace_id": context.workspace_id
-            }
-            results = await self.search_engine.hybrid_search(
-                query=query, top_k=top_k, filter=filter_expr
-            )
+            filter_expr = {"organization_id": context.organization_id, "workspace_id": context.workspace_id}
+            results = await self.search_engine.hybrid_search(query=query, top_k=top_k, filter=filter_expr)
 
             docs_data = [
-                {
-                    "id": doc.id,
-                    "text": doc.text,
-                    "metadata": doc.metadata,
-                    "score": doc.score
-                }
-                for doc in results
+                {"id": doc.id, "text": doc.text, "metadata": doc.metadata, "score": doc.score} for doc in results
             ]
 
             formatted_context = self.context_builder.build_context(docs_data)
@@ -51,13 +38,8 @@ class KnowledgeAdapter:
                 "query": query,
                 "documents": docs_data,
                 "formatted_context": formatted_context,
-                "cited_text": cited_text
+                "cited_text": cited_text,
             }
         except Exception as e:
             logger.warning(f"Knowledge search failed: {e}")
-            return {
-                "query": query,
-                "documents": [],
-                "formatted_context": "",
-                "cited_text": f"Search unavailable: {e}"
-            }
+            return {"query": query, "documents": [], "formatted_context": "", "cited_text": f"Search unavailable: {e}"}

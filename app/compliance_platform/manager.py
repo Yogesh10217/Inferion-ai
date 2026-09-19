@@ -131,7 +131,11 @@ class CompliancePlatformManager:
         report = self.assurance_manager.generate_assurance_report(
             tenant_id=tenant_id,
             framework_id=fw.framework_id,
-            conclusion=AssuranceConclusion.ASSURED if assessment.overall_result == AssessmentResult.PASS else AssuranceConclusion.INSUFFICIENT_EVIDENCE,
+            conclusion=(
+                AssuranceConclusion.ASSURED
+                if assessment.overall_result == AssessmentResult.PASS
+                else AssuranceConclusion.INSUFFICIENT_EVIDENCE
+            ),
         )
         self.metrics_collector.increment("ai_compliance_assurance_reports_total")
 

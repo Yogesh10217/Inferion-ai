@@ -86,7 +86,8 @@ class KnowledgeProvenanceManager:
             tenant_id=tenant_id,
             reference_id=ref_id,
             origin_source=origin_source,
-            chain=chain or ProvenanceChain(steps=[{"step": 1, "action": "INGESTED", "source": origin_source.source_name}]),
+            chain=chain
+            or ProvenanceChain(steps=[{"step": 1, "action": "INGESTED", "source": origin_source.source_name}]),
             evidence=evidence or [],
         )
         prov.fingerprint = prov.calculate_fingerprint()

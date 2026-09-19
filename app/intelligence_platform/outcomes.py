@@ -65,8 +65,12 @@ class OutcomeEvaluator:
         if not tenant_id:
             raise IntelligenceException("Tenant ID is required for outcome measurement.")
 
-        dev_cost = round(((actual_cost_impact_usd - expected_cost_impact_usd) / abs(expected_cost_impact_usd or 1.0)) * 100.0, 2)
-        dev_risk = round(((actual_risk_delta_pct - expected_risk_delta_pct) / abs(expected_risk_delta_pct or 1.0)) * 100.0, 2)
+        dev_cost = round(
+            ((actual_cost_impact_usd - expected_cost_impact_usd) / abs(expected_cost_impact_usd or 1.0)) * 100.0, 2
+        )
+        dev_risk = round(
+            ((actual_risk_delta_pct - expected_risk_delta_pct) / abs(expected_risk_delta_pct or 1.0)) * 100.0, 2
+        )
 
         cost_metric = OutcomeMetric(
             metric_name="cost_impact_usd",
@@ -83,7 +87,11 @@ class OutcomeEvaluator:
             unit="pct",
         )
 
-        status = OutcomeStatus.OUTPERFORMED if actual_risk_delta_pct <= expected_risk_delta_pct else OutcomeStatus.EXPECTED_ACHIEVED
+        status = (
+            OutcomeStatus.OUTPERFORMED
+            if actual_risk_delta_pct <= expected_risk_delta_pct
+            else OutcomeStatus.EXPECTED_ACHIEVED
+        )
 
         meas = DecisionOutcomeMeasurement(
             tenant_id=tenant_id,
@@ -96,7 +104,9 @@ class OutcomeEvaluator:
         )
 
         self._measurements[meas.measurement_id] = meas
-        logger.info(f"[OUTCOME EVALUATOR] Measured outcome '{meas.measurement_id}' for recommendation '{recommendation_id}' (Status: {status.value})")
+        logger.info(
+            f"[OUTCOME EVALUATOR] Measured outcome '{meas.measurement_id}' for recommendation '{recommendation_id}' (Status: {status.value})"
+        )
         return meas
 
     def get_measurement(self, measurement_id: str, tenant_id: str) -> DecisionOutcomeMeasurement:

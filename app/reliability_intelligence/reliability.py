@@ -25,9 +25,7 @@ class MasterReliabilityEngine:
         self.provider_registry = provider_registry
         self.rel_repo = rel_repo
 
-    def evaluate_reliability(
-        self, tenant_id: str, scope: Optional[str] = None
-    ) -> ReliabilityAssessment:
+    def evaluate_reliability(self, tenant_id: str, scope: Optional[str] = None) -> ReliabilityAssessment:
         domains = self.provider_registry.list_domains()
         scores = {}
         for domain in domains:
@@ -64,5 +62,7 @@ class MasterReliabilityEngine:
         )
 
         self.rel_repo.save(assessment)
-        logger.info(f"Generated ReliabilityAssessment '{assessment.assessment_id}' for tenant '{tenant_id}' (Score: {overall:.4f})")
+        logger.info(
+            f"Generated ReliabilityAssessment '{assessment.assessment_id}' for tenant '{tenant_id}' (Score: {overall:.4f})"
+        )
         return assessment

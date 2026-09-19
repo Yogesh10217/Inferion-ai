@@ -54,7 +54,9 @@ class DigitalTwinManager:
 
         self._twin_snapshots: Dict[str, DigitalTwinSnapshot] = {}
 
-    def get_or_create_twin(self, tenant_id: str, environment: str = "production", topology_ref_id: str = "latest") -> ArchitectureDigitalTwin:
+    def get_or_create_twin(
+        self, tenant_id: str, environment: str = "production", topology_ref_id: str = "latest"
+    ) -> ArchitectureDigitalTwin:
         if tenant_id not in self._twins:
             self._twins[tenant_id] = {}
 
@@ -106,7 +108,8 @@ class DigitalTwinManager:
             twin.state.sync_status = TwinSynchronizationStatus.STALE
 
         has_drift = (
-            twin.state.sync_status in (TwinSynchronizationStatus.STALE, TwinSynchronizationStatus.SYNCHRONIZATION_FAILED)
+            twin.state.sync_status
+            in (TwinSynchronizationStatus.STALE, TwinSynchronizationStatus.SYNCHRONIZATION_FAILED)
             or twin.state.operational_state_ref in ("DEGRADED", "UNHEALTHY", "FAILED")
             or twin.state.risk_level_ref in ("HIGH", "CRITICAL")
         )

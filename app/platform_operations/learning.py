@@ -77,7 +77,9 @@ class OperationalLearningManager:
             knowledge_item_id=knowledge_item_id,
         )
         self._insights[insight.insight_id] = insight
-        logger.info(f"[OPERATIONAL LEARNING] Generated insight '{insight.insight_id}' for incident '{incident_id}' (Knowledge item: {knowledge_item_id})")
+        logger.info(
+            f"[OPERATIONAL LEARNING] Generated insight '{insight.insight_id}' for incident '{incident_id}' (Knowledge item: {knowledge_item_id})"
+        )
         return insight
 
     def list_insights(self, tenant_id: str) -> List[PostIncidentInsight]:

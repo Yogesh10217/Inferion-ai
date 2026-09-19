@@ -32,6 +32,7 @@ class EmergencyAccessStatus(str, Enum):
 
 class EmergencyAccessVerification(BaseModel):
     """Post-emergency audit verification entry."""
+
     verification_id: str = Field(default_factory=lambda: f"em_verif_{uuid.uuid4().hex[:8]}")
     verified_by: str
     passed: bool
@@ -41,6 +42,7 @@ class EmergencyAccessVerification(BaseModel):
 
 class EmergencyAccessRequest(BaseModel):
     """Break-glass Emergency Access Request."""
+
     request_id: str = Field(default_factory=lambda: f"em_req_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     requester_identity_id: str
@@ -72,7 +74,9 @@ class EmergencyAccessManager:
         metadata: Optional[Dict[str, Any]] = None,
     ) -> EmergencyAccessRequest:
         if not justification or len(justification.strip()) < 10:
-            raise AccessIntelligenceException("Explicit, detailed justification (min 10 chars) required for emergency access.")
+            raise AccessIntelligenceException(
+                "Explicit, detailed justification (min 10 chars) required for emergency access."
+            )
 
         req = EmergencyAccessRequest(
             tenant_id=tenant_id,
@@ -99,7 +103,9 @@ class EmergencyAccessManager:
         req.expires_at = req.activated_at + timedelta(minutes=req.time_bound_minutes)
         return req
 
-    def conclude_emergency_access(self, tenant_id: str, request_id: str, verifier_id: str, notes: str) -> EmergencyAccessRequest:
+    def conclude_emergency_access(
+        self, tenant_id: str, request_id: str, verifier_id: str, notes: str
+    ) -> EmergencyAccessRequest:
         req = self.get_request(tenant_id, request_id)
         verif = EmergencyAccessVerification(
             verified_by=verifier_id,

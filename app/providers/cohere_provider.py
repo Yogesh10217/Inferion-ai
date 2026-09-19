@@ -45,7 +45,9 @@ class CohereProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> InferenceResponse:
-        request_obj = request or InferenceRequest(model=model or "command-r-plus", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "command-r-plus", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "command-r-plus"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -99,7 +101,9 @@ class CohereProvider(BaseProvider):
 
                     latency_ms = (time.perf_counter() - start_time) * 1000.0
                     if response.status_code != 200:
-                        raise ProviderUnavailableException(f"Cohere error status {response.status_code}: {response.text}")
+                        raise ProviderUnavailableException(
+                            f"Cohere error status {response.status_code}: {response.text}"
+                        )
 
                     resp_json = response.json()
                     msg_content = resp_json.get("message", {}).get("content", [])
@@ -140,7 +144,9 @@ class CohereProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> AsyncIterator[InferenceResponse]:
-        request_obj = request or InferenceRequest(model=model or "command-r-plus", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "command-r-plus", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "command-r-plus"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -223,6 +229,8 @@ class CohereProvider(BaseProvider):
 
     async def list_models(self) -> list[ProviderModel]:
         return [
-            ProviderModel(id="command-r-plus", provider="cohere", description="Cohere Command R+", context_window=128000),
+            ProviderModel(
+                id="command-r-plus", provider="cohere", description="Cohere Command R+", context_window=128000
+            ),
             ProviderModel(id="command-r", provider="cohere", description="Cohere Command R", context_window=128000),
         ]

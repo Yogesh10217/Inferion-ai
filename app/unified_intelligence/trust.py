@@ -28,7 +28,7 @@ class UnifiedTrustAssessment:
         trust_level: str,  # TRUSTED, VERIFIED, CONDITIONAL, HIGH_RISK, UNTRUSTED
         trust_factors: List[str],
         confidence_score: float,
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.assessment_id = assessment_id
         self.tenant_id = tenant_id
@@ -50,7 +50,7 @@ class UnifiedTrustAssessment:
             "trust_level": self.trust_level,
             "trust_factors": self.trust_factors,
             "confidence_score": round(self.confidence_score, 4),
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -63,10 +63,7 @@ class CrossDomainTrustEngine:
         pass
 
     def evaluate_entity_trust(
-        self,
-        tenant_id: str,
-        entity_reference: str,
-        domain_trust_inputs: Dict[str, float]
+        self, tenant_id: str, entity_reference: str, domain_trust_inputs: Dict[str, float]
     ) -> UnifiedTrustAssessment:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -78,7 +75,7 @@ class CrossDomainTrustEngine:
                 IntelligenceDomain.IDENTITY.value: 0.9,
                 IntelligenceDomain.SECURITY.value: 0.85,
                 IntelligenceDomain.OPERATIONS.value: 0.95,
-                IntelligenceDomain.POLICY.value: 0.9
+                IntelligenceDomain.POLICY.value: 0.9,
             }
 
         total_score = sum(domain_trust_inputs.values())
@@ -95,10 +92,7 @@ class CrossDomainTrustEngine:
         else:
             level = "UNTRUSTED"
 
-        factors = [
-            f"{d} trust score: {score:.2f}"
-            for d, score in domain_trust_inputs.items()
-        ]
+        factors = [f"{d} trust score: {score:.2f}" for d, score in domain_trust_inputs.items()]
 
         assessment_id = f"trust-{uuid.uuid4().hex[:12]}"
 
@@ -110,5 +104,5 @@ class CrossDomainTrustEngine:
             domain_trust_scores=domain_trust_inputs,
             trust_level=level,
             trust_factors=factors,
-            confidence_score=0.88
+            confidence_score=0.88,
         )

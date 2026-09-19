@@ -87,7 +87,9 @@ class DecisionApprovalManager:
             status="PENDING",
         )
         self._reviews[rev.review_id] = rev
-        logger.info(f"[DECISION APPROVAL MANAGER] Requested human approval for recommendation '{recommendation.recommendation_id}' (Approval ID: '{appr_req.request_id}')")
+        logger.info(
+            f"[DECISION APPROVAL MANAGER] Requested human approval for recommendation '{recommendation.recommendation_id}' (Approval ID: '{appr_req.request_id}')"
+        )
         return rev
 
     def submit_review_decision(

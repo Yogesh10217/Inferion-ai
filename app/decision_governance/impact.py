@@ -69,7 +69,9 @@ class DecisionImpactManager:
                     severity=ImpactSeverity.LOW,
                     impact_score=0.2,
                     summary="Estimated spend reduction of $250/mo",
-                    evidence=[ImpactEvidence(metric_name="monthly_cost_usd", baseline_value=1200.0, projected_value=950.0)],
+                    evidence=[
+                        ImpactEvidence(metric_name="monthly_cost_usd", baseline_value=1200.0, projected_value=950.0)
+                    ],
                 ),
                 DecisionImpact(
                     dimension=ImpactDimension.RELIABILITY,

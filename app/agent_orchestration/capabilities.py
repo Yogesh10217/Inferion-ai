@@ -95,7 +95,15 @@ class AgentCapabilityManager:
                     capability_id=capability_id,
                     tenant_id=tenant_id,
                     name=f"Standard {capability_id} Capability",
-                    scopes={scope_enum, CapabilityScope.READ, CapabilityScope.ANALYZE, CapabilityScope.PLAN, CapabilityScope.RECOMMEND, CapabilityScope.DELEGATE, CapabilityScope.EXECUTE_WITH_APPROVAL},
+                    scopes={
+                        scope_enum,
+                        CapabilityScope.READ,
+                        CapabilityScope.ANALYZE,
+                        CapabilityScope.PLAN,
+                        CapabilityScope.RECOMMEND,
+                        CapabilityScope.DELEGATE,
+                        CapabilityScope.EXECUTE_WITH_APPROVAL,
+                    },
                 )
             except Exception:
                 raise AgentCapabilityViolationException(f"Capability '{capability_id}' not found.")

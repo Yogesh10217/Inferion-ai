@@ -24,7 +24,7 @@ class CrossPhaseDelegationValidationEngine:
         del_tenant = delegation_payload.get("tenant_id")
         direct_exec = delegation_payload.get("direct_infrastructure_mutation", False)
 
-        auto_execute_false_enforced = (auto_execute is False)
+        auto_execute_false_enforced = auto_execute is False
         direct_executions = 0
         cross_tenant_delegations = 0
 

@@ -60,7 +60,9 @@ class ExtensionManifest(BaseModel):
     def validate_manifest(self) -> None:
         """Validate required manifest fields."""
         if not self.identifier or not self.name or not self.publisher_id:
-            raise InvalidExtensionManifestException("Missing required metadata fields (identifier, name, or publisher_id)")
+            raise InvalidExtensionManifestException(
+                "Missing required metadata fields (identifier, name, or publisher_id)"
+            )
         if not self.version:
             raise InvalidExtensionManifestException("Missing extension version")
 

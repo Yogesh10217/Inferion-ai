@@ -80,7 +80,9 @@ class HighRiskOptimizationRequiresApprovalException(FinOpsIntelligenceException)
     """Raised when high-risk optimization action requires human approval."""
 
     def __init__(self, action_name: str, estimated_savings: float) -> None:
-        super().__init__(f"High-risk optimization action '{action_name}' (estimated savings: ${estimated_savings}) requires human approval.")
+        super().__init__(
+            f"High-risk optimization action '{action_name}' (estimated savings: ${estimated_savings}) requires human approval."
+        )
         self.action_name = action_name
         self.estimated_savings = estimated_savings
 

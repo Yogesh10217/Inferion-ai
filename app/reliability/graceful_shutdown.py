@@ -42,7 +42,9 @@ class GracefulShutdownManager:
             await asyncio.sleep(0.5)
 
         if self._active_requests > 0:
-            logger.warning(f"[SHUTDOWN DRAIN TIMEOUT] Forcibly closing {self._active_requests} remaining active requests")
+            logger.warning(
+                f"[SHUTDOWN DRAIN TIMEOUT] Forcibly closing {self._active_requests} remaining active requests"
+            )
 
         # Phase 2: Execute registered shutdown hooks
         for idx, hook in enumerate(self._shutdown_hooks):

@@ -58,7 +58,13 @@ class KnowledgeConflictManager:
         self.knowledge_manager = knowledge_manager or KnowledgeManager()
         self._conflicts: Dict[str, KnowledgeConflict] = {}
 
-    def detect_conflict(self, item_a_id: str, item_b_id: str, conflict_type: ConflictType = ConflictType.FACT_CONTRADICTION, tenant_id: str = "global") -> KnowledgeConflict:
+    def detect_conflict(
+        self,
+        item_a_id: str,
+        item_b_id: str,
+        conflict_type: ConflictType = ConflictType.FACT_CONTRADICTION,
+        tenant_id: str = "global",
+    ) -> KnowledgeConflict:
         cnflct = KnowledgeConflict(
             item_a_id=item_a_id,
             item_b_id=item_b_id,
@@ -66,10 +72,14 @@ class KnowledgeConflictManager:
             tenant_id=tenant_id,
         )
         self._conflicts[cnflct.conflict_id] = cnflct
-        logger.warning(f"[CONFLICT MANAGER] Detected knowledge conflict '{cnflct.conflict_id}' between '{item_a_id}' and '{item_b_id}' ({conflict_type.value})")
+        logger.warning(
+            f"[CONFLICT MANAGER] Detected knowledge conflict '{cnflct.conflict_id}' between '{item_a_id}' and '{item_b_id}' ({conflict_type.value})"
+        )
         return cnflct
 
-    def resolve_conflict(self, conflict_id: str, strategy: ConflictResolutionStrategy = ConflictResolutionStrategy.RECENCY) -> KnowledgeConflict:
+    def resolve_conflict(
+        self, conflict_id: str, strategy: ConflictResolutionStrategy = ConflictResolutionStrategy.RECENCY
+    ) -> KnowledgeConflict:
         cnflct = self._conflicts.get(conflict_id)
         if not cnflct:
             raise KnowledgeConflictException(conflict_id, "Conflict record not found")
@@ -93,7 +103,9 @@ class KnowledgeConflictManager:
         cnflct.resolved_item_id = winner_id
         cnflct.resolved_at = _now()
 
-        logger.info(f"[CONFLICT MANAGER] Resolved conflict '{conflict_id}' via strategy {strategy.value}: Winner '{winner_id}'")
+        logger.info(
+            f"[CONFLICT MANAGER] Resolved conflict '{conflict_id}' via strategy {strategy.value}: Winner '{winner_id}'"
+        )
         return cnflct
 
     def list_conflicts(self, tenant_id: Optional[str] = None) -> List[KnowledgeConflict]:

@@ -28,7 +28,11 @@ class RuntimeBlastRadiusAnalyzer:
     def evaluate_blast_radius(
         self, tenant_id: str, target_resource_id: str, downstream_deps: List[str]
     ) -> RuntimeBlastRadiusAssessment:
-        level = "CRITICAL" if len(downstream_deps) >= 5 else ("HIGH" if len(downstream_deps) >= 3 else "MEDIUM" if len(downstream_deps) >= 1 else "LOW")
+        level = (
+            "CRITICAL"
+            if len(downstream_deps) >= 5
+            else ("HIGH" if len(downstream_deps) >= 3 else "MEDIUM" if len(downstream_deps) >= 1 else "LOW")
+        )
         complexity = "COMPLEX" if len(downstream_deps) >= 3 else "MODERATE"
 
         ass = RuntimeBlastRadiusAssessment(
@@ -41,5 +45,7 @@ class RuntimeBlastRadiusAnalyzer:
             blast_radius_level=level,
             estimated_recovery_complexity=complexity,
         )
-        logger.info(f"Evaluated blast radius for '{target_resource_id}': level={level}, downstream={len(downstream_deps)}")
+        logger.info(
+            f"Evaluated blast radius for '{target_resource_id}': level={level}, downstream={len(downstream_deps)}"
+        )
         return ass

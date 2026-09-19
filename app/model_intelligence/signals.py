@@ -67,7 +67,9 @@ class ModelSignalManager:
         )
 
         self._signals[s_id] = signal
-        logger.info(f"[MODEL SIGNAL] Ingested signal {s_id} for model {model_id} (Tenant: {tenant_id}) Source: {source.source_name}")
+        logger.info(
+            f"[MODEL SIGNAL] Ingested signal {s_id} for model {model_id} (Tenant: {tenant_id}) Source: {source.source_name}"
+        )
         return signal
 
     def list_signals(self, tenant_id: str, model_id: Optional[str] = None) -> List[ModelSignal]:

@@ -54,7 +54,9 @@ class ResilienceEvidenceManager:
         self._bundles[bundle.bundle_id] = bundle
         return bundle
 
-    def add_evidence(self, bundle_id: str, tenant_id: str, evidence_type: str, raw_content: Dict[str, Any]) -> ResilienceEvidence:
+    def add_evidence(
+        self, bundle_id: str, tenant_id: str, evidence_type: str, raw_content: Dict[str, Any]
+    ) -> ResilienceEvidence:
         bundle = self._bundles.get(bundle_id)
         if not bundle:
             bundle = self.create_bundle(tenant_id, "default_plan")

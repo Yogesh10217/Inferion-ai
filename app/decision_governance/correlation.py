@@ -73,7 +73,9 @@ class DecisionCorrelationManager:
             )
             evidence_list.append(ev)
 
-        summary = f"Correlated {len(signals)} signals across {len(set(s.source_domain.value for s in signals))} domains."
+        summary = (
+            f"Correlated {len(signals)} signals across {len(set(s.source_domain.value for s in signals))} domains."
+        )
         corr = DecisionCorrelation(
             tenant_id=tenant_id,
             correlation_type=correlation_type,

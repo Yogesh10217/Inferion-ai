@@ -50,5 +50,7 @@ class ServiceHealthEngine:
         )
 
         self.health_repo.save(assessment)
-        logger.info(f"Evaluated ServiceHealth for service '{service_id}' (tenant: '{tenant_id}') -> Status: {status.value}")
+        logger.info(
+            f"Evaluated ServiceHealth for service '{service_id}' (tenant: '{tenant_id}') -> Status: {status.value}"
+        )
         return assessment

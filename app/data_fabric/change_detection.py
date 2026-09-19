@@ -64,7 +64,9 @@ class ChangeDetector:
             changes=changes or {},
         )
         self._events.append(evt)
-        logger.info(f"[CHANGE DETECTOR] Detected change '{change_type.value}' on source '{source_id}' (Record: {record_id})")
+        logger.info(
+            f"[CHANGE DETECTOR] Detected change '{change_type.value}' on source '{source_id}' (Record: {record_id})"
+        )
 
         # Notify registered change listeners
         for handler in self._handlers:

@@ -59,5 +59,7 @@ class IntelligenceBillingTracker:
             logger.debug(f"UnifiedCostLedger recording note: {e}")
 
         self._events[evt.event_id] = evt
-        logger.info(f"[INTELLIGENCE BILLING] Recorded ${amount_usd:.4f} for operation {operation_type} on tenant '{tenant_id}'")
+        logger.info(
+            f"[INTELLIGENCE BILLING] Recorded ${amount_usd:.4f} for operation {operation_type} on tenant '{tenant_id}'"
+        )
         return evt

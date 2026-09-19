@@ -27,7 +27,9 @@ class WorkflowRepository:
         with self._lock:
             item = self._items.get(workflow_id)
             if item and item.tenant_id != tenant_id and tenant_id != "global":
-                raise CrossTenantAutonomousAssuranceException(f"Unauthorized cross-tenant access to workflow '{workflow_id}'")
+                raise CrossTenantAutonomousAssuranceException(
+                    f"Unauthorized cross-tenant access to workflow '{workflow_id}'"
+                )
             return item
 
     def list_by_tenant(self, tenant_id: str) -> List[AutonomousWorkflow]:
@@ -51,5 +53,7 @@ class PlanRepository:
         with self._lock:
             item = self._items.get(workflow_id)
             if item and item.tenant_id != tenant_id and tenant_id != "global":
-                raise CrossTenantAutonomousAssuranceException(f"Unauthorized cross-tenant access to plan for workflow '{workflow_id}'")
+                raise CrossTenantAutonomousAssuranceException(
+                    f"Unauthorized cross-tenant access to plan for workflow '{workflow_id}'"
+                )
             return item

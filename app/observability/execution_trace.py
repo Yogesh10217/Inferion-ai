@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 @dataclass
 class ExecutionEvent:
     """Represents a discrete event or state change during execution."""
+
     name: str
     timestamp: float = field(default_factory=time.time)
     attributes: Dict[str, Any] = field(default_factory=dict)
@@ -21,6 +22,7 @@ class ExecutionEvent:
 @dataclass
 class ExecutionSpan:
     """Represents a node in the execution graph."""
+
     span_id: str
     trace_id: str
     name: str
@@ -63,6 +65,7 @@ class ExecutionSpan:
 @dataclass
 class ExecutionTimeline:
     """Flat chronological timeline representation of an execution tree."""
+
     trace_id: str
     execution_id: Optional[str]
     total_duration_ms: float
@@ -105,7 +108,13 @@ class ExecutionTrace:
         events = []
         for ev in raw_span.get("events", []):
             if isinstance(ev, dict):
-                events.append(ExecutionEvent(name=ev.get("name", ""), timestamp=ev.get("timestamp", time.time()), attributes=ev.get("attributes", {})))
+                events.append(
+                    ExecutionEvent(
+                        name=ev.get("name", ""),
+                        timestamp=ev.get("timestamp", time.time()),
+                        attributes=ev.get("attributes", {}),
+                    )
+                )
             elif isinstance(ev, ExecutionEvent):
                 events.append(ev)
 
@@ -170,19 +179,21 @@ class ExecutionTrace:
             total_tokens += span.tokens.get("total", 0)
             offset_ms = round((span.start_time - start_ref) * 1000.0, 2)
 
-            flat_items.append({
-                "span_id": span.span_id,
-                "parent_span_id": span.parent_span_id,
-                "name": span.name,
-                "component": span.component,
-                "offset_ms": offset_ms,
-                "duration_ms": span.duration_ms,
-                "status": span.status,
-                "cost": span.cost,
-                "tokens": span.tokens,
-                "events_count": len(span.events),
-                "is_error": span.status.upper() in ["ERROR", "FAILED"],
-            })
+            flat_items.append(
+                {
+                    "span_id": span.span_id,
+                    "parent_span_id": span.parent_span_id,
+                    "name": span.name,
+                    "component": span.component,
+                    "offset_ms": offset_ms,
+                    "duration_ms": span.duration_ms,
+                    "status": span.status,
+                    "cost": span.cost,
+                    "tokens": span.tokens,
+                    "events_count": len(span.events),
+                    "is_error": span.status.upper() in ["ERROR", "FAILED"],
+                }
+            )
 
         return ExecutionTimeline(
             trace_id=self.trace_id,

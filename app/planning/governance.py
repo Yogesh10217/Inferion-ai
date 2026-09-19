@@ -26,7 +26,9 @@ class PlanningGovernanceEngine:
 
         # 1. Multi-Tenant Isolation
         if plan.tenant_id not in (tenant_id, "global", "default_tenant"):
-            raise ResourcePlanningError(f"Tenant isolation violation: plan tenant '{plan.tenant_id}' != request tenant '{tenant_id}'")
+            raise ResourcePlanningError(
+                f"Tenant isolation violation: plan tenant '{plan.tenant_id}' != request tenant '{tenant_id}'"
+            )
 
         # 2. RBAC Scope Validation
         if "plans:execute" not in user_scopes and "admin" not in user_scopes:
@@ -34,10 +36,14 @@ class PlanningGovernanceEngine:
 
         # 3. Budget Limits
         if plan.estimated_cost > workspace_budget_dollars:
-            raise ResourcePlanningError(f"Workspace budget exceeded: plan cost ${plan.estimated_cost:.4f} > workspace budget ${workspace_budget_dollars:.4f}")
+            raise ResourcePlanningError(
+                f"Workspace budget exceeded: plan cost ${plan.estimated_cost:.4f} > workspace budget ${workspace_budget_dollars:.4f}"
+            )
 
         # 4. Confidence Threshold
         if plan.confidence_score < confidence_threshold:
-            raise ResourcePlanningError(f"Plan confidence score {plan.confidence_score:.2f} below threshold {confidence_threshold:.2f}")
+            raise ResourcePlanningError(
+                f"Plan confidence score {plan.confidence_score:.2f} below threshold {confidence_threshold:.2f}"
+            )
 
         logger.info(f"[PLANNING GOVERNANCE] Approved plan '{plan.plan_id}' for execution")

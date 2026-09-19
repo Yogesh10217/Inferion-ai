@@ -19,6 +19,7 @@ class InfrastructureInitializer:
         logger.info("Initializing database...")
         try:
             from app.core.database import init_db
+
             await init_db()
         except Exception as e:
             logger.warning(f"Database initialization warning: {e}")

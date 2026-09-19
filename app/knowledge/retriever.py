@@ -2,6 +2,7 @@
 Retriever Module.
 Orchestrates Dense/Hybrid Retrieval, and Metadata/Namespace Filtering.
 """
+
 import logging
 from typing import Any, Dict, List, Optional
 
@@ -25,7 +26,7 @@ class Retriever:
         workspace_id: str,
         organization_id: str,
         profile: RetrievalProfile = Profiles.BALANCED,
-        metadata_filter: Optional[Dict[str, Any]] = None
+        metadata_filter: Optional[Dict[str, Any]] = None,
     ) -> List[DocumentInfo]:
         """
         Retrieves documents based on the specified profile.
@@ -60,12 +61,10 @@ class Retriever:
         elif profile.strategy == RetrievalStrategy.SPARSE:
             results = await self.search_engine.sparse_search(query, fetch_k, combined_filter)
         elif profile.strategy == RetrievalStrategy.HYBRID:
-            results = await self.search_engine.hybrid_search(
-                query, fetch_k, profile.alpha or 0.5, combined_filter
-            )
+            results = await self.search_engine.hybrid_search(query, fetch_k, profile.alpha or 0.5, combined_filter)
 
         # Rerank if configured
         if profile.use_reranker and self.reranker and profile.reranker_top_n:
             results = await self.reranker.rerank(query, results, profile.reranker_top_n)
 
-        return results[:profile.top_k]
+        return results[: profile.top_k]

@@ -52,7 +52,15 @@ class DataDelegationManager:
         del_reqs = []
         for a in actions:
             target_name = a.target_subsystem.upper()
-            if target_name not in ("PLATFORM_OPERATIONS", "APPLICATION_PLATFORM", "DEVELOPER_PLATFORM", "ORCHESTRATION", "INTEGRATION", "ARCHITECTURE_PLATFORM", "PORTFOLIO_PLATFORM"):
+            if target_name not in (
+                "PLATFORM_OPERATIONS",
+                "APPLICATION_PLATFORM",
+                "DEVELOPER_PLATFORM",
+                "ORCHESTRATION",
+                "INTEGRATION",
+                "ARCHITECTURE_PLATFORM",
+                "PORTFOLIO_PLATFORM",
+            ):
                 target_name = "ORCHESTRATION"
             del_reqs.append(
                 DelegationRequest(

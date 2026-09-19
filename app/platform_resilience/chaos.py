@@ -100,7 +100,9 @@ class ChaosExperimentManager:
         self._experiments[exp.experiment_id] = exp
 
         if risk in (ExperimentRisk.HIGH, ExperimentRisk.CRITICAL):
-            raise HighRiskRecoveryRequiresApprovalException(f"Chaos experiment '{name}' (ID: {exp.experiment_id}) is high-risk ({risk.value}) and requires human approval.")
+            raise HighRiskRecoveryRequiresApprovalException(
+                f"Chaos experiment '{name}' (ID: {exp.experiment_id}) is high-risk ({risk.value}) and requires human approval."
+            )
 
         return exp
 
@@ -112,7 +114,11 @@ class ChaosExperimentManager:
             tenant_id=tenant_id,
             target=DelegationTarget.PLATFORM_OPERATIONS,
             action="run_chaos_experiment",
-            payload={"experiment_id": experiment_id, "scenario": exp.scenario.value, "target_service_id": exp.target_service_id},
+            payload={
+                "experiment_id": experiment_id,
+                "scenario": exp.scenario.value,
+                "target_service_id": exp.target_service_id,
+            },
             requester_id="chaos_manager",
         )
         exp.delegation_id = del_req.delegation_id

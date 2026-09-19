@@ -57,7 +57,9 @@ class DataFabricBillingTracker:
             cost_dollars=cost_dollars,
         )
         self._records.append(rec)
-        logger.info(f"[DATA FABRIC BILLING] Recorded {records_ingested} records ingested for source '{source_id}' (${cost_dollars:.4f})")
+        logger.info(
+            f"[DATA FABRIC BILLING] Recorded {records_ingested} records ingested for source '{source_id}' (${cost_dollars:.4f})"
+        )
         return rec
 
     def get_tenant_total_cost(self, tenant_id: str) -> float:

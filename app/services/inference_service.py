@@ -80,35 +80,39 @@ class DefaultInferenceService(InferenceService):
                 duration_ms = int((time.time() - start_time) * 1000)
 
                 if self._usage_emitter:
-                    self._usage_emitter.emit(UsageEvent(
-                        organization_id=kwargs.get("organization_id", "default"),
-                        workspace_id=kwargs.get("workspace_id"),
-                        user_id=kwargs.get("user_id"),
-                        api_key_id=kwargs.get("api_key_id"),
-                        provider=response.model.split('/')[0] if '/' in response.model else "unknown",
-                        model=response.model,
-                        request_tokens=response.usage.prompt_tokens if response.usage else 0,
-                        response_tokens=response.usage.completion_tokens if response.usage else 0,
-                        status_code="200",
-                        is_streaming=False,
-                        is_cached=False,  # Can extract from response if metadata supports it
-                        duration_ms=duration_ms
-                    ))
+                    self._usage_emitter.emit(
+                        UsageEvent(
+                            organization_id=kwargs.get("organization_id", "default"),
+                            workspace_id=kwargs.get("workspace_id"),
+                            user_id=kwargs.get("user_id"),
+                            api_key_id=kwargs.get("api_key_id"),
+                            provider=response.model.split("/")[0] if "/" in response.model else "unknown",
+                            model=response.model,
+                            request_tokens=response.usage.prompt_tokens if response.usage else 0,
+                            response_tokens=response.usage.completion_tokens if response.usage else 0,
+                            status_code="200",
+                            is_streaming=False,
+                            is_cached=False,  # Can extract from response if metadata supports it
+                            duration_ms=duration_ms,
+                        )
+                    )
 
             except Exception as exc:  # pragma: no cover - defensive boundary
                 duration_ms = int((time.time() - start_time) * 1000)
                 if self._usage_emitter:
-                    self._usage_emitter.emit(UsageEvent(
-                        organization_id=kwargs.get("organization_id", "default"),
-                        workspace_id=kwargs.get("workspace_id"),
-                        user_id=kwargs.get("user_id"),
-                        api_key_id=kwargs.get("api_key_id"),
-                        provider="unknown",
-                        model=model_id,
-                        status_code="500",
-                        error_type=type(exc).__name__,
-                        duration_ms=duration_ms
-                    ))
+                    self._usage_emitter.emit(
+                        UsageEvent(
+                            organization_id=kwargs.get("organization_id", "default"),
+                            workspace_id=kwargs.get("workspace_id"),
+                            user_id=kwargs.get("user_id"),
+                            api_key_id=kwargs.get("api_key_id"),
+                            provider="unknown",
+                            model=model_id,
+                            status_code="500",
+                            error_type=type(exc).__name__,
+                            duration_ms=duration_ms,
+                        )
+                    )
                 raise ProviderUnavailableError(f"Provider failed for model '{model_id}'") from exc
 
             return response

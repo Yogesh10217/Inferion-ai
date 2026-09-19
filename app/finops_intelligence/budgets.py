@@ -19,8 +19,8 @@ class BudgetPeriod(str, Enum):
 
 
 class BudgetThreshold(str, Enum):
-    WARNING = "WARNING"      # 75%
-    CRITICAL = "CRITICAL"    # 90%
+    WARNING = "WARNING"  # 75%
+    CRITICAL = "CRITICAL"  # 90%
     HARD_LIMIT = "HARD_LIMIT"  # 100%
 
 

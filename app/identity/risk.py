@@ -77,7 +77,11 @@ class IdentityRiskEngine:
 
         # For HIGH or CRITICAL severity, automatically trigger an Operations Incident
         if severity in (IdentityRiskSeverity.CRITICAL, IdentityRiskSeverity.HIGH):
-            op_sev = IncidentSeverity.SEV1_CRITICAL if severity == IdentityRiskSeverity.CRITICAL else IncidentSeverity.SEV2_HIGH
+            op_sev = (
+                IncidentSeverity.SEV1_CRITICAL
+                if severity == IdentityRiskSeverity.CRITICAL
+                else IncidentSeverity.SEV2_HIGH
+            )
             inc = self.incident_manager.create_incident(
                 title=f"[IDENTITY RISK] {anomaly_type.value} for '{identity_id}'",
                 tenant_id=tenant_id,
@@ -85,10 +89,14 @@ class IdentityRiskEngine:
                 primary_resource_id=identity_id,
             )
             evt.incident_id = inc.incident_id
-            logger.warning(f"[IDENTITY RISK ENGINE] Created Operations Incident '{inc.incident_id}' for {severity.value} identity risk event '{evt.event_id}'")
+            logger.warning(
+                f"[IDENTITY RISK ENGINE] Created Operations Incident '{inc.incident_id}' for {severity.value} identity risk event '{evt.event_id}'"
+            )
 
         self._risk_events[evt.event_id] = evt
-        logger.info(f"[IDENTITY RISK ENGINE] Recorded risk event '{evt.event_id}' ({anomaly_type.value}) for '{identity_id}'")
+        logger.info(
+            f"[IDENTITY RISK ENGINE] Recorded risk event '{evt.event_id}' ({anomaly_type.value}) for '{identity_id}'"
+        )
         return evt
 
     def get_event(self, event_id: str) -> IdentityRiskEvent:

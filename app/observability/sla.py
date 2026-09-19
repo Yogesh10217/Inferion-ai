@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 class SLOStatus(str, Enum):
     """SLO Evaluation Status Enum."""
+
     HEALTHY = "HEALTHY"
     WARNING = "WARNING"
     VIOLATED = "VIOLATED"
@@ -24,6 +25,7 @@ class SLOStatus(str, Enum):
 @dataclass
 class SLODefinition:
     """Represents a Service Level Objective rule definition."""
+
     slo_id: str
     name: str
     target_component: str
@@ -43,6 +45,7 @@ class SLODefinition:
 @dataclass
 class SLOEvaluation:
     """Result of an SLO evaluation check."""
+
     slo_id: str
     name: str
     target_component: str

@@ -46,6 +46,7 @@ class ServiceDependencyType(str, Enum):
 
 class ServiceDependency(BaseModel):
     """Relationship between services."""
+
     dependency_id: str = Field(default_factory=lambda: f"dep_{uuid.uuid4().hex[:10]}")
     source_service_id: str
     target_service_id: str
@@ -58,6 +59,7 @@ class ServiceDependency(BaseModel):
 
 class Service(BaseModel):
     """Operational service definition."""
+
     service_id: str = Field(default_factory=lambda: f"svc_{uuid.uuid4().hex[:10]}")
     tenant_id: str = "global"
     name: str
@@ -148,7 +150,9 @@ class ServiceCatalogManager:
             description=description,
         )
         self._dependencies[dep.dependency_id] = dep
-        logger.info(f"[SERVICE CATALOG] Added dependency: {source_service_id} -> {target_service_id} ({dependency_type.value})")
+        logger.info(
+            f"[SERVICE CATALOG] Added dependency: {source_service_id} -> {target_service_id} ({dependency_type.value})"
+        )
         return dep
 
     def resolve_dependencies(

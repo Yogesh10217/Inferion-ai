@@ -102,7 +102,9 @@ class ApplicationResilienceManager:
                 fbk.active = True
                 fbk.failure_count += 1
                 fbk.updated_at = datetime.now(timezone.utc)
-                logger.warning(f"[RESILIENCE] Triggered fallback target '{fbk.fallback_target}' for app '{application_id}'")
+                logger.warning(
+                    f"[RESILIENCE] Triggered fallback target '{fbk.fallback_target}' for app '{application_id}'"
+                )
                 return {
                     "target": fbk.fallback_target,
                     "is_fallback": True,

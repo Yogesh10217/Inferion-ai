@@ -36,7 +36,9 @@ class GovernanceMonitoringEngine:
         self.violation_manager = violation_manager or ViolationManager()
         self.risk_manager = risk_manager or RiskManager()
 
-    def run_monitoring_scan(self, tenant_id: str = "global", target_resource_id: str = "resource_all") -> MonitoringCheckResult:
+    def run_monitoring_scan(
+        self, tenant_id: str = "global", target_resource_id: str = "resource_all"
+    ) -> MonitoringCheckResult:
         findings = []
         has_drift = False
 

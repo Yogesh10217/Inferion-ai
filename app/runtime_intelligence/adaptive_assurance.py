@@ -52,5 +52,7 @@ class AdaptiveAssuranceEngine:
             posture=posture,
             component_scores=comp_scores,
         )
-        logger.info(f"Evaluated AdaptiveAssuranceScore for tenant '{tenant_id}': Score={overall:.4f}, Posture={posture}")
+        logger.info(
+            f"Evaluated AdaptiveAssuranceScore for tenant '{tenant_id}': Score={overall:.4f}, Posture={posture}"
+        )
         return score

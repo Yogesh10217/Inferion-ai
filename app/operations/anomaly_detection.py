@@ -79,7 +79,11 @@ class RuleBasedAnomalyDetector:
         # 1. Latency Spike
         p95 = float(app_m.get("latency_p95", 0.0))
         if p95 > self.latency_p95_threshold:
-            sev = AnomalySeverity.EMERGENCY if p95 > 2000.0 else (AnomalySeverity.CRITICAL if p95 > 1000.0 else AnomalySeverity.WARNING)
+            sev = (
+                AnomalySeverity.EMERGENCY
+                if p95 > 2000.0
+                else (AnomalySeverity.CRITICAL if p95 > 1000.0 else AnomalySeverity.WARNING)
+            )
             anomalies.append(
                 Anomaly(
                     anomaly_type=AnomalyType.LATENCY_SPIKE,
@@ -95,7 +99,11 @@ class RuleBasedAnomalyDetector:
         # 2. Error Rate Spike
         err_rate = float(app_m.get("error_rate", 0.0))
         if err_rate > self.error_rate_threshold:
-            sev = AnomalySeverity.EMERGENCY if err_rate > 0.10 else (AnomalySeverity.CRITICAL if err_rate > 0.05 else AnomalySeverity.WARNING)
+            sev = (
+                AnomalySeverity.EMERGENCY
+                if err_rate > 0.10
+                else (AnomalySeverity.CRITICAL if err_rate > 0.05 else AnomalySeverity.WARNING)
+            )
             anomalies.append(
                 Anomaly(
                     anomaly_type=AnomalyType.ERROR_RATE_SPIKE,
@@ -151,8 +159,7 @@ class RuleBasedAnomalyDetector:
 
         # 5. Dependency Failure
         failed_deps = [
-            k for k, v in dep_m.items()
-            if isinstance(v, dict) and v.get("status") in ("UNHEALTHY", "FAILED", "DOWN")
+            k for k, v in dep_m.items() if isinstance(v, dict) and v.get("status") in ("UNHEALTHY", "FAILED", "DOWN")
         ]
         if failed_deps:
             anomalies.append(

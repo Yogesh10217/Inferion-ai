@@ -52,7 +52,9 @@ class SecurityException:
                 "reason": self.reason,
                 "expires_at": self.expires_at,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
         self.check_expiration()
 
     def check_expiration(self) -> SecurityExceptionStatus:

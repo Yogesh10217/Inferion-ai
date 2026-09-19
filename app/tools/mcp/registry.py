@@ -46,6 +46,7 @@ class MCPRegistry:
             self._servers.pop(server_id, None)
             if client:
                 import asyncio
+
                 try:
                     asyncio.create_task(client.close())
                 except RuntimeError:

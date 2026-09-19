@@ -25,7 +25,7 @@ class CheckpointManager:
                 "session_id": session_id,
                 "name": name,
                 "timestamp": time.time(),
-                "state": serialized_state
+                "state": serialized_state,
             }
             logger.info(f"Saved checkpoint '{name}' for session '{session_id}'")
             return name

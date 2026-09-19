@@ -29,7 +29,9 @@ class FineTuningService:
     def __init__(self):
         self._jobs: Dict[str, FineTuningJob] = {}
 
-    def create_job(self, model: str, dataset_uri: str, hyperparameters: Optional[Dict[str, Any]] = None) -> FineTuningJob:
+    def create_job(
+        self, model: str, dataset_uri: str, hyperparameters: Optional[Dict[str, Any]] = None
+    ) -> FineTuningJob:
         job = FineTuningJob(
             model=model,
             dataset_uri=dataset_uri,

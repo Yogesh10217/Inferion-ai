@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class AnomalyEvent:
     """Structured anomaly notification event."""
+
     anomaly_id: str
     metric_name: str
     anomaly_type: str  # COST_SPIKE, LATENCY_SPIKE, FAILURE_SPIKE, EXECUTION_LOOP, DEGRADATION

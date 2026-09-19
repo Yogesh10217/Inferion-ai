@@ -76,7 +76,9 @@ class DataCatalog:
 
     def register_dataset(self, dataset: Dataset) -> Dataset:
         self._datasets[dataset.dataset_id] = dataset
-        logger.info(f"[DATA CATALOG] Registered dataset '{dataset.name}' (ID: {dataset.dataset_id}, Tenant: {dataset.tenant_id})")
+        logger.info(
+            f"[DATA CATALOG] Registered dataset '{dataset.name}' (ID: {dataset.dataset_id}, Tenant: {dataset.tenant_id})"
+        )
         return dataset
 
     def get_dataset(self, dataset_id: str) -> Dataset:

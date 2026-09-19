@@ -99,7 +99,9 @@ class OperationalRemediationManager:
         )
         return plan
 
-    def approve_remediation(self, tenant_id: str, plan_id: str, approval_id: str = "appr_rem_123") -> OperationalRemediationPlan:
+    def approve_remediation(
+        self, tenant_id: str, plan_id: str, approval_id: str = "appr_rem_123"
+    ) -> OperationalRemediationPlan:
         plan = self.get_plan(tenant_id, plan_id)
         plan.approval_id = approval_id
         plan.status = RemediationStatus.APPROVED

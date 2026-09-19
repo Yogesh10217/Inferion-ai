@@ -108,7 +108,9 @@ class KnowledgeFreshnessManager:
     def evaluate_freshness_assessment(self, tenant_id: str, reference_ids: List[str]) -> FreshnessAssessment:
         assessments = []
         for ref_id in reference_ids:
-            matching = [f for f in self._freshness_records.values() if f.reference_id == ref_id and f.tenant_id == tenant_id]
+            matching = [
+                f for f in self._freshness_records.values() if f.reference_id == ref_id and f.tenant_id == tenant_id
+            ]
             if matching:
                 assessments.append(matching[0])
             else:

@@ -175,7 +175,9 @@ class DataAccessManager:
         # 5. Retention / Legal Hold Validation
         under_hold = self.retention_manager.is_under_legal_hold(request.asset_id, request.tenant_id)
         if request.action == DataAction.DELETE and under_hold:
-            return self._make_block_decision(request, "Deletion blocked: Asset is under active Legal Hold.", 90.0, "HIGH")
+            return self._make_block_decision(
+                request, "Deletion blocked: Asset is under active Legal Hold.", 90.0, "HIGH"
+            )
 
         # 6. Data Trust & Risk Evaluation
         trust_assessment = self.trust_engine.calculate_trust_score(
@@ -225,7 +227,9 @@ class DataAccessManager:
             snapshot=snapshot,
         )
 
-    def _make_block_decision(self, request: DataAccessRequest, reason: str, trust_score: float, risk_level: str) -> DataAccessDecision:
+    def _make_block_decision(
+        self, request: DataAccessRequest, reason: str, trust_score: float, risk_level: str
+    ) -> DataAccessDecision:
         snapshot = DataGovernanceSnapshot(
             policy_version="1.0.0",
             classification_version="1.0.0",

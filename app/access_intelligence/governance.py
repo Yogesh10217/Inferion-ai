@@ -20,6 +20,7 @@ class AccessGovernanceStatus(str, Enum):
 
 class AccessGovernanceRequirement(BaseModel):
     """Requirement associated with governance evaluation."""
+
     requirement_id: str = Field(default_factory=lambda: f"gov_req_{uuid.uuid4().hex[:8]}")
     code: str
     description: str
@@ -29,6 +30,7 @@ class AccessGovernanceRequirement(BaseModel):
 
 class AccessGovernanceDecision(BaseModel):
     """Access Governance Evaluation Decision."""
+
     decision_id: str = Field(default_factory=lambda: f"gov_dec_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     subject_identity_id: str
@@ -61,11 +63,22 @@ class AccessGovernanceEngine:
         reqs: List[AccessGovernanceRequirement] = []
 
         if hard_policy_violation:
-            reqs.append(AccessGovernanceRequirement(code="HARD_POL_01", description="Hard policy compliance rule", is_hard_policy=True, satisfied=False))
+            reqs.append(
+                AccessGovernanceRequirement(
+                    code="HARD_POL_01", description="Hard policy compliance rule", is_hard_policy=True, satisfied=False
+                )
+            )
             status = AccessGovernanceStatus.BLOCK
             reason = "Hard policy violation overrides evaluation. Action is BLOCKED."
         elif requires_human_approval or risk_score >= 80.0:
-            reqs.append(AccessGovernanceRequirement(code="HUMAN_APPR_01", description="Human approval for high-risk action", is_hard_policy=False, satisfied=False))
+            reqs.append(
+                AccessGovernanceRequirement(
+                    code="HUMAN_APPR_01",
+                    description="Human approval for high-risk action",
+                    is_hard_policy=False,
+                    satisfied=False,
+                )
+            )
             status = AccessGovernanceStatus.REQUIRE_APPROVAL
             reason = f"High risk score ({risk_score}) or approval requirement triggered REQUIRE_APPROVAL."
         elif risk_score >= 60.0:

@@ -30,7 +30,7 @@ class DatabaseHealthMonitor:
                 async with self.session_factory() as session:
                     res = await session.execute(text("SELECT 1"))
                     val = res.scalar()
-                    is_connected = (val == 1)
+                    is_connected = val == 1
             except Exception as e:
                 is_connected = False
                 error_msg = str(e)

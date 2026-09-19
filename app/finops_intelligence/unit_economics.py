@@ -42,8 +42,18 @@ class UnitEconomicManager:
         task_cost = round(total_cost_usd / max(total_agent_tasks, 1.0), 4)
 
         metrics = [
-            UnitEconomicMetric(unit_type="PER_REQUEST", cost_per_unit_usd=req_cost, total_units=total_requests, total_cost_usd=total_cost_usd),
-            UnitEconomicMetric(unit_type="PER_AGENT_TASK", cost_per_unit_usd=task_cost, total_units=total_agent_tasks, total_cost_usd=total_cost_usd),
+            UnitEconomicMetric(
+                unit_type="PER_REQUEST",
+                cost_per_unit_usd=req_cost,
+                total_units=total_requests,
+                total_cost_usd=total_cost_usd,
+            ),
+            UnitEconomicMetric(
+                unit_type="PER_AGENT_TASK",
+                cost_per_unit_usd=task_cost,
+                total_units=total_agent_tasks,
+                total_cost_usd=total_cost_usd,
+            ),
         ]
         asm = UnitEconomicAssessment(
             tenant_id=tenant_id,

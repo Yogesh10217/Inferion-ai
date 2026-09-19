@@ -83,11 +83,18 @@ class AgentGovernanceEngine:
         risk_score = 0.1
 
         # High risk / Destructive action invariants
-        if is_destructive or risk_level in ("HIGH", "CRITICAL") or "DELETE" in proposed_action.upper() or "RELEASE" in proposed_action.upper():
+        if (
+            is_destructive
+            or risk_level in ("HIGH", "CRITICAL")
+            or "DELETE" in proposed_action.upper()
+            or "RELEASE" in proposed_action.upper()
+        ):
             status = AgentGovernanceStatus.REQUIRE_APPROVAL
             requires_approval = True
             risk_score = 0.85
-            reasons.append(f"Proposed action '{proposed_action}' is destructive or high-risk ({risk_level}). Human approval required.")
+            reasons.append(
+                f"Proposed action '{proposed_action}' is destructive or high-risk ({risk_level}). Human approval required."
+            )
 
         elif "MODIFY_SECURITY" in proposed_action.upper() or "GRANT_PERMISSION" in proposed_action.upper():
             status = AgentGovernanceStatus.BLOCK
@@ -98,7 +105,9 @@ class AgentGovernanceEngine:
             status = AgentGovernanceStatus.REQUIRE_APPROVAL
             requires_approval = True
             risk_score = 0.7
-            reasons.append(f"Estimated action cost ${estimated_cost:.2f} exceeds auto-approval spending limit of $1000.00.")
+            reasons.append(
+                f"Estimated action cost ${estimated_cost:.2f} exceeds auto-approval spending limit of $1000.00."
+            )
 
         else:
             reasons.append("Action evaluated and permitted under standard enterprise agent governance policy.")

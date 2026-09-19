@@ -64,7 +64,9 @@ class ModelIntelligenceBillingTracker:
             metadata={"model_id": model_id, "cost_event_id": e_id},
         )
 
-        logger.info(f"[MODEL BILLING] Recorded intelligence cost ${cost_usd:.4f} for model {model_id} (Operation: {operation})")
+        logger.info(
+            f"[MODEL BILLING] Recorded intelligence cost ${cost_usd:.4f} for model {model_id} (Operation: {operation})"
+        )
         return event
 
     def get_total_cost(self, model_id: str, tenant_id: str) -> float:

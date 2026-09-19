@@ -124,7 +124,9 @@ class DataContractManager:
             elif field_name in incoming_schema:
                 inc_type = incoming_schema[field_name]
                 if inc_type != rule.expected_type:
-                    violations.append(f"Breaking Change: Type mismatch for field '{field_name}'. Expected '{rule.expected_type}', got '{inc_type}'.")
+                    violations.append(
+                        f"Breaking Change: Type mismatch for field '{field_name}'. Expected '{rule.expected_type}', got '{inc_type}'."
+                    )
                     is_breaking = True
 
         requires_approval = False

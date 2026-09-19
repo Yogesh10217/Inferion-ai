@@ -101,6 +101,7 @@ class CrossPhaseEventType(str, Enum):
 @dataclass
 class TraceContext:
     """Canonical cross-phase correlation and trace tracking context."""
+
     trace_id: str = field(default_factory=lambda: f"trace-{uuid.uuid4().hex[:12]}")
     correlation_id: str = field(default_factory=lambda: f"corr-{uuid.uuid4().hex[:12]}")
     causation_id: Optional[str] = None

@@ -36,7 +36,9 @@ class UncertaintyLevel(str, Enum):
 
 class DecisionUncertaintyDimensionScore(BaseModel):
     dimension: UncertaintyDimension
-    score: float = Field(0.0, ge=0.0, le=1.0, description="Uncertainty score between 0.0 (certain) and 1.0 (highly uncertain)")
+    score: float = Field(
+        0.0, ge=0.0, le=1.0, description="Uncertainty score between 0.0 (certain) and 1.0 (highly uncertain)"
+    )
     reasoning: str = ""
 
 
@@ -80,7 +82,12 @@ class DecisionUncertaintyEngine:
         )
 
         # 2. Evidence uncertainty
-        ev_unc = max(0.0, min(1.0, 1.0 - (evidence_quality_score / 100.0 if evidence_quality_score > 1.0 else evidence_quality_score)))
+        ev_unc = max(
+            0.0,
+            min(
+                1.0, 1.0 - (evidence_quality_score / 100.0 if evidence_quality_score > 1.0 else evidence_quality_score)
+            ),
+        )
         dimension_scores.append(
             DecisionUncertaintyDimensionScore(
                 dimension=UncertaintyDimension.EVIDENCE_UNCERTAINTY,
@@ -168,5 +175,7 @@ class DecisionUncertaintyEngine:
         if not assessment:
             raise DecisionNotFoundException(f"Uncertainty assessment for decision '{decision_id}' not found.")
         if assessment.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantDecisionIntelligenceException(f"Unauthorized cross-tenant access to uncertainty assessment for decision '{decision_id}'")
+            raise CrossTenantDecisionIntelligenceException(
+                f"Unauthorized cross-tenant access to uncertainty assessment for decision '{decision_id}'"
+            )
         return assessment

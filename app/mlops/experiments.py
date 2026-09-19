@@ -70,9 +70,13 @@ class ExperimentManager:
         logger.info(f"[EXPERIMENT ENGINE] Created experiment '{name}' (ID: {exp.experiment_id})")
         return exp
 
-    def add_variant(self, experiment_id: str, name: str, asset_id: str, version_number: str, traffic_weight: float = 50.0) -> ExperimentVariant:
+    def add_variant(
+        self, experiment_id: str, name: str, asset_id: str, version_number: str, traffic_weight: float = 50.0
+    ) -> ExperimentVariant:
         exp = self.get_experiment(experiment_id)
-        var = ExperimentVariant(name=name, asset_id=asset_id, version_number=version_number, traffic_weight=traffic_weight)
+        var = ExperimentVariant(
+            name=name, asset_id=asset_id, version_number=version_number, traffic_weight=traffic_weight
+        )
         exp.variants.append(var)
         logger.info(f"[EXPERIMENT ENGINE] Added variant '{name}' to experiment '{exp.name}'")
         return var
@@ -83,7 +87,14 @@ class ExperimentManager:
         logger.info(f"[EXPERIMENT ENGINE] Started experiment '{exp.name}'")
         return exp
 
-    def record_run(self, experiment_id: str, variant_id: str, input_data: Dict[str, Any], output_data: Dict[str, Any], scores: Optional[ExperimentMetricScore] = None) -> ExperimentRun:
+    def record_run(
+        self,
+        experiment_id: str,
+        variant_id: str,
+        input_data: Dict[str, Any],
+        output_data: Dict[str, Any],
+        scores: Optional[ExperimentMetricScore] = None,
+    ) -> ExperimentRun:
         run = ExperimentRun(
             experiment_id=experiment_id,
             variant_id=variant_id,
@@ -114,6 +125,7 @@ class ExperimentManager:
             return exp.variants[0]
 
         import hashlib
+
         h = int(hashlib.md5(f"{experiment_id}:{request_id}".encode()).hexdigest(), 16)
         bucket = (h % 10000) / 100.0  # Float 0.00 - 99.99
 

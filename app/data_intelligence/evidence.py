@@ -61,7 +61,9 @@ class DataEvidenceManager:
         sanitized_meta = self._sanitizer.sanitize(raw_metadata or {})
         clean_meta = sanitized_meta if isinstance(sanitized_meta, dict) else {}
 
-        fp = FingerprintGenerator.generate({"tenant_id": tenant_id, "dataset_id": dataset_id, "evidence_type": evidence_type, "meta": clean_meta})
+        fp = FingerprintGenerator.generate(
+            {"tenant_id": tenant_id, "dataset_id": dataset_id, "evidence_type": evidence_type, "meta": clean_meta}
+        )
 
         ev = DataEvidence(
             evidence_id=eid,
@@ -89,11 +91,13 @@ class DataEvidenceManager:
             ev = self.get_evidence(eid, tenant_id)
             ev_list.append(ev)
 
-        bundle_fp = FingerprintGenerator.generate({
-            "tenant_id": tenant_id,
-            "dataset_id": dataset_id,
-            "evidences": [e.evidence_id for e in ev_list],
-        })
+        bundle_fp = FingerprintGenerator.generate(
+            {
+                "tenant_id": tenant_id,
+                "dataset_id": dataset_id,
+                "evidences": [e.evidence_id for e in ev_list],
+            }
+        )
 
         bundle = DataEvidenceBundle(
             bundle_id=bid,
@@ -115,10 +119,12 @@ class DataEvidenceManager:
 
     def verify_integrity(self, evidence_id: str, tenant_id: str) -> bool:
         ev = self.get_evidence(evidence_id, tenant_id)
-        computed_fp = FingerprintGenerator.generate({
-            "tenant_id": tenant_id,
-            "dataset_id": ev.dataset_id,
-            "evidence_type": ev.evidence_type,
-            "meta": ev.sanitized_metadata,
-        })
+        computed_fp = FingerprintGenerator.generate(
+            {
+                "tenant_id": tenant_id,
+                "dataset_id": ev.dataset_id,
+                "evidence_type": ev.evidence_type,
+                "meta": ev.sanitized_metadata,
+            }
+        )
         return computed_fp == ev.integrity.sha256_hash

@@ -46,9 +46,7 @@ class IdentityVerificationManager:
         identity_id: str,
         checks: Optional[List[VerificationCheck]] = None,
     ) -> IdentityVerification:
-        chk_list = checks or [
-            VerificationCheck(check_type="PERMISSION_REMOVED", target_entity=identity_id)
-        ]
+        chk_list = checks or [VerificationCheck(check_type="PERMISSION_REMOVED", target_entity=identity_id)]
         all_passed = all(c.status == VerificationStatus.PASSED for c in chk_list)
         overall = VerificationStatus.PASSED if all_passed else VerificationStatus.FAILED
 

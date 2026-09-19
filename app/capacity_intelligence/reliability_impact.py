@@ -20,7 +20,9 @@ class ReliabilityCapacityImpactEngine:
             "error_budget_burn_risk": error_budget_burn_risk,
             "availability_impact_score": round(saturation_risk, 4),
         }
-        logger.info(f"Evaluated ReliabilityCapacityImpact for resource '{resource_id}': Burn Risk={error_budget_burn_risk}")
+        logger.info(
+            f"Evaluated ReliabilityCapacityImpact for resource '{resource_id}': Burn Risk={error_budget_burn_risk}"
+        )
         return impact
 
 

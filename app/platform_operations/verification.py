@@ -82,7 +82,9 @@ class RemediationVerifier:
         is_rolled_back = False
 
         if not all_passed and auto_rollback_on_failure:
-            logger.warning(f"[REMEDIATION VERIFIER] Verification failed for plan '{plan_id}'. Triggering automatic rollback...")
+            logger.warning(
+                f"[REMEDIATION VERIFIER] Verification failed for plan '{plan_id}'. Triggering automatic rollback..."
+            )
             plan.status = RemediationStatus.ROLLED_BACK
             plan.updated_at = _now()
             is_rolled_back = True
@@ -95,5 +97,7 @@ class RemediationVerifier:
             checks=[check1, check2],
         )
         self._verifications[plan_id] = verif
-        logger.info(f"[REMEDIATION VERIFIER] Verified plan '{plan_id}': Passed={all_passed}, RolledBack={is_rolled_back}")
+        logger.info(
+            f"[REMEDIATION VERIFIER] Verified plan '{plan_id}': Passed={all_passed}, RolledBack={is_rolled_back}"
+        )
         return verif

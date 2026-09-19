@@ -110,6 +110,10 @@ class ProgressiveDeliveryEngine:
         if plan.active_step_index >= len(plan.steps):
             plan.status = ProgressiveDeliveryState.COMPLETED
         else:
-            plan.status = ProgressiveDeliveryState.CANARY_VALIDATING if target_pct < 100 else ProgressiveDeliveryState.FULL_VALIDATING
+            plan.status = (
+                ProgressiveDeliveryState.CANARY_VALIDATING
+                if target_pct < 100
+                else ProgressiveDeliveryState.FULL_VALIDATING
+            )
 
         return step_result

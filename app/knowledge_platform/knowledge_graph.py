@@ -86,7 +86,9 @@ class KnowledgeGraphManager:
     ) -> KnowledgeNode:
         node = KnowledgeNode(label=label, node_type=node_type, tenant_id=tenant_id, properties=properties or {})
         self._nodes[node.node_id] = node
-        logger.info(f"[KNOWLEDGE GRAPH] Added node '{node.node_id}' ('{label}', {node_type.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[KNOWLEDGE GRAPH] Added node '{node.node_id}' ('{label}', {node_type.value}) for tenant '{tenant_id}'"
+        )
         return node
 
     def add_edge(
@@ -108,10 +110,14 @@ class KnowledgeGraphManager:
             weight=weight,
         )
         self._edges[edge.edge_id] = edge
-        logger.info(f"[KNOWLEDGE GRAPH] Added edge '{edge.edge_id}': {source_node_id} -[{relationship.value}]-> {target_node_id}")
+        logger.info(
+            f"[KNOWLEDGE GRAPH] Added edge '{edge.edge_id}': {source_node_id} -[{relationship.value}]-> {target_node_id}"
+        )
         return edge
 
-    def multi_hop_traversal(self, start_node_id: str, max_hops: int = 2, tenant_id: str = "global") -> List[KnowledgeNode]:
+    def multi_hop_traversal(
+        self, start_node_id: str, max_hops: int = 2, tenant_id: str = "global"
+    ) -> List[KnowledgeNode]:
         if start_node_id not in self._nodes:
             raise KnowledgeGraphException(f"Start node '{start_node_id}' not found")
 

@@ -102,7 +102,9 @@ class AgentTeam:
             team.add_member(AgentProfile(name="Code Reviewer", role=AgentRole.get_preset_role(RoleType.REVIEWER)))
             team.add_member(AgentProfile(name="QA Engineer", role=AgentRole.get_preset_role(RoleType.QA)))
         elif team_type == TeamType.COMPLIANCE:
-            team.add_member(AgentProfile(name="Compliance Lead", role=AgentRole.get_preset_role(RoleType.COMPLIANCE_OFFICER)))
+            team.add_member(
+                AgentProfile(name="Compliance Lead", role=AgentRole.get_preset_role(RoleType.COMPLIANCE_OFFICER))
+            )
             team.add_member(AgentProfile(name="Auditor", role=AgentRole.get_preset_role(RoleType.REVIEWER)))
         else:  # Support / Analysis / Custom
             team.add_member(AgentProfile(name="Team Lead", role=AgentRole.get_preset_role(RoleType.MANAGER)))

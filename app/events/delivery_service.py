@@ -113,9 +113,7 @@ class DeliveryService:
 
         # Update observability metrics
         if self.metrics_service and hasattr(self.metrics_service, "record_webhook_delivery"):
-            self.metrics_service.record_webhook_delivery(
-                latency_ms=float(total_latency_ms), success=success
-            )
+            self.metrics_service.record_webhook_delivery(latency_ms=float(total_latency_ms), success=success)
 
         # Stage 6: Dead-letter queue if delivery failed after max retries
         if not success:

@@ -19,5 +19,5 @@ __all__ = [
     "AuditAdminService",
     "ReportAdminService",
     "HealthAdminService",
-    "SystemAdminService"
+    "SystemAdminService",
 ]

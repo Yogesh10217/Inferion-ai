@@ -69,10 +69,14 @@ class SecurityVulnerabilityStore:
         if not vuln:
             raise SecurityVulnerabilityNotFoundException(f"Vulnerability '{vulnerability_id}' not found.")
         if vuln.tenant_id != tenant_id:
-            raise CrossTenantSecurityAssuranceException(f"Tenant '{tenant_id}' cannot access vulnerability for tenant '{vuln.tenant_id}'.")
+            raise CrossTenantSecurityAssuranceException(
+                f"Tenant '{tenant_id}' cannot access vulnerability for tenant '{vuln.tenant_id}'."
+            )
         return vuln
 
-    def list_vulnerabilities(self, tenant_id: str, asset_id: Optional[str] = None, status: Optional[str] = None) -> List[SecurityVulnerability]:
+    def list_vulnerabilities(
+        self, tenant_id: str, asset_id: Optional[str] = None, status: Optional[str] = None
+    ) -> List[SecurityVulnerability]:
         results = [v for v in self._vulns.values() if v.tenant_id == tenant_id]
         if asset_id:
             results = [v for v in results if v.asset_id == asset_id]

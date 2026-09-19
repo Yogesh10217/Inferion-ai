@@ -80,7 +80,10 @@ class EventResolutionManager:
         # Enforce valid lifecycle transitions
         valid_transitions = {
             EventResolutionStatus.OPEN: [EventResolutionStatus.INVESTIGATING, EventResolutionStatus.RESPONSE_PLANNED],
-            EventResolutionStatus.INVESTIGATING: [EventResolutionStatus.RESPONSE_PLANNED, EventResolutionStatus.DELEGATED],
+            EventResolutionStatus.INVESTIGATING: [
+                EventResolutionStatus.RESPONSE_PLANNED,
+                EventResolutionStatus.DELEGATED,
+            ],
             EventResolutionStatus.RESPONSE_PLANNED: [EventResolutionStatus.DELEGATED],
             EventResolutionStatus.DELEGATED: [EventResolutionStatus.VERIFYING],
             EventResolutionStatus.VERIFYING: [EventResolutionStatus.RESOLVED],
@@ -90,7 +93,9 @@ class EventResolutionManager:
 
         allowed = valid_transitions.get(res.status, [])
         if target_status not in allowed:
-            raise EventResolutionException(f"Invalid resolution transition from '{res.status.value}' to '{target_status.value}'.")
+            raise EventResolutionException(
+                f"Invalid resolution transition from '{res.status.value}' to '{target_status.value}'."
+            )
 
         res.status = target_status
         if target_status in (EventResolutionStatus.RESOLVED, EventResolutionStatus.CLOSED):

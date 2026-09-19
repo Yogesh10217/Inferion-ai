@@ -28,7 +28,7 @@ class AutonomousDelegationEngine:
         tenant_id: str,
         plan: CoordinationPlan,
         step: CoordinationStep,
-        requestor_id: str = "unified_intelligence_engine"
+        requestor_id: str = "unified_intelligence_engine",
     ) -> DelegationRequest:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -61,7 +61,7 @@ class AutonomousDelegationEngine:
                     "plan_id": plan.plan_id,
                     "step_id": step.step_id,
                     "recommendation_id": plan.recommendation_id,
-                    "target_domain": step.target_domain.value
-                }
-            }
+                    "target_domain": step.target_domain.value,
+                },
+            },
         )

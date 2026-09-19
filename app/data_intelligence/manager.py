@@ -122,17 +122,25 @@ class DataIntelligenceManager:
         self.dataset_repo.save(dataset)
 
         # 3. Profile Dataset
-        profile = self.profiling_manager.profile_dataset(dataset.dataset_id, tenant_id, total_records=5000, total_columns=20)
+        profile = self.profiling_manager.profile_dataset(
+            dataset.dataset_id, tenant_id, total_records=5000, total_columns=20
+        )
         self.billing_tracker.record_cost_event(tenant_id, dataset.dataset_id, "PROFILING", 0.05)
 
         # 4. Evaluate Quality
-        self.quality_manager.create_rule(dataset.dataset_id, tenant_id, "Completeness Check", DataQualityDimension.COMPLETENESS, min_threshold=0.90)
+        self.quality_manager.create_rule(
+            dataset.dataset_id, tenant_id, "Completeness Check", DataQualityDimension.COMPLETENESS, min_threshold=0.90
+        )
         quality_result = self.quality_manager.evaluate_quality(dataset.dataset_id, tenant_id)
         self.metrics_collector.set_gauge("quality_score", quality_result.overall_quality_score)
 
         # 5. Validate Data
-        self.validation_manager.create_rule(dataset.dataset_id, tenant_id, "User ID Not Null", ValidationType.CONSTRAINT, "user_id", {"not_null": True})
-        validation_result = self.validation_manager.validate_data(dataset.dataset_id, tenant_id, [{"user_id": "usr-123", "age": 30}])
+        self.validation_manager.create_rule(
+            dataset.dataset_id, tenant_id, "User ID Not Null", ValidationType.CONSTRAINT, "user_id", {"not_null": True}
+        )
+        validation_result = self.validation_manager.validate_data(
+            dataset.dataset_id, tenant_id, [{"user_id": "usr-123", "age": 30}]
+        )
 
         # 6. Evaluate Freshness
         freshness_ass = self.freshness_manager.evaluate_freshness(dataset.dataset_id, tenant_id)
@@ -152,7 +160,9 @@ class DataIntelligenceManager:
         self.metrics_collector.increment("anomalies_total")
 
         # 8. Detect Drift
-        drift = self.drift_manager.detect_drift(dataset.dataset_id, tenant_id, DriftType.DISTRIBUTION_DRIFT, 0.45, feature_name="age")
+        drift = self.drift_manager.detect_drift(
+            dataset.dataset_id, tenant_id, DriftType.DISTRIBUTION_DRIFT, 0.45, feature_name="age"
+        )
         drift_ass = self.drift_manager.evaluate_drift_assessment(dataset.dataset_id, tenant_id)
 
         # 9. Evaluate Schema
@@ -168,10 +178,14 @@ class DataIntelligenceManager:
         self.lineage_manager.add_relationship(node1.node_id, node2.node_id, LineageType.SOURCE_TO_DATASET, tenant_id)
 
         # 11. Analyze Dependencies
-        self.dependency_manager.register_dependency(dataset.dataset_id, "model-recommendation-v2", DependencyType.DATASET_TO_MODEL, tenant_id)
+        self.dependency_manager.register_dependency(
+            dataset.dataset_id, "model-recommendation-v2", DependencyType.DATASET_TO_MODEL, tenant_id
+        )
 
         # 12. Evaluate Pipeline Health
-        pipeline = self.pipeline_manager.register_pipeline("etl_daily_features", tenant_id, input_dataset_ids=[dataset.dataset_id])
+        pipeline = self.pipeline_manager.register_pipeline(
+            "etl_daily_features", tenant_id, input_dataset_ids=[dataset.dataset_id]
+        )
         self.pipeline_manager.record_execution(pipeline.pipeline_id, tenant_id, "SUCCESS", records_processed=5000)
         pipe_ass = self.pipeline_manager.evaluate_pipeline_health(pipeline.pipeline_id, tenant_id)
 
@@ -179,11 +193,17 @@ class DataIntelligenceManager:
         impact_ass = self.impact_manager.evaluate_impact(dataset.dataset_id, tenant_id, downstream_nodes_count=4)
 
         # 14. Correlate Platform Signals
-        sig = self.signal_manager.emit_signal(tenant_id, dataset.dataset_id, DataSignalType.ANOMALY_DETECTED, DataSignalSource.EVENT_INTELLIGENCE)
-        corr = self.correlation_manager.correlate(tenant_id, CorrelationType.DATA_ANOMALY_TO_PIPELINE_FAILURE, anomaly.anomaly_id, pipeline.pipeline_id)
+        sig = self.signal_manager.emit_signal(
+            tenant_id, dataset.dataset_id, DataSignalType.ANOMALY_DETECTED, DataSignalSource.EVENT_INTELLIGENCE
+        )
+        corr = self.correlation_manager.correlate(
+            tenant_id, CorrelationType.DATA_ANOMALY_TO_PIPELINE_FAILURE, anomaly.anomaly_id, pipeline.pipeline_id
+        )
 
         # 15. Calculate Risk
-        risk_ass = self.risk_manager.evaluate_risk(dataset.dataset_id, tenant_id, quality_risk=15.0, downstream_risk=80.0 if anomaly else 15.0)
+        risk_ass = self.risk_manager.evaluate_risk(
+            dataset.dataset_id, tenant_id, quality_risk=15.0, downstream_risk=80.0 if anomaly else 15.0
+        )
 
         # 16. Calculate Dataset Trust
         trust_ass: TrustAssessment = self.trust_engine.evaluate_trust(
@@ -215,7 +235,11 @@ class DataIntelligenceManager:
             dataset.dataset_id,
             tenant_id,
             DataRemediationPriority.P2_HIGH,
-            actions=[DataRemediationAction(action_id="act-1", action_type="PIPELINE_RESTART", target_subsystem="orchestration")],
+            actions=[
+                DataRemediationAction(
+                    action_id="act-1", action_type="PIPELINE_RESTART", target_subsystem="orchestration"
+                )
+            ],
         )
         rem_plan = self.remediation_manager.execute_remediation(rem_plan.plan_id, tenant_id, approved=True)
 
@@ -223,13 +247,21 @@ class DataIntelligenceManager:
         verif = self.verification_manager.verify_remediation(dataset.dataset_id, tenant_id, rem_plan.plan_id)
 
         # 21. Collect Evidence
-        evidence = self.evidence_manager.record_evidence(tenant_id, dataset.dataset_id, "QUALITY", quality_result.result_id)
+        evidence = self.evidence_manager.record_evidence(
+            tenant_id, dataset.dataset_id, "QUALITY", quality_result.result_id
+        )
         bundle = self.evidence_manager.create_bundle(tenant_id, dataset.dataset_id, [evidence.evidence_id])
         self.evidence_repo.save(bundle)
 
         # 22. Investigation
         inv = self.investigation_manager.start_investigation(incident.incident_id, tenant_id, dataset.dataset_id)
-        self.investigation_manager.add_finding(inv.investigation_id, tenant_id, "Upstream API Spike", "Third-party vendor API emitted duplicate payload.", "Vendor API change")
+        self.investigation_manager.add_finding(
+            inv.investigation_id,
+            tenant_id,
+            "Upstream API Spike",
+            "Third-party vendor API emitted duplicate payload.",
+            "Vendor API change",
+        )
         inv = self.investigation_manager.conclude_investigation(inv.investigation_id, tenant_id)
 
         # 23. Learning Recommendations
@@ -246,7 +278,9 @@ class DataIntelligenceManager:
         report = self.analytics_engine.generate_report(tenant_id, avg_dataset_trust_score=trust_ass.score)
 
         # 25. Immutable Snapshot
-        snapshot = self.snapshot_manager.create_snapshot(tenant_id, dataset.dataset_id, {"trust_score": trust_ass.score, "status": "HEALTHY"})
+        snapshot = self.snapshot_manager.create_snapshot(
+            tenant_id, dataset.dataset_id, {"trust_score": trust_ass.score, "status": "HEALTHY"}
+        )
 
         return {
             "dataset": dataset,

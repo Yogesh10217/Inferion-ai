@@ -51,7 +51,9 @@ class DecisionEngine:
     def __init__(self) -> None:
         self._tables: Dict[str, DecisionTable] = {}
 
-    def register_table(self, name: str, rules: List[DecisionRule], tenant_id: str = "global", default_decision: str = "REQUIRE_REVIEW") -> DecisionTable:
+    def register_table(
+        self, name: str, rules: List[DecisionRule], tenant_id: str = "global", default_decision: str = "REQUIRE_REVIEW"
+    ) -> DecisionTable:
         dtab = DecisionTable(name=name, rules=rules, tenant_id=tenant_id, default_decision=default_decision)
         self._tables[dtab.table_id] = dtab
         logger.info(f"[DECISION ENGINE] Registered decision table '{dtab.table_id}' ({name}) with {len(rules)} rules")

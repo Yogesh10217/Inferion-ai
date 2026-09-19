@@ -55,5 +55,7 @@ class DecisionSnapshotStore:
         snaps = self._snapshots.get(decision_id, [])
         for snap in snaps:
             if snap.tenant_id != tenant_id and tenant_id != "global":
-                raise CrossTenantDecisionIntelligenceException(f"Unauthorized access to snapshots for decision '{decision_id}'")
+                raise CrossTenantDecisionIntelligenceException(
+                    f"Unauthorized access to snapshots for decision '{decision_id}'"
+                )
         return snaps

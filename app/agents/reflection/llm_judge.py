@@ -13,10 +13,7 @@ logger = logging.getLogger(__name__)
 
 class LLMJudgeReflection(BaseReflection):
     async def reflect(
-        self,
-        goal: str,
-        execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        self, goal: str, execution_history: List[Dict[str, Any]], context: AgentContext
     ) -> Dict[str, Any]:
         # LLM Judge evaluates response quality against goal
         score = 9.0 if len(execution_history) > 0 else 5.0
@@ -25,5 +22,5 @@ class LLMJudgeReflection(BaseReflection):
             "score": score,
             "critique": f"LLM Judge score: {score}/10",
             "retry_recommended": score < 7.0,
-            "revised_plan": None
+            "revised_plan": None,
         }

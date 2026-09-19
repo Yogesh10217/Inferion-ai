@@ -37,6 +37,7 @@ class DocumentBase(BaseModel):
     content: str
     permissions: DocumentPermissions
 
+
 # CRUD Endpoints
 
 
@@ -58,6 +59,7 @@ async def update_document(document_id: str, doc: DocumentBase):
 @router.delete("/documents/{document_id}")
 async def delete_document(document_id: str):
     return {"status": "success", "id": document_id}
+
 
 # Operational Endpoints
 
@@ -87,6 +89,7 @@ async def evaluate_system(req: EvaluateRequest):
 @router.get("/analytics", response_model=AnalyticsReport)
 async def get_analytics():
     return await analytics_tracker.generate_report()
+
 
 # System Config Endpoints
 

@@ -24,7 +24,9 @@ class SaturationPredictionEngine:
             saturation_probability=round(prob, 4),
             time_to_saturation_hours=round(time_to_sat, 1),
         )
-        logger.info(f"Evaluated SaturationAssessment for resource '{resource_id}': Saturated={is_saturated}, Prob={prob:.2f}")
+        logger.info(
+            f"Evaluated SaturationAssessment for resource '{resource_id}': Saturated={is_saturated}, Prob={prob:.2f}"
+        )
         return sat
 
 

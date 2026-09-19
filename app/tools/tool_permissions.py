@@ -35,7 +35,9 @@ class ToolPermissionEngine:
         ctx_tid = context.tenant_id
 
         if tool_tid not in (ctx_tid, "global", "default_tenant"):
-            logger.warning(f"Cross-tenant access blocked: user tenant '{ctx_tid}' attempted to access tool tenant '{tool_tid}'")
+            logger.warning(
+                f"Cross-tenant access blocked: user tenant '{ctx_tid}' attempted to access tool tenant '{tool_tid}'"
+            )
             raise ToolPermissionDenied(f"Cross-tenant access denied: Tool '{tool.name}' belongs to tenant '{tool_tid}'")
 
         # 2. RBAC Scope Validation
@@ -73,7 +75,9 @@ class ToolPermissionEngine:
                         )
 
                     if rule.effect == PolicyEffect.DENY:
-                        raise ToolPermissionDenied(f"Policy rule '{rule.rule_id}' explicitly denied execution of tool '{tool.name}'")
+                        raise ToolPermissionDenied(
+                            f"Policy rule '{rule.rule_id}' explicitly denied execution of tool '{tool.name}'"
+                        )
                     elif rule.effect == PolicyEffect.REQUIRE_APPROVAL:
                         raise ToolApprovalRequiredException(
                             f"Execution of tool '{tool.name}' requires manual approval per policy rule '{rule.rule_id}'",

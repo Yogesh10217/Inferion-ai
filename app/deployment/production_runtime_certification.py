@@ -24,18 +24,20 @@ class ProductionRuntimeCertification:
     issued_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "deployment_id": self.deployment_id,
-            "artifact_digest": self.artifact_digest,
-            "environment": self.environment,
-            "deployment_status": self.deployment_status,
-            "runtime_status": self.runtime_status.value,
-            "evidence_level": self.evidence_level,
-            "validation_results": self.validation_results,
-            "evidence_fingerprint": self.evidence_fingerprint,
-            "truthfulness_status": self.truthfulness_status,
-            "issued_at": self.issued_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "deployment_id": self.deployment_id,
+                "artifact_digest": self.artifact_digest,
+                "environment": self.environment,
+                "deployment_status": self.deployment_status,
+                "runtime_status": self.runtime_status.value,
+                "evidence_level": self.evidence_level,
+                "validation_results": self.validation_results,
+                "evidence_fingerprint": self.evidence_fingerprint,
+                "truthfulness_status": self.truthfulness_status,
+                "issued_at": self.issued_at,
+            }
+        )
 
 
 class ProductionRuntimeCertificationEngine:
@@ -58,11 +60,17 @@ class ProductionRuntimeCertificationEngine:
         if adapter_type == "SIMULATION":
             evidence_level = "SIMULATION_RUNTIME"
             truthfulness = "SIMULATION_RUNTIME_VALIDATED"
-            cert_status = RuntimeCertificationStatus.VALIDATED if health_validated else RuntimeCertificationStatus.FAILED
+            cert_status = (
+                RuntimeCertificationStatus.VALIDATED if health_validated else RuntimeCertificationStatus.FAILED
+            )
         elif adapter_type == "CONTAINER":
             evidence_level = "CONTAINER_RUNTIME"
             truthfulness = PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value
-            cert_status = RuntimeCertificationStatus.VALIDATED if (health_validated and smoke_tests_passed) else RuntimeCertificationStatus.FAILED
+            cert_status = (
+                RuntimeCertificationStatus.VALIDATED
+                if (health_validated and smoke_tests_passed)
+                else RuntimeCertificationStatus.FAILED
+            )
         elif adapter_type == "PRODUCTION":
             has_real_prod = execution_evidence.get("has_real_production_infrastructure", False)
             if not has_real_prod:
@@ -91,13 +99,16 @@ class ProductionRuntimeCertificationEngine:
             "evidence": execution_evidence,
         }
 
-        canonical_str = json.dumps({
-            "dep_id": deployment_id,
-            "digest": artifact_digest,
-            "env": env_norm,
-            "truthfulness": truthfulness,
-            "results": SecretsSanitizer.sanitize_structure(validation_results),
-        }, sort_keys=True)
+        canonical_str = json.dumps(
+            {
+                "dep_id": deployment_id,
+                "digest": artifact_digest,
+                "env": env_norm,
+                "truthfulness": truthfulness,
+                "results": SecretsSanitizer.sanitize_structure(validation_results),
+            },
+            sort_keys=True,
+        )
         fp = f"sha256:{hashlib.sha256(canonical_str.encode('utf-8')).hexdigest()}"
 
         return ProductionRuntimeCertification(

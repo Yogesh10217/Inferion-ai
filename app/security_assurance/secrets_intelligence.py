@@ -60,6 +60,10 @@ class SecretsIntelligenceEngine:
         """Scans payload for potential raw secrets using sanitizer patterns."""
         sanitized = self.sanitizer.sanitize_string(payload)
         detected = []
-        if "[REDACTED_API_KEY]" in sanitized or "[REDACTED_AWS_KEY]" in sanitized or "[REDACTED_BEARER_TOKEN]" in sanitized:
+        if (
+            "[REDACTED_API_KEY]" in sanitized
+            or "[REDACTED_AWS_KEY]" in sanitized
+            or "[REDACTED_BEARER_TOKEN]" in sanitized
+        ):
             detected.append("Potential raw credential detected in text payload.")
         return detected

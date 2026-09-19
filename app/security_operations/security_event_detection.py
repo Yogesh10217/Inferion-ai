@@ -19,6 +19,7 @@ try:
     from app.operations.alert_deduplication import AlertDeduplicationEngine
     from app.operations.alerting import Alert, AlertEngine, AlertSeverity, AlertStatus
     from app.operations.incident_management import Incident, IncidentManager, IncidentSeverity
+
     SRE_AVAILABLE = True
 except ImportError:
     SRE_AVAILABLE = False
@@ -59,7 +60,9 @@ class SecurityEvent:
                 "type": self.event_type.value if isinstance(self.event_type, Enum) else str(self.event_type),
                 "severity": self.severity,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         ev_type_str = self.event_type.value if isinstance(self.event_type, Enum) else str(self.event_type)
@@ -198,9 +201,11 @@ class SecurityEventDetector:
                 )
             )
 
-        dedup_alerts = self.alert_deduplicating_engine.deduplicate(raw_alerts) if self.alert_deduplicating_engine else raw_alerts
+        dedup_alerts = (
+            self.alert_deduplicating_engine.deduplicate(raw_alerts) if self.alert_deduplicating_engine else raw_alerts
+        )
 
-        has_emergency = any(getattr(a, 'severity', None) == AlertSeverity.EMERGENCY for a in dedup_alerts)
+        has_emergency = any(getattr(a, "severity", None) == AlertSeverity.EMERGENCY for a in dedup_alerts)
         inc_sev = IncidentSeverity.P1 if has_emergency else IncidentSeverity.P2
 
         inc = self.incident_manager.create_incident(

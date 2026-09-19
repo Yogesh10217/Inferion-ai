@@ -88,17 +88,19 @@ class ObservabilityEngine:
         latency_p95 = float(app_raw.get("latency_p95", 120.0))
         latency_p99 = float(app_raw.get("latency_p99", 250.0))
 
-        app_metrics = SecretsSanitizer.sanitize_structure({
-            "availability": availability,
-            "request_count": req_count,
-            "success_count": succ_count,
-            "failure_count": fail_count,
-            "error_rate": error_rate,
-            "latency_p50": latency_p50,
-            "latency_p95": latency_p95,
-            "latency_p99": latency_p99,
-            "raw_details": app_raw,
-        })
+        app_metrics = SecretsSanitizer.sanitize_structure(
+            {
+                "availability": availability,
+                "request_count": req_count,
+                "success_count": succ_count,
+                "failure_count": fail_count,
+                "error_rate": error_rate,
+                "latency_p50": latency_p50,
+                "latency_p95": latency_p95,
+                "latency_p99": latency_p99,
+                "raw_details": app_raw,
+            }
+        )
 
         # Health metrics normalization
         h_raw = health_data or {}
@@ -106,21 +108,25 @@ class ObservabilityEngine:
         ready_probe = bool(h_raw.get("ready", True))
         health_probe = bool(h_raw.get("health", True))
 
-        health_metrics = SecretsSanitizer.sanitize_structure({
-            "live": live_probe,
-            "ready": ready_probe,
-            "health": health_probe,
-            "raw_details": h_raw,
-        })
+        health_metrics = SecretsSanitizer.sanitize_structure(
+            {
+                "live": live_probe,
+                "ready": ready_probe,
+                "health": health_probe,
+                "raw_details": h_raw,
+            }
+        )
 
         # Dependency metrics normalization
         d_raw = dependency_data or {}
-        deps = SecretsSanitizer.sanitize_structure({
-            "postgresql": d_raw.get("postgresql", {"status": "HEALTHY", "latency_ms": 3.5}),
-            "redis": d_raw.get("redis", {"status": "HEALTHY", "latency_ms": 1.2}),
-            "eventbus": d_raw.get("eventbus", {"status": "HEALTHY", "latency_ms": 0.5}),
-            "prometheus": d_raw.get("prometheus", {"status": "HEALTHY", "latency_ms": 2.0}),
-        })
+        deps = SecretsSanitizer.sanitize_structure(
+            {
+                "postgresql": d_raw.get("postgresql", {"status": "HEALTHY", "latency_ms": 3.5}),
+                "redis": d_raw.get("redis", {"status": "HEALTHY", "latency_ms": 1.2}),
+                "eventbus": d_raw.get("eventbus", {"status": "HEALTHY", "latency_ms": 0.5}),
+                "prometheus": d_raw.get("prometheus", {"status": "HEALTHY", "latency_ms": 2.0}),
+            }
+        )
 
         # Determine overall status
         status = ObservationStatus.HEALTHY
@@ -145,7 +151,11 @@ class ObservabilityEngine:
                 timestamp=now_iso,
                 evidence_level=ev_level,
                 source="health_probes",
-                status=ObservationStatus.HEALTHY if (live_probe and ready_probe and health_probe) else ObservationStatus.UNHEALTHY,
+                status=(
+                    ObservationStatus.HEALTHY
+                    if (live_probe and ready_probe and health_probe)
+                    else ObservationStatus.UNHEALTHY
+                ),
                 sanitized_details=health_metrics,
             ),
             RuntimeObservation(

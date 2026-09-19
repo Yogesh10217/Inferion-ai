@@ -12,7 +12,11 @@ class ReliabilityRepository(TenantScopedRepository[Any]):
         self._store: Dict[str, Any] = {}
 
     def save(self, entity: Any) -> Any:
-        eid = getattr(entity, "service_id", getattr(entity, "slo_id", getattr(entity, "incident_id", getattr(entity, "report_id", None))))
+        eid = getattr(
+            entity,
+            "service_id",
+            getattr(entity, "slo_id", getattr(entity, "incident_id", getattr(entity, "report_id", None))),
+        )
         if eid:
             self._store[eid] = entity
         return entity

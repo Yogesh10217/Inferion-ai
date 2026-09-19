@@ -15,7 +15,7 @@ from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
 class RecoveryObjective:
     rto_target_seconds: float = 900.0  # 15 minutes max downtime
     rpo_target_seconds: float = 300.0  # 5 minutes max data loss
-    mttd_target_seconds: float = 60.0   # 1 minute to detect
+    mttd_target_seconds: float = 60.0  # 1 minute to detect
     mtta_target_seconds: float = 300.0  # 5 minutes to acknowledge
     mttr_target_seconds: float = 900.0  # 15 minutes to recover
 

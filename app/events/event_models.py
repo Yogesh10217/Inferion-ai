@@ -53,8 +53,12 @@ class WebhookDelivery(Base):
     __tablename__ = "webhook_deliveries"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    endpoint_id: Mapped[str] = mapped_column(ForeignKey("webhook_endpoints.id", ondelete="CASCADE"), nullable=False, index=True)
-    event_id: Mapped[str] = mapped_column(ForeignKey("webhook_events.id", ondelete="CASCADE"), nullable=False, index=True)
+    endpoint_id: Mapped[str] = mapped_column(
+        ForeignKey("webhook_endpoints.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    event_id: Mapped[str] = mapped_column(
+        ForeignKey("webhook_events.id", ondelete="CASCADE"), nullable=False, index=True
+    )
     status: Mapped[str] = mapped_column(String, default="pending", index=True)  # pending, success, failed, retrying
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     latency_ms: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)

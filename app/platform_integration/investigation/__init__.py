@@ -1,4 +1,5 @@
 """Investigation Package Init."""
+
 from app.platform_integration.investigation.engine import (
     CrossPhaseInvestigationEngine,
     CrossPhaseInvestigationResult,

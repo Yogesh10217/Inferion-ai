@@ -66,12 +66,42 @@ class KnowledgeTrustEngine:
         ref_id = target_resource_id or reference_id or "ref-1"
         if not factors:
             factors = [
-                KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.SOURCE_AUTHORITY, score=0.98, weight=0.25, evidence_description="Authoritative internal repo"),
-                KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.FRESHNESS, score=0.95, weight=0.20, evidence_description="Updated < 24h ago"),
-                KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.PROVENANCE, score=0.96, weight=0.20, evidence_description="SHA-256 verified provenance chain"),
-                KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.CONSISTENCY, score=0.92, weight=0.15, evidence_description="No policy contradictions"),
-                KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.VERIFICATION, score=0.94, weight=0.10, evidence_description="Verified by compliance audit"),
-                KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.RELEVANCE, score=0.90, weight=0.10, evidence_description="High semantic alignment"),
+                KnowledgeTrustFactor(
+                    dimension=KnowledgeTrustDimension.SOURCE_AUTHORITY,
+                    score=0.98,
+                    weight=0.25,
+                    evidence_description="Authoritative internal repo",
+                ),
+                KnowledgeTrustFactor(
+                    dimension=KnowledgeTrustDimension.FRESHNESS,
+                    score=0.95,
+                    weight=0.20,
+                    evidence_description="Updated < 24h ago",
+                ),
+                KnowledgeTrustFactor(
+                    dimension=KnowledgeTrustDimension.PROVENANCE,
+                    score=0.96,
+                    weight=0.20,
+                    evidence_description="SHA-256 verified provenance chain",
+                ),
+                KnowledgeTrustFactor(
+                    dimension=KnowledgeTrustDimension.CONSISTENCY,
+                    score=0.92,
+                    weight=0.15,
+                    evidence_description="No policy contradictions",
+                ),
+                KnowledgeTrustFactor(
+                    dimension=KnowledgeTrustDimension.VERIFICATION,
+                    score=0.94,
+                    weight=0.10,
+                    evidence_description="Verified by compliance audit",
+                ),
+                KnowledgeTrustFactor(
+                    dimension=KnowledgeTrustDimension.RELEVANCE,
+                    score=0.90,
+                    weight=0.10,
+                    evidence_description="High semantic alignment",
+                ),
             ]
 
         total_w = sum(f.weight for f in factors)

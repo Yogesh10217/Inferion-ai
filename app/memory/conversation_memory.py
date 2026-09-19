@@ -9,12 +9,7 @@ from typing import Any, Dict, List, Optional
 class ConversationMemory:
     """Manages multi-turn conversation history, sliding context windows, and summarization."""
 
-    def __init__(
-        self,
-        session_id: str,
-        max_messages: int = 50,
-        max_tokens: int = 4096
-    ):
+    def __init__(self, session_id: str, max_messages: int = 50, max_tokens: int = 4096):
         self.session_id = session_id
         self.max_messages = max_messages
         self.max_tokens = max_tokens

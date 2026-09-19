@@ -57,7 +57,8 @@ class DataCorrelationManager:
             source_event_id=primary_resource_id,
             target_event_id=correlated_resource_id,
             confidence=confidence_score,
-            description=description or f"Correlated {primary_resource_id} with {correlated_resource_id} ({correlation_type.value})",
+            description=description
+            or f"Correlated {primary_resource_id} with {correlated_resource_id} ({correlation_type.value})",
         )
 
         corr = DataCorrelation(

@@ -54,8 +54,12 @@ class AgentDataFabricAdapter:
 
         # Tenant isolation check
         if ds.tenant_id != tenant_id and tenant_id != "global":
-            logger.warning(f"[AGENT DATA ADAPTER] Cross-tenant access blocked (Tenant '{tenant_id}' -> Source '{data_source_id}' of Tenant '{ds.tenant_id}')")
-            return DataAccessDecision(permitted=False, reason="Cross-tenant access prohibited", classification=classification)
+            logger.warning(
+                f"[AGENT DATA ADAPTER] Cross-tenant access blocked (Tenant '{tenant_id}' -> Source '{data_source_id}' of Tenant '{ds.tenant_id}')"
+            )
+            return DataAccessDecision(
+                permitted=False, reason="Cross-tenant access prohibited", classification=classification
+            )
 
         decision = self.governance_engine.evaluate_access(
             tenant_id=tenant_id,

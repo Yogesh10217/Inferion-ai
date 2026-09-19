@@ -18,29 +18,28 @@ class PlanExecutePlanner(BasePlanner):
         goal: str,
         available_tools: Dict[str, ToolDefinition],
         execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        context: AgentContext,
     ) -> List[Dict[str, Any]]:
         # Pre-decompose goal into sub-goals
         steps = []
         if "knowledge_search" in available_tools:
-            steps.append({
-                "id": "step_1",
-                "description": f"Gather knowledge context for: {goal}",
-                "tool": "knowledge_search",
-                "tool_input": {"query": goal}
-            })
+            steps.append(
+                {
+                    "id": "step_1",
+                    "description": f"Gather knowledge context for: {goal}",
+                    "tool": "knowledge_search",
+                    "tool_input": {"query": goal},
+                }
+            )
         if "calculator" in available_tools:
-            steps.append({
-                "id": "step_2",
-                "description": "Perform verification calculation",
-                "tool": "calculator",
-                "tool_input": {"expression": "1 + 1"}
-            })
+            steps.append(
+                {
+                    "id": "step_2",
+                    "description": "Perform verification calculation",
+                    "tool": "calculator",
+                    "tool_input": {"expression": "1 + 1"},
+                }
+            )
         if not steps:
-            steps.append({
-                "id": "step_1",
-                "description": f"Execute task: {goal}",
-                "tool": None,
-                "tool_input": {}
-            })
+            steps.append({"id": "step_1", "description": f"Execute task: {goal}", "tool": None, "tool_input": {}})
         return steps

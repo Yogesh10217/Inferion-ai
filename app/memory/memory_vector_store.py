@@ -61,11 +61,13 @@ class MemoryVectorStore:
                 continue
 
             sim = self._cosine_similarity(query_vector, data["vector"])
-            results.append({
-                "memory_id": memory_id,
-                "score": sim,
-                "payload": data["payload"],
-            })
+            results.append(
+                {
+                    "memory_id": memory_id,
+                    "score": sim,
+                    "payload": data["payload"],
+                }
+            )
 
         results.sort(key=lambda item: item["score"], reverse=True)
         return results[:top_k]

@@ -30,7 +30,15 @@ class GitHubTool(BaseTool):
                 "properties": {
                     "action": {
                         "type": "string",
-                        "enum": ["get_repo", "list_issues", "create_issue", "list_prs", "list_commits", "list_releases", "trigger_workflow"],
+                        "enum": [
+                            "get_repo",
+                            "list_issues",
+                            "create_issue",
+                            "list_prs",
+                            "list_commits",
+                            "list_releases",
+                            "trigger_workflow",
+                        ],
                     },
                     "owner": {"type": "string", "description": "Repository owner/org"},
                     "repo": {"type": "string", "description": "Repository name"},
@@ -70,7 +78,10 @@ class GitHubTool(BaseTool):
                             json={"title": parameters.get("title", ""), "body": parameters.get("body", "")},
                         )
                     else:
-                        resp = await client.get(f"https://api.github.com/repos/{owner}/{repo}/{action.replace('list_', '')}", headers=headers)
+                        resp = await client.get(
+                            f"https://api.github.com/repos/{owner}/{repo}/{action.replace('list_', '')}",
+                            headers=headers,
+                        )
 
                     elapsed = time.time() - start_time
                     return ToolResult(

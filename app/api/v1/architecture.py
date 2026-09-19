@@ -83,7 +83,9 @@ async def add_dependency(
     strength = DependencyStrength(payload.get("strength", "STRONG"))
 
     if not src or not tgt:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="source_node_id and target_node_id are required.")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="source_node_id and target_node_id are required."
+        )
 
     dep = mgr.add_dependency(
         tenant_id=tenant_id,

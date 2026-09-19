@@ -33,7 +33,9 @@ class APISecurityResult:
                 "classification": self.classification,
                 "is_secure": self.is_secure,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     @property
     def hsts_enabled(self) -> bool:
@@ -111,7 +113,9 @@ class APISecurityEvaluator:
         cors_valid = True
         if cors_allow_origins == "*" or (is_production and "localhost" in cors_allow_origins):
             cors_valid = False
-            reasons.append("API_SECURITY_ERROR: Wildcard or untrusted CORS origins permitted in production configuration")
+            reasons.append(
+                "API_SECURITY_ERROR: Wildcard or untrusted CORS origins permitted in production configuration"
+            )
 
         openapi_protected = True
         if is_production and docs_enabled:

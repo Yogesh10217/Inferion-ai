@@ -8,10 +8,10 @@ from pydantic import BaseModel, Field
 
 
 class HealthState(str, Enum):
-    HEALTHY = "HEALTHY"       # 90-100
-    DEGRADED = "DEGRADED"     # 70-89
-    UNHEALTHY = "UNHEALTHY"   # 40-69
-    CRITICAL = "CRITICAL"     # <40
+    HEALTHY = "HEALTHY"  # 90-100
+    DEGRADED = "DEGRADED"  # 70-89
+    UNHEALTHY = "UNHEALTHY"  # 40-69
+    CRITICAL = "CRITICAL"  # <40
 
 
 class HealthScore(BaseModel):

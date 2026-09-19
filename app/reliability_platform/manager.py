@@ -55,7 +55,9 @@ class ReliabilityPlatformManager:
         self.metrics_collector = ReliabilityMetricsCollector()
         self.billing_tracker = ReliabilityBillingTracker()
 
-        logger.info("[RELIABILITY MASTER] ReliabilityPlatformManager initialized cleanly with all 23 domain subsystems.")
+        logger.info(
+            "[RELIABILITY MASTER] ReliabilityPlatformManager initialized cleanly with all 23 domain subsystems."
+        )
 
     def run_full_reliability_flow(
         self,
@@ -67,7 +69,9 @@ class ReliabilityPlatformManager:
         svc = self.service_manager.register_service(tenant_id, service_name, ServiceTier.TIER_0_CRITICAL)
 
         # 2. Process Signal
-        sig = self.signal_processor.process_signal(tenant_id, svc.service_id, "error_rate", 15.0, 1.0, severity=SignalSeverity.ERROR)
+        sig = self.signal_processor.process_signal(
+            tenant_id, svc.service_id, "error_rate", 15.0, 1.0, severity=SignalSeverity.ERROR
+        )
 
         # 3. Health Assessment
         health = self.health_engine.evaluate_health(svc.service_id, tenant_id, latency_ms=450.0, error_rate_pct=15.0)
@@ -77,7 +81,9 @@ class ReliabilityPlatformManager:
         breach = self.slo_manager.evaluate_slo(slo.slo_id, tenant_id, observed_value=90.0)
 
         # 5. Incident Creation
-        inc = self.incident_manager.create_incident(tenant_id, svc.service_id, f"SLO Breach on {service_name}", severity=IncidentSeverity.SEV_0_CRITICAL)
+        inc = self.incident_manager.create_incident(
+            tenant_id, svc.service_id, f"SLO Breach on {service_name}", severity=IncidentSeverity.SEV_0_CRITICAL
+        )
         self.metrics_collector.record_incident("SEV_0_CRITICAL", tenant_id)
 
         # 6. Correlation
@@ -87,11 +93,17 @@ class ReliabilityPlatformManager:
         impact = self.impact_analyzer.analyze_impact(tenant_id, svc.service_id)
 
         # 8. Root Cause Hypothesis
-        rch = self.root_cause_manager.create_hypothesis(tenant_id, inc.incident_id, "Memory leak in inference worker", probability=0.92)
+        rch = self.root_cause_manager.create_hypothesis(
+            tenant_id, inc.incident_id, "Memory leak in inference worker", probability=0.92
+        )
 
         # 9. Plan Remediation & Governance
-        action = RemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="RESTART_POD", risk=RemediationRisk.HIGH)
-        plan = self.remediation_manager.plan_remediation(tenant_id, inc.incident_id, f"idemp_{inc.incident_id}", [action])
+        action = RemediationAction(
+            target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="RESTART_POD", risk=RemediationRisk.HIGH
+        )
+        plan = self.remediation_manager.plan_remediation(
+            tenant_id, inc.incident_id, f"idemp_{inc.incident_id}", [action]
+        )
         gov_dec = self.governance_engine.evaluate_remediation(tenant_id, plan)
 
         # 10. Transition Incident -> RESOLVED -> CLOSED
@@ -104,11 +116,15 @@ class ReliabilityPlatformManager:
         closed_inc = self.incident_manager.transition_incident(inc.incident_id, tenant_id, IncidentStatus.CLOSED)
 
         # 11. Postmortem & Finalization
-        pm = self.postmortem_manager.create_postmortem(tenant_id, inc.incident_id, "Inference Pod Outage", rch.description)
+        pm = self.postmortem_manager.create_postmortem(
+            tenant_id, inc.incident_id, "Inference Pod Outage", rch.description
+        )
         finalized_pm = self.postmortem_manager.finalize_postmortem(pm.report_id, tenant_id)
 
         # 12. Learning & Trust Update
-        pattern = self.learning_manager.record_learning(tenant_id, "Worker Memory Leak", rch.description, "Auto-scale threshold tune")
+        pattern = self.learning_manager.record_learning(
+            tenant_id, "Worker Memory Leak", rch.description, "Auto-scale threshold tune"
+        )
         trust = self.trust_engine.compute_trust_score(tenant_id, svc.service_id, 99.2)
 
         return {

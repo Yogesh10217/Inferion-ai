@@ -53,10 +53,18 @@ class SecurityImpactAnalyzer:
 
     def analyze_impact(self, tenant_id: str, asset_id: str) -> SecurityImpactAssessment:
         dims = [
-            SecurityImpactDimension(dimension_name="Confidentiality", impact_severity=SecurityImpactSeverity.HIGH, score=80.0),
-            SecurityImpactDimension(dimension_name="Integrity", impact_severity=SecurityImpactSeverity.MEDIUM, score=60.0),
-            SecurityImpactDimension(dimension_name="Availability", impact_severity=SecurityImpactSeverity.HIGH, score=85.0),
-            SecurityImpactDimension(dimension_name="Compliance", impact_severity=SecurityImpactSeverity.CRITICAL, score=95.0),
+            SecurityImpactDimension(
+                dimension_name="Confidentiality", impact_severity=SecurityImpactSeverity.HIGH, score=80.0
+            ),
+            SecurityImpactDimension(
+                dimension_name="Integrity", impact_severity=SecurityImpactSeverity.MEDIUM, score=60.0
+            ),
+            SecurityImpactDimension(
+                dimension_name="Availability", impact_severity=SecurityImpactSeverity.HIGH, score=85.0
+            ),
+            SecurityImpactDimension(
+                dimension_name="Compliance", impact_severity=SecurityImpactSeverity.CRITICAL, score=95.0
+            ),
         ]
 
         return SecurityImpactAssessment(

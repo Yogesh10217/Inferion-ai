@@ -41,18 +41,22 @@ class DeploymentTarget:
                 self.credentials_available = False
                 self.connectivity_status = "NOT_AVAILABLE"
                 self.runtime_status = DeploymentTargetStatus.TARGET_NOT_AVAILABLE
-                return SecretsSanitizer.sanitize_structure({
-                    "target_id": self.target_id,
-                    "status": "NOT_AVAILABLE",
-                    "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE: Real production infrastructure credentials or endpoints unconfigured",
-                    "truthfulness_status": "NOT_EXECUTED",
-                })
+                return SecretsSanitizer.sanitize_structure(
+                    {
+                        "target_id": self.target_id,
+                        "status": "NOT_AVAILABLE",
+                        "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE: Real production infrastructure credentials or endpoints unconfigured",
+                        "truthfulness_status": "NOT_EXECUTED",
+                    }
+                )
 
         self.runtime_status = DeploymentTargetStatus.TARGET_CONNECTIVITY_VALIDATED
-        return SecretsSanitizer.sanitize_structure({
-            "target_id": self.target_id,
-            "status": "VALIDATED",
-            "environment": self.environment,
-            "endpoint": self.endpoint,
-            "truthfulness_status": "VALIDATED" if not self.is_production() else "NOT_EXECUTED",
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "target_id": self.target_id,
+                "status": "VALIDATED",
+                "environment": self.environment,
+                "endpoint": self.endpoint,
+                "truthfulness_status": "VALIDATED" if not self.is_production() else "NOT_EXECUTED",
+            }
+        )

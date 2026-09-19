@@ -34,7 +34,9 @@ class SecurityMetricsResult:
                 "comp_rate": self.security_policy_compliance_rate,
                 "open_vulns": self.open_vulnerability_count,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     @property
     def posture_index(self) -> float:

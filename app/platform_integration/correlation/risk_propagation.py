@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class RiskPropagationPolicy:
     """Configurable policy governing risk cascading across platforms."""
+
     hop_decay: float = 0.7
     max_hops: int = 4
     minimum_risk: float = 0.1

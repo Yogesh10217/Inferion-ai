@@ -84,7 +84,9 @@ class RecoveryDecisionEngine:
             reason = "Traffic anomaly detected. Traffic shift to fallback pool recommended."
         elif incident and incident.severity in (IncidentSeverity.P2, IncidentSeverity.P3):
             rec = RecoveryRecommendation.MANUAL_INVESTIGATION_REQUIRED
-            reason = f"Incident {incident.incident_id} ({incident.severity.value}) active. Manual investigation required."
+            reason = (
+                f"Incident {incident.incident_id} ({incident.severity.value}) active. Manual investigation required."
+            )
         else:
             rec = RecoveryRecommendation.CONTINUE_MONITORING
             reason = "Minor operational alerts present. Continue monitoring telemetry."

@@ -58,7 +58,8 @@ class PlatformASTAnalysisEngine(ast.NodeVisitor):
 
         # Strip docstrings from body for stub evaluation
         body_stmts = [
-            s for s in node.body
+            s
+            for s in node.body
             if not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Constant) and isinstance(s.value.value, str))
         ]
 
@@ -134,7 +135,10 @@ class PlatformASTAnalysisEngine(ast.NodeVisitor):
                 )
             elif isinstance(ret_val, ast.Dict):
                 # Check for constant return dicts like {"status": "success", "score": 100}
-                if all(isinstance(k, ast.Constant) and isinstance(v, ast.Constant) for k, v in zip(ret_val.keys, ret_val.values)):
+                if all(
+                    isinstance(k, ast.Constant) and isinstance(v, ast.Constant)
+                    for k, v in zip(ret_val.keys, ret_val.values)
+                ):
                     self.findings.append(
                         ASTNodeFinding(
                             finding_type="CONSTANT_RETURN",

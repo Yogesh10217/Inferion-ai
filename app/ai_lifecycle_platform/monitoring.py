@@ -53,4 +53,6 @@ class LifecycleMonitoringManager:
         self.reliability_manager = reliability_manager or ReliabilityPlatformManager()
 
     def get_asset_health(self, tenant_id: str, asset_id: str) -> AIAssetHealth:
-        return AIAssetHealth(asset_id=asset_id, tenant_id=tenant_id, status=HealthStatus.HEALTHY, uptime_percentage=99.95)
+        return AIAssetHealth(
+            asset_id=asset_id, tenant_id=tenant_id, status=HealthStatus.HEALTHY, uptime_percentage=99.95
+        )

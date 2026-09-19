@@ -34,6 +34,7 @@ class IdentityRiskLevel(str, Enum):
 
 class IdentityReference(BaseModel):
     """Reference pointing to existing identity resource in app.identity / external IAM."""
+
     external_id: str
     identity_type: IdentityType
     provider: str = "internal"
@@ -42,6 +43,7 @@ class IdentityReference(BaseModel):
 
 class AccessIdentity(BaseModel):
     """Access Intelligence Identity Representation."""
+
     identity_id: str = Field(default_factory=lambda: f"ident_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     name: str

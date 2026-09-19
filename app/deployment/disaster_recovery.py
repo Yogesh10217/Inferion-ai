@@ -52,28 +52,28 @@ class DisasterRecoveryEvaluationResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status,
-            "dr_plan_name": self.dr_plan.plan_name,
-            "rto_minutes": self.dr_plan.recovery_objective.recovery_time_objective_minutes,
-            "rpo_minutes": self.dr_plan.recovery_objective.recovery_point_objective_minutes,
-            "backup_strategy_defined": self.dr_plan.backup_strategy_defined,
-            "restore_strategy_defined": self.dr_plan.restore_strategy_defined,
-            "rollback_reference_available": self.dr_plan.rollback_reference_available,
-            "database_restore_plan_available": self.dr_plan.database_restore_plan_available,
-            "classifications": self.classifications,
-            "execution_status": self.dr_plan.execution_status,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status,
+                "dr_plan_name": self.dr_plan.plan_name,
+                "rto_minutes": self.dr_plan.recovery_objective.recovery_time_objective_minutes,
+                "rpo_minutes": self.dr_plan.recovery_objective.recovery_point_objective_minutes,
+                "backup_strategy_defined": self.dr_plan.backup_strategy_defined,
+                "restore_strategy_defined": self.dr_plan.restore_strategy_defined,
+                "rollback_reference_available": self.dr_plan.rollback_reference_available,
+                "database_restore_plan_available": self.dr_plan.database_restore_plan_available,
+                "classifications": self.classifications,
+                "execution_status": self.dr_plan.execution_status,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class BackupReadinessEvaluator:
     """Evaluates disaster recovery and backup readiness plans without claiming unexecuted production backups."""
 
     @classmethod
-    def evaluate_disaster_recovery_readiness(
-        cls, is_production: bool = False
-    ) -> DisasterRecoveryEvaluationResult:
+    def evaluate_disaster_recovery_readiness(cls, is_production: bool = False) -> DisasterRecoveryEvaluationResult:
         dr_plan = DisasterRecoveryPlan()
 
         classifications = [

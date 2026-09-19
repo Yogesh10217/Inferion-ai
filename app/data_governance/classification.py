@@ -120,22 +120,26 @@ class DataClassificationEngine:
         for rule in self.rules:
             if re.search(rule.pattern, text_to_check):
                 detected_types.append(rule.sensitive_type)
-                evidence.append({
-                    "rule": rule.name,
-                    "pattern": rule.pattern,
-                    "sensitive_type": rule.sensitive_type.value,
-                    "recommended_level": rule.target_level.name,
-                })
+                evidence.append(
+                    {
+                        "rule": rule.name,
+                        "pattern": rule.pattern,
+                        "sensitive_type": rule.sensitive_type.value,
+                        "recommended_level": rule.target_level.name,
+                    }
+                )
                 if rule.target_level > highest_level:
                     highest_level = rule.target_level
 
         # Monotonicity rule check if existing level is higher than evaluated level
         if existing_level and existing_level > highest_level:
             highest_level = existing_level
-            evidence.append({
-                "note": "Monotonicity invariant preserved: classification was not downgraded.",
-                "retained_level": existing_level.name,
-            })
+            evidence.append(
+                {
+                    "note": "Monotonicity invariant preserved: classification was not downgraded.",
+                    "retained_level": existing_level.name,
+                }
+            )
 
         return ClassificationResult(
             tenant_id=tenant_id,

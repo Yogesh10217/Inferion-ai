@@ -108,6 +108,7 @@ async def validate_data(dataset_id: str, tenant_id: str = "global"):
 @router.post("/anomalies")
 async def detect_anomaly(req: AnomalyDetectRequest):
     from app.data_intelligence.anomalies import DataAnomalySeverity, DataAnomalyType
+
     anom = _mgr.anomaly_manager.detect_anomaly(
         dataset_id=req.dataset_id,
         tenant_id=req.tenant_id,
@@ -161,6 +162,7 @@ async def list_pipelines(tenant_id: str = "global"):
 @router.post("/incidents")
 async def create_incident(req: IncidentCreateRequest):
     from app.data_intelligence.incidents import DataIncidentSeverity
+
     inc = _mgr.incident_manager.create_incident(
         dataset_id=req.dataset_id,
         tenant_id=req.tenant_id,
@@ -186,12 +188,15 @@ async def list_investigations(tenant_id: str = "global"):
 @router.post("/remediation")
 async def create_remediation(req: RemediationPlanRequest):
     from app.data_intelligence.remediation import DataRemediationAction, DataRemediationPriority
+
     plan = _mgr.remediation_manager.create_remediation_plan(
         incident_id=req.incident_id,
         dataset_id=req.dataset_id,
         tenant_id=req.tenant_id,
         priority=DataRemediationPriority.P2_HIGH,
-        actions=[DataRemediationAction(action_id="act-1", action_type=req.action_type, target_subsystem=req.target_subsystem)],
+        actions=[
+            DataRemediationAction(action_id="act-1", action_type=req.action_type, target_subsystem=req.target_subsystem)
+        ],
     )
     return plan.model_dump()
 

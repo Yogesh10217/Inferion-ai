@@ -18,7 +18,7 @@ class ZeroShotPlanner(BasePlanner):
         goal: str,
         available_tools: Dict[str, ToolDefinition],
         execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        context: AgentContext,
     ) -> List[Dict[str, Any]]:
         tool_names = list(available_tools.keys())
         selected_tool = tool_names[0] if tool_names else None
@@ -28,6 +28,6 @@ class ZeroShotPlanner(BasePlanner):
                 "id": "step_1",
                 "description": f"Direct single-step execution for goal: {goal}",
                 "tool": selected_tool,
-                "tool_input": {"query": goal} if selected_tool == "knowledge_search" else {"expression": "2+2"}
+                "tool_input": {"query": goal} if selected_tool == "knowledge_search" else {"expression": "2+2"},
             }
         ]

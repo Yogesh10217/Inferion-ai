@@ -56,4 +56,6 @@ class IdentitySecurityManager:
         self.lifecycle_manager = lifecycle_manager or IdentityLifecycleManager()
         self.metrics_collector = metrics_collector or IdentityMetricsCollector()
 
-        logger.info("[IDENTITY SECURITY MANAGER] Master IdentitySecurityManager initialized with all 14 domain subsystems")
+        logger.info(
+            "[IDENTITY SECURITY MANAGER] Master IdentitySecurityManager initialized with all 14 domain subsystems"
+        )

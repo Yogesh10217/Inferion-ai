@@ -58,9 +58,7 @@ class RefreshTokenRequest(BaseModel):
 
 @router.post("/login", response_model=Token)
 async def login(
-    request: Request,
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(get_db_session)
+    request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db_session)
 ):
     ip_address = request.client.host if request.client else None
     user = await AuthService.authenticate_user(db, form_data.username, form_data.password, ip_address)
@@ -68,6 +66,7 @@ async def login(
     org_id = user.default_organization_id
     if not org_id:
         from app.tenant.models import Membership
+
         stmt_mem = select(Membership).where(Membership.user_id == user.id)
         res_mem = await db.execute(stmt_mem)
         mem = res_mem.scalars().first()
@@ -78,18 +77,11 @@ async def login(
     access_token = JWTService.create_access_token(data={"sub": user.id})
     session = await AuthService.create_user_session(db, user, organization_id=org_id)
 
-    return Token(
-        access_token=access_token,
-        refresh_token=session.raw_token,
-        token_type="bearer"
-    )
+    return Token(access_token=access_token, refresh_token=session.raw_token, token_type="bearer")
 
 
 @router.post("/refresh", response_model=Token)
-async def refresh_token(
-    request: RefreshTokenRequest,
-    db: AsyncSession = Depends(get_db_session)
-):
+async def refresh_token(request: RefreshTokenRequest, db: AsyncSession = Depends(get_db_session)):
     try:
         payload = JWTService.verify_token(request.refresh_token)
         if payload.get("type") != "refresh":
@@ -102,7 +94,7 @@ async def refresh_token(
         return Token(
             access_token=access_token,
             refresh_token=request.refresh_token,  # keep same refresh token for now
-            token_type="bearer"
+            token_type="bearer",
         )
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
@@ -110,14 +102,14 @@ async def refresh_token(
 
 @router.post("/logout")
 async def logout(
-    request: Request,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    request: Request, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db_session)
 ):
     # Assuming we revoke via session. For now just audit log.
     org_id = getattr(request.state, "organization_id", "SYSTEM")
     ip_address = request.client.host if request.client else None
-    await AuthService.log_audit_event(db, "logout", organization_id=org_id, actor_id=current_user.id, ip_address=ip_address)
+    await AuthService.log_audit_event(
+        db, "logout", organization_id=org_id, actor_id=current_user.id, ip_address=ip_address
+    )
     return {"detail": "Successfully logged out"}
 
 
@@ -131,7 +123,7 @@ async def create_api_key(
     request: Request,
     key_data: APIKeyCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     org_id = getattr(request.state, "organization_id", None)
     ws_id = getattr(request.state, "workspace_id", None)
@@ -151,13 +143,14 @@ async def create_api_key(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "api_key_created",
+        db,
+        "api_key_created",
         organization_id=org_id,
         workspace_id=ws_id,
         actor_id=current_user.id,
         resource_type="APIKey",
         ip_address=ip_address,
-        details=f"Key name: {key_data.name}"
+        details=f"Key name: {key_data.name}",
     )
 
     await db.commit()
@@ -169,10 +162,7 @@ async def create_api_key(
 
 
 @router.get("/api-keys", response_model=List[APIKeyOut])
-async def list_api_keys(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
-):
+async def list_api_keys(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db_session)):
     stmt = select(APIKey).where(APIKey.user_id == current_user.id, APIKey.revoked_at.is_(None))
     result = await db.execute(stmt)
     return result.scalars().all()
@@ -183,7 +173,7 @@ async def revoke_api_key(
     request: Request,
     key_id: str,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     stmt = select(APIKey).where(APIKey.id == key_id, APIKey.user_id == current_user.id)
     result = await db.execute(stmt)
@@ -196,13 +186,14 @@ async def revoke_api_key(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "api_key_revoked",
+        db,
+        "api_key_revoked",
         organization_id=api_key.organization_id,
         workspace_id=api_key.workspace_id,
         actor_id=current_user.id,
         resource_type="APIKey",
         resource_id=api_key.id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()
@@ -212,6 +203,7 @@ async def revoke_api_key(
 @router.get("/sso/authorize")
 async def sso_authorize(provider_id: str = "google", state: str = "state-token"):
     from app.sso.oidc import get_oidc_manager
+
     manager = get_oidc_manager()
     try:
         url = manager.generate_authorize_url(provider_id=provider_id, state=state)
@@ -222,18 +214,16 @@ async def sso_authorize(provider_id: str = "google", state: str = "state-token")
 
 @router.get("/sso/callback")
 async def sso_callback(
-    code: str,
-    state: Optional[str] = None,
-    provider_id: str = "google",
-    db: AsyncSession = Depends(get_db_session)
+    code: str, state: Optional[str] = None, provider_id: str = "google", db: AsyncSession = Depends(get_db_session)
 ):
     from app.sso.oidc import get_oidc_manager
+
     manager = get_oidc_manager()
     # Mock token exchange for OIDC flow testing
     mock_id_token = jwt.encode(
         {"sub": "sso-user-123", "email": "sso@example.com", "name": "SSO User", "groups": ["Admins"]},
         "secret",
-        algorithm="HS256"
+        algorithm="HS256",
     )
     session_data = manager.process_id_token(provider_id=provider_id, id_token=mock_id_token)
 

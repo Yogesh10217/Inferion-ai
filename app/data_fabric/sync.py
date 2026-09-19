@@ -77,7 +77,11 @@ class DataSyncManager:
     ) -> SyncJob:
         """Create a sync job with idempotency deduplication."""
         if idempotency_key:
-            existing = [j for j in self._jobs.values() if j.idempotency_key == idempotency_key and j.status in (SyncStatus.PENDING, SyncStatus.RUNNING)]
+            existing = [
+                j
+                for j in self._jobs.values()
+                if j.idempotency_key == idempotency_key and j.status in (SyncStatus.PENDING, SyncStatus.RUNNING)
+            ]
             if existing:
                 logger.info(f"[DATA SYNC] Returned existing idempotent job '{existing[0].job_id}'")
                 return existing[0]
@@ -89,7 +93,9 @@ class DataSyncManager:
             idempotency_key=idempotency_key or f"idemp_{uuid.uuid4().hex[:10]}",
         )
         self._jobs[job.job_id] = job
-        logger.info(f"[DATA SYNC] Created sync job '{job.job_id}' for source '{source_id}' (Strategy: {strategy.value})")
+        logger.info(
+            f"[DATA SYNC] Created sync job '{job.job_id}' for source '{source_id}' (Strategy: {strategy.value})"
+        )
         return job
 
     async def run_sync_job(self, job_id: str, secret_data: Optional[Dict[str, Any]] = None) -> SyncJob:
@@ -102,9 +108,13 @@ class DataSyncManager:
         job.status = SyncStatus.RUNNING
         try:
             ds = self.source_manager.get_source(job.source_id)
-            ing_mode = IngestionMode.INCREMENTAL_SYNC if job.strategy == SyncStrategy.INCREMENTAL else IngestionMode.FULL_SYNC
+            ing_mode = (
+                IngestionMode.INCREMENTAL_SYNC if job.strategy == SyncStrategy.INCREMENTAL else IngestionMode.FULL_SYNC
+            )
 
-            req = IngestionRequest(source_id=job.source_id, tenant_id=job.tenant_id, mode=ing_mode, secret_data=secret_data)
+            req = IngestionRequest(
+                source_id=job.source_id, tenant_id=job.tenant_id, mode=ing_mode, secret_data=secret_data
+            )
             res = await self.ingestion_engine.execute_ingestion(ds, req)
 
             job.processed_records = res.total_records
@@ -113,7 +123,9 @@ class DataSyncManager:
             job.completed_at = _now()
             self.source_manager.update_sync_timestamp(job.source_id)
 
-            logger.info(f"[DATA SYNC] Job '{job.job_id}' finished with status '{job.status.value}' ({job.processed_records} records)")
+            logger.info(
+                f"[DATA SYNC] Job '{job.job_id}' finished with status '{job.status.value}' ({job.processed_records} records)"
+            )
             return job
         except Exception as e:
             job.status = SyncStatus.FAILED

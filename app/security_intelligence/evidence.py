@@ -58,7 +58,9 @@ class SecurityEvidenceManager:
         sanitized_evidences = []
         for ev in evidences:
             sanitized_meta = self.sanitizer.sanitize_copy(ev.metadata)
-            fp = FingerprintGenerator.generate({"source": ev.source, "ref": ev.content_reference, "meta": sanitized_meta})
+            fp = FingerprintGenerator.generate(
+                {"source": ev.source, "ref": ev.content_reference, "meta": sanitized_meta}
+            )
             sanitized_ev = SecurityEvidence(
                 tenant_id=tenant_id,
                 source=ev.source,

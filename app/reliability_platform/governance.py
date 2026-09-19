@@ -41,7 +41,11 @@ class ReliabilityGovernanceEngine:
                 subject_type="REMEDIATION_PLAN",
                 subject_id=plan.plan_id,
                 status=GovernanceDecisionStatus.REQUIRE_APPROVAL,
-                reasons=[GovernanceDecisionReason(code="HIGH_RISK_APPROVAL_REQUIRED", message="Human approval required for high-risk action")],
+                reasons=[
+                    GovernanceDecisionReason(
+                        code="HIGH_RISK_APPROVAL_REQUIRED", message="Human approval required for high-risk action"
+                    )
+                ],
             )
 
         return GovernanceDecision(

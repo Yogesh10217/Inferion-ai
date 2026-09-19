@@ -16,6 +16,7 @@ from app.services.metrics_service import MetricsService
 @dataclass
 class ProviderHealth:
     """Strongly typed model representing the health status of a provider."""
+
     name: str
     status: str  # "healthy" | "unhealthy" | "error"
     message: str | None = None
@@ -57,6 +58,7 @@ class HealthService:
                 return {"status": "disabled", "message": "Redis not configured for cache or rate limiting"}
 
             import redis.asyncio as aioredis
+
             client = aioredis.from_url(settings.redis_url, socket_timeout=2.0)
             await client.ping()
             await client.aclose()

@@ -24,9 +24,13 @@ class AIAssetModel(Base):
     status = Column(String, default="DRAFT", index=True)
 
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+    )
 
-    versions = relationship("AIAssetVersionModel", back_populates="asset", cascade="all, delete-orphan", lazy="selectin")
+    versions = relationship(
+        "AIAssetVersionModel", back_populates="asset", cascade="all, delete-orphan", lazy="selectin"
+    )
 
 
 class AIAssetVersionModel(Base):
@@ -56,6 +60,4 @@ class AIAssetVersionModel(Base):
 
     asset = relationship("AIAssetModel", back_populates="versions")
 
-    __table_args__ = (
-        Index("idx_asset_version_num", "asset_id", "version_number", unique=True),
-    )
+    __table_args__ = (Index("idx_asset_version_num", "asset_id", "version_number", unique=True),)

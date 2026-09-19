@@ -14,9 +14,7 @@ class ContinuousAssuranceRemediationPlanner:
     def __init__(self, delegation_coordinator: ContinuousAssuranceDelegationCoordinator) -> None:
         self.delegation_coordinator = delegation_coordinator
 
-    def plan_remediation(
-        self, tenant_id: str, drift_id: str, action_name: str
-    ) -> ContinuousAssuranceRemediationPlan:
+    def plan_remediation(self, tenant_id: str, drift_id: str, action_name: str) -> ContinuousAssuranceRemediationPlan:
         delegation = self.delegation_coordinator.create_delegation_request(
             tenant_id=tenant_id,
             action_name=action_name,

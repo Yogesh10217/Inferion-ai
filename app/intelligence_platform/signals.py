@@ -160,7 +160,9 @@ class IntelligenceSignalManager:
         )
 
         self._signals[sig.signal_id] = sig
-        logger.info(f"[INTELLIGENCE SIGNAL] Ingested {source.value}/{signal_type.value} signal '{sig.signal_id}' for tenant '{tenant_id}'")
+        logger.info(
+            f"[INTELLIGENCE SIGNAL] Ingested {source.value}/{signal_type.value} signal '{sig.signal_id}' for tenant '{tenant_id}'"
+        )
         return sig
 
     def get_signal(self, signal_id: str, tenant_id: str) -> IntelligenceSignal:
@@ -169,7 +171,9 @@ class IntelligenceSignalManager:
             raise SignalValidationException(f"Signal '{signal_id}' not found for tenant '{tenant_id}'.")
         return sig
 
-    def list_signals(self, tenant_id: str, source: Optional[SignalSource] = None, resource_id: Optional[str] = None) -> List[IntelligenceSignal]:
+    def list_signals(
+        self, tenant_id: str, source: Optional[SignalSource] = None, resource_id: Optional[str] = None
+    ) -> List[IntelligenceSignal]:
         res = [s for s in self._signals.values() if s.tenant_id == tenant_id]
         if source:
             res = [s for s in res if s.source == source]

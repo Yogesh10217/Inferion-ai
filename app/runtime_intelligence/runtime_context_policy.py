@@ -14,9 +14,7 @@ logger = logging.getLogger(__name__)
 class RuntimeContextPolicyEngine:
     """Enforces bounded context size and calculates canonical SHA-256 context fingerprints."""
 
-    def sanitize_and_fingerprint(
-        self, tenant_id: str, raw_context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def sanitize_and_fingerprint(self, tenant_id: str, raw_context: Dict[str, Any]) -> Dict[str, Any]:
         # 1. Sanitize sensitive data
         sanitized = SensitiveDataSanitizer.sanitize(raw_context)
 

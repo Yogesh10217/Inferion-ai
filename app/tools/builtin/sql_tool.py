@@ -16,7 +16,18 @@ logger = logging.getLogger(__name__)
 class SQLTool(BaseTool):
     """SQL tool supporting read-only query validation, parameterized queries, and safe execution."""
 
-    FORBIDDEN_KEYWORDS = {"INSERT", "UPDATE", "DELETE", "DROP", "ALTER", "CREATE", "TRUNCATE", "GRANT", "REVOKE", "EXEC"}
+    FORBIDDEN_KEYWORDS = {
+        "INSERT",
+        "UPDATE",
+        "DELETE",
+        "DROP",
+        "ALTER",
+        "CREATE",
+        "TRUNCATE",
+        "GRANT",
+        "REVOKE",
+        "EXEC",
+    }
 
     def __init__(self, name: str = "sql_query", read_only: bool = True, connection_string: Optional[str] = None):
         metadata = ToolMetadata(
@@ -43,7 +54,9 @@ class SQLTool(BaseTool):
         clean_q = query.upper().strip()
         tokens = clean_q.split()
         if not clean_q.startswith("SELECT") and not clean_q.startswith("WITH") and not clean_q.startswith("EXPLAIN"):
-            raise ValueError(f"Read-only SQL policy enforced: Query must start with SELECT or WITH (got '{tokens[0] if tokens else ''}')")
+            raise ValueError(
+                f"Read-only SQL policy enforced: Query must start with SELECT or WITH (got '{tokens[0] if tokens else ''}')"
+            )
 
         for kw in self.FORBIDDEN_KEYWORDS:
             if f" {kw} " in f" {clean_q} " or clean_q.startswith(f"{kw} "):
@@ -77,6 +90,7 @@ class SQLTool(BaseTool):
         try:
             if self.connection_string and self.connection_string.startswith("sqlite"):
                 import sqlite3
+
                 conn = sqlite3.connect(self.connection_string.replace("sqlite:///", ""))
                 cursor = conn.cursor()
                 cursor.execute(query, params)

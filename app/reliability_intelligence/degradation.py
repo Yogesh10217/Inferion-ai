@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class SafeDegradationEngine:
     """Plans safe degradation strategies (GRACEFUL, PARTIAL_SERVICE, READ_ONLY, FEATURE_REDUCTION, LOAD_SHEDDING) producing DelegationRequests."""
 
-    def plan_degradation(
-        self, tenant_id: str, service_id: str, strategy_str: str = "GRACEFUL"
-    ) -> DegradationPlan:
+    def plan_degradation(self, tenant_id: str, service_id: str, strategy_str: str = "GRACEFUL") -> DegradationPlan:
         try:
             strat = DegradationStrategy(strategy_str.upper())
         except ValueError:

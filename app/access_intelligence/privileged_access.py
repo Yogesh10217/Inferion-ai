@@ -32,12 +32,14 @@ class PrivilegedAccessStatus(str, Enum):
 
 class PrivilegedAccessDuration(BaseModel):
     """Duration specification for JIT / temporary privileged access."""
+
     duration_minutes: int = 60
     max_allowed_minutes: int = 480
 
 
 class PrivilegedAccessRequest(BaseModel):
     """Privileged Access Request representation."""
+
     request_id: str = Field(default_factory=lambda: f"priv_req_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     requester_identity_id: str
@@ -70,7 +72,11 @@ class PrivilegedAccessManager:
         duration_minutes: int = 60,
         metadata: Optional[Dict[str, Any]] = None,
     ) -> PrivilegedAccessRequest:
-        requires_appr = scope in [PrivilegedAccessScope.PRODUCTION, PrivilegedAccessScope.ADMIN, PrivilegedAccessScope.EMERGENCY]
+        requires_appr = scope in [
+            PrivilegedAccessScope.PRODUCTION,
+            PrivilegedAccessScope.ADMIN,
+            PrivilegedAccessScope.EMERGENCY,
+        ]
 
         req = PrivilegedAccessRequest(
             tenant_id=tenant_id,
@@ -86,7 +92,9 @@ class PrivilegedAccessManager:
         self._requests[req.request_id] = req
         return req
 
-    def approve_request(self, tenant_id: str, request_id: str, approver_id: str, approval_id: str = "appr_123") -> PrivilegedAccessRequest:
+    def approve_request(
+        self, tenant_id: str, request_id: str, approver_id: str, approval_id: str = "appr_123"
+    ) -> PrivilegedAccessRequest:
         req = self.get_request(tenant_id, request_id)
         if req.status != PrivilegedAccessStatus.PENDING_APPROVAL:
             raise InvalidAccessStateTransitionException(req.status.value, PrivilegedAccessStatus.APPROVED.value)
@@ -109,7 +117,9 @@ class PrivilegedAccessManager:
             raise CrossTenantAccessIntelligenceException()
         return req
 
-    def list_requests(self, tenant_id: str, scope: Optional[PrivilegedAccessScope] = None) -> List[PrivilegedAccessRequest]:
+    def list_requests(
+        self, tenant_id: str, scope: Optional[PrivilegedAccessScope] = None
+    ) -> List[PrivilegedAccessRequest]:
         results = [r for r in self._requests.values() if r.tenant_id == tenant_id]
         if scope:
             results = [r for r in results if r.scope == scope]

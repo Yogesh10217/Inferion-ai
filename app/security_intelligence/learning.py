@@ -43,7 +43,9 @@ class SecurityLearningManager:
         recommendation_title: str,
     ) -> SecurityLearningRecord:
         pat = SecurityPattern(pattern_name=pattern_name)
-        rec = SecurityRecommendation(title=recommendation_title, description=f"Recommended action for {pattern_name}", action_type="TUNE_POLICY")
+        rec = SecurityRecommendation(
+            title=recommendation_title, description=f"Recommended action for {pattern_name}", action_type="TUNE_POLICY"
+        )
         record = SecurityLearningRecord(
             tenant_id=tenant_id,
             incident_id=incident_id,

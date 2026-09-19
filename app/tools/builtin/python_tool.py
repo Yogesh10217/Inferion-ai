@@ -36,9 +36,7 @@ class PythonTool(BaseTool):
             requires_approval=True,
             parameters_schema={
                 "type": "object",
-                "properties": {
-                    "code": {"type": "string", "description": "Python code snippet to execute"}
-                },
+                "properties": {"code": {"type": "string", "description": "Python code snippet to execute"}},
                 "required": ["code"],
             },
         )
@@ -119,7 +117,10 @@ class PythonTool(BaseTool):
             stdout_str = redirected_output.getvalue()
 
             elapsed = time.time() - start_time
-            result_output = {"stdout": stdout_str, "locals": {k: str(v) for k, v in safe_locals.items() if not k.startswith("_")}}
+            result_output = {
+                "stdout": stdout_str,
+                "locals": {k: str(v) for k, v in safe_locals.items() if not k.startswith("_")},
+            }
             return ToolResult(
                 execution_id=context.execution_id,
                 tool_name=self.name,

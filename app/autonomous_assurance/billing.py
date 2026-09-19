@@ -25,8 +25,12 @@ class AutonomousAssuranceBillingTracker:
     def __init__(self) -> None:
         self._events: Dict[str, List[AutonomousCostEvent]] = {}
 
-    def track_cost(self, workflow_id: str, tenant_id: str, amount_usd: float = 0.05, description: str = "Workflow execution") -> AutonomousCostEvent:
-        event = AutonomousCostEvent(workflow_id=workflow_id, tenant_id=tenant_id, amount_usd=amount_usd, description=description)
+    def track_cost(
+        self, workflow_id: str, tenant_id: str, amount_usd: float = 0.05, description: str = "Workflow execution"
+    ) -> AutonomousCostEvent:
+        event = AutonomousCostEvent(
+            workflow_id=workflow_id, tenant_id=tenant_id, amount_usd=amount_usd, description=description
+        )
         if workflow_id not in self._events:
             self._events[workflow_id] = []
         self._events[workflow_id].append(event)

@@ -102,7 +102,9 @@ class CorrelationEngine:
 
         for svc_id, sigs in grouped_by_service.items():
             if len(sigs) >= 2:
-                evidence = [f"Time-window co-occurrence ({len(sigs)} signals within {time_window_minutes}m for service '{svc_id}')."]
+                evidence = [
+                    f"Time-window co-occurrence ({len(sigs)} signals within {time_window_minutes}m for service '{svc_id}')."
+                ]
                 clusters.append(
                     CorrelationCluster(
                         tenant_id=tenant_id,
@@ -113,5 +115,7 @@ class CorrelationEngine:
                     )
                 )
 
-        logger.info(f"[CORRELATION ENGINE] Correlated {len(recent_signals)} signals into {len(clusters)} clusters for tenant '{tenant_id}'")
+        logger.info(
+            f"[CORRELATION ENGINE] Correlated {len(recent_signals)} signals into {len(clusters)} clusters for tenant '{tenant_id}'"
+        )
         return clusters

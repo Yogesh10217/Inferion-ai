@@ -114,7 +114,9 @@ class AuthorizationMiddleware(BaseHTTPMiddleware):
                 ws_id = getattr(request.state, "workspace_id", None)
 
                 # Look up permissions
-                permissions = await RBACService.get_user_permissions(session, user_id, organization_id=org_id, workspace_id=ws_id)
+                permissions = await RBACService.get_user_permissions(
+                    session, user_id, organization_id=org_id, workspace_id=ws_id
+                )
                 request.state.permissions = permissions
         except Exception:
             # Safe fallback if DB is unreachable
@@ -150,7 +152,9 @@ def require_roles(roles: list[str]):
                     async with async_session_maker() as session:
                         org_id = getattr(request.state, "organization_id", None)
                         ws_id = getattr(request.state, "workspace_id", None)
-                        user_roles = await RBACService.get_user_roles(session, user_id, organization_id=org_id, workspace_id=ws_id)
+                        user_roles = await RBACService.get_user_roles(
+                            session, user_id, organization_id=org_id, workspace_id=ws_id
+                        )
                         request.state.roles = user_roles
                 except Exception:
                     user_roles = set()
@@ -160,11 +164,10 @@ def require_roles(roles: list[str]):
             has_admin_perm = "admin:all" in permissions or "super_admin" in user_roles or "admin" in user_roles
 
             if not (has_role or has_admin_perm):
-                raise HTTPException(
-                    status_code=403,
-                    detail=f"Forbidden: Missing required role ({', '.join(roles)})"
-                )
+                raise HTTPException(status_code=403, detail=f"Forbidden: Missing required role ({', '.join(roles)})")
 
             return await func(*args, **kwargs)
+
         return wrapper
+
     return decorator

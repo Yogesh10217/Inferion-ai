@@ -19,19 +19,12 @@ class UnifiedSnapshotGenerator:
     def __init__(self):
         pass
 
-    def generate_snapshot(
-        self,
-        tenant_id: str,
-        domain_snapshots: Dict[str, Any]
-    ) -> PlatformSnapshot:
+    def generate_snapshot(self, tenant_id: str, domain_snapshots: Dict[str, Any]) -> PlatformSnapshot:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
 
         snap_id = f"snap-uni-{uuid.uuid4().hex[:12]}"
 
         return SnapshotFactory.create_snapshot(
-            tenant_id=tenant_id,
-            resource_type="UNIFIED_SNAPSHOT",
-            resource_id=snap_id,
-            domain_payload=domain_snapshots
+            tenant_id=tenant_id, resource_type="UNIFIED_SNAPSHOT", resource_id=snap_id, domain_payload=domain_snapshots
         )

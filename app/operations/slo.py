@@ -115,11 +115,41 @@ class SLOEvaluator:
 
     def __init__(self, default_slos: Optional[List[ServiceLevelObjective]] = None) -> None:
         self.slos = default_slos or [
-            ServiceLevelObjective("Availability SLO", SLIType.AVAILABILITY, target_value=0.999, warning_threshold=0.9995, description="99.9% availability"),
-            ServiceLevelObjective("Error Rate SLO", SLIType.ERROR_RATE, target_value=0.01, warning_threshold=0.005, description="Error rate <= 1%"),
-            ServiceLevelObjective("p95 Latency SLO", SLIType.LATENCY_P95, target_value=500.0, warning_threshold=400.0, description="p95 latency <= 500ms"),
-            ServiceLevelObjective("Health Probes SLO", SLIType.HEALTH_PROBE, target_value=1.0, warning_threshold=1.0, description="100% healthy probes"),
-            ServiceLevelObjective("Dependency SLO", SLIType.DEPENDENCY_AVAILABILITY, target_value=1.0, warning_threshold=1.0, description="100% dependency availability"),
+            ServiceLevelObjective(
+                "Availability SLO",
+                SLIType.AVAILABILITY,
+                target_value=0.999,
+                warning_threshold=0.9995,
+                description="99.9% availability",
+            ),
+            ServiceLevelObjective(
+                "Error Rate SLO",
+                SLIType.ERROR_RATE,
+                target_value=0.01,
+                warning_threshold=0.005,
+                description="Error rate <= 1%",
+            ),
+            ServiceLevelObjective(
+                "p95 Latency SLO",
+                SLIType.LATENCY_P95,
+                target_value=500.0,
+                warning_threshold=400.0,
+                description="p95 latency <= 500ms",
+            ),
+            ServiceLevelObjective(
+                "Health Probes SLO",
+                SLIType.HEALTH_PROBE,
+                target_value=1.0,
+                warning_threshold=1.0,
+                description="100% healthy probes",
+            ),
+            ServiceLevelObjective(
+                "Dependency SLO",
+                SLIType.DEPENDENCY_AVAILABILITY,
+                target_value=1.0,
+                warning_threshold=1.0,
+                description="100% dependency availability",
+            ),
         ]
 
     def evaluate(self, sli_results: List[SLIResult]) -> List[SLOResult]:
@@ -148,7 +178,13 @@ class SLOEvaluator:
             status = SLOStatus.MET
             reason = None
 
-            if slo.sli_type in (SLIType.AVAILABILITY, SLIType.LIVE_PROBE, SLIType.READY_PROBE, SLIType.HEALTH_PROBE, SLIType.DEPENDENCY_AVAILABILITY):
+            if slo.sli_type in (
+                SLIType.AVAILABILITY,
+                SLIType.LIVE_PROBE,
+                SLIType.READY_PROBE,
+                SLIType.HEALTH_PROBE,
+                SLIType.DEPENDENCY_AVAILABILITY,
+            ):
                 if obs < slo.target_value:
                     status = SLOStatus.BREACHED
                     reason = f"Observed value {obs} fell below SLO target {slo.target_value}"
@@ -229,7 +265,9 @@ class SLOManager:
         else:
             slo.status = SLOStatus.HEALTHY
 
-        logger.info(f"[SLO MANAGER] Measured SLO '{slo.name}': Current = {current_value}%, Error Budget = {remaining_eb:.1f}%, Status = {slo.status.value}")
+        logger.info(
+            f"[SLO MANAGER] Measured SLO '{slo.name}': Current = {current_value}%, Error Budget = {remaining_eb:.1f}%, Status = {slo.status.value}"
+        )
         return slo
 
     def get_slo(self, slo_id: str) -> LegacyServiceLevelObjective:

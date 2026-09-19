@@ -90,7 +90,12 @@ def create_slo(
     x_tenant_id: str = Header("default_tenant", alias="X-Tenant-ID"),
     mgr: ReliabilityIntelligenceManager = Depends(get_reliability_manager),
 ):
-    slo = mgr.create_slo(tenant_id=x_tenant_id, service_id=req.service_id, indicator_type=req.indicator_type, target_percentage=req.target_percentage)
+    slo = mgr.create_slo(
+        tenant_id=x_tenant_id,
+        service_id=req.service_id,
+        indicator_type=req.indicator_type,
+        target_percentage=req.target_percentage,
+    )
     return SLOResponse(
         slo_id=slo.slo_id,
         tenant_id=slo.tenant_id,
@@ -146,7 +151,9 @@ def analyze_propagation(
     x_tenant_id: str = Header("default_tenant", alias="X-Tenant-ID"),
     mgr: ReliabilityIntelligenceManager = Depends(get_reliability_manager),
 ):
-    path = mgr.analyze_propagation(tenant_id=x_tenant_id, origin_service=req.origin_service, downstream_services=["svc_db", "svc_auth"])
+    path = mgr.analyze_propagation(
+        tenant_id=x_tenant_id, origin_service=req.origin_service, downstream_services=["svc_db", "svc_auth"]
+    )
     return PropagationResponse(
         path_id=path.path_id,
         tenant_id=path.tenant_id,
@@ -197,7 +204,12 @@ def propose_chaos(
     x_tenant_id: str = Header("default_tenant", alias="X-Tenant-ID"),
     mgr: ReliabilityIntelligenceManager = Depends(get_reliability_manager),
 ):
-    prop = mgr.propose_chaos_experiment(tenant_id=x_tenant_id, experiment_name=req.experiment_name, target_service=req.target_service, hypothesis=req.hypothesis)
+    prop = mgr.propose_chaos_experiment(
+        tenant_id=x_tenant_id,
+        experiment_name=req.experiment_name,
+        target_service=req.target_service,
+        hypothesis=req.hypothesis,
+    )
     return ChaosProposalResponse(
         proposal_id=prop.proposal_id,
         tenant_id=prop.tenant_id,

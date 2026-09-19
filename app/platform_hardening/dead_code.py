@@ -64,9 +64,7 @@ class DeadCodeDetectionEngine:
         classifications: Dict[str, int] = {c.value: 0 for c in DeadCodeClassification}
 
         for symbol, (file_path, line_no) in defined_symbols.items():
-            classification = self.classify_symbol(
-                symbol, file_path, referenced_symbols, route_or_cli_symbols
-            )
+            classification = self.classify_symbol(symbol, file_path, referenced_symbols, route_or_cli_symbols)
             classifications[classification.value] += 1
 
             if classification in [DeadCodeClassification.CONFIRMED_DEAD, DeadCodeClassification.LIKELY_DEAD]:

@@ -47,26 +47,18 @@ class CapabilityRegistry:
         with self._lock:
             return capability in self._provider_capabilities.get(provider_id, set())
 
-    def filter_providers_by_capabilities(
-        self, providers: List[str], required_capabilities: List[str]
-    ) -> List[str]:
+    def filter_providers_by_capabilities(self, providers: List[str], required_capabilities: List[str]) -> List[str]:
         """Filter a list of providers to only those matching all required capabilities."""
         if not required_capabilities:
             return list(providers)
         req_set = set(required_capabilities)
         with self._lock:
-            return [
-                p for p in providers
-                if req_set.issubset(self._provider_capabilities.get(p, set()))
-            ]
+            return [p for p in providers if req_set.issubset(self._provider_capabilities.get(p, set()))]
 
     def get_providers_with_capability(self, capability: str) -> List[str]:
         """Get all registered providers supporting a specific capability."""
         with self._lock:
-            return [
-                p for p, caps in self._provider_capabilities.items()
-                if capability in caps
-            ]
+            return [p for p, caps in self._provider_capabilities.items() if capability in caps]
 
     def supports_model(self, provider_id: str, model_id: str) -> bool:
         """Check if provider explicitly supports a given model ID."""

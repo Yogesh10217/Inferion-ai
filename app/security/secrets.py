@@ -78,8 +78,7 @@ class VaultSecretProvider(SecretProvider):
 
             req_url = f"{self.vault_url}/v1/{self.mount_point}/data/{key}"
             req = urllib.request.Request(
-                req_url,
-                headers={"X-Vault-Token": self.vault_token, "Content-Type": "application/json"}
+                req_url, headers={"X-Vault-Token": self.vault_token, "Content-Type": "application/json"}
             )
             with urllib.request.urlopen(req, timeout=3.0) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
@@ -108,7 +107,7 @@ class VaultSecretProvider(SecretProvider):
                 req_url,
                 data=payload,
                 headers={"X-Vault-Token": self.vault_token, "Content-Type": "application/json"},
-                method="POST"
+                method="POST",
             )
             with urllib.request.urlopen(req, timeout=3.0):
                 pass
@@ -136,6 +135,7 @@ class AWSSecretsManagerProvider(SecretProvider):
 
         try:
             import boto3
+
             client = boto3.client("secretsmanager", region_name=self.region_name)
             response = client.get_secret_value(SecretId=key)
             secret_str = response.get("SecretString", "")
@@ -151,6 +151,7 @@ class AWSSecretsManagerProvider(SecretProvider):
         self._cache[key] = value
         try:
             import boto3
+
             client = boto3.client("secretsmanager", region_name=self.region_name)
             client.put_secret_value(SecretId=key, SecretString=value)
         except Exception as e:

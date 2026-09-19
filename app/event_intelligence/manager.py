@@ -67,7 +67,9 @@ class EventIntelligenceManager:
         self.metrics_collector = EventMetricsCollector()
         self.billing_tracker = EventBillingTracker()
 
-        logger.info("[EVENT INTELLIGENCE MASTER] EventIntelligenceManager initialized cleanly with all 28 domain subsystems.")
+        logger.info(
+            "[EVENT INTELLIGENCE MASTER] EventIntelligenceManager initialized cleanly with all 28 domain subsystems."
+        )
 
     def run_full_event_intelligence_flow(
         self,
@@ -98,7 +100,9 @@ class EventIntelligenceManager:
         impact = self.impact_analyzer.analyze_impact(evt)
 
         # 5. Correlation & Causality Analysis
-        corr_group = self.correlation_manager.correlate_events(tenant_id, f"Correlation for {evt.event_id}", [evt], CorrelationType.RELIABILITY_CASCADE)
+        corr_group = self.correlation_manager.correlate_events(
+            tenant_id, f"Correlation for {evt.event_id}", [evt], CorrelationType.RELIABILITY_CASCADE
+        )
         self.metrics_collector.record_event_correlated(corr_group.correlation_type.value, tenant_id)
 
         causal = self.causality_analyzer.analyze_causality(tenant_id, [evt])
@@ -109,34 +113,58 @@ class EventIntelligenceManager:
 
         # 7. Trust Scoring & Prioritization
         trust = self.trust_engine.compute_trust(tenant_id, evt.event_id)
-        prio = self.prioritization_engine.prioritize_event(evt, security_risk_high=cls.governance_sensitive, business_impact_high=impact.overall_severity == EventSeverity.HIGH)
+        prio = self.prioritization_engine.prioritize_event(
+            evt,
+            security_risk_high=cls.governance_sensitive,
+            business_impact_high=impact.overall_severity == EventSeverity.HIGH,
+        )
 
         # 8. Governance Evaluation & Automation Planning
-        gov_dec = self.governance_engine.evaluate_automation_governance(tenant_id, evt.event_id, is_high_risk=is_high_risk_automation)
-        requires_approval = (gov_dec.status == GovernanceDecisionStatus.REQUIRE_APPROVAL)
+        gov_dec = self.governance_engine.evaluate_automation_governance(
+            tenant_id, evt.event_id, is_high_risk=is_high_risk_automation
+        )
+        requires_approval = gov_dec.status == GovernanceDecisionStatus.REQUIRE_APPROVAL
 
-        auto_plan = self.automation_manager.create_automation_plan(evt, action=AutomationAction.REQUEST_INVESTIGATION, requires_approval=requires_approval)
+        auto_plan = self.automation_manager.create_automation_plan(
+            evt, action=AutomationAction.REQUEST_INVESTIGATION, requires_approval=requires_approval
+        )
         self.metrics_collector.record_automation_triggered(auto_plan.action.value, tenant_id)
 
         # 9. Cross-Platform Response Planning & Delegated Execution
         resp_act = EventResponseAction(target=ResponseTarget.RELIABILITY_PLATFORM, action_type="INVESTIGATE_INCIDENT")
         resp_plan = self.response_manager.create_response_plan(tenant_id, evt.event_id, [resp_act])
 
-        delegation_plan = self.delegation_manager.delegate_event_response(tenant_id, evt.event_id, DelegationTarget.PLATFORM_OPERATIONS, "EXECUTE_RESPONSE")
+        delegation_plan = self.delegation_manager.delegate_event_response(
+            tenant_id, evt.event_id, DelegationTarget.PLATFORM_OPERATIONS, "EXECUTE_RESPONSE"
+        )
 
         # 10. Investigation, Resolution Lifecycle & Immutable Snapshot
         inv = self.investigation_manager.initiate_investigation(tenant_id, evt.event_id)
-        concluded_inv = self.investigation_manager.conclude_investigation(inv.investigation_id, tenant_id, "Root cause identified cleanly.")
+        concluded_inv = self.investigation_manager.conclude_investigation(
+            inv.investigation_id, tenant_id, "Root cause identified cleanly."
+        )
 
         res = self.resolution_manager.create_resolution(tenant_id, evt.event_id)
-        res = self.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.INVESTIGATING)
-        res = self.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.RESPONSE_PLANNED)
-        res = self.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.DELEGATED)
-        res = self.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.VERIFYING)
-        final_res = self.resolution_manager.transition_resolution(res.resolution_id, tenant_id, EventResolutionStatus.RESOLVED)
+        res = self.resolution_manager.transition_resolution(
+            res.resolution_id, tenant_id, EventResolutionStatus.INVESTIGATING
+        )
+        res = self.resolution_manager.transition_resolution(
+            res.resolution_id, tenant_id, EventResolutionStatus.RESPONSE_PLANNED
+        )
+        res = self.resolution_manager.transition_resolution(
+            res.resolution_id, tenant_id, EventResolutionStatus.DELEGATED
+        )
+        res = self.resolution_manager.transition_resolution(
+            res.resolution_id, tenant_id, EventResolutionStatus.VERIFYING
+        )
+        final_res = self.resolution_manager.transition_resolution(
+            res.resolution_id, tenant_id, EventResolutionStatus.RESOLVED
+        )
 
         # 11. Learning, Analytics & Cost Attribution
-        learning = self.learning_manager.record_learning(tenant_id, "Cascading Failure Pattern", "Update Reliability Rules")
+        learning = self.learning_manager.record_learning(
+            tenant_id, "Cascading Failure Pattern", "Update Reliability Rules"
+        )
         report = self.analytics_engine.generate_report(tenant_id)
         self.billing_tracker.record_event_cost(tenant_id, evt.event_id, 0.05, "Event intelligence pipeline run")
 

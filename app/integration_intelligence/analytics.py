@@ -44,7 +44,9 @@ class IntegrationAnalyticsEngine:
                 impact_level="HIGH",
             )
             int_insights.append(ins)
-            plat_insights.append(PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level))
+            plat_insights.append(
+                PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level)
+            )
 
         if verification_failure_count > 0:
             ins = IntegrationInsight(
@@ -53,7 +55,9 @@ class IntegrationAnalyticsEngine:
                 impact_level="MEDIUM",
             )
             int_insights.append(ins)
-            plat_insights.append(PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level))
+            plat_insights.append(
+                PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level)
+            )
 
         metrics = [
             AnalyticsMetric(metric_name="active_connectors_count", metric_value=float(active_connectors_count)),

@@ -14,6 +14,7 @@ class PipelineStatus(Enum):
 @dataclass
 class DocumentContext:
     """Context object carrying document data through the pipeline stages."""
+
     document_id: str
     raw_content: Optional[bytes] = None
     parsed_content: Optional[str] = None

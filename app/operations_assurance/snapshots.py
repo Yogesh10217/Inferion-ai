@@ -42,7 +42,8 @@ class OperationalAssuranceSnapshotManager:
             tenant_id=tenant_id,
             resource_type="OPERATIONAL_SERVICE",
             resource_id=service_id,
-            domain_payload=domain_payload or {
+            domain_payload=domain_payload
+            or {
                 "assurance_score": assurance_score,
                 "health_status": health_status,
                 "reliability_score": reliability_score,

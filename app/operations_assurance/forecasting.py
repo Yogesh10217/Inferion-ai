@@ -60,7 +60,7 @@ class OperationsForecastingEngine:
 
         demand_tps = baseline_tps * multiplier
         capacity_util = min(1.0, 0.4 * multiplier)
-        fail_prob = min(0.95, 0.05 * (multiplier ** 1.5))
+        fail_prob = min(0.95, 0.05 * (multiplier**1.5))
         inc_prob = min(0.95, 0.1 * multiplier)
 
         forecast = OperationalForecast(

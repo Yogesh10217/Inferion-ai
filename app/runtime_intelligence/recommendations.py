@@ -29,7 +29,9 @@ class RuntimeRecommendationEngine:
             auto_execute=False,  # Enforce advisory invariant
         )
         self.repo.save(rec)
-        logger.info(f"Generated advisory RuntimeRecommendation '{rec.recommendation_id}' for tenant '{tenant_id}' (auto_execute=False)")
+        logger.info(
+            f"Generated advisory RuntimeRecommendation '{rec.recommendation_id}' for tenant '{tenant_id}' (auto_execute=False)"
+        )
         return rec
 
     def list_recommendations(self, tenant_id: str) -> List[RuntimeRecommendation]:

@@ -23,7 +23,11 @@ class DeploymentObservabilityValidator:
         tracing_active = True
 
         return {
-            "status": DependencyStatus.AVAILABLE.value if (metrics_active and tracing_active) else DependencyStatus.DEGRADED.value,
+            "status": (
+                DependencyStatus.AVAILABLE.value
+                if (metrics_active and tracing_active)
+                else DependencyStatus.DEGRADED.value
+            ),
             "metrics_active": metrics_active,
             "tracing_active": tracing_active,
             "exporter": "Prometheus/OpenTelemetry",

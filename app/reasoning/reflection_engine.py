@@ -27,7 +27,9 @@ class ReflectionEngine:
     def __init__(self):
         self._lessons_store: List[LessonLearned] = []
 
-    def analyze_execution(self, episode_id: str, execution_trace: List[Dict[str, Any]], final_status: str) -> Dict[str, Any]:
+    def analyze_execution(
+        self, episode_id: str, execution_trace: List[Dict[str, Any]], final_status: str
+    ) -> Dict[str, Any]:
         """Perform post-execution reflection analysis."""
         failures = [step for step in execution_trace if step.get("status") in ("failed", "error")]
         successes = [step for step in execution_trace if step.get("status") == "completed"]

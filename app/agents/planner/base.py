@@ -16,7 +16,7 @@ class BasePlanner(ABC):
         goal: str,
         available_tools: Dict[str, ToolDefinition],
         execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        context: AgentContext,
     ) -> List[Dict[str, Any]]:
         """
         Generates structured execution plan steps.

@@ -28,7 +28,7 @@ class CrossPhaseGovernanceValidationEngine:
         approval_bypasses = 0
 
         # Rule: If risk is HIGH or CRITICAL, or governance_decision is REQUIRE_APPROVAL, human approval is mandatory before delegation
-        if (risk_level in ["HIGH", "CRITICAL"] or governance_decision == "REQUIRE_APPROVAL"):
+        if risk_level in ["HIGH", "CRITICAL"] or governance_decision == "REQUIRE_APPROVAL":
             if delegation_created and not has_human_approval:
                 approval_bypasses += 1
                 findings.append(

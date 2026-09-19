@@ -88,14 +88,18 @@ class DecisionReproducibilityEngine:
         if not record:
             raise DecisionNotFoundException(f"Reproducibility record for decision '{decision_id}' not found.")
         if record.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantDecisionIntelligenceException(f"Unauthorized cross-tenant access to reproducibility record for decision '{decision_id}'")
+            raise CrossTenantDecisionIntelligenceException(
+                f"Unauthorized cross-tenant access to reproducibility record for decision '{decision_id}'"
+            )
         return record
 
     def verify_reproducibility(self, decision_id: str, tenant_id: str) -> bool:
         record = self.get_reproducibility_record(decision_id, tenant_id)
         expected_hash = record.compute_reproducibility_hash()
         if record.reproducibility_hash != expected_hash:
-            raise ImmutableDecisionRecordException(f"Reproducibility record integrity check failed for decision '{decision_id}'")
+            raise ImmutableDecisionRecordException(
+                f"Reproducibility record integrity check failed for decision '{decision_id}'"
+            )
         return True
 
 

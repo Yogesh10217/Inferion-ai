@@ -70,7 +70,9 @@ class MLOpsEvaluationEngine:
         self._datasets: Dict[str, EvaluationDataset] = {}
         self._runs: List[EvaluationResult] = []
 
-    def create_dataset(self, name: str, tenant_id: str = "global", cases: Optional[List[EvaluationCase]] = None) -> EvaluationDataset:
+    def create_dataset(
+        self, name: str, tenant_id: str = "global", cases: Optional[List[EvaluationCase]] = None
+    ) -> EvaluationDataset:
         ds = EvaluationDataset(name=name, tenant_id=tenant_id, cases=cases or [])
         self._datasets[ds.dataset_id] = ds
         logger.info(f"[EVALUATION ENGINE] Created evaluation dataset '{name}' (ID: {ds.dataset_id})")
@@ -100,7 +102,9 @@ class MLOpsEvaluationEngine:
         if overall_score < min_quality_score:
             regressions.append(f"Quality score {overall_score:.1f}% below minimum threshold {min_quality_score:.1f}%")
         if hallucination_rate > max_hallucination_rate:
-            regressions.append(f"Hallucination rate {hallucination_rate:.3f} exceeds maximum threshold {max_hallucination_rate:.3f}")
+            regressions.append(
+                f"Hallucination rate {hallucination_rate:.3f} exceeds maximum threshold {max_hallucination_rate:.3f}"
+            )
 
         result = EvaluationResult(
             asset_id=asset_id,
@@ -116,5 +120,7 @@ class MLOpsEvaluationEngine:
         )
 
         self._runs.append(result)
-        logger.info(f"[EVALUATION ENGINE] Evaluated asset '{asset_id}' v{version_number}: Passed = {passed} (Score: {overall_score:.1f}%)")
+        logger.info(
+            f"[EVALUATION ENGINE] Evaluated asset '{asset_id}' v{version_number}: Passed = {passed} (Score: {overall_score:.1f}%)"
+        )
         return result

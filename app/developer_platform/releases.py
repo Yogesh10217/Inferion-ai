@@ -35,5 +35,7 @@ class ReleaseManager:
     def create_release(self, project_id: str, version: str, tenant_id: str = "global") -> SoftwareRelease:
         rel = SoftwareRelease(project_id=project_id, version=version, tenant_id=tenant_id)
         self._releases[rel.release_id] = rel
-        logger.info(f"[RELEASE MANAGER] Created software release '{rel.release_id}' (v{version}) for project '{project_id}'")
+        logger.info(
+            f"[RELEASE MANAGER] Created software release '{rel.release_id}' (v{version}) for project '{project_id}'"
+        )
         return rel

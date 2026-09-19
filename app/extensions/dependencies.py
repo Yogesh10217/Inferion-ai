@@ -98,5 +98,7 @@ class DependencyResolver:
             resolved_dependencies=resolved,
             lock_hash=f"hash_{len(resolved)}",
         )
-        logger.info(f"[DEPENDENCY RESOLVER] Successfully resolved {len(resolved)} dependencies for '{manifest.identifier}'")
+        logger.info(
+            f"[DEPENDENCY RESOLVER] Successfully resolved {len(resolved)} dependencies for '{manifest.identifier}'"
+        )
         return lock

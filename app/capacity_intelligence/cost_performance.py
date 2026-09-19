@@ -9,9 +9,7 @@ logger = logging.getLogger(__name__)
 class CostPerformanceEngine:
     """Evaluates cost per request, cost per workload, cost per inference, and optimization benefit."""
 
-    def evaluate_cost_performance(
-        self, tenant_id: str, service_id: str
-    ) -> Dict[str, Any]:
+    def evaluate_cost_performance(self, tenant_id: str, service_id: str) -> Dict[str, Any]:
         return {
             "tenant_id": tenant_id,
             "service_id": service_id,

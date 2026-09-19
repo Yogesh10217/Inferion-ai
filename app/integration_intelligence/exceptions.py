@@ -113,7 +113,9 @@ class IntegrationRetryException(IntegrationIntelligenceException):
     """Raised when integration retry policy is violated or retry limit exceeded."""
 
     def __init__(self, attempt_count: int, max_retries: int) -> None:
-        super().__init__(f"Integration retry limit exceeded ({attempt_count}/{max_retries}). Sent to dead-letter handler.")
+        super().__init__(
+            f"Integration retry limit exceeded ({attempt_count}/{max_retries}). Sent to dead-letter handler."
+        )
         self.attempt_count = attempt_count
         self.max_retries = max_retries
 

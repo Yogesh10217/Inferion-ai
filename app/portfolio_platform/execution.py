@@ -64,7 +64,9 @@ class PortfolioExecutionManager:
     ) -> InitiativeExecutionPlan:
         plan = self._plans.get(execution_plan_id)
         if not plan or plan.tenant_id != tenant_id:
-            raise PortfolioPolicyViolationException(f"Execution plan '{execution_plan_id}' not found for tenant '{tenant_id}'.")
+            raise PortfolioPolicyViolationException(
+                f"Execution plan '{execution_plan_id}' not found for tenant '{tenant_id}'."
+            )
 
         plan.status = ExecutionStatus.DELEGATED
         plan.delegated_reference_id = f"delegated_{target_manager_name}_{uuid.uuid4().hex[:8]}"

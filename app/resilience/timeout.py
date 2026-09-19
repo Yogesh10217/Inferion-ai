@@ -62,7 +62,9 @@ class TimeoutManager:
             return self.policy.worker_timeout_seconds
         return self.policy.request_timeout_seconds
 
-    async def execute_with_timeout(self, layer: str, func: Callable, *args, custom_timeout: Optional[float] = None, **kwargs) -> Any:
+    async def execute_with_timeout(
+        self, layer: str, func: Callable, *args, custom_timeout: Optional[float] = None, **kwargs
+    ) -> Any:
         """Execute async callable under specified layer timeout limit."""
         timeout_sec = custom_timeout if custom_timeout is not None else self.get_timeout_for_layer(layer)
         try:

@@ -102,12 +102,21 @@ class CacheManager:
             logger.warning(f"Cache get failed for scoped key {scoped_key}: {exc}")
             return None
 
-    async def set(self, key: str, value: Any, ttl_seconds: Optional[int] = None, tenant_id: str = "global", namespace: str = "default") -> None:
+    async def set(
+        self,
+        key: str,
+        value: Any,
+        ttl_seconds: Optional[int] = None,
+        tenant_id: str = "global",
+        namespace: str = "default",
+    ) -> None:
         """Generic cache set with TTL, tenant isolation, and namespace prefix."""
         scoped_key = f"{tenant_id}:{namespace}:{key}"
         ttl = ttl_seconds if ttl_seconds is not None else self._policy.ttl_seconds
         try:
-            serialized = CacheSerializer.serialize(value) if not isinstance(value, (str, bytes, int, float, bool)) else value
+            serialized = (
+                CacheSerializer.serialize(value) if not isinstance(value, (str, bytes, int, float, bool)) else value
+            )
             await self._backend.set(scoped_key, serialized, ttl)
             self._metrics.record_cache_write()
         except Exception as exc:

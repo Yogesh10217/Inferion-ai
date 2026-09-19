@@ -63,7 +63,9 @@ class ReliabilityOperationsOrchestrator:
         # Sub-engines
         self.reliability_engine = ReliabilityEngine(evidence_level=self.evidence_level)
         self.resilience_evaluator = ResilienceEvaluator(evidence_level=self.evidence_level)
-        self.chaos_engine = ChaosEngineeringEngine(evidence_collector=self.evidence_collector, evidence_level=self.evidence_level)
+        self.chaos_engine = ChaosEngineeringEngine(
+            evidence_collector=self.evidence_collector, evidence_level=self.evidence_level
+        )
         self.failure_injection_engine = FailureInjectionEngine(evidence_level=self.evidence_level)
         self.db_resilience_evaluator = DatabaseResilienceEvaluator(evidence_level=self.evidence_level)
         self.cache_resilience_evaluator = CacheResilienceEvaluator(evidence_level=self.evidence_level)
@@ -71,10 +73,14 @@ class ReliabilityOperationsOrchestrator:
         self.circuit_breaker = CircuitBreaker("core_api_breaker", evidence_level=self.evidence_level)
         self.retry_engine = RetryPolicyEngine(evidence_level=self.evidence_level)
         self.timeout_engine = TimeoutManagementEngine(evidence_level=self.evidence_level)
-        self.recovery_orchestrator = RecoveryOrchestrator(evidence_collector=self.evidence_collector, evidence_level=self.evidence_level)
+        self.recovery_orchestrator = RecoveryOrchestrator(
+            evidence_collector=self.evidence_collector, evidence_level=self.evidence_level
+        )
         self.dr_simulation_engine = DisasterRecoverySimulationEngine(evidence_level=self.evidence_level)
         self.failover_evaluator = FailoverEvaluator(evidence_level=self.evidence_level)
-        self.recovery_validation_engine = RecoveryValidationEngine(container=self.container, evidence_level=self.evidence_level)
+        self.recovery_validation_engine = RecoveryValidationEngine(
+            container=self.container, evidence_level=self.evidence_level
+        )
         self.audit_engine = RecoveryAuditEngine(evidence_level=self.evidence_level)
         self.metrics_calculator = ReliabilityMetricsCalculator(evidence_level=self.evidence_level)
         self.certification_engine = ReliabilityCertificationEngine(evidence_level=self.evidence_level)
@@ -136,11 +142,16 @@ class ReliabilityOperationsOrchestrator:
             event="pipeline_start",
             status="SUCCESS",
             evidence_level=self.evidence_level,
-            raw_payload={"real_production_configured": real_production_configured, "manager_validation": registry_validation},
+            raw_payload={
+                "real_production_configured": real_production_configured,
+                "manager_validation": registry_validation,
+            },
         )
 
         # 3. Evaluate Resilience & Health
-        db_res = self.db_resilience_evaluator.evaluate_database_resilience(real_production_executed=real_production_configured)
+        db_res = self.db_resilience_evaluator.evaluate_database_resilience(
+            real_production_executed=real_production_configured
+        )
         cache_res = self.cache_resilience_evaluator.evaluate_cache_resilience()
         net_res = self.network_resilience_evaluator.evaluate_network_resilience()
 

@@ -54,7 +54,9 @@ class IntegrationRiskManager:
         blast_radius_score: float = 20.0,
         is_destructive: bool = False,
     ) -> IntegrationRiskAssessment:
-        base_score = (system_criticality_score + action_sensitivity_score + data_sensitivity_score + blast_radius_score) / 4.0
+        base_score = (
+            system_criticality_score + action_sensitivity_score + data_sensitivity_score + blast_radius_score
+        ) / 4.0
         if is_destructive:
             base_score = max(base_score, 85.0)
 

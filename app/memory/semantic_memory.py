@@ -65,7 +65,9 @@ class SemanticMemory:
         self._facts[item.fact_id] = item
         return item
 
-    def update_fact(self, fact_id: str, fact: Optional[str] = None, importance_score: Optional[float] = None) -> SemanticMemoryItem:
+    def update_fact(
+        self, fact_id: str, fact: Optional[str] = None, importance_score: Optional[float] = None
+    ) -> SemanticMemoryItem:
         if fact_id not in self._facts:
             raise KeyError(f"Semantic fact '{fact_id}' not found")
         item = self._facts[fact_id]

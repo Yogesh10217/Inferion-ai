@@ -86,10 +86,14 @@ class AutonomousRemediationEngine:
         if risk_level in (RemediationRisk.HIGH, RemediationRisk.CRITICAL):
             plan.status = RemediationStatus.APPROVAL_REQUIRED
             plan.approval_request_id = f"rem_appr_{plan.plan_id[:8]}"
-            logger.warning(f"[REMEDIATION ENGINE] {risk_level.value} risk remediation '{plan.plan_id}' REQUIRES APPROVAL (Request ID: {plan.approval_request_id})")
+            logger.warning(
+                f"[REMEDIATION ENGINE] {risk_level.value} risk remediation '{plan.plan_id}' REQUIRES APPROVAL (Request ID: {plan.approval_request_id})"
+            )
         else:
             plan.status = RemediationStatus.APPROVED
-            logger.info(f"[REMEDIATION ENGINE] {risk_level.value} risk remediation '{plan.plan_id}' automatically approved for execution")
+            logger.info(
+                f"[REMEDIATION ENGINE] {risk_level.value} risk remediation '{plan.plan_id}' automatically approved for execution"
+            )
 
         self._plans[plan.plan_id] = plan
         return plan

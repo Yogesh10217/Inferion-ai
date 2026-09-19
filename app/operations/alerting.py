@@ -228,7 +228,9 @@ class AlertManager:
             if existing_alert.status == AlertStatus.ACTIVE:
                 existing_alert.deduplication_count += 1
                 existing_alert.updated_at = _now()
-                logger.info(f"[ALERT MANAGER] Deduplicated alert '{existing_id}' (Count: {existing_alert.deduplication_count})")
+                logger.info(
+                    f"[ALERT MANAGER] Deduplicated alert '{existing_id}' (Count: {existing_alert.deduplication_count})"
+                )
                 return existing_alert
 
         alert = LegacyAlert(

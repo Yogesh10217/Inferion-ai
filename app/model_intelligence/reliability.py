@@ -73,7 +73,9 @@ class ModelReliabilityManager:
         )
 
         self._assessments[assessment.assessment_id] = assessment
-        logger.info(f"[MODEL RELIABILITY] Assessed {model_id} (Tenant: {tenant_id}) Score: {overall:.2f} Resilient: {resilient}")
+        logger.info(
+            f"[MODEL RELIABILITY] Assessed {model_id} (Tenant: {tenant_id}) Score: {overall:.2f} Resilient: {resilient}"
+        )
         return assessment
 
     def get_latest_assessment(self, model_id: str, tenant_id: str) -> Optional[ModelReliabilityAssessment]:

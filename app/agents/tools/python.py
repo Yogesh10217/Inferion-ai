@@ -40,5 +40,5 @@ async def execute_python_code(code: str, context: AgentContext) -> Dict[str, Any
         "stderr": stderr_val,
         "result": local_scope.get("result"),
         "error": error_msg,
-        "success": error_msg is None
+        "success": error_msg is None,
     }

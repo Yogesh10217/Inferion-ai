@@ -44,6 +44,7 @@ class MemoryTool(BaseTool):
 
         try:
             from app.memory.memory_service import MemoryService
+
             ms = self.memory_service or MemoryService()
 
             if action == "save":

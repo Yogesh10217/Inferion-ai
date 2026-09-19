@@ -45,7 +45,7 @@ class PrivilegeCreepManager:
         current_count: int = 15,
         timeframe_days: int = 90,
     ) -> PrivilegeCreepAssessment:
-        growth_rate = ((current_count - initial_count) / max(1, initial_count))
+        growth_rate = (current_count - initial_count) / max(1, initial_count)
         has_creep = growth_rate > 1.0 and current_count > 10
         creep_score = min(1.0, max(0.0, growth_rate / 3.0))
 

@@ -18,6 +18,7 @@ from app.platform_contracts.redaction import SensitiveDataSanitizer
 
 class AccessEvidenceIntegrity(BaseModel):
     """Integrity calculation metadata."""
+
     sha256_hash: str
     verified: bool = True
     verified_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -25,6 +26,7 @@ class AccessEvidenceIntegrity(BaseModel):
 
 class AccessEvidence(BaseModel):
     """Single item of access evidence."""
+
     evidence_id: str = Field(default_factory=lambda: f"ev_{uuid.uuid4().hex[:8]}")
     evidence_type: str  # AUTHORIZATION_RECORD, CERTIFICATION_DECISION, REVIEW_DECISION, AUDIT_SIGNAL
     reference_id: str
@@ -34,6 +36,7 @@ class AccessEvidence(BaseModel):
 
 class AccessEvidenceBundle(BaseModel):
     """Immutable Access Evidence Bundle."""
+
     bundle_id: str = Field(default_factory=lambda: f"ev_bundle_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     title: str

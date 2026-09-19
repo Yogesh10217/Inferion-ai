@@ -49,19 +49,21 @@ class ProductionDeploymentExecutionResult:
     executed_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "deployment_id": self.deployment_id,
-            "target_id": self.target_id,
-            "environment": self.environment,
-            "artifact_digest": self.artifact_digest,
-            "git_revision": self.git_revision,
-            "state": self.state.value,
-            "authorized": self.authorized,
-            "certification": self.certification.sanitized_dict() if self.certification else None,
-            "blocking_reasons": self.blocking_reasons,
-            "evidence_records": self.evidence_records,
-            "executed_at": self.executed_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "deployment_id": self.deployment_id,
+                "target_id": self.target_id,
+                "environment": self.environment,
+                "artifact_digest": self.artifact_digest,
+                "git_revision": self.git_revision,
+                "state": self.state.value,
+                "authorized": self.authorized,
+                "certification": self.certification.sanitized_dict() if self.certification else None,
+                "blocking_reasons": self.blocking_reasons,
+                "evidence_records": self.evidence_records,
+                "executed_at": self.executed_at,
+            }
+        )
 
 
 class ProductionDeploymentExecutor:
@@ -169,14 +171,19 @@ class ProductionDeploymentExecutor:
 
         # 3. Artifact & Infrastructure Verification
         sm.transition_to(ProductionDeploymentState.ARTIFACT_VERIFYING, "Verifying immutable artifact identity")
-        sm.transition_to(ProductionDeploymentState.INFRASTRUCTURE_VALIDATING, "Validating target infrastructure readiness")
+        sm.transition_to(
+            ProductionDeploymentState.INFRASTRUCTURE_VALIDATING, "Validating target infrastructure readiness"
+        )
 
         # 4. Database & Backup Guards
         sm.transition_to(ProductionDeploymentState.DATABASE_VALIDATING, "Evaluating database deployment guard")
         from app.deployment.environment import EnvironmentManager
+
         env_mgr = EnvironmentManager()
         cfg = env_mgr.load_environment_config()
-        db_res = DatabaseDeploymentGuard.evaluate_database_guard(config=cfg, explicit_migration_authorized=explicit_migration_authorized)
+        db_res = DatabaseDeploymentGuard.evaluate_database_guard(
+            config=cfg, explicit_migration_authorized=explicit_migration_authorized
+        )
         if not db_res.preflight_ready:
             blocking_reasons.extend(db_res.blocking_reasons)
             sm.transition_to(ProductionDeploymentState.FAILED, "Database guard evaluation failed")
@@ -194,12 +201,16 @@ class ProductionDeploymentExecutor:
             )
 
         sm.transition_to(ProductionDeploymentState.BACKUP_VALIDATING, "Evaluating backup execution guard")
-        bk_res = BackupExecutionGuard.evaluate_backup_guard(is_production=target.is_production(), explicit_backup_authorized=explicit_backup_authorized)
+        bk_res = BackupExecutionGuard.evaluate_backup_guard(
+            is_production=target.is_production(), explicit_backup_authorized=explicit_backup_authorized
+        )
 
         # 5. Deployment Execution
         sm.transition_to(ProductionDeploymentState.DEPLOYMENT_PREPARING, "Preparing deployment execution plan")
         sm.transition_to(ProductionDeploymentState.DEPLOYMENT_EXECUTING, "Executing artifact deployment")
-        dep_res = adapter.deploy_artifact(artifact_digest=artifact_digest, release_manifest_id=authorization_record.release_candidate_id)
+        dep_res = adapter.deploy_artifact(
+            artifact_digest=artifact_digest, release_manifest_id=authorization_record.release_candidate_id
+        )
 
         if dep_res.get("status") == "NOT_EXECUTED":
             blocking_reasons.append(dep_res.get("reason", "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE"))
@@ -227,7 +238,9 @@ class ProductionDeploymentExecutor:
                 evidence_records=evidence_list,
             )
 
-        sm.transition_to(ProductionDeploymentState.DEPLOYMENT_STARTING, "Starting application runtime containers/services")
+        sm.transition_to(
+            ProductionDeploymentState.DEPLOYMENT_STARTING, "Starting application runtime containers/services"
+        )
 
         # 6. Health Probe Validation
         sm.transition_to(ProductionDeploymentState.HEALTH_VALIDATING, "Validating runtime health probe contract")
@@ -236,15 +249,21 @@ class ProductionDeploymentExecutor:
 
         # 7. Smoke Testing
         sm.transition_to(ProductionDeploymentState.SMOKE_TESTING, "Executing post-deployment smoke test suite")
-        smoke_res = ProductionSmokeTestExecutor.execute_smoke_test_suite(adapter=adapter, explicit_smoke_test_authorized=explicit_smoke_test_authorized)
+        smoke_res = ProductionSmokeTestExecutor.execute_smoke_test_suite(
+            adapter=adapter, explicit_smoke_test_authorized=explicit_smoke_test_authorized
+        )
         smoke_ok = smoke_res.passed
 
         if not smoke_ok:
             blocking_reasons.extend(smoke_res.blocking_reasons)
-            fail_rec = DeploymentFailureDetector.detect_failure("SMOKE_TEST_FAILURE", "Post-deployment smoke test execution failed", smoke_res.sanitized_dict())
+            fail_rec = DeploymentFailureDetector.detect_failure(
+                "SMOKE_TEST_FAILURE", "Post-deployment smoke test execution failed", smoke_res.sanitized_dict()
+            )
             sm.transition_to(ProductionDeploymentState.FAILED, "Smoke test failed")
             if fail_rec.rollback_required:
-                sm.transition_to(ProductionDeploymentState.ROLLBACK_REQUIRED, "Smoke test failure triggered rollback requirement")
+                sm.transition_to(
+                    ProductionDeploymentState.ROLLBACK_REQUIRED, "Smoke test failure triggered rollback requirement"
+                )
                 sm.transition_to(ProductionDeploymentState.ROLLBACK_EXECUTING, "Executing rollback procedure")
                 rb_res = adapter.rollback(previous_digest="previous_sha256_hash_reference")
                 sm.transition_to(ProductionDeploymentState.ROLLBACK_VALIDATING, "Validating rollback execution")
@@ -264,7 +283,9 @@ class ProductionDeploymentExecutor:
             )
 
         # 8. Progressive Delivery & Traffic Validation
-        sm.transition_to(ProductionDeploymentState.TRAFFIC_VALIDATING, "Orchestrating progressive delivery & traffic validation")
+        sm.transition_to(
+            ProductionDeploymentState.TRAFFIC_VALIDATING, "Orchestrating progressive delivery & traffic validation"
+        )
         plan = ProgressiveDeliveryEngine.create_delivery_plan(strategy=strategy)
 
         def _traffic_promoter(pct: int) -> Dict[str, Any]:
@@ -278,16 +299,27 @@ class ProductionDeploymentExecutor:
                 expected_artifact_digest=artifact_digest,
                 runtime_artifact_digest=artifact_digest,
             )
-            return {"valid": t_res.valid, "status": t_res.status.value, "errors": t_res.blocking_reasons, "metrics": metrics}
+            return {
+                "valid": t_res.valid,
+                "status": t_res.status.value,
+                "errors": t_res.blocking_reasons,
+                "metrics": metrics,
+            }
 
-        step_res = ProgressiveDeliveryEngine.execute_next_step(plan=plan, traffic_promoter_fn=_traffic_promoter, validation_fn=_traffic_validator)
+        step_res = ProgressiveDeliveryEngine.execute_next_step(
+            plan=plan, traffic_promoter_fn=_traffic_promoter, validation_fn=_traffic_validator
+        )
         traffic_ok = step_res.validated
 
         if not traffic_ok:
             blocking_reasons.extend(step_res.errors)
-            fail_rec = DeploymentFailureDetector.detect_failure("TRAFFIC_DEGRADATION", "Traffic validation failed during progressive promotion", step_res.metrics)
+            fail_rec = DeploymentFailureDetector.detect_failure(
+                "TRAFFIC_DEGRADATION", "Traffic validation failed during progressive promotion", step_res.metrics
+            )
             sm.transition_to(ProductionDeploymentState.FAILED, "Traffic validation failed")
-            sm.transition_to(ProductionDeploymentState.ROLLBACK_REQUIRED, "Traffic failure triggered rollback requirement")
+            sm.transition_to(
+                ProductionDeploymentState.ROLLBACK_REQUIRED, "Traffic failure triggered rollback requirement"
+            )
             sm.transition_to(ProductionDeploymentState.ROLLBACK_EXECUTING, "Executing rollback procedure")
             rb_res = adapter.rollback(previous_digest="previous_sha256_hash_reference")
             sm.transition_to(ProductionDeploymentState.ROLLBACK_VALIDATING, "Validating rollback execution")
@@ -308,9 +340,16 @@ class ProductionDeploymentExecutor:
 
         # 9. Runtime Validation & Certification
         sm.transition_to(ProductionDeploymentState.RUNTIME_VALIDATING, "Performing final empirical runtime validation")
-        sm.transition_to(ProductionDeploymentState.DEPLOYMENT_VALIDATED, "Deployment execution & runtime validation completed cleanly")
+        sm.transition_to(
+            ProductionDeploymentState.DEPLOYMENT_VALIDATED,
+            "Deployment execution & runtime validation completed cleanly",
+        )
 
-        adapter_type = "SIMULATION" if target.provider == "SIMULATION" else ("CONTAINER" if not target.is_production() else "PRODUCTION")
+        adapter_type = (
+            "SIMULATION"
+            if target.provider == "SIMULATION"
+            else ("CONTAINER" if not target.is_production() else "PRODUCTION")
+        )
         cert = ProductionRuntimeCertificationEngine.certify_runtime(
             deployment_id=dep_id,
             artifact_digest=artifact_digest,

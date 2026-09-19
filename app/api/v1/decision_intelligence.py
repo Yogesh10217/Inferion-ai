@@ -40,7 +40,11 @@ def get_tenant_id(x_tenant_id: Optional[str] = Header("default", alias="X-Tenant
 def create_decision(request: DecisionCreateRequest, tenant_id: str = Depends(get_tenant_id)) -> DecisionResponse:
     """Create a new enterprise decision request in PROPOSED state."""
     try:
-        dtype = DecisionType(request.decision_type) if request.decision_type in DecisionType.__members__ else DecisionType.CROSS_DOMAIN
+        dtype = (
+            DecisionType(request.decision_type)
+            if request.decision_type in DecisionType.__members__
+            else DecisionType.CROSS_DOMAIN
+        )
         dec = _decision_manager.decision_manager.create_decision(
             tenant_id=tenant_id,
             title=request.title,
@@ -104,7 +108,9 @@ def transition_decision_state(
     """Transition decision lifecycle state with strict state machine validation."""
     try:
         target = DecisionLifecycleState(request.target_state)
-        dec = _decision_manager.decision_manager.update_decision_state(decision_id, tenant_id, target, reason=request.reason)
+        dec = _decision_manager.decision_manager.update_decision_state(
+            decision_id, tenant_id, target, reason=request.reason
+        )
         return DecisionResponse(
             id=dec.decision_id,
             tenant_id=dec.tenant_id,
@@ -201,7 +207,9 @@ def simulate_decision(
 
 
 @router.get("/{decision_id}/reproducibility", response_model=DecisionReproducibilityRecordResponse)
-def get_reproducibility_record(decision_id: str, tenant_id: str = Depends(get_tenant_id)) -> DecisionReproducibilityRecordResponse:
+def get_reproducibility_record(
+    decision_id: str, tenant_id: str = Depends(get_tenant_id)
+) -> DecisionReproducibilityRecordResponse:
     """Get decision reproducibility record and verify integrity."""
     try:
         rec = _decision_manager.reproducibility_engine.get_reproducibility_record(decision_id, tenant_id)
@@ -225,7 +233,9 @@ def get_reproducibility_record(decision_id: str, tenant_id: str = Depends(get_te
 
 
 @router.post("/{decision_id}/approve", status_code=status.HTTP_200_OK)
-def approve_decision(decision_id: str, request: DecisionApprovalRequest, tenant_id: str = Depends(get_tenant_id)) -> Dict[str, Any]:
+def approve_decision(
+    decision_id: str, request: DecisionApprovalRequest, tenant_id: str = Depends(get_tenant_id)
+) -> Dict[str, Any]:
     """Submit human approval for a decision requiring review."""
     try:
         rec = _decision_manager.approval_manager.submit_approval(
@@ -245,7 +255,9 @@ def approve_decision(decision_id: str, request: DecisionApprovalRequest, tenant_
 
 
 @router.post("/flow", status_code=status.HTTP_200_OK)
-def run_full_flow(title: str = "Enterprise Architecture Modernization", tenant_id: str = Depends(get_tenant_id)) -> Dict[str, Any]:
+def run_full_flow(
+    title: str = "Enterprise Architecture Modernization", tenant_id: str = Depends(get_tenant_id)
+) -> Dict[str, Any]:
     """Run full end-to-end decision intelligence lifecycle flow."""
     try:
         return _decision_manager.run_full_decision_flow(tenant_id=tenant_id, title=title)

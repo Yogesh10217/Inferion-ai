@@ -51,7 +51,9 @@ class CompensationManager:
     def create_saga(self, execution_id: str, steps: List[SagaStep], tenant_id: str = "global") -> SagaTransaction:
         saga = SagaTransaction(execution_id=execution_id, steps=steps, tenant_id=tenant_id)
         self._sagas[saga.saga_id] = saga
-        logger.info(f"[COMPENSATION MANAGER] Registered Saga '{saga.saga_id}' with {len(steps)} steps for execution '{execution_id}'")
+        logger.info(
+            f"[COMPENSATION MANAGER] Registered Saga '{saga.saga_id}' with {len(steps)} steps for execution '{execution_id}'"
+        )
         return saga
 
     def mark_step_executed(self, saga_id: str, step_id: str) -> SagaStep:
@@ -71,10 +73,14 @@ class CompensationManager:
 
         for s in executed_steps:
             s.status = SagaStepStatus.COMPENSATED
-            logger.warning(f"[COMPENSATION MANAGER] Executed compensation action '{s.compensation_action}' for step '{s.step_id}'")
+            logger.warning(
+                f"[COMPENSATION MANAGER] Executed compensation action '{s.compensation_action}' for step '{s.step_id}'"
+            )
 
         saga.is_compensated = True
-        logger.warning(f"[COMPENSATION MANAGER] Saga '{saga_id}' fully COMPENSATED ({len(executed_steps)} steps reversed)")
+        logger.warning(
+            f"[COMPENSATION MANAGER] Saga '{saga_id}' fully COMPENSATED ({len(executed_steps)} steps reversed)"
+        )
         return saga
 
     def get_saga(self, saga_id: str) -> SagaTransaction:

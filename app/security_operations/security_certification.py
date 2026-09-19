@@ -152,21 +152,34 @@ class SecurityCertificationEngine:
             )
 
         # Certification Requirements
-        has_blocking_policy = policy_result.is_blocking if hasattr(policy_result, 'is_blocking') else (policy_result.action == "BLOCK")
+        has_blocking_policy = (
+            policy_result.is_blocking if hasattr(policy_result, "is_blocking") else (policy_result.action == "BLOCK")
+        )
         has_crit_vulns = vulnerability_assessment.critical_count > 0
         has_audit_tampering = not audit_integrity.is_valid
-        has_blocking_risk = risk_assessment.is_blocking if hasattr(risk_assessment, 'is_blocking') else (risk_assessment.overall_risk_level == "CRITICAL")
-        container_blocked = getattr(container_security, 'classification', '') == "CONTAINER_SECURITY_BLOCKED"
+        has_blocking_risk = (
+            risk_assessment.is_blocking
+            if hasattr(risk_assessment, "is_blocking")
+            else (risk_assessment.overall_risk_level == "CRITICAL")
+        )
+        container_blocked = getattr(container_security, "classification", "") == "CONTAINER_SECURITY_BLOCKED"
 
         if has_blocking_policy or has_crit_vulns or has_audit_tampering or has_blocking_risk or container_blocked:
             decision = SecurityCertificationDecision.SECURITY_BLOCKED.value
             is_certified = False
             summary = "Security certification BLOCKED due to critical security policy, vulnerability, or audit integrity failure."
-        elif getattr(policy_result, 'overall_action', policy_result.action) == SecurityPolicyAction.MANUAL_REVIEW_REQUIRED or getattr(risk_assessment, 'overall_policy_action', None) == RiskPolicyAction.MANUAL_REVIEW_REQUIRED:
+        elif (
+            getattr(policy_result, "overall_action", policy_result.action)
+            == SecurityPolicyAction.MANUAL_REVIEW_REQUIRED
+            or getattr(risk_assessment, "overall_policy_action", None) == RiskPolicyAction.MANUAL_REVIEW_REQUIRED
+        ):
             decision = SecurityCertificationDecision.SECURITY_MANUAL_REVIEW_REQUIRED.value
             is_certified = False
             summary = "Security manual review required prior to release candidate signoff."
-        elif getattr(policy_result, 'overall_action', policy_result.action) == SecurityPolicyAction.WARN or vulnerability_assessment.high_count > 0:
+        elif (
+            getattr(policy_result, "overall_action", policy_result.action) == SecurityPolicyAction.WARN
+            or vulnerability_assessment.high_count > 0
+        ):
             decision = SecurityCertificationDecision.SECURITY_CERTIFIED_WITH_WARNINGS.value
             is_certified = True
             summary = "Platform security certified with non-blocking security warnings."
@@ -185,7 +198,11 @@ class SecurityCertificationEngine:
             truthfulness_matrix=truthfulness_matrix,
             sha256_fingerprint=fp,
             details={
-                "posture_score": posture_result.score if hasattr(posture_result, 'score') else getattr(posture_result, 'security_score', 0),
+                "posture_score": (
+                    posture_result.score
+                    if hasattr(posture_result, "score")
+                    else getattr(posture_result, "security_score", 0)
+                ),
                 "critical_vuln_count": vulnerability_assessment.critical_count,
                 "audit_integrity_valid": audit_integrity.is_valid,
             },

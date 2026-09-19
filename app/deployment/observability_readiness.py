@@ -23,18 +23,20 @@ class ObservabilityReleaseReadinessResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status,
-            "logging_ready": self.logging_ready,
-            "structured_logging_active": self.structured_logging_active,
-            "secret_sanitization_enabled": self.secret_sanitization_enabled,
-            "health_endpoints_configured": self.health_endpoints_configured,
-            "metrics_endpoint_active": self.metrics_endpoint_active,
-            "prometheus_integration_ready": self.prometheus_integration_ready,
-            "alert_configuration_ready": self.alert_configuration_ready,
-            "classifications": self.classifications,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status,
+                "logging_ready": self.logging_ready,
+                "structured_logging_active": self.structured_logging_active,
+                "secret_sanitization_enabled": self.secret_sanitization_enabled,
+                "health_endpoints_configured": self.health_endpoints_configured,
+                "metrics_endpoint_active": self.metrics_endpoint_active,
+                "prometheus_integration_ready": self.prometheus_integration_ready,
+                "alert_configuration_ready": self.alert_configuration_ready,
+                "classifications": self.classifications,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class ObservabilityReleaseEvaluator:

@@ -48,5 +48,7 @@ class CostAttributionEngine:
             allocated_shared_cost=shared_alloc,
             total_attributed_cost=total,
         )
-        logger.info(f"[COST ATTRIBUTION] Attributed tenant '{tenant_id}': Direct = ${direct}, Shared = ${shared_alloc}, Total = ${total}")
+        logger.info(
+            f"[COST ATTRIBUTION] Attributed tenant '{tenant_id}': Direct = ${direct}, Shared = ${shared_alloc}, Total = ${total}"
+        )
         return summary

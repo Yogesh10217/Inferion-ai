@@ -14,10 +14,10 @@ class JobQueue:
     """Production job queue with priority ordering, deduplication, and dead-letter isolation."""
 
     def __init__(self) -> None:
-        self._jobs: Dict[str, Job] = {}                 # job_id -> Job
-        self._idempotency_map: Dict[str, str] = {}      # idempotency_key -> job_id
-        self._queue: List[tuple] = []                  # Heap tuple: (-priority, created_at, job_id)
-        self._dead_letter_queue: List[Job] = []        # Dead letter store
+        self._jobs: Dict[str, Job] = {}  # job_id -> Job
+        self._idempotency_map: Dict[str, str] = {}  # idempotency_key -> job_id
+        self._queue: List[tuple] = []  # Heap tuple: (-priority, created_at, job_id)
+        self._dead_letter_queue: List[Job] = []  # Dead letter store
 
     def enqueue(self, job: Job) -> Job:
         """Enqueue a new job with idempotency deduplication."""
@@ -102,13 +102,17 @@ class JobQueue:
             job.status = JobStatus.DEAD_LETTER
             job.completed_at = datetime.now(timezone.utc)
             self._dead_letter_queue.append(job)
-            logger.error(f"[JOB QUEUE] Job '{job_id}' max attempts reached ({job.attempts_made}/{job.max_attempts}). Moved to DEAD_LETTER queue")
+            logger.error(
+                f"[JOB QUEUE] Job '{job_id}' max attempts reached ({job.attempts_made}/{job.max_attempts}). Moved to DEAD_LETTER queue"
+            )
         else:
             job.status = JobStatus.RETRYING
-            backoff_sec = 2.0 ** job.attempts_made
+            backoff_sec = 2.0**job.attempts_made
             job.scheduled_at = datetime.now(timezone.utc) + timedelta(seconds=backoff_sec)
             job.status = JobStatus.QUEUED
-            logger.warning(f"[JOB QUEUE] Job '{job_id}' failed (attempt {job.attempts_made}/{job.max_attempts}). Retrying in {backoff_sec}s...")
+            logger.warning(
+                f"[JOB QUEUE] Job '{job_id}' failed (attempt {job.attempts_made}/{job.max_attempts}). Retrying in {backoff_sec}s..."
+            )
 
         return job
 

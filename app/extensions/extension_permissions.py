@@ -32,13 +32,21 @@ class ExtensionPermissionEngine:
         req_perms = manifest.required_permissions
 
         if requested_action == "network:external" and not manifest.runtime_requirements.allow_network_access:
-            raise ExtensionSecurityViolationException("Unpermitted action: Network access is disabled in extension manifest")
+            raise ExtensionSecurityViolationException(
+                "Unpermitted action: Network access is disabled in extension manifest"
+            )
 
         if requested_action == "filesystem:write" and not manifest.runtime_requirements.allow_filesystem_access:
-            raise ExtensionSecurityViolationException("Unpermitted action: Filesystem write access is disabled in extension manifest")
+            raise ExtensionSecurityViolationException(
+                "Unpermitted action: Filesystem write access is disabled in extension manifest"
+            )
 
         if requested_action in ("secret:read", "admin:all") and requested_action not in req_perms:
-            raise ExtensionSecurityViolationException(f"Permission escalation blocked: Extension lacks required permission '{requested_action}'")
+            raise ExtensionSecurityViolationException(
+                f"Permission escalation blocked: Extension lacks required permission '{requested_action}'"
+            )
 
-        logger.info(f"[EXTENSION PERMISSION] Authorized action '{requested_action}' for extension '{extension.extension_id}'")
+        logger.info(
+            f"[EXTENSION PERMISSION] Authorized action '{requested_action}' for extension '{extension.extension_id}'"
+        )
         return True

@@ -39,13 +39,16 @@ class DataSourceCapability(str, Enum):
 
 class DataSource(BaseModel):
     """Reference to enterprise data source (zero credentials / secrets stored)."""
+
     source_id: str
     name: str
     tenant_id: str
     source_type: DataSourceType
     status: DataSourceStatus = DataSourceStatus.CONNECTED
     connection_endpoint: str
-    capabilities: List[DataSourceCapability] = Field(default_factory=lambda: [DataSourceCapability.READ, DataSourceCapability.PROFILE])
+    capabilities: List[DataSourceCapability] = Field(
+        default_factory=lambda: [DataSourceCapability.READ, DataSourceCapability.PROFILE]
+    )
     sanitized_metadata: Dict[str, Any] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

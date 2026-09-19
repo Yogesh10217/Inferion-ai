@@ -76,7 +76,9 @@ class SLIEvaluator:
             ServiceLevelIndicator("Liveness Probe Indicator", SLIType.LIVE_PROBE, target_value=1.0),
             ServiceLevelIndicator("Readiness Probe Indicator", SLIType.READY_PROBE, target_value=1.0),
             ServiceLevelIndicator("Health Probe Indicator", SLIType.HEALTH_PROBE, target_value=1.0),
-            ServiceLevelIndicator("Dependency Availability Indicator", SLIType.DEPENDENCY_AVAILABILITY, target_value=1.0),
+            ServiceLevelIndicator(
+                "Dependency Availability Indicator", SLIType.DEPENDENCY_AVAILABILITY, target_value=1.0
+            ),
         ]
 
     def evaluate(self, observation: ObservationResult) -> List[SLIResult]:
@@ -115,10 +117,11 @@ class SLIEvaluator:
                 observed = 1.0 if health_m.get("health", True) else 0.0
                 satisfactory = observed >= ind.target_value
             elif ind.sli_type == SLIType.DEPENDENCY_AVAILABILITY:
-                dep_ok = all(
-                    isinstance(v, dict) and v.get("status") in ("HEALTHY", "AVAILABLE")
-                    for v in dep_m.values()
-                ) if dep_m else True
+                dep_ok = (
+                    all(isinstance(v, dict) and v.get("status") in ("HEALTHY", "AVAILABLE") for v in dep_m.values())
+                    if dep_m
+                    else True
+                )
                 observed = 1.0 if dep_ok else 0.0
                 satisfactory = observed >= ind.target_value
 

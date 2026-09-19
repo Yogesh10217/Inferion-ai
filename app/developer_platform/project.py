@@ -74,7 +74,9 @@ class ProjectManager:
             raise ProjectNotFoundException(project_id)
         return proj
 
-    def list_projects(self, tenant_id: Optional[str] = None, developer_id: Optional[str] = None) -> List[DeveloperProject]:
+    def list_projects(
+        self, tenant_id: Optional[str] = None, developer_id: Optional[str] = None
+    ) -> List[DeveloperProject]:
         res = [p for p in self._projects.values() if p.status != ProjectStatus.DELETED]
         if tenant_id:
             res = [r for r in res if r.tenant_id == tenant_id]

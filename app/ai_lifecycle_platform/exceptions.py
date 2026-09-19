@@ -9,7 +9,9 @@ class CrossTenantLifecycleAccessException(AILifecycleException):
     """Raised when an operation attempts to access resources belonging to another tenant."""
 
     def __init__(self, tenant_id: str, target_tenant_id: str) -> None:
-        super().__init__(f"Tenant '{tenant_id}' unauthorized to access lifecycle resource of tenant '{target_tenant_id}'.")
+        super().__init__(
+            f"Tenant '{tenant_id}' unauthorized to access lifecycle resource of tenant '{target_tenant_id}'."
+        )
         self.tenant_id = tenant_id
         self.target_tenant_id = target_tenant_id
 
@@ -100,7 +102,9 @@ class ArtifactIntegrityException(AILifecycleException):
     """Raised when artifact SHA-256 fingerprint validation fails."""
 
     def __init__(self, artifact_id: str, expected_hash: str, actual_hash: str) -> None:
-        super().__init__(f"Artifact integrity check failed for '{artifact_id}'. Expected {expected_hash}, got {actual_hash}.")
+        super().__init__(
+            f"Artifact integrity check failed for '{artifact_id}'. Expected {expected_hash}, got {actual_hash}."
+        )
         self.artifact_id = artifact_id
         self.expected_hash = expected_hash
         self.actual_hash = actual_hash

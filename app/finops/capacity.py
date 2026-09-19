@@ -43,5 +43,7 @@ class CapacityPlanner:
                 reason="Cache memory underutilized (25.0%)",
             ),
         ]
-        logger.info(f"[CAPACITY PLANNER] Analyzed capacity for tenant '{tenant_id}': Generated {len(recs)} recommendations")
+        logger.info(
+            f"[CAPACITY PLANNER] Analyzed capacity for tenant '{tenant_id}': Generated {len(recs)} recommendations"
+        )
         return recs

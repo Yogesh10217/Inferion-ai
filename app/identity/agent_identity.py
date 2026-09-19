@@ -51,7 +51,9 @@ class AgentIdentityManager:
         tenant_id: str = "global",
         boundary: Optional[AgentPermissionBoundary] = None,
     ) -> DelegatedAuthorization:
-        del_bnd = boundary or AgentPermissionBoundary(agent_id=agent_id, tenant_id=tenant_id, allowed_scopes=delegated_scopes)
+        del_bnd = boundary or AgentPermissionBoundary(
+            agent_id=agent_id, tenant_id=tenant_id, allowed_scopes=delegated_scopes
+        )
 
         delegation = DelegatedAuthorization(
             user_identity_id=user_identity_id,
@@ -61,7 +63,9 @@ class AgentIdentityManager:
             boundary=del_bnd,
         )
         self._delegations[delegation.delegation_id] = delegation
-        logger.info(f"[AGENT IDENTITY] Delegated scopes {delegated_scopes} from '{user_identity_id}' to Agent '{agent_id}' (Tenant: {tenant_id})")
+        logger.info(
+            f"[AGENT IDENTITY] Delegated scopes {delegated_scopes} from '{user_identity_id}' to Agent '{agent_id}' (Tenant: {tenant_id})"
+        )
         return delegation
 
     def validate_agent_action(
@@ -74,12 +78,16 @@ class AgentIdentityManager:
 
         # 1. Action explicitly disallowed
         if requested_action in del_auth.boundary.disallowed_actions:
-            logger.warning(f"[AGENT IDENTITY] Agent '{del_auth.agent_id}' blocked from disallowed action '{requested_action}'")
+            logger.warning(
+                f"[AGENT IDENTITY] Agent '{del_auth.agent_id}' blocked from disallowed action '{requested_action}'"
+            )
             raise AgentBoundaryViolationException(del_auth.agent_id, requested_action)
 
         # 2. Scope check: Requested scope must be within delegated scopes
         if requested_scope not in del_auth.delegated_scopes:
-            logger.warning(f"[AGENT IDENTITY] Agent '{del_auth.agent_id}' requested scope '{requested_scope}' outside delegated boundary {del_auth.delegated_scopes}")
+            logger.warning(
+                f"[AGENT IDENTITY] Agent '{del_auth.agent_id}' requested scope '{requested_scope}' outside delegated boundary {del_auth.delegated_scopes}"
+            )
             raise AgentBoundaryViolationException(del_auth.agent_id, f"scope:{requested_scope}")
 
         return True

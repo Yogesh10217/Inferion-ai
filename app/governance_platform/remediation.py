@@ -85,11 +85,15 @@ class ControlEnforcementEngine:
         if risk_level in (RemediationRisk.HIGH, RemediationRisk.CRITICAL) and not is_emergency:
             status = RemediationStatus.APPROVAL_REQUIRED
             req_id = f"appr_grem_{uuid.uuid4().hex[:8]}"
-            logger.warning(f"[CONTROL ENFORCEMENT] Remediation for '{target_resource_id}' ({action.value}) requires approval (Request ID: {req_id})")
+            logger.warning(
+                f"[CONTROL ENFORCEMENT] Remediation for '{target_resource_id}' ({action.value}) requires approval (Request ID: {req_id})"
+            )
         else:
             status = RemediationStatus.APPROVED
             req_id = None
-            logger.info(f"[CONTROL ENFORCEMENT] Remediation for '{target_resource_id}' ({action.value}) auto-approved under {risk_level.value} risk policy")
+            logger.info(
+                f"[CONTROL ENFORCEMENT] Remediation for '{target_resource_id}' ({action.value}) auto-approved under {risk_level.value} risk policy"
+            )
 
         rem = GovernanceRemediation(
             target_resource_id=target_resource_id,
@@ -126,7 +130,9 @@ class ControlEnforcementEngine:
             logger.warning(f"[REMEDIATION EXEC] Triggered deployment rollback for '{rem.target_resource_id}'")
 
         rem.status = RemediationStatus.COMPLETED
-        logger.info(f"[CONTROL ENFORCEMENT] Completed remediation '{remediation_id}' ({rem.action.value}) on '{rem.target_resource_id}'")
+        logger.info(
+            f"[CONTROL ENFORCEMENT] Completed remediation '{remediation_id}' ({rem.action.value}) on '{rem.target_resource_id}'"
+        )
         return rem
 
     def approve_remediation(self, remediation_id: str) -> GovernanceRemediation:

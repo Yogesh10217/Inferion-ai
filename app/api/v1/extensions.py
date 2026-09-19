@@ -32,7 +32,9 @@ class RollbackExtensionSchema(BaseModel):
 @router.post("", status_code=status.HTTP_201_CREATED)
 async def register_extension(data: RegisterExtensionSchema, mgr: ExtensionManager = Depends(get_extension_framework)):
     try:
-        ext = mgr.loader.load_extension_from_manifest(data.manifest, tenant_id=data.tenant_id, developer_id=data.developer_id)
+        ext = mgr.loader.load_extension_from_manifest(
+            data.manifest, tenant_id=data.tenant_id, developer_id=data.developer_id
+        )
         mgr.registry.register_extension(ext)
         return {"status": "registered", "extension": ext.model_dump()}
     except ExtensionFrameworkException as e:
@@ -40,7 +42,11 @@ async def register_extension(data: RegisterExtensionSchema, mgr: ExtensionManage
 
 
 @router.get("")
-async def list_extensions(tenant_id: Optional[str] = None, extension_type: Optional[str] = None, mgr: ExtensionManager = Depends(get_extension_framework)):
+async def list_extensions(
+    tenant_id: Optional[str] = None,
+    extension_type: Optional[str] = None,
+    mgr: ExtensionManager = Depends(get_extension_framework),
+):
     exts = mgr.registry.list_extensions(tenant_id=tenant_id)
     return {"extensions": [e.model_dump() for e in exts]}
 
@@ -85,7 +91,9 @@ async def disable_extension(id: str, mgr: ExtensionManager = Depends(get_extensi
 
 
 @router.post("/{id}/rollback")
-async def rollback_extension(id: str, data: RollbackExtensionSchema, mgr: ExtensionManager = Depends(get_extension_framework)):
+async def rollback_extension(
+    id: str, data: RollbackExtensionSchema, mgr: ExtensionManager = Depends(get_extension_framework)
+):
     try:
         ext = mgr.registry.get_extension(id)
         mgr.lifecycle_manager.rollback_extension(ext, data.target_version)

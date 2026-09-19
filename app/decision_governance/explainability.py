@@ -72,20 +72,26 @@ class DecisionExplainabilityManager:
             decision_id=decision_id,
             why_summary=why_summary,
             expected_outcome=expected_outcome,
-            why_not_alternatives=why_not_alternatives or [
+            why_not_alternatives=why_not_alternatives
+            or [
                 "Alternative A (Status Quo): Retains higher operational risk and cost.",
                 "Alternative B (Aggressive): Exceeds risk threshold for production workloads.",
             ],
-            evidence=evidence or [
-                ExplanationEvidence(source="telemetry_metrics", summary="Resource utilization spikes detected at peak load"),
+            evidence=evidence
+            or [
+                ExplanationEvidence(
+                    source="telemetry_metrics", summary="Resource utilization spikes detected at peak load"
+                ),
                 ExplanationEvidence(source="finops_ledger", summary="Cost budget remains within 80% allocation limit"),
             ],
-            assumptions=assumptions or [
+            assumptions=assumptions
+            or [
                 "System traffic projected to follow normal weekly curve",
                 "Downstream dependencies remain available",
             ],
             key_risks=key_risks or ["Transient network latency during configuration update"],
-            tradeoffs=tradeoffs or [
+            tradeoffs=tradeoffs
+            or [
                 ExplanationTradeoff(
                     chosen_path="Automated cost optimization",
                     alternative_path="Manual review",

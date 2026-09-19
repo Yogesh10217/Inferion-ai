@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 
 class AccessGraphNode(BaseModel):
     """Node in the analytical access graph."""
+
     node_id: str
     tenant_id: str
     node_type: str  # IDENTITY, ROLE, APPLICATION, AGENT, TOOL, SENSITIVE_RESOURCE, DATASET, KNOWLEDGE_SOURCE
@@ -18,6 +19,7 @@ class AccessGraphNode(BaseModel):
 
 class AccessGraphEdge(BaseModel):
     """Edge in the analytical access graph."""
+
     edge_id: str = Field(default_factory=lambda: f"edge_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     source_node_id: str
@@ -29,6 +31,7 @@ class AccessGraphEdge(BaseModel):
 
 class AccessGraphPath(BaseModel):
     """Path traversed in the access graph."""
+
     tenant_id: str
     source_node_id: str
     target_node_id: str
@@ -40,6 +43,7 @@ class AccessGraphPath(BaseModel):
 
 class AccessGraph(BaseModel):
     """Analytical Access Graph Representation."""
+
     tenant_id: str
     nodes: Dict[str, AccessGraphNode] = Field(default_factory=dict)
     edges: List[AccessGraphEdge] = Field(default_factory=list)
@@ -60,7 +64,12 @@ class AccessGraphTraversal:
     def find_paths(self, start_node_id: str, end_node_id: str, max_depth: int = 5) -> List[AccessGraphPath]:
         paths: List[AccessGraphPath] = []
 
-        def dfs(current_id: str, current_nodes: List[AccessGraphNode], current_edges: List[AccessGraphEdge], visited: Set[str]):
+        def dfs(
+            current_id: str,
+            current_nodes: List[AccessGraphNode],
+            current_edges: List[AccessGraphEdge],
+            visited: Set[str],
+        ):
             if current_id == end_node_id:
                 path_obj = AccessGraphPath(
                     tenant_id=self.graph.tenant_id,
@@ -105,7 +114,9 @@ class AccessGraphManager:
             self._graphs[tenant_id] = AccessGraph(tenant_id=tenant_id)
         return self._graphs[tenant_id]
 
-    def add_node(self, tenant_id: str, node_id: str, node_type: str, label: str, attributes: Optional[Dict[str, Any]] = None) -> AccessGraphNode:
+    def add_node(
+        self, tenant_id: str, node_id: str, node_type: str, label: str, attributes: Optional[Dict[str, Any]] = None
+    ) -> AccessGraphNode:
         graph = self.get_or_create_graph(tenant_id)
         node = AccessGraphNode(
             node_id=node_id,
@@ -118,7 +129,9 @@ class AccessGraphManager:
         graph.updated_at = datetime.now(timezone.utc)
         return node
 
-    def add_edge(self, tenant_id: str, source_node_id: str, target_node_id: str, relationship_type: str, is_direct: bool = True) -> AccessGraphEdge:
+    def add_edge(
+        self, tenant_id: str, source_node_id: str, target_node_id: str, relationship_type: str, is_direct: bool = True
+    ) -> AccessGraphEdge:
         graph = self.get_or_create_graph(tenant_id)
         edge = AccessGraphEdge(
             tenant_id=tenant_id,

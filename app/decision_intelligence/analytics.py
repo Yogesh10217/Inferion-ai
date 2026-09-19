@@ -27,7 +27,9 @@ class DecisionReport(BaseModel):
 class DecisionAnalyticsEngine:
     """Generates tenant-isolated decision intelligence analytics reports."""
 
-    def generate_report(self, tenant_id: str, total_count: int = 1, approved_count: int = 1, trust_score: float = 90.0) -> DecisionReport:
+    def generate_report(
+        self, tenant_id: str, total_count: int = 1, approved_count: int = 1, trust_score: float = 90.0
+    ) -> DecisionReport:
         insights = [
             DecisionInsight(
                 title="Enterprise Decision Posture",

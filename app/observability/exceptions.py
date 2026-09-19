@@ -9,7 +9,9 @@ LLMEngineException = AppException
 class ObservabilityException(AppException):
     """Base exception for all observability subsystem errors."""
 
-    def __init__(self, message: str, status_code: int = 500, details: dict | None = None, code: str = "observability_error") -> None:
+    def __init__(
+        self, message: str, status_code: int = 500, details: dict | None = None, code: str = "observability_error"
+    ) -> None:
         super().__init__(status_code=status_code, code=code, message=message, details=details)
 
 

@@ -112,11 +112,13 @@ class AgentContextManager:
                     items.append(ctx_item)
 
                     ref_id = item_dict.get("item_id", f"kitem_{idx}")
-                    references.append(AgentContextReference(
-                        source_subsystem="KNOWLEDGE_INTELLIGENCE",
-                        external_entity_id=ref_id,
-                        description=f"Knowledge retrieval for '{query}'",
-                    ))
+                    references.append(
+                        AgentContextReference(
+                            source_subsystem="KNOWLEDGE_INTELLIGENCE",
+                            external_entity_id=ref_id,
+                            description=f"Knowledge retrieval for '{query}'",
+                        )
+                    )
             except Exception:
                 pass
 

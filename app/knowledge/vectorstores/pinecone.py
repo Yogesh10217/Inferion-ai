@@ -31,7 +31,7 @@ class PineconeStore(VectorStore):
         query_vector: List[float],
         collection_name: str,
         top_k: int = 10,
-        filter_expr: Optional[Dict[str, Any]] = None
+        filter_expr: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """Search Pinecone index for similar vectors."""
         logger.info(f"Searching Pinecone index '{collection_name}' for top {top_k} results")

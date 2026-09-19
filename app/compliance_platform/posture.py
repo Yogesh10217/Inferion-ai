@@ -25,9 +25,9 @@ class PostureDimension(str, Enum):
 
 class PostureBand(str, Enum):
     HIGH_ASSURANCE = "HIGH_ASSURANCE"  # 90-100
-    ASSURED = "ASSURED"               # 70-89
-    DEGRADED = "DEGRADED"             # 50-69
-    NON_COMPLIANT = "NON_COMPLIANT"   # <50
+    ASSURED = "ASSURED"  # 70-89
+    DEGRADED = "DEGRADED"  # 50-69
+    NON_COMPLIANT = "NON_COMPLIANT"  # <50
 
 
 class CompliancePosture(BaseModel):
@@ -95,7 +95,8 @@ class CompliancePostureManager:
             posture_band=band,
             dimension_scores=dim_scores,
             has_critical_failure=has_critical_finding,
-            critical_failures=critical_finding_details or ([] if not has_critical_finding else ["Critical Compliance Finding Active"]),
+            critical_failures=critical_finding_details
+            or ([] if not has_critical_finding else ["Critical Compliance Finding Active"]),
         )
         self._posture_cache[tenant_id] = posture
         return posture

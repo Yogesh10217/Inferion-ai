@@ -41,7 +41,11 @@ class ResilienceAnalyticsEngine:
             AnalyticsMetric(metric_name="readiness_score", metric_value=98.0),
         ]
         insights = [
-            PlatformInsight(title="High DR Readiness", description="All critical Tier 0 services have verified backups and active RTO/RPO compliance.", impact_level="HIGH")
+            PlatformInsight(
+                title="High DR Readiness",
+                description="All critical Tier 0 services have verified backups and active RTO/RPO compliance.",
+                impact_level="HIGH",
+            )
         ]
 
         return PlatformReport(

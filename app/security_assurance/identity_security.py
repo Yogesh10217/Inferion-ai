@@ -19,7 +19,9 @@ class IdentityRiskAssessment(BaseModel):
 class IdentitySecurityEngine:
     """Evaluates security risks associated with human and workload identities."""
 
-    def assess_identity_security(self, tenant_id: str, identity_id: str, excessive_permissions: int = 0, mfa_enabled: bool = True) -> IdentityRiskAssessment:
+    def assess_identity_security(
+        self, tenant_id: str, identity_id: str, excessive_permissions: int = 0, mfa_enabled: bool = True
+    ) -> IdentityRiskAssessment:
         score = (excessive_permissions * 2.0) + (0.0 if mfa_enabled else 5.0)
         return IdentityRiskAssessment(
             tenant_id=tenant_id,

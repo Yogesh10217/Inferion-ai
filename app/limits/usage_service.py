@@ -45,7 +45,7 @@ class UsageService(UsageEventEmitter):
                         error_type=event.error_type,
                         is_streaming=event.is_streaming,
                         is_cached=event.is_cached,
-                        duration_ms=event.duration_ms
+                        duration_ms=event.duration_ms,
                     )
                     session.add(record)
 
@@ -66,7 +66,9 @@ class UsageService(UsageEventEmitter):
         except Exception as e:
             logger.error(f"Failed to process usage event asynchronously: {e}", exc_info=True)
 
-    async def _upsert_window(self, session: AsyncSession, scope_id: str, metric: str, window: str, increment: int) -> None:
+    async def _upsert_window(
+        self, session: AsyncSession, scope_id: str, metric: str, window: str, increment: int
+    ) -> None:
         # Generic UPSERT for SQLite/PostgreSQL compatibility
         # For simplicity in this engine we'll attempt select + update, or insert if missing
         from sqlalchemy import select

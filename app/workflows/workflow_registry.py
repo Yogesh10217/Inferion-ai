@@ -26,8 +26,16 @@ class WorkflowRegistry:
             ("tmpl_code_gen", "Code Generation Workflow", WorkflowTemplates.build_code_generation_workflow()),
             ("tmpl_compliance", "Compliance Workflow", WorkflowTemplates.build_compliance_workflow()),
             ("tmpl_approval", "Approval Workflow", WorkflowTemplates.build_approval_workflow()),
-            ("tmpl_incident_response", "Incident Response Workflow", WorkflowTemplates.build_incident_response_workflow()),
-            ("tmpl_knowledge_ingestion", "Knowledge Ingestion Workflow", WorkflowTemplates.build_knowledge_ingestion_workflow()),
+            (
+                "tmpl_incident_response",
+                "Incident Response Workflow",
+                WorkflowTemplates.build_incident_response_workflow(),
+            ),
+            (
+                "tmpl_knowledge_ingestion",
+                "Knowledge Ingestion Workflow",
+                WorkflowTemplates.build_knowledge_ingestion_workflow(),
+            ),
         ]
         for tid, name, graph in templates:
             wf = WorkflowDefinition(
@@ -50,7 +58,8 @@ class WorkflowRegistry:
     def list_workflows(self, organization_id: Optional[str] = None) -> List[WorkflowDefinition]:
         if organization_id:
             return [
-                wf for wf in self._definitions.values()
+                wf
+                for wf in self._definitions.values()
                 if wf.organization_id == organization_id or wf.workflow_id.startswith("tmpl_")
             ]
         return list(self._definitions.values())
@@ -60,7 +69,4 @@ class WorkflowRegistry:
             del self._definitions[workflow_id]
 
     def get_templates(self) -> List[Dict[str, Any]]:
-        return [
-            wf.to_dict() for wf in self._definitions.values()
-            if wf.workflow_id.startswith("tmpl_")
-        ]
+        return [wf.to_dict() for wf in self._definitions.values() if wf.workflow_id.startswith("tmpl_")]

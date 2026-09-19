@@ -68,7 +68,9 @@ class OperationalRunbookManager:
         service_id: str,
         incident_title: str,
     ) -> Optional[RunbookRecommendation]:
-        service_rbs = [r for r in self._runbooks.values() if r.tenant_id == tenant_id and r.target_service_id == service_id]
+        service_rbs = [
+            r for r in self._runbooks.values() if r.tenant_id == tenant_id and r.target_service_id == service_id
+        ]
         if not service_rbs:
             return None
 

@@ -26,7 +26,9 @@ class DigitalWorker(BaseModel):
     assigned_goals_count: int = 0
     created_at: float = Field(default_factory=time.time)
 
-    async def execute_goal(self, goal_prompt: str, engine: Optional[AutonomousExecutionEngine] = None) -> Dict[str, Any]:
+    async def execute_goal(
+        self, goal_prompt: str, engine: Optional[AutonomousExecutionEngine] = None
+    ) -> Dict[str, Any]:
         """Execute a goal using the platform's autonomous execution pipeline."""
         self.status = "running"
         self.assigned_goals_count += 1

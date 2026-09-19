@@ -68,7 +68,10 @@ class PostIncidentReportGenerator:
         now_iso = datetime.now(timezone.utc).isoformat()
         rep_id = f"pir-{incident.incident_id}"
 
-        lessons = lessons_learned or ["Improve automated anomaly detection thresholds", "Add synthetic probe for edge dependencies"]
+        lessons = lessons_learned or [
+            "Improve automated anomaly detection thresholds",
+            "Add synthetic probe for edge dependencies",
+        ]
         actions = action_items or [{"task": "Update health probe timeouts", "owner": "SRE Team", "status": "OPEN"}]
 
         return PostIncidentReport(

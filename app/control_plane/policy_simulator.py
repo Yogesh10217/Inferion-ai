@@ -27,7 +27,9 @@ class PolicyImpactReport(BaseModel):
 class PolicySimulator:
     """Simulates prospective policy rules against active platform resources."""
 
-    def __init__(self, policy_manager: Optional[PolicyManager] = None, resource_registry: Optional[ResourceRegistry] = None) -> None:
+    def __init__(
+        self, policy_manager: Optional[PolicyManager] = None, resource_registry: Optional[ResourceRegistry] = None
+    ) -> None:
         self.policy_manager = policy_manager or PolicyManager()
         self.resource_registry = resource_registry or ResourceRegistry()
 
@@ -57,7 +59,9 @@ class PolicySimulator:
         if len(blocked_ids) > 10 or conflicts:
             rec = "WARNING"
 
-        logger.info(f"[POLICY SIMULATOR] Simulated policy '{name}': {len(blocked_ids)} blocked resources, {len(conflicts)} conflicts")
+        logger.info(
+            f"[POLICY SIMULATOR] Simulated policy '{name}': {len(blocked_ids)} blocked resources, {len(conflicts)} conflicts"
+        )
         return PolicyImpactReport(
             policy_name=name,
             target_type=target_type,

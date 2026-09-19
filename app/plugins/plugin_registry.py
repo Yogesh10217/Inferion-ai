@@ -79,9 +79,7 @@ class PluginRegistry:
             self._plugins[pid] = plugin
 
             existing_record = self._records.get(pid)
-            is_enabled = enabled if enabled is not None else (
-                existing_record.enabled if existing_record else False
-            )
+            is_enabled = enabled if enabled is not None else (existing_record.enabled if existing_record else False)
             plugin.is_enabled = is_enabled
 
             self._records[pid] = PluginRecord(

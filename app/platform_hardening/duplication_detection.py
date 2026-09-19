@@ -56,7 +56,11 @@ class PlatformDuplicationDetectionEngine:
                         rule_id="RULE-DUP-001",
                         title=f"Duplicate Contract Definition: '{class_name}'",
                         description=f"Class '{class_name}' defined in multiple subsystems ({loc_desc})",
-                        severity=PlatformAuditSeverity.HIGH if "Status" in class_name or "State" in class_name else PlatformAuditSeverity.MEDIUM,
+                        severity=(
+                            PlatformAuditSeverity.HIGH
+                            if "Status" in class_name or "State" in class_name
+                            else PlatformAuditSeverity.MEDIUM
+                        ),
                         subsystem="app",
                         affected_component=class_name,
                         file_path=locations[0][0],

@@ -36,7 +36,9 @@ class ExplainabilityEngine:
             primary_reason = f"Action '{record.action}' on resource '{record.target_resource_id}' complied with all evaluated governance policies."
         elif record.decision == GovernanceDecision.REQUIRE_APPROVAL:
             outcome = "APPROVAL_REQUIRED"
-            primary_reason = f"Action '{record.action}' required explicit authorization due to elevated risk or policy constraints."
+            primary_reason = (
+                f"Action '{record.action}' required explicit authorization due to elevated risk or policy constraints."
+            )
         else:
             outcome = f"BLOCKED ({record.decision.value})"
             primary_reason = f"Action '{record.action}' violated governance policies: {'; '.join(record.violations) if record.violations else 'Policy restriction'}"

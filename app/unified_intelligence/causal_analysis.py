@@ -50,14 +50,14 @@ class CausalHypothesis(BaseModel):
             "cause": self.cause,
             "effect": self.effect,
             "hypothesis_statement": self.hypothesis_statement,
-            "status": self.status.value if hasattr(self.status, 'value') else str(self.status),
+            "status": self.status.value if hasattr(self.status, "value") else str(self.status),
             "confidence": round(self.confidence_score, 4),
             "confidence_score": round(self.confidence_score, 4),
             "evidence_ids": self.evidence_ids,
             "alternative_hypotheses": self.alternative_hypotheses,
             "explainability": self.explainability_notes,
             "explainability_notes": self.explainability_notes,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -65,12 +65,12 @@ class CausalAnalysisEngine:
     """Generates explainable causal hypotheses based on multi-domain correlations without assuming simple correlation equals causation."""
 
     def hypothesize_causality(self, tenant_id: str, correlation: Any) -> List[CausalHypothesis]:
-        corr_id = getattr(correlation, 'correlation_id', f"corr-{uuid.uuid4().hex[:8]}")
-        domains = getattr(correlation, 'correlated_domains', [])
-        sig_ids = getattr(correlation, 'signal_ids', [])
+        corr_id = getattr(correlation, "correlation_id", f"corr-{uuid.uuid4().hex[:8]}")
+        domains = getattr(correlation, "correlated_domains", [])
+        sig_ids = getattr(correlation, "signal_ids", [])
 
-        cause_d = domains[0].value if domains and hasattr(domains[0], 'value') else "SECURITY"
-        effect_d = domains[1].value if len(domains) > 1 and hasattr(domains[1], 'value') else "OPERATIONS"
+        cause_d = domains[0].value if domains and hasattr(domains[0], "value") else "SECURITY"
+        effect_d = domains[1].value if len(domains) > 1 and hasattr(domains[1], "value") else "OPERATIONS"
 
         hyp = CausalHypothesis(
             correlation_id=corr_id,
@@ -83,8 +83,11 @@ class CausalAnalysisEngine:
             status=CausalStatus.SUPPORTED,
             confidence_score=0.82,
             evidence_ids=sig_ids,
-            alternative_hypotheses=[f"Independent concurrent failure in {effect_d}", "External environment metric noise"],
-            explainability_notes=f"Temporal correlation between {cause_d} signal and {effect_d} signal."
+            alternative_hypotheses=[
+                f"Independent concurrent failure in {effect_d}",
+                "External environment metric noise",
+            ],
+            explainability_notes=f"Temporal correlation between {cause_d} signal and {effect_d} signal.",
         )
         return [hyp]
 

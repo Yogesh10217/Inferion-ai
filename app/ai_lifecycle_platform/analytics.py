@@ -1,6 +1,5 @@
 """Tenant-Scoped Lifecycle Analytics Subsystem (Phase 5.33)."""
 
-
 from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformInsight, PlatformReport
 
 
@@ -15,7 +14,11 @@ class LifecycleAnalyticsEngine:
             AnalyticsMetric(metric_name="average_lifecycle_trust_score", metric_value=92.5),
         ]
         insights = [
-            PlatformInsight(title="High Model Quality", description="All production models passed evaluation gates cleanly.", impact_level="LOW"),
+            PlatformInsight(
+                title="High Model Quality",
+                description="All production models passed evaluation gates cleanly.",
+                impact_level="LOW",
+            ),
         ]
 
         return PlatformReport(

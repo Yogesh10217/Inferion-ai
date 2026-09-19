@@ -48,7 +48,7 @@ class InMemoryApplicationRepository(ApplicationRepository):
 
     def __init__(self) -> None:
         self._applications: Dict[str, Dict[str, Any]] = {}  # key: f"{tenant_id}:{app_id}"
-        self._versions: Dict[str, Dict[str, Any]] = {}      # key: f"{tenant_id}:{version_id}"
+        self._versions: Dict[str, Dict[str, Any]] = {}  # key: f"{tenant_id}:{version_id}"
 
     def save_application(self, app_data: Dict[str, Any]) -> Dict[str, Any]:
         tenant_id = app_data.get("tenant_id", "default")
@@ -63,10 +63,7 @@ class InMemoryApplicationRepository(ApplicationRepository):
         return self._applications.get(key)
 
     def list_applications(self, tenant_id: str) -> List[Dict[str, Any]]:
-        return [
-            app for key, app in self._applications.items()
-            if key.startswith(f"{tenant_id}:")
-        ]
+        return [app for key, app in self._applications.items() if key.startswith(f"{tenant_id}:")]
 
     def delete_application(self, application_id: str, tenant_id: str) -> bool:
         key = f"{tenant_id}:{application_id}"
@@ -88,7 +85,8 @@ class InMemoryApplicationRepository(ApplicationRepository):
 
     def list_versions(self, application_id: str, tenant_id: str) -> List[Dict[str, Any]]:
         return [
-            v for key, v in self._versions.items()
+            v
+            for key, v in self._versions.items()
             if key.startswith(f"{tenant_id}:") and v.get("application_id") == application_id
         ]
 

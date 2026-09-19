@@ -31,15 +31,23 @@ from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext
 # OpenTelemetry optional fallback
 try:
     from opentelemetry import trace
+
     tracer = trace.get_tracer("app.multi_agent.coordinator")
 except ImportError:
+
     class DummySpan:
-        def __enter__(self): return self
-        def __exit__(self, exc_type, exc_val, exc_tb): pass
-        def set_attribute(self, k, v): pass
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            pass
+
+        def set_attribute(self, k, v):
+            pass
 
     class DummyTracer:
-        def start_as_current_span(self, name, **kwargs): return DummySpan()
+        def start_as_current_span(self, name, **kwargs):
+            return DummySpan()
 
     tracer = DummyTracer()
 

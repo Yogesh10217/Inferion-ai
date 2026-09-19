@@ -42,10 +42,7 @@ class ProviderSelector:
     ) -> List[str]:
         """Generate full failover sequence of providers in priority order."""
         unhealthy = unhealthy_providers or set()
-        sequence = [
-            p for p, _ in ranked_providers
-            if p not in unhealthy
-        ]
+        sequence = [p for p, _ in ranked_providers if p not in unhealthy]
         # Append remaining as last-resort failover targets
         for p, _ in ranked_providers:
             if p not in sequence:

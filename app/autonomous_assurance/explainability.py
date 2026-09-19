@@ -53,7 +53,9 @@ class WorkflowExplainabilityEngine:
         )
         delegation_rat = f"Delegation created to dispatch formal DelegationRequest to downstream execution engine for action '{action_type}'."
         recovery_rat = "Recovery triggered due to step failure verification." if recovery_triggered else None
-        compensation_rat = "Compensation selected to mitigate partial execution effects." if compensation_triggered else None
+        compensation_rat = (
+            "Compensation selected to mitigate partial execution effects." if compensation_triggered else None
+        )
 
         record = WorkflowExplainabilityRecord(
             workflow_id=workflow_id,

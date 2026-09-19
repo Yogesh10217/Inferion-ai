@@ -19,7 +19,7 @@ class MemoryCoordinator:
         data = {
             "working_memory": self.working_memory.model_dump(),
             "conversation_messages": [m.model_dump() for m in self.conversation_memory.messages],
-            "conversation_summary": self.conversation_memory.summary
+            "conversation_summary": self.conversation_memory.summary,
         }
         await self.store.set(f"memory:{session_id}", data)
 

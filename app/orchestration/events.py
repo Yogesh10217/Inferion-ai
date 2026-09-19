@@ -30,7 +30,9 @@ class EventRouter:
     def __init__(self) -> None:
         self._processed_event_ids: List[str] = []
 
-    def dispatch_event(self, event_type: str, payload: Dict[str, Any], tenant_id: str = "global", correlation_id: Optional[str] = None) -> ProcessEvent:
+    def dispatch_event(
+        self, event_type: str, payload: Dict[str, Any], tenant_id: str = "global", correlation_id: Optional[str] = None
+    ) -> ProcessEvent:
         pevt = ProcessEvent(
             event_type=event_type,
             payload=payload,
@@ -44,5 +46,7 @@ class EventRouter:
             return pevt
 
         self._processed_event_ids.append(pevt.event_id)
-        logger.info(f"[EVENT ROUTER] Dispatched process event '{pevt.event_id}' ({event_type}) for tenant '{tenant_id}' (Correlation: {pevt.correlation_id})")
+        logger.info(
+            f"[EVENT ROUTER] Dispatched process event '{pevt.event_id}' ({event_type}) for tenant '{tenant_id}' (Correlation: {pevt.correlation_id})"
+        )
         return pevt

@@ -84,9 +84,7 @@ def request_failover(
 ):
     """Request controlled regional failover."""
     try:
-        plan = mgr.failover_manager.create_failover_request(
-            tenant_id, service_id, source_region, target_region
-        )
+        plan = mgr.failover_manager.create_failover_request(tenant_id, service_id, source_region, target_region)
         return plan.dict()
     except PlatformResilienceException as exc:
         raise HTTPException(status_code=400, detail=exc.message)

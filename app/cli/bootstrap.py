@@ -80,7 +80,7 @@ async def bootstrap(admin_username: str, admin_email: str, admin_password: str):
                 password_hash=PasswordService.get_password_hash(admin_password),
                 is_admin=True,
                 is_active=True,
-                default_organization_id=org.id
+                default_organization_id=org.id,
             )
             admin.roles.append(role_objs[SystemRoles.ADMIN])
             session.add(admin)
@@ -88,10 +88,7 @@ async def bootstrap(admin_username: str, admin_email: str, admin_password: str):
 
             # Add membership
             mem = Membership(
-                organization_id=org.id,
-                user_id=admin.id,
-                role_id=role_objs[SystemRoles.ADMIN].id,
-                status="active"
+                organization_id=org.id, user_id=admin.id, role_id=role_objs[SystemRoles.ADMIN].id, status="active"
             )
             session.add(mem)
             print(f"Created admin user: {admin_username} in organization: {org.name}")

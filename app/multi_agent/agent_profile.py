@@ -12,6 +12,7 @@ from app.multi_agent.agent_role import AgentRole, RoleType
 
 class AgentProfile(BaseModel):
     """Profile specification for an individual agent in a team."""
+
     agent_id: str = Field(default_factory=lambda: f"agent_{uuid.uuid4().hex[:10]}")
     name: str
     role: AgentRole = Field(default_factory=lambda: AgentRole.get_preset_role(RoleType.EXECUTOR))

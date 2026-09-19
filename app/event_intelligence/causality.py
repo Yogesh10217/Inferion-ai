@@ -62,7 +62,13 @@ class EventCausalityAnalyzer:
 
         if len(events) > 1:
             for i in range(1, len(events)):
-                edges.append(CausalEdge(source_node_id=events[0].event_id, target_node_id=events[i].event_id, relationship=CausalRelationship.DOWNSTREAM_EFFECT))
+                edges.append(
+                    CausalEdge(
+                        source_node_id=events[0].event_id,
+                        target_node_id=events[i].event_id,
+                        relationship=CausalRelationship.DOWNSTREAM_EFFECT,
+                    )
+                )
                 downstream.append(events[i].event_id)
 
         graph = CausalGraph(tenant_id=tenant_id, nodes=nodes, edges=edges)

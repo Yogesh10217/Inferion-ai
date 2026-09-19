@@ -21,9 +21,18 @@ class OllamaProvider(BaseProvider):
     def __init__(self, *, base_url: str | None = None) -> None:
         self.base_url = base_url or "http://localhost:11434"
 
-    async def generate(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> InferenceResponse:
+    async def generate(
+        self,
+        *,
+        request: InferenceRequest | None = None,
+        model: str | None = None,
+        prompt: str | None = None,
+        **kwargs: Any,
+    ) -> InferenceResponse:
         """Return a standardized response for the prompt."""
-        request_obj = request or InferenceRequest(model=model or "", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or ""
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -35,7 +44,11 @@ class OllamaProvider(BaseProvider):
                 provider=self.name,
                 model=model_name,
                 text=f"[ollama:{model_name}] {prompt_text}",
-                usage=Usage(prompt_tokens=max(1, len(prompt_text.split())), completion_tokens=max(1, len(prompt_text.split())), total_tokens=max(1, len(prompt_text.split())) * 2),
+                usage=Usage(
+                    prompt_tokens=max(1, len(prompt_text.split())),
+                    completion_tokens=max(1, len(prompt_text.split())),
+                    total_tokens=max(1, len(prompt_text.split())) * 2,
+                ),
                 finish_reason="stop",
                 latency_ms=0.0,
                 created=created_at,
@@ -84,7 +97,9 @@ class OllamaProvider(BaseProvider):
 
                     latency_ms = (asyncio.get_event_loop().time() - start_time) * 1000.0
                     if response.status_code != 200:
-                        raise ProviderUnavailableException(f"Ollama error status {response.status_code}: {response.text}")
+                        raise ProviderUnavailableException(
+                            f"Ollama error status {response.status_code}: {response.text}"
+                        )
 
                     resp_json = response.json()
                     message = resp_json.get("message", {})
@@ -109,7 +124,9 @@ class OllamaProvider(BaseProvider):
                         latency_ms=latency_ms,
                         created=datetime.now(timezone.utc),
                         metadata={"base_url": self.base_url, "provider_version": "v1", "cached": False, **kwargs},
-                        request_id=request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id"),
+                        request_id=(
+                            request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id")
+                        ),
                         raw_response=resp_json,
                     )
                 except (httpx.ConnectError, httpx.TimeoutException) as exc:
@@ -123,13 +140,17 @@ class OllamaProvider(BaseProvider):
             if last_exc:
                 raise ProviderUnavailableException(f"Ollama retries exhausted: {last_exc}") from last_exc
 
-    async def stream(self, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[InferenceResponse]:
+    async def stream(
+        self,
+        request: InferenceRequest | None = None,
+        model: str | None = None,
+        prompt: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncIterator[InferenceResponse]:
         """Yield normalized InferenceResponse chunks for the completion."""
         if request is None:
             request = InferenceRequest(
-                model=model or "",
-                messages=[ChatMessage(role="user", content=prompt or "")],
-                **kwargs
+                model=model or "", messages=[ChatMessage(role="user", content=prompt or "")], **kwargs
             )
         model_name = request.model
 
@@ -194,7 +215,9 @@ class OllamaProvider(BaseProvider):
                 ) as r:
                     if r.status_code != 200:
                         error_text = await r.aread()
-                        raise ProviderUnavailableException(f"Ollama error status {r.status_code}: {error_text.decode('utf-8')}")
+                        raise ProviderUnavailableException(
+                            f"Ollama error status {r.status_code}: {error_text.decode('utf-8')}"
+                        )
 
                     async for line in r.aiter_lines():
                         if not line.strip():

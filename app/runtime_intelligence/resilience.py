@@ -23,7 +23,11 @@ class RuntimeResilienceEngine:
 
         # Evaluate redundancy and rollback capability
         cluster_nodes = telem.get("node_count", 3)
-        redundancy = "HIGH_AVAILABILITY" if cluster_nodes >= 3 else ("REDUNDANT" if cluster_nodes >= 2 else "SINGLE_POINT_OF_FAILURE")
+        redundancy = (
+            "HIGH_AVAILABILITY"
+            if cluster_nodes >= 3
+            else ("REDUNDANT" if cluster_nodes >= 2 else "SINGLE_POINT_OF_FAILURE")
+        )
         rollback = telem.get("rollback_supported", True)
 
         recovery_cap = round(min(1.0, base_score * 0.95 + (0.05 if rollback else 0.0)), 2)
@@ -37,5 +41,7 @@ class RuntimeResilienceEngine:
             rollback_available=rollback,
             subsystem=scope,
         )
-        logger.info(f"Assessed RuntimeResilienceAssessment '{ass.assessment_id}' for '{scope}' (Score: {ass.resilience_score})")
+        logger.info(
+            f"Assessed RuntimeResilienceAssessment '{ass.assessment_id}' for '{scope}' (Score: {ass.resilience_score})"
+        )
         return ass

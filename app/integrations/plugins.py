@@ -54,18 +54,28 @@ class PluginManager:
     def register_plugin(self, manifest: PluginManifest, tenant_id: str = "global") -> Plugin:
         plug = Plugin(manifest=manifest, tenant_id=tenant_id)
         self._plugins[plug.plugin_id] = plug
-        logger.info(f"[PLUGIN MANAGER] Registered plugin '{plug.plugin_id}' ('{manifest.name}') for tenant '{tenant_id}'")
+        logger.info(
+            f"[PLUGIN MANAGER] Registered plugin '{plug.plugin_id}' ('{manifest.name}') for tenant '{tenant_id}'"
+        )
         return plug
 
-    def execute_plugin(self, plugin_id: str, requested_capability: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def execute_plugin(
+        self, plugin_id: str, requested_capability: str, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         plug = self._plugins.get(plugin_id)
         if not plug or plug.status != PluginStatus.ACTIVE:
             raise PluginSecurityViolationException(plugin_id, "Plugin is not active or not registered")
 
         # Verify capability declared in manifest!
         if requested_capability not in plug.manifest.capabilities:
-            logger.warning(f"[PLUGIN MANAGER] Plugin '{plugin_id}' attempted capability '{requested_capability}' not in manifest!")
-            raise PluginSecurityViolationException(plugin_id, f"Capability '{requested_capability}' is not declared in plugin manifest")
+            logger.warning(
+                f"[PLUGIN MANAGER] Plugin '{plugin_id}' attempted capability '{requested_capability}' not in manifest!"
+            )
+            raise PluginSecurityViolationException(
+                plugin_id, f"Capability '{requested_capability}' is not declared in plugin manifest"
+            )
 
-        logger.info(f"[PLUGIN MANAGER] Executed plugin '{plugin_id}' capability '{requested_capability}' within sandbox limits")
+        logger.info(
+            f"[PLUGIN MANAGER] Executed plugin '{plugin_id}' capability '{requested_capability}' within sandbox limits"
+        )
         return {"status": "SUCCESS", "plugin_id": plugin_id, "capability": requested_capability}

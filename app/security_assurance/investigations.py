@@ -29,7 +29,9 @@ class SecurityInvestigationManager:
     def __init__(self) -> None:
         self._investigations: Dict[str, SecurityInvestigation] = {}
 
-    def launch_investigation(self, tenant_id: str, incident_id: str, lead_investigator: str = "security-agent") -> SecurityInvestigation:
+    def launch_investigation(
+        self, tenant_id: str, incident_id: str, lead_investigator: str = "security-agent"
+    ) -> SecurityInvestigation:
         inv = SecurityInvestigation(
             tenant_id=tenant_id,
             incident_id=incident_id,
@@ -43,7 +45,9 @@ class SecurityInvestigationManager:
         if not inv:
             raise SecurityInvestigationNotFoundException(f"Investigation '{investigation_id}' not found.")
         if inv.tenant_id != tenant_id:
-            raise CrossTenantSecurityAssuranceException(f"Tenant '{tenant_id}' cannot access investigation for tenant '{inv.tenant_id}'.")
+            raise CrossTenantSecurityAssuranceException(
+                f"Tenant '{tenant_id}' cannot access investigation for tenant '{inv.tenant_id}'."
+            )
         return inv
 
     def add_finding(self, tenant_id: str, investigation_id: str, finding: str) -> SecurityInvestigation:

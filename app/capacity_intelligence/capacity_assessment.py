@@ -14,9 +14,7 @@ class CapacityAssessmentEngine:
     def __init__(self, repo: CapacityAssessmentRepository) -> None:
         self.repo = repo
 
-    def assess_capacity(
-        self, tenant_id: str, resource_id: str, consumed_pct: float = 65.0
-    ) -> CapacityAssessment:
+    def assess_capacity(self, tenant_id: str, resource_id: str, consumed_pct: float = 65.0) -> CapacityAssessment:
         headroom = max(0.0, 100.0 - consumed_pct)
         risk_score = round(consumed_pct / 100.0, 4)
 
@@ -40,5 +38,7 @@ class CapacityAssessmentEngine:
             saturation_risk_score=risk_score,
         )
         self.repo.save(assessment)
-        logger.info(f"Evaluated CapacityAssessment for resource '{resource_id}': Status={status.value}, Consumed={consumed_pct}%")
+        logger.info(
+            f"Evaluated CapacityAssessment for resource '{resource_id}': Status={status.value}, Consumed={consumed_pct}%"
+        )
         return assessment

@@ -29,7 +29,7 @@ class UnifiedAnalyticsSummary:
         top_correlated_domains: List[str],
         generated_recommendations_count: int,
         executed_delegations_count: int,
-        period_days: int = 30
+        period_days: int = 30,
     ):
         self.tenant_id = tenant_id
         self.total_signals_processed = total_signals_processed
@@ -53,7 +53,7 @@ class UnifiedAnalyticsSummary:
             "generated_recommendations_count": self.generated_recommendations_count,
             "executed_delegations_count": self.executed_delegations_count,
             "period_days": self.period_days,
-            "generated_at": self.generated_at.isoformat()
+            "generated_at": self.generated_at.isoformat(),
         }
 
 
@@ -66,18 +66,14 @@ class CrossDomainAnalyticsEngine:
         pass
 
     def compute_summary(
-        self,
-        tenant_id: str,
-        signals_count: int = 150,
-        situations: Optional[List[Any]] = None,
-        period_days: int = 30
+        self, tenant_id: str, signals_count: int = 150, situations: Optional[List[Any]] = None, period_days: int = 30
     ) -> UnifiedAnalyticsSummary:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
 
         situations_list = situations or []
         for sit in situations_list:
-            if hasattr(sit, 'tenant_id') and sit.tenant_id != tenant_id:
+            if hasattr(sit, "tenant_id") and sit.tenant_id != tenant_id:
                 raise CrossTenantUnifiedIntelligenceException(
                     f"Tenant mismatch in analytics computation: expected {tenant_id}, got {sit.tenant_id}"
                 )
@@ -86,9 +82,9 @@ class CrossDomainAnalyticsEngine:
         total_conf = 0.0
 
         for sit in situations_list:
-            sev_str = sit.severity.value if hasattr(sit.severity, 'value') else str(sit.severity)
+            sev_str = sit.severity.value if hasattr(sit.severity, "value") else str(sit.severity)
             sev_counts[sev_str] = sev_counts.get(sev_str, 0) + 1
-            total_conf += getattr(sit, 'confidence_score', 0.8)
+            total_conf += getattr(sit, "confidence_score", 0.8)
 
         avg_conf = (total_conf / len(situations_list)) if situations_list else 0.88
 
@@ -101,5 +97,5 @@ class CrossDomainAnalyticsEngine:
             top_correlated_domains=["security", "identity", "operations"],
             generated_recommendations_count=len(situations_list) * 2,
             executed_delegations_count=len(situations_list),
-            period_days=period_days
+            period_days=period_days,
         )

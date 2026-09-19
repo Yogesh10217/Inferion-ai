@@ -79,5 +79,7 @@ class IntelligenceGovernanceEngine:
         else:
             dec = IntelligencePolicyDecision.ALLOW
 
-        logger.info(f"[INTELLIGENCE GOVERNANCE] Evaluated decision '{action_type}' for tenant '{tenant_id}': Decision={dec.value}, Risk={r_level.value}")
+        logger.info(
+            f"[INTELLIGENCE GOVERNANCE] Evaluated decision '{action_type}' for tenant '{tenant_id}': Decision={dec.value}, Risk={r_level.value}"
+        )
         return dec, risk_assessment

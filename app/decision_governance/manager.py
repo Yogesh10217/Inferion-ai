@@ -137,7 +137,9 @@ class DecisionGovernanceManager:
         gov_res = self.governance.evaluate_decision_governance(gov_req)
 
         if gov_res.requires_human_approval:
-            self.decisions.update_status(decision_id, tenant_id, DecisionStatus.REQUIRES_APPROVAL, outcome=DecisionOutcome.REQUIRE_APPROVAL)
+            self.decisions.update_status(
+                decision_id, tenant_id, DecisionStatus.REQUIRES_APPROVAL, outcome=DecisionOutcome.REQUIRE_APPROVAL
+            )
         else:
             self.decisions.update_status(decision_id, tenant_id, DecisionStatus.RECOMMENDED, outcome=gov_res.outcome)
 
@@ -146,7 +148,9 @@ class DecisionGovernanceManager:
 
     def approve_decision(self, decision_id: str, tenant_id: str, approver_id: str = "human_admin") -> Decision:
         decision = self.get_decision(decision_id, tenant_id)
-        approved = self.decisions.update_status(decision_id, tenant_id, DecisionStatus.APPROVED, outcome=DecisionOutcome.ALLOW)
+        approved = self.decisions.update_status(
+            decision_id, tenant_id, DecisionStatus.APPROVED, outcome=DecisionOutcome.ALLOW
+        )
         approved.metadata["approved_by"] = approver_id
         approved.metadata["approved_at"] = datetime.now(timezone.utc).isoformat()
         self.repository.save(tenant_id, decision_id, approved)
@@ -158,7 +162,9 @@ class DecisionGovernanceManager:
     ) -> DecisionDelegationPlan:
         decision = self.get_decision(decision_id, tenant_id)
         if decision.status == DecisionStatus.REQUIRES_APPROVAL and decision.outcome == DecisionOutcome.REQUIRE_APPROVAL:
-            raise HighRiskDecisionRequiresApprovalException(f"Decision '{decision_id}' requires human approval before delegation.")
+            raise HighRiskDecisionRequiresApprovalException(
+                f"Decision '{decision_id}' requires human approval before delegation."
+            )
 
         del_plan = self.delegation.create_delegation_plan(tenant_id, decision_id, actions)
         self.decisions.update_status(decision_id, tenant_id, DecisionStatus.DELEGATED)

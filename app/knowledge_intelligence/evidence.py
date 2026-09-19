@@ -81,7 +81,9 @@ class KnowledgeEvidenceManager:
             summary=summary,
         )
 
-    def assemble_bundle(self, tenant_id: str, target_id: str, items: List[KnowledgeEvidence]) -> KnowledgeEvidenceBundle:
+    def assemble_bundle(
+        self, tenant_id: str, target_id: str, items: List[KnowledgeEvidence]
+    ) -> KnowledgeEvidenceBundle:
         fp_payload = {
             "tenant_id": tenant_id,
             "target_id": target_id,

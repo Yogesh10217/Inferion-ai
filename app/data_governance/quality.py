@@ -101,7 +101,11 @@ class DataQualityManager:
         non_null_fields = sum(1 for r in sample_records for v in r.values() if v is not None and v != "")
         completeness_score = (non_null_fields / max(1, total_fields)) * 100.0
         dimension_scores[QualityDimension.COMPLETENESS] = completeness_score
-        metrics.append(DataQualityMetric(dimension=QualityDimension.COMPLETENESS, score=completeness_score, passed=completeness_score >= 80.0))
+        metrics.append(
+            DataQualityMetric(
+                dimension=QualityDimension.COMPLETENESS, score=completeness_score, passed=completeness_score >= 80.0
+            )
+        )
 
         # 2. UNIQUENESS
         # Assume 'id' or first field is key
@@ -112,20 +116,35 @@ class DataQualityManager:
         else:
             uniqueness_score = 100.0
         dimension_scores[QualityDimension.UNIQUENESS] = uniqueness_score
-        metrics.append(DataQualityMetric(dimension=QualityDimension.UNIQUENESS, score=uniqueness_score, passed=uniqueness_score >= 90.0))
+        metrics.append(
+            DataQualityMetric(
+                dimension=QualityDimension.UNIQUENESS, score=uniqueness_score, passed=uniqueness_score >= 90.0
+            )
+        )
 
         # 3. TIMELINESS
         timeliness_score = max(0.0, min(100.0, 100.0 - (freshness_seconds / 3600.0) * 10.0))
         dimension_scores[QualityDimension.TIMELINESS] = timeliness_score
-        metrics.append(DataQualityMetric(dimension=QualityDimension.TIMELINESS, score=timeliness_score, passed=timeliness_score >= 70.0))
+        metrics.append(
+            DataQualityMetric(
+                dimension=QualityDimension.TIMELINESS, score=timeliness_score, passed=timeliness_score >= 70.0
+            )
+        )
 
         # 4. ACCURACY, CONSISTENCY, VALIDITY, INTEGRITY (default clean evaluation)
-        for dim in [QualityDimension.ACCURACY, QualityDimension.CONSISTENCY, QualityDimension.VALIDITY, QualityDimension.INTEGRITY]:
+        for dim in [
+            QualityDimension.ACCURACY,
+            QualityDimension.CONSISTENCY,
+            QualityDimension.VALIDITY,
+            QualityDimension.INTEGRITY,
+        ]:
             dimension_scores[dim] = 95.0
             metrics.append(DataQualityMetric(dimension=dim, score=95.0, passed=True))
 
         overall_score = sum(dimension_scores.values()) / len(dimension_scores)
-        has_critical = overall_score < 70.0 or any(not m.passed for m in metrics if m.dimension in (QualityDimension.COMPLETENESS, QualityDimension.UNIQUENESS))
+        has_critical = overall_score < 70.0 or any(
+            not m.passed for m in metrics if m.dimension in (QualityDimension.COMPLETENESS, QualityDimension.UNIQUENESS)
+        )
 
         if has_critical:
             violations.append(f"Critical Data Quality Score ({overall_score:.1f}/100.0) below acceptable threshold.")

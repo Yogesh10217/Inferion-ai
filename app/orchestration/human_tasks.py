@@ -84,7 +84,9 @@ class HumanTaskManager:
             status=TaskStatus.ASSIGNED if assigned_user_id else TaskStatus.CREATED,
         )
         self._tasks[task.task_id] = task
-        logger.info(f"[HUMAN TASK MANAGER] Created task '{task.task_id}' ('{title}') assigned to user '{assigned_user_id}' (Tenant: {tenant_id})")
+        logger.info(
+            f"[HUMAN TASK MANAGER] Created task '{task.task_id}' ('{title}') assigned to user '{assigned_user_id}' (Tenant: {tenant_id})"
+        )
         return task
 
     def complete_task(self, task_id: str, outputs: Optional[Dict[str, Any]] = None) -> HumanTask:

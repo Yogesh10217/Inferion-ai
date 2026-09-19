@@ -22,39 +22,28 @@ from app.core.database import get_db_session
 
 # Use a single router for all admin routes, prefixed with /admin and enforcing the "admin" role globally.
 # This ensures that ONLY platform administrators can access these endpoints.
-admin_router = APIRouter(
-    prefix="/admin",
-    tags=["Administration"],
-    dependencies=[Depends(require_admin)]
-)
+admin_router = APIRouter(prefix="/admin", tags=["Administration"], dependencies=[Depends(require_admin)])
 
 # ----------------- SYSTEM & HEALTH -----------------
 
 
 @admin_router.get("/system")
-async def get_system_stats(
-    db: AsyncSession = Depends(get_db_session)
-):
+async def get_system_stats(db: AsyncSession = Depends(get_db_session)):
     """Retrieve overarching platform statistics."""
     return await SystemAdminService(db).get_system_stats()
 
 
 @admin_router.get("/health")
-async def get_admin_health(
-    db: AsyncSession = Depends(get_db_session)
-):
+async def get_admin_health(db: AsyncSession = Depends(get_db_session)):
     """Retrieve comprehensive system health (DB, Redis, Providers)."""
     return await HealthAdminService(db).get_system_health()
+
 
 # ----------------- USERS -----------------
 
 
 @admin_router.get("/users")
-async def list_users(
-    limit: int = Query(100),
-    offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
-):
+async def list_users(limit: int = Query(100), offset: int = Query(0), db: AsyncSession = Depends(get_db_session)):
     users = await UserAdminService(db).list_users(limit=limit, offset=offset)
     return [{"id": u.id, "username": u.username, "email": u.email, "is_active": u.is_active} for u in users]
 
@@ -64,11 +53,7 @@ class UserUpdate(BaseModel):
 
 
 @admin_router.patch("/users/{user_id}")
-async def update_user(
-    update_data: UserUpdate,
-    user_id: str = Path(...),
-    db: AsyncSession = Depends(get_db_session)
-):
+async def update_user(update_data: UserUpdate, user_id: str = Path(...), db: AsyncSession = Depends(get_db_session)):
     try:
         if update_data.is_active:
             user = await UserAdminService(db).enable_user(user_id)
@@ -78,14 +63,13 @@ async def update_user(
     except ResourceNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+
 # ----------------- ORGANIZATIONS -----------------
 
 
 @admin_router.get("/organizations")
 async def list_organizations(
-    limit: int = Query(100),
-    offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
+    limit: int = Query(100), offset: int = Query(0), db: AsyncSession = Depends(get_db_session)
 ):
     orgs = await OrganizationAdminService(db).list_organizations(limit=limit, offset=offset)
     return [{"id": o.id, "name": o.name, "slug": o.slug, "status": o.status} for o in orgs]
@@ -98,9 +82,7 @@ class OrganizationUpdate(BaseModel):
 
 @admin_router.patch("/organizations/{org_id}")
 async def update_organization(
-    update_data: OrganizationUpdate,
-    org_id: str = Path(...),
-    db: AsyncSession = Depends(get_db_session)
+    update_data: OrganizationUpdate, org_id: str = Path(...), db: AsyncSession = Depends(get_db_session)
 ):
     try:
         if update_data.status == "suspended":
@@ -118,6 +100,7 @@ async def update_organization(
     except InvalidOperationException as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 # ----------------- WORKSPACES -----------------
 
 
@@ -126,7 +109,7 @@ async def list_workspaces(
     organization_id: Optional[str] = Query(None),
     limit: int = Query(100),
     offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     ws = await WorkspaceAdminService(db).list_workspaces(organization_id=organization_id, limit=limit, offset=offset)
     return [{"id": w.id, "name": w.name, "organization_id": w.organization_id} for w in ws]
@@ -134,15 +117,14 @@ async def list_workspaces(
 
 @admin_router.patch("/workspaces/{workspace_id}")
 async def update_workspace(
-    update_data: dict,
-    workspace_id: str = Path(...),
-    db: AsyncSession = Depends(get_db_session)
+    update_data: dict, workspace_id: str = Path(...), db: AsyncSession = Depends(get_db_session)
 ):
     try:
         w = await WorkspaceAdminService(db).update_workspace(workspace_id, **update_data)
         return {"id": w.id, "name": w.name}
     except ResourceNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
+
 
 # ----------------- API KEYS -----------------
 
@@ -153,9 +135,11 @@ async def list_api_keys(
     organization_id: Optional[str] = Query(None),
     limit: int = Query(100),
     offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
-    keys = await APIKeyAdminService(db).list_api_keys(user_id=user_id, org_id=organization_id, limit=limit, offset=offset)
+    keys = await APIKeyAdminService(db).list_api_keys(
+        user_id=user_id, org_id=organization_id, limit=limit, offset=offset
+    )
     return [{"id": k.id, "prefix": k.prefix, "revoked_at": k.revoked_at, "expires_at": k.expires_at} for k in keys]
 
 
@@ -166,9 +150,7 @@ class APIKeyUpdate(BaseModel):
 
 @admin_router.patch("/api-keys/{api_key_id}")
 async def update_api_key(
-    update_data: APIKeyUpdate,
-    api_key_id: str = Path(...),
-    db: AsyncSession = Depends(get_db_session)
+    update_data: APIKeyUpdate, api_key_id: str = Path(...), db: AsyncSession = Depends(get_db_session)
 ):
     try:
         if update_data.action == "revoke":
@@ -181,6 +163,7 @@ async def update_api_key(
     except ResourceNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+
 # ----------------- SUBSCRIPTIONS -----------------
 
 
@@ -190,10 +173,13 @@ async def list_subscriptions(
     status: Optional[str] = Query(None),
     limit: int = Query(100),
     offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
-    subs = await SubscriptionAdminService(db).list_subscriptions(organization_id=organization_id, status=status, limit=limit, offset=offset)
+    subs = await SubscriptionAdminService(db).list_subscriptions(
+        organization_id=organization_id, status=status, limit=limit, offset=offset
+    )
     return [{"id": s.id, "organization_id": s.organization_id, "status": s.status} for s in subs]
+
 
 # ----------------- AUDIT & REPORTS -----------------
 
@@ -206,15 +192,10 @@ async def search_audit_events(
     severity: Optional[str] = Query(None),
     limit: int = Query(100),
     offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     events = await AuditAdminService(db).search_events(
-        organization_id=organization_id,
-        actor_id=actor_id,
-        action=action,
-        severity=severity,
-        limit=limit,
-        offset=offset
+        organization_id=organization_id, actor_id=actor_id, action=action, severity=severity, limit=limit, offset=offset
     )
     return [
         {
@@ -223,16 +204,15 @@ async def search_audit_events(
             "actor_id": e.actor_id,
             "organization_id": e.organization_id,
             "severity": e.severity,
-            "timestamp": e.timestamp
-        } for e in events
+            "timestamp": e.timestamp,
+        }
+        for e in events
     ]
 
 
 @admin_router.post("/reports")
 async def create_report(
-    type: str = Query(...),
-    db: AsyncSession = Depends(get_db_session),
-    user: User = Depends(require_admin)
+    type: str = Query(...), db: AsyncSession = Depends(get_db_session), user: User = Depends(require_admin)
 ):
     """Asynchronously generate a report."""
     job = await ReportAdminService(db).create_report_job(type=type, created_by=user.id)
@@ -240,13 +220,10 @@ async def create_report(
 
 
 @admin_router.get("/reports")
-async def list_reports(
-    limit: int = Query(100),
-    offset: int = Query(0),
-    db: AsyncSession = Depends(get_db_session)
-):
+async def list_reports(limit: int = Query(100), offset: int = Query(0), db: AsyncSession = Depends(get_db_session)):
     jobs = await ReportAdminService(db).list_report_jobs(limit=limit, offset=offset)
     return [{"id": j.id, "type": j.type, "status": j.status, "created_at": j.created_at} for j in jobs]
+
 
 # ----------------- DEAD-LETTER QUEUE -----------------
 
@@ -255,6 +232,7 @@ async def list_reports(
 async def get_dead_letter_queue():
     """Retrieve permanently failed requests from Dead Letter Queue."""
     from app.main import app
+
     container = getattr(app.state, "container", None)
     if container and hasattr(container, "dead_letter_queue") and container.dead_letter_queue:
         entries = await container.dead_letter_queue.get_entries()

@@ -58,7 +58,7 @@ class UnifiedIntelligenceManager:
     def __init__(
         self,
         repository: Optional[UnifiedIntelligenceRepository] = None,
-        provider_registry: Optional[IntelligenceProviderRegistry] = None
+        provider_registry: Optional[IntelligenceProviderRegistry] = None,
     ):
         self.repository = repository or UnifiedIntelligenceRepository()
         self.provider_registry = provider_registry or IntelligenceProviderRegistry()
@@ -96,10 +96,7 @@ class UnifiedIntelligenceManager:
         self.provider_registry.register_provider(domain, provider)
 
     def ingest_domain_input(
-        self,
-        tenant_id: str,
-        domain_input: UnifiedDomainInput,
-        idempotency_key: Optional[str] = None
+        self, tenant_id: str, domain_input: UnifiedDomainInput, idempotency_key: Optional[str] = None
     ) -> UnifiedSignal:
         """
         Ingests a standardized domain input, normalizes it, enforces idempotency,
@@ -126,17 +123,13 @@ class UnifiedIntelligenceManager:
             self.idempotency.register_execution(tenant_id, key, sig)
 
         # Metrics and billing
-        domain_str = sig.domain.value if hasattr(sig.domain, 'value') else str(sig.domain)
+        domain_str = sig.domain.value if hasattr(sig.domain, "value") else str(sig.domain)
         self.observability.record_signal_processed(tenant_id, domain_str)
         self.billing_engine.record_usage(tenant_id, signals=1)
 
         return sig
 
-    def fuse_context(
-        self,
-        tenant_id: str,
-        policy: Optional[UnifiedContextPolicy] = None
-    ) -> UnifiedContext:
+    def fuse_context(self, tenant_id: str, policy: Optional[UnifiedContextPolicy] = None) -> UnifiedContext:
         """Fuse available domain signals into a bounded UnifiedContext."""
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -146,9 +139,7 @@ class UnifiedIntelligenceManager:
         return context
 
     def detect_situations(
-        self,
-        tenant_id: str,
-        policy: Optional[UnifiedContextPolicy] = None
+        self, tenant_id: str, policy: Optional[UnifiedContextPolicy] = None
     ) -> List[EnterpriseSituation]:
         """
         Main intelligence pipeline: fuses context, correlates signals, analyzes causality,
@@ -177,12 +168,10 @@ class UnifiedIntelligenceManager:
 
             # Evidentiary proof creation
             self.evidence_ledger.create_evidence(
-                tenant_id=tenant_id,
-                source_domain="unified_intelligence",
-                payload=sit.to_dict()
+                tenant_id=tenant_id, source_domain="unified_intelligence", payload=sit.to_dict()
             )
 
-            sev_str = sit.severity.value if hasattr(sit.severity, 'value') else str(sit.severity)
+            sev_str = sit.severity.value if hasattr(sit.severity, "value") else str(sit.severity)
             self.observability.record_situation_detected(tenant_id, sev_str)
             self.billing_engine.record_usage(tenant_id, situations=1, correlations=len(correlations))
 
@@ -227,11 +216,7 @@ class UnifiedIntelligenceManager:
 
         return self.trust_engine.evaluate_entity_trust(tenant_id, entity_reference, {})
 
-    def generate_recommendations(
-        self,
-        tenant_id: str,
-        situation_id: str
-    ) -> List[UnifiedRecommendation]:
+    def generate_recommendations(self, tenant_id: str, situation_id: str) -> List[UnifiedRecommendation]:
         """Generate prioritized cross-domain recommendations for a situation."""
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -245,11 +230,7 @@ class UnifiedIntelligenceManager:
             self.repository.save_recommendation(tenant_id, r)
         return recs
 
-    def build_coordination_plan(
-        self,
-        tenant_id: str,
-        recommendation_id: str
-    ) -> CoordinationPlan:
+    def build_coordination_plan(self, tenant_id: str, recommendation_id: str) -> CoordinationPlan:
         """Build a multi-step execution coordination plan for a recommendation."""
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -262,10 +243,7 @@ class UnifiedIntelligenceManager:
         return self.coordination_planner.build_plan_for_recommendation(tenant_id, target_rec)
 
     def evaluate_governance(
-        self,
-        tenant_id: str,
-        recommendation: UnifiedRecommendation,
-        approved_by: Optional[str] = None
+        self, tenant_id: str, recommendation: UnifiedRecommendation, approved_by: Optional[str] = None
     ) -> GovernanceEvaluationResult:
         """
         Evaluate governance policies. Raises HighRiskUnifiedActionRequiresApprovalException if unapproved.
@@ -278,7 +256,7 @@ class UnifiedIntelligenceManager:
         plan: CoordinationPlan,
         step_id: str,
         approved_by: Optional[str] = None,
-        requestor_id: str = "unified_intelligence_manager"
+        requestor_id: str = "unified_intelligence_manager",
     ) -> Dict[str, Any]:
         """
         Translates a coordination step into a DelegationRequest, ensuring governance approval gates pass.
@@ -303,15 +281,11 @@ class UnifiedIntelligenceManager:
             "status": "DELEGATED",
             "delegation_request": delegation_req.to_dict(),
             "plan_id": plan.plan_id,
-            "step_id": step.step_id
+            "step_id": step.step_id,
         }
 
     def create_investigation(
-        self,
-        tenant_id: str,
-        situation_id: str,
-        title: Optional[str] = None,
-        assigned_to: Optional[str] = None
+        self, tenant_id: str, situation_id: str, title: Optional[str] = None, assigned_to: Optional[str] = None
     ) -> UnifiedInvestigation:
         """Create a new cross-domain investigation context for a situation."""
         if not tenant_id:
@@ -335,11 +309,7 @@ class UnifiedIntelligenceManager:
         signals = [s.to_dict() for s in self.repository.list_signals(tenant_id)]
         situations = [s.to_dict() for s in self.repository.list_situations(tenant_id)]
 
-        data = {
-            "signals": signals,
-            "situations": situations,
-            "snapshot_timestamp": datetime.utcnow().isoformat()
-        }
+        data = {"signals": signals, "situations": situations, "snapshot_timestamp": datetime.utcnow().isoformat()}
         return self.snapshot_generator.generate_snapshot(tenant_id, data)
 
     def get_analytics_summary(self, tenant_id: str) -> UnifiedAnalyticsSummary:

@@ -2,6 +2,7 @@
 Reranker Module.
 Provider abstraction for reranking search results.
 """
+
 import asyncio
 import logging
 from abc import ABC, abstractmethod
@@ -75,17 +76,9 @@ class CohereReranker(BaseReranker):
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "https://api.cohere.ai/v1/rerank",
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "query": query,
-                    "documents": texts,
-                    "model": self.model,
-                    "top_n": top_n
-                },
-                timeout=15.0
+                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                json={"query": query, "documents": texts, "model": self.model, "top_n": top_n},
+                timeout=15.0,
             )
             response.raise_for_status()
             data = response.json()
@@ -151,17 +144,9 @@ class JinaReranker(BaseReranker):
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "https://api.jina.ai/v1/rerank",
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "query": query,
-                    "documents": texts,
-                    "model": self.model,
-                    "top_n": top_n
-                },
-                timeout=15.0
+                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                json={"query": query, "documents": texts, "model": self.model, "top_n": top_n},
+                timeout=15.0,
             )
             response.raise_for_status()
             data = response.json()

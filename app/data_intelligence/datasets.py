@@ -31,6 +31,7 @@ class DatasetStatus(str, Enum):
 
 class DatasetClassificationReference(BaseModel):
     """Reference to existing platform data classification."""
+
     classification_id: str
     tier: str = "CONFIDENTIAL"
     contains_pii: bool = False
@@ -40,6 +41,7 @@ class DatasetClassificationReference(BaseModel):
 
 class DatasetMetadata(BaseModel):
     """Metadata reference for dataset."""
+
     description: str = ""
     domain: str = "general"
     owner_id: str = "system"
@@ -52,6 +54,7 @@ class DatasetMetadata(BaseModel):
 
 class DatasetProfile(BaseModel):
     """Profile reference for dataset state."""
+
     profile_id: str = Field(default_factory=lambda: f"prof-{uuid.uuid4().hex[:8]}")
     dataset_id: str
     tenant_id: str
@@ -66,6 +69,7 @@ class DatasetProfile(BaseModel):
 
 class DatasetReference(BaseModel):
     """Enterprise reference to existing platform dataset (no storage duplication)."""
+
     dataset_id: str
     name: str
     tenant_id: str
@@ -73,7 +77,9 @@ class DatasetReference(BaseModel):
     status: DatasetStatus = DatasetStatus.ACTIVE
     source_id: Optional[str] = None
     external_uri: Optional[str] = None
-    classification: DatasetClassificationReference = Field(default_factory=lambda: DatasetClassificationReference(classification_id="class-default"))
+    classification: DatasetClassificationReference = Field(
+        default_factory=lambda: DatasetClassificationReference(classification_id="class-default")
+    )
     metadata: DatasetMetadata = Field(default_factory=DatasetMetadata)
     version: str = "1.0.0"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

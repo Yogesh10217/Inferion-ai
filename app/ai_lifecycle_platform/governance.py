@@ -38,7 +38,12 @@ class LifecycleGovernanceEngine:
                 subject_type="AI_ASSET_LIFECYCLE",
                 subject_id=asset_id,
                 status=GovernanceDecisionStatus.BLOCK,
-                reasons=[GovernanceDecisionReason(code="HARD_GATE_FAILURE", message="Lifecycle promotion blocked due to hard governance gate failure")],
+                reasons=[
+                    GovernanceDecisionReason(
+                        code="HARD_GATE_FAILURE",
+                        message="Lifecycle promotion blocked due to hard governance gate failure",
+                    )
+                ],
             )
 
         if requires_approval:
@@ -53,7 +58,9 @@ class LifecycleGovernanceEngine:
                 subject_type="AI_ASSET_LIFECYCLE",
                 subject_id=asset_id,
                 status=GovernanceDecisionStatus.REQUIRE_APPROVAL,
-                reasons=[GovernanceDecisionReason(code="APPROVAL_REQUIRED", message="Operation requires human approval")],
+                reasons=[
+                    GovernanceDecisionReason(code="APPROVAL_REQUIRED", message="Operation requires human approval")
+                ],
             )
 
         return GovernanceDecision(

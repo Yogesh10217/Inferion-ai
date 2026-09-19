@@ -37,7 +37,9 @@ class SecretSecurityResult:
                 "is_secure": self.is_secure,
                 "canary_leaks": self.canary_leaks_detected,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         return {

@@ -20,9 +20,7 @@ class RuntimeObservationORM(Base):
     payload = Column(JSON, nullable=False)
     observed_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    __table_args__ = (
-        Index("idx_ca_obs_tenant_domain", "tenant_id", "source_domain"),
-    )
+    __table_args__ = (Index("idx_ca_obs_tenant_domain", "tenant_id", "source_domain"),)
 
 
 class ContinuousAssuranceAssessmentORM(Base):
@@ -35,9 +33,7 @@ class ContinuousAssuranceAssessmentORM(Base):
     findings = Column(JSON, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    __table_args__ = (
-        Index("idx_ca_ass_tenant_created", "tenant_id", "created_at"),
-    )
+    __table_args__ = (Index("idx_ca_ass_tenant_created", "tenant_id", "created_at"),)
 
 
 class AssuranceDriftORM(Base):
@@ -54,9 +50,7 @@ class AssuranceDriftORM(Base):
     confidence = Column(Float, nullable=False, default=0.95)
     detected_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    __table_args__ = (
-        Index("idx_ca_drift_tenant_status", "tenant_id", "status"),
-    )
+    __table_args__ = (Index("idx_ca_drift_tenant_status", "tenant_id", "status"),)
 
 
 class ContinuousVerificationORM(Base):

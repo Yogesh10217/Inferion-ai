@@ -56,7 +56,11 @@ class IntelligenceAnalyticsEngine:
         recommendations_accepted: int = 4,
         savings_usd: float = 120.0,
     ) -> IntelligenceReport:
-        dec = DecisionAnalytics(total_decisions=recommendations_generated, approved_decisions=recommendations_accepted, decision_accuracy_pct=96.0)
+        dec = DecisionAnalytics(
+            total_decisions=recommendations_generated,
+            approved_decisions=recommendations_accepted,
+            decision_accuracy_pct=96.0,
+        )
 
         rec = RecommendationAnalytics(
             recommendations_generated=recommendations_generated,

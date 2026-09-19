@@ -39,7 +39,9 @@ class CrossPhaseVerificationEngine:
             verified=verified,
             details={
                 "required_delta": required_delta,
-                "summary": "Assurance score successfully recovered" if verified else "Improvement failed to satisfy criteria",
+                "summary": (
+                    "Assurance score successfully recovered" if verified else "Improvement failed to satisfy criteria"
+                ),
             },
         )
         logger.info(f"Cross-phase outcome verification {v_id}: verified={verified} (delta={delta})")

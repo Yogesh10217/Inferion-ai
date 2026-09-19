@@ -53,7 +53,9 @@ class MappingManager:
         self.control_manager = control_manager
         self._mappings: Dict[str, RequirementControlMapping] = {}
 
-    def map_requirement_to_control(self, tenant_id: str, requirement_id: str, control_id: str) -> RequirementControlMapping:
+    def map_requirement_to_control(
+        self, tenant_id: str, requirement_id: str, control_id: str
+    ) -> RequirementControlMapping:
         mapping = RequirementControlMapping(
             tenant_id=tenant_id,
             requirement_id=requirement_id,

@@ -23,4 +23,9 @@ class CapacityImpactEngine:
         }
         overall = sum(dimensions.values()) / len(dimensions)
         logger.info(f"Evaluated CapacityImpact for resource '{resource_id}': Overall={overall:.4f}")
-        return {"tenant_id": tenant_id, "resource_id": resource_id, "overall_impact": round(overall, 4), "dimensions": dimensions}
+        return {
+            "tenant_id": tenant_id,
+            "resource_id": resource_id,
+            "overall_impact": round(overall, 4),
+            "dimensions": dimensions,
+        }

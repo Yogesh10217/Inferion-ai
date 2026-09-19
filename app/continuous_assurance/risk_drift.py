@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class RiskDriftAnalyzer:
     """Analyzes risk score increases, volatility, and threshold violations."""
 
-    def analyze_risk_drift(
-        self, tenant_id: str, baseline_risk: float, current_risk: float
-    ) -> AssuranceDrift:
+    def analyze_risk_drift(self, tenant_id: str, baseline_risk: float, current_risk: float) -> AssuranceDrift:
         risk_diff = current_risk - baseline_risk
 
         if risk_diff > 0.3:

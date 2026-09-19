@@ -48,7 +48,11 @@ class AuthService:
 
         if not user or not PasswordService.verify_password(password, user.password_hash):
             await AuthService.log_audit_event(
-                db, "failed_authentication", user_id=user.id if user else None, ip_address=ip_address, details=f"Failed login for {username}"
+                db,
+                "failed_authentication",
+                user_id=user.id if user else None,
+                ip_address=ip_address,
+                details=f"Failed login for {username}",
             )
             raise InvalidCredentialsException()
 
@@ -59,6 +63,7 @@ class AuthService:
         if not org_id:
             # Find first available org for audit log
             from app.tenant.models import Membership
+
             stmt_mem = select(Membership).where(Membership.user_id == user.id)
             res_mem = await db.execute(stmt_mem)
             mem = res_mem.scalars().first()
@@ -81,7 +86,7 @@ class AuthService:
             user_id=user.id,
             organization_id=organization_id,
             refresh_token_hash=refresh_token_hash,
-            expires_at=datetime.now(timezone.utc)
+            expires_at=datetime.now(timezone.utc),
             # In a real app we'd calculate expires_at properly based on the refresh token expiry
         )
         db.add(session)

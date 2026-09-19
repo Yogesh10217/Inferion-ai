@@ -54,7 +54,9 @@ class SecurityPolicyResult:
                 "blocking": self.is_blocking,
                 "triggered": len(self.triggered_rules),
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     @property
     def action(self) -> str:
@@ -83,16 +85,76 @@ class SecurityPolicyEngine:
     ) -> None:
         self.min_production_score = min_production_score
         self.rules = custom_rules or [
-            SecurityPolicyRule("R001", "Secret Exposure Policy", "SECRET_EXPOSURE", SecurityPolicyAction.BLOCK, "Block if raw secrets detected"),
-            SecurityPolicyRule("R002", "Insecure Configuration Policy", "INSECURE_CONFIGURATION", SecurityPolicyAction.BLOCK, "Block on insecure configuration"),
-            SecurityPolicyRule("R003", "Weak Authentication Policy", "WEAK_AUTHENTICATION", SecurityPolicyAction.BLOCK, "Block on weak auth"),
-            SecurityPolicyRule("R004", "Unsafe CORS Policy", "UNSAFE_CORS", SecurityPolicyAction.BLOCK, "Block wildcard CORS in production/staging"),
-            SecurityPolicyRule("R005", "Missing Security Headers Policy", "MISSING_SECURITY_HEADERS", SecurityPolicyAction.WARN, "Warn on missing headers"),
-            SecurityPolicyRule("R006", "Invalid Artifact Policy", "INVALID_ARTIFACT", SecurityPolicyAction.BLOCK, "Block on digest mismatch"),
-            SecurityPolicyRule("R007", "Untrusted Dependency Policy", "UNTRUSTED_DEPENDENCY", SecurityPolicyAction.MANUAL_REVIEW_REQUIRED, "Manual review for unpinned deps"),
-            SecurityPolicyRule("R008", "Vulnerable Container Policy", "VULNERABLE_CONTAINER", SecurityPolicyAction.BLOCK, "Block container running as root"),
-            SecurityPolicyRule("R009", "Unauthorized Access Policy", "UNAUTHORIZED_ACCESS", SecurityPolicyAction.BLOCK, "Block on RBAC violation"),
-            SecurityPolicyRule("R010", "Audit Failure Policy", "AUDIT_FAILURE", SecurityPolicyAction.BLOCK, "Block on audit tamper failure"),
+            SecurityPolicyRule(
+                "R001",
+                "Secret Exposure Policy",
+                "SECRET_EXPOSURE",
+                SecurityPolicyAction.BLOCK,
+                "Block if raw secrets detected",
+            ),
+            SecurityPolicyRule(
+                "R002",
+                "Insecure Configuration Policy",
+                "INSECURE_CONFIGURATION",
+                SecurityPolicyAction.BLOCK,
+                "Block on insecure configuration",
+            ),
+            SecurityPolicyRule(
+                "R003",
+                "Weak Authentication Policy",
+                "WEAK_AUTHENTICATION",
+                SecurityPolicyAction.BLOCK,
+                "Block on weak auth",
+            ),
+            SecurityPolicyRule(
+                "R004",
+                "Unsafe CORS Policy",
+                "UNSAFE_CORS",
+                SecurityPolicyAction.BLOCK,
+                "Block wildcard CORS in production/staging",
+            ),
+            SecurityPolicyRule(
+                "R005",
+                "Missing Security Headers Policy",
+                "MISSING_SECURITY_HEADERS",
+                SecurityPolicyAction.WARN,
+                "Warn on missing headers",
+            ),
+            SecurityPolicyRule(
+                "R006",
+                "Invalid Artifact Policy",
+                "INVALID_ARTIFACT",
+                SecurityPolicyAction.BLOCK,
+                "Block on digest mismatch",
+            ),
+            SecurityPolicyRule(
+                "R007",
+                "Untrusted Dependency Policy",
+                "UNTRUSTED_DEPENDENCY",
+                SecurityPolicyAction.MANUAL_REVIEW_REQUIRED,
+                "Manual review for unpinned deps",
+            ),
+            SecurityPolicyRule(
+                "R008",
+                "Vulnerable Container Policy",
+                "VULNERABLE_CONTAINER",
+                SecurityPolicyAction.BLOCK,
+                "Block container running as root",
+            ),
+            SecurityPolicyRule(
+                "R009",
+                "Unauthorized Access Policy",
+                "UNAUTHORIZED_ACCESS",
+                SecurityPolicyAction.BLOCK,
+                "Block on RBAC violation",
+            ),
+            SecurityPolicyRule(
+                "R010",
+                "Audit Failure Policy",
+                "AUDIT_FAILURE",
+                SecurityPolicyAction.BLOCK,
+                "Block on audit tamper failure",
+            ),
         ]
 
     def evaluate_policy(
@@ -110,7 +172,7 @@ class SecurityPolicyEngine:
         res.is_production = is_production
 
         # Check production threshold
-        score = posture_result.score if hasattr(posture_result, 'score') else 100.0
+        score = posture_result.score if hasattr(posture_result, "score") else 100.0
         if is_production and score < self.min_production_score:
             res.overall_action = SecurityPolicyAction.BLOCK
             res.is_blocking = True
@@ -131,19 +193,27 @@ class SecurityPolicyEngine:
         for rule in self.rules:
             if rule.category in category_findings:
                 finding = category_findings[rule.category]
-                triggered.append({
-                    "rule_id": rule.rule_id,
-                    "name": rule.name,
-                    "category": rule.category,
-                    "action": rule.action_if_triggered.value,
-                    "finding": finding,
-                })
+                triggered.append(
+                    {
+                        "rule_id": rule.rule_id,
+                        "name": rule.name,
+                        "category": rule.category,
+                        "action": rule.action_if_triggered.value,
+                        "finding": finding,
+                    }
+                )
                 if rule.action_if_triggered == SecurityPolicyAction.BLOCK:
                     overall = SecurityPolicyAction.BLOCK
                     is_blocking = True
-                elif rule.action_if_triggered == SecurityPolicyAction.MANUAL_REVIEW_REQUIRED and overall != SecurityPolicyAction.BLOCK:
+                elif (
+                    rule.action_if_triggered == SecurityPolicyAction.MANUAL_REVIEW_REQUIRED
+                    and overall != SecurityPolicyAction.BLOCK
+                ):
                     overall = SecurityPolicyAction.MANUAL_REVIEW_REQUIRED
-                elif rule.action_if_triggered == SecurityPolicyAction.WARN and overall not in (SecurityPolicyAction.BLOCK, SecurityPolicyAction.MANUAL_REVIEW_REQUIRED):
+                elif rule.action_if_triggered == SecurityPolicyAction.WARN and overall not in (
+                    SecurityPolicyAction.BLOCK,
+                    SecurityPolicyAction.MANUAL_REVIEW_REQUIRED,
+                ):
                     overall = SecurityPolicyAction.WARN
 
         return SecurityPolicyResult(

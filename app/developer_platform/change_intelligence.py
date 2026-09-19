@@ -15,5 +15,7 @@ class ChangeIntelligenceEngine:
         self.change_history_tracker = change_history_tracker or ChangeHistoryTracker()
 
     def analyze_release_impact(self, release_id: str, commit_shas: list) -> Dict[str, Any]:
-        logger.info(f"[CHANGE INTELLIGENCE] Analyzed change impact for release '{release_id}' across {len(commit_shas)} commits")
+        logger.info(
+            f"[CHANGE INTELLIGENCE] Analyzed change impact for release '{release_id}' across {len(commit_shas)} commits"
+        )
         return {"release_id": release_id, "impacted_services_count": 2, "risk_score": 15.0}

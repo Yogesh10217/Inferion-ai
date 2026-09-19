@@ -18,7 +18,7 @@ class TreeOfThoughtPlanner(BasePlanner):
         goal: str,
         available_tools: Dict[str, ToolDefinition],
         execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        context: AgentContext,
     ) -> List[Dict[str, Any]]:
         # Explores multiple reasoning branches and selects optimal path
         tool_name = "knowledge_search" if "knowledge_search" in available_tools else list(available_tools.keys())[0]
@@ -27,6 +27,6 @@ class TreeOfThoughtPlanner(BasePlanner):
                 "id": "tot_branch_alpha",
                 "description": f"Tree-of-Thought Branch Alpha for '{goal}'",
                 "tool": tool_name,
-                "tool_input": {"query": goal}
+                "tool_input": {"query": goal},
             }
         ]

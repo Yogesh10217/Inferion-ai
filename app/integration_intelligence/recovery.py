@@ -63,7 +63,9 @@ class IntegrationRecoveryManager:
         self._plans[plan.plan_id] = plan
         return plan
 
-    def approve_recovery(self, tenant_id: str, plan_id: str, approval_id: str = "appr_rec_123") -> IntegrationRecoveryPlan:
+    def approve_recovery(
+        self, tenant_id: str, plan_id: str, approval_id: str = "appr_rec_123"
+    ) -> IntegrationRecoveryPlan:
         plan = self.get_plan(tenant_id, plan_id)
         plan.approval_id = approval_id
         plan.status = RecoveryStatus.APPROVED

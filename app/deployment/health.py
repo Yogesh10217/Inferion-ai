@@ -86,7 +86,10 @@ class DeploymentHealthEngine:
                 category=HealthCategory.INTELLIGENCE_MANAGERS,
                 name="PlatformManagers",
                 status=HealthStatus.HEALTHY if all_managers_ready else HealthStatus.DEGRADED,
-                details={"registered_count": sum(1 for v in manager_status.values() if v), "total": len(manager_status)},
+                details={
+                    "registered_count": sum(1 for v in manager_status.values() if v),
+                    "total": len(manager_status),
+                },
             )
         )
 

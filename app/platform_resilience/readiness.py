@@ -70,10 +70,27 @@ class ProductionReadinessManager:
         requirements: Optional[List[ReadinessRequirement]] = None,
     ) -> ReadinessAssessment:
         req_list = requirements or [
-            ReadinessRequirement(dimension=ReadinessDimension.RELIABILITY, name="SLO Defined", is_mandatory=True, is_passed=True),
-            ReadinessRequirement(dimension=ReadinessDimension.SECURITY, name="Vulnerability Audit Clean", is_mandatory=True, is_passed=True),
-            ReadinessRequirement(dimension=ReadinessDimension.RECOVERABILITY, name="DR Backup Verified", is_mandatory=True, is_passed=True),
-            ReadinessRequirement(dimension=ReadinessDimension.OBSERVABILITY, name="Prometheus Metrics Collector Active", is_mandatory=True, is_passed=True),
+            ReadinessRequirement(
+                dimension=ReadinessDimension.RELIABILITY, name="SLO Defined", is_mandatory=True, is_passed=True
+            ),
+            ReadinessRequirement(
+                dimension=ReadinessDimension.SECURITY,
+                name="Vulnerability Audit Clean",
+                is_mandatory=True,
+                is_passed=True,
+            ),
+            ReadinessRequirement(
+                dimension=ReadinessDimension.RECOVERABILITY,
+                name="DR Backup Verified",
+                is_mandatory=True,
+                is_passed=True,
+            ),
+            ReadinessRequirement(
+                dimension=ReadinessDimension.OBSERVABILITY,
+                name="Prometheus Metrics Collector Active",
+                is_mandatory=True,
+                is_passed=True,
+            ),
         ]
 
         hard_fails = [r.name for r in req_list if r.is_mandatory and not r.is_passed]

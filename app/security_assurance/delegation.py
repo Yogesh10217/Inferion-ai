@@ -74,7 +74,9 @@ class SecurityDelegationManager:
         if idempotency_key:
             self._idempotency_map[idempotency_key] = plan.delegation_id
 
-        logger.info(f"[SECURITY DELEGATION] Delegated action '{action_name}' to system '{target_system}' (Request ID: {del_req.request_id})")
+        logger.info(
+            f"[SECURITY DELEGATION] Delegated action '{action_name}' to system '{target_system}' (Request ID: {del_req.request_id})"
+        )
         return plan
 
     def list_delegations(self, tenant_id: str) -> List[SecurityDelegationPlan]:

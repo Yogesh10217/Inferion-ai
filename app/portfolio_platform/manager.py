@@ -77,13 +77,19 @@ class PortfolioPlatformManager:
         """Runs end-to-end portfolio flow: Strategy -> Objective -> Opportunity -> Initiative -> BC -> Prioritize -> Optimize -> Investment -> Funding -> Execute -> Outcomes -> Benefits -> Learning."""
         # 1. Strategy & Objective
         strat = self.strategy_manager.create_strategy(tenant_id, strategy_name, "Strategic AI Acceleration")
-        obj = self.strategy_manager.add_objective(strat.strategy_id, tenant_id, "Customer Satisfaction Boost", "Increase CSAT via AI")
+        obj = self.strategy_manager.add_objective(
+            strat.strategy_id, tenant_id, "Customer Satisfaction Boost", "Increase CSAT via AI"
+        )
 
         # 2. Opportunity & Initiative
-        opp = self.opportunity_manager.discover_opportunity(tenant_id, "Customer Insights Discovery", "Discover CSAT drivers")
+        opp = self.opportunity_manager.discover_opportunity(
+            tenant_id, "Customer Insights Discovery", "Discover CSAT drivers"
+        )
         self.opportunity_manager.qualify_opportunity(opp.opportunity_id, tenant_id, True)
 
-        init = self.initiative_manager.create_initiative(tenant_id, initiative_title, "Deploy agent for insights", opp.opportunity_id, obj.objective_id)
+        init = self.initiative_manager.create_initiative(
+            tenant_id, initiative_title, "Deploy agent for insights", opp.opportunity_id, obj.objective_id
+        )
         self.opportunity_manager.mark_converted(opp.opportunity_id, tenant_id, init.initiative_id)
 
         # 3. Business Case
@@ -101,21 +107,35 @@ class PortfolioPlatformManager:
         self.metrics_collector.increment("ai_portfolio_optimization_total")
 
         # 5. Investment & Funding
-        proposal = self.investment_manager.propose_investment(tenant_id, init.initiative_id, 60000.0, risk_level=InvestmentRisk.LOW)
+        proposal = self.investment_manager.propose_investment(
+            tenant_id, init.initiative_id, 60000.0, risk_level=InvestmentRisk.LOW
+        )
         decision = self.investment_manager.finalize_decision(proposal.proposal_id, tenant_id)
 
-        alloc = self.funding_manager.allocate_funding(tenant_id, init.initiative_id, f"idemp_fund_{init.initiative_id}", 60000.0)
+        alloc = self.funding_manager.allocate_funding(
+            tenant_id, init.initiative_id, f"idemp_fund_{init.initiative_id}", 60000.0
+        )
         self.metrics_collector.increment("ai_portfolio_funding_requests_total")
 
         # 6. Delegated Execution
-        exec_plan = self.execution_manager.create_execution_plan(tenant_id, init.initiative_id, ExecutionTarget.APPLICATION_PLATFORM)
-        del_plan = self.execution_manager.delegate_execution(exec_plan.execution_plan_id, tenant_id, "ApplicationPlatformManager")
+        exec_plan = self.execution_manager.create_execution_plan(
+            tenant_id, init.initiative_id, ExecutionTarget.APPLICATION_PLATFORM
+        )
+        del_plan = self.execution_manager.delegate_execution(
+            exec_plan.execution_plan_id, tenant_id, "ApplicationPlatformManager"
+        )
 
         # 7. Value & Outcomes & Benefits
-        vm = self.value_manager.record_expected_value(tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 80000.0)
-        vm_act = self.value_manager.record_realized_value(tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 85000.0)
+        vm = self.value_manager.record_expected_value(
+            tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 80000.0
+        )
+        vm_act = self.value_manager.record_realized_value(
+            tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 85000.0
+        )
 
-        outcome = self.outcome_evaluator.evaluate_outcome(tenant_id, init.initiative_id, 60000.0, 58000.0, 120000.0, 125000.0)
+        outcome = self.outcome_evaluator.evaluate_outcome(
+            tenant_id, init.initiative_id, 60000.0, 58000.0, 120000.0, 125000.0
+        )
         benefit = self.benefits_manager.create_benefit_plan(tenant_id, init.initiative_id, "CSAT Efficiency", 120000.0)
         self.benefits_manager.record_realized_benefit(benefit.benefit_id, tenant_id, 125000.0)
 

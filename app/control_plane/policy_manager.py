@@ -152,15 +152,19 @@ class PolicyManager:
             # Check action restriction rules
             denied_actions = pol.rules.get("deny_actions", [])
             if action in denied_actions or "*" in denied_actions:
-                violations.append({
-                    "policy_id": pol.policy_id,
-                    "policy_name": pol.name,
-                    "reason": f"Action '{action}' explicitly denied by policy '{pol.name}'",
-                })
+                violations.append(
+                    {
+                        "policy_id": pol.policy_id,
+                        "policy_name": pol.name,
+                        "reason": f"Action '{action}' explicitly denied by policy '{pol.name}'",
+                    }
+                )
 
         allowed = len(violations) == 0
         if not allowed:
-            logger.warning(f"[POLICY VIOLATION] Target '{target_id}' action '{action}' blocked by {len(violations)} policies")
+            logger.warning(
+                f"[POLICY VIOLATION] Target '{target_id}' action '{action}' blocked by {len(violations)} policies"
+            )
 
         return {
             "allowed": allowed,

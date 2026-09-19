@@ -104,10 +104,7 @@ class WorkerPool:
             w.register_handler(name, handler)
 
     async def start(self) -> None:
-        self.workers = [
-            JobWorker(worker_id=f"pool_worker_{i + 1}", queue=self.queue)
-            for i in range(self.size)
-        ]
+        self.workers = [JobWorker(worker_id=f"pool_worker_{i + 1}", queue=self.queue) for i in range(self.size)]
         for w in self.workers:
             await w.start()
         logger.info(f"[WORKER POOL] Started {self.size} workers")

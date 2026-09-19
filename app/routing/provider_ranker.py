@@ -40,9 +40,7 @@ class ProviderRanker:
             cost = stats.get("estimated_cost_per_1k", 0.002)
 
             # 3. Normalize latency score (0 ms -> 1.0, max_latency -> 0.0)
-            latency_score = max(
-                0.0, 1.0 - (avg_latency / self.default_max_latency_ms)
-            )
+            latency_score = max(0.0, 1.0 - (avg_latency / self.default_max_latency_ms))
 
             # 4. Normalize cost score (0 cost -> 1.0, max_cost -> 0.0)
             cost_score = max(0.0, 1.0 - (cost / self.default_max_cost))

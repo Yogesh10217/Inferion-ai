@@ -123,7 +123,9 @@ class RiskManager:
             evidence_ids=evidence,
         )
         self._assessments[assessment.assessment_id] = assessment
-        logger.info(f"[RISK MANAGER] Assessed '{target_resource_id}' ({category.value}): Score = {total_score:.1f} ({severity.value})")
+        logger.info(
+            f"[RISK MANAGER] Assessed '{target_resource_id}' ({category.value}): Score = {total_score:.1f} ({severity.value})"
+        )
         return assessment
 
     def request_risk_acceptance(self, assessment_id: str) -> RiskAssessment:
@@ -133,7 +135,9 @@ class RiskManager:
             req_id = f"risk_appr_{assessment.assessment_id[:8]}"
             assessment.approval_request_id = req_id
             assessment.status = RiskStatus.ESCALATED
-            logger.warning(f"[RISK MANAGER] {assessment.severity.value} risk acceptance REQUIRES APPROVAL (Request ID: {req_id})")
+            logger.warning(
+                f"[RISK MANAGER] {assessment.severity.value} risk acceptance REQUIRES APPROVAL (Request ID: {req_id})"
+            )
         else:
             assessment.status = RiskStatus.ACCEPTED
             logger.info(f"[RISK MANAGER] {assessment.severity.value} risk accepted automatically under policy")

@@ -52,7 +52,9 @@ class RuntimeImpactAssessmentEngine:
         else:
             severity_level = "LOW"
 
-        logger.info(f"Evaluated RuntimeImpactAssessment for '{component_id}': Overall={overall_impact:.3f} ({severity_level})")
+        logger.info(
+            f"Evaluated RuntimeImpactAssessment for '{component_id}': Overall={overall_impact:.3f} ({severity_level})"
+        )
         return {
             "tenant_id": tenant_id,
             "component_id": component_id,

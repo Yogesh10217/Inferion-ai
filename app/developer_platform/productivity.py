@@ -24,5 +24,7 @@ class DeveloperProductivityEngine:
 
     def calculate_dora_metrics(self, project_id: str, tenant_id: str = "global") -> DORAMetrics:
         metrics = DORAMetrics()
-        logger.info(f"[DEVELOPER PRODUCTIVITY] Calculated DORA metrics for project '{project_id}' (Tenant: {tenant_id})")
+        logger.info(
+            f"[DEVELOPER PRODUCTIVITY] Calculated DORA metrics for project '{project_id}' (Tenant: {tenant_id})"
+        )
         return metrics

@@ -31,6 +31,7 @@ class IntegrationExecutionStatus(str, Enum):
 
 class IntegrationExecutionResult(BaseModel):
     """Result payload returned by delegated execution."""
+
     execution_id: str
     status: IntegrationExecutionStatus
     delegation_id: str
@@ -41,6 +42,7 @@ class IntegrationExecutionResult(BaseModel):
 
 class IntegrationExecution(BaseModel):
     """Integration Execution Lifecycle Representation."""
+
     execution_id: str = Field(default_factory=lambda: f"exec_int_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     workflow_id: str
@@ -115,10 +117,14 @@ class IntegrationExecutionManager:
         )
         return exec_obj
 
-    def evaluate_governance(self, tenant_id: str, execution_id: str, is_governed_clean: bool = True) -> IntegrationExecution:
+    def evaluate_governance(
+        self, tenant_id: str, execution_id: str, is_governed_clean: bool = True
+    ) -> IntegrationExecution:
         exec_obj = self.get_execution(tenant_id, execution_id)
         if exec_obj.status != IntegrationExecutionStatus.REQUESTED:
-            raise InvalidAccessStateTransitionException(exec_obj.status.value, IntegrationExecutionStatus.GOVERNANCE_EVALUATED.value)
+            raise InvalidAccessStateTransitionException(
+                exec_obj.status.value, IntegrationExecutionStatus.GOVERNANCE_EVALUATED.value
+            )
 
         if exec_obj.requires_approval and not exec_obj.approval_id:
             exec_obj.status = IntegrationExecutionStatus.APPROVAL_PENDING
@@ -126,7 +132,9 @@ class IntegrationExecutionManager:
             exec_obj.status = IntegrationExecutionStatus.GOVERNANCE_EVALUATED
         return exec_obj
 
-    def approve_execution(self, tenant_id: str, execution_id: str, approval_id: str = "appr_int_123") -> IntegrationExecution:
+    def approve_execution(
+        self, tenant_id: str, execution_id: str, approval_id: str = "appr_int_123"
+    ) -> IntegrationExecution:
         exec_obj = self.get_execution(tenant_id, execution_id)
         exec_obj.approval_id = approval_id
         exec_obj.status = IntegrationExecutionStatus.GOVERNANCE_EVALUATED
@@ -152,7 +160,12 @@ class IntegrationExecutionManager:
         exec_obj.delegation_request_id = del_req.delegation_id
         return del_req
 
-    def finalize_execution(self, tenant_id: str, execution_id: str, status: IntegrationExecutionStatus = IntegrationExecutionStatus.COMPLETED) -> IntegrationExecution:
+    def finalize_execution(
+        self,
+        tenant_id: str,
+        execution_id: str,
+        status: IntegrationExecutionStatus = IntegrationExecutionStatus.COMPLETED,
+    ) -> IntegrationExecution:
         exec_obj = self.get_execution(tenant_id, execution_id)
         exec_obj.status = status
         exec_obj.is_finalized = True
@@ -166,7 +179,11 @@ class IntegrationExecutionManager:
             operation_type="INTEGRATION_EXECUTION",
             idempotency_key=exec_obj.idempotency_key,
             result_payload={"execution_id": exec_obj.execution_id, "fingerprint": exec_obj.fingerprint},
-            status=IdempotencyStatus.COMPLETED if status == IntegrationExecutionStatus.COMPLETED else IdempotencyStatus.FAILED,
+            status=(
+                IdempotencyStatus.COMPLETED
+                if status == IntegrationExecutionStatus.COMPLETED
+                else IdempotencyStatus.FAILED
+            ),
         )
         return exec_obj
 

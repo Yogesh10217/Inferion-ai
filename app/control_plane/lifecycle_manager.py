@@ -28,7 +28,14 @@ class LifecycleState(str, Enum):
 VALID_TRANSITIONS = {
     LifecycleState.CREATED: {LifecycleState.PROVISIONING, LifecycleState.ACTIVE, LifecycleState.FAILED},
     LifecycleState.PROVISIONING: {LifecycleState.ACTIVE, LifecycleState.FAILED},
-    LifecycleState.ACTIVE: {LifecycleState.PAUSED, LifecycleState.SUSPENDED, LifecycleState.UPDATING, LifecycleState.DEPRECATED, LifecycleState.ARCHIVED, LifecycleState.DELETED},
+    LifecycleState.ACTIVE: {
+        LifecycleState.PAUSED,
+        LifecycleState.SUSPENDED,
+        LifecycleState.UPDATING,
+        LifecycleState.DEPRECATED,
+        LifecycleState.ARCHIVED,
+        LifecycleState.DELETED,
+    },
     LifecycleState.PAUSED: {LifecycleState.ACTIVE, LifecycleState.DELETED},
     LifecycleState.SUSPENDED: {LifecycleState.ACTIVE, LifecycleState.DELETED},
     LifecycleState.UPDATING: {LifecycleState.ACTIVE, LifecycleState.FAILED},

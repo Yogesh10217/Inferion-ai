@@ -62,9 +62,30 @@ class KnowledgeRiskManager:
     ) -> KnowledgeRiskAssessment:
         if not risk_factors:
             risk_factors = [
-                KnowledgeRiskFactor(dimension=KnowledgeRiskDimension.STALE_KNOWLEDGE, name="Aging Content Risk", risk_score=0.15, impact=0.4, likelihood=0.3, description="Reference updated < 7 days ago"),
-                KnowledgeRiskFactor(dimension=KnowledgeRiskDimension.PROVENANCE, name="Source Authority Risk", risk_score=0.10, impact=0.8, likelihood=0.1, description="Verified internal repository source"),
-                KnowledgeRiskFactor(dimension=KnowledgeRiskDimension.CONFLICT, name="Contradiction Risk", risk_score=0.05, impact=0.7, likelihood=0.05, description="Zero policy contradictions detected"),
+                KnowledgeRiskFactor(
+                    dimension=KnowledgeRiskDimension.STALE_KNOWLEDGE,
+                    name="Aging Content Risk",
+                    risk_score=0.15,
+                    impact=0.4,
+                    likelihood=0.3,
+                    description="Reference updated < 7 days ago",
+                ),
+                KnowledgeRiskFactor(
+                    dimension=KnowledgeRiskDimension.PROVENANCE,
+                    name="Source Authority Risk",
+                    risk_score=0.10,
+                    impact=0.8,
+                    likelihood=0.1,
+                    description="Verified internal repository source",
+                ),
+                KnowledgeRiskFactor(
+                    dimension=KnowledgeRiskDimension.CONFLICT,
+                    name="Contradiction Risk",
+                    risk_score=0.05,
+                    impact=0.7,
+                    likelihood=0.05,
+                    description="Zero policy contradictions detected",
+                ),
             ]
 
         dim_scores: Dict[str, float] = {}

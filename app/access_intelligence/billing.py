@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 
 class AccessCostEvent(BaseModel):
     """Cost event emitted by access intelligence governance."""
+
     event_id: str = Field(default_factory=lambda: f"cost_acc_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     action_type: str  # AUTHORIZATION_EVALUATION, RISK_ASSESSMENT, CERTIFICATION_RUN, ANOMALY_ANALYSIS

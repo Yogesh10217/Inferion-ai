@@ -16,8 +16,7 @@ logger = logging.getLogger(__name__)
 class NotificationChannel(Protocol):
     """Protocol interface for alerting notification channels (Webhook, Slack, Email, PagerDuty)."""
 
-    async def send_notification(self, alert_data: Dict[str, Any]) -> bool:
-        ...
+    async def send_notification(self, alert_data: Dict[str, Any]) -> bool: ...
 
 
 class ConsoleNotificationChannel:
@@ -31,6 +30,7 @@ class ConsoleNotificationChannel:
 @dataclass
 class Alert:
     """Represents an active or historical system alert."""
+
     alert_id: str
     title: str
     condition_type: str  # CRITICAL_FAILURE, SLA_VIOLATION, COST_SPIKE, BUDGET_THRESHOLD, HIGH_ERROR_RATE, AGENT_STUCK, WORKFLOW_STUCK, EXECUTION_LOOP, TOOL_FAILURE, PROVIDER_OUTAGE

@@ -129,7 +129,9 @@ class ControlManager:
         if not ctrl:
             raise ControlNotFoundException(control_id=control_id, tenant_id=tenant_id)
         if ctrl.tenant_id != tenant_id and tenant_id != "global" and ctrl.tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=ctrl.tenant_id, resource_id=control_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=ctrl.tenant_id, resource_id=control_id
+            )
         return ctrl
 
     def list_controls(self, tenant_id: str, category: Optional[ControlCategory] = None) -> List[ComplianceControl]:

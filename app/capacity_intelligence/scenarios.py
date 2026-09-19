@@ -23,5 +23,7 @@ class CapacityScenarioEngine:
             simulated_headroom_pct=round(sim_headroom, 2),
             is_feasible=is_feasible,
         )
-        logger.info(f"Simulated CapacityScenario '{scenario_name}' (Multiplier: {workload_multiplier}x, Headroom: {sim_headroom}%, Feasible: {is_feasible})")
+        logger.info(
+            f"Simulated CapacityScenario '{scenario_name}' (Multiplier: {workload_multiplier}x, Headroom: {sim_headroom}%, Feasible: {is_feasible})"
+        )
         return scen

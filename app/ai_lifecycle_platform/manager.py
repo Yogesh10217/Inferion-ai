@@ -67,7 +67,9 @@ class AILifecyclePlatformManager:
         self.metrics_collector = LifecycleMetricsCollector()
         self.billing_tracker = LifecycleBillingTracker()
 
-        logger.info("[AI LIFECYCLE MASTER] AILifecyclePlatformManager initialized cleanly with all 29 domain subsystems.")
+        logger.info(
+            "[AI LIFECYCLE MASTER] AILifecyclePlatformManager initialized cleanly with all 29 domain subsystems."
+        )
 
     def run_full_ai_lifecycle_flow(
         self,
@@ -78,21 +80,37 @@ class AILifecyclePlatformManager:
     ) -> Dict[str, Any]:
         """Executes complete 19-stage E2E AI asset lifecycle flow from dataset registration to retirement & snapshotting."""
         # 1. Dataset Registration
-        dataset = self.dataset_manager.register_dataset(tenant_id, f"{asset_name}_Dataset", DatasetClassification.INTERNAL)
+        dataset = self.dataset_manager.register_dataset(
+            tenant_id, f"{asset_name}_Dataset", DatasetClassification.INTERNAL
+        )
 
         # 2. Model & Agent Registration & Versioning
-        model = self.model_manager.register_model(tenant_id, f"{asset_name}_Model", ModelType.LLM, ModelFramework.TRANSFORMERS, dataset_version_ids=[dataset.versions[0].version_id])
-        agent = self.agent_manager.register_agent(tenant_id, asset_name, AgentType.TASK_AGENT, AgentAutonomyLevel.HUMAN_APPROVED)
+        model = self.model_manager.register_model(
+            tenant_id,
+            f"{asset_name}_Model",
+            ModelType.LLM,
+            ModelFramework.TRANSFORMERS,
+            dataset_version_ids=[dataset.versions[0].version_id],
+        )
+        agent = self.agent_manager.register_agent(
+            tenant_id, asset_name, AgentType.TASK_AGENT, AgentAutonomyLevel.HUMAN_APPROVED
+        )
 
         # 3. Lineage Recording
-        lineage = self.lineage_manager.record_lineage(tenant_id, dataset.dataset_id, model.model_id, LineageRelationshipType.TRAINED_ON)
+        lineage = self.lineage_manager.record_lineage(
+            tenant_id, dataset.dataset_id, model.model_id, LineageRelationshipType.TRAINED_ON
+        )
 
         # 4. Artifact Registration & Integrity
-        artifact = self.artifact_manager.register_artifact(tenant_id, f"{asset_name}_Weights", ArtifactType.MODEL_BINARY)
+        artifact = self.artifact_manager.register_artifact(
+            tenant_id, f"{asset_name}_Weights", ArtifactType.MODEL_BINARY
+        )
 
         # 5. Evaluation & Evidence Collection
         suite = self.evaluation_manager.create_suite(tenant_id, f"{asset_name}_Eval_Suite")
-        eval_run = self.evaluation_manager.run_evaluation(tenant_id, model.model_id, suite.suite_id, overall_passed=True)
+        eval_run = self.evaluation_manager.run_evaluation(
+            tenant_id, model.model_id, suite.suite_id, overall_passed=True
+        )
         self.metrics_collector.record_evaluation(eval_run.status.value, tenant_id)
 
         ev = LifecycleEvidence(tenant_id=tenant_id, source="EVALUATION_RUNNER", content_reference=eval_run.run_id)
@@ -101,10 +119,14 @@ class AILifecyclePlatformManager:
 
         # 6. Risk & Trust Assessment
         risk_ass = self.risk_manager.assess_lifecycle_risk(tenant_id, model.model_id, eval_run.results[0].score)
-        trust_score = self.trust_engine.compute_trust(tenant_id, model.model_id, eval_passed=eval_run.overall_passed, gates_passed=True)
+        trust_score = self.trust_engine.compute_trust(
+            tenant_id, model.model_id, eval_passed=eval_run.overall_passed, gates_passed=True
+        )
 
         # 7. Governance Gates & Promotion Request
-        gate = self.gate_manager.create_gate(tenant_id, f"{asset_name}_Security_Gate", GateType.SECURITY, is_hard_gate=True)
+        gate = self.gate_manager.create_gate(
+            tenant_id, f"{asset_name}_Security_Gate", GateType.SECURITY, is_hard_gate=True
+        )
         gate_evals = self.gate_manager.evaluate_gates(tenant_id, [gate.gate_id], gate_override_pass=True)
 
         prom_req = self.promotion_manager.request_promotion(
@@ -118,24 +140,42 @@ class AILifecyclePlatformManager:
         self.metrics_collector.record_promotion(target_env.value, tenant_id)
 
         # 8. Governance Evaluation & Release Creation
-        gov_dec = self.governance_engine.evaluate_lifecycle_governance(tenant_id, model.model_id, action_type="PROMOTION", requires_approval=prom_req.status == PromotionStatus.REQUIRE_APPROVAL)
-        release = self.release_manager.create_release(tenant_id, f"Release of {asset_name}", model.model_id, version="1.0.0", risk_level=ReleaseRisk.MEDIUM)
+        gov_dec = self.governance_engine.evaluate_lifecycle_governance(
+            tenant_id,
+            model.model_id,
+            action_type="PROMOTION",
+            requires_approval=prom_req.status == PromotionStatus.REQUIRE_APPROVAL,
+        )
+        release = self.release_manager.create_release(
+            tenant_id, f"Release of {asset_name}", model.model_id, version="1.0.0", risk_level=ReleaseRisk.MEDIUM
+        )
         finalized_release = self.release_manager.finalize_release(release.release_id, tenant_id)
 
         # 9. Delegated Deployment Planning & Verification
-        deploy_plan = self.deployment_manager.plan_deployment(tenant_id, finalized_release.release_id, f"dep_idemp_{finalized_release.release_id}", DeploymentTarget.KUBERNETES_CLUSTER)
+        deploy_plan = self.deployment_manager.plan_deployment(
+            tenant_id,
+            finalized_release.release_id,
+            f"dep_idemp_{finalized_release.release_id}",
+            DeploymentTarget.KUBERNETES_CLUSTER,
+        )
 
         # 10. Runtime Monitoring & Drift Detection
         health = self.monitoring_manager.get_asset_health(tenant_id, model.model_id)
-        drift = self.drift_manager.detect_drift(tenant_id, model.model_id, DriftType.PERFORMANCE_DRIFT, severity=DriftSeverity.LOW)
+        drift = self.drift_manager.detect_drift(
+            tenant_id, model.model_id, DriftType.PERFORMANCE_DRIFT, severity=DriftSeverity.LOW
+        )
         self.metrics_collector.record_drift(drift.drift_type.value, tenant_id)
 
         # 11. Rollback & Retirement Workflow
-        rollback_req = self.rollback_manager.request_rollback(tenant_id, model.model_id, target_version="1.0.0", reason="Precautionary", requires_approval=False)
+        rollback_req = self.rollback_manager.request_rollback(
+            tenant_id, model.model_id, target_version="1.0.0", reason="Precautionary", requires_approval=False
+        )
         rollback_plan = self.rollback_manager.execute_rollback_plan(rollback_req)
         self.metrics_collector.record_rollback(tenant_id)
 
-        ret_req = self.retirement_manager.request_retirement(tenant_id, model.model_id, reason=RetirementReason.DEPRECATED)
+        ret_req = self.retirement_manager.request_retirement(
+            tenant_id, model.model_id, reason=RetirementReason.DEPRECATED
+        )
         finalized_ret = self.retirement_manager.finalize_retirement(ret_req.retirement_id, tenant_id)
         self.metrics_collector.record_retirement(tenant_id)
 
@@ -143,12 +183,18 @@ class AILifecyclePlatformManager:
         lsnap = self.snapshot_manager.create_snapshot(
             tenant_id=tenant_id,
             asset_id=model.model_id,
-            domain_payload={"model": model.model_dump(), "release": finalized_release.model_dump(), "retirement": finalized_ret.model_dump()},
+            domain_payload={
+                "model": model.model_dump(),
+                "release": finalized_release.model_dump(),
+                "retirement": finalized_ret.model_dump(),
+            },
         )
         finalized_snap = self.snapshot_manager.finalize_snapshot(lsnap.snapshot_id, tenant_id)
 
         report = self.analytics_engine.generate_report(tenant_id)
-        learning = self.learning_manager.record_learning(tenant_id, model.model_id, "Evaluation Drift Pattern", "Tighten Gate Threshold")
+        learning = self.learning_manager.record_learning(
+            tenant_id, model.model_id, "Evaluation Drift Pattern", "Tighten Gate Threshold"
+        )
 
         return {
             "dataset": dataset.model_dump(),

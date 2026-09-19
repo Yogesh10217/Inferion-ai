@@ -37,5 +37,7 @@ class CapacityForecastEngine:
             confidence_score=0.92,
         )
         self.repo.save(forecast)
-        logger.info(f"Generated CapacityForecast for resource '{resource_id}': Predicted={predicted_util:.2f}% in {horizon_days}d")
+        logger.info(
+            f"Generated CapacityForecast for resource '{resource_id}': Predicted={predicted_util:.2f}% in {horizon_days}d"
+        )
         return forecast

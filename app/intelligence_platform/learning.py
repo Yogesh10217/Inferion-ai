@@ -65,7 +65,9 @@ class ContinuousLearningManager:
     ) -> LearningInsight:
         # Poisoning protection check
         if trust_weight < 0.40:
-            logger.warning(f"[CONTINUOUS LEARNING] Ignored untrusted outcome signal (trust weight: {trust_weight:.2f}) to prevent feedback poisoning.")
+            logger.warning(
+                f"[CONTINUOUS LEARNING] Ignored untrusted outcome signal (trust weight: {trust_weight:.2f}) to prevent feedback poisoning."
+            )
             raise IntelligenceException("Learning signal rejected due to low trust weight (poisoning protection).")
 
         lsig = LearningSignal(
@@ -110,7 +112,9 @@ class ContinuousLearningManager:
         )
         self._insights[insight.learning_id] = insight
 
-        logger.info(f"[CONTINUOUS LEARNING] Processed learning insight '{insight.learning_id}' for tenant '{tenant_id}'")
+        logger.info(
+            f"[CONTINUOUS LEARNING] Processed learning insight '{insight.learning_id}' for tenant '{tenant_id}'"
+        )
         return insight
 
     def list_insights(self, tenant_id: str) -> List[LearningInsight]:

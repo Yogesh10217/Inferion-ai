@@ -33,7 +33,9 @@ class SecurityEvidenceManager:
         self._idempotency_map: Dict[str, str] = {}
 
     def _compute_hash(self, tenant_id: str, evidence_type: str, payload: Dict[str, Any]) -> str:
-        serialized = json.dumps({"tenant_id": tenant_id, "evidence_type": evidence_type, "payload": payload}, sort_keys=True)
+        serialized = json.dumps(
+            {"tenant_id": tenant_id, "evidence_type": evidence_type, "payload": payload}, sort_keys=True
+        )
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def record_evidence(
@@ -68,7 +70,9 @@ class SecurityEvidenceManager:
         if not ev:
             raise KeyError(f"Evidence '{evidence_id}' not found.")
         if ev.tenant_id != tenant_id:
-            raise CrossTenantSecurityAssuranceException(f"Tenant '{tenant_id}' cannot access evidence for tenant '{ev.tenant_id}'.")
+            raise CrossTenantSecurityAssuranceException(
+                f"Tenant '{tenant_id}' cannot access evidence for tenant '{ev.tenant_id}'."
+            )
         return ev
 
     def update_evidence(self, tenant_id: str, evidence_id: str, payload: Dict[str, Any]) -> SecurityEvidence:

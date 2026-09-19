@@ -83,7 +83,9 @@ class MemoryManager:
             owner_agent_id=owner_agent_id,
         )
         self._memories[mem.memory_id] = mem
-        logger.info(f"[MEMORY MANAGER] Stored memory '{mem.memory_id}' (Key: '{key}', Scope: {scope.value}, Agent: '{owner_agent_id}')")
+        logger.info(
+            f"[MEMORY MANAGER] Stored memory '{mem.memory_id}' (Key: '{key}', Scope: {scope.value}, Agent: '{owner_agent_id}')"
+        )
         return mem
 
     def get_memory(self, memory_id: str, requesting_agent_id: Optional[str] = None) -> Memory:
@@ -94,8 +96,13 @@ class MemoryManager:
         # Enforce agent private memory isolation
         if mem.scope == MemoryScope.AGENT and mem.owner_agent_id and requesting_agent_id:
             if mem.owner_agent_id != requesting_agent_id:
-                logger.warning(f"[MEMORY MANAGER] Access denied: Agent '{requesting_agent_id}' attempted to access private memory of Agent '{mem.owner_agent_id}'")
-                raise KnowledgeAccessDeniedException(memory_id, f"Agent '{requesting_agent_id}' is not authorized to access private memory of Agent '{mem.owner_agent_id}'")
+                logger.warning(
+                    f"[MEMORY MANAGER] Access denied: Agent '{requesting_agent_id}' attempted to access private memory of Agent '{mem.owner_agent_id}'"
+                )
+                raise KnowledgeAccessDeniedException(
+                    memory_id,
+                    f"Agent '{requesting_agent_id}' is not authorized to access private memory of Agent '{mem.owner_agent_id}'",
+                )
 
         return mem
 

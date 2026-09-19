@@ -34,10 +34,7 @@ class KnowledgeRelevance(BaseModel):
 
     @property
     def factors(self) -> List[Dict[str, Any]]:
-        return [
-            {"dimension": k, "score": v}
-            for k, v in self.scores.dimension_scores.items()
-        ]
+        return [{"dimension": k, "score": v} for k, v in self.scores.dimension_scores.items()]
 
 
 class RelevanceAssessment(BaseModel):

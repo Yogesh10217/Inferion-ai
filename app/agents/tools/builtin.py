@@ -37,11 +37,11 @@ BUILTIN_TOOLS = {
             description="Searches Phase 5.0 Knowledge Base for context & documents",
             parameters=[
                 ToolParameter(name="query", type="string", description="Search query string"),
-                ToolParameter(name="top_k", type="integer", description="Number of results", required=False, default=3)
+                ToolParameter(name="top_k", type="integer", description="Number of results", required=False, default=3),
             ],
-            tool_type="builtin"
+            tool_type="builtin",
         ),
-        "handler": execute_knowledge_search
+        "handler": execute_knowledge_search,
     },
     "calculator": {
         "definition": ToolDefinition(
@@ -50,8 +50,8 @@ BUILTIN_TOOLS = {
             parameters=[
                 ToolParameter(name="expression", type="string", description="Math expression, e.g., '2 + 2 * 4'")
             ],
-            tool_type="builtin"
+            tool_type="builtin",
         ),
-        "handler": execute_calculator
-    }
+        "handler": execute_calculator,
+    },
 }

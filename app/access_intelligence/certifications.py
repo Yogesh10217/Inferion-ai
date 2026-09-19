@@ -37,6 +37,7 @@ class CertificationDecision(str, Enum):
 
 class AccessCertification(BaseModel):
     """Access Certification representation."""
+
     certification_id: str = Field(default_factory=lambda: f"cert_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     name: str
@@ -82,7 +83,9 @@ class AccessCertificationManager:
         cert.status = CertificationStatus.IN_PROGRESS
         return cert
 
-    def record_decision(self, tenant_id: str, certification_id: str, decision: CertificationDecision) -> AccessCertification:
+    def record_decision(
+        self, tenant_id: str, certification_id: str, decision: CertificationDecision
+    ) -> AccessCertification:
         cert = self.get_certification(tenant_id, certification_id)
         if cert.is_finalized:
             raise ImmutableAccessRecordException(certification_id)
@@ -109,7 +112,9 @@ class AccessCertificationManager:
             raise CrossTenantAccessIntelligenceException()
         return cert
 
-    def list_certifications(self, tenant_id: str, status: Optional[CertificationStatus] = None) -> List[AccessCertification]:
+    def list_certifications(
+        self, tenant_id: str, status: Optional[CertificationStatus] = None
+    ) -> List[AccessCertification]:
         results = [c for c in self._certifications.values() if c.tenant_id == tenant_id]
         if status:
             results = [c for c in results if c.status == status]

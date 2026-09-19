@@ -81,10 +81,28 @@ class ModelPerformanceManager:
         trend = PerformanceTrend.DEGRADING if degraded else PerformanceTrend.STABLE
 
         metrics = [
-            PerformanceMetric(dimension=PerformanceDimension.LATENCY, value=latency_p95_ms, unit="ms", threshold=500.0, is_anomaly=latency_p95_ms > 500.0),
+            PerformanceMetric(
+                dimension=PerformanceDimension.LATENCY,
+                value=latency_p95_ms,
+                unit="ms",
+                threshold=500.0,
+                is_anomaly=latency_p95_ms > 500.0,
+            ),
             PerformanceMetric(dimension=PerformanceDimension.THROUGHPUT, value=throughput_rps, unit="rps"),
-            PerformanceMetric(dimension=PerformanceDimension.ERROR_RATE, value=error_rate_percentage, unit="percentage", threshold=5.0, is_anomaly=error_rate_percentage > 5.0),
-            PerformanceMetric(dimension=PerformanceDimension.AVAILABILITY, value=availability_percentage, unit="percentage", threshold=99.0, is_anomaly=availability_percentage < 99.0),
+            PerformanceMetric(
+                dimension=PerformanceDimension.ERROR_RATE,
+                value=error_rate_percentage,
+                unit="percentage",
+                threshold=5.0,
+                is_anomaly=error_rate_percentage > 5.0,
+            ),
+            PerformanceMetric(
+                dimension=PerformanceDimension.AVAILABILITY,
+                value=availability_percentage,
+                unit="percentage",
+                threshold=99.0,
+                is_anomaly=availability_percentage < 99.0,
+            ),
         ]
 
         assessment = PerformanceAssessment(

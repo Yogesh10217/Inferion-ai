@@ -63,9 +63,13 @@ class PlatformOperationsManager:
         self.slo_manager = slo_manager or SLOManager()
         self.anomaly_detector = anomaly_detector or AnomalyDetector()
         self.incident_intelligence_engine = incident_intelligence_engine or IncidentIntelligenceEngine()
-        self.root_cause_analyzer = root_cause_analyzer or RootCauseAnalyzer(service_catalog_manager=self.service_catalog_manager)
+        self.root_cause_analyzer = root_cause_analyzer or RootCauseAnalyzer(
+            service_catalog_manager=self.service_catalog_manager
+        )
         self.remediation_planner = remediation_planner or RemediationPlanner()
-        self.autonomous_operations_engine = autonomous_operations_engine or AutonomousOperationsEngine(remediation_planner=self.remediation_planner)
+        self.autonomous_operations_engine = autonomous_operations_engine or AutonomousOperationsEngine(
+            remediation_planner=self.remediation_planner
+        )
         self.remediation_verifier = remediation_verifier or RemediationVerifier(
             service_catalog_manager=self.service_catalog_manager,
             remediation_planner=self.remediation_planner,

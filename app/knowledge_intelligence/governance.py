@@ -67,7 +67,11 @@ class KnowledgeGovernanceEngine:
         classification_restricted: bool = False,
     ) -> KnowledgeGovernanceDecision:
         if attempts_direct_mutation:
-            reason = GovernanceDecisionReason(code="DIRECT_MUTATION_FORBIDDEN", message="Direct knowledge mutation forbidden. Use delegation.", severity="CRITICAL")
+            reason = GovernanceDecisionReason(
+                code="DIRECT_MUTATION_FORBIDDEN",
+                message="Direct knowledge mutation forbidden. Use delegation.",
+                severity="CRITICAL",
+            )
             return KnowledgeGovernanceDecision(
                 tenant_id=tenant_id,
                 target_id=target_id,
@@ -82,7 +86,11 @@ class KnowledgeGovernanceEngine:
                 tenant_id=tenant_id,
                 requester="KnowledgeGovernanceEngine",
             )
-            reason = GovernanceDecisionReason(code="HIGH_RISK_REQUIRES_APPROVAL", message="Action is high-risk or restricted. Human approval requested.", severity="HIGH")
+            reason = GovernanceDecisionReason(
+                code="HIGH_RISK_REQUIRES_APPROVAL",
+                message="Action is high-risk or restricted. Human approval requested.",
+                severity="HIGH",
+            )
             return KnowledgeGovernanceDecision(
                 tenant_id=tenant_id,
                 target_id=target_id,

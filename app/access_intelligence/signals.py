@@ -35,6 +35,7 @@ class AccessSignalSource(str, Enum):
 
 class AccessSignal(BaseModel):
     """Sanitized access telemetry signal."""
+
     signal_id: str = Field(default_factory=lambda: f"sig_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     signal_type: AccessSignalType

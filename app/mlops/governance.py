@@ -44,14 +44,22 @@ class MLOpsGovernanceEngine:
 
         if evaluation_result:
             if evaluation_result.overall_score < pol.min_evaluation_score:
-                reasons.append(f"Evaluation score {evaluation_result.overall_score:.1f}% below minimum {pol.min_evaluation_score:.1f}%")
+                reasons.append(
+                    f"Evaluation score {evaluation_result.overall_score:.1f}% below minimum {pol.min_evaluation_score:.1f}%"
+                )
             if evaluation_result.safety_score < pol.min_safety_score:
-                reasons.append(f"Safety score {evaluation_result.safety_score:.1f}% below minimum {pol.min_safety_score:.1f}%")
+                reasons.append(
+                    f"Safety score {evaluation_result.safety_score:.1f}% below minimum {pol.min_safety_score:.1f}%"
+                )
             if evaluation_result.hallucination_rate > pol.max_hallucination_rate:
-                reasons.append(f"Hallucination rate {evaluation_result.hallucination_rate:.3f} exceeds maximum {pol.max_hallucination_rate:.3f}")
+                reasons.append(
+                    f"Hallucination rate {evaluation_result.hallucination_rate:.3f} exceeds maximum {pol.max_hallucination_rate:.3f}"
+                )
 
         requires_appr = (target_environment.upper() == "PRODUCTION") and pol.require_approval_for_production
         approved = len(reasons) == 0
 
-        logger.info(f"[MLOPS GOVERNANCE] Evaluated promotion to '{target_environment}' for tenant '{tenant_id}': Approved = {approved}, Requires Approval = {requires_appr}")
+        logger.info(
+            f"[MLOPS GOVERNANCE] Evaluated promotion to '{target_environment}' for tenant '{tenant_id}': Approved = {approved}, Requires Approval = {requires_appr}"
+        )
         return PromotionDecision(approved=approved, requires_approval=requires_appr, reasons=reasons)

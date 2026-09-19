@@ -25,7 +25,9 @@ class WorkflowModel(Base):
     config_json = Column(JSON, nullable=True)
     created_by = Column(String(64), nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+    )
 
     runs = relationship("WorkflowRunModel", back_populates="workflow", cascade="all, delete-orphan")
 

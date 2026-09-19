@@ -12,7 +12,19 @@ class LifecycleRepository(TenantScopedRepository[Any]):
         self._store: Dict[str, Any] = {}
 
     def save(self, entity: Any) -> Any:
-        eid = getattr(entity, "asset_id", getattr(entity, "dataset_id", getattr(entity, "model_id", getattr(entity, "agent_id", getattr(entity, "release_id", getattr(entity, "snapshot_id", None))))))
+        eid = getattr(
+            entity,
+            "asset_id",
+            getattr(
+                entity,
+                "dataset_id",
+                getattr(
+                    entity,
+                    "model_id",
+                    getattr(entity, "agent_id", getattr(entity, "release_id", getattr(entity, "snapshot_id", None))),
+                ),
+            ),
+        )
         if eid:
             self._store[eid] = entity
         return entity

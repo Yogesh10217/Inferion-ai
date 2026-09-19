@@ -97,5 +97,7 @@ class ContextBuilder:
             token_count=approx_tokens,
             provenance_references=provenance,
         )
-        logger.info(f"[CONTEXT BUILDER] Assembled context window '{win.window_id}' ({approx_tokens} tokens) via strategy {strategy.value}")
+        logger.info(
+            f"[CONTEXT BUILDER] Assembled context window '{win.window_id}' ({approx_tokens} tokens) via strategy {strategy.value}"
+        )
         return win

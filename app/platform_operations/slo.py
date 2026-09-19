@@ -90,7 +90,9 @@ class SLOManager:
             remaining_budget=rem_budget,
             consumed_percentage=consumed_pct,
             burn_rate=1.0 if consumed_pct < 50 else 2.5,
-            status=SLOStatus.HEALTHY if rem_budget > 20 else (SLOStatus.WARNING if rem_budget > 0 else SLOStatus.BREACHED),
+            status=(
+                SLOStatus.HEALTHY if rem_budget > 20 else (SLOStatus.WARNING if rem_budget > 0 else SLOStatus.BREACHED)
+            ),
         )
 
         slo = ServiceLevelObjective(
@@ -105,7 +107,9 @@ class SLOManager:
             status=eb.status,
         )
         self._slos[slo.slo_id] = slo
-        logger.info(f"[SLO MANAGER] Created SLO '{name}' ({slo.slo_id}) for service {service_id} (Target: {target_threshold}%)")
+        logger.info(
+            f"[SLO MANAGER] Created SLO '{name}' ({slo.slo_id}) for service {service_id} (Target: {target_threshold}%)"
+        )
         return slo
 
     def update_slo_indicator(

@@ -41,7 +41,9 @@ class MemoryCounterBackend(CounterBackend):
                 return True, limit - count - 1
             return False, 0
 
-    async def check_and_decrement_token_bucket(self, key: str, capacity: int, refill_time_seconds: int) -> Tuple[bool, int]:
+    async def check_and_decrement_token_bucket(
+        self, key: str, capacity: int, refill_time_seconds: int
+    ) -> Tuple[bool, int]:
         now = self._now()
         refill_rate = capacity / refill_time_seconds
 
@@ -88,10 +90,7 @@ class MemoryCounterBackend(CounterBackend):
                 self._leases[scope_key] = {}
 
             # Clean expired
-            active_leases = {
-                lid: expires for lid, expires in self._leases[scope_key].items()
-                if expires > now
-            }
+            active_leases = {lid: expires for lid, expires in self._leases[scope_key].items() if expires > now}
 
             if len(active_leases) < limit:
                 active_leases[lease_id] = now + ttl_seconds

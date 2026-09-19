@@ -14,7 +14,9 @@ from app.platform_hardening.models import (
 class PlatformProductionReadinessEngine:
     """Calculates weighted readiness scores (0-100) based strictly on empirical audit findings."""
 
-    def calculate_readiness_report(self, findings: List[PlatformAuditFinding], tenant_id: str = "system") -> Dict[str, float]:
+    def calculate_readiness_report(
+        self, findings: List[PlatformAuditFinding], tenant_id: str = "system"
+    ) -> Dict[str, float]:
         # Deduct penalties per component category from baseline score of 100.0
         scores = {
             "integration": 100.0,

@@ -38,6 +38,7 @@ class ConnectorCapability(str, Enum):
 
 class ConnectorReference(BaseModel):
     """Reference pointing to system integration target without storing secrets."""
+
     external_system_id: str
     provider_name: str
     base_endpoint_url: str
@@ -47,6 +48,7 @@ class ConnectorReference(BaseModel):
 
 class IntegrationConnector(BaseModel):
     """Enterprise Integration Connector Representation."""
+
     connector_id: str = Field(default_factory=lambda: f"conn_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     name: str

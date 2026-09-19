@@ -33,5 +33,7 @@ class ReliabilityDelegationCoordinator:
             "auto_executed": False,
         }
 
-        logger.info(f"Created DelegationRequest '{del_id}' for reliability action '{action_name}' (tenant: '{tenant_id}') - Zero direct execution.")
+        logger.info(
+            f"Created DelegationRequest '{del_id}' for reliability action '{action_name}' (tenant: '{tenant_id}') - Zero direct execution."
+        )
         return delegation

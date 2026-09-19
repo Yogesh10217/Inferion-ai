@@ -30,7 +30,7 @@ class CoordinationStep:
         parameters: Dict[str, Any],
         depends_on_steps: List[str],
         requires_approval: bool,
-        status: str = "PENDING"  # PENDING, IN_PROGRESS, COMPLETED, FAILED, WAITING_APPROVAL
+        status: str = "PENDING",  # PENDING, IN_PROGRESS, COMPLETED, FAILED, WAITING_APPROVAL
     ):
         self.step_id = step_id
         self.target_domain = target_domain
@@ -48,7 +48,7 @@ class CoordinationStep:
             "parameters": self.parameters,
             "depends_on_steps": self.depends_on_steps,
             "requires_approval": self.requires_approval,
-            "status": self.status
+            "status": self.status,
         }
 
 
@@ -65,7 +65,7 @@ class CoordinationPlan:
         title: str,
         steps: List[CoordinationStep],
         overall_status: str = "DRAFT",  # DRAFT, APPROVED, IN_PROGRESS, EXECUTED, FAILED
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.plan_id = plan_id
         self.tenant_id = tenant_id
@@ -83,7 +83,7 @@ class CoordinationPlan:
             "title": self.title,
             "steps": [s.to_dict() for s in self.steps],
             "overall_status": self.overall_status,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -95,11 +95,7 @@ class CoordinationPlannerEngine:
     def __init__(self):
         pass
 
-    def build_plan_for_recommendation(
-        self,
-        tenant_id: str,
-        recommendation: UnifiedRecommendation
-    ) -> CoordinationPlan:
+    def build_plan_for_recommendation(self, tenant_id: str, recommendation: UnifiedRecommendation) -> CoordinationPlan:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
         if recommendation.tenant_id != tenant_id:
@@ -121,10 +117,10 @@ class CoordinationPlannerEngine:
                 parameters={
                     "recommendation_id": recommendation.recommendation_id,
                     "action_type": recommendation.action_type,
-                    "priority": recommendation.priority
+                    "priority": recommendation.priority,
                 },
                 depends_on_steps=[prev_step_id] if prev_step_id else [],
-                requires_approval=recommendation.requires_human_approval and i == 0
+                requires_approval=recommendation.requires_human_approval and i == 0,
             )
             steps.append(step)
             prev_step_id = s_id
@@ -135,5 +131,5 @@ class CoordinationPlannerEngine:
             recommendation_id=recommendation.recommendation_id,
             title=f"Coordination plan for: {recommendation.title}",
             steps=steps,
-            overall_status="DRAFT"
+            overall_status="DRAFT",
         )

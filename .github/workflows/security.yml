@@ -4,22 +4,68 @@ on:
   schedule:
     - cron: "0 0 * * 0"  # Weekly Sunday midnight
   push:
+    branches: [ main, develop ]
+  pull_request:
     branches: [ main ]
 
-jobs:
-  security-audit:
-    name: Security Vulnerability Scan
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
 
+jobs:
+  sast:
+    name: Python SAST & Safety Check
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-
-      - name: Dependency Vulnerability Audit (Safety)
+          python-version: "3.11"
+      - name: Install Security Tools
+        run: pip install bandit safety pip-audit
+      - name: Run Bandit Code Security Analysis
+        run: bandit -r app/ -x tests/
+      - name: Dependency Vulnerability Audit (pip-audit & safety)
         run: |
-          pip install safety
-          safety check || true
+          pip-audit --desc
+          safety check -r requirements.txt
+
+  container-security-scan:
+    name: Trivy Container Image Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Container Image for Scanning
+        run: docker build -t llm-engine:scan .
+      - name: Run Trivy Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "llm-engine:scan"
+          format: "table"
+          exit-code: "0"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+
+  sbom-generation:
+    name: Generate Software Bill of Materials (SBOM)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Container Image for SBOM
+        run: docker build -t llm-engine:sbom .
+
+      - name: Generate SBOM via Syft
+        uses: anchore/sbom-action@v0
+        with:
+          image: llm-engine:sbom
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-spdx-json
+          path: sbom.spdx.json

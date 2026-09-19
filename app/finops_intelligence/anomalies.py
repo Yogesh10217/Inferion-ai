@@ -69,7 +69,11 @@ class CostAnomalyManager:
         if deviation < 50.0:
             return None  # Below anomaly threshold
 
-        severity = CostAnomalySeverity.CRITICAL if deviation >= 200.0 else (CostAnomalySeverity.HIGH if deviation >= 100.0 else CostAnomalySeverity.MEDIUM)
+        severity = (
+            CostAnomalySeverity.CRITICAL
+            if deviation >= 200.0
+            else (CostAnomalySeverity.HIGH if deviation >= 100.0 else CostAnomalySeverity.MEDIUM)
+        )
 
         anom = CostAnomaly(
             tenant_id=tenant_id,

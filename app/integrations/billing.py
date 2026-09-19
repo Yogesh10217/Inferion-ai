@@ -16,5 +16,7 @@ class IntegrationBillingTracker:
 
     def record_integration_cost(self, tenant_id: str, connector_name: str, calls: int) -> float:
         estimated_cost = round(calls * 0.0005, 6)
-        logger.info(f"[INTEGRATION BILLING] Recorded cost for tenant '{tenant_id}' ({connector_name}): ${estimated_cost}")
+        logger.info(
+            f"[INTEGRATION BILLING] Recorded cost for tenant '{tenant_id}' ({connector_name}): ${estimated_cost}"
+        )
         return estimated_cost

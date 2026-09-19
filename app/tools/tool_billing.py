@@ -69,14 +69,17 @@ class ToolBillingTracker:
 
     def get_tenant_billing_summary(self, tenant_id: str) -> Dict[str, Any]:
         with self._lock:
-            return self._tenant_usage.get(tenant_id, {
-                "total_calls": 0,
-                "external_api_calls": 0,
-                "total_duration_seconds": 0.0,
-                "total_cost": 0.0,
-                "cpu_ms": 0.0,
-                "memory_mb": 0.0,
-                "bytes_read": 0,
-                "bytes_written": 0,
-                "tool_breakdown": {},
-            })
+            return self._tenant_usage.get(
+                tenant_id,
+                {
+                    "total_calls": 0,
+                    "external_api_calls": 0,
+                    "total_duration_seconds": 0.0,
+                    "total_cost": 0.0,
+                    "cpu_ms": 0.0,
+                    "memory_mb": 0.0,
+                    "bytes_read": 0,
+                    "bytes_written": 0,
+                    "tool_breakdown": {},
+                },
+            )

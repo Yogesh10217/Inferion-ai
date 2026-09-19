@@ -129,7 +129,9 @@ class DataLineageManager:
         full_lineage = self._lineages[tenant_id]
 
         relevant_nodes = set()
-        if asset_id in full_lineage.nodes or any(e.source_node_id == asset_id or e.target_node_id == asset_id for e in full_lineage.edges):
+        if asset_id in full_lineage.nodes or any(
+            e.source_node_id == asset_id or e.target_node_id == asset_id for e in full_lineage.edges
+        ):
             relevant_nodes.add(asset_id)
             # Breadth-first search for all connected nodes in graph component
             added = True
@@ -144,7 +146,9 @@ class DataLineageManager:
                         added = True
 
         nodes = {nid: n for nid, n in full_lineage.nodes.items() if nid in relevant_nodes}
-        edges = [e for e in full_lineage.edges if e.source_node_id in relevant_nodes and e.target_node_id in relevant_nodes]
+        edges = [
+            e for e in full_lineage.edges if e.source_node_id in relevant_nodes and e.target_node_id in relevant_nodes
+        ]
         events = [ev for ev in full_lineage.events if ev.source in relevant_nodes or ev.target in relevant_nodes]
 
         return DataLineage(tenant_id=tenant_id, nodes=nodes, edges=edges, events=events)
@@ -159,7 +163,11 @@ class DataLineageManager:
         # Ideal path has SOURCE, INGESTION/TRANSFORMATION, KNOWLEDGE/MODEL
         has_source = LineageNodeType.SOURCE in node_types or LineageNodeType.DATASET in node_types
         has_transform = LineageNodeType.TRANSFORMATION in node_types or LineageNodeType.INGESTION in node_types
-        has_consumer = LineageNodeType.KNOWLEDGE in node_types or LineageNodeType.MODEL_AGENT in node_types or LineageNodeType.APPLICATION in node_types
+        has_consumer = (
+            LineageNodeType.KNOWLEDGE in node_types
+            or LineageNodeType.MODEL_AGENT in node_types
+            or LineageNodeType.APPLICATION in node_types
+        )
 
         score = 40.0
         if has_source:

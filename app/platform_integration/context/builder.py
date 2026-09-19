@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class BoundedContextPolicy:
     """Policy governing boundaries of cross-phase integrated contexts."""
+
     max_platforms: int = 10
     max_signals: int = 500
     max_age_hours: int = 24

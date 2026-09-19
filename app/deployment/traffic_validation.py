@@ -31,18 +31,20 @@ class TrafficValidationResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status.value,
-            "valid": self.valid,
-            "traffic_percentage": self.traffic_percentage,
-            "error_rate": self.error_rate,
-            "p95_latency_ms": self.p95_latency_ms,
-            "success_rate": self.success_rate,
-            "probes_healthy": self.probes_healthy,
-            "artifact_digest_matching": self.artifact_digest_matching,
-            "blocking_reasons": self.blocking_reasons,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status.value,
+                "valid": self.valid,
+                "traffic_percentage": self.traffic_percentage,
+                "error_rate": self.error_rate,
+                "p95_latency_ms": self.p95_latency_ms,
+                "success_rate": self.success_rate,
+                "probes_healthy": self.probes_healthy,
+                "artifact_digest_matching": self.artifact_digest_matching,
+                "blocking_reasons": self.blocking_reasons,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class TrafficValidationEngine:
@@ -67,15 +69,21 @@ class TrafficValidationEngine:
 
         # 1. Error Rate Guard
         if error_rate > thresh.max_error_rate:
-            blocking_reasons.append(f"TRAFFIC_VALIDATION_FAILED: Error rate {error_rate:.4f} exceeded threshold {thresh.max_error_rate:.4f}")
+            blocking_reasons.append(
+                f"TRAFFIC_VALIDATION_FAILED: Error rate {error_rate:.4f} exceeded threshold {thresh.max_error_rate:.4f}"
+            )
 
         # 2. Latency SLA Guard
         if p95_latency > thresh.max_p95_latency_ms:
-            blocking_reasons.append(f"TRAFFIC_VALIDATION_FAILED: p95 latency {p95_latency:.2f}ms exceeded SLA threshold {thresh.max_p95_latency_ms:.2f}ms")
+            blocking_reasons.append(
+                f"TRAFFIC_VALIDATION_FAILED: p95 latency {p95_latency:.2f}ms exceeded SLA threshold {thresh.max_p95_latency_ms:.2f}ms"
+            )
 
         # 3. Success Rate Guard
         if success_rate < thresh.min_success_rate:
-            blocking_reasons.append(f"TRAFFIC_VALIDATION_FAILED: Success rate {success_rate:.4f} below minimum threshold {thresh.min_success_rate:.4f}")
+            blocking_reasons.append(
+                f"TRAFFIC_VALIDATION_FAILED: Success rate {success_rate:.4f} below minimum threshold {thresh.min_success_rate:.4f}"
+            )
 
         # 4. Probe Health Guard
         if thresh.required_probes_healthy and not probes_healthy:
@@ -86,7 +94,9 @@ class TrafficValidationEngine:
         if thresh.require_matching_artifact_digest and expected_artifact_digest and runtime_artifact_digest:
             if expected_artifact_digest != runtime_artifact_digest:
                 digest_match = False
-                blocking_reasons.append(f"DEPLOYMENT_ARTIFACT_MISMATCH: Runtime artifact digest '{runtime_artifact_digest}' != expected digest '{expected_artifact_digest}'")
+                blocking_reasons.append(
+                    f"DEPLOYMENT_ARTIFACT_MISMATCH: Runtime artifact digest '{runtime_artifact_digest}' != expected digest '{expected_artifact_digest}'"
+                )
 
         is_valid = len(blocking_reasons) == 0
         status = TrafficValidationStatus.PASSED if is_valid else TrafficValidationStatus.FAILED

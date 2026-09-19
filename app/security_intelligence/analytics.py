@@ -14,7 +14,11 @@ class SecurityAnalyticsEngine:
             AnalyticsMetric(metric_name="security_trust_score", metric_value=88.5),
         ]
         insights = [
-            PlatformInsight(title="Strong Security Posture", description="No critical prompt injection threats detected in current window.", impact_level="LOW"),
+            PlatformInsight(
+                title="Strong Security Posture",
+                description="No critical prompt injection threats detected in current window.",
+                impact_level="LOW",
+            ),
         ]
 
         return PlatformReport(

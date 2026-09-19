@@ -101,13 +101,19 @@ class DeploymentManager:
         dep = self.get_deployment(deployment_id)
 
         if dep.environment == DeploymentEnvironment.PRODUCTION and dep.status == DeploymentStatus.APPROVAL_REQUIRED:
-            raise GovernanceViolationException(f"Production deployment '{deployment_id}' requires explicit approval before deploy")
+            raise GovernanceViolationException(
+                f"Production deployment '{deployment_id}' requires explicit approval before deploy"
+            )
 
         dep.status = DeploymentStatus.ACTIVE
         dep.updated_at = _now()
 
         # Update asset status in registry
-        self.registry.promote_version(dep.asset_id, dep.version_number, AIAssetStatus.PRODUCTION if dep.environment == DeploymentEnvironment.PRODUCTION else AIAssetStatus.STAGED)
+        self.registry.promote_version(
+            dep.asset_id,
+            dep.version_number,
+            AIAssetStatus.PRODUCTION if dep.environment == DeploymentEnvironment.PRODUCTION else AIAssetStatus.STAGED,
+        )
 
         logger.info(f"[DEPLOYMENT MANAGER] Deployed '{dep.name}' to '{dep.environment.value}' (Status: ACTIVE)")
         return dep
@@ -128,7 +134,9 @@ class DeploymentManager:
         dep.updated_at = _now()
 
         self.registry.rollback_version(dep.asset_id, previous_version_number)
-        logger.info(f"[DEPLOYMENT MANAGER] Rolled back deployment '{deployment_id}' to version '{previous_version_number}'")
+        logger.info(
+            f"[DEPLOYMENT MANAGER] Rolled back deployment '{deployment_id}' to version '{previous_version_number}'"
+        )
         return dep
 
     def get_deployment(self, deployment_id: str) -> Deployment:
@@ -137,7 +145,9 @@ class DeploymentManager:
             raise DeploymentNotFoundException(deployment_id)
         return dep
 
-    def list_deployments(self, tenant_id: Optional[str] = None, environment: Optional[DeploymentEnvironment] = None) -> List[Deployment]:
+    def list_deployments(
+        self, tenant_id: Optional[str] = None, environment: Optional[DeploymentEnvironment] = None
+    ) -> List[Deployment]:
         res = list(self._deployments.values())
         if tenant_id:
             res = [d for d in res if d.tenant_id == tenant_id]

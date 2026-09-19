@@ -34,6 +34,7 @@ class AccessAnomalyConfidence(str, Enum):
 
 class AccessAnomalyEvidence(BaseModel):
     """Telemetry evidence supporting access anomaly finding."""
+
     evidence_id: str = Field(default_factory=lambda: f"anom_evid_{uuid.uuid4().hex[:8]}")
     source_signal_id: Optional[str] = None
     baseline_value: str = ""
@@ -43,6 +44,7 @@ class AccessAnomalyEvidence(BaseModel):
 
 class AccessAnomaly(BaseModel):
     """Access Anomaly Finding Representation."""
+
     anomaly_id: str = Field(default_factory=lambda: f"anom_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     subject_identity_id: str

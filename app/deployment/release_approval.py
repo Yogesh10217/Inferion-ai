@@ -45,23 +45,25 @@ class ReleaseApprovalResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status,
-            "requirements": [
-                {
-                    "category": r.category.value,
-                    "approver_role": r.approver_role,
-                    "required": r.required,
-                    "status": r.status.value,
-                    "approver_id": r.approver_id,
-                    "approved_at": r.approved_at,
-                    "notes": r.notes,
-                }
-                for r in self.requirements
-            ],
-            "classifications": self.classifications,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status,
+                "requirements": [
+                    {
+                        "category": r.category.value,
+                        "approver_role": r.approver_role,
+                        "required": r.required,
+                        "status": r.status.value,
+                        "approver_id": r.approver_id,
+                        "approved_at": r.approved_at,
+                        "notes": r.notes,
+                    }
+                    for r in self.requirements
+                ],
+                "classifications": self.classifications,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class ReleaseApprovalEngine:

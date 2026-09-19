@@ -63,7 +63,8 @@ class OutcomeEvaluator:
                 metric_name="benefit_usd",
                 expected_value=expected_benefit_usd,
                 actual_value=actual_benefit_usd,
-                deviation_percentage=((actual_benefit_usd - expected_benefit_usd) / max(1.0, expected_benefit_usd)) * 100.0,
+                deviation_percentage=((actual_benefit_usd - expected_benefit_usd) / max(1.0, expected_benefit_usd))
+                * 100.0,
             ),
         ]
 

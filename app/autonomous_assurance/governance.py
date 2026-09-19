@@ -57,7 +57,12 @@ class AutonomousAssuranceGovernanceEngine:
         trust_score: float = 90.0,
         action_name: str = "DELEGATE_ACTION",
     ) -> AutonomousGovernanceEvaluation:
-        requires_approval = (risk_score >= 50.0) or (trust_score < 70.0) or ("RESTART" in action_name.upper()) or ("DISABLE" in action_name.upper())
+        requires_approval = (
+            (risk_score >= 50.0)
+            or (trust_score < 70.0)
+            or ("RESTART" in action_name.upper())
+            or ("DISABLE" in action_name.upper())
+        )
 
         if requires_approval:
             status = GovernanceEvaluationStatus.REQUIRE_APPROVAL

@@ -40,11 +40,7 @@ class VectorStoreStage(PipelineStage):
 
             # Prepare metadata mapping correctly
             metadata = {k: v for k, v in chunk.items() if k not in ("chunk_id", "embedding")}
-            embeddings_to_store.append({
-                "id": chunk["chunk_id"],
-                "vector": chunk["embedding"],
-                "metadata": metadata
-            })
+            embeddings_to_store.append({"id": chunk["chunk_id"], "vector": chunk["embedding"], "metadata": metadata})
 
         try:
             await self.vector_store.add(embeddings_to_store, self.collection_name)
@@ -80,7 +76,9 @@ class PipelineRunner:
                 logger.info(f"Running stage: {stage.__class__.__name__} for document {context.document_id}")
                 context = await stage.process(context)
                 if context.errors:
-                    logger.error(f"Stage {stage.__class__.__name__} failed for document {context.document_id}: {context.errors}")
+                    logger.error(
+                        f"Stage {stage.__class__.__name__} failed for document {context.document_id}: {context.errors}"
+                    )
                     context.status = PipelineStatus.FAILED
                     break
 
@@ -116,12 +114,14 @@ def build_end_to_end_pipeline(
     embedding_provider: ProviderFactory,
     vector_store: VectorStore,
     collection_name: str = "default",
-    chunk_strategy: ChunkingStrategy = ChunkingStrategy.TOKEN_AWARE
+    chunk_strategy: ChunkingStrategy = ChunkingStrategy.TOKEN_AWARE,
 ) -> PipelineRunner:
     """Creates a configured end-to-end knowledge ingestion pipeline."""
-    return PipelineRunner([
-        DocumentIngestionStage(storage_provider=storage_provider),
-        ChunkingStage(strategy=chunk_strategy),
-        EmbeddingStage(provider_factory=embedding_provider),
-        VectorStoreStage(vector_store=vector_store, collection_name=collection_name)
-    ])
+    return PipelineRunner(
+        [
+            DocumentIngestionStage(storage_provider=storage_provider),
+            ChunkingStage(strategy=chunk_strategy),
+            EmbeddingStage(provider_factory=embedding_provider),
+            VectorStoreStage(vector_store=vector_store, collection_name=collection_name),
+        ]
+    )

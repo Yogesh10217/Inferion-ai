@@ -33,6 +33,11 @@ class CodeIntelligenceEngine:
             tenant_id=tenant_id,
             source_system="code_intelligence",
         )
-        insight = CodeInsight(repository_id=repository_id, symbol_name="main", tenant_id=tenant_id, summary=f"Indexed knowledge item '{item.item_id}'")
+        insight = CodeInsight(
+            repository_id=repository_id,
+            symbol_name="main",
+            tenant_id=tenant_id,
+            summary=f"Indexed knowledge item '{item.item_id}'",
+        )
         logger.info(f"[CODE INTELLIGENCE] Indexed repository code for '{repository_id}' -> Knowledge '{item.item_id}'")
         return insight

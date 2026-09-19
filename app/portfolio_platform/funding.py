@@ -68,7 +68,9 @@ class FundingManager:
     def set_budget_envelope(self, tenant_id: str, total_budget_usd: float) -> BudgetEnvelope:
         env = self._envelopes.get(tenant_id)
         if not env:
-            env = BudgetEnvelope(tenant_id=tenant_id, total_budget_usd=total_budget_usd, remaining_budget_usd=total_budget_usd)
+            env = BudgetEnvelope(
+                tenant_id=tenant_id, total_budget_usd=total_budget_usd, remaining_budget_usd=total_budget_usd
+            )
             self._envelopes[tenant_id] = env
         else:
             env.total_budget_usd = total_budget_usd
@@ -99,7 +101,12 @@ class FundingManager:
             )
 
         canonical_str = json.dumps(
-            {"tenant": tenant_id, "initiative": initiative_id, "amount": requested_amount_usd, "idemp": idempotency_key},
+            {
+                "tenant": tenant_id,
+                "initiative": initiative_id,
+                "amount": requested_amount_usd,
+                "idemp": idempotency_key,
+            },
             sort_keys=True,
         )
         fingerprint = hashlib.sha256(canonical_str.encode("utf-8")).hexdigest()

@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 class RetrievalResult(BaseModel):
     """Mock Retrieval Result for evaluation."""
+
     chunk_id: str
     document_id: str
     score: float
@@ -14,6 +15,7 @@ class RetrievalResult(BaseModel):
 
 class EvaluationMetrics(BaseModel):
     """Retrieval metrics structure."""
+
     recall_at_k: float = 0.0
     mrr: float = 0.0
     ndcg: float = 0.0

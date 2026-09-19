@@ -89,13 +89,17 @@ def get_integration_health(integration_id: str):
 
 @router.post("/credentials", status_code=status.HTTP_201_CREATED)
 def store_credential(req: StoreCredentialRequestDTO):
-    ref = _global_manager.credential_broker.store_credential(secret_name=req.secret_name, secret_value=req.secret_value, tenant_id=req.tenant_id)
+    ref = _global_manager.credential_broker.store_credential(
+        secret_name=req.secret_name, secret_value=req.secret_value, tenant_id=req.tenant_id
+    )
     return ref.model_dump()
 
 
 @router.post("/webhooks/endpoints", status_code=status.HTTP_201_CREATED)
 def create_webhook_endpoint(req: CreateWebhookEndpointRequestDTO):
-    ep = _global_manager.webhook_manager.create_endpoint(url=req.url, secret_token=req.secret_token, tenant_id=req.tenant_id)
+    ep = _global_manager.webhook_manager.create_endpoint(
+        url=req.url, secret_token=req.secret_token, tenant_id=req.tenant_id
+    )
     return ep.model_dump()
 
 
@@ -132,10 +136,14 @@ def register_plugin(manifest: PluginManifest, tenant_id: str = Query("global")):
 @router.post("/plugins/{plugin_id}/execute")
 def execute_plugin(plugin_id: str, req: ExecutePluginRequestDTO):
     try:
-        res = _global_manager.plugin_manager.execute_plugin(plugin_id, requested_capability=req.capability, params=req.params)
+        res = _global_manager.plugin_manager.execute_plugin(
+            plugin_id, requested_capability=req.capability, params=req.params
+        )
         return res
     except Exception as e:
-        raise HTTPException(status_code=403 if "boundary" in str(e).lower() or "declared" in str(e).lower() else 400, detail=str(e))
+        raise HTTPException(
+            status_code=403 if "boundary" in str(e).lower() or "declared" in str(e).lower() else 400, detail=str(e)
+        )
 
 
 @router.get("/analytics")

@@ -157,7 +157,9 @@ async def plan_remediation(
     from app.platform_contracts.delegation import DelegationTarget
     from app.security_intelligence.remediation import SecurityRemediationAction
 
-    action = SecurityRemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name=req.action_name, priority=req.priority)
+    action = SecurityRemediationAction(
+        target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name=req.action_name, priority=req.priority
+    )
 
     plan = mgr.remediation_manager.plan_remediation(
         tenant_id=tenant_id,

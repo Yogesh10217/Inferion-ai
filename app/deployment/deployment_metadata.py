@@ -23,7 +23,9 @@ class DeploymentIdentityBuilder:
         image_tag = os.getenv("IMAGE_TAG") or f"enterprise-ai-platform:{dep_version}"
         image_digest = os.getenv("IMAGE_DIGEST") or "NOT_AVAILABLE"
 
-        tag_valid, tag_msg = ContainerValidationEngine.validate_image_tag(image_tag, is_production=config.is_production())
+        tag_valid, tag_msg = ContainerValidationEngine.validate_image_tag(
+            image_tag, is_production=config.is_production()
+        )
         if not tag_valid:
             raise ConfigurationValidationError(tag_msg)
 
@@ -60,7 +62,9 @@ class DeploymentMetadataProvider:
             "instance_id": config.instance_id,
             "image_tag": identity.image_tag,
             "image_digest": identity.image_digest,
-            "readiness_classification": PlatformReadinessClassification.PRODUCTION_CONFIGURATION_READY.value
-            if config.is_production()
-            else PlatformReadinessClassification.STAGING_VALIDATED.value,
+            "readiness_classification": (
+                PlatformReadinessClassification.PRODUCTION_CONFIGURATION_READY.value
+                if config.is_production()
+                else PlatformReadinessClassification.STAGING_VALIDATED.value
+            ),
         }

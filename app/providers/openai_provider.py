@@ -24,13 +24,26 @@ class OpenAIProvider(BaseProvider):
         self.api_key = api_key or get_settings().openai_api_key
         self.base_url = base_url or "https://api.openai.com/v1"
 
-    async def generate(self, *, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> InferenceResponse:
+    async def generate(
+        self,
+        *,
+        request: InferenceRequest | None = None,
+        model: str | None = None,
+        prompt: str | None = None,
+        **kwargs: Any,
+    ) -> InferenceResponse:
         """Return a standardized response for the prompt."""
-        request_obj = request or InferenceRequest(model=model or "", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or ""
         prompt_text = prompt or self._extract_prompt(request_obj)
 
-        is_mock = not self.api_key or self.api_key in ("mock", "test-key", "test") or (request_obj.metadata and request_obj.metadata.get("mock") is True)
+        is_mock = (
+            not self.api_key
+            or self.api_key in ("mock", "test-key", "test")
+            or (request_obj.metadata and request_obj.metadata.get("mock") is True)
+        )
         if is_mock:
             created_at = datetime.now(timezone.utc)
             return InferenceResponse(
@@ -38,7 +51,11 @@ class OpenAIProvider(BaseProvider):
                 provider=self.name,
                 model=model_name,
                 text=f"[openai:{model_name}] {prompt_text}",
-                usage=Usage(prompt_tokens=max(1, len(prompt_text.split())), completion_tokens=max(1, len(prompt_text.split())), total_tokens=max(1, len(prompt_text.split())) * 2),
+                usage=Usage(
+                    prompt_tokens=max(1, len(prompt_text.split())),
+                    completion_tokens=max(1, len(prompt_text.split())),
+                    total_tokens=max(1, len(prompt_text.split())) * 2,
+                ),
                 finish_reason="stop",
                 latency_ms=0.0,
                 created=created_at,
@@ -89,7 +106,9 @@ class OpenAIProvider(BaseProvider):
 
                     latency_ms = (time.perf_counter() - start_time) * 1000.0
                     if response.status_code != 200:
-                        raise ProviderUnavailableException(f"OpenAI error status {response.status_code}: {response.text}")
+                        raise ProviderUnavailableException(
+                            f"OpenAI error status {response.status_code}: {response.text}"
+                        )
 
                     resp_json = response.json()
                     choices = resp_json.get("choices", [])
@@ -121,7 +140,9 @@ class OpenAIProvider(BaseProvider):
                         latency_ms=latency_ms,
                         created=created_at,
                         metadata={"base_url": self.base_url, "provider_version": "v1", "cached": False, **kwargs},
-                        request_id=request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id"),
+                        request_id=(
+                            request_obj.metadata.get("request_id") if request_obj.metadata else kwargs.get("request_id")
+                        ),
                         raw_response=resp_json,
                     )
                 except (httpx.ConnectError, httpx.TimeoutException) as exc:
@@ -135,18 +156,26 @@ class OpenAIProvider(BaseProvider):
             if last_exc:
                 raise ProviderUnavailableException(f"OpenAI retries exhausted: {last_exc}") from last_exc
 
-    async def stream(self, request: InferenceRequest | None = None, model: str | None = None, prompt: str | None = None, **kwargs: Any) -> AsyncIterator[InferenceResponse]:
+    async def stream(
+        self,
+        request: InferenceRequest | None = None,
+        model: str | None = None,
+        prompt: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncIterator[InferenceResponse]:
         """Yield normalized InferenceResponse chunks for the completion."""
         if request is None:
             request = InferenceRequest(
-                model=model or "",
-                messages=[ChatMessage(role="user", content=prompt or "")],
-                **kwargs
+                model=model or "", messages=[ChatMessage(role="user", content=prompt or "")], **kwargs
             )
         model_name = request.model
 
         # Check if we should use mock/simulation fallback or real client
-        is_mock = not self.api_key or self.api_key in ("mock", "test-key", "test") or (request.metadata and request.metadata.get("mock") is True)
+        is_mock = (
+            not self.api_key
+            or self.api_key in ("mock", "test-key", "test")
+            or (request.metadata and request.metadata.get("mock") is True)
+        )
 
         if is_mock:
             prompt_text = self._extract_prompt(request)
@@ -207,13 +236,15 @@ class OpenAIProvider(BaseProvider):
                 ) as r:
                     if r.status_code != 200:
                         error_text = await r.aread()
-                        raise ProviderUnavailableException(f"OpenAI error status {r.status_code}: {error_text.decode('utf-8')}")
+                        raise ProviderUnavailableException(
+                            f"OpenAI error status {r.status_code}: {error_text.decode('utf-8')}"
+                        )
 
                     async for line in r.aiter_lines():
                         if not line.strip():
                             continue
                         if line.startswith("data: "):
-                            data_str = line[len("data: "):].strip()
+                            data_str = line[len("data: ") :].strip()
                             if data_str == "[DONE]":
                                 break
                             try:
@@ -242,7 +273,9 @@ class OpenAIProvider(BaseProvider):
                                     usage=usage,
                                     finish_reason=finish_reason or "",
                                     latency_ms=0.0,
-                                    created=datetime.fromtimestamp(chunk_data.get("created", int(time.time())), tz=timezone.utc),
+                                    created=datetime.fromtimestamp(
+                                        chunk_data.get("created", int(time.time())), tz=timezone.utc
+                                    ),
                                     metadata={},
                                     request_id=request.metadata.get("request_id") if request.metadata else None,
                                     raw_response=chunk_data,

@@ -98,37 +98,59 @@ class ModelIntelligenceManager:
         """Runs complete 30-step Model Intelligence, Governance & Assurance Lifecycle."""
         # 1. Registration
         provider = ModelProviderReference(provider_id="prov-1", provider_name=provider_name)
-        model_ref = self.registry.register_model(name=model_name, tenant_id=tenant_id, model_type=model_type, provider=provider)
+        model_ref = self.registry.register_model(
+            name=model_name, tenant_id=tenant_id, model_type=model_type, provider=provider
+        )
         model_id = model_ref.model_id
 
         # 2. Version Intelligence
-        v_assess = self.version_manager.compare_versions(model_id=model_id, base_version_tag="1.0.0", target_version_tag="1.1.0", tenant_id=tenant_id)
+        v_assess = self.version_manager.compare_versions(
+            model_id=model_id, base_version_tag="1.0.0", target_version_tag="1.1.0", tenant_id=tenant_id
+        )
 
         # 3. Evaluation
         metrics = [EvaluationMetric(name="accuracy", score=0.92, min_threshold=0.85, passed=True)]
-        evaluation = self.evaluation_manager.create_evaluation(model_id=model_id, tenant_id=tenant_id, version_tag="1.0.0", eval_type=EvaluationType.DETERMINISTIC, metrics=metrics)
+        evaluation = self.evaluation_manager.create_evaluation(
+            model_id=model_id,
+            tenant_id=tenant_id,
+            version_tag="1.0.0",
+            eval_type=EvaluationType.DETERMINISTIC,
+            metrics=metrics,
+        )
         self.metrics_collector.increment_counter("evaluation_total")
 
         # 4. Benchmarking
-        bm_res = BenchmarkResult(model_id=model_id, model_name=model_name, version_tag="1.0.0", suite_name="ReasoningSuite", score=88.5)
-        benchmark = self.benchmark_manager.run_benchmark(tenant_id=tenant_id, suite_name="ReasoningSuite", results=[bm_res])
+        bm_res = BenchmarkResult(
+            model_id=model_id, model_name=model_name, version_tag="1.0.0", suite_name="ReasoningSuite", score=88.5
+        )
+        benchmark = self.benchmark_manager.run_benchmark(
+            tenant_id=tenant_id, suite_name="ReasoningSuite", results=[bm_res]
+        )
 
         # 5. Performance Analysis
-        perf = self.performance_manager.record_performance(model_id=model_id, tenant_id=tenant_id, latency_p95_ms=115.0, error_rate_percentage=0.01)
+        perf = self.performance_manager.record_performance(
+            model_id=model_id, tenant_id=tenant_id, latency_p95_ms=115.0, error_rate_percentage=0.01
+        )
 
         # 6. Quality Assessment
         q_scores = [QualityScore(dimension=QualityDimension.CORRECTNESS, score=0.95)]
         quality = self.quality_manager.evaluate_quality(model_id=model_id, tenant_id=tenant_id, scores=q_scores)
 
         # 7. Hallucination Intelligence
-        hal_assess = self.hallucination_manager.analyze_hallucinations(model_id=model_id, tenant_id=tenant_id, total_evaluated=100, findings=[])
+        hal_assess = self.hallucination_manager.analyze_hallucinations(
+            model_id=model_id, tenant_id=tenant_id, total_evaluated=100, findings=[]
+        )
 
         # 8. Drift Detection
-        drift = self.drift_manager.detect_drift(model_id=model_id, tenant_id=tenant_id, drift_type=ModelDriftType.BEHAVIORAL_DRIFT, drift_score=0.02)
+        drift = self.drift_manager.detect_drift(
+            model_id=model_id, tenant_id=tenant_id, drift_type=ModelDriftType.BEHAVIORAL_DRIFT, drift_score=0.02
+        )
 
         # 9. Reliability Assessment
         rel_scores = [ReliabilityScore(dimension="AVAILABILITY", score=0.99)]
-        reliability = self.reliability_manager.assess_reliability(model_id=model_id, tenant_id=tenant_id, scores=rel_scores)
+        reliability = self.reliability_manager.assess_reliability(
+            model_id=model_id, tenant_id=tenant_id, scores=rel_scores
+        )
 
         # 10. Safety Assessment
         safety = self.safety_manager.evaluate_safety(model_id=model_id, tenant_id=tenant_id)
@@ -137,7 +159,11 @@ class ModelIntelligenceManager:
         security = self.security_manager.assess_security(model_id=model_id, tenant_id=tenant_id)
 
         # 12. Risk Evaluation
-        risk_factors = [ModelRiskFactor(dimension=ModelRiskDimension.SAFETY, risk_score=0.1, weight=1.0, description="Low safety risk")]
+        risk_factors = [
+            ModelRiskFactor(
+                dimension=ModelRiskDimension.SAFETY, risk_score=0.1, weight=1.0, description="Low safety risk"
+            )
+        ]
         risk = self.risk_manager.assess_risk(model_id=model_id, tenant_id=tenant_id, factors=risk_factors)
 
         # 13. Trust Evaluation
@@ -146,65 +172,136 @@ class ModelIntelligenceManager:
         self.metrics_collector.set_gauge("trust_score", trust.trust_score.overall_score)
 
         # 14. Explainability Analysis
-        explanation = self.explainability_manager.generate_explanation(model_id=model_id, tenant_id=tenant_id, explanation_type=ExplanationType.EVALUATION_EXPLANATION, summary="Evaluation passed with 92% score.")
+        explanation = self.explainability_manager.generate_explanation(
+            model_id=model_id,
+            tenant_id=tenant_id,
+            explanation_type=ExplanationType.EVALUATION_EXPLANATION,
+            summary="Evaluation passed with 92% score.",
+        )
 
         # 15. Monitoring
         self.monitoring_manager.configure_monitoring(model_id=model_id, tenant_id=tenant_id)
         mon_assess = self.monitoring_manager.assess_monitoring(model_id=model_id, tenant_id=tenant_id)
 
         # 16. Anomaly Detection
-        anom = self.anomaly_manager.detect_anomaly(model_id=model_id, tenant_id=tenant_id, anomaly_type=ModelAnomalyType.LATENCY_SPIKE, metric_name="latency", observed_value=120.0, expected_threshold=500.0, severity=ModelAnomalySeverity.LOW)
+        anom = self.anomaly_manager.detect_anomaly(
+            model_id=model_id,
+            tenant_id=tenant_id,
+            anomaly_type=ModelAnomalyType.LATENCY_SPIKE,
+            metric_name="latency",
+            observed_value=120.0,
+            expected_threshold=500.0,
+            severity=ModelAnomalySeverity.LOW,
+        )
 
         # 17. Incident Governance
-        incident = self.incident_manager.create_incident(model_id=model_id, tenant_id=tenant_id, title="Routine Quality Inspection", severity=ModelIncidentSeverity.LOW)
+        incident = self.incident_manager.create_incident(
+            model_id=model_id,
+            tenant_id=tenant_id,
+            title="Routine Quality Inspection",
+            severity=ModelIncidentSeverity.LOW,
+        )
 
         # 18. Investigation
-        inv = self.investigation_manager.start_investigation(incident_id=incident.incident_id, model_id=model_id, tenant_id=tenant_id)
-        self.investigation_manager.add_finding(investigation_id=inv.investigation_id, tenant_id=tenant_id, category="Quality", summary="Routine check clean.", root_cause="None")
-        inv_concluded = self.investigation_manager.conclude_investigation(investigation_id=inv.investigation_id, tenant_id=tenant_id)
+        inv = self.investigation_manager.start_investigation(
+            incident_id=incident.incident_id, model_id=model_id, tenant_id=tenant_id
+        )
+        self.investigation_manager.add_finding(
+            investigation_id=inv.investigation_id,
+            tenant_id=tenant_id,
+            category="Quality",
+            summary="Routine check clean.",
+            root_cause="None",
+        )
+        inv_concluded = self.investigation_manager.conclude_investigation(
+            investigation_id=inv.investigation_id, tenant_id=tenant_id
+        )
 
         # 19. Remediation Planning
         act = ModelRemediationAction(action_id="act-1", action_name="configuration_review", target_resource_id=model_id)
-        rem_plan = self.remediation_manager.create_plan(model_id=model_id, tenant_id=tenant_id, priority=ModelRemediationPriority.LOW, actions=[act])
-        rem_executed = self.remediation_manager.execute_plan_via_delegation(plan_id=rem_plan.plan_id, tenant_id=tenant_id)
+        rem_plan = self.remediation_manager.create_plan(
+            model_id=model_id, tenant_id=tenant_id, priority=ModelRemediationPriority.LOW, actions=[act]
+        )
+        rem_executed = self.remediation_manager.execute_plan_via_delegation(
+            plan_id=rem_plan.plan_id, tenant_id=tenant_id
+        )
 
         # 20. Governance Decision
-        gov_dec = self.governance_engine.evaluate_action(action_type="configuration_review", model_id=model_id, tenant_id=tenant_id)
+        gov_dec = self.governance_engine.evaluate_action(
+            action_type="configuration_review", model_id=model_id, tenant_id=tenant_id
+        )
 
         # 21. Delegation
-        del_act = ModelDelegationAction(action_id="dact-1", target_system="model_hosting", action_type="configuration_review")
-        del_plan = self.delegation_manager.create_delegation_plan(model_id=model_id, tenant_id=tenant_id, actions=[del_act])
+        del_act = ModelDelegationAction(
+            action_id="dact-1", target_system="model_hosting", action_type="configuration_review"
+        )
+        del_plan = self.delegation_manager.create_delegation_plan(
+            model_id=model_id, tenant_id=tenant_id, actions=[del_act]
+        )
 
         # 22. Verification
         v_check = VerificationCheck(check_name="config_verified", target="configuration_review", passed=True)
-        ver = self.verification_manager.verify_remediation(remediation_plan_id=rem_plan.plan_id, model_id=model_id, tenant_id=tenant_id, checks=[v_check])
+        ver = self.verification_manager.verify_remediation(
+            remediation_plan_id=rem_plan.plan_id, model_id=model_id, tenant_id=tenant_id, checks=[v_check]
+        )
 
         # 23. Evidence
-        ev_item = ModelEvidence(evidence_id="ev-1", evidence_type="EVALUATION", reference_id=evaluation.evaluation_id, data_ref=f"eval:{evaluation.evaluation_id}")
-        ev_bundle = self.evidence_manager.create_evidence_bundle(model_id=model_id, tenant_id=tenant_id, evidences=[ev_item])
+        ev_item = ModelEvidence(
+            evidence_id="ev-1",
+            evidence_type="EVALUATION",
+            reference_id=evaluation.evaluation_id,
+            data_ref=f"eval:{evaluation.evaluation_id}",
+        )
+        ev_bundle = self.evidence_manager.create_evidence_bundle(
+            model_id=model_id, tenant_id=tenant_id, evidences=[ev_item]
+        )
 
         # 24. Assurance
-        assr_scores = [ModelAssuranceScore(dimension=AssuranceDimension.PERFORMANCE, score=0.95, weight=1.0, passed=True)]
+        assr_scores = [
+            ModelAssuranceScore(dimension=AssuranceDimension.PERFORMANCE, score=0.95, weight=1.0, passed=True)
+        ]
         assurance = self.assurance_manager.compute_assurance(model_id=model_id, tenant_id=tenant_id, scores=assr_scores)
         self.metrics_collector.set_gauge("assurance_score", assurance.overall_assurance_score * 100.0)
 
         # 25. Correlation
-        corr = self.correlation_manager.correlate_events(model_id=model_id, tenant_id=tenant_id, correlation_type=CorrelationType.MODEL_INCIDENT, primary_event_id=incident.incident_id, correlated_event_id=inv.investigation_id, source_subsystem="model_intelligence")
+        corr = self.correlation_manager.correlate_events(
+            model_id=model_id,
+            tenant_id=tenant_id,
+            correlation_type=CorrelationType.MODEL_INCIDENT,
+            primary_event_id=incident.incident_id,
+            correlated_event_id=inv.investigation_id,
+            source_subsystem="model_intelligence",
+        )
 
         # 26. Snapshots
-        snap = self.snapshot_manager.capture_snapshot(model_id=model_id, tenant_id=tenant_id, snapshot_type="assurance", data={"assurance_score": assurance.overall_assurance_score})
+        snap = self.snapshot_manager.capture_snapshot(
+            model_id=model_id,
+            tenant_id=tenant_id,
+            snapshot_type="assurance",
+            data={"assurance_score": assurance.overall_assurance_score},
+        )
 
         # 27. Learning
-        learn_rec = self.learning_manager.generate_recommendation(target_model_id=model_id, tenant_id=tenant_id, pattern_name="OptimalPerformance", recommendation_text="Maintain current model parameters.", reasoning="Model performance and quality are within ideal ranges.")
+        learn_rec = self.learning_manager.generate_recommendation(
+            target_model_id=model_id,
+            tenant_id=tenant_id,
+            pattern_name="OptimalPerformance",
+            recommendation_text="Maintain current model parameters.",
+            reasoning="Model performance and quality are within ideal ranges.",
+        )
 
         # 28. Analytics
-        report = self.analytics_engine.generate_report(tenant_id=tenant_id, total_models_monitored=1, active_incidents_count=0, overall_health_score=95.0)
+        report = self.analytics_engine.generate_report(
+            tenant_id=tenant_id, total_models_monitored=1, active_incidents_count=0, overall_health_score=95.0
+        )
 
         # 29. Observability Metrics
         metrics_summary = self.metrics_collector.collect_metrics()
 
         # 30. Billing
-        cost_event = self.billing_tracker.track_operation_cost(model_id=model_id, tenant_id=tenant_id, operation="evaluation", cost_usd=0.005)
+        cost_event = self.billing_tracker.track_operation_cost(
+            model_id=model_id, tenant_id=tenant_id, operation="evaluation", cost_usd=0.005
+        )
 
         return {
             "model_id": model_id,

@@ -76,7 +76,9 @@ class ModelCorrelationManager:
         )
 
         self._correlations[c_id] = correlation
-        logger.info(f"[MODEL CORRELATION] Correlated {primary_event_id} with {correlated_event_id} ({correlation_type})")
+        logger.info(
+            f"[MODEL CORRELATION] Correlated {primary_event_id} with {correlated_event_id} ({correlation_type})"
+        )
         return correlation
 
     def list_correlations(self, tenant_id: str, model_id: Optional[str] = None) -> List[ModelCorrelation]:

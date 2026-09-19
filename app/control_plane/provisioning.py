@@ -70,7 +70,9 @@ class ProvisioningEngine:
         quota_defn = QuotaDefinition(tenant_id=tenant.tenant_id)
         self.quota_manager.set_definition(quota_defn)
 
-        logger.info(f"[PROVISIONING COMPLETE] Provisioned tenant bundle (Tenant ID: {tenant.tenant_id}, Org ID: {org.organization_id}, WS ID: {ws.workspace_id})")
+        logger.info(
+            f"[PROVISIONING COMPLETE] Provisioned tenant bundle (Tenant ID: {tenant.tenant_id}, Org ID: {org.organization_id}, WS ID: {ws.workspace_id})"
+        )
 
         return ProvisionedTenantBundle(
             tenant=tenant.model_dump(),

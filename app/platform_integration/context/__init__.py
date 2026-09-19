@@ -1,4 +1,5 @@
 """Context Package Init."""
+
 from app.platform_integration.context.builder import (
     BoundedContextPolicy,
     PlatformIntegrationContext,

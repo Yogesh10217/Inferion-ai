@@ -35,23 +35,68 @@ class RuntimeLifecycleState(str, Enum):
 
 # Valid state transitions graph
 VALID_TRANSITIONS: Dict[RuntimeLifecycleState, Set[RuntimeLifecycleState]] = {
-    RuntimeLifecycleState.OBSERVED: {RuntimeLifecycleState.ANALYZING, RuntimeLifecycleState.FAILED, RuntimeLifecycleState.CANCELLED},
-    RuntimeLifecycleState.ANALYZING: {RuntimeLifecycleState.HEALTH_ASSESSED, RuntimeLifecycleState.FAILED, RuntimeLifecycleState.CANCELLED},
-    RuntimeLifecycleState.HEALTH_ASSESSED: {RuntimeLifecycleState.ANOMALY_DETECTED, RuntimeLifecycleState.RISK_ASSESSED, RuntimeLifecycleState.FAILED},
-    RuntimeLifecycleState.ANOMALY_DETECTED: {RuntimeLifecycleState.RISK_ASSESSED, RuntimeLifecycleState.DEGRADED, RuntimeLifecycleState.FAILED},
-    RuntimeLifecycleState.RISK_ASSESSED: {RuntimeLifecycleState.ADAPTATION_RECOMMENDED, RuntimeLifecycleState.CLOSED, RuntimeLifecycleState.FAILED},
-    RuntimeLifecycleState.ADAPTATION_RECOMMENDED: {RuntimeLifecycleState.GOVERNANCE_EVALUATED, RuntimeLifecycleState.CLOSED, RuntimeLifecycleState.FAILED},
-    RuntimeLifecycleState.GOVERNANCE_EVALUATED: {RuntimeLifecycleState.REQUIRES_APPROVAL, RuntimeLifecycleState.APPROVED, RuntimeLifecycleState.REJECTED, RuntimeLifecycleState.FAILED},
-    RuntimeLifecycleState.REQUIRES_APPROVAL: {RuntimeLifecycleState.APPROVED, RuntimeLifecycleState.REJECTED, RuntimeLifecycleState.CANCELLED},
-    RuntimeLifecycleState.APPROVED: {RuntimeLifecycleState.DELEGATED, RuntimeLifecycleState.CANCELLED, RuntimeLifecycleState.FAILED},
+    RuntimeLifecycleState.OBSERVED: {
+        RuntimeLifecycleState.ANALYZING,
+        RuntimeLifecycleState.FAILED,
+        RuntimeLifecycleState.CANCELLED,
+    },
+    RuntimeLifecycleState.ANALYZING: {
+        RuntimeLifecycleState.HEALTH_ASSESSED,
+        RuntimeLifecycleState.FAILED,
+        RuntimeLifecycleState.CANCELLED,
+    },
+    RuntimeLifecycleState.HEALTH_ASSESSED: {
+        RuntimeLifecycleState.ANOMALY_DETECTED,
+        RuntimeLifecycleState.RISK_ASSESSED,
+        RuntimeLifecycleState.FAILED,
+    },
+    RuntimeLifecycleState.ANOMALY_DETECTED: {
+        RuntimeLifecycleState.RISK_ASSESSED,
+        RuntimeLifecycleState.DEGRADED,
+        RuntimeLifecycleState.FAILED,
+    },
+    RuntimeLifecycleState.RISK_ASSESSED: {
+        RuntimeLifecycleState.ADAPTATION_RECOMMENDED,
+        RuntimeLifecycleState.CLOSED,
+        RuntimeLifecycleState.FAILED,
+    },
+    RuntimeLifecycleState.ADAPTATION_RECOMMENDED: {
+        RuntimeLifecycleState.GOVERNANCE_EVALUATED,
+        RuntimeLifecycleState.CLOSED,
+        RuntimeLifecycleState.FAILED,
+    },
+    RuntimeLifecycleState.GOVERNANCE_EVALUATED: {
+        RuntimeLifecycleState.REQUIRES_APPROVAL,
+        RuntimeLifecycleState.APPROVED,
+        RuntimeLifecycleState.REJECTED,
+        RuntimeLifecycleState.FAILED,
+    },
+    RuntimeLifecycleState.REQUIRES_APPROVAL: {
+        RuntimeLifecycleState.APPROVED,
+        RuntimeLifecycleState.REJECTED,
+        RuntimeLifecycleState.CANCELLED,
+    },
+    RuntimeLifecycleState.APPROVED: {
+        RuntimeLifecycleState.DELEGATED,
+        RuntimeLifecycleState.CANCELLED,
+        RuntimeLifecycleState.FAILED,
+    },
     RuntimeLifecycleState.DELEGATED: {RuntimeLifecycleState.VERIFYING, RuntimeLifecycleState.FAILED},
-    RuntimeLifecycleState.VERIFYING: {RuntimeLifecycleState.STABILIZED, RuntimeLifecycleState.DEGRADED, RuntimeLifecycleState.FAILED},
+    RuntimeLifecycleState.VERIFYING: {
+        RuntimeLifecycleState.STABILIZED,
+        RuntimeLifecycleState.DEGRADED,
+        RuntimeLifecycleState.FAILED,
+    },
     RuntimeLifecycleState.STABILIZED: {RuntimeLifecycleState.CLOSED},
     RuntimeLifecycleState.CLOSED: set(),
     RuntimeLifecycleState.REJECTED: set(),
     RuntimeLifecycleState.CANCELLED: set(),
     RuntimeLifecycleState.FAILED: set(),
-    RuntimeLifecycleState.DEGRADED: {RuntimeLifecycleState.ANALYZING, RuntimeLifecycleState.FAILED, RuntimeLifecycleState.CLOSED},
+    RuntimeLifecycleState.DEGRADED: {
+        RuntimeLifecycleState.ANALYZING,
+        RuntimeLifecycleState.FAILED,
+        RuntimeLifecycleState.CLOSED,
+    },
 }
 
 

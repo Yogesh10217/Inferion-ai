@@ -22,8 +22,8 @@ class ResourceGraph:
     """Directed acyclic dependency graph tracking resource relationships across platform subsystems."""
 
     def __init__(self) -> None:
-        self._adj: Dict[str, Set[str]] = {}        # parent_id -> set of child_ids it depends on
-        self._rev_adj: Dict[str, Set[str]] = {}    # child_id -> set of parent_ids that depend on it
+        self._adj: Dict[str, Set[str]] = {}  # parent_id -> set of child_ids it depends on
+        self._rev_adj: Dict[str, Set[str]] = {}  # child_id -> set of parent_ids that depend on it
 
     def register_dependency(self, parent_id: str, child_id: str, dependency_type: str = "REQUIRES") -> None:
         """Register a dependency edge parent -> child."""
@@ -112,7 +112,5 @@ class ResourceGraph:
         """Validate if a resource can be safely deleted without breaking dependents."""
         dependents = self.find_dependent_resources(resource_id)
         if dependents:
-            raise LifecycleException(
-                f"Cannot delete resource '{resource_id}'. Active dependents exist: {dependents}"
-            )
+            raise LifecycleException(f"Cannot delete resource '{resource_id}'. Active dependents exist: {dependents}")
         return True

@@ -11,6 +11,7 @@ from app.core.database import Base
 
 class TraceModel(Base):
     """Persistent database model for a Trace."""
+
     __tablename__ = "observability_traces"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -30,11 +31,14 @@ class TraceModel(Base):
 
 class SpanModel(Base):
     """Persistent database model for an Execution Span."""
+
     __tablename__ = "observability_spans"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     span_id = Column(String(64), unique=True, nullable=False, index=True)
-    trace_id = Column(String(64), ForeignKey("observability_traces.trace_id", ondelete="CASCADE"), nullable=False, index=True)
+    trace_id = Column(
+        String(64), ForeignKey("observability_traces.trace_id", ondelete="CASCADE"), nullable=False, index=True
+    )
     parent_span_id = Column(String(64), index=True, nullable=True)
     name = Column(String(128), nullable=False, index=True)
     component = Column(String(64), nullable=False, index=True)
@@ -55,6 +59,7 @@ class SpanModel(Base):
 
 class ExecutionEventModel(Base):
     """Persistent model for discrete Execution Events."""
+
     __tablename__ = "observability_execution_events"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -71,6 +76,7 @@ class ExecutionEventModel(Base):
 
 class ExecutionSnapshotModel(Base):
     """Persistent model for Execution Replay Snapshots."""
+
     __tablename__ = "observability_snapshots"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -91,6 +97,7 @@ class ExecutionSnapshotModel(Base):
 
 class AlertModel(Base):
     """Persistent model for System Alerts."""
+
     __tablename__ = "observability_alerts"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -114,6 +121,7 @@ class AlertModel(Base):
 
 class SLODefinitionModel(Base):
     """Persistent model for SLO Rule Definitions."""
+
     __tablename__ = "observability_slo_definitions"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -132,10 +140,13 @@ class SLODefinitionModel(Base):
 
 class SLOViolationModel(Base):
     """Persistent model for SLO Violations."""
+
     __tablename__ = "observability_slo_violations"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    slo_id = Column(String(64), ForeignKey("observability_slo_definitions.slo_id", ondelete="CASCADE"), nullable=False, index=True)
+    slo_id = Column(
+        String(64), ForeignKey("observability_slo_definitions.slo_id", ondelete="CASCADE"), nullable=False, index=True
+    )
     status = Column(String(32), nullable=False)
     current_value = Column(Float, nullable=False)
     target_value = Column(Float, nullable=False)
@@ -145,6 +156,7 @@ class SLOViolationModel(Base):
 
 class AnomalyEventModel(Base):
     """Persistent model for Statistical Anomaly Events."""
+
     __tablename__ = "observability_anomaly_events"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -163,6 +175,7 @@ class AnomalyEventModel(Base):
 
 class EvaluationResultModel(Base):
     """Persistent model for Quality Evaluation Metrics."""
+
     __tablename__ = "observability_evaluations"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))

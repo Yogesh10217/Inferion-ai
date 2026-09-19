@@ -60,7 +60,9 @@ class MLOpsBillingTracker:
             cost_dollars=cost_dollars,
         )
         self._records.append(rec)
-        logger.info(f"[MLOPS BILLING] Recorded cost ${cost_dollars:.6f} for operation '{operation}' (Tenant: {tenant_id})")
+        logger.info(
+            f"[MLOPS BILLING] Recorded cost ${cost_dollars:.6f} for operation '{operation}' (Tenant: {tenant_id})"
+        )
         return rec
 
     def get_total_cost(self, tenant_id: Optional[str] = None, asset_id: Optional[str] = None) -> float:

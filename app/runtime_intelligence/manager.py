@@ -293,9 +293,7 @@ class RuntimeIntelligenceManager:
         self.observability.increment("ai_runtime_intelligence_observations_total")
         return obs
 
-    def correlate_telemetry(
-        self, tenant_id: str, subsystem: str, observation_ids: List[str]
-    ) -> RuntimeCorrelation:
+    def correlate_telemetry(self, tenant_id: str, subsystem: str, observation_ids: List[str]) -> RuntimeCorrelation:
         return RuntimeCorrelation(
             correlation_id=f"corr-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,
@@ -318,7 +316,9 @@ class RuntimeIntelligenceManager:
     ) -> RuntimeHealthAssessment:
         telem = telemetry if telemetry is not None else (raw_telemetry or {})
         rh = self.health_engine.evaluate_health(tenant_id, telem, subsystem=subsystem)
-        self.timeline.record_event(tenant_id, "HEALTH_EVALUATED", f"Subsystem '{subsystem}' health score: {rh.overall_score:.4f}")
+        self.timeline.record_event(
+            tenant_id, "HEALTH_EVALUATED", f"Subsystem '{subsystem}' health score: {rh.overall_score:.4f}"
+        )
         self.observability.increment("ai_runtime_intelligence_health_assessments_total")
         return rh
 
@@ -343,7 +343,7 @@ class RuntimeIntelligenceManager:
     ) -> BaselineRecord:
         mean_val = sum(sample_values) / len(sample_values) if sample_values else 0.0
         variance = sum((x - mean_val) ** 2 for x in sample_values) / len(sample_values) if sample_values else 0.0
-        std_dev = variance ** 0.5
+        std_dev = variance**0.5
         return BaselineRecord(
             baseline_id=f"base-{uuid.uuid4().hex[:12]}",
             tenant_id=tenant_id,
@@ -450,9 +450,7 @@ class RuntimeIntelligenceManager:
             recommended_level=recommended,
         )
 
-    def quantify_uncertainty(
-        self, tenant_id: str, assessment_type: str, sample_variance: float
-    ) -> UncertaintyResult:
+    def quantify_uncertainty(self, tenant_id: str, assessment_type: str, sample_variance: float) -> UncertaintyResult:
         res = self.uncertainty_engine.evaluate_uncertainty(
             tenant_id=tenant_id,
             sample_variance=sample_variance,
@@ -466,9 +464,7 @@ class RuntimeIntelligenceManager:
             confidence_interval_upper=res["confidence_interval_upper"],
         )
 
-    def generate_recommendations(
-        self, tenant_id: str, subsystem: str
-    ) -> List[RuntimeRecommendation]:
+    def generate_recommendations(self, tenant_id: str, subsystem: str) -> List[RuntimeRecommendation]:
         rec = RuntimeRecommendation(
             tenant_id=tenant_id,
             recommendation_type="SCALE_REPLICAS",
@@ -488,9 +484,7 @@ class RuntimeIntelligenceManager:
         )
 
     # Governance, Delegation & Review
-    def evaluate_governance(
-        self, tenant_id: str, action: str, risk_level: Any = "MEDIUM"
-    ) -> Dict[str, Any]:
+    def evaluate_governance(self, tenant_id: str, action: str, risk_level: Any = "MEDIUM") -> Dict[str, Any]:
         return self.governance_engine.evaluate_governance(
             tenant_id=tenant_id, action_name=action, risk_level=risk_level
         )
@@ -506,7 +500,11 @@ class RuntimeIntelligenceManager:
     ) -> DelegationRecord:
         risk_enum = RiskLevel(risk_level.value if hasattr(risk_level, "value") else risk_level)
         requires_appr = risk_enum in [RiskLevel.HIGH, RiskLevel.CRITICAL] and not is_approved
-        status = DelegationStatus.PENDING_APPROVAL if requires_appr else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
+        status = (
+            DelegationStatus.PENDING_APPROVAL
+            if requires_appr
+            else (DelegationStatus.APPROVED if is_approved else DelegationStatus.PENDING_APPROVAL)
+        )
 
         del_rec = DelegationRecord(
             delegation_id=f"del-{uuid.uuid4().hex[:12]}",
@@ -567,14 +565,14 @@ class RuntimeIntelligenceManager:
         )
 
     # Evidence & Snapshots
-    def create_evidence_bundle(
-        self, tenant_id: str, records: List[Dict[str, Any]]
-    ) -> RuntimeEvidenceBundle:
+    def create_evidence_bundle(self, tenant_id: str, records: List[Dict[str, Any]]) -> RuntimeEvidenceBundle:
         eb = self.evidence_manager.create_evidence_bundle(tenant_id, records)
         self._evidence_bundles[eb.bundle_id] = eb
         return eb
 
-    def get_evidence(self, tenant_id: str, bundle_id: Optional[str] = None, evidence_id: Optional[str] = None) -> Optional[RuntimeEvidenceBundle]:
+    def get_evidence(
+        self, tenant_id: str, bundle_id: Optional[str] = None, evidence_id: Optional[str] = None
+    ) -> Optional[RuntimeEvidenceBundle]:
         target_id = bundle_id or evidence_id
         if not target_id:
             return None

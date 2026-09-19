@@ -129,7 +129,9 @@ class ApplicationRuntime:
 
             # Simulate execution of composed components (or direct model response)
             user_message = input_data.get("message", input_data.get("prompt", ""))
-            response_text = f"Application [{context.application_id}:{context.application_version_id}] response to: '{user_message}'"
+            response_text = (
+                f"Application [{context.application_id}:{context.application_version_id}] response to: '{user_message}'"
+            )
 
             exec_record.steps_completed.append("COMPONENTS_EXECUTED")
 

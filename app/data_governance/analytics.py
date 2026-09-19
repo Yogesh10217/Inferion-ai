@@ -63,7 +63,9 @@ class DataGovernanceAnalyticsEngine:
         unclassified_count = governed_count - classified_count
 
         usage_events = self.usage_manager.list_usage_events(tenant_id=tenant_id, limit=1000)
-        blocked_attempts = sum(1 for e in usage_events if "BLOCK" in e.authorization_decision or "DENIED" in e.authorization_decision)
+        blocked_attempts = sum(
+            1 for e in usage_events if "BLOCK" in e.authorization_decision or "DENIED" in e.authorization_decision
+        )
 
         # Trust analytics
         dist: Dict[TrustBand, int] = {tb: 0 for tb in TrustBand}

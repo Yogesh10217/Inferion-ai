@@ -46,10 +46,13 @@ class PlanningBillingTracker:
 
     def get_billing_summary(self, tenant_id: str) -> Dict[str, Any]:
         with self._lock:
-            return self._tenant_billing.get(tenant_id, {
-                "tenant_id": tenant_id,
-                "total_cost": 0.0,
-                "tokens_used": 0,
-                "compute_seconds": 0.0,
-                "operation_counts": {},
-            })
+            return self._tenant_billing.get(
+                tenant_id,
+                {
+                    "tenant_id": tenant_id,
+                    "total_cost": 0.0,
+                    "tokens_used": 0,
+                    "compute_seconds": 0.0,
+                    "operation_counts": {},
+                },
+            )

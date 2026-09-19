@@ -93,7 +93,9 @@ class EvidenceCollector:
 
         self._evidence_store[evd.evidence_id] = evd
         self._last_hash = content_hash
-        logger.info(f"[EVIDENCE COLLECTOR] Registered evidence '{evd.evidence_id}' from {source_system.value} (Hash: {content_hash[:8]})")
+        logger.info(
+            f"[EVIDENCE COLLECTOR] Registered evidence '{evd.evidence_id}' from {source_system.value} (Hash: {content_hash[:8]})"
+        )
         return evd
 
     def get_evidence(self, evidence_id: str) -> Evidence:
@@ -114,7 +116,9 @@ class EvidenceCollector:
         sanitized = {}
         for k, v in data.items():
             if isinstance(v, str):
-                sanitized[k] = self.secret_manager.sanitize_text(v) if hasattr(self.secret_manager, "sanitize_text") else v
+                sanitized[k] = (
+                    self.secret_manager.sanitize_text(v) if hasattr(self.secret_manager, "sanitize_text") else v
+                )
             elif isinstance(v, dict):
                 sanitized[k] = self._sanitize_dict(v)
             else:

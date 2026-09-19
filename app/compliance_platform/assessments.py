@@ -93,7 +93,11 @@ class ComplianceAssessmentManager:
 
         for r in reqs:
             # Find controls mapped to this requirement
-            mapped_ctrls = [c for c in ctrls if r.requirement_id in c.requirement_ids or r.code in c.name or len(c.requirement_ids) == 0]
+            mapped_ctrls = [
+                c
+                for c in ctrls
+                if r.requirement_id in c.requirement_ids or r.code in c.name or len(c.requirement_ids) == 0
+            ]
 
             ctrl_assessments: List[ControlAssessment] = []
             for c in mapped_ctrls:
@@ -125,7 +129,10 @@ class ComplianceAssessmentManager:
                 req_res = AssessmentResult.FAIL
                 failed_cnt += 1
                 req_expl = f"Requirement '{r.code}' failed due to control failures."
-            elif any(ca.result == AssessmentResult.INSUFFICIENT_EVIDENCE for ca in ctrl_assessments) or not ctrl_assessments:
+            elif (
+                any(ca.result == AssessmentResult.INSUFFICIENT_EVIDENCE for ca in ctrl_assessments)
+                or not ctrl_assessments
+            ):
                 req_res = AssessmentResult.INSUFFICIENT_EVIDENCE
                 insufficient_cnt += 1
                 req_expl = f"Requirement '{r.code}' cannot pass due to insufficient evidence."

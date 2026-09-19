@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class AssuranceWeightPolicy:
     """Configurable baseline weights per platform domain."""
+
     base_weights: Dict[str, float] = field(
         default_factory=lambda: {
             "RUNTIME": 1.2,

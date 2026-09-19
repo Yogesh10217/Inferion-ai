@@ -121,7 +121,9 @@ class RemediationPlanner:
             )
             plan.approval_request_id = req.request_id
             plan.status = RemediationStatus.AWAITING_APPROVAL
-            logger.info(f"[REMEDIATION PLANNER] Plan {plan.plan_id} gated by approval '{req.request_id}' due to {highest_risk.value} risk.")
+            logger.info(
+                f"[REMEDIATION PLANNER] Plan {plan.plan_id} gated by approval '{req.request_id}' due to {highest_risk.value} risk."
+            )
         else:
             plan.status = RemediationStatus.APPROVED
 
@@ -151,7 +153,9 @@ class RemediationPlanner:
                 plan.status = RemediationStatus.APPROVED
 
         if plan.status != RemediationStatus.APPROVED:
-            raise RemediationPlanException(f"Remediation plan '{plan_id}' is not in APPROVED state (current: {plan.status.value}).")
+            raise RemediationPlanException(
+                f"Remediation plan '{plan_id}' is not in APPROVED state (current: {plan.status.value})."
+            )
 
         plan.status = RemediationStatus.EXECUTING
         plan.updated_at = _now()

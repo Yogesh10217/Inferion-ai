@@ -23,5 +23,5 @@ class PluginToolAdapter:
             "status": "success",
             "plugin": self.plugin_name,
             "action": self.action_name,
-            "output": f"Plugin output for {kwargs}"
+            "output": f"Plugin output for {kwargs}",
         }

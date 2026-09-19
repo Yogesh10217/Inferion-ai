@@ -29,7 +29,9 @@ class SDKManager:
     def __init__(self) -> None:
         self._sdks: Dict[str, SDKArtifact] = {}
 
-    def generate_sdk(self, language: str, service_id: str, version: str = "1.0.0", tenant_id: str = "global") -> SDKArtifact:
+    def generate_sdk(
+        self, language: str, service_id: str, version: str = "1.0.0", tenant_id: str = "global"
+    ) -> SDKArtifact:
         sdk = SDKArtifact(language=language.lower(), service_id=service_id, version=version, tenant_id=tenant_id)
         self._sdks[sdk.sdk_id] = sdk
         logger.info(f"[SDK MANAGER] Generated SDK '{sdk.sdk_id}' ({language} v{version}) for service '{service_id}'")

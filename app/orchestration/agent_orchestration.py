@@ -46,7 +46,9 @@ class AgentOrchestrationManager:
                 requested_scope=requested_scope,
             )
 
-        logger.info(f"[AGENT ORCHESTRATION] Agent '{task.agent_id}' executed action '{task.action}' under delegated scope '{requested_scope}'")
+        logger.info(
+            f"[AGENT ORCHESTRATION] Agent '{task.agent_id}' executed action '{task.action}' under delegated scope '{requested_scope}'"
+        )
         return {
             "task_id": task.task_id,
             "agent_id": task.agent_id,

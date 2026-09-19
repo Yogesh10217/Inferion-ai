@@ -30,7 +30,9 @@ class AnalyticalAttackGraph:
         self._nodes: Dict[str, AttackNode] = {}
         self._edges: List[AttackEdge] = []
 
-    def add_node(self, node_id: str, asset_id: str, asset_name: str, asset_type: str, risk_weight: float = 1.0) -> AttackNode:
+    def add_node(
+        self, node_id: str, asset_id: str, asset_name: str, asset_type: str, risk_weight: float = 1.0
+    ) -> AttackNode:
         node = AttackNode(
             node_id=node_id,
             asset_id=asset_id,
@@ -41,7 +43,13 @@ class AnalyticalAttackGraph:
         self._nodes[node_id] = node
         return node
 
-    def add_edge(self, source_node_id: str, target_node_id: str, relationship_type: str = "DEPENDS_ON", propagation_factor: float = 0.5) -> AttackEdge:
+    def add_edge(
+        self,
+        source_node_id: str,
+        target_node_id: str,
+        relationship_type: str = "DEPENDS_ON",
+        propagation_factor: float = 0.5,
+    ) -> AttackEdge:
         edge = AttackEdge(
             source_node_id=source_node_id,
             target_node_id=target_node_id,

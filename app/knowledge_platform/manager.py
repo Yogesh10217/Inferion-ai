@@ -43,13 +43,17 @@ class KnowledgePlatformManager:
         self.learning_engine = KnowledgeLearningEngine(knowledge_manager=self.knowledge_manager)
         self.governance_engine = KnowledgeGovernanceEngine()
         self.agent_adapter = AgentKnowledgeAdapter(retrieval_pipeline=self.retrieval_pipeline)
-        self.workflow_adapter = WorkflowKnowledgeAdapter(knowledge_manager=self.knowledge_manager, retrieval_pipeline=self.retrieval_pipeline)
+        self.workflow_adapter = WorkflowKnowledgeAdapter(
+            knowledge_manager=self.knowledge_manager, retrieval_pipeline=self.retrieval_pipeline
+        )
         self.orchestration_adapter = OrchestrationKnowledgeAdapter()
         self.analytics_engine = KnowledgeAnalyticsEngine()
         self.metrics_collector = KnowledgeMetricsCollector()
         self.billing_tracker = KnowledgeBillingTracker()
 
-        logger.info("[KNOWLEDGE PLATFORM MANAGER] Master KnowledgePlatformManager initialized with all 18 domain subsystems")
+        logger.info(
+            "[KNOWLEDGE PLATFORM MANAGER] Master KnowledgePlatformManager initialized with all 18 domain subsystems"
+        )
 
     def create_and_index_knowledge(
         self,

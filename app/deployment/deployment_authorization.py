@@ -34,19 +34,23 @@ class DeploymentAuthorizationRecord:
             return True
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "authorization_id": self.authorization_id,
-            "release_candidate_id": self.release_candidate_id,
-            "artifact_digest": self.artifact_digest,
-            "git_revision": self.git_revision,
-            "environment": self.environment,
-            "approved_categories": self.approved_categories,
-            "approved_by": self.approved_by,
-            "created_at": self.created_at,
-            "expires_at": self.expires_at,
-            "status": self.status.value if isinstance(self.status, DeploymentAuthorizationStatus) else str(self.status),
-            "fingerprint": self.fingerprint,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "authorization_id": self.authorization_id,
+                "release_candidate_id": self.release_candidate_id,
+                "artifact_digest": self.artifact_digest,
+                "git_revision": self.git_revision,
+                "environment": self.environment,
+                "approved_categories": self.approved_categories,
+                "approved_by": self.approved_by,
+                "created_at": self.created_at,
+                "expires_at": self.expires_at,
+                "status": (
+                    self.status.value if isinstance(self.status, DeploymentAuthorizationStatus) else str(self.status)
+                ),
+                "fingerprint": self.fingerprint,
+            }
+        )
 
 
 class DeploymentAuthorizationEngine:
@@ -98,7 +102,9 @@ class DeploymentAuthorizationEngine:
         # Binding check: invalidate if artifact or git revision changed
         if current_artifact_digest != record.artifact_digest or current_git_revision != record.git_revision:
             record.status = DeploymentAuthorizationStatus.REJECTED
-            record.metadata["rejection_reason"] = "DEPLOYMENT_ARTIFACT_MISMATCH: Artifact or Git revision altered since request"
+            record.metadata["rejection_reason"] = (
+                "DEPLOYMENT_ARTIFACT_MISMATCH: Artifact or Git revision altered since request"
+            )
             record.fingerprint = cls._calculate_fingerprint(record)
             return record
 
@@ -134,24 +140,37 @@ class DeploymentAuthorizationEngine:
             blocking_reasons.append("AUTHORIZATION_EXPIRED: Authorization TTL elapsed")
 
         if record.artifact_digest != target_artifact_digest:
-            blocking_reasons.append(f"DEPLOYMENT_ARTIFACT_MISMATCH: Authorization digest '{record.artifact_digest}' != target '{target_artifact_digest}'")
+            blocking_reasons.append(
+                f"DEPLOYMENT_ARTIFACT_MISMATCH: Authorization digest '{record.artifact_digest}' != target '{target_artifact_digest}'"
+            )
 
         if record.git_revision != target_git_revision:
-            blocking_reasons.append(f"DEPLOYMENT_ARTIFACT_MISMATCH: Authorization git rev '{record.git_revision}' != target '{target_git_revision}'")
+            blocking_reasons.append(
+                f"DEPLOYMENT_ARTIFACT_MISMATCH: Authorization git rev '{record.git_revision}' != target '{target_git_revision}'"
+            )
 
         missing = [cat for cat in cls.REQUIRED_CATEGORIES if cat not in record.approved_categories]
         if missing:
             blocking_reasons.append(f"AUTHORIZATION_REQUIRED: Missing signoffs for categories: {missing}")
 
-        is_valid = len(blocking_reasons) == 0 and record.status in (DeploymentAuthorizationStatus.AUTHORIZED, DeploymentAuthorizationStatus.EXECUTION_STARTED)
+        is_valid = len(blocking_reasons) == 0 and record.status in (
+            DeploymentAuthorizationStatus.AUTHORIZED,
+            DeploymentAuthorizationStatus.EXECUTION_STARTED,
+        )
 
-        return SecretsSanitizer.sanitize_structure({
-            "valid": is_valid,
-            "status": record.status.value if isinstance(record.status, DeploymentAuthorizationStatus) else str(record.status),
-            "missing_categories": missing,
-            "blocking_reasons": blocking_reasons,
-            "fingerprint": record.fingerprint,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "valid": is_valid,
+                "status": (
+                    record.status.value
+                    if isinstance(record.status, DeploymentAuthorizationStatus)
+                    else str(record.status)
+                ),
+                "missing_categories": missing,
+                "blocking_reasons": blocking_reasons,
+                "fingerprint": record.fingerprint,
+            }
+        )
 
     @classmethod
     def _calculate_fingerprint(cls, record: DeploymentAuthorizationRecord) -> str:
@@ -161,7 +180,9 @@ class DeploymentAuthorizationEngine:
             "digest": record.artifact_digest,
             "git_rev": record.git_revision,
             "categories": sorted(record.approved_categories),
-            "status": record.status.value if isinstance(record.status, DeploymentAuthorizationStatus) else str(record.status),
+            "status": (
+                record.status.value if isinstance(record.status, DeploymentAuthorizationStatus) else str(record.status)
+            ),
         }
         canonical_str = json.dumps(payload, sort_keys=True)
         return f"sha256:{hashlib.sha256(canonical_str.encode('utf-8')).hexdigest()}"

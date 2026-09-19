@@ -154,7 +154,9 @@ def create_remediation_plan(req: CreateRemediationPlanRequest):
 def approve_remediation_plan(plan_id: str, approver_id: str = Query("admin"), tenant_id: str = Query("global")):
     """Approve a gated remediation plan."""
     try:
-        plan = mgr.remediation_planner.approve_remediation_plan(plan_id=plan_id, approver_id=approver_id, tenant_id=tenant_id)
+        plan = mgr.remediation_planner.approve_remediation_plan(
+            plan_id=plan_id, approver_id=approver_id, tenant_id=tenant_id
+        )
         return plan.model_dump(mode="json")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

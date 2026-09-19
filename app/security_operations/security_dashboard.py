@@ -24,6 +24,7 @@ from app.security_operations.security_risk_engine import RiskAssessment
 @dataclass
 class SecurityDashboardSnapshot:
     """Unified security operations dashboard snapshot."""
+
     timestamp: str
     overall_posture_score: float
     overall_posture_status: str
@@ -43,25 +44,27 @@ class SecurityDashboardSnapshot:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        return get_secrets_sanitizer().sanitize_dict({
-            "timestamp": self.timestamp,
-            "overall_posture_score": self.overall_posture_score,
-            "overall_posture_status": self.overall_posture_status,
-            "certification_decision": self.certification_decision,
-            "risk_level": self.risk_level,
-            "total_vulnerabilities": self.total_vulnerabilities,
-            "critical_vulnerabilities": self.critical_vulnerabilities,
-            "high_vulnerabilities": self.high_vulnerabilities,
-            "open_vulnerabilities": self.open_vulnerabilities,
-            "active_exceptions_count": self.active_exceptions_count,
-            "compliance_score": self.compliance_score,
-            "audit_tamper_detected": self.audit_tamper_detected,
-            "metrics_summary": self.metrics_summary,
-            "active_threats_count": self.active_threats_count,
-            "is_production": self.is_production,
-            "fingerprint": self.fingerprint,
-            "metadata": self.metadata,
-        })
+        return get_secrets_sanitizer().sanitize_dict(
+            {
+                "timestamp": self.timestamp,
+                "overall_posture_score": self.overall_posture_score,
+                "overall_posture_status": self.overall_posture_status,
+                "certification_decision": self.certification_decision,
+                "risk_level": self.risk_level,
+                "total_vulnerabilities": self.total_vulnerabilities,
+                "critical_vulnerabilities": self.critical_vulnerabilities,
+                "high_vulnerabilities": self.high_vulnerabilities,
+                "open_vulnerabilities": self.open_vulnerabilities,
+                "active_exceptions_count": self.active_exceptions_count,
+                "compliance_score": self.compliance_score,
+                "audit_tamper_detected": self.audit_tamper_detected,
+                "metrics_summary": self.metrics_summary,
+                "active_threats_count": self.active_threats_count,
+                "is_production": self.is_production,
+                "fingerprint": self.fingerprint,
+                "metadata": self.metadata,
+            }
+        )
 
 
 class SecurityDashboard:
@@ -114,7 +117,7 @@ class SecurityDashboard:
             metadata={
                 "gating_passed": certification_result.is_certified,
                 "sanitized": True,
-            }
+            },
         )
 
         return snapshot

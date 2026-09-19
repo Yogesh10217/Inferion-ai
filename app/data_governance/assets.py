@@ -115,7 +115,9 @@ class DataAssetManager:
         if not asset:
             raise DataAssetNotFoundException(asset_id=asset_id, tenant_id=tenant_id)
         if asset.tenant_id != tenant_id and tenant_id != "system":
-            raise CrossTenantDataAccessException(request_tenant=tenant_id, target_tenant=asset.tenant_id, asset_id=asset_id)
+            raise CrossTenantDataAccessException(
+                request_tenant=tenant_id, target_tenant=asset.tenant_id, asset_id=asset_id
+            )
         return asset
 
     def list_assets(

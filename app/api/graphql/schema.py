@@ -29,8 +29,4 @@ async def graphql_endpoint(payload: GraphQLQueryPayload):
                 ]
             }
         }
-    return {
-        "data": {
-            "health": {"status": "ok", "uptime_seconds": 3600}
-        }
-    }
+    return {"data": {"health": {"status": "ok", "uptime_seconds": 3600}}}

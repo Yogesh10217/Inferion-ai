@@ -61,5 +61,7 @@ class RuntimeHealthEngine:
             subsystem=subsystem,
         )
         self.repo.save(assessment)
-        logger.info(f"Evaluated RuntimeHealth for '{subsystem}' (tenant: '{tenant_id}'): Status={status.value}, Score={avg_score:.4f}")
+        logger.info(
+            f"Evaluated RuntimeHealth for '{subsystem}' (tenant: '{tenant_id}'): Status={status.value}, Score={avg_score:.4f}"
+        )
         return assessment

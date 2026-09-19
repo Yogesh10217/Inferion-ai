@@ -42,9 +42,7 @@ class TrustAssessment(BaseModel):
 
     overall_trust_score: float = 100.0  # 0.0 to 100.0 scale
     factors: List[TrustFactor] = Field(default_factory=list)
-    disclaimer: str = (
-        "Internal governance assessment metric. Not a guarantee, certification, or warranty."
-    )
+    disclaimer: str = "Internal governance assessment metric. Not a guarantee, certification, or warranty."
     assessed_at: datetime = Field(default_factory=_now)
 
 

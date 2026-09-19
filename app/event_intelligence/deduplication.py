@@ -56,7 +56,9 @@ class EventDeduplicator:
 
             if record and record.result_payload and record.result_payload.get("event_id") != event.event_id:
                 existing_id = record.result_payload.get("event_id")
-                return EventDeduplicationResult(is_duplicate=True, fingerprint_hash=fp_hash, existing_event_id=existing_id)
+                return EventDeduplicationResult(
+                    is_duplicate=True, fingerprint_hash=fp_hash, existing_event_id=existing_id
+                )
 
             self.idempotency_manager.complete_operation(
                 tenant_id=event.tenant_id,

@@ -28,7 +28,7 @@ class UnifiedVerificationResult:
         verified_successful: bool,
         verification_method: str,
         details: str,
-        verified_at: Optional[datetime] = None
+        verified_at: Optional[datetime] = None,
     ):
         self.verification_id = verification_id
         self.tenant_id = tenant_id
@@ -46,7 +46,7 @@ class UnifiedVerificationResult:
             "verified_successful": self.verified_successful,
             "verification_method": self.verification_method,
             "details": self.details,
-            "verified_at": self.verified_at.isoformat()
+            "verified_at": self.verified_at.isoformat(),
         }
 
 
@@ -59,10 +59,7 @@ class DelegationVerificationEngine:
         pass
 
     def verify_delegation(
-        self,
-        tenant_id: str,
-        delegation_request: DelegationRequest,
-        execution_outcome: Dict[str, Any]
+        self, tenant_id: str, delegation_request: DelegationRequest, execution_outcome: Dict[str, Any]
     ) -> UnifiedVerificationResult:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -81,5 +78,5 @@ class DelegationVerificationEngine:
             delegation_id=delegation_request.delegation_id,
             verified_successful=success,
             verification_method="AUTOMATED_DOMAIN_PROBE",
-            details=f"Verification status: {status_msg}"
+            details=f"Verification status: {status_msg}",
         )

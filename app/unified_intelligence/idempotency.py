@@ -30,11 +30,7 @@ class IdempotencyEngine:
         canonical_str = json.dumps(payload, sort_keys=True, default=str)
         return hashlib.sha256(canonical_str.encode("utf-8")).hexdigest()
 
-    def is_duplicate(
-        self,
-        tenant_id: str,
-        idempotency_key: str
-    ) -> bool:
+    def is_duplicate(self, tenant_id: str, idempotency_key: str) -> bool:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
         if not idempotency_key:
@@ -52,11 +48,7 @@ class IdempotencyEngine:
         return True
 
     def register_execution(
-        self,
-        tenant_id: str,
-        idempotency_key: str,
-        result_data: Any,
-        ttl_seconds: Optional[int] = None
+        self, tenant_id: str, idempotency_key: str, result_data: Any, ttl_seconds: Optional[int] = None
     ) -> None:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -68,11 +60,7 @@ class IdempotencyEngine:
         expiry = datetime.utcnow() + timedelta(seconds=ttl)
         self._cache[cache_key] = (result_data, expiry)
 
-    def get_cached_result(
-        self,
-        tenant_id: str,
-        idempotency_key: str
-    ) -> Optional[Any]:
+    def get_cached_result(self, tenant_id: str, idempotency_key: str) -> Optional[Any]:
         if not tenant_id or not idempotency_key:
             return None
         cache_key = f"{tenant_id}:{idempotency_key}"

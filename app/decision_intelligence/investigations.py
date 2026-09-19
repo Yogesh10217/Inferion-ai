@@ -28,7 +28,9 @@ class DecisionInvestigationEngine:
     def __init__(self) -> None:
         self._investigations: Dict[str, DecisionInvestigation] = {}
 
-    def launch_investigation(self, decision_id: str, tenant_id: str, investigator: str = "SYSTEM") -> DecisionInvestigation:
+    def launch_investigation(
+        self, decision_id: str, tenant_id: str, investigator: str = "SYSTEM"
+    ) -> DecisionInvestigation:
         inv = DecisionInvestigation(
             decision_id=decision_id,
             tenant_id=tenant_id,

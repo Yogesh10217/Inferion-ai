@@ -23,7 +23,10 @@ class ToolAuditLogger:
         if isinstance(data, dict):
             redacted = {}
             for k, v in data.items():
-                if any(secret_kw in k.lower() for secret_kw in ("password", "secret", "token", "api_key", "authorization", "bearer")):
+                if any(
+                    secret_kw in k.lower()
+                    for secret_kw in ("password", "secret", "token", "api_key", "authorization", "bearer")
+                ):
                     redacted[k] = "******"
                 else:
                     redacted[k] = self._redact_secrets(v)
@@ -46,7 +49,9 @@ class ToolAuditLogger:
             "parameters": self._redact_secrets(parameters),
         }
         self._audit_records.append(record)
-        logger.info(f"[AUDIT START] Tool '{tool_name}' (exec: {context.execution_id}, tenant: {context.tenant_id}, user: {context.user_id})")
+        logger.info(
+            f"[AUDIT START] Tool '{tool_name}' (exec: {context.execution_id}, tenant: {context.tenant_id}, user: {context.user_id})"
+        )
 
     def log_execution_completed(self, result: ToolResult, context: ToolContext) -> None:
         record = {
@@ -64,7 +69,9 @@ class ToolAuditLogger:
             "error": result.error,
         }
         self._audit_records.append(record)
-        logger.info(f"[AUDIT END] Tool '{result.tool_name}' status={result.status.value} duration={result.execution_time_seconds:.3f}s cost=${result.cost:.4f}")
+        logger.info(
+            f"[AUDIT END] Tool '{result.tool_name}' status={result.status.value} duration={result.execution_time_seconds:.3f}s cost=${result.cost:.4f}"
+        )
 
     def log_security_block(self, tool_name: str, context: ToolContext, reason: str) -> None:
         record = {

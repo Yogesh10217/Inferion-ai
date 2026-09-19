@@ -47,7 +47,9 @@ class ExtensionSecurityEngine:
         """Verify SHA-256 checksum of extension package archive."""
         computed = hashlib.sha256(package_bytes).hexdigest()
         if computed.lower() != expected_sha256.lower():
-            raise ExtensionSecurityViolationException(f"Package SHA-256 checksum mismatch: computed {computed} != expected {expected_sha256}")
+            raise ExtensionSecurityViolationException(
+                f"Package SHA-256 checksum mismatch: computed {computed} != expected {expected_sha256}"
+            )
         return True
 
     def analyze_extension_security(
@@ -67,7 +69,9 @@ class ExtensionSecurityEngine:
         requires_approval = len(high_risk_found) > 0 or not publisher_verified
         recommendation = "APPROVAL_REQUIRED" if requires_approval else "APPROVED"
 
-        logger.info(f"[EXTENSION SECURITY] Analyzed '{manifest.identifier}': Risk Score={risk_score}, Requires Approval={requires_approval}")
+        logger.info(
+            f"[EXTENSION SECURITY] Analyzed '{manifest.identifier}': Risk Score={risk_score}, Requires Approval={requires_approval}"
+        )
 
         return SecurityAnalysisReport(
             extension_identifier=manifest.identifier,

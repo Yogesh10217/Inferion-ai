@@ -57,16 +57,16 @@ class EnterpriseSituation(BaseModel):
             "tenant_id": self.tenant_id,
             "title": self.title,
             "description": self.description or self.summary,
-            "status": self.status.value if hasattr(self.status, 'value') else str(self.status),
-            "severity": self.severity.value if hasattr(self.severity, 'value') else str(self.severity),
-            "impacted_domains": [d.value if hasattr(d, 'value') else str(d) for d in self.impacted_domains],
-            "participating_domains": [d.value if hasattr(d, 'value') else str(d) for d in self.impacted_domains],
+            "status": self.status.value if hasattr(self.status, "value") else str(self.status),
+            "severity": self.severity.value if hasattr(self.severity, "value") else str(self.severity),
+            "impacted_domains": [d.value if hasattr(d, "value") else str(d) for d in self.impacted_domains],
+            "participating_domains": [d.value if hasattr(d, "value") else str(d) for d in self.impacted_domains],
             "affected_entities": self.affected_entities,
             "evidence_references": self.evidence_references,
             "confidence_score": round(self.confidence_score, 4),
             "summary": self.summary,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
         }
 
 
@@ -78,10 +78,7 @@ class SituationAwarenessEngine:
         self._idempotency_map: Dict[str, str] = {}
 
     def evaluate_situations(
-        self,
-        context: Any,
-        correlations: List[Any],
-        hypotheses: List[Any]
+        self, context: Any, correlations: List[Any], hypotheses: List[Any]
     ) -> List[EnterpriseSituation]:
         if not context.signals:
             return []
@@ -89,15 +86,24 @@ class SituationAwarenessEngine:
         tenant_id = context.tenant_id
         corr_id = correlations[0].correlation_id if correlations else f"corr-{uuid.uuid4().hex[:8]}"
 
-        severities = [getattr(s, 'severity', 'MEDIUM') for s in context.signals]
-        is_critical = any(str(sev).upper() == 'CRITICAL' for sev in severities)
-        is_high = any(str(sev).upper() == 'HIGH' for sev in severities)
+        severities = [getattr(s, "severity", "MEDIUM") for s in context.signals]
+        is_critical = any(str(sev).upper() == "CRITICAL" for sev in severities)
+        is_high = any(str(sev).upper() == "HIGH" for sev in severities)
 
-        sev = SituationSeverity.CRITICAL if is_critical else (SituationSeverity.HIGH if is_high else SituationSeverity.MEDIUM)
+        sev = (
+            SituationSeverity.CRITICAL
+            if is_critical
+            else (SituationSeverity.HIGH if is_high else SituationSeverity.MEDIUM)
+        )
         stat = SituationStatus.ANALYZING if is_critical or is_high else SituationStatus.WATCH
 
-        entities = list({getattr(s, 'source_reference', None) or getattr(s, 'entity_reference', 'entity-1') for s in context.signals})
-        evidence = list({ev for s in context.signals for ev in getattr(s, 'evidence_ids', [])})
+        entities = list(
+            {
+                getattr(s, "source_reference", None) or getattr(s, "entity_reference", "entity-1")
+                for s in context.signals
+            }
+        )
+        evidence = list({ev for s in context.signals for ev in getattr(s, "evidence_ids", [])})
 
         title = f"Multi-Domain Event in {[d.value if hasattr(d, 'value') else str(d) for d in context.domains]}"
         sit_id = f"sit-{uuid.uuid4().hex[:8]}"
@@ -115,7 +121,7 @@ class SituationAwarenessEngine:
             evidence_references=evidence,
             causal_hypotheses=hypotheses,
             confidence_score=context.confidence_score,
-            summary=context.unified_summary
+            summary=context.unified_summary,
         )
 
         self._situations[sit.situation_id] = sit
@@ -135,8 +141,10 @@ class SituationAwarenessEngine:
             sit_id = self._idempotency_map[idempotency_key]
             return self._situations[sit_id]
 
-        status = SituationStatus.CRITICAL if severity == SituationSeverity.CRITICAL else (
-            SituationStatus.ELEVATED if severity == SituationSeverity.HIGH else SituationStatus.WATCH
+        status = (
+            SituationStatus.CRITICAL
+            if severity == SituationSeverity.CRITICAL
+            else (SituationStatus.ELEVATED if severity == SituationSeverity.HIGH else SituationStatus.WATCH)
         )
 
         sit = EnterpriseSituation(

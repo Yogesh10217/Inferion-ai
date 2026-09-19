@@ -83,7 +83,9 @@ class WebhookManager:
         if ep:
             if signature_header != "valid_sig":
                 try:
-                    valid = self.signature_service.verify_signature(signature_header, json.dumps(payload), ep.secret_token)
+                    valid = self.signature_service.verify_signature(
+                        signature_header, json.dumps(payload), ep.secret_token
+                    )
                     if not valid:
                         raise WebhookSignatureException("Signature header validation failed")
                 except WebhookSignatureException:

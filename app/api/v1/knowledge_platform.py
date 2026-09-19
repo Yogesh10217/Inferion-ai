@@ -119,6 +119,7 @@ def get_knowledge_versions(item_id: str):
 def retrieve_knowledge(req: RetrieveRequestDTO):
     try:
         from app.knowledge_platform.retrieval import RetrievalRequest
+
         r_req = RetrievalRequest(
             query=req.query,
             tenant_id=req.tenant_id,
@@ -136,6 +137,7 @@ def retrieve_knowledge(req: RetrieveRequestDTO):
 @router.post("/context")
 def build_context_window(req: BuildContextRequestDTO):
     from app.knowledge_platform.retrieval import RetrievalRequest
+
     r_req = RetrievalRequest(query=req.query, tenant_id=req.tenant_id, identity_id=req.identity_id)
     ret_res = _global_manager.retrieval_pipeline.execute_retrieval(r_req)
     cwin = _global_manager.context_builder.build_context(ret_res, strategy=req.strategy, max_tokens=req.max_tokens)
@@ -191,8 +193,12 @@ def query_graph(req: GraphQueryRequestDTO):
 
 
 @router.post("/access-check")
-def access_check(identity_id: str, classification: str = "INTERNAL", user_role: str = "viewer", tenant_id: str = "global"):
-    dec = _global_manager.governance_engine.evaluate_access(identity_id=identity_id, user_role=user_role, tenant_id=tenant_id, classification=classification)
+def access_check(
+    identity_id: str, classification: str = "INTERNAL", user_role: str = "viewer", tenant_id: str = "global"
+):
+    dec = _global_manager.governance_engine.evaluate_access(
+        identity_id=identity_id, user_role=user_role, tenant_id=tenant_id, classification=classification
+    )
     return dec.model_dump()
 
 

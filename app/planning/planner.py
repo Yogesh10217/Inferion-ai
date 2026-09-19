@@ -17,7 +17,13 @@ logger = logging.getLogger(__name__)
 class Planner:
     """Planner creating, optimizing, validating, and estimating execution plans."""
 
-    def create_plan(self, goal_title: str, description: str = "", tenant_id: str = "default_tenant", workspace_id: str = "default_workspace") -> ExecutionPlan:
+    def create_plan(
+        self,
+        goal_title: str,
+        description: str = "",
+        tenant_id: str = "default_tenant",
+        workspace_id: str = "default_workspace",
+    ) -> ExecutionPlan:
         tasks, order = TaskDecomposer.decompose_goal(goal_title, description)
         graph = DependencyGraph(tasks)
         crit_path = graph.calculate_critical_path()

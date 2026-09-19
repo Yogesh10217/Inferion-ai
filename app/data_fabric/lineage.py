@@ -49,7 +49,14 @@ class DataLineageManager:
         self._nodes: Dict[str, LineageNode] = {}
         self._edges: List[LineageEdge] = []
 
-    def record_node(self, node_id: str, node_type: str, name: str, tenant_id: str = "global", metadata: Optional[Dict[str, Any]] = None) -> LineageNode:
+    def record_node(
+        self,
+        node_id: str,
+        node_type: str,
+        name: str,
+        tenant_id: str = "global",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> LineageNode:
         node = LineageNode(
             node_id=node_id,
             node_type=node_type,
@@ -60,13 +67,17 @@ class DataLineageManager:
         self._nodes[node_id] = node
         return node
 
-    def record_lineage(self, source_node_id: str, target_node_id: str, relationship_type: str = "PRODUCES") -> LineageEdge:
+    def record_lineage(
+        self, source_node_id: str, target_node_id: str, relationship_type: str = "PRODUCES"
+    ) -> LineageEdge:
         if source_node_id not in self._nodes:
             self.record_node(source_node_id, "UNKNOWN", source_node_id)
         if target_node_id not in self._nodes:
             self.record_node(target_node_id, "UNKNOWN", target_node_id)
 
-        edge = LineageEdge(source_node_id=source_node_id, target_node_id=target_node_id, relationship_type=relationship_type)
+        edge = LineageEdge(
+            source_node_id=source_node_id, target_node_id=target_node_id, relationship_type=relationship_type
+        )
         self._edges.append(edge)
         logger.info(f"[DATA LINEAGE] Lineage link: '{source_node_id}' --({relationship_type})--> '{target_node_id}'")
         return edge

@@ -18,7 +18,9 @@ class WorkflowTemplate(BaseModel):
 
     template_id: str
     name: str
-    category: str  # 'Research Automation', 'Customer Support', 'DevOps', 'Data Analysis', 'Document Processing', 'Compliance'
+    category: (
+        str  # 'Research Automation', 'Customer Support', 'DevOps', 'Data Analysis', 'Document Processing', 'Compliance'
+    )
     description: str = ""
     parameters_schema: Dict[str, Any] = Field(default_factory=dict)
     nodes_config: List[Dict[str, Any]] = Field(default_factory=list)

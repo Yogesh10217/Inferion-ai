@@ -34,27 +34,24 @@ async def create_organization(
     # Assign creator as Owner (Assuming we have a mechanism to fetch OWNER role_id; for now, stub)
     # Ideally, we look up the Owner role ID from the DB
     from app.auth.models import Role
+
     stmt_role = select(Role).where(Role.name == "Admin")  # Or 'Owner'
     res_role = await db.execute(stmt_role)
     owner_role = res_role.scalars().first()
     role_id = owner_role.id if owner_role else "stub-role-id"
 
-    membership = Membership(
-        organization_id=org.id,
-        user_id=current_user.id,
-        role_id=role_id,
-        status="active"
-    )
+    membership = Membership(organization_id=org.id, user_id=current_user.id, role_id=role_id, status="active")
     db.add(membership)
 
     ip_address = request.client.host if request and request.client else None
     await AuthService.log_audit_event(
-        db, "organization_created",
+        db,
+        "organization_created",
         organization_id=org.id,
         actor_id=current_user.id,
         resource_type="Organization",
         resource_id=org.id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()
@@ -64,8 +61,7 @@ async def create_organization(
 
 @router.get("", response_model=List[OrganizationResponse])
 async def list_organizations(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db_session)
 ):
     # Only return organizations the user is a member of, or all if user is system admin
     if current_user.is_admin:
@@ -82,9 +78,7 @@ async def list_organizations(
 
 @router.get("/{org_id}", response_model=OrganizationResponse)
 async def get_organization(
-    org_id: str,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    org_id: str, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db_session)
 ):
     # Must be member or system admin
     stmt = select(Organization).where(Organization.id == org_id)
@@ -108,7 +102,7 @@ async def update_organization(
     org_in: OrganizationUpdate,
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     # Enforce active org matches org_id or user is system admin
     req_org_id = getattr(request.state, "organization_id", None)
@@ -133,12 +127,13 @@ async def update_organization(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "organization_updated",
+        db,
+        "organization_updated",
         organization_id=org.id,
         actor_id=current_user.id,
         resource_type="Organization",
         resource_id=org.id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()
@@ -151,7 +146,7 @@ async def delete_organization(
     org_id: str,
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     # Enforce system admin for hard deletion, or org owner
     # For now, require system admin for safety
@@ -168,12 +163,13 @@ async def delete_organization(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "organization_deleted",
+        db,
+        "organization_deleted",
         organization_id=org.id,
         actor_id=current_user.id,
         resource_type="Organization",
         resource_id=org.id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()

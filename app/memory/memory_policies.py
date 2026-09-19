@@ -20,7 +20,9 @@ class MemoryPolicyEngine:
         if not request_org or request_org != target_org:
             raise TenantMemoryIsolationError(f"Cross-tenant access blocked: '{request_org}' != '{target_org}'")
         if target_workspace and request_workspace and request_workspace != target_workspace:
-            raise TenantMemoryIsolationError(f"Cross-workspace access blocked: '{request_workspace}' != '{target_workspace}'")
+            raise TenantMemoryIsolationError(
+                f"Cross-workspace access blocked: '{request_workspace}' != '{target_workspace}'"
+            )
 
     @staticmethod
     def validate_rbac(user_roles: List[str], required_permission: str = "read") -> None:

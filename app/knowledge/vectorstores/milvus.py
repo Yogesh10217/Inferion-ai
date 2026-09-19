@@ -35,7 +35,7 @@ class MilvusStore(VectorStore):
         query_vector: List[float],
         collection_name: str,
         top_k: int = 10,
-        filter_expr: Optional[Dict[str, Any]] = None
+        filter_expr: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """Search Milvus for similar vectors."""
         logger.info(f"Searching Milvus collection '{collection_name}' for top {top_k} results")

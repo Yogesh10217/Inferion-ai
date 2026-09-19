@@ -89,7 +89,12 @@ class ArchitectureDecisionManager:
         selected_option_id: Optional[str] = None,
     ) -> ArchitectureDecisionRecord:
         adr = self.get_adr(decision_id, tenant_id)
-        if adr.status in (ArchitectureDecisionStatus.FINALIZED, ArchitectureDecisionStatus.APPROVED, ArchitectureDecisionStatus.REJECTED, ArchitectureDecisionStatus.SUPERSEDED):
+        if adr.status in (
+            ArchitectureDecisionStatus.FINALIZED,
+            ArchitectureDecisionStatus.APPROVED,
+            ArchitectureDecisionStatus.REJECTED,
+            ArchitectureDecisionStatus.SUPERSEDED,
+        ):
             raise ImmutableArchitectureDecisionException(decision_id=decision_id, tenant_id=tenant_id)
 
         if title:
@@ -132,5 +137,7 @@ class ArchitectureDecisionManager:
         if not adr:
             raise ArchitectureDecisionException(f"ADR '{decision_id}' not found.", tenant_id=tenant_id)
         if adr.tenant_id != tenant_id and tenant_id != "system":
-            raise CrossTenantArchitectureAccessException(request_tenant=tenant_id, target_tenant=adr.tenant_id, resource_id=decision_id)
+            raise CrossTenantArchitectureAccessException(
+                request_tenant=tenant_id, target_tenant=adr.tenant_id, resource_id=decision_id
+            )
         return adr

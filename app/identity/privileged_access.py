@@ -76,7 +76,9 @@ class PrivilegedAccessManager:
             duration_minutes=duration_minutes,
         )
         self._grants[grant.grant_id] = grant
-        logger.warning(f"[PRIVILEGED ACCESS] JIT request for role '{role.value}' by '{identity_id}' requires approval (ID: {req_id})")
+        logger.warning(
+            f"[PRIVILEGED ACCESS] JIT request for role '{role.value}' by '{identity_id}' requires approval (ID: {req_id})"
+        )
         return grant
 
     def approve_grant(self, grant_id: str) -> PrivilegedAccessGrant:

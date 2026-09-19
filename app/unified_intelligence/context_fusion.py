@@ -46,12 +46,12 @@ class UnifiedContext(BaseModel):
             "context_id": self.context_id,
             "correlation_id": self.correlation_id,
             "tenant_id": self.tenant_id,
-            "domains": [d.value if hasattr(d, 'value') else str(d) for d in self.domains],
+            "domains": [d.value if hasattr(d, "value") else str(d) for d in self.domains],
             "signal_ids": self.signal_ids,
             "context_fingerprint": self.context_fingerprint,
             "confidence_score": round(self.confidence_score, 4),
             "unified_summary": self.unified_summary,
-            "fused_at": self.fused_at.isoformat()
+            "fused_at": self.fused_at.isoformat(),
         }
 
 
@@ -79,28 +79,28 @@ class ContextFusionEngine:
                 signals = []
 
         if target_domains:
-            signals = [s for s in signals if getattr(s, 'domain', None) in target_domains]
+            signals = [s for s in signals if getattr(s, "domain", None) in target_domains]
 
         # Apply context bounding policy (max_signals limit)
-        bounded_signals = signals[-active_policy.max_signals:] if len(signals) > active_policy.max_signals else signals
+        bounded_signals = signals[-active_policy.max_signals :] if len(signals) > active_policy.max_signals else signals
 
         # Bounded domains
         all_domains = []
         for s in bounded_signals:
-            d = getattr(s, 'domain', None)
+            d = getattr(s, "domain", None)
             if d and d not in all_domains:
                 all_domains.append(d)
-        domains = all_domains[:active_policy.max_domains]
+        domains = all_domains[: active_policy.max_domains]
 
         # Filter signals to only those in bounded domains
-        final_signals = [s for s in bounded_signals if getattr(s, 'domain', None) in domains]
-        signal_ids = [getattr(s, 'signal_id', f"sig-{i}") for i, s in enumerate(final_signals)]
+        final_signals = [s for s in bounded_signals if getattr(s, "domain", None) in domains]
+        signal_ids = [getattr(s, "signal_id", f"sig-{i}") for i, s in enumerate(final_signals)]
 
         # Generate SHA-256 context fingerprint
         data = {
             "tenant_id": tenant_id,
             "signal_ids": sorted(signal_ids),
-            "domains": [d.value if hasattr(d, 'value') else str(d) for d in domains],
+            "domains": [d.value if hasattr(d, "value") else str(d) for d in domains],
         }
         fingerprint = hashlib.sha256(json.dumps(data, sort_keys=True).encode("utf-8")).hexdigest()
 

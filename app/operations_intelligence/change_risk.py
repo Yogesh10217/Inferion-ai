@@ -42,9 +42,15 @@ class ChangeRiskManager:
         is_emergency_change: bool = False,
     ) -> ChangeRiskAssessment:
         factors = [
-            ChangeRiskFactor(dimension="AFFECTED_SERVICES", score=affected_services_score, description="Service blast radius"),
-            ChangeRiskFactor(dimension="DEPENDENCY_IMPACT", score=dependency_impact_score, description="Downstream dependency impact"),
-            ChangeRiskFactor(dimension="SECURITY_RISK", score=security_risk_score, description="Security policy posture"),
+            ChangeRiskFactor(
+                dimension="AFFECTED_SERVICES", score=affected_services_score, description="Service blast radius"
+            ),
+            ChangeRiskFactor(
+                dimension="DEPENDENCY_IMPACT", score=dependency_impact_score, description="Downstream dependency impact"
+            ),
+            ChangeRiskFactor(
+                dimension="SECURITY_RISK", score=security_risk_score, description="Security policy posture"
+            ),
         ]
         base = sum(f.score for f in factors) / len(factors)
         if is_emergency_change:

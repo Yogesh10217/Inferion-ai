@@ -295,9 +295,13 @@ class ProductionSimulationEngine:
 
             # Validate Digest Match
             actual_rt_digest = runtime_digest or effective_digest
-            digest_match, match_msg = ContainerValidationEngine.validate_runtime_artifact(identity.image_digest, actual_rt_digest)
+            digest_match, match_msg = ContainerValidationEngine.validate_runtime_artifact(
+                identity.image_digest, actual_rt_digest
+            )
             if not digest_match or release_res.status == DeploymentReleaseStatus.BLOCKED:
-                machine.transition_to(DeploymentLifecycleState.FAILED.value, {"reason": match_msg or release_res.blocking_reasons})
+                machine.transition_to(
+                    DeploymentLifecycleState.FAILED.value, {"reason": match_msg or release_res.blocking_reasons}
+                )
                 machine.transition_to(DeploymentLifecycleState.BLOCKED.value)
                 return DeploymentSimulationEvidence(
                     simulation_id=simulation_id,
@@ -313,7 +317,9 @@ class ProductionSimulationEngine:
 
             # 3. DEPLOYING
             machine.transition_to(DeploymentLifecycleState.DEPLOYING.value, {"phase": "starting_simulation_containers"})
-            container_status = ContainerValidationEngine.validate_container_environment(image_tag=identity.image_tag, is_production=True)
+            container_status = ContainerValidationEngine.validate_container_environment(
+                image_tag=identity.image_tag, is_production=True
+            )
 
             # 4. STARTING
             machine.transition_to(DeploymentLifecycleState.STARTING.value, {"phase": "verifying_process_startup"})
@@ -326,7 +332,12 @@ class ProductionSimulationEngine:
 
             probes = {
                 "live": {"status_code": 200, "alive": True, "dependencies_required": False},
-                "ready": {"status_code": 200, "ready": True, "managers_registered": len(manager_status), "managers_ok": managers_ok},
+                "ready": {
+                    "status_code": 200,
+                    "ready": True,
+                    "managers_registered": len(manager_status),
+                    "managers_ok": managers_ok,
+                },
                 "health": {"status_code": 200, "status": HealthStatus.HEALTHY.value, "security_active": True},
             }
 
@@ -382,7 +393,9 @@ class ProductionSimulationEngine:
         simulation_id = f"sim-fail-{uuid.uuid4().hex[:8]}"
 
         config = EnvironmentConfig(
-            environment=DeploymentEnvironment.PRODUCTION if environment == "PRODUCTION" else DeploymentEnvironment.STAGING,
+            environment=(
+                DeploymentEnvironment.PRODUCTION if environment == "PRODUCTION" else DeploymentEnvironment.STAGING
+            ),
             application_name="Enterprise AI Platform",
             application_version="1.0.0",
             deployment_version="5.62",

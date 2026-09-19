@@ -16,7 +16,7 @@ class SignalNormalizationEngine:
         self.sanitizer = SensitiveDataSanitizer()
 
     def normalize_input(self, domain_input: UnifiedDomainInput) -> NormalizedSignal:
-        raw_meta = getattr(domain_input, 'raw_metadata', None) or getattr(domain_input, 'metadata', {})
+        raw_meta = getattr(domain_input, "raw_metadata", None) or getattr(domain_input, "metadata", {})
         sanitized_payload = self.sanitizer.sanitize_copy(raw_meta)
 
         sig_id = f"norm-sig-{uuid.uuid4().hex[:8]}"
@@ -34,7 +34,7 @@ class SignalNormalizationEngine:
             confidence_score=conf,
             risk_score=domain_input.risk_score,
             evidence_ids=domain_input.evidence_references,
-            sanitized_payload=sanitized_payload
+            sanitized_payload=sanitized_payload,
         )
 
     def normalize(self, domain_input: UnifiedDomainInput) -> NormalizedSignal:

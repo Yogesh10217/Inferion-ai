@@ -30,22 +30,31 @@ class FeatureEvaluator:
 
         # 1. Direct explicit assignment overrides
         if user_id:
-            user_assign = next((a for a in flag.assignments if a.target_type == "user" and a.target_id == user_id), None)
+            user_assign = next(
+                (a for a in flag.assignments if a.target_type == "user" and a.target_id == user_id), None
+            )
             if user_assign:
                 return user_assign.enabled
 
         if workspace_id:
-            ws_assign = next((a for a in flag.assignments if a.target_type == "workspace" and a.target_id == workspace_id), None)
+            ws_assign = next(
+                (a for a in flag.assignments if a.target_type == "workspace" and a.target_id == workspace_id), None
+            )
             if ws_assign:
                 return ws_assign.enabled
 
         if organization_id:
-            org_assign = next((a for a in flag.assignments if a.target_type == "organization" and a.target_id == organization_id), None)
+            org_assign = next(
+                (a for a in flag.assignments if a.target_type == "organization" and a.target_id == organization_id),
+                None,
+            )
             if org_assign:
                 return org_assign.enabled
 
         if tenant_id:
-            tenant_assign = next((a for a in flag.assignments if a.target_type == "tenant" and a.target_id == tenant_id), None)
+            tenant_assign = next(
+                (a for a in flag.assignments if a.target_type == "tenant" and a.target_id == tenant_id), None
+            )
             if tenant_assign:
                 return tenant_assign.enabled
 

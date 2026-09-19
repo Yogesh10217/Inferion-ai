@@ -58,5 +58,7 @@ class SecurityBillingTracker:
             except Exception as e:
                 logger.debug(f"UnifiedCostLedger record_cost call skipped: {e}")
 
-        logger.info(f"[SECURITY BILLING] Charged ${amount:.2f} to tenant '{tenant_id}' for operation '{operation}' on '{resource_id}'")
+        logger.info(
+            f"[SECURITY BILLING] Charged ${amount:.2f} to tenant '{tenant_id}' for operation '{operation}' on '{resource_id}'"
+        )
         return rec.model_dump()

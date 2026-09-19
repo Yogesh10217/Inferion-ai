@@ -17,9 +17,7 @@ async def get_current_user_id(request: Request) -> Optional[str]:
     return getattr(request.state, "user_id", None)
 
 
-async def get_current_user(
-    request: Request, db: AsyncSession = Depends(get_db_session)
-) -> Optional[User]:
+async def get_current_user(request: Request, db: AsyncSession = Depends(get_db_session)) -> Optional[User]:
     """Retrieve the current User object from the database."""
     if not settings.auth_enabled:
         return None

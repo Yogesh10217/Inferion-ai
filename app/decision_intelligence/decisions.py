@@ -53,15 +53,56 @@ DecisionStatus = DecisionLifecycleState
 
 # Valid state transitions map
 VALID_TRANSITIONS: Dict[DecisionLifecycleState, List[DecisionLifecycleState]] = {
-    DecisionLifecycleState.PROPOSED: [DecisionLifecycleState.ANALYZING, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.ANALYZING: [DecisionLifecycleState.OPTIONS_IDENTIFIED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.FAILED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.OPTIONS_IDENTIFIED: [DecisionLifecycleState.RISK_ASSESSED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.RISK_ASSESSED: [DecisionLifecycleState.POLICY_EVALUATED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.POLICY_EVALUATED: [DecisionLifecycleState.RECOMMENDED, DecisionLifecycleState.DENIED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.RECOMMENDED: [DecisionLifecycleState.REQUIRES_APPROVAL, DecisionLifecycleState.APPROVED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.REQUIRES_APPROVAL: [DecisionLifecycleState.APPROVED, DecisionLifecycleState.DENIED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.APPROVED: [DecisionLifecycleState.DELEGATED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
-    DecisionLifecycleState.DELEGATED: [DecisionLifecycleState.VERIFIED, DecisionLifecycleState.FAILED, DecisionLifecycleState.CANCELLED, DecisionLifecycleState.CLOSED],
+    DecisionLifecycleState.PROPOSED: [
+        DecisionLifecycleState.ANALYZING,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.ANALYZING: [
+        DecisionLifecycleState.OPTIONS_IDENTIFIED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.FAILED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.OPTIONS_IDENTIFIED: [
+        DecisionLifecycleState.RISK_ASSESSED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.RISK_ASSESSED: [
+        DecisionLifecycleState.POLICY_EVALUATED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.POLICY_EVALUATED: [
+        DecisionLifecycleState.RECOMMENDED,
+        DecisionLifecycleState.DENIED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.RECOMMENDED: [
+        DecisionLifecycleState.REQUIRES_APPROVAL,
+        DecisionLifecycleState.APPROVED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.REQUIRES_APPROVAL: [
+        DecisionLifecycleState.APPROVED,
+        DecisionLifecycleState.DENIED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.APPROVED: [
+        DecisionLifecycleState.DELEGATED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
+    DecisionLifecycleState.DELEGATED: [
+        DecisionLifecycleState.VERIFIED,
+        DecisionLifecycleState.FAILED,
+        DecisionLifecycleState.CANCELLED,
+        DecisionLifecycleState.CLOSED,
+    ],
     DecisionLifecycleState.VERIFIED: [DecisionLifecycleState.CLOSED, DecisionLifecycleState.FAILED],
     DecisionLifecycleState.CLOSED: [],  # Terminal state
     DecisionLifecycleState.DENIED: [],  # Terminal state
@@ -137,7 +178,13 @@ class DecisionManager:
         self._decisions: Dict[str, EnterpriseDecision] = {}
         self._snapshots: Dict[str, DecisionSnapshot] = {}
 
-    def create_decision(self, tenant_id: str, title: str, decision_type: DecisionType = DecisionType.CROSS_DOMAIN, description: Optional[str] = None) -> EnterpriseDecision:
+    def create_decision(
+        self,
+        tenant_id: str,
+        title: str,
+        decision_type: DecisionType = DecisionType.CROSS_DOMAIN,
+        description: Optional[str] = None,
+    ) -> EnterpriseDecision:
         dec = EnterpriseDecision(tenant_id=tenant_id, title=title, decision_type=decision_type, description=description)
         self._decisions[dec.decision_id] = dec
         return dec
@@ -147,10 +194,14 @@ class DecisionManager:
         if not dec:
             raise DecisionNotFoundException(f"Decision '{decision_id}' not found for tenant '{tenant_id}'")
         if dec.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantDecisionIntelligenceException(f"Unauthorized cross-tenant access to decision '{decision_id}'")
+            raise CrossTenantDecisionIntelligenceException(
+                f"Unauthorized cross-tenant access to decision '{decision_id}'"
+            )
         return dec
 
-    def update_decision_state(self, decision_id: str, tenant_id: str, target_state: DecisionLifecycleState, reason: Optional[str] = None) -> EnterpriseDecision:
+    def update_decision_state(
+        self, decision_id: str, tenant_id: str, target_state: DecisionLifecycleState, reason: Optional[str] = None
+    ) -> EnterpriseDecision:
         dec = self.get_decision(decision_id, tenant_id)
         return dec.transition_to(target_state, reason=reason)
 

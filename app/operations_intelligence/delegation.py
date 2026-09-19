@@ -46,7 +46,9 @@ class OperationalDelegationManager:
         self._plans[plan.plan_id] = plan
         return plan
 
-    def approve_plan(self, tenant_id: str, plan_id: str, approval_id: str = "appr_del_999") -> OperationalDelegationPlan:
+    def approve_plan(
+        self, tenant_id: str, plan_id: str, approval_id: str = "appr_del_999"
+    ) -> OperationalDelegationPlan:
         plan = self.get_plan(tenant_id, plan_id)
         plan.approval_id = approval_id
         return plan

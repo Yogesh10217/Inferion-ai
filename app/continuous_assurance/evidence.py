@@ -23,7 +23,9 @@ class ContinuousAssuranceEvidenceManager:
         self, tenant_id: str, assessment_id: str, observation_ids: List[str]
     ) -> ContinuousAssuranceEvidenceBundle:
         clean_obs = SensitiveDataSanitizer.sanitize(observation_ids)
-        canonical = json.dumps({"tenant_id": tenant_id, "assessment_id": assessment_id, "obs": clean_obs}, sort_keys=True)
+        canonical = json.dumps(
+            {"tenant_id": tenant_id, "assessment_id": assessment_id, "obs": clean_obs}, sort_keys=True
+        )
         sha256_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
         bundle = ContinuousAssuranceEvidenceBundle(
@@ -35,7 +37,9 @@ class ContinuousAssuranceEvidenceManager:
         )
 
         self.evidence_repo.save(bundle)
-        logger.info(f"Created sealed ContinuousAssuranceEvidenceBundle '{bundle.evidence_id}' (SHA-256: {sha256_hash[:12]}...)")
+        logger.info(
+            f"Created sealed ContinuousAssuranceEvidenceBundle '{bundle.evidence_id}' (SHA-256: {sha256_hash[:12]}...)"
+        )
         return bundle
 
     def modify_sealed_bundle(self, bundle_id: str) -> None:

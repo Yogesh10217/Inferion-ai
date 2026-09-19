@@ -18,10 +18,7 @@ class AgentSessionManager:
     def create_session(self, agent_id: str, max_iterations: int = 15) -> AgentState:
         session_id = f"sess_{uuid.uuid4().hex[:12]}"
         state = AgentState(
-            session_id=session_id,
-            agent_id=agent_id,
-            status=AgentStatus.INITIALIZING,
-            max_iterations=max_iterations
+            session_id=session_id, agent_id=agent_id, status=AgentStatus.INITIALIZING, max_iterations=max_iterations
         )
         self._sessions[session_id] = state
         logger.info(f"Created agent session '{session_id}' for agent '{agent_id}'")

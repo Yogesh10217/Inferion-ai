@@ -1,6 +1,5 @@
 """Security Trust Engine."""
 
-
 import uuid
 from datetime import datetime, timezone
 

@@ -14,7 +14,7 @@ class MetadataExtractionStage(PipelineStage):
             "language": "en",
             "page_count": 1,
             "tags": ["auto-generated"],
-            "classification": "general"
+            "classification": "general",
         }
 
         # Merge with existing metadata

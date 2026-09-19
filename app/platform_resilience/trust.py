@@ -44,7 +44,7 @@ class ResilienceTrustEngine:
     ) -> TrustAssessment:
         base_score = min(100.0, slo_attainment_pct)
         if failed_recoveries > 0:
-            base_score -= (failed_recoveries * 15.0)
+            base_score -= failed_recoveries * 15.0
 
         score = max(0.0, min(100.0, base_score))
 

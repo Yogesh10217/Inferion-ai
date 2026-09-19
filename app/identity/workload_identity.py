@@ -72,7 +72,9 @@ class WorkloadIdentityManager:
             allowed_scopes=allowed_scopes or ["read"],
         )
         self._workloads[wkld.workload_id] = wkld
-        logger.info(f"[WORKLOAD IDENTITY] Registered workload '{wkld.workload_id}' ({name}, {workload_type.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[WORKLOAD IDENTITY] Registered workload '{wkld.workload_id}' ({name}, {workload_type.value}) for tenant '{tenant_id}'"
+        )
         return wkld
 
     def issue_credential(self, workload_id: str, ttl_minutes: int = 60) -> WorkloadCredential:
@@ -85,7 +87,9 @@ class WorkloadIdentityManager:
             expires_at=now + timedelta(minutes=ttl_minutes),
         )
         self._credentials[cred.credential_id] = cred
-        logger.info(f"[WORKLOAD IDENTITY] Issued short-lived credential '{cred.credential_id}' for workload '{workload_id}' (TTL: {ttl_minutes}m)")
+        logger.info(
+            f"[WORKLOAD IDENTITY] Issued short-lived credential '{cred.credential_id}' for workload '{workload_id}' (TTL: {ttl_minutes}m)"
+        )
         return cred
 
     def get_workload(self, workload_id: str) -> WorkloadIdentity:

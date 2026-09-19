@@ -28,7 +28,9 @@ class CheckpointManager:
     def __init__(self):
         self._checkpoints: Dict[str, List[ExecutionSnapshot]] = {}
 
-    def save_checkpoint(self, execution_id: str, step_number: int, state_data: Dict[str, Any], tenant_id: str = "default_tenant") -> ExecutionSnapshot:
+    def save_checkpoint(
+        self, execution_id: str, step_number: int, state_data: Dict[str, Any], tenant_id: str = "default_tenant"
+    ) -> ExecutionSnapshot:
         cid = f"chk_{execution_id}_{step_number}_{int(time.time() * 1000)}"
         snapshot = ExecutionSnapshot(
             checkpoint_id=cid,
@@ -51,6 +53,8 @@ class CheckpointManager:
         snapshots = self._checkpoints.get(execution_id, [])
         for snap in reversed(snapshots):
             if snap.step_number <= step_number:
-                logger.info(f"[CHECKPOINT] Rolled back execution '{execution_id}' to step {snap.step_number} (chk: {snap.checkpoint_id})")
+                logger.info(
+                    f"[CHECKPOINT] Rolled back execution '{execution_id}' to step {snap.step_number} (chk: {snap.checkpoint_id})"
+                )
                 return snap
         raise CheckpointError(f"No checkpoint found for execution '{execution_id}' at step <= {step_number}")

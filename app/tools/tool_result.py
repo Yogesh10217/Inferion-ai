@@ -18,6 +18,7 @@ class ToolExecutionStatus(str, Enum):
 
 class ToolResult(BaseModel):
     """Encapsulates execution output, diagnostic metrics, telemetry, and status."""
+
     execution_id: str
     tool_name: str
     status: ToolExecutionStatus = ToolExecutionStatus.SUCCESS

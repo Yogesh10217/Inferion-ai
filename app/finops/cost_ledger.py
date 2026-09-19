@@ -145,14 +145,24 @@ class UnifiedCostLedger:
             metadata=metadata or {},
         )
         self._entries.append(entry)
-        logger.info(f"[COST LEDGER] Recorded immutable cost entry '{entry.cost_id}': ${total} ({component}/{cost_category.value})")
+        logger.info(
+            f"[COST LEDGER] Recorded immutable cost entry '{entry.cost_id}': ${total} ({component}/{cost_category.value})"
+        )
         return entry
 
-    def record_adjustment(self, original_cost_id: str, adjustment_amount: Decimal, reason: str, tenant_id: str = "global") -> CostAdjustment:
-        adj_amt = Decimal(str(adjustment_amount)) if isinstance(adjustment_amount, (float, int, str)) else adjustment_amount
-        adj = CostAdjustment(original_cost_id=original_cost_id, tenant_id=tenant_id, adjustment_amount=adj_amt, reason=reason)
+    def record_adjustment(
+        self, original_cost_id: str, adjustment_amount: Decimal, reason: str, tenant_id: str = "global"
+    ) -> CostAdjustment:
+        adj_amt = (
+            Decimal(str(adjustment_amount)) if isinstance(adjustment_amount, (float, int, str)) else adjustment_amount
+        )
+        adj = CostAdjustment(
+            original_cost_id=original_cost_id, tenant_id=tenant_id, adjustment_amount=adj_amt, reason=reason
+        )
         self._adjustments.append(adj)
-        logger.info(f"[COST LEDGER] Recorded adjustment '{adj.adjustment_id}' for cost '{original_cost_id}': ${adj_amt}")
+        logger.info(
+            f"[COST LEDGER] Recorded adjustment '{adj.adjustment_id}' for cost '{original_cost_id}': ${adj_amt}"
+        )
         return adj
 
     def list_entries(self, tenant_id: Optional[str] = None, component: Optional[str] = None) -> List[CostLedgerEntry]:

@@ -44,6 +44,7 @@ class WorkflowTool(BaseTool):
 
         try:
             from app.workflows.workflow_manager import WorkflowManager
+
             wm = self.workflow_manager or WorkflowManager()
 
             if action == "run":

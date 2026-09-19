@@ -43,12 +43,12 @@ class RuntimeApprovalCoordinator:
             "decision_notes": "",
         }
         self._approvals[approval_id] = req
-        logger.info(f"Created RuntimeApproval Request '{approval_id}' for action '{action_name}' (tenant: '{tenant_id}')")
+        logger.info(
+            f"Created RuntimeApproval Request '{approval_id}' for action '{action_name}' (tenant: '{tenant_id}')"
+        )
         return req
 
-    def approve(
-        self, tenant_id: str, approval_id: str, reviewer_id: str, notes: str = ""
-    ) -> Dict[str, Any]:
+    def approve(self, tenant_id: str, approval_id: str, reviewer_id: str, notes: str = "") -> Dict[str, Any]:
         req = self._approvals.get(approval_id)
         if not req:
             raise RuntimeIntelligenceException("Approval request not found")
@@ -62,9 +62,7 @@ class RuntimeApprovalCoordinator:
         logger.info(f"Approved runtime action '{req['action_name']}' by '{reviewer_id}' (ID: {approval_id})")
         return req
 
-    def reject(
-        self, tenant_id: str, approval_id: str, reviewer_id: str, reason: str = ""
-    ) -> Dict[str, Any]:
+    def reject(self, tenant_id: str, approval_id: str, reviewer_id: str, reason: str = "") -> Dict[str, Any]:
         req = self._approvals.get(approval_id)
         if not req:
             raise RuntimeIntelligenceException("Approval request not found")

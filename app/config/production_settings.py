@@ -59,11 +59,15 @@ class ConfigurationValidator:
         if env == EnvironmentName.PRODUCTION:
             # 1. Unsafe JWT Secret
             if settings.jwt_secret in ("super-secret-key-change-in-production", "change-me", "secret", "123456"):
-                errors.append("PRODUCTION SECURITY ERROR: Default or weak 'jwt_secret' configured in production environment!")
+                errors.append(
+                    "PRODUCTION SECURITY ERROR: Default or weak 'jwt_secret' configured in production environment!"
+                )
 
             # 2. SQLite in Production Warning
             if "sqlite" in settings.database_url.lower():
-                warnings.append("PRODUCTION WARNING: SQLite database configured for production environment. PostgreSQL is recommended.")
+                warnings.append(
+                    "PRODUCTION WARNING: SQLite database configured for production environment. PostgreSQL is recommended."
+                )
 
             # 3. Open CORS / Hosts
             if "*" in settings.allowed_hosts:
@@ -71,7 +75,9 @@ class ConfigurationValidator:
 
             # 4. Redis backend check
             if not settings.redis_url:
-                warnings.append("PRODUCTION WARNING: No Redis URL configured. Distributed caching/locks will default to in-memory.")
+                warnings.append(
+                    "PRODUCTION WARNING: No Redis URL configured. Distributed caching/locks will default to in-memory."
+                )
 
         if errors:
             err_msg = "; ".join(errors)

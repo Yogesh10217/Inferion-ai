@@ -6,10 +6,18 @@ try:
     from prometheus_client import Counter, Gauge
 
     # Prometheus metrics prefixed with ai_security_assurance_*
-    SECURITY_ASSURANCE_ASSETS_GAUGE = Gauge("ai_security_assurance_monitored_assets_total", "Total monitored security assets per tenant", ["tenant_id"])
-    SECURITY_ASSURANCE_POSTURE_GAUGE = Gauge("ai_security_assurance_posture_score", "Current security posture score per tenant", ["tenant_id"])
-    SECURITY_ASSURANCE_THREATS_COUNTER = Counter("ai_security_assurance_threats_detected_total", "Total security threats detected", ["tenant_id", "severity"])
-    SECURITY_ASSURANCE_INCIDENTS_COUNTER = Counter("ai_security_assurance_incidents_created_total", "Total security incidents created", ["tenant_id", "severity"])
+    SECURITY_ASSURANCE_ASSETS_GAUGE = Gauge(
+        "ai_security_assurance_monitored_assets_total", "Total monitored security assets per tenant", ["tenant_id"]
+    )
+    SECURITY_ASSURANCE_POSTURE_GAUGE = Gauge(
+        "ai_security_assurance_posture_score", "Current security posture score per tenant", ["tenant_id"]
+    )
+    SECURITY_ASSURANCE_THREATS_COUNTER = Counter(
+        "ai_security_assurance_threats_detected_total", "Total security threats detected", ["tenant_id", "severity"]
+    )
+    SECURITY_ASSURANCE_INCIDENTS_COUNTER = Counter(
+        "ai_security_assurance_incidents_created_total", "Total security incidents created", ["tenant_id", "severity"]
+    )
     PROMETHEUS_AVAILABLE = True
 except Exception:
     PROMETHEUS_AVAILABLE = False

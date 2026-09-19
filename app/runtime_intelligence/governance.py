@@ -53,10 +53,14 @@ class RuntimeGovernanceEngine:
             outcome = RuntimeGovernanceOutcome.ALLOW
             decision = "ALLOW"
             req_review = False
-            reasoning = f"Action '{action_name}' evaluated against risk level '{risk_str}' — allowed within normal boundaries"
+            reasoning = (
+                f"Action '{action_name}' evaluated against risk level '{risk_str}' — allowed within normal boundaries"
+            )
 
         evaluation_id = f"gov_{uuid.uuid4().hex[:12]}"
-        logger.info(f"Evaluated Runtime Governance for action '{action_name}' (tenant: '{tenant_id}') -> Decision: {decision}")
+        logger.info(
+            f"Evaluated Runtime Governance for action '{action_name}' (tenant: '{tenant_id}') -> Decision: {decision}"
+        )
         return {
             "evaluation_id": evaluation_id,
             "tenant_id": tenant_id,

@@ -20,7 +20,12 @@ class WorkflowPriorityEngine:
         urgency_score: float = 0.0,
     ) -> WorkflowPriority:
         eff_risk = max(risk_score, (impact_score + urgency_score) / 2.0)
-        if security_severity in ("CRITICAL", "EMERGENCY") or urgency == "EMERGENCY" or eff_risk >= 80.0 or impact_score >= 80.0:
+        if (
+            security_severity in ("CRITICAL", "EMERGENCY")
+            or urgency == "EMERGENCY"
+            or eff_risk >= 80.0
+            or impact_score >= 80.0
+        ):
             return WorkflowPriority.CRITICAL
         elif security_severity == "HIGH" or business_impact == "HIGH" or eff_risk >= 50.0:
             return WorkflowPriority.HIGH

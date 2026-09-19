@@ -17,12 +17,7 @@ class ApprovalController:
         self._pending_approvals: Dict[str, Dict[str, Any]] = {}
 
     def check_approval(
-        self,
-        tool_name: str,
-        tool_args: Dict[str, Any],
-        required_tools: list,
-        session_id: str,
-        state: AgentState
+        self, tool_name: str, tool_args: Dict[str, Any], required_tools: list, session_id: str, state: AgentState
     ) -> None:
         if tool_name in required_tools:
             approval_request = {
@@ -30,7 +25,7 @@ class ApprovalController:
                 "tool_name": tool_name,
                 "tool_args": tool_args,
                 "requested_at": time.time(),
-                "status": "PENDING"
+                "status": "PENDING",
             }
             self._pending_approvals[session_id] = approval_request
             state.status = AgentStatus.AWAITING_APPROVAL

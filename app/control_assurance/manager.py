@@ -78,7 +78,9 @@ class ControlAssuranceManager:
         self.governance_engine = ControlGovernanceEngine(tenant_guard=self.tenant_guard)
         self.delegation_manager = ControlDelegationManager(tenant_guard=self.tenant_guard)
 
-        self.snapshot_manager = ControlAssuranceSnapshotManager(snapshot_factory=self.snapshot_factory, tenant_guard=self.tenant_guard)
+        self.snapshot_manager = ControlAssuranceSnapshotManager(
+            snapshot_factory=self.snapshot_factory, tenant_guard=self.tenant_guard
+        )
         self.audit_manager = ControlAssuranceAuditManager(tenant_guard=self.tenant_guard)
         self.learning_manager = ControlLearningManager(tenant_guard=self.tenant_guard)
 
@@ -182,7 +184,9 @@ class ControlAssuranceManager:
 
             # Transition violation status
             self.violation_manager.transition_status(viol.violation_id, tenant_id, ViolationStatus.REMEDIATION_PLANNED)
-            self.violation_manager.transition_status(viol.violation_id, tenant_id, ViolationStatus.REMEDIATION_DELEGATED)
+            self.violation_manager.transition_status(
+                viol.violation_id, tenant_id, ViolationStatus.REMEDIATION_DELEGATED
+            )
 
             # Verify remediation
             verif = self.verification_manager.verify_remediation(tenant_id, rem_plan.plan_id, ctrl.control_id)

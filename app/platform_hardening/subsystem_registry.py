@@ -121,7 +121,11 @@ class SubsystemRegistry:
         return list(self._subsystems.values())
 
     def update_subsystem_health(
-        self, subsystem_name: str, status: IntegrationHealthStatus, health_score: float, error_message: Optional[str] = None
+        self,
+        subsystem_name: str,
+        status: IntegrationHealthStatus,
+        health_score: float,
+        error_message: Optional[str] = None,
     ):
         if subsystem_name in self._subsystems:
             self._subsystems[subsystem_name].status = status

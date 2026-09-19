@@ -85,7 +85,9 @@ class RootCauseAnalysisEngine:
                         resource_id=chg.get("resource_id", failed_resource_id),
                         role=CauseRole.CONTRIBUTING_FACTOR,
                         confidence_score=0.75,
-                        evidence=[f"Recent change '{chg.get('change_type', 'CONFIG_CHANGE')}' executed at {chg.get('timestamp')}"],
+                        evidence=[
+                            f"Recent change '{chg.get('change_type', 'CONFIG_CHANGE')}' executed at {chg.get('timestamp')}"
+                        ],
                         description="Deployment/Configuration change correlated with metric regression",
                     )
                 )
@@ -110,5 +112,7 @@ class RootCauseAnalysisEngine:
             candidates=candidates,
             primary_cause_id=primary_id,
         )
-        logger.info(f"[ROOT CAUSE ANALYSIS] Conducted RCA for incident '{incident_id}': Found {len(candidates)} candidates, Top = '{primary_id}'")
+        logger.info(
+            f"[ROOT CAUSE ANALYSIS] Conducted RCA for incident '{incident_id}': Found {len(candidates)} candidates, Top = '{primary_id}'"
+        )
         return rca

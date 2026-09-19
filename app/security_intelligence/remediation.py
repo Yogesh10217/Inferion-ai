@@ -65,14 +65,22 @@ class SecurityRemediationManager:
         priority: SecurityRemediationPriority = SecurityRemediationPriority.HIGH,
     ) -> SecurityRemediationPlan:
         payload = {"incident_id": incident_id, "actions": [a.model_dump() for a in actions]}
-        record = self.idempotency_manager.check_or_start(tenant_id, "PLAN_SECURITY_REMEDIATION", idempotency_key, payload)
+        record = self.idempotency_manager.check_or_start(
+            tenant_id, "PLAN_SECURITY_REMEDIATION", idempotency_key, payload
+        )
 
         if record and record.result_payload:
             plan_dict = record.result_payload.get("plan")
             if plan_dict:
                 return SecurityRemediationPlan(**plan_dict)
 
-        first_action = actions[0] if actions else SecurityRemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="REVOKE_KEY")
+        first_action = (
+            actions[0]
+            if actions
+            else SecurityRemediationAction(
+                target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="REVOKE_KEY"
+            )
+        )
 
         delegation = DelegationRequest(
             tenant_id=tenant_id,

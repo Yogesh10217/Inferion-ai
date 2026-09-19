@@ -33,5 +33,7 @@ class RuntimeContextBuilder:
             context_fingerprint=ctx_fp,
             bounded_window_minutes=bounded_window_minutes,
         )
-        logger.info(f"Built RuntimeContext '{ctx.context_id}' with {len(bounded_signals)} signals (Fingerprint: {ctx_fp[:12]}...)")
+        logger.info(
+            f"Built RuntimeContext '{ctx.context_id}' with {len(bounded_signals)} signals (Fingerprint: {ctx_fp[:12]}...)"
+        )
         return ctx

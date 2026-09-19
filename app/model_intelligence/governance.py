@@ -65,7 +65,9 @@ class ModelIntelligenceGovernanceEngine:
 
         # Check high-risk actions
         if action_type.lower() in [a.lower() for a in self.HIGH_RISK_ACTIONS]:
-            logger.warning(f"[MODEL GOVERNANCE] Action '{action_type}' for model '{model_id}' is high-risk -> REQUIRE_APPROVAL")
+            logger.warning(
+                f"[MODEL GOVERNANCE] Action '{action_type}' for model '{model_id}' is high-risk -> REQUIRE_APPROVAL"
+            )
             return ModelGovernanceDecision(
                 decision_id=dec_id,
                 action_type=action_type,
@@ -77,7 +79,9 @@ class ModelIntelligenceGovernanceEngine:
 
         # Policy evaluation check
         ctx = context or {}
-        policy_eval_result = self.policy_evaluator.evaluate_request(action=action_type, resource_id=model_id, tenant_id=tenant_id, context=ctx)
+        policy_eval_result = self.policy_evaluator.evaluate_request(
+            action=action_type, resource_id=model_id, tenant_id=tenant_id, context=ctx
+        )
         if not policy_eval_result.allow:
             return ModelGovernanceDecision(
                 decision_id=dec_id,

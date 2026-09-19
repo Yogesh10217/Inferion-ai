@@ -70,7 +70,9 @@ class CompensationManager:
         self._plans[plan.plan_id] = plan
         return plan
 
-    def approve_compensation(self, tenant_id: str, plan_id: str, approval_id: str = "appr_comp_123") -> CompensationPlan:
+    def approve_compensation(
+        self, tenant_id: str, plan_id: str, approval_id: str = "appr_comp_123"
+    ) -> CompensationPlan:
         plan = self.get_plan(tenant_id, plan_id)
         plan.approval_id = approval_id
         plan.status = CompensationStatus.APPROVED
@@ -79,9 +81,7 @@ class CompensationManager:
     def delegate_compensation(self, tenant_id: str, plan_id: str) -> DelegationRequest:
         plan = self.get_plan(tenant_id, plan_id)
         if plan.has_unsupported_steps and not plan.approval_id:
-            raise HighRiskIntegrationRequiresApprovalException(
-                "COMPENSATE_UNSUPPORTED_ACTION", 90.0
-            )
+            raise HighRiskIntegrationRequiresApprovalException("COMPENSATE_UNSUPPORTED_ACTION", 90.0)
 
         del_req = DelegationRequest(
             tenant_id=tenant_id,

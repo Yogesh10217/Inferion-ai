@@ -47,7 +47,9 @@ class IntegrationManager:
         self.metrics_collector = IntegrationMetricsCollector()
         self.billing_tracker = IntegrationBillingTracker()
 
-        logger.info("[INTEGRATION MANAGER] Master IntegrationManager initialized with all integration domain subsystems")
+        logger.info(
+            "[INTEGRATION MANAGER] Master IntegrationManager initialized with all integration domain subsystems"
+        )
 
     def register_and_connect_integration(
         self,

@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 class ProviderFactory(Protocol):
     """Protocol for embedding providers."""
 
-    async def get_embeddings(self, texts: List[str]) -> List[List[float]]:
-        ...
+    async def get_embeddings(self, texts: List[str]) -> List[List[float]]: ...
 
 
 class OpenAIProvider:
     def __init__(self, api_key: str, model: str = "text-embedding-ada-002"):
         import openai
+
         self.client = openai.AsyncOpenAI(api_key=api_key)
         self.model = model
 
@@ -29,6 +29,7 @@ class OpenAIProvider:
 class OllamaProvider:
     def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama2"):
         import httpx
+
         self.base_url = base_url
         self.model = model
         self.client = httpx.AsyncClient(base_url=self.base_url)
@@ -45,6 +46,7 @@ class OllamaProvider:
 class CohereProvider:
     def __init__(self, api_key: str, model: str = "embed-english-v3.0"):
         import cohere
+
         self.client = cohere.AsyncClient(api_key=api_key)
         self.model = model
 
@@ -56,6 +58,7 @@ class CohereProvider:
 class EmbeddingCache:
     def __init__(self, max_size: int = 10000):
         from collections import OrderedDict
+
         self.max_size = max_size
         self.cache: OrderedDict[str, List[float]] = OrderedDict()
 
@@ -78,7 +81,14 @@ class EmbeddingCache:
 class EmbeddingStage(PipelineStage):
     """Generates embeddings for chunks using a ProviderFactory with batching, retries, and caching."""
 
-    def __init__(self, provider_factory: ProviderFactory, batch_size: int = 10, max_retries: int = 3, base_backoff: float = 1.0, rate_limit_delay: float = 0.1):
+    def __init__(
+        self,
+        provider_factory: ProviderFactory,
+        batch_size: int = 10,
+        max_retries: int = 3,
+        base_backoff: float = 1.0,
+        rate_limit_delay: float = 0.1,
+    ):
         self.provider_factory = provider_factory
         self.batch_size = batch_size
         self.max_retries = max_retries
@@ -90,6 +100,7 @@ class EmbeddingStage(PipelineStage):
         import time
 
         from app.monitoring.metrics import knowledge_embedding_latency_seconds
+
         start_time = time.time()
         try:
             for attempt in range(self.max_retries):
@@ -102,7 +113,7 @@ class EmbeddingStage(PipelineStage):
                     if attempt == self.max_retries - 1:
                         logger.error(f"Failed to get embeddings after {self.max_retries} attempts: {e}")
                         raise
-                    wait_time = self.base_backoff * (2 ** attempt)
+                    wait_time = self.base_backoff * (2**attempt)
                     logger.warning(f"Embedding generation failed: {e}. Retrying in {wait_time}s...")
                     await asyncio.sleep(wait_time)
             return []
@@ -165,8 +176,8 @@ class EmbeddingStage(PipelineStage):
 
         # Batching logic for missing embeddings
         for i in range(0, len(texts_to_embed), self.batch_size):
-            batch = texts_to_embed[i:i + self.batch_size]
-            batch_indices = texts_to_embed_indices[i:i + self.batch_size]
+            batch = texts_to_embed[i : i + self.batch_size]
+            batch_indices = texts_to_embed_indices[i : i + self.batch_size]
             try:
                 batch_embeddings = await self._get_embeddings_with_retry(batch)
                 for text, indices, emb in zip(batch, batch_indices, batch_embeddings):

@@ -61,7 +61,9 @@ class ArchitectureDriftDetector:
         self.node_manager = node_manager
         self._drift_records: Dict[str, List[ArchitectureDrift]] = {}
 
-    def detect_drift(self, tenant_id: str, snapshot_id: str, environment: str = "production") -> List[ArchitectureDrift]:
+    def detect_drift(
+        self, tenant_id: str, snapshot_id: str, environment: str = "production"
+    ) -> List[ArchitectureDrift]:
         snapshot = self.topology_manager.get_snapshot(snapshot_id, tenant_id)
         current_topology = self.topology_manager.build_topology(tenant_id, environment)
 
@@ -96,7 +98,10 @@ class ArchitectureDriftDetector:
                     expected_snapshot_reference=snapshot.snapshot_id,
                     observed_state_reference=current_topology.topology_id,
                     affected_nodes=list(unexpected),
-                    evidence=[f"Observed unauthorized/unexpected node '{nid}' not present in baseline snapshot." for nid in unexpected],
+                    evidence=[
+                        f"Observed unauthorized/unexpected node '{nid}' not present in baseline snapshot."
+                        for nid in unexpected
+                    ],
                 )
             )
 

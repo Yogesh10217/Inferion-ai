@@ -35,10 +35,7 @@ class AgentCache:
     def set(self, namespace: str, key_data: Any, value: Any, ttl: Optional[int] = None) -> None:
         key = self._hash_key(namespace, key_data)
         effective_ttl = ttl if ttl is not None else self.ttl_seconds
-        self._store[key] = {
-            "value": value,
-            "expires_at": time.time() + effective_ttl
-        }
+        self._store[key] = {"value": value, "expires_at": time.time() + effective_ttl}
         logger.debug(f"Cache stored for namespace '{namespace}'")
 
     def clear(self) -> None:

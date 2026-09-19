@@ -31,7 +31,9 @@ class DecisionApprovalManager:
     def __init__(self) -> None:
         self._approvals: Dict[str, DecisionApprovalRecord] = {}
 
-    def submit_approval(self, decision_id: str, tenant_id: str, approver: str, approved: bool, comments: Optional[str] = None) -> DecisionApprovalRecord:
+    def submit_approval(
+        self, decision_id: str, tenant_id: str, approver: str, approved: bool, comments: Optional[str] = None
+    ) -> DecisionApprovalRecord:
         record = DecisionApprovalRecord(
             decision_id=decision_id,
             tenant_id=tenant_id,
@@ -47,7 +49,9 @@ class DecisionApprovalManager:
         if not record:
             return False
         if record.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantDecisionIntelligenceException(f"Unauthorized cross-tenant access to approval for decision '{decision_id}'")
+            raise CrossTenantDecisionIntelligenceException(
+                f"Unauthorized cross-tenant access to approval for decision '{decision_id}'"
+            )
         return record.approved
 
     def require_approval_check(self, decision_id: str, tenant_id: str, risk_level: str) -> None:

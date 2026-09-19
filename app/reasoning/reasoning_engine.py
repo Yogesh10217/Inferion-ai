@@ -52,9 +52,27 @@ class ReasoningEngine:
 
     def generate_alternatives(self, prompt: str) -> List[StrategyOption]:
         return [
-            StrategyOption(name="Fast Strategy", description="Minimal latency path", estimated_cost=0.005, estimated_duration_seconds=3.0, confidence_score=0.85),
-            StrategyOption(name="Balanced Strategy", description="Recommended standard path", estimated_cost=0.01, estimated_duration_seconds=8.0, confidence_score=0.92),
-            StrategyOption(name="Thorough Strategy", description="Comprehensive verification path", estimated_cost=0.025, estimated_duration_seconds=20.0, confidence_score=0.98),
+            StrategyOption(
+                name="Fast Strategy",
+                description="Minimal latency path",
+                estimated_cost=0.005,
+                estimated_duration_seconds=3.0,
+                confidence_score=0.85,
+            ),
+            StrategyOption(
+                name="Balanced Strategy",
+                description="Recommended standard path",
+                estimated_cost=0.01,
+                estimated_duration_seconds=8.0,
+                confidence_score=0.92,
+            ),
+            StrategyOption(
+                name="Thorough Strategy",
+                description="Comprehensive verification path",
+                estimated_cost=0.025,
+                estimated_duration_seconds=20.0,
+                confidence_score=0.98,
+            ),
         ]
 
     def evaluate_options(self, prompt: str) -> Dict[str, Any]:

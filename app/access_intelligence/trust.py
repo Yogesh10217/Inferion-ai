@@ -29,6 +29,7 @@ class AccessTrustFactor(BaseModel):
 
 class AccessTrustScore(BaseModel):
     """Access Trust Score Representation."""
+
     score_id: str = Field(default_factory=lambda: f"ats_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     target_identity_id: str
@@ -56,9 +57,13 @@ class AccessTrustEngine:
     ) -> TrustAssessment:
         factors = [
             AccessTrustFactor(dimension=AccessTrustDimension.IDENTITY_AUTHENTICATION, score=auth_score, weight=1.0),
-            AccessTrustFactor(dimension=AccessTrustDimension.ENTITLEMENT_HYGIENE, score=entitlement_hygiene_score, weight=1.2),
+            AccessTrustFactor(
+                dimension=AccessTrustDimension.ENTITLEMENT_HYGIENE, score=entitlement_hygiene_score, weight=1.2
+            ),
             AccessTrustFactor(dimension=AccessTrustDimension.ANOMALY_FREQUENCY, score=anomaly_score, weight=1.5),
-            AccessTrustFactor(dimension=AccessTrustDimension.CERTIFICATION_COMPLIANCE, score=certification_score, weight=1.0),
+            AccessTrustFactor(
+                dimension=AccessTrustDimension.CERTIFICATION_COMPLIANCE, score=certification_score, weight=1.0
+            ),
             AccessTrustFactor(dimension=AccessTrustDimension.SOD_COMPLIANCE, score=sod_score, weight=1.5),
         ]
 
@@ -86,8 +91,7 @@ class AccessTrustEngine:
 
         # Adapt to standard Platform Contract TrustAssessment
         generic_dims = [
-            GenericTrustDimension(dimension_name=f.dimension.value, score=f.score, weight=f.weight)
-            for f in factors
+            GenericTrustDimension(dimension_name=f.dimension.value, score=f.score, weight=f.weight) for f in factors
         ]
 
         assessment = TrustAssessment(

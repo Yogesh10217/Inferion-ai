@@ -34,16 +34,18 @@ async def list_plugins(manager: PluginManager = Depends(get_plugin_manager)):
     result = []
     for p in plugins:
         health = manager.get_plugin_health(p.manifest.id)
-        result.append({
-            "id": p.manifest.id,
-            "name": p.manifest.name,
-            "version": p.manifest.version,
-            "description": p.manifest.description,
-            "author": p.manifest.author,
-            "enabled": p.is_enabled,
-            "health": health.get("health", "healthy"),
-            "state": health.get("state", "UNKNOWN"),
-        })
+        result.append(
+            {
+                "id": p.manifest.id,
+                "name": p.manifest.name,
+                "version": p.manifest.version,
+                "description": p.manifest.description,
+                "author": p.manifest.author,
+                "enabled": p.is_enabled,
+                "health": health.get("health", "healthy"),
+                "state": health.get("state", "UNKNOWN"),
+            }
+        )
     return {"plugins": result}
 
 

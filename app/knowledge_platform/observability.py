@@ -15,7 +15,9 @@ class KnowledgeMetricsCollector:
         self.metrics = metrics or ObservabilityMetrics()
 
     def record_retrieval(self, tenant_id: str, strategy: str, count: int) -> None:
-        logger.info(f"[KNOWLEDGE METRICS] Recorded retrieval counter for tenant '{tenant_id}': strategy='{strategy}', count={count}")
+        logger.info(
+            f"[KNOWLEDGE METRICS] Recorded retrieval counter for tenant '{tenant_id}': strategy='{strategy}', count={count}"
+        )
 
     def record_context_tokens(self, tenant_id: str, tokens: int) -> None:
         logger.info(f"[KNOWLEDGE METRICS] Recorded context tokens for tenant '{tenant_id}': tokens={tokens}")

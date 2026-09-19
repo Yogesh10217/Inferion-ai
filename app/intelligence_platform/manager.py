@@ -59,7 +59,9 @@ class EnterpriseIntelligenceManager:
         self.metrics_collector = IntelligenceMetricsCollector()
         self.billing_tracker = IntelligenceBillingTracker()
 
-        logger.info("[ENTERPRISE INTELLIGENCE MANAGER] Master EnterpriseIntelligenceManager initialized with all 19 domain subsystems.")
+        logger.info(
+            "[ENTERPRISE INTELLIGENCE MANAGER] Master EnterpriseIntelligenceManager initialized with all 19 domain subsystems."
+        )
 
     def run_full_intelligence_cycle(
         self,
@@ -76,7 +78,9 @@ class EnterpriseIntelligenceManager:
 
         # 1. Signals & Context Assembly
         signals = self.signal_manager.list_signals(tenant_id, resource_id=target_resource_id)
-        context = self.context_builder.assemble_context(tenant_id, primary_resource_id=target_resource_id, signals=signals)
+        context = self.context_builder.assemble_context(
+            tenant_id, primary_resource_id=target_resource_id, signals=signals
+        )
         self.billing_tracker.record_operation_cost(tenant_id, "CONTEXT_RETRIEVAL", 0.005, target_resource_id)
 
         # 2. Insights & Forecasting
@@ -91,20 +95,44 @@ class EnterpriseIntelligenceManager:
         self.billing_tracker.record_operation_cost(tenant_id, "FORECASTING", 0.010, target_resource_id)
 
         # 3. Simulation & Optimization
-        sim_input = SimulationInput(scenario_name="Scenario_Evaluation", target_resource_id=target_resource_id, action_type=recommendation_type.value)
+        sim_input = SimulationInput(
+            scenario_name="Scenario_Evaluation",
+            target_resource_id=target_resource_id,
+            action_type=recommendation_type.value,
+        )
         sim_res = self.simulation_engine.simulate(tenant_id, SimulationScenario.WHAT_IF, sim_input, context)
         self.billing_tracker.record_operation_cost(tenant_id, "SIMULATION", 0.015, target_resource_id)
 
         opts = candidates or [
-            OptimizationCandidate(name="Candidate Rollback", action_type=recommendation_type.value, target_resource_id=target_resource_id, cost_usd=10.0, latency_ms=200.0, risk_level=risk_level_str),
-            OptimizationCandidate(name="Candidate Scale", action_type="SCALE_RESOURCE", target_resource_id=target_resource_id, cost_usd=50.0, latency_ms=100.0, risk_level="LOW"),
+            OptimizationCandidate(
+                name="Candidate Rollback",
+                action_type=recommendation_type.value,
+                target_resource_id=target_resource_id,
+                cost_usd=10.0,
+                latency_ms=200.0,
+                risk_level=risk_level_str,
+            ),
+            OptimizationCandidate(
+                name="Candidate Scale",
+                action_type="SCALE_RESOURCE",
+                target_resource_id=target_resource_id,
+                cost_usd=50.0,
+                latency_ms=100.0,
+                risk_level="LOW",
+            ),
         ]
         opt_res = self.optimization_engine.optimize(tenant_id, optimization_objective, opts)
 
         # 4. Trust & Governance Matrix Evaluation
-        trust_score = self.trust_engine.evaluate_trust(context, fc.confidence.confidence_score, sim_res.confidence_score)
-        pol_dec, risk_ass = self.governance_engine.evaluate_decision(tenant_id, recommendation_type.value, target_resource_id, risk_level_str, trust_score.overall_score)
-        can_execute, matrix_reason = self.trust_engine.evaluate_trust_risk_matrix(trust_score.overall_score, risk_ass.risk_level, pol_dec)
+        trust_score = self.trust_engine.evaluate_trust(
+            context, fc.confidence.confidence_score, sim_res.confidence_score
+        )
+        pol_dec, risk_ass = self.governance_engine.evaluate_decision(
+            tenant_id, recommendation_type.value, target_resource_id, risk_level_str, trust_score.overall_score
+        )
+        can_execute, matrix_reason = self.trust_engine.evaluate_trust_risk_matrix(
+            trust_score.overall_score, risk_ass.risk_level, pol_dec
+        )
 
         # 5. Decision & Reproducible Snapshot Creation
         snap = DecisionSnapshot(
@@ -150,11 +178,17 @@ class EnterpriseIntelligenceManager:
 
         # 8. Approval vs Execution Delegation
         if not can_execute and not autonomy_allowed:
-            self.recommendation_manager.update_status(rec.recommendation_id, tenant_id, RecommendationStatus.REQUIRES_APPROVAL)
+            self.recommendation_manager.update_status(
+                rec.recommendation_id, tenant_id, RecommendationStatus.REQUIRES_APPROVAL
+            )
             rev = self.approval_manager.request_human_approval(tenant_id, rec)
-            self.decision_manager.update_status(dec.decision_id, tenant_id, DecisionStatus.REQUIRES_APPROVAL, rev.approval_request_id)
+            self.decision_manager.update_status(
+                dec.decision_id, tenant_id, DecisionStatus.REQUIRES_APPROVAL, rev.approval_request_id
+            )
             # Auto-approve for cycle flow test continuity if admin approval is simulated
-            self.approval_manager.submit_review_decision(tenant_id, rev.review_id, DecisionReviewer(user_id="admin"), ReviewAction.APPROVE)
+            self.approval_manager.submit_review_decision(
+                tenant_id, rev.review_id, DecisionReviewer(user_id="admin"), ReviewAction.APPROVE
+            )
             self.recommendation_manager.update_status(rec.recommendation_id, tenant_id, RecommendationStatus.APPROVED)
 
         self.decision_manager.update_status(dec.decision_id, tenant_id, DecisionStatus.EXECUTING)

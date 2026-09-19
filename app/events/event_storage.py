@@ -106,9 +106,11 @@ class EventStorage:
             request_id=envelope.request_id,
             payload=envelope.payload,
             metadata_json=envelope.metadata,
-            timestamp=datetime.fromisoformat(envelope.timestamp)
-            if isinstance(envelope.timestamp, str)
-            else envelope.timestamp,
+            timestamp=(
+                datetime.fromisoformat(envelope.timestamp)
+                if isinstance(envelope.timestamp, str)
+                else envelope.timestamp
+            ),
         )
         self.db.add(event)
         await self.db.commit()
@@ -132,9 +134,7 @@ class EventStorage:
 
     # --- Webhook Deliveries ---
 
-    async def create_delivery(
-        self, endpoint_id: str, event_id: str, is_replay: bool = False
-    ) -> WebhookDelivery:
+    async def create_delivery(self, endpoint_id: str, event_id: str, is_replay: bool = False) -> WebhookDelivery:
         delivery = WebhookDelivery(
             id=str(uuid.uuid4()),
             endpoint_id=endpoint_id,

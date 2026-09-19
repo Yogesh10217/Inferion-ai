@@ -84,7 +84,9 @@ class CircuitBreaker:
         self._failure_count += 1
 
         if self._state == CircuitBreakerState.CLOSED and self._failure_count >= self.failure_threshold:
-            self._transition_to(CircuitBreakerState.OPEN, reason=f"Failure threshold ({self.failure_threshold}) reached")
+            self._transition_to(
+                CircuitBreakerState.OPEN, reason=f"Failure threshold ({self.failure_threshold}) reached"
+            )
         elif self._state == CircuitBreakerState.HALF_OPEN:
             self._transition_to(CircuitBreakerState.OPEN, reason="Failure recorded during HALF_OPEN probe")
 
@@ -101,11 +103,13 @@ class CircuitBreaker:
 
     def _transition_to(self, target_state: CircuitBreakerState, reason: str) -> None:
         now = time.time()
-        self._history.append({
-            "from_state": self._state.value,
-            "to_state": target_state.value,
-            "reason": reason,
-            "timestamp": now,
-        })
+        self._history.append(
+            {
+                "from_state": self._state.value,
+                "to_state": target_state.value,
+                "reason": reason,
+                "timestamp": now,
+            }
+        )
         self._state = target_state
         self._last_state_change = now

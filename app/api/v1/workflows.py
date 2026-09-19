@@ -47,10 +47,7 @@ def get_tenant_context(
 
 
 @router.post("", response_model=Dict[str, Any])
-async def create_workflow(
-    req: CreateWorkflowRequest,
-    tenant: Dict[str, str] = Depends(get_tenant_context)
-):
+async def create_workflow(req: CreateWorkflowRequest, tenant: Dict[str, str] = Depends(get_tenant_context)):
     try:
         wf = _workflow_manager.create_workflow(
             workflow_id=req.id,
@@ -141,8 +138,7 @@ async def approve_workflow(
         _workflow_manager.approval_manager.reject(req.request_id, feedback=decision.feedback)
 
     res = await _workflow_manager.resume_workflow(
-        run_id=run_id,
-        approval_decision={"approved": decision.approved, "feedback": decision.feedback}
+        run_id=run_id, approval_decision={"approved": decision.approved, "feedback": decision.feedback}
     )
     return {"status": "success", "approval": req.to_dict(), "execution": res}
 

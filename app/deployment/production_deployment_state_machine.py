@@ -22,15 +22,17 @@ class ProductionDeploymentStateTransition:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "previous_state": self.previous_state.value,
-            "next_state": self.next_state.value,
-            "timestamp": self.timestamp,
-            "reason": self.reason,
-            "evidence_level": self.evidence_level,
-            "fingerprint": self.fingerprint,
-            "metadata": self.metadata,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "previous_state": self.previous_state.value,
+                "next_state": self.next_state.value,
+                "timestamp": self.timestamp,
+                "reason": self.reason,
+                "evidence_level": self.evidence_level,
+                "fingerprint": self.fingerprint,
+                "metadata": self.metadata,
+            }
+        )
 
 
 class ProductionDeploymentStateMachine:

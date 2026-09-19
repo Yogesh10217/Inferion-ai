@@ -26,7 +26,9 @@ class DecisionVerificationEngine:
     def __init__(self) -> None:
         self._verifications: Dict[str, DecisionVerificationRecord] = {}
 
-    def verify_delegation(self, decision_id: str, tenant_id: str, delegation_id: str, metrics: Optional[Dict[str, Any]] = None) -> DecisionVerificationRecord:
+    def verify_delegation(
+        self, decision_id: str, tenant_id: str, delegation_id: str, metrics: Optional[Dict[str, Any]] = None
+    ) -> DecisionVerificationRecord:
         record = DecisionVerificationRecord(
             decision_id=decision_id,
             tenant_id=tenant_id,

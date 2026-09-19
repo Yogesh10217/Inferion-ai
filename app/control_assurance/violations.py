@@ -64,7 +64,11 @@ class ControlViolationManager:
     """Manages control violations lifecycle and transitions."""
 
     VALID_TRANSITIONS: Dict[ViolationStatus, List[ViolationStatus]] = {
-        ViolationStatus.DETECTED: [ViolationStatus.TRIAGED, ViolationStatus.INVESTIGATING, ViolationStatus.REMEDIATION_PLANNED],
+        ViolationStatus.DETECTED: [
+            ViolationStatus.TRIAGED,
+            ViolationStatus.INVESTIGATING,
+            ViolationStatus.REMEDIATION_PLANNED,
+        ],
         ViolationStatus.TRIAGED: [ViolationStatus.INVESTIGATING, ViolationStatus.REMEDIATION_PLANNED],
         ViolationStatus.INVESTIGATING: [ViolationStatus.REMEDIATION_PLANNED, ViolationStatus.REMEDIATION_DELEGATED],
         ViolationStatus.REMEDIATION_PLANNED: [ViolationStatus.REMEDIATION_DELEGATED],

@@ -130,8 +130,17 @@ class RateLimiter:
     ) -> RateLimitResult:
         """Consume tokens/units against rate limit policy."""
         key = self._build_key(
-            tenant_id, organization_id, workspace_id, user_id, api_key_id,
-            ip_address, endpoint, model, tool, worker, policy.key_prefix
+            tenant_id,
+            organization_id,
+            workspace_id,
+            user_id,
+            api_key_id,
+            ip_address,
+            endpoint,
+            model,
+            tool,
+            worker,
+            policy.key_prefix,
         )
         now = time.time()
 

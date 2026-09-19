@@ -81,7 +81,9 @@ class RedisCounterBackend(CounterBackend):
             self._trigger_fallback(e)
             return await self.fallback.check_and_increment_sliding_window(key, limit, window_seconds)
 
-    async def check_and_decrement_token_bucket(self, key: str, capacity: int, refill_time_seconds: int) -> Tuple[bool, int]:
+    async def check_and_decrement_token_bucket(
+        self, key: str, capacity: int, refill_time_seconds: int
+    ) -> Tuple[bool, int]:
         redis_client = await self._get_redis()
         if redis_client is None:
             return await self.fallback.check_and_decrement_token_bucket(key, capacity, refill_time_seconds)
@@ -90,8 +92,7 @@ class RedisCounterBackend(CounterBackend):
             tokens_key = f"{key}:tokens"
             ts_key = f"{key}:ts"
             res = await self._script_token(
-                keys=[tokens_key, ts_key],
-                args=[capacity, refill_time_seconds * 1000, 1, self._now_ms()]
+                keys=[tokens_key, ts_key], args=[capacity, refill_time_seconds * 1000, 1, self._now_ms()]
             )
             return res[0] == 1, res[1]
         except RedisError as e:

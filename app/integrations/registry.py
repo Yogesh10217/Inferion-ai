@@ -31,7 +31,9 @@ class IntegrationRegistry:
             credential_id=credential_id,
         )
         self._integrations[integ.integration_id] = integ
-        logger.info(f"[INTEGRATION REGISTRY] Registered integration '{integ.integration_id}' ('{name}', {category.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[INTEGRATION REGISTRY] Registered integration '{integ.integration_id}' ('{name}', {category.value}) for tenant '{tenant_id}'"
+        )
         return integ
 
     def get_integration(self, integration_id: str) -> Integration:
@@ -46,7 +48,9 @@ class IntegrationRegistry:
         logger.info(f"[INTEGRATION REGISTRY] Integration '{integration_id}' status updated -> {new_status.value}")
         return integ
 
-    def list_integrations(self, tenant_id: Optional[str] = None, category: Optional[IntegrationType] = None) -> List[Integration]:
+    def list_integrations(
+        self, tenant_id: Optional[str] = None, category: Optional[IntegrationType] = None
+    ) -> List[Integration]:
         res = [i for i in self._integrations.values() if i.status != IntegrationStatus.ARCHIVED]
         if tenant_id:
             res = [r for r in res if r.tenant_id == tenant_id]

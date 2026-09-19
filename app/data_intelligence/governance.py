@@ -57,16 +57,30 @@ class DataIntelligenceGovernanceEngine:
         reqs: List[DataGovernanceRequirement] = []
 
         # High-risk action checks
-        high_risk_actions = {"dataset_rollback", "production_schema_migration", "large_scale_data_repair", "data_deletion", "sensitive_dataset_reprocessing"}
+        high_risk_actions = {
+            "dataset_rollback",
+            "production_schema_migration",
+            "large_scale_data_repair",
+            "data_deletion",
+            "sensitive_dataset_reprocessing",
+        }
         if action_type.lower() in high_risk_actions or requires_approval or sensitivity_tier == "RESTRICTED":
             requires_approval = True
 
         if is_blocked:
-            reqs.append(DataGovernanceRequirement(code="GOV_BLOCK", description="Data policy block enforced", satisfied=False))
+            reqs.append(
+                DataGovernanceRequirement(code="GOV_BLOCK", description="Data policy block enforced", satisfied=False)
+            )
             status = DataGovernanceDecisionStatus.BLOCK
             reason = f"Data action '{action_type}' blocked by policy."
         elif requires_approval or risk_score >= 75.0 or downstream_impact_count > 10:
-            reqs.append(DataGovernanceRequirement(code="APPROVAL_REQUIRED", description="Human approval required for high-risk data action", satisfied=False))
+            reqs.append(
+                DataGovernanceRequirement(
+                    code="APPROVAL_REQUIRED",
+                    description="Human approval required for high-risk data action",
+                    satisfied=False,
+                )
+            )
             status = DataGovernanceDecisionStatus.REQUIRE_APPROVAL
             reason = f"High-risk data action '{action_type}' (risk: {risk_score:.1f}) requires explicit human approval."
         elif risk_score >= 50.0:

@@ -12,6 +12,8 @@ class RoutingStrategy(ABC):
     """Abstract strategy for selecting a provider for a routing request."""
 
     @abstractmethod
-    async def determine_provider_name(self, *, model: ModelMetadata | None, request: RoutingRequest | None = None) -> str:
+    async def determine_provider_name(
+        self, *, model: ModelMetadata | None, request: RoutingRequest | None = None
+    ) -> str:
         """Return the provider name that should handle the request."""
         raise NotImplementedError

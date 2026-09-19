@@ -19,7 +19,9 @@ class APISecurityAssessment(BaseModel):
 class APISecurityEngine:
     """Evaluates security posture of API endpoints."""
 
-    def assess_endpoint(self, tenant_id: str, endpoint_path: str, auth_enabled: bool = True, rate_limit_enabled: bool = True) -> APISecurityAssessment:
+    def assess_endpoint(
+        self, tenant_id: str, endpoint_path: str, auth_enabled: bool = True, rate_limit_enabled: bool = True
+    ) -> APISecurityAssessment:
         risk = "LOW"
         if not auth_enabled:
             risk = "HIGH"

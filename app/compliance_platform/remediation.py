@@ -99,10 +99,14 @@ class ComplianceRemediationManager:
             raise ComplianceRemediationException(f"Remediation plan '{plan_id}' not found for tenant '{tenant_id}'.")
         return plan
 
-    def delegate_execution(self, plan_id: str, tenant_id: str, delegated_subsystem: str = "PlatformOperationsManager") -> ComplianceRemediationPlan:
+    def delegate_execution(
+        self, plan_id: str, tenant_id: str, delegated_subsystem: str = "PlatformOperationsManager"
+    ) -> ComplianceRemediationPlan:
         plan = self.get_plan(plan_id, tenant_id)
         if plan.status not in (RemediationStatus.APPROVED, RemediationStatus.PROPOSED):
-            raise ComplianceRemediationException(f"Remediation plan '{plan_id}' is not in APPROVED state (Status: {plan.status}).")
+            raise ComplianceRemediationException(
+                f"Remediation plan '{plan_id}' is not in APPROVED state (Status: {plan.status})."
+            )
 
         plan.status = RemediationStatus.DELEGATED
         plan.delegated_subsystem = delegated_subsystem

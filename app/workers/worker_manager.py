@@ -26,7 +26,11 @@ class WorkerManager:
         tenant_id: str = "default_tenant",
         workspace_id: str = "default_workspace",
     ) -> DigitalWorker:
-        ttype = WorkerTemplateType(template_type) if template_type in [t.value for t in WorkerTemplateType] else WorkerTemplateType.CUSTOM
+        ttype = (
+            WorkerTemplateType(template_type)
+            if template_type in [t.value for t in WorkerTemplateType]
+            else WorkerTemplateType.CUSTOM
+        )
         preset = WorkerTemplate.get_preset(ttype)
 
         worker = DigitalWorker(

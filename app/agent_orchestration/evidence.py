@@ -57,7 +57,10 @@ class AgentEvidenceManager:
         evidence_descriptions: Optional[List[str]] = None,
     ) -> AgentEvidenceBundle:
         ev_items = []
-        descriptions = evidence_descriptions or ["Agent execution trace verification", "Governance policy compliance proof"]
+        descriptions = evidence_descriptions or [
+            "Agent execution trace verification",
+            "Governance policy compliance proof",
+        ]
 
         for desc in descriptions:
             meta = EvidenceMetadata(
@@ -71,17 +74,21 @@ class AgentEvidenceManager:
                 description=desc,
                 attributes={"trace_id": trace_id},
             )
-            ev_items.append(AgentEvidence(
-                tenant_id=tenant_id,
-                evidence_type="AUDIT_PROOF",
-                reference=ev_ref,
-            ))
+            ev_items.append(
+                AgentEvidence(
+                    tenant_id=tenant_id,
+                    evidence_type="AUDIT_PROOF",
+                    reference=ev_ref,
+                )
+            )
 
-        fp = FingerprintGenerator.generate({
-            "tenant_id": tenant_id,
-            "trace_id": trace_id,
-            "items": [i.model_dump() for i in ev_items],
-        })
+        fp = FingerprintGenerator.generate(
+            {
+                "tenant_id": tenant_id,
+                "trace_id": trace_id,
+                "items": [i.model_dump() for i in ev_items],
+            }
+        )
 
         bundle = AgentEvidenceBundle(
             tenant_id=tenant_id,

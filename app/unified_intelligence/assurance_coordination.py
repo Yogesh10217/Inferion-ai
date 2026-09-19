@@ -27,7 +27,7 @@ class UnifiedAssurancePosture:
         assurance_level: str,  # HIGH, MODERATE, LOW, DEGRADED
         unmet_assurance_conditions: List[str],
         confidence_score: float,
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.posture_id = posture_id
         self.tenant_id = tenant_id
@@ -47,7 +47,7 @@ class UnifiedAssurancePosture:
             "assurance_level": self.assurance_level,
             "unmet_assurance_conditions": self.unmet_assurance_conditions,
             "confidence_score": round(self.confidence_score, 4),
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -60,9 +60,7 @@ class CrossDomainAssuranceCoordinator:
         pass
 
     def evaluate_assurance_posture(
-        self,
-        tenant_id: str,
-        domain_assurance_map: Dict[str, float]
+        self, tenant_id: str, domain_assurance_map: Dict[str, float]
     ) -> UnifiedAssurancePosture:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -97,5 +95,5 @@ class CrossDomainAssuranceCoordinator:
             domain_assurance_scores=domain_assurance_map,
             assurance_level=level,
             unmet_assurance_conditions=unmet,
-            confidence_score=confidence
+            confidence_score=confidence,
         )

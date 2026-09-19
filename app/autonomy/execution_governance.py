@@ -44,4 +44,6 @@ class ExecutionGovernanceEngine:
             raise AutonomyException(f"User scopes {user_scopes} missing required scope 'autonomy:run'")
 
         if cost_so_far > budget_limit:
-            raise AutonomyException(f"Workspace budget limit exceeded: cost ${cost_so_far:.4f} > limit ${budget_limit:.4f}")
+            raise AutonomyException(
+                f"Workspace budget limit exceeded: cost ${cost_so_far:.4f} > limit ${budget_limit:.4f}"
+            )

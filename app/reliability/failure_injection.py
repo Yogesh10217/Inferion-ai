@@ -94,7 +94,9 @@ class FailureInjectionEngine:
                     rollback_recommended=False,
                     auto_execution_blocked=True,
                     evidence_level=ReliabilityEvidenceLevel.CONTAINER_RUNTIME,
-                    details={"error": f"Container ID '{target_container_id}' is not in the explicit allowlist! Operation blocked."},
+                    details={
+                        "error": f"Container ID '{target_container_id}' is not in the explicit allowlist! Operation blocked."
+                    },
                 )
 
         # 2. STRICT PRODUCTION AUTHORIZATION GUARD
@@ -132,7 +134,9 @@ class FailureInjectionEngine:
             recovery_detected=True,
             incident_created=True,
             alert_created=True,
-            rollback_recommended=(failure_type in (ChaosFailureType.APPLICATION_CRASH, ChaosFailureType.DATABASE_UNAVAILABLE)),
+            rollback_recommended=(
+                failure_type in (ChaosFailureType.APPLICATION_CRASH, ChaosFailureType.DATABASE_UNAVAILABLE)
+            ),
             auto_execution_blocked=True,  # STRICT SAFETY RULE: Mandatory auto_execution_blocked = True
             evidence_level=ev_level,
             details={

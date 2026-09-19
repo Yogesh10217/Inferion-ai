@@ -37,8 +37,12 @@ class SecurityRiskManager:
     def __init__(self, enterprise_risk_manager: Optional[RiskManager] = None) -> None:
         self.enterprise_risk_manager = enterprise_risk_manager or RiskManager()
 
-    def assess_security_risk(self, tenant_id: str, asset_id: str, threat_severity: str = "HIGH") -> SecurityRiskAssessment:
-        factors = [RiskFactor(name="threat_severity", weight=1.0, impact_score=80.0 if threat_severity == "HIGH" else 40.0)]
+    def assess_security_risk(
+        self, tenant_id: str, asset_id: str, threat_severity: str = "HIGH"
+    ) -> SecurityRiskAssessment:
+        factors = [
+            RiskFactor(name="threat_severity", weight=1.0, impact_score=80.0 if threat_severity == "HIGH" else 40.0)
+        ]
         base_assessment = self.enterprise_risk_manager.calculate_risk(
             target_resource_id=asset_id,
             factors=factors,

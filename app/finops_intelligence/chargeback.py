@@ -58,7 +58,9 @@ class ChargebackManager:
         return rec
 
     def get_assessment(self, tenant_id: str, business_unit: str) -> ChargebackAssessment:
-        recs = [r for r in self._records.values() if r.tenant_id == tenant_id and r.target_business_unit == business_unit]
+        recs = [
+            r for r in self._records.values() if r.tenant_id == tenant_id and r.target_business_unit == business_unit
+        ]
         total = sum(r.billed_amount_usd for r in recs)
         return ChargebackAssessment(
             tenant_id=tenant_id,

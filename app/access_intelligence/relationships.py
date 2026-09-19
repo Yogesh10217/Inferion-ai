@@ -35,6 +35,7 @@ class RelationshipStatus(str, Enum):
 
 class AccessRelationship(BaseModel):
     """Identity-Access Relationship representation."""
+
     relationship_id: str = Field(default_factory=lambda: f"rel_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     source_identity_id: str

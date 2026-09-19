@@ -71,9 +71,7 @@ class OIDCManager:
                 return config.role_mapping[grp]
         return "viewer"
 
-    def process_id_token(
-        self, provider_id: str, id_token: str, access_token: Optional[str] = None
-    ) -> OIDCUserSession:
+    def process_id_token(self, provider_id: str, id_token: str, access_token: Optional[str] = None) -> OIDCUserSession:
         config = self._providers.get(provider_id)
         if not config:
             raise ValueError(f"OIDC provider '{provider_id}' is not configured")

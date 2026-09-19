@@ -51,10 +51,30 @@ class ChaosStateMachine:
         ChaosState.VALIDATING: [ChaosState.AUTHORIZED, ChaosState.BLOCKED, ChaosState.FAILED, ChaosState.ABORTED],
         ChaosState.AUTHORIZED: [ChaosState.RUNNING, ChaosState.ABORTED, ChaosState.BLOCKED],
         ChaosState.RUNNING: [ChaosState.FAILURE_INJECTED, ChaosState.FAILED, ChaosState.ABORTED, ChaosState.BLOCKED],
-        ChaosState.FAILURE_INJECTED: [ChaosState.OBSERVING, ChaosState.FAILED, ChaosState.RECOVERY_FAILED, ChaosState.ABORTED],
-        ChaosState.OBSERVING: [ChaosState.RECOVERING, ChaosState.FAILED, ChaosState.RECOVERY_FAILED, ChaosState.ABORTED],
-        ChaosState.RECOVERING: [ChaosState.VALIDATING_RECOVERY, ChaosState.RECOVERY_FAILED, ChaosState.FAILED, ChaosState.ABORTED],
-        ChaosState.VALIDATING_RECOVERY: [ChaosState.COMPLETED, ChaosState.RECOVERY_FAILED, ChaosState.FAILED, ChaosState.ABORTED],
+        ChaosState.FAILURE_INJECTED: [
+            ChaosState.OBSERVING,
+            ChaosState.FAILED,
+            ChaosState.RECOVERY_FAILED,
+            ChaosState.ABORTED,
+        ],
+        ChaosState.OBSERVING: [
+            ChaosState.RECOVERING,
+            ChaosState.FAILED,
+            ChaosState.RECOVERY_FAILED,
+            ChaosState.ABORTED,
+        ],
+        ChaosState.RECOVERING: [
+            ChaosState.VALIDATING_RECOVERY,
+            ChaosState.RECOVERY_FAILED,
+            ChaosState.FAILED,
+            ChaosState.ABORTED,
+        ],
+        ChaosState.VALIDATING_RECOVERY: [
+            ChaosState.COMPLETED,
+            ChaosState.RECOVERY_FAILED,
+            ChaosState.FAILED,
+            ChaosState.ABORTED,
+        ],
         ChaosState.COMPLETED: [],
         ChaosState.BLOCKED: [],
         ChaosState.FAILED: [],
@@ -102,7 +122,11 @@ class ChaosStateMachine:
         ev = self.evidence_collector.collect_evidence(
             component="ChaosStateMachine",
             event=f"chaos_transition:{self._current_state.value}->{to_state.value}",
-            status="SUCCESS" if to_state not in (ChaosState.BLOCKED, ChaosState.FAILED, ChaosState.RECOVERY_FAILED) else "FAILED",
+            status=(
+                "SUCCESS"
+                if to_state not in (ChaosState.BLOCKED, ChaosState.FAILED, ChaosState.RECOVERY_FAILED)
+                else "FAILED"
+            ),
             evidence_level=self.evidence_level,
             raw_payload={
                 "experiment_id": self.experiment_id,

@@ -221,8 +221,14 @@ class MetricsService:
                 "cache_writes": self._cache_writes,
                 "cache_evictions": self._cache_evictions,
                 "cache_hit_ratio": self.get_cache_hit_ratio(),
-                "average_cache_lookup_latency_ms": self._cache_lookup_latency_ms / (self._cache_hits + self._cache_misses) if (self._cache_hits + self._cache_misses) > 0 else 0.0,
-                "average_cache_write_latency_ms": self._cache_write_latency_ms / self._cache_writes if self._cache_writes > 0 else 0.0,
+                "average_cache_lookup_latency_ms": (
+                    self._cache_lookup_latency_ms / (self._cache_hits + self._cache_misses)
+                    if (self._cache_hits + self._cache_misses) > 0
+                    else 0.0
+                ),
+                "average_cache_write_latency_ms": (
+                    self._cache_write_latency_ms / self._cache_writes if self._cache_writes > 0 else 0.0
+                ),
                 "load_balancer_decisions": getattr(self, "_load_balancer_decisions", 0),
                 "requests_per_provider": getattr(self, "_requests_per_provider", {}).copy(),
                 "requests_per_instance": getattr(self, "_requests_per_instance", {}).copy(),

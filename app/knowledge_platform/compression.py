@@ -69,5 +69,7 @@ class ContextCompressor:
             compressed_text=compressed_text,
             provenance_preserved=True,
         )
-        logger.info(f"[CONTEXT COMPRESSOR] Compressed context '{context_window.window_id}': {orig_tokens} -> {comp_tokens} tokens (Saved {tokens_saved} tokens)")
+        logger.info(
+            f"[CONTEXT COMPRESSOR] Compressed context '{context_window.window_id}': {orig_tokens} -> {comp_tokens} tokens (Saved {tokens_saved} tokens)"
+        )
         return res

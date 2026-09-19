@@ -45,7 +45,9 @@ class MistralProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> InferenceResponse:
-        request_obj = request or InferenceRequest(model=model or "mistral-large-latest", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "mistral-large-latest", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "mistral-large-latest"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -101,7 +103,9 @@ class MistralProvider(BaseProvider):
 
                     latency_ms = (time.perf_counter() - start_time) * 1000.0
                     if response.status_code != 200:
-                        raise ProviderUnavailableException(f"Mistral error status {response.status_code}: {response.text}")
+                        raise ProviderUnavailableException(
+                            f"Mistral error status {response.status_code}: {response.text}"
+                        )
 
                     resp_json = response.json()
                     choices = resp_json.get("choices", [])
@@ -144,7 +148,9 @@ class MistralProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> AsyncIterator[InferenceResponse]:
-        request_obj = request or InferenceRequest(model=model or "mistral-large-latest", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "mistral-large-latest", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "mistral-large-latest"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -181,7 +187,9 @@ class MistralProvider(BaseProvider):
         }
 
         async with httpx.AsyncClient(timeout=30.0) as client:
-            async with client.stream("POST", f"{self.base_url}/chat/completions", headers=headers, json=payload) as response:
+            async with client.stream(
+                "POST", f"{self.base_url}/chat/completions", headers=headers, json=payload
+            ) as response:
                 if response.status_code != 200:
                     raise ProviderUnavailableException(f"Mistral stream status {response.status_code}")
                 async for line in response.aiter_lines():
@@ -221,7 +229,13 @@ class MistralProvider(BaseProvider):
 
     async def list_models(self) -> list[ProviderModel]:
         return [
-            ProviderModel(id="mistral-large-latest", provider="mistral", description="Mistral Large", context_window=128000),
-            ProviderModel(id="mistral-small-latest", provider="mistral", description="Mistral Small", context_window=32000),
-            ProviderModel(id="codestral-latest", provider="mistral", description="Codestral Code Generation", context_window=32000),
+            ProviderModel(
+                id="mistral-large-latest", provider="mistral", description="Mistral Large", context_window=128000
+            ),
+            ProviderModel(
+                id="mistral-small-latest", provider="mistral", description="Mistral Small", context_window=32000
+            ),
+            ProviderModel(
+                id="codestral-latest", provider="mistral", description="Codestral Code Generation", context_window=32000
+            ),
         ]

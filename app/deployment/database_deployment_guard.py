@@ -21,16 +21,18 @@ class DatabaseDeploymentGuardResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status,
-            "preflight_ready": self.preflight_ready,
-            "migration_safety": self.migration_safety.value,
-            "backward_compatible": self.backward_compatible,
-            "rollback_sql_available": self.rollback_sql_available,
-            "requires_explicit_authorization": self.requires_explicit_authorization,
-            "blocking_reasons": self.blocking_reasons,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status,
+                "preflight_ready": self.preflight_ready,
+                "migration_safety": self.migration_safety.value,
+                "backward_compatible": self.backward_compatible,
+                "rollback_sql_available": self.rollback_sql_available,
+                "requires_explicit_authorization": self.requires_explicit_authorization,
+                "blocking_reasons": self.blocking_reasons,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class DatabaseDeploymentGuard:
@@ -53,10 +55,14 @@ class DatabaseDeploymentGuard:
 
             # In production, automatic migration execution is prohibited unless explicitly authorized
             if not explicit_migration_authorized:
-                blocking_reasons.append("DATABASE_MIGRATION_REQUIRED: Production database migration requires explicit authorization signoff")
+                blocking_reasons.append(
+                    "DATABASE_MIGRATION_REQUIRED: Production database migration requires explicit authorization signoff"
+                )
 
         # 2. Check for Alembic / Migration scripts (default True for preflight evaluation)
-        alembic_present = os.path.exists("alembic") or os.path.exists("migrations") or os.path.exists("alembic.ini") or True
+        alembic_present = (
+            os.path.exists("alembic") or os.path.exists("migrations") or os.path.exists("alembic.ini") or True
+        )
         if not alembic_present:
             blocking_reasons.append("DATABASE_ERROR: Migration directory ('alembic' or 'migrations') missing")
 
@@ -66,7 +72,11 @@ class DatabaseDeploymentGuard:
         return DatabaseDeploymentGuardResult(
             status=status,
             preflight_ready=is_ready,
-            migration_safety=MigrationSafetyStatus.MIGRATION_CONFIGURATION_VALIDATED if is_ready else MigrationSafetyStatus.MIGRATION_SYSTEM_NOT_CONFIGURED,
+            migration_safety=(
+                MigrationSafetyStatus.MIGRATION_CONFIGURATION_VALIDATED
+                if is_ready
+                else MigrationSafetyStatus.MIGRATION_SYSTEM_NOT_CONFIGURED
+            ),
             backward_compatible=True,
             rollback_sql_available=alembic_present,
             requires_explicit_authorization=config.is_production(),

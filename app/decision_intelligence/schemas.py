@@ -10,7 +10,9 @@ from pydantic import BaseModel, Field
 class DecisionCreateRequest(BaseModel):
     title: str = Field(..., description="Title of the decision request")
     description: Optional[str] = Field(None, description="Detailed description")
-    decision_type: str = Field("OPERATIONAL", description="Type of decision (OPERATIONAL, SECURITY, ARCHITECTURAL, POLICY)")
+    decision_type: str = Field(
+        "OPERATIONAL", description="Type of decision (OPERATIONAL, SECURITY, ARCHITECTURAL, POLICY)"
+    )
     scope: str = Field("ENTERPRISE", description="Scope of the decision")
     risk_level: str = Field("MEDIUM", description="Assessed risk level (LOW, MEDIUM, HIGH, CRITICAL)")
     input_signals: List[Dict[str, Any]] = Field(default_factory=list, description="Input domain signals")
@@ -24,7 +26,9 @@ class DecisionOptionCreateRequest(BaseModel):
     target_system: str = Field("OPERATIONS", description="Target system")
     parameters: Dict[str, Any] = Field(default_factory=dict, description="Action parameters")
     estimated_cost: float = Field(0.0, description="Estimated monetary/resource cost")
-    reversibility: str = Field("REVERSIBLE", description="Reversibility rating (REVERSIBLE, PARTIALLY_REVERSIBLE, IRREVERSIBLE)")
+    reversibility: str = Field(
+        "REVERSIBLE", description="Reversibility rating (REVERSIBLE, PARTIALLY_REVERSIBLE, IRREVERSIBLE)"
+    )
 
 
 class DecisionStateTransitionRequest(BaseModel):

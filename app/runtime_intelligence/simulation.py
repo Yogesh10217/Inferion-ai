@@ -35,7 +35,12 @@ class RuntimeSimulationEngine:
     """Simulates what-if adaptation scenarios without executing real infrastructure changes."""
 
     def simulate_scenario(
-        self, tenant_id: str, scenario_name: str, target_resource: str, adaptation_action: str, workload_multiplier: float = 1.5
+        self,
+        tenant_id: str,
+        scenario_name: str,
+        target_resource: str,
+        adaptation_action: str,
+        workload_multiplier: float = 1.5,
     ) -> RuntimeSimulationResult:
         scen = RuntimeSimulationScenario(
             scenario_id=f"scen_{uuid.uuid4().hex[:12]}",

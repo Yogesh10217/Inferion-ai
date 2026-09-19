@@ -41,7 +41,9 @@ class RuntimeRiskEngine:
     ) -> RuntimeRiskAssessment:
         scores = {dim.value: dimension_inputs.get(dim.value, 0.15) for dim in RuntimeRiskDimension}
         overall = sum(scores.values()) / len(scores)
-        level = "CRITICAL" if overall >= 0.8 else ("HIGH" if overall >= 0.6 else ("MEDIUM" if overall >= 0.3 else "LOW"))
+        level = (
+            "CRITICAL" if overall >= 0.8 else ("HIGH" if overall >= 0.6 else ("MEDIUM" if overall >= 0.3 else "LOW"))
+        )
 
         ass = RuntimeRiskAssessment(
             assessment_id=f"risk_{uuid.uuid4().hex[:12]}",

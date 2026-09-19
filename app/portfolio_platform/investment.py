@@ -143,7 +143,9 @@ class InvestmentManager:
         if not p:
             raise InvestmentNotFoundException(investment_id=proposal_id, tenant_id=tenant_id)
         if p.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=p.tenant_id, resource_id=proposal_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=p.tenant_id, resource_id=proposal_id
+            )
         return p
 
     def get_decision(self, decision_id: str, tenant_id: str) -> InvestmentDecision:
@@ -151,5 +153,7 @@ class InvestmentManager:
         if not d:
             raise InvestmentNotFoundException(investment_id=decision_id, tenant_id=tenant_id)
         if d.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=d.tenant_id, resource_id=decision_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=d.tenant_id, resource_id=decision_id
+            )
         return d

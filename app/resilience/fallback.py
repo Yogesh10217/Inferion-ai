@@ -75,7 +75,11 @@ class FallbackManager:
         if pol.enable_cache_fallback and cache_lookup_func:
             try:
                 logger.info("[FALLBACK TIER 3] Attempting cache lookup fallback...")
-                cached = await cache_lookup_func(*args, **kwargs) if asyncio.iscoroutinefunction(cache_lookup_func) else cache_lookup_func(*args, **kwargs)
+                cached = (
+                    await cache_lookup_func(*args, **kwargs)
+                    if asyncio.iscoroutinefunction(cache_lookup_func)
+                    else cache_lookup_func(*args, **kwargs)
+                )
                 if cached:
                     logger.info("[FALLBACK TIER 3 SUCCESS] Cache fallback response retrieved")
                     return cached

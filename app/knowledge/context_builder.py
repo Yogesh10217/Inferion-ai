@@ -2,6 +2,7 @@
 Context Builder Module.
 Assembles context for the LLM (ordering chunks, removing duplicates, semantic deduplication, adjacent chunk merging, token budgeting, prompt formatting).
 """
+
 import difflib
 import logging
 from typing import List, Tuple
@@ -15,7 +16,9 @@ logger = logging.getLogger(__name__)
 class ContextBuilder:
     """Builds optimized context for LLM consumption."""
 
-    def __init__(self, max_tokens: int = 4000, citation_engine: CitationEngine = None, similarity_threshold: float = 0.85):
+    def __init__(
+        self, max_tokens: int = 4000, citation_engine: CitationEngine = None, similarity_threshold: float = 0.85
+    ):
         self.max_tokens = max_tokens
         self.citation_engine = citation_engine or CitationEngine()
         self.similarity_threshold = similarity_threshold
@@ -111,8 +114,8 @@ class ContextBuilder:
             accepted_docs = []
 
             for idx, doc in enumerate(merged_docs):
-                source = doc.metadata.get('source', doc.metadata.get('doc_id', 'Unknown'))
-                page = doc.metadata.get('page', 'Unknown')
+                source = doc.metadata.get("source", doc.metadata.get("doc_id", "Unknown"))
+                page = doc.metadata.get("page", "Unknown")
 
                 # Prompt formatting
                 chunk_text = f"--- Document {idx + 1} ---\nSource: {source} (Page: {page})\nConfidence: {doc.score:.2f}\nContent:\n{doc.text}\n"

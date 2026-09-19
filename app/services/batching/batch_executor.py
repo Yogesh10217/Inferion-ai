@@ -50,14 +50,15 @@ class BatchExecutor:
 
         # Filter entries that still need execution (not cached and not cancelled)
         pending_entries = [
-            entry for entry in batch.entries
-            if not entry.result_future.done() and not entry.cancellation_state.is_set()
+            entry for entry in batch.entries if not entry.result_future.done() and not entry.cancellation_state.is_set()
         ]
 
         if not pending_entries:
             return
 
-        logger.info(f"Executing batch of size {len(pending_entries)} (original size {batch.size()}) for provider {batch.key.provider_id}")
+        logger.info(
+            f"Executing batch of size {len(pending_entries)} (original size {batch.size()}) for provider {batch.key.provider_id}"
+        )
 
         async def execute_on_instance(instance: ProviderInstance) -> None:
             provider = instance.provider
@@ -67,7 +68,11 @@ class BatchExecutor:
             if self._circuit_breaker_registry:
                 breaker = self._circuit_breaker_registry.get_breaker(provider_id)
                 if not breaker.allow_request():
-                    rec_sec = max(0.0, breaker.policy.recovery_timeout_seconds - (asyncio.get_event_loop().time() - breaker.last_failure_time))
+                    rec_sec = max(
+                        0.0,
+                        breaker.policy.recovery_timeout_seconds
+                        - (asyncio.get_event_loop().time() - breaker.last_failure_time),
+                    )
                     raise CircuitBreakerOpenException(provider_id, rec_sec)
 
             bulkhead = self._bulkhead_registry.get_bulkhead(provider_id) if self._bulkhead_registry else None
@@ -115,8 +120,7 @@ class BatchExecutor:
 
         try:
             await self._failover_policy.execute_with_failover(
-                provider_id=batch.key.provider_id,
-                execute_fn=execute_on_instance
+                provider_id=batch.key.provider_id, execute_fn=execute_on_instance
             )
         except Exception as exc:
             logger.error(f"Failed to execute batch completely: {exc}")

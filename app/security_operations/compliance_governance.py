@@ -49,7 +49,9 @@ class ComplianceResult:
                 "score": self.overall_compliance_score,
                 "is_compliant": self.is_compliant,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         fw_str = self.framework.value if isinstance(self.framework, Enum) else str(self.framework)

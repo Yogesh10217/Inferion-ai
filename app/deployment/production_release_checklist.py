@@ -31,27 +31,29 @@ class ProductionReleaseChecklistResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "decision": self.decision.value,
-            "total_sections": self.total_sections,
-            "passed_sections": self.passed_sections,
-            "failed_sections": self.failed_sections,
-            "manual_review_sections": self.manual_review_sections,
-            "items": [
-                {
-                    "section_number": i.section_number,
-                    "name": i.name,
-                    "status": i.status,
-                    "blocking": i.blocking,
-                    "evidence_level": i.evidence_level,
-                    "message": i.message,
-                    "execution_status": i.execution_status,
-                }
-                for i in self.items
-            ],
-            "classifications": self.classifications,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "decision": self.decision.value,
+                "total_sections": self.total_sections,
+                "passed_sections": self.passed_sections,
+                "failed_sections": self.failed_sections,
+                "manual_review_sections": self.manual_review_sections,
+                "items": [
+                    {
+                        "section_number": i.section_number,
+                        "name": i.name,
+                        "status": i.status,
+                        "blocking": i.blocking,
+                        "evidence_level": i.evidence_level,
+                        "message": i.message,
+                        "execution_status": i.execution_status,
+                    }
+                    for i in self.items
+                ],
+                "classifications": self.classifications,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class ProductionReleaseChecklistEvaluator:
@@ -71,7 +73,11 @@ class ProductionReleaseChecklistEvaluator:
                 status="PASSED" if art_ok else "FAILED",
                 blocking=True,
                 evidence_level=data.get("artifact_evidence", "CONTAINER_RUNTIME"),
-                message="Artifact digest and image reference integrity verified" if art_ok else "Invalid artifact digest or mismatch",
+                message=(
+                    "Artifact digest and image reference integrity verified"
+                    if art_ok
+                    else "Invalid artifact digest or mismatch"
+                ),
             )
         )
 
@@ -84,7 +90,11 @@ class ProductionReleaseChecklistEvaluator:
                 status="PASSED" if cfg_ok else "FAILED",
                 blocking=True,
                 evidence_level="SIMULATION_RUNTIME",
-                message="Runtime configuration and environment rules valid" if cfg_ok else "Configuration error or debug mode enabled in production",
+                message=(
+                    "Runtime configuration and environment rules valid"
+                    if cfg_ok
+                    else "Configuration error or debug mode enabled in production"
+                ),
             )
         )
 
@@ -97,7 +107,11 @@ class ProductionReleaseChecklistEvaluator:
                 status="PASSED" if sec_ok else "FAILED",
                 blocking=True,
                 evidence_level="SIMULATION_RUNTIME",
-                message="Secret canary audit passed; fallback secrets disabled" if sec_ok else "Unsafe or canary secret detected",
+                message=(
+                    "Secret canary audit passed; fallback secrets disabled"
+                    if sec_ok
+                    else "Unsafe or canary secret detected"
+                ),
             )
         )
 
@@ -224,7 +238,11 @@ class ProductionReleaseChecklistEvaluator:
             ChecklistItem(
                 section_number=13,
                 name="Release Approval Governance",
-                status="PASSED" if app_status == "APPROVED" else ("MANUAL_REVIEW" if app_status == "MANUAL_REVIEW_REQUIRED" else "FAILED"),
+                status=(
+                    "PASSED"
+                    if app_status == "APPROVED"
+                    else ("MANUAL_REVIEW" if app_status == "MANUAL_REVIEW_REQUIRED" else "FAILED")
+                ),
                 blocking=True,
                 evidence_level="STATIC",
                 message="Technical, Security, DBA, SRE, and Release Manager approval status",

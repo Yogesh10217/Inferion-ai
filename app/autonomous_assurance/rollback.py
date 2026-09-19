@@ -36,7 +36,9 @@ class RollbackPlanner:
     def __init__(self) -> None:
         self._plans: Dict[str, RollbackPlan] = {}
 
-    def plan_rollback(self, workflow_id: str, tenant_id: str, strategy: RollbackStrategy = RollbackStrategy.SAFE) -> RollbackPlan:
+    def plan_rollback(
+        self, workflow_id: str, tenant_id: str, strategy: RollbackStrategy = RollbackStrategy.SAFE
+    ) -> RollbackPlan:
         plan = RollbackPlan(
             workflow_id=workflow_id,
             tenant_id=tenant_id,
@@ -50,7 +52,13 @@ class RollbackPlanner:
         self._plans[workflow_id] = plan
         return plan
 
-    def create_rollback_plan(self, workflow_id: str, tenant_id: str, executed_actions: Optional[List[str]] = None, strategy: RollbackStrategy = RollbackStrategy.SAFE) -> RollbackPlan:
+    def create_rollback_plan(
+        self,
+        workflow_id: str,
+        tenant_id: str,
+        executed_actions: Optional[List[str]] = None,
+        strategy: RollbackStrategy = RollbackStrategy.SAFE,
+    ) -> RollbackPlan:
         action_map = {
             "DISABLE_ROUTE": "ENABLE_ROUTE",
             "DRAIN_TRAFFIC": "RESTORE_TRAFFIC",

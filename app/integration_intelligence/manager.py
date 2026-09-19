@@ -62,7 +62,9 @@ class IntegrationIntelligenceManager:
         self.learning_manager = IntegrationLearningManager()
         self.billing_tracker = IntegrationBillingTracker()
 
-        logger.info("[INTEGRATION INTELLIGENCE] IntegrationIntelligenceManager initialized with all 22 lifecycle components.")
+        logger.info(
+            "[INTEGRATION INTELLIGENCE] IntegrationIntelligenceManager initialized with all 22 lifecycle components."
+        )
 
     def run_full_lifecycle(self, tenant_id: str, workflow_name: str) -> Dict[str, Any]:
         """Runs complete end-to-end governed integration lifecycle."""
@@ -121,16 +123,22 @@ class IntegrationIntelligenceManager:
         route_dec = self.routing_manager.resolve_route(tenant_id, conn.connector_id)
 
         # 7. Evaluate data governance
-        data_asm = self.data_governance_manager.evaluate_data_flow(tenant_id, wf.workflow_id, IntegrationDataClassification.INTERNAL)
+        data_asm = self.data_governance_manager.evaluate_data_flow(
+            tenant_id, wf.workflow_id, IntegrationDataClassification.INTERNAL
+        )
 
         # 8. Evaluate security
-        sec_asm = self.security_manager.evaluate_connector_security(tenant_id, conn.connector_id, conn.reference.base_endpoint_url, conn.reference.auth_type)
+        sec_asm = self.security_manager.evaluate_connector_security(
+            tenant_id, conn.connector_id, conn.reference.base_endpoint_url, conn.reference.auth_type
+        )
 
         # 9. Calculate risk
         risk_asm = self.risk_manager.calculate_risk(tenant_id, wf.workflow_id, 20.0, 20.0, 20.0, 20.0)
 
         # 10. Evaluate policy & governance
-        gov_dec = self.governance_engine.evaluate_governance(tenant_id, wf.workflow_id, "SYNC_RECORDS", risk_asm.composite_risk_score)
+        gov_dec = self.governance_engine.evaluate_governance(
+            tenant_id, wf.workflow_id, "SYNC_RECORDS", risk_asm.composite_risk_score
+        )
         self.workflow_manager.govern_workflow(tenant_id, wf.workflow_id)
         self.workflow_manager.mark_ready(tenant_id, wf.workflow_id)
 
@@ -151,16 +159,22 @@ class IntegrationIntelligenceManager:
         del_req = self.execution_manager.delegate_execution(tenant_id, exec_obj.execution_id)
 
         # 13. Verification
-        check = VerificationCheck(target_system_id="sys_ext_01", expected_status_code=200, observed_status_code=200, passed=True)
+        check = VerificationCheck(
+            target_system_id="sys_ext_01", expected_status_code=200, observed_status_code=200, passed=True
+        )
         verif = self.verification_manager.verify_execution(tenant_id, exec_obj.execution_id, [check])
 
         # 14. Evidence & Snapshot
         bundle = self.evidence_manager.create_bundle(tenant_id, f"Evidence {workflow_name}")
-        self.evidence_manager.add_evidence(tenant_id, bundle.bundle_id, "EXECUTION_RECORD", exec_obj.execution_id, {"status": "SUCCESS"})
+        self.evidence_manager.add_evidence(
+            tenant_id, bundle.bundle_id, "EXECUTION_RECORD", exec_obj.execution_id, {"status": "SUCCESS"}
+        )
         self.evidence_manager.finalize_bundle(tenant_id, bundle.bundle_id)
 
         # 15. Finalize Execution
-        fin_exec = self.execution_manager.finalize_execution(tenant_id, exec_obj.execution_id, IntegrationExecutionStatus.COMPLETED)
+        fin_exec = self.execution_manager.finalize_execution(
+            tenant_id, exec_obj.execution_id, IntegrationExecutionStatus.COMPLETED
+        )
         self.workflow_manager.complete_workflow(tenant_id, wf.workflow_id)
 
         # 16. Metrics, Analytics, Billing
@@ -171,8 +185,12 @@ class IntegrationIntelligenceManager:
 
         # 17. Learning
         lrn = self.learning_manager.record_learning_pattern(
-            tenant_id, "SuccessfulSyncPattern", "Optimized sync workflow execution",
-            "Maintain Sync Schedule", "Keep daily schedule unchanged", target_workflow_id=wf.workflow_id
+            tenant_id,
+            "SuccessfulSyncPattern",
+            "Optimized sync workflow execution",
+            "Maintain Sync Schedule",
+            "Keep daily schedule unchanged",
+            target_workflow_id=wf.workflow_id,
         )
 
         return {

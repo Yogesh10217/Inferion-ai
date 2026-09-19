@@ -84,12 +84,14 @@ class AgentCoordinationManager:
 
         for res_ref, agents in resource_map.items():
             if len(set(agents)) > 1:
-                conflicts.append(CoordinationConflict(
-                    competing_agent_ids=list(set(agents)),
-                    resource_ref=res_ref,
-                    resolution_strategy="SEQUENTIAL_ORDERING",
-                    resolved=True,
-                ))
+                conflicts.append(
+                    CoordinationConflict(
+                        competing_agent_ids=list(set(agents)),
+                        resource_ref=res_ref,
+                        resolution_strategy="SEQUENTIAL_ORDERING",
+                        resolved=True,
+                    )
+                )
 
         plan = AgentCoordinationPlan(
             coordination_id=cid,

@@ -28,6 +28,7 @@ class AccessDelegationStatus(str, Enum):
 
 class AccessDelegationPlan(BaseModel):
     """Delegated Access Plan representation."""
+
     delegation_plan_id: str = Field(default_factory=lambda: f"del_plan_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     action: AccessDelegationAction

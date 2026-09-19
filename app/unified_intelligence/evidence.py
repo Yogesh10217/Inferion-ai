@@ -31,7 +31,7 @@ class UnifiedEvidenceRecord:
         payload: Dict[str, Any],
         sha256_hash: str,
         finalized: bool = True,
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.evidence_id = evidence_id
         self.tenant_id = tenant_id
@@ -56,7 +56,7 @@ class UnifiedEvidenceRecord:
             "payload": self.payload,
             "sha256_hash": self.sha256_hash,
             "finalized": self.finalized,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -68,12 +68,7 @@ class SHA256EvidenceLedgerEngine:
     def __init__(self):
         self._ledger: Dict[str, UnifiedEvidenceRecord] = {}
 
-    def create_evidence(
-        self,
-        tenant_id: str,
-        source_domain: str,
-        payload: Dict[str, Any]
-    ) -> UnifiedEvidenceRecord:
+    def create_evidence(self, tenant_id: str, source_domain: str, payload: Dict[str, Any]) -> UnifiedEvidenceRecord:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
 
@@ -87,7 +82,7 @@ class SHA256EvidenceLedgerEngine:
             source_domain=source_domain,
             payload=payload,
             sha256_hash=hash_val,
-            finalized=True
+            finalized=True,
         )
         self._ledger[ev_id] = record
         return record

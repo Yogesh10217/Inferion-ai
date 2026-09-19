@@ -57,10 +57,14 @@ class ReleaseManager:
     def __init__(self) -> None:
         self._releases: Dict[str, Release] = {}
 
-    def create_release(self, name: str, tenant_id: str = "global", artifacts: Optional[List[ReleaseArtifact]] = None) -> Release:
+    def create_release(
+        self, name: str, tenant_id: str = "global", artifacts: Optional[List[ReleaseArtifact]] = None
+    ) -> Release:
         rel = Release(release_name=name, tenant_id=tenant_id, artifacts=artifacts or [])
         self._releases[rel.release_id] = rel
-        logger.info(f"[RELEASE MANAGER] Created release '{name}' (ID: {rel.release_id}, Artifacts: {len(rel.artifacts)})")
+        logger.info(
+            f"[RELEASE MANAGER] Created release '{name}' (ID: {rel.release_id}, Artifacts: {len(rel.artifacts)})"
+        )
         return rel
 
     def validate_release(self, release_id: str) -> bool:
@@ -80,7 +84,9 @@ class ReleaseManager:
     def deploy_release(self, release_id: str) -> Release:
         rel = self.get_release(release_id)
         if rel.status not in (ReleaseStatus.READY, ReleaseStatus.APPROVED):
-            raise GovernanceViolationException(f"Release '{release_id}' must be validated or approved before deployment")
+            raise GovernanceViolationException(
+                f"Release '{release_id}' must be validated or approved before deployment"
+            )
 
         rel.status = ReleaseStatus.DEPLOYED
         rel.deployed_at = _now()

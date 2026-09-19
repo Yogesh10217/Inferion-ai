@@ -19,9 +19,7 @@ class ServiceHealthORM(Base):
     dimensions = Column(JSON, nullable=False)
     evaluated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    __table_args__ = (
-        Index("idx_rel_health_tenant_service", "tenant_id", "service_id"),
-    )
+    __table_args__ = (Index("idx_rel_health_tenant_service", "tenant_id", "service_id"),)
 
 
 class ReliabilityAssessmentORM(Base):

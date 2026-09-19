@@ -14,8 +14,7 @@ logger = logging.getLogger(__name__)
 class IntelligenceProvider(Protocol):
     """Protocol interface that domain managers implement or wrap to supply intelligence outputs to UnifiedIntelligence."""
 
-    def get_domain(self) -> IntelligenceDomain:
-        ...
+    def get_domain(self) -> IntelligenceDomain: ...
 
     def get_signals(self, tenant_id: str) -> List[Dict[str, Any]]:
         """Fetch raw domain signals."""

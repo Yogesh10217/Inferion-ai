@@ -25,5 +25,7 @@ class CapacityDelegationCoordinator:
             "status": "SUBMITTED",
             "execution_target": "AUTONOMOUS_ASSURANCE_ORCHESTRATOR",
         }
-        logger.info(f"Created DelegationRequest '{delegation_id}' for capacity action '{action_name}' (tenant: '{tenant_id}') - Zero direct execution.")
+        logger.info(
+            f"Created DelegationRequest '{delegation_id}' for capacity action '{action_name}' (tenant: '{tenant_id}') - Zero direct execution."
+        )
         return delegation

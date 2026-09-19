@@ -20,10 +20,10 @@ class TrustDimension(str, Enum):
 
 
 class TrustBand(str, Enum):
-    HIGH_TRUST = "HIGH_TRUST"        # 90-100
-    TRUSTED = "TRUSTED"              # 70-89
-    RESTRICTED = "RESTRICTED"        # 50-69
-    UNTRUSTED = "UNTRUSTED"          # <50
+    HIGH_TRUST = "HIGH_TRUST"  # 90-100
+    TRUSTED = "TRUSTED"  # 70-89
+    RESTRICTED = "RESTRICTED"  # 50-69
+    UNTRUSTED = "UNTRUSTED"  # <50
 
 
 class DataTrustScore(BaseModel):
@@ -92,8 +92,7 @@ class DataTrustEngine:
             band = TrustBand.UNTRUSTED
 
         factors = [
-            {"dimension": dim.value, "score": score, "weight": weights[dim]}
-            for dim, score in dimension_scores.items()
+            {"dimension": dim.value, "score": score, "weight": weights[dim]} for dim, score in dimension_scores.items()
         ]
 
         trust_score = DataTrustScore(

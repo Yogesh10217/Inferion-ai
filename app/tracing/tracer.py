@@ -42,11 +42,13 @@ class Span:
         return self
 
     def add_event(self, name: str, attributes: Optional[Dict[str, Any]] = None) -> "Span":
-        self.events.append({
-            "name": name,
-            "timestamp": time.time(),
-            "attributes": attributes or {},
-        })
+        self.events.append(
+            {
+                "name": name,
+                "timestamp": time.time(),
+                "attributes": attributes or {},
+            }
+        )
         return self
 
     def record_exception(self, exception: Exception) -> "Span":
@@ -82,9 +84,7 @@ class Span:
             ContextPropagator.set_current_context(None)
 
     def to_dict(self) -> Dict[str, Any]:
-        duration_ms = (
-            ((self.end_time or time.time()) - self.start_time) * 1000.0
-        )
+        duration_ms = ((self.end_time or time.time()) - self.start_time) * 1000.0
         return {
             "name": self.name,
             "trace_id": self.context.trace_id,
@@ -121,9 +121,7 @@ class Tracer:
         parent_span_id = parent_ctx.span_id if parent_ctx else None
 
         # Sample decision
-        sampling_res = self.provider.sampler.should_sample(
-            parent_ctx, trace_id, name, attributes
-        )
+        sampling_res = self.provider.sampler.should_sample(parent_ctx, trace_id, name, attributes)
         trace_flags = "01" if sampling_res.decision else "00"
 
         baggage = dict(parent_ctx.baggage) if parent_ctx else {}

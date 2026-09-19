@@ -27,7 +27,7 @@ class ToolExecutor:
         tool_name: str,
         kwargs: Dict[str, Any],
         context: AgentContext,
-        budget_tracker: Optional[AgentBudgetTracker] = None
+        budget_tracker: Optional[AgentBudgetTracker] = None,
     ) -> Dict[str, Any]:
         definition = self.registry.get_definition(tool_name)
         handler = self.registry.get_handler(tool_name)
@@ -50,10 +50,7 @@ class ToolExecutor:
         while attempt <= definition.max_retries:
             try:
                 attempt += 1
-                result = await asyncio.wait_for(
-                    handler(**kwargs, context=context),
-                    timeout=definition.timeout_seconds
-                )
+                result = await asyncio.wait_for(handler(**kwargs, context=context), timeout=definition.timeout_seconds)
                 duration = time.time() - start_time
 
                 # Track estimated cost if budget tracker provided
@@ -65,7 +62,7 @@ class ToolExecutor:
                     "status": "SUCCESS",
                     "result": result,
                     "duration_seconds": duration,
-                    "attempts": attempt
+                    "attempts": attempt,
                 }
 
                 # Store in cache

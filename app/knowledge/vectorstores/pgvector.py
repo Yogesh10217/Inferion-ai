@@ -21,7 +21,7 @@ class PGVectorStore(VectorStore):
         pool_size: int = 10,
         max_overflow: int = 20,
         max_retries: int = 3,
-        base_backoff: float = 1.0
+        base_backoff: float = 1.0,
     ):
         """Initialize the PGVector store with connection pooling and retries.
 
@@ -36,9 +36,14 @@ class PGVectorStore(VectorStore):
         if "postgresql+asyncpg" in connection_string or "postgres+asyncpg" in connection_string:
             if "?" in connection_string:
                 base_url, query_str = connection_string.split("?", 1)
-                params = [p for p in query_str.split("&") if not p.startswith("sslmode=") and not p.startswith("channel_binding=")]
+                params = [
+                    p
+                    for p in query_str.split("&")
+                    if not p.startswith("sslmode=") and not p.startswith("channel_binding=")
+                ]
                 connection_string = base_url + ("?" + "&".join(params) if params else "")
             import ssl
+
             ssl_ctx = ssl.create_default_context()
             ssl_ctx.check_hostname = False
             ssl_ctx.verify_mode = ssl.CERT_NONE
@@ -49,7 +54,7 @@ class PGVectorStore(VectorStore):
             pool_size=pool_size,
             max_overflow=max_overflow,
             pool_pre_ping=True,
-            connect_args=connect_args
+            connect_args=connect_args,
         )
         self.session_maker = async_sessionmaker(self.engine, class_=AsyncSession, expire_on_commit=False)
         self.max_retries = max_retries
@@ -63,7 +68,7 @@ class PGVectorStore(VectorStore):
                 if attempt == self.max_retries - 1:
                     logger.error(f"Operation failed after {self.max_retries} attempts: {e}")
                     raise
-                wait_time = self.base_backoff * (2 ** attempt)
+                wait_time = self.base_backoff * (2**attempt)
                 logger.warning(f"Database operation failed: {e}. Retrying in {wait_time}s...")
                 await asyncio.sleep(wait_time)
             except SQLAlchemyError as e:
@@ -118,12 +123,14 @@ class PGVectorStore(VectorStore):
                 for item in embeddings:
                     # PGVector expects string representation for vector like '[1.0, 2.0, ...]'
                     vector_str = "[" + ",".join(map(str, item["embedding"])) + "]"
-                    params.append({
-                        "id": item["id"],
-                        "collection_name": collection_name,
-                        "embedding": vector_str,
-                        "metadata": json.dumps(item.get("metadata", {}))
-                    })
+                    params.append(
+                        {
+                            "id": item["id"],
+                            "collection_name": collection_name,
+                            "embedding": vector_str,
+                            "metadata": json.dumps(item.get("metadata", {})),
+                        }
+                    )
 
                 # Execute in chunks if necessary, here we do it all at once
                 await session.execute(insert_sql, params)
@@ -136,7 +143,7 @@ class PGVectorStore(VectorStore):
         query_vector: List[float],
         collection_name: str,
         top_k: int = 10,
-        filter_expr: Optional[Dict[str, Any]] = None
+        filter_expr: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """Search the PGVector store for similar vectors with metadata filtering."""
         logger.info(f"Searching PGVector collection '{collection_name}' for top {top_k} results")
@@ -158,11 +165,7 @@ class PGVectorStore(VectorStore):
                 base_query += " ORDER BY distance ASC LIMIT :top_k"
 
                 sql = text(base_query)
-                params = {
-                    "query_vector": vector_str,
-                    "collection_name": collection_name,
-                    "top_k": top_k
-                }
+                params = {"query_vector": vector_str, "collection_name": collection_name, "top_k": top_k}
 
                 if filter_expr:
                     params["filter_expr"] = json.dumps(filter_expr)
@@ -174,7 +177,7 @@ class PGVectorStore(VectorStore):
                     {
                         "id": row.id,
                         "metadata": row.metadata,
-                        "score": 1.0 - row.distance  # converting distance to similarity score
+                        "score": 1.0 - row.distance,  # converting distance to similarity score
                     }
                     for row in rows
                 ]
@@ -261,10 +264,12 @@ class PGVectorStore(VectorStore):
     async def health(self) -> bool:
         """Check the health of the PGVector connection."""
         try:
+
             async def _do_health():
                 async with self.session_maker() as session:
                     await session.execute(text("SELECT 1"))
                     return True
+
             return await self._execute_with_retry(_do_health)
         except Exception as e:
             logger.error(f"Health check failed: {e}")

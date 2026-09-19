@@ -56,7 +56,9 @@ class PostmortemManager:
             preventive_actions=preventive_actions,
         )
         self._postmortems[pm.postmortem_id] = pm
-        logger.info(f"[POSTMORTEM MANAGER] Generated postmortem '{pm.postmortem_id}' for incident '{incident.incident_id}'")
+        logger.info(
+            f"[POSTMORTEM MANAGER] Generated postmortem '{pm.postmortem_id}' for incident '{incident.incident_id}'"
+        )
         return pm
 
     def list_postmortems(self, tenant_id: Optional[str] = None) -> List[Postmortem]:

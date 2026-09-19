@@ -79,7 +79,9 @@ class SecurityIncidentManager:
         if not inc:
             raise SecurityIncidentNotFoundException(f"Security incident '{incident_id}' not found.")
         if inc.tenant_id != tenant_id:
-            raise CrossTenantSecurityAssuranceException(f"Tenant '{tenant_id}' cannot access incident for tenant '{inc.tenant_id}'.")
+            raise CrossTenantSecurityAssuranceException(
+                f"Tenant '{tenant_id}' cannot access incident for tenant '{inc.tenant_id}'."
+            )
         return inc
 
     def update_incident_state(self, tenant_id: str, incident_id: str, state: SecurityIncidentState) -> SecurityIncident:

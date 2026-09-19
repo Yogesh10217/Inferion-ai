@@ -65,7 +65,9 @@ class ModelRiskManager:
     ) -> ModelRiskAssessment:
         overall = sum(f.risk_score * f.weight for f in factors) / max(sum(f.weight for f in factors), 1.0)
 
-        risk_level = "LOW" if overall < 0.25 else ("MEDIUM" if overall < 0.5 else ("HIGH" if overall < 0.75 else "CRITICAL"))
+        risk_level = (
+            "LOW" if overall < 0.25 else ("MEDIUM" if overall < 0.5 else ("HIGH" if overall < 0.75 else "CRITICAL"))
+        )
         acceptable = overall < 0.5
         mitigation = overall >= 0.5
 

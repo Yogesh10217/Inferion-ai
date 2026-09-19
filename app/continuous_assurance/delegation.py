@@ -33,5 +33,7 @@ class ContinuousAssuranceDelegationCoordinator:
             "auto_executed": False,
         }
 
-        logger.info(f"Created DelegationRequest '{del_id}' for action '{action_name}' (tenant: '{tenant_id}') - Zero direct execution.")
+        logger.info(
+            f"Created DelegationRequest '{del_id}' for action '{action_name}' (tenant: '{tenant_id}') - Zero direct execution."
+        )
         return delegation

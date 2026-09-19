@@ -22,7 +22,9 @@ class VerificationStatus(str, Enum):
 
 class VerificationCheck(BaseModel):
     check_name: str
-    target: str  # rollback_effectiveness, performance_recovery, safety_improvement, drift_resolution, reliability_recovery
+    target: (
+        str  # rollback_effectiveness, performance_recovery, safety_improvement, drift_resolution, reliability_recovery
+    )
     passed: bool = True
     details: str = ""
 

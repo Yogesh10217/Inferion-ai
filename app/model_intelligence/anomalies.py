@@ -92,7 +92,9 @@ class ModelAnomalyManager:
         )
 
         self._anomalies[a_id] = anomaly
-        logger.info(f"[MODEL ANOMALY] Detected {anomaly_type} for model {model_id} (Tenant: {tenant_id}) Severity: {severity}")
+        logger.info(
+            f"[MODEL ANOMALY] Detected {anomaly_type} for model {model_id} (Tenant: {tenant_id}) Severity: {severity}"
+        )
         return anomaly
 
     def list_anomalies(self, tenant_id: str, model_id: Optional[str] = None) -> List[ModelAnomaly]:

@@ -28,7 +28,9 @@ class AutonomousWorkflowLearningEngine:
     def __init__(self) -> None:
         self._recommendations: Dict[str, List[WorkflowLearningRecommendation]] = {}
 
-    def process_workflow_outcome(self, workflow_id: str, tenant_id: str, outcome_status: str) -> WorkflowLearningRecommendation:
+    def process_workflow_outcome(
+        self, workflow_id: str, tenant_id: str, outcome_status: str
+    ) -> WorkflowLearningRecommendation:
         rec = WorkflowLearningRecommendation(
             tenant_id=tenant_id,
             workflow_id=workflow_id,

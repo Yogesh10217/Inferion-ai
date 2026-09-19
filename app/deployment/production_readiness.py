@@ -50,28 +50,30 @@ class ProductionReadinessResult:
     generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "release_identity": self.release_identity.canonical_fingerprint(),
-            "environment": self.environment,
-            "readiness_status": self.readiness_status,
-            "release_decision": self.release_decision.value,
-            "artifact_validation": self.artifact_validation,
-            "configuration_validation": self.configuration_validation,
-            "secret_validation": self.secret_validation,
-            "dependency_validation": self.dependency_validation,
-            "database_readiness": self.database_readiness,
-            "observability_readiness": self.observability_readiness,
-            "backup_readiness": self.backup_readiness,
-            "rollback_readiness": self.rollback_readiness,
-            "security_readiness": self.security_readiness,
-            "infrastructure_readiness": self.infrastructure_readiness,
-            "approval_readiness": self.approval_readiness,
-            "operational_readiness": self.operational_readiness,
-            "blocking_reasons": self.blocking_reasons,
-            "warnings": self.warnings,
-            "execution_status": self.execution_status,
-            "generated_at": self.generated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "release_identity": self.release_identity.canonical_fingerprint(),
+                "environment": self.environment,
+                "readiness_status": self.readiness_status,
+                "release_decision": self.release_decision.value,
+                "artifact_validation": self.artifact_validation,
+                "configuration_validation": self.configuration_validation,
+                "secret_validation": self.secret_validation,
+                "dependency_validation": self.dependency_validation,
+                "database_readiness": self.database_readiness,
+                "observability_readiness": self.observability_readiness,
+                "backup_readiness": self.backup_readiness,
+                "rollback_readiness": self.rollback_readiness,
+                "security_readiness": self.security_readiness,
+                "infrastructure_readiness": self.infrastructure_readiness,
+                "approval_readiness": self.approval_readiness,
+                "operational_readiness": self.operational_readiness,
+                "blocking_reasons": self.blocking_reasons,
+                "warnings": self.warnings,
+                "execution_status": self.execution_status,
+                "generated_at": self.generated_at,
+            }
+        )
 
 
 class ProductionReadinessEvaluator:
@@ -84,7 +86,9 @@ class ProductionReadinessEvaluator:
     ) -> None:
         self.config_manager = config_manager or RuntimeConfigurationManager()
         self.container = container or ServiceContainer()
-        self.release_validator = DeploymentReleaseValidator(config_manager=self.config_manager, container=self.container)
+        self.release_validator = DeploymentReleaseValidator(
+            config_manager=self.config_manager, container=self.container
+        )
 
     def evaluate_production_readiness(
         self, external_evidence: Optional[Dict[str, Any]] = None
@@ -103,6 +107,7 @@ class ProductionReadinessEvaluator:
             env_name = os.getenv("ENVIRONMENT", "STAGING").upper()
             is_prod = env_name == "PRODUCTION"
             from app.deployment.models import DeploymentEnvironment
+
             config = EnvironmentConfig(
                 environment=DeploymentEnvironment.PRODUCTION if is_prod else DeploymentEnvironment.STAGING,
                 application_name="Enterprise-AI-Platform",
@@ -120,13 +125,18 @@ class ProductionReadinessEvaluator:
 
         # 2. Deployment Identity & Release Manifest
         from app.deployment.deployment_metadata import DeploymentIdentityBuilder
+
         try:
             identity = DeploymentIdentityBuilder.build_identity(config)
             manifest = ProductionReleaseManifest.create_from_identity(identity)
             manifest_ok, manifest_errs = manifest.validate_manifest()
             if not manifest_ok:
                 blocking_reasons.extend(manifest_errs)
-            artifact_val = {"valid": manifest_ok, "fingerprint": manifest.canonical_fingerprint(), "errors": manifest_errs}
+            artifact_val = {
+                "valid": manifest_ok,
+                "fingerprint": manifest.canonical_fingerprint(),
+                "errors": manifest_errs,
+            }
         except Exception as exc:
             err_str = str(exc)
             blocking_reasons.append(err_str)
@@ -165,7 +175,10 @@ class ProductionReadinessEvaluator:
 
         # 9. Rollback Readiness (Reuses RollbackStrategyEngine)
         from app.deployment.models import RollbackTrigger
-        rollback_plan = RollbackStrategyEngine.generate_rollback_plan(trigger=RollbackTrigger.READINESS_FAILURE, deployment_identity=identity)
+
+        rollback_plan = RollbackStrategyEngine.generate_rollback_plan(
+            trigger=RollbackTrigger.READINESS_FAILURE, deployment_identity=identity
+        )
         rollback_val = {"ready": True, "safety_classification": rollback_plan.safety_classification.value}
 
         # 10. Audit Evidence
@@ -175,7 +188,10 @@ class ProductionReadinessEvaluator:
         if len(blocking_reasons) > 0:
             readiness_status = "BLOCKED"
             release_decision = ProductionReleaseDecision.NO_GO
-        elif app_eval.status == "MANUAL_REVIEW_REQUIRED" or base_val.decision == DeploymentDecision.MANUAL_REVIEW_REQUIRED:
+        elif (
+            app_eval.status == "MANUAL_REVIEW_REQUIRED"
+            or base_val.decision == DeploymentDecision.MANUAL_REVIEW_REQUIRED
+        ):
             readiness_status = "MANUAL_REVIEW_REQUIRED"
             release_decision = ProductionReleaseDecision.MANUAL_REVIEW_REQUIRED
         else:

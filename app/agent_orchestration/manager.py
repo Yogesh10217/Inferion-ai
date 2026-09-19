@@ -63,11 +63,15 @@ class AgentOrchestrationManager:
         self.router = AgentRouter(agent_manager=self.agent_manager, tenant_guard=self.tenant_guard)
         self.governance_engine = AgentGovernanceEngine(tenant_guard=self.tenant_guard)
         self.delegation_manager = AgentDelegationManager(tenant_guard=self.tenant_guard)
-        self.execution_manager = AgentExecutionManager(delegation_manager=self.delegation_manager, tenant_guard=self.tenant_guard)
+        self.execution_manager = AgentExecutionManager(
+            delegation_manager=self.delegation_manager, tenant_guard=self.tenant_guard
+        )
         self.runtime_manager = AgentRuntimeManager(tenant_guard=self.tenant_guard)
         self.safeguard_manager = AgentSafeguardManager(tenant_guard=self.tenant_guard)
         self.verification_manager = AgentVerificationManager(tenant_guard=self.tenant_guard)
-        self.recovery_manager = AgentRecoveryManager(delegation_manager=self.delegation_manager, tenant_guard=self.tenant_guard)
+        self.recovery_manager = AgentRecoveryManager(
+            delegation_manager=self.delegation_manager, tenant_guard=self.tenant_guard
+        )
         self.failure_analyzer = AgentFailureAnalyzer(tenant_guard=self.tenant_guard)
         self.trace_manager = AgentTraceManager(tenant_guard=self.tenant_guard)
         self.evidence_manager = AgentEvidenceManager(tenant_guard=self.tenant_guard)
@@ -96,11 +100,13 @@ class AgentOrchestrationManager:
 
         # 1. Routing / Agent discovery
         if not agent_id:
-            route_res = self.router.route_task(AgentRoutingRequest(
-                tenant_id=tenant_id,
-                required_capabilities=["READ", "EXECUTE_WITH_APPROVAL"],
-                routing_strategy=RoutingStrategy.CAPABILITY_MATCH,
-            ))
+            route_res = self.router.route_task(
+                AgentRoutingRequest(
+                    tenant_id=tenant_id,
+                    required_capabilities=["READ", "EXECUTE_WITH_APPROVAL"],
+                    routing_strategy=RoutingStrategy.CAPABILITY_MATCH,
+                )
+            )
             agent_id = route_res.selected_agent_id
 
         agent = self.agent_manager.get_agent(agent_id, tenant_id)
@@ -175,7 +181,9 @@ class AgentOrchestrationManager:
         if gov_dec.status == AgentGovernanceStatus.REQUIRE_APPROVAL:
             self.task_manager.transition_task_status(task.task_id, tenant_id, AgentTaskStatus.APPROVAL_PENDING)
             self.metrics_collector.increment_human_escalations(tenant_id, "HIGH_RISK_ACTION")
-            raise HighRiskAgentActionRequiresApprovalException("High-risk action requires human approval before proceeding.")
+            raise HighRiskAgentActionRequiresApprovalException(
+                "High-risk action requires human approval before proceeding."
+            )
 
         # 8. Ready for execution: GOVERNANCE_PENDING -> READY -> EXECUTING
         self.task_manager.transition_task_status(task.task_id, tenant_id, AgentTaskStatus.READY)
@@ -204,7 +212,9 @@ class AgentOrchestrationManager:
         )
 
         # 10. Delegated Execution
-        actions = [{"target_system": (target_systems[0] if target_systems else "PLATFORM_OPERATIONS"), "action": prompt}]
+        actions = [
+            {"target_system": (target_systems[0] if target_systems else "PLATFORM_OPERATIONS"), "action": prompt}
+        ]
         execution = self.execution_manager.start_execution(
             tenant_id=tenant_id,
             agent_id=agent_id,
@@ -245,7 +255,9 @@ class AgentOrchestrationManager:
         # 13. Learning, Trust, Billing, Observability
         self.learning_manager.record_execution_learning(tenant_id, agent_id, execution.execution_id)
         self.trust_engine.calculate_agent_trust(tenant_id, agent_id, success_count=1)
-        self.billing_tracker.record_cost(tenant_id, agent_id, task.task_id, AgentCostDimension.MODEL_USAGE, estimated_cost)
+        self.billing_tracker.record_cost(
+            tenant_id, agent_id, task.task_id, AgentCostDimension.MODEL_USAGE, estimated_cost
+        )
         self.metrics_collector.increment_tasks_total(tenant_id, status="COMPLETED")
 
         return {

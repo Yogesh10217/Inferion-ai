@@ -117,7 +117,9 @@ class DataSourceManager:
             secret_reference=secret_reference,
         )
         self._sources[ds.id] = ds
-        logger.info(f"[DATA FABRIC] Created data source '{ds.name}' (ID: {ds.id}, Type: {ds.source_type.value}, Tenant: {tenant_id})")
+        logger.info(
+            f"[DATA FABRIC] Created data source '{ds.name}' (ID: {ds.id}, Type: {ds.source_type.value}, Tenant: {tenant_id})"
+        )
         return ds
 
     def get_source(self, source_id: str) -> DataSource:

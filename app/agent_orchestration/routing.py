@@ -77,24 +77,28 @@ class AgentRouter:
         candidates: List[AgentRoutingCandidate] = []
         for agent in all_agents:
             # Match capabilities
-            matched = sum(1 for req_cap in req.required_capabilities if req_cap in agent.capabilities or req_cap == "READ")
+            matched = sum(
+                1 for req_cap in req.required_capabilities if req_cap in agent.capabilities or req_cap == "READ"
+            )
             match_score = (matched / max(1, len(req.required_capabilities))) if req.required_capabilities else 1.0
 
             if req.preferred_agent_type and agent.agent_type == req.preferred_agent_type:
                 match_score += 0.2
 
             composite = min(1.0, match_score)
-            candidates.append(AgentRoutingCandidate(
-                agent_id=agent.agent_id,
-                tenant_id=agent.tenant_id,
-                agent_name=agent.name,
-                agent_type=agent.agent_type,
-                capability_match_score=match_score,
-                trust_score=0.9,
-                autonomy_level="SUPERVISED",
-                current_workload=0,
-                composite_routing_score=composite,
-            ))
+            candidates.append(
+                AgentRoutingCandidate(
+                    agent_id=agent.agent_id,
+                    tenant_id=agent.tenant_id,
+                    agent_name=agent.name,
+                    agent_type=agent.agent_type,
+                    capability_match_score=match_score,
+                    trust_score=0.9,
+                    autonomy_level="SUPERVISED",
+                    current_workload=0,
+                    composite_routing_score=composite,
+                )
+            )
 
         if not candidates:
             # Register default fallback agent if none exist
@@ -104,17 +108,19 @@ class AgentRouter:
                 agent_type=req.preferred_agent_type or AgentType.GENERAL,
                 capabilities=req.required_capabilities or ["READ"],
             )
-            candidates.append(AgentRoutingCandidate(
-                agent_id=fallback.agent_id,
-                tenant_id=fallback.tenant_id,
-                agent_name=fallback.name,
-                agent_type=fallback.agent_type,
-                capability_match_score=1.0,
-                trust_score=0.95,
-                autonomy_level="SUPERVISED",
-                current_workload=0,
-                composite_routing_score=1.0,
-            ))
+            candidates.append(
+                AgentRoutingCandidate(
+                    agent_id=fallback.agent_id,
+                    tenant_id=fallback.tenant_id,
+                    agent_name=fallback.name,
+                    agent_type=fallback.agent_type,
+                    capability_match_score=1.0,
+                    trust_score=0.95,
+                    autonomy_level="SUPERVISED",
+                    current_workload=0,
+                    composite_routing_score=1.0,
+                )
+            )
 
         # Sort candidates by composite score descending
         candidates.sort(key=lambda c: c.composite_routing_score, reverse=True)

@@ -36,8 +36,12 @@ class CrossDomainDependencyGraph:
         self._nodes[node_id] = node
         return node
 
-    def add_edge(self, source_node_id: str, target_node_id: str, relationship_type: str = "DEPENDS_ON") -> DependencyEdge:
-        edge = DependencyEdge(source_node_id=source_node_id, target_node_id=target_node_id, relationship_type=relationship_type)
+    def add_edge(
+        self, source_node_id: str, target_node_id: str, relationship_type: str = "DEPENDS_ON"
+    ) -> DependencyEdge:
+        edge = DependencyEdge(
+            source_node_id=source_node_id, target_node_id=target_node_id, relationship_type=relationship_type
+        )
         self._edges.append(edge)
         return edge
 

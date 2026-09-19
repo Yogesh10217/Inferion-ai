@@ -88,9 +88,7 @@ class RuleEngine:
                     return directives
         return None
 
-    def filter_excluded_providers(
-        self, providers: List[str], context: RoutingContext
-    ) -> List[str]:
+    def filter_excluded_providers(self, providers: List[str], context: RoutingContext) -> List[str]:
         """Apply rule exclusions and context-driven restrictions (e.g. region, max_cost)."""
         excluded = set(context.request_metadata.get("excluded_providers", []))
         restricted_region = context.request_metadata.get("region")

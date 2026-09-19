@@ -81,7 +81,8 @@ class DataAnomalyManager:
             expected_value=expected_value,
             actual_value=actual_value,
             deviation_pct=round(dev_pct, 2),
-            description=description or f"Metric {metric_name} deviated by {dev_pct:.1f}% from expected {expected_value}",
+            description=description
+            or f"Metric {metric_name} deviated by {dev_pct:.1f}% from expected {expected_value}",
         )
 
         anom = DataAnomaly(

@@ -58,7 +58,9 @@ class PortfolioManager:
         if not port:
             raise PortfolioNotFoundException(portfolio_id=portfolio_id, tenant_id=tenant_id)
         if port.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=port.tenant_id, resource_id=portfolio_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=port.tenant_id, resource_id=portfolio_id
+            )
         return port
 
     def add_initiative(self, portfolio_id: str, tenant_id: str, initiative_id: str) -> Portfolio:

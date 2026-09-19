@@ -75,7 +75,9 @@ class TreeOfThoughtsEngine:
             curr = nodes.get(curr.parent_id) if curr.parent_id else None
         path.reverse()
 
-        logger.info(f"[TREE OF THOUGHTS] Selected best path with score {best_node.score:.2f} across {len(nodes)} generated nodes")
+        logger.info(
+            f"[TREE OF THOUGHTS] Selected best path with score {best_node.score:.2f} across {len(nodes)} generated nodes"
+        )
         return {
             "best_score": best_node.score,
             "best_path": path,

@@ -85,8 +85,10 @@ class DisasterRecoverySimulationEngine:
             rpo_simulation_status=rpo_status,
             simulation_validated=sim_valid,
             production_execution=real_production_configured,  # Strictly False unless real production configured
-            production_rto_validated=real_production_configured and rto_ok,  # Strictly False unless real production configured
-            production_rpo_validated=real_production_configured and rpo_ok,  # Strictly False unless real production configured
+            production_rto_validated=real_production_configured
+            and rto_ok,  # Strictly False unless real production configured
+            production_rpo_validated=real_production_configured
+            and rpo_ok,  # Strictly False unless real production configured
             evidence_level=self.evidence_level,
             details={
                 "is_logical_simulation": True,

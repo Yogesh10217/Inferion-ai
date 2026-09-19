@@ -56,11 +56,18 @@ class TenantMiddleware(BaseHTTPMiddleware):
                     result = await session.execute(stmt)
                     memberships = result.scalars().all()
                     if not memberships:
-                        return JSONResponse(status_code=403, content={"detail": "User does not belong to any organization"})
+                        return JSONResponse(
+                            status_code=403, content={"detail": "User does not belong to any organization"}
+                        )
                     if len(memberships) == 1:
                         org_id = memberships[0].organization_id
                     else:
-                        return JSONResponse(status_code=400, content={"detail": "User belongs to multiple organizations. X-Organization-Id header is required."})
+                        return JSONResponse(
+                            status_code=400,
+                            content={
+                                "detail": "User belongs to multiple organizations. X-Organization-Id header is required."
+                            },
+                        )
 
             # Verify membership
             stmt = select(Membership).where(Membership.organization_id == org_id, Membership.user_id == user_id)
@@ -76,8 +83,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
             request.state.workspace_id = None
             if workspace_id:
                 stmt = select(WorkspaceMembership).where(
-                    WorkspaceMembership.workspace_id == workspace_id,
-                    WorkspaceMembership.user_id == user_id
+                    WorkspaceMembership.workspace_id == workspace_id, WorkspaceMembership.user_id == user_id
                 )
                 result = await session.execute(stmt)
                 ws_membership = result.scalar_one_or_none()

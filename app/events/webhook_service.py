@@ -75,7 +75,9 @@ class WebhookService:
     async def list_events(
         self, organization_id: Optional[str] = None, event_type: Optional[str] = None, limit: int = 100, offset: int = 0
     ) -> List[WebhookEvent]:
-        return await self.storage.list_events(organization_id=organization_id, event_type=event_type, limit=limit, offset=offset)
+        return await self.storage.list_events(
+            organization_id=organization_id, event_type=event_type, limit=limit, offset=offset
+        )
 
     # Replay
     async def replay_delivery(self, delivery_id: str) -> WebhookDelivery:

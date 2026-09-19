@@ -12,6 +12,7 @@ from app.platform_contracts.snapshots import SnapshotFactory
 
 class AccessSnapshot(BaseModel):
     """Access Intelligence Snapshot Representation."""
+
     snapshot_id: str = Field(default_factory=lambda: f"snap_acc_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     target_entity_id: str

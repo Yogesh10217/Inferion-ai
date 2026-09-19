@@ -88,5 +88,7 @@ class PromptManager:
 
         return rendered
 
-    def promote_prompt(self, prompt_asset_id: str, version_number: str, target_status: AIAssetStatus = AIAssetStatus.PRODUCTION) -> AIAssetVersion:
+    def promote_prompt(
+        self, prompt_asset_id: str, version_number: str, target_status: AIAssetStatus = AIAssetStatus.PRODUCTION
+    ) -> AIAssetVersion:
         return self.registry.promote_version(prompt_asset_id, version_number, target_status)

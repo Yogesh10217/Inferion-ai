@@ -29,10 +29,14 @@ class TelemetryRetentionManager:
     def __init__(self) -> None:
         self._policies: Dict[str, RetentionPolicy] = {}
 
-    def set_policy(self, tenant_id: str, hot_days: int = 7, warm_days: int = 30, archive_days: int = 365) -> RetentionPolicy:
+    def set_policy(
+        self, tenant_id: str, hot_days: int = 7, warm_days: int = 30, archive_days: int = 365
+    ) -> RetentionPolicy:
         pol = RetentionPolicy(tenant_id=tenant_id, hot_days=hot_days, warm_days=warm_days, archive_days=archive_days)
         self._policies[tenant_id] = pol
-        logger.info(f"[RETENTION MANAGER] Configured retention policy for tenant '{tenant_id}': Hot={hot_days}d, Warm={warm_days}d, Archive={archive_days}d")
+        logger.info(
+            f"[RETENTION MANAGER] Configured retention policy for tenant '{tenant_id}': Hot={hot_days}d, Warm={warm_days}d, Archive={archive_days}d"
+        )
         return pol
 
     def get_policy(self, tenant_id: str) -> RetentionPolicy:

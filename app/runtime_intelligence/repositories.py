@@ -215,7 +215,11 @@ class RuntimeGovernanceRepository:
         self._lock = threading.RLock()
 
     def save(self, decision: Any) -> None:
-        key = decision.get("evaluation_id") if isinstance(decision, dict) else getattr(decision, "evaluation_id", str(id(decision)))
+        key = (
+            decision.get("evaluation_id")
+            if isinstance(decision, dict)
+            else getattr(decision, "evaluation_id", str(id(decision)))
+        )
         with self._lock:
             self._storage[key] = decision
 
@@ -245,7 +249,11 @@ class RuntimeDelegationRepository:
         self._lock = threading.RLock()
 
     def save(self, delegation: Any) -> None:
-        del_id = delegation.get("delegation_id") if isinstance(delegation, dict) else getattr(delegation, "delegation_id", str(id(delegation)))
+        del_id = (
+            delegation.get("delegation_id")
+            if isinstance(delegation, dict)
+            else getattr(delegation, "delegation_id", str(id(delegation)))
+        )
         with self._lock:
             self._storage[del_id] = delegation
 
@@ -275,7 +283,11 @@ class RuntimeVerificationRepository:
         self._lock = threading.RLock()
 
     def save(self, verification: Any) -> None:
-        v_id = verification.get("verification_id") if isinstance(verification, dict) else getattr(verification, "verification_id", str(id(verification)))
+        v_id = (
+            verification.get("verification_id")
+            if isinstance(verification, dict)
+            else getattr(verification, "verification_id", str(id(verification)))
+        )
         with self._lock:
             self._storage[v_id] = verification
 

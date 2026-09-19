@@ -80,7 +80,7 @@ class FingerprintGenerator:
     @staticmethod
     def verify(obj: Any, expected_fingerprint: str, contract_version: str = "1.0.0") -> FingerprintValidationResult:
         computed = FingerprintGenerator.generate(obj, contract_version)
-        is_valid = (computed == expected_fingerprint)
+        is_valid = computed == expected_fingerprint
         return FingerprintValidationResult(
             is_valid=is_valid,
             expected_fingerprint=expected_fingerprint,

@@ -64,5 +64,7 @@ class PlatformOperationsBillingTracker:
             resource_id=service_id,
             metadata={"operation_type": operation_type, "service_id": service_id},
         )
-        logger.info(f"[PLATFORM OPERATIONS BILLING] Attributed ${amount_usd:.4f} for operation '{operation_type}' on service '{service_id}'")
+        logger.info(
+            f"[PLATFORM OPERATIONS BILLING] Attributed ${amount_usd:.4f} for operation '{operation_type}' on service '{service_id}'"
+        )
         return evt

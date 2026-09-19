@@ -45,7 +45,9 @@ class DeveloperPortalManager:
         key_id = f"key_{uuid.uuid4().hex[:8]}"
         app_obj = DeveloperApplication(name=name, developer_id=developer_id, tenant_id=tenant_id, api_key_id=key_id)
         self._applications[app_obj.app_id] = app_obj
-        logger.info(f"[DEVELOPER PORTAL] Registered application '{app_obj.app_id}' ('{name}') for developer '{developer_id}'")
+        logger.info(
+            f"[DEVELOPER PORTAL] Registered application '{app_obj.app_id}' ('{name}') for developer '{developer_id}'"
+        )
         return app_obj
 
     def subscribe_to_api(self, app_id: str, service_id: str, tenant_id: str = "global") -> DeveloperSubscription:

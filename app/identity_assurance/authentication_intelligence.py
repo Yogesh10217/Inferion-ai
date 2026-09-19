@@ -53,9 +53,7 @@ class AuthenticationIntelligenceManager:
         mfa_enabled: bool = True,
         methods: Optional[List[AuthenticationMethodReference]] = None,
     ) -> AuthenticationAssessment:
-        method_list = methods or [
-            AuthenticationMethodReference(method_type="MFA_TOTP", is_mfa=True)
-        ]
+        method_list = methods or [AuthenticationMethodReference(method_type="MFA_TOTP", is_mfa=True)]
         strength = (
             AuthenticationStrength.VERY_STRONG
             if any(m.method_type == "MFA_FIDO2" for m in method_list)

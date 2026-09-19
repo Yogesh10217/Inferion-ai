@@ -51,7 +51,7 @@ class AgentAnalyticsEngine:
                 title="Zero Unbounded Autonomy Violations",
                 description="All agents operated within assigned autonomy policy boundaries.",
                 severity="INFO",
-            )
+            ),
         ]
 
         pref = PlatformReport(

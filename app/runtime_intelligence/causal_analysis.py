@@ -42,5 +42,7 @@ class RuntimeCausalAnalysisEngine:
             evidence_ids=evidence_ids,
             explanation_notes=notes,
         )
-        logger.info(f"Formulated RuntimeCausalHypothesis '{hypo.hypothesis_id}' (Status: {status}, Confidence: {confidence})")
+        logger.info(
+            f"Formulated RuntimeCausalHypothesis '{hypo.hypothesis_id}' (Status: {status}, Confidence: {confidence})"
+        )
         return hypo

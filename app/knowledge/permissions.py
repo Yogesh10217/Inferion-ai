@@ -15,6 +15,7 @@ class DocumentPermissions(BaseModel):
     """
     Document-level permissions for the Knowledge & Retrieval platform.
     """
+
     organization_id: str = Field(..., description="The organization the document belongs to")
     workspace_id: str = Field(..., description="The workspace the document belongs to")
     owner_id: str = Field(..., description="The user ID of the document owner")

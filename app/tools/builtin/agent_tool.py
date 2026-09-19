@@ -44,11 +44,16 @@ class AgentTool(BaseTool):
 
         try:
             from app.agents.agent_manager import AgentManager
+
             am = self.agent_manager or AgentManager()
 
             if action == "run":
                 state = await am.run_agent(agent_id=agent_id, user_request=prompt)
-                output = {"status": "completed", "agent_id": agent_id, "state": state.model_dump() if hasattr(state, "model_dump") else str(state)}
+                output = {
+                    "status": "completed",
+                    "agent_id": agent_id,
+                    "state": state.model_dump() if hasattr(state, "model_dump") else str(state),
+                }
             else:
                 output = {"agent_id": agent_id, "action": action, "status": "processed"}
 

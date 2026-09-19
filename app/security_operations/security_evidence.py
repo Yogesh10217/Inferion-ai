@@ -66,12 +66,20 @@ class SecurityEvidenceCollector:
         raw_payload = {
             "posture": posture_result.to_dict() if hasattr(posture_result, "to_dict") else str(posture_result),
             "policy": policy_result.to_dict() if hasattr(policy_result, "to_dict") else str(policy_result),
-            "compliance": compliance_result.to_dict() if hasattr(compliance_result, "to_dict") else str(compliance_result),
+            "compliance": (
+                compliance_result.to_dict() if hasattr(compliance_result, "to_dict") else str(compliance_result)
+            ),
             "risk": risk_assessment.to_dict() if hasattr(risk_assessment, "to_dict") else str(risk_assessment),
-            "certification": certification_result.to_dict() if hasattr(certification_result, "to_dict") else str(certification_result),
+            "certification": (
+                certification_result.to_dict()
+                if hasattr(certification_result, "to_dict")
+                else str(certification_result)
+            ),
             "is_production": is_production,
         }
-        ev_level = SecurityEvidenceLevel.PRODUCTION_RUNTIME if is_production else SecurityEvidenceLevel.CONTAINER_RUNTIME
+        ev_level = (
+            SecurityEvidenceLevel.PRODUCTION_RUNTIME if is_production else SecurityEvidenceLevel.CONTAINER_RUNTIME
+        )
         ev_id = f"EVID-{uuid.uuid4().hex[:8]}"
 
         return self.create_evidence(

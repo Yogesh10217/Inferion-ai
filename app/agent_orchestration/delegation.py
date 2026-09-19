@@ -89,5 +89,8 @@ class AgentDelegationManager:
             delegation_id=req.delegation_id,
             status=DelegationStatus.COMPLETED,
             target_reference_id=f"target_ref_{uuid.uuid4().hex[:8]}",
-            output={"result": "Delegated execution successfully handled by existing platform manager.", "action": req.action},
+            output={
+                "result": "Delegated execution successfully handled by existing platform manager.",
+                "action": req.action,
+            },
         )

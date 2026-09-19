@@ -91,7 +91,9 @@ class ViolationManager:
 
         # For CRITICAL or HIGH violations, automatically create an Operations Incident
         if severity in (ViolationSeverity.CRITICAL, ViolationSeverity.HIGH):
-            op_sev = IncidentSeverity.SEV1_CRITICAL if severity == ViolationSeverity.CRITICAL else IncidentSeverity.SEV2_HIGH
+            op_sev = (
+                IncidentSeverity.SEV1_CRITICAL if severity == ViolationSeverity.CRITICAL else IncidentSeverity.SEV2_HIGH
+            )
             inc = self.incident_manager.create_incident(
                 title=f"[GOVERNANCE VIOLATION] {title}",
                 tenant_id=tenant_id,
@@ -99,10 +101,14 @@ class ViolationManager:
                 primary_resource_id=primary_resource_id,
             )
             v.incident_id = inc.incident_id
-            logger.warning(f"[VIOLATION MANAGER] Created Operations Incident '{inc.incident_id}' for {severity.value} violation '{v.violation_id}'")
+            logger.warning(
+                f"[VIOLATION MANAGER] Created Operations Incident '{inc.incident_id}' for {severity.value} violation '{v.violation_id}'"
+            )
 
         self._violations[v.violation_id] = v
-        logger.info(f"[VIOLATION MANAGER] Recorded violation '{v.violation_id}' ({violation_type.value}) for '{primary_resource_id}'")
+        logger.info(
+            f"[VIOLATION MANAGER] Recorded violation '{v.violation_id}' ({violation_type.value}) for '{primary_resource_id}'"
+        )
         return v
 
     def update_status(self, violation_id: str, status: ViolationStatus) -> GovernanceViolation:

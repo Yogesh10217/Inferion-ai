@@ -55,13 +55,25 @@ class ResourceEfficiencyManager:
     ) -> EfficiencyAssessment:
         scores = [
             EfficiencyScore(dimension=EfficiencyDimension.COST, score=cost_score, description="Cost efficiency score"),
-            EfficiencyScore(dimension=EfficiencyDimension.UTILIZATION, score=utilization_score, description="Capacity utilization score"),
-            EfficiencyScore(dimension=EfficiencyDimension.MODEL_EFFICIENCY, score=model_efficiency_score, description="Model efficiency score"),
+            EfficiencyScore(
+                dimension=EfficiencyDimension.UTILIZATION,
+                score=utilization_score,
+                description="Capacity utilization score",
+            ),
+            EfficiencyScore(
+                dimension=EfficiencyDimension.MODEL_EFFICIENCY,
+                score=model_efficiency_score,
+                description="Model efficiency score",
+            ),
         ]
         overall = round(sum(s.score for s in scores) / len(scores), 2)
         recs: List[EfficiencyRecommendation] = []
         if model_efficiency_score < 70.0:
-            recs.append(EfficiencyRecommendation(title="Model Rightsizing", action="Switch to quantized or smaller parameters model."))
+            recs.append(
+                EfficiencyRecommendation(
+                    title="Model Rightsizing", action="Switch to quantized or smaller parameters model."
+                )
+            )
 
         asm = EfficiencyAssessment(
             tenant_id=tenant_id,

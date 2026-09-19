@@ -85,7 +85,9 @@ class CapacityManager:
             estimated_cost_impact_usd=cost_impact,
         )
         self._assessments[service_id] = assessment
-        logger.info(f"[CAPACITY MANAGER] Capacity for service '{service_id}': Risk={risk.value}, Recommendation={recommendation}")
+        logger.info(
+            f"[CAPACITY MANAGER] Capacity for service '{service_id}': Risk={risk.value}, Recommendation={recommendation}"
+        )
         return assessment
 
     def get_latest_assessment(self, service_id: str, tenant_id: str) -> CapacityAssessment:

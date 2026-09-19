@@ -39,6 +39,7 @@ class AccessRemediationStatus(str, Enum):
 
 class AccessRemediationPlan(BaseModel):
     """Access Remediation Plan."""
+
     plan_id: str = Field(default_factory=lambda: f"rem_plan_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     target_identity_id: str
@@ -103,7 +104,9 @@ class AccessRemediationManager:
         plan.delegation_request_id = delegation_req.delegation_id
         return delegation_req
 
-    def approve_remediation(self, tenant_id: str, plan_id: str, approval_id: str = "appr_rem_123") -> AccessRemediationPlan:
+    def approve_remediation(
+        self, tenant_id: str, plan_id: str, approval_id: str = "appr_rem_123"
+    ) -> AccessRemediationPlan:
         plan = self.get_plan(tenant_id, plan_id)
         plan.approval_id = approval_id
         return plan
@@ -114,7 +117,9 @@ class AccessRemediationManager:
             raise CrossTenantAccessIntelligenceException()
         return plan
 
-    def list_plans(self, tenant_id: str, status: Optional[AccessRemediationStatus] = None) -> List[AccessRemediationPlan]:
+    def list_plans(
+        self, tenant_id: str, status: Optional[AccessRemediationStatus] = None
+    ) -> List[AccessRemediationPlan]:
         results = [p for p in self._plans.values() if p.tenant_id == tenant_id]
         if status:
             results = [p for p in results if p.status == status]

@@ -108,9 +108,7 @@ class KnowledgeLearningManager:
     def list_records(self, tenant_id: str) -> List[KnowledgeLearningRecord]:
         return [r for r in self._records.values() if r.tenant_id == tenant_id]
 
-    def list_recommendations(
-        self, tenant_id: str
-    ) -> List[KnowledgeLearningRecommendation]:
+    def list_recommendations(self, tenant_id: str) -> List[KnowledgeLearningRecommendation]:
         recs: List[KnowledgeLearningRecommendation] = []
         for r in self.list_records(tenant_id):
             recs.extend(r.recommendations)

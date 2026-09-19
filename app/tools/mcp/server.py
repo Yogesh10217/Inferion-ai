@@ -28,7 +28,9 @@ class MCPServer:
         self._resources: Dict[str, MCPResourceSchema] = {}
         self._prompts: Dict[str, MCPPromptSchema] = {}
 
-    def register_tool(self, name: str, description: str, handler: Callable, input_schema: Optional[Dict[str, Any]] = None) -> None:
+    def register_tool(
+        self, name: str, description: str, handler: Callable, input_schema: Optional[Dict[str, Any]] = None
+    ) -> None:
         schema = MCPToolSchema(
             name=name,
             description=description,
@@ -37,7 +39,9 @@ class MCPServer:
         self._tools[name] = (schema, handler)
         logger.info(f"Registered MCP Tool '{name}' on server '{self.server_info.name}'")
 
-    def register_resource(self, uri: str, name: str, description: Optional[str] = None, mime_type: str = "text/plain") -> None:
+    def register_resource(
+        self, uri: str, name: str, description: Optional[str] = None, mime_type: str = "text/plain"
+    ) -> None:
         resource = MCPResourceSchema(uri=uri, name=name, description=description, mimeType=mime_type)
         self._resources[uri] = resource
         logger.info(f"Registered MCP Resource '{uri}'")

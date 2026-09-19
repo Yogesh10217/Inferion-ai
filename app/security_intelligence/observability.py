@@ -8,10 +8,18 @@ from app.platform_contracts.observability import SafeMetricLabelSanitizer
 
 logger = logging.getLogger(__name__)
 
-SECURITY_SIGNALS_TOTAL = Counter("ai_security_signals_total", "Total security signals ingested", ["signal_type", "tenant_id"])
-SECURITY_THREATS_TOTAL = Counter("ai_security_threats_total", "Total security threats detected", ["threat_type", "tenant_id"])
-SECURITY_VULNERABILITIES_TOTAL = Counter("ai_security_vulnerabilities_total", "Total security vulnerabilities discovered", ["severity", "tenant_id"])
-SECURITY_INCIDENTS_TOTAL = Counter("ai_security_incidents_total", "Total security incidents detected", ["severity", "tenant_id"])
+SECURITY_SIGNALS_TOTAL = Counter(
+    "ai_security_signals_total", "Total security signals ingested", ["signal_type", "tenant_id"]
+)
+SECURITY_THREATS_TOTAL = Counter(
+    "ai_security_threats_total", "Total security threats detected", ["threat_type", "tenant_id"]
+)
+SECURITY_VULNERABILITIES_TOTAL = Counter(
+    "ai_security_vulnerabilities_total", "Total security vulnerabilities discovered", ["severity", "tenant_id"]
+)
+SECURITY_INCIDENTS_TOTAL = Counter(
+    "ai_security_incidents_total", "Total security incidents detected", ["severity", "tenant_id"]
+)
 SECURITY_POSTURE_SCORE = Gauge("ai_security_posture_score", "Current security posture score", ["tenant_id"])
 SECURITY_TRUST_SCORE = Gauge("ai_security_trust_score", "Current security trust score", ["tenant_id"])
 

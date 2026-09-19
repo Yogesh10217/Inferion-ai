@@ -37,7 +37,9 @@ class DecisionEvidence(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
     def calculate_fingerprint(self) -> str:
-        payload = f"{self.evidence_id}:{self.tenant_id}:{self.decision_id}:{self.evidence_type}:{self.created_at.isoformat()}"
+        payload = (
+            f"{self.evidence_id}:{self.tenant_id}:{self.decision_id}:{self.evidence_type}:{self.created_at.isoformat()}"
+        )
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
@@ -112,7 +114,7 @@ class DecisionEvidenceManager:
     def verify_integrity(self, bundle_id: str, tenant_id: str) -> DecisionEvidenceIntegrity:
         bundle = self.get_bundle(bundle_id, tenant_id)
         calc_fp = bundle.calculate_bundle_fingerprint()
-        is_valid = (calc_fp == bundle.bundle_fingerprint)
+        is_valid = calc_fp == bundle.bundle_fingerprint
         return DecisionEvidenceIntegrity(
             is_valid=is_valid,
             calculated_fingerprint=calc_fp,

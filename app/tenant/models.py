@@ -28,7 +28,9 @@ class Organization(Base):
 
     memberships: Mapped[List["Membership"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
     workspaces: Mapped[List["Workspace"]] = relationship(back_populates="organization", cascade="all, delete-orphan")
-    settings: Mapped["OrganizationSettings"] = relationship(back_populates="organization", uselist=False, cascade="all, delete-orphan")
+    settings: Mapped["OrganizationSettings"] = relationship(
+        back_populates="organization", uselist=False, cascade="all, delete-orphan"
+    )
 
 
 class Membership(Base):
@@ -50,14 +52,18 @@ class Workspace(Base):
     __tablename__ = "workspaces"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    organization_id: Mapped[str] = mapped_column(
+        ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
     organization: Mapped["Organization"] = relationship(back_populates="workspaces")
-    memberships: Mapped[List["WorkspaceMembership"]] = relationship(back_populates="workspace", cascade="all, delete-orphan")
+    memberships: Mapped[List["WorkspaceMembership"]] = relationship(
+        back_populates="workspace", cascade="all, delete-orphan"
+    )
 
 
 class WorkspaceMembership(Base):

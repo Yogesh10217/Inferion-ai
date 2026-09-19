@@ -18,7 +18,9 @@ class MarketplaceRegistry:
     def register_item(self, item: MarketplaceItem) -> MarketplaceItem:
         """Add or update an item in the marketplace catalog."""
         self._items[item.item_id] = item
-        logger.info(f"[MARKETPLACE REGISTRY] Registered item '{item.title}' (ID: {item.item_id}, Status: {item.status.value})")
+        logger.info(
+            f"[MARKETPLACE REGISTRY] Registered item '{item.title}' (ID: {item.item_id}, Status: {item.status.value})"
+        )
         return item
 
     def get_item(self, item_id: str) -> MarketplaceItem:

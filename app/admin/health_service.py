@@ -24,7 +24,7 @@ class HealthAdminService:
             "middleware": {"status": "healthy"},
             "cache": {"status": "healthy", "hit_rate": 0.85},
             "scheduler": {"status": "healthy", "queue_depth": 0},
-            "providers": {"openai": "healthy", "anthropic": "healthy"}
+            "providers": {"openai": "healthy", "anthropic": "healthy"},
         }
         return health
 
@@ -37,7 +37,7 @@ class HealthAdminService:
 
     async def _check_redis(self) -> Dict[str, Any]:
         try:
-            if getattr(self.settings, 'redis_url', None):
+            if getattr(self.settings, "redis_url", None):
                 client = redis.from_url(self.settings.redis_url)
                 await client.ping()
                 await client.aclose()

@@ -125,5 +125,5 @@ __all__ = [
     "UnifiedBillingRecord",
     "IdempotencyEngine",
     "UnifiedIntelligenceRepository",
-    "UnifiedIntelligenceManager"
+    "UnifiedIntelligenceManager",
 ]

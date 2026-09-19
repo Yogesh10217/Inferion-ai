@@ -49,7 +49,9 @@ class FailoverPolicy:
 
             except Exception as exc:
                 last_exception = exc
-                logger.warning(f"Execution failed on instance {instance.instance_id} (attempt {attempt + 1}/{self.max_retries + 1}): {exc}")
+                logger.warning(
+                    f"Execution failed on instance {instance.instance_id} (attempt {attempt + 1}/{self.max_retries + 1}): {exc}"
+                )
                 await instance.health.record_failure()
 
                 # Check if it's a fatal error that shouldn't be retried (e.g. invalid request format)

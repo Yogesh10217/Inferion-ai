@@ -56,13 +56,16 @@ class TeamBillingTracker:
 
     def get_team_billing_summary(self, team_id: str) -> Dict[str, Any]:
         with self._lock:
-            return self._team_usage.get(team_id, {
-                "team_id": team_id,
-                "tenant_id": "default_tenant",
-                "total_runs": 0,
-                "total_duration_seconds": 0.0,
-                "total_cost": 0.0,
-                "tool_calls": 0,
-                "external_api_calls": 0,
-                "agent_breakdown": {},
-            })
+            return self._team_usage.get(
+                team_id,
+                {
+                    "team_id": team_id,
+                    "tenant_id": "default_tenant",
+                    "total_runs": 0,
+                    "total_duration_seconds": 0.0,
+                    "total_cost": 0.0,
+                    "tool_calls": 0,
+                    "external_api_calls": 0,
+                    "agent_breakdown": {},
+                },
+            )

@@ -1,4 +1,5 @@
 """Assurance Package Init."""
+
 from app.platform_integration.assurance.assurance_fabric import (
     AssuranceWeightPolicy,
     CrossPhaseAssuranceEngine,

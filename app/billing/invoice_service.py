@@ -29,7 +29,7 @@ class InvoiceService:
                 and_(
                     UsageRecord.organization_id == org_id,
                     UsageRecord.created_at >= start_time,
-                    UsageRecord.created_at <= end_time
+                    UsageRecord.created_at <= end_time,
                 )
             )
             result = await db.execute(stmt)
@@ -57,7 +57,7 @@ class InvoiceService:
                 organization_id=org_id,
                 billing_period_start=start_time,
                 billing_period_end=end_time,
-                status=InvoiceStatus.GENERATED
+                status=InvoiceStatus.GENERATED,
             )
             db.add(invoice)
             await db.flush()
@@ -72,7 +72,7 @@ class InvoiceService:
                     model=model,
                     requests=data["requests"],
                     tokens=data["tokens"],
-                    cost=data["cost"]
+                    cost=data["cost"],
                 )
                 db.add(line_item)
                 subtotal += data["cost"]
@@ -83,8 +83,7 @@ class InvoiceService:
 
             # Check for Subscription discounts
             sub_stmt = select(OrganizationSubscription).where(
-                OrganizationSubscription.organization_id == org_id,
-                OrganizationSubscription.status == "active"
+                OrganizationSubscription.organization_id == org_id, OrganizationSubscription.status == "active"
             )
             sub_res = await db.execute(sub_stmt)
             active_sub = sub_res.scalars().first()

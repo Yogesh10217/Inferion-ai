@@ -37,13 +37,14 @@ class StalenessPolicy(BaseModel):
 
 
 class FreshnessEvaluator:
-
     """Evaluates knowledge staleness and handles Data Fabric CDC events by marking items STALE."""
 
     def __init__(self, knowledge_manager: Optional[KnowledgeManager] = None) -> None:
         self.knowledge_manager = knowledge_manager or KnowledgeManager()
 
-    def process_cdc_event(self, source_id: str, tenant_id: str = "global", reason: StalenessReason = StalenessReason.SOURCE_CHANGED) -> List[str]:
+    def process_cdc_event(
+        self, source_id: str, tenant_id: str = "global", reason: StalenessReason = StalenessReason.SOURCE_CHANGED
+    ) -> List[str]:
         items = self.knowledge_manager.list_items(tenant_id)
         stale_item_ids = []
 
@@ -51,6 +52,8 @@ class FreshnessEvaluator:
             if item.source_id == source_id:
                 self.knowledge_manager.mark_status(item.item_id, KnowledgeStatus.STALE)
                 stale_item_ids.append(item.item_id)
-                logger.warning(f"[FRESHNESS EVALUATOR] Marked knowledge item '{item.item_id}' as STALE due to CDC event on source '{source_id}' ({reason.value})")
+                logger.warning(
+                    f"[FRESHNESS EVALUATOR] Marked knowledge item '{item.item_id}' as STALE due to CDC event on source '{source_id}' ({reason.value})"
+                )
 
         return stale_item_ids

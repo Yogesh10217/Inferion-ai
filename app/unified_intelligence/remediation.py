@@ -28,7 +28,7 @@ class RemediationActionResult:
         step_id: str,
         status: str,  # SUCCESS, FAILED, DELEGATED, PENDING_APPROVAL
         message: str,
-        executed_at: Optional[datetime] = None
+        executed_at: Optional[datetime] = None,
     ):
         self.action_id = action_id
         self.tenant_id = tenant_id
@@ -46,7 +46,7 @@ class RemediationActionResult:
             "step_id": self.step_id,
             "status": self.status,
             "message": self.message,
-            "executed_at": self.executed_at.isoformat()
+            "executed_at": self.executed_at.isoformat(),
         }
 
 
@@ -59,9 +59,7 @@ class CrossDomainRemediationCoordinator:
         pass
 
     def prepare_remediation_actions(
-        self,
-        tenant_id: str,
-        coordination_plan: CoordinationPlan
+        self, tenant_id: str, coordination_plan: CoordinationPlan
     ) -> List[RemediationActionResult]:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -84,7 +82,7 @@ class CrossDomainRemediationCoordinator:
                     plan_id=coordination_plan.plan_id,
                     step_id=step.step_id,
                     status=status,
-                    message=msg
+                    message=msg,
                 )
             )
 

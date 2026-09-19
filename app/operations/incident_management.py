@@ -58,16 +58,21 @@ class Incident:
         now_iso = datetime.now(timezone.utc).isoformat()
         if next_state in (IncidentState.TRIAGING, IncidentState.CONFIRMED) and not self.acknowledged_at:
             self.acknowledged_at = now_iso
-        if next_state in (IncidentState.RESOLVED, IncidentState.POST_INCIDENT_REVIEW_REQUIRED, IncidentState.CLOSED) and not self.resolved_at:
+        if (
+            next_state in (IncidentState.RESOLVED, IncidentState.POST_INCIDENT_REVIEW_REQUIRED, IncidentState.CLOSED)
+            and not self.resolved_at
+        ):
             self.resolved_at = now_iso
 
-        self.timeline.append({
-            "timestamp": now_iso,
-            "from_state": old_state.value,
-            "to_state": next_state.value,
-            "actor": actor,
-            "note": SecretsSanitizer.sanitize_string(note),
-        })
+        self.timeline.append(
+            {
+                "timestamp": now_iso,
+                "from_state": old_state.value,
+                "to_state": next_state.value,
+                "actor": actor,
+                "note": SecretsSanitizer.sanitize_string(note),
+            }
+        )
         return next_state
 
     def to_dict(self) -> Dict[str, Any]:
@@ -118,13 +123,15 @@ class IncidentManager:
             deployment_identity=deployment_identity,
             summary=sanitized_summary,
             evidence=sanitized_evidence,
-            timeline=[{
-                "timestamp": now_iso,
-                "from_state": IncidentState.NOT_DETECTED.value,
-                "to_state": IncidentState.DETECTED.value,
-                "actor": "SYSTEM",
-                "note": "Incident detected and created",
-            }],
+            timeline=[
+                {
+                    "timestamp": now_iso,
+                    "from_state": IncidentState.NOT_DETECTED.value,
+                    "to_state": IncidentState.DETECTED.value,
+                    "actor": "SYSTEM",
+                    "note": "Incident detected and created",
+                }
+            ],
         )
         self.active_incidents[inc_id] = inc
         return inc

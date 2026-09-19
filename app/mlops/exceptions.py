@@ -8,7 +8,9 @@ from app.core.exceptions import AppException
 class MLOpsException(AppException):
     """Base exception for all MLOps domain errors."""
 
-    def __init__(self, message: str, code: str = "MLOPS_ERROR", status_code: int = 400, details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, message: str, code: str = "MLOPS_ERROR", status_code: int = 400, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, code=code, status_code=status_code, details=details)
 
 
@@ -19,12 +21,16 @@ class AssetNotFoundException(MLOpsException):
 
 class VersionNotFoundException(MLOpsException):
     def __init__(self, asset_id: str, version: str) -> None:
-        super().__init__(message=f"Version '{version}' for asset '{asset_id}' not found", code="VERSION_NOT_FOUND", status_code=404)
+        super().__init__(
+            message=f"Version '{version}' for asset '{asset_id}' not found", code="VERSION_NOT_FOUND", status_code=404
+        )
 
 
 class DeploymentNotFoundException(MLOpsException):
     def __init__(self, deployment_id: str) -> None:
-        super().__init__(message=f"Deployment '{deployment_id}' not found", code="DEPLOYMENT_NOT_FOUND", status_code=404)
+        super().__init__(
+            message=f"Deployment '{deployment_id}' not found", code="DEPLOYMENT_NOT_FOUND", status_code=404
+        )
 
 
 class ReleaseNotFoundException(MLOpsException):
@@ -44,7 +50,11 @@ class GovernanceViolationException(MLOpsException):
 
 class RollbackFailedException(MLOpsException):
     def __init__(self, deployment_id: str, reason: str) -> None:
-        super().__init__(message=f"Rollback failed for deployment '{deployment_id}': {reason}", code="ROLLBACK_FAILED", status_code=500)
+        super().__init__(
+            message=f"Rollback failed for deployment '{deployment_id}': {reason}",
+            code="ROLLBACK_FAILED",
+            status_code=500,
+        )
 
 
 class DriftDetectedException(MLOpsException):

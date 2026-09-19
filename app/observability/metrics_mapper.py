@@ -127,7 +127,9 @@ class MetricsMapper:
             inst_id = parts[1] if len(parts) > 1 else instance_id
 
             last_count = self._last_provider_requests.get(instance_id, 0)
-            self.registry.provider_requests_total.labels(provider_id=prov_id, instance_id=inst_id).inc(count - last_count)
+            self.registry.provider_requests_total.labels(provider_id=prov_id, instance_id=inst_id).inc(
+                count - last_count
+            )
             self._last_provider_requests[instance_id] = count
 
         for key, count in provider_failures.items():
@@ -136,7 +138,9 @@ class MetricsMapper:
             inst_id = parts[1] if len(parts) > 1 else key
 
             last_count = self._last_provider_failures.get(key, 0)
-            self.registry.provider_failures_total.labels(provider_id=prov_id, instance_id=inst_id).inc(count - last_count)
+            self.registry.provider_failures_total.labels(provider_id=prov_id, instance_id=inst_id).inc(
+                count - last_count
+            )
             self._last_provider_failures[key] = count
 
         for prov_id, count in provider_failovers.items():
@@ -163,7 +167,9 @@ class MetricsMapper:
             self.registry.cache_write_latency_seconds.observe(lat / 1000.0)
 
         for prov_id, inst_id, lat in events.get("provider_latencies", []):
-            self.registry.provider_latency_seconds.labels(provider_id=prov_id, instance_id=inst_id).observe(lat / 1000.0)
+            self.registry.provider_latency_seconds.labels(provider_id=prov_id, instance_id=inst_id).observe(
+                lat / 1000.0
+            )
 
         # --- Rate Limiting & Quotas ---
         limits_summary = self.metrics.get_limits_summary()
@@ -185,7 +191,9 @@ class MetricsMapper:
         self._last_tokens_consumed = current_tokens
 
         if limits_summary.get("redis_fallback_events", 0) > self._last_redis_fallbacks:
-            self.registry.redis_fallbacks_total.inc(limits_summary.get("redis_fallback_events", 0) - self._last_redis_fallbacks)
+            self.registry.redis_fallbacks_total.inc(
+                limits_summary.get("redis_fallback_events", 0) - self._last_redis_fallbacks
+            )
             self._last_redis_fallbacks = limits_summary.get("redis_fallback_events", 0)
 
         # Sync Billing Metrics
@@ -200,7 +208,9 @@ class MetricsMapper:
             self._last_budget_warnings = billing_summary["budget_warnings"]
 
         if billing_summary["invoice_generation_count"] > self._last_invoice_count:
-            self.registry.invoice_generation_total.inc(billing_summary["invoice_generation_count"] - self._last_invoice_count)
+            self.registry.invoice_generation_total.inc(
+                billing_summary["invoice_generation_count"] - self._last_invoice_count
+            )
             self._last_invoice_count = billing_summary["invoice_generation_count"]
 
         self.registry.monthly_recurring_revenue.set(billing_summary["mrr"])

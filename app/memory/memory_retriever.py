@@ -40,14 +40,16 @@ class MemoryRetriever:
         candidates = []
         for m in matches:
             payload = m["payload"]
-            candidates.append({
-                "memory_id": m["memory_id"],
-                "content": payload.get("content", ""),
-                "similarity_score": m["score"],
-                "recency_score": 0.8,
-                "importance_score": payload.get("importance_score", 0.5),
-                "confidence_score": payload.get("confidence_score", 0.9),
-                "payload": payload,
-            })
+            candidates.append(
+                {
+                    "memory_id": m["memory_id"],
+                    "content": payload.get("content", ""),
+                    "similarity_score": m["score"],
+                    "recency_score": 0.8,
+                    "importance_score": payload.get("importance_score", 0.5),
+                    "confidence_score": payload.get("confidence_score", 0.9),
+                    "payload": payload,
+                }
+            )
 
         return self.ranker.rank(candidates)

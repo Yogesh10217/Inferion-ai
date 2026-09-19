@@ -99,9 +99,13 @@ class DependencyManager:
         # Add nodes if not existing
         node_names = {n.service_name for n in graph.nodes}
         if source_service not in node_names:
-            graph.nodes.append(DependencyNode(node_id=f"node_{source_service}", tenant_id=tenant_id, service_name=source_service))
+            graph.nodes.append(
+                DependencyNode(node_id=f"node_{source_service}", tenant_id=tenant_id, service_name=source_service)
+            )
         if target_service not in node_names:
-            graph.nodes.append(DependencyNode(node_id=f"node_{target_service}", tenant_id=tenant_id, service_name=target_service))
+            graph.nodes.append(
+                DependencyNode(node_id=f"node_{target_service}", tenant_id=tenant_id, service_name=target_service)
+            )
 
         # Register in architecture platform as well
         try:

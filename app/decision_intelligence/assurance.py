@@ -26,7 +26,9 @@ class DecisionAssuranceEngine:
     def __init__(self) -> None:
         self._ratings: Dict[str, DecisionAssuranceRating] = {}
 
-    def evaluate_assurance(self, decision_id: str, tenant_id: str, confidence_score: float = 0.9, uncertainty_score: float = 0.1) -> DecisionAssuranceRating:
+    def evaluate_assurance(
+        self, decision_id: str, tenant_id: str, confidence_score: float = 0.9, uncertainty_score: float = 0.1
+    ) -> DecisionAssuranceRating:
         score = round(((confidence_score * 0.7) + ((1.0 - uncertainty_score) * 0.3)) * 100.0, 2)
         rating_str = "HIGH_ASSURANCE" if score >= 80.0 else ("MEDIUM_ASSURANCE" if score >= 60.0 else "LOW_ASSURANCE")
 

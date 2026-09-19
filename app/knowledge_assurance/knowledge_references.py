@@ -144,7 +144,9 @@ class KnowledgeReferenceManager:
             metadata=metadata,
         )
 
-    def get_reference(self, tenant_id_or_ref_id: str, reference_id_or_tenant_id: Optional[str] = None) -> KnowledgeReference:
+    def get_reference(
+        self, tenant_id_or_ref_id: str, reference_id_or_tenant_id: Optional[str] = None
+    ) -> KnowledgeReference:
         if reference_id_or_tenant_id is None:
             reference_id = tenant_id_or_ref_id
             tenant_id = None

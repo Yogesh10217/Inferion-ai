@@ -128,7 +128,4 @@ class DataProfilingManager:
         return dp
 
     def list_profiles(self, dataset_id: str, tenant_id: str) -> List[DataProfile]:
-        return [
-            dp for dp in self._profiles.values()
-            if dp.dataset_id == dataset_id and dp.tenant_id == tenant_id
-        ]
+        return [dp for dp in self._profiles.values() if dp.dataset_id == dataset_id and dp.tenant_id == tenant_id]

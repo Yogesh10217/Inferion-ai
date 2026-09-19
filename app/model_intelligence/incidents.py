@@ -78,7 +78,9 @@ class ModelIncidentManager:
             impact=impact or ModelIncidentImpact(),
         )
         self._incidents[inc_id] = incident
-        logger.info(f"[MODEL INCIDENT] Created incident {inc_id} for model {model_id} (Tenant: {tenant_id}) Severity: {severity}")
+        logger.info(
+            f"[MODEL INCIDENT] Created incident {inc_id} for model {model_id} (Tenant: {tenant_id}) Severity: {severity}"
+        )
         return incident
 
     def update_status(

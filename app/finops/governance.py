@@ -29,17 +29,31 @@ class FinOpsGovernanceEngine:
         risk = recommendation.risk_level
 
         if risk == OptimizationRiskLevel.LOW:
-            logger.info(f"[FINOPS GOVERNANCE] LOW risk optimization '{recommendation.recommendation_id}' automatically permitted")
-            return OptimizationDecision(recommendation_id=recommendation.recommendation_id, permitted=True, reason="LOW risk automatically permitted by policy")
+            logger.info(
+                f"[FINOPS GOVERNANCE] LOW risk optimization '{recommendation.recommendation_id}' automatically permitted"
+            )
+            return OptimizationDecision(
+                recommendation_id=recommendation.recommendation_id,
+                permitted=True,
+                reason="LOW risk automatically permitted by policy",
+            )
 
         elif risk == OptimizationRiskLevel.MEDIUM:
-            logger.info(f"[FINOPS GOVERNANCE] MEDIUM risk optimization '{recommendation.recommendation_id}' permitted under policy")
-            return OptimizationDecision(recommendation_id=recommendation.recommendation_id, permitted=True, reason="MEDIUM risk permitted under active policy")
+            logger.info(
+                f"[FINOPS GOVERNANCE] MEDIUM risk optimization '{recommendation.recommendation_id}' permitted under policy"
+            )
+            return OptimizationDecision(
+                recommendation_id=recommendation.recommendation_id,
+                permitted=True,
+                reason="MEDIUM risk permitted under active policy",
+            )
 
         else:
             # HIGH and CRITICAL risk optimizations REQUIRE ApprovalEngine approval!
             req_id = f"opt_appr_{recommendation.recommendation_id[:8]}"
-            logger.warning(f"[FINOPS GOVERNANCE] {risk.value} risk optimization '{recommendation.recommendation_id}' REQUIRES APPROVAL (Request ID: {req_id})")
+            logger.warning(
+                f"[FINOPS GOVERNANCE] {risk.value} risk optimization '{recommendation.recommendation_id}' REQUIRES APPROVAL (Request ID: {req_id})"
+            )
             return OptimizationDecision(
                 recommendation_id=recommendation.recommendation_id,
                 permitted=False,

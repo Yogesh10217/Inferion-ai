@@ -103,7 +103,9 @@ class RequirementManager:
         if not req:
             raise ComplianceRequirementNotFoundException(requirement_id=requirement_id, tenant_id=tenant_id)
         if req.tenant_id != tenant_id and tenant_id != "global" and req.tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=req.tenant_id, resource_id=requirement_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=req.tenant_id, resource_id=requirement_id
+            )
         return req
 
     def list_requirements(self, tenant_id: str, framework_id: Optional[str] = None) -> List[ComplianceRequirement]:

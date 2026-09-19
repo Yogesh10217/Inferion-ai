@@ -20,15 +20,17 @@ class ReleaseGovernanceDecisionResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "decision": self.decision.value,
-            "status_classification": self.status_classification.value,
-            "blocking_reasons": self.blocking_reasons,
-            "warnings": self.warnings,
-            "approval_granted": self.approval_granted,
-            "governance_message": self.governance_message,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "decision": self.decision.value,
+                "status_classification": self.status_classification.value,
+                "blocking_reasons": self.blocking_reasons,
+                "warnings": self.warnings,
+                "approval_granted": self.approval_granted,
+                "governance_message": self.governance_message,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class ProductionReleaseDecisionEngine:

@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class CapacityAssuranceEngine:
     """Synthesizes overall capacity assurance score across health, forecasting confidence, resilience, and efficiency."""
 
-    def evaluate_assurance_score(
-        self, tenant_id: str, capacity_health_score: float = 0.95
-    ) -> CapacityAssuranceScore:
+    def evaluate_assurance_score(self, tenant_id: str, capacity_health_score: float = 0.95) -> CapacityAssuranceScore:
         comp_scores = {
             "capacity_health": capacity_health_score,
             "forecasting_confidence": 0.92,

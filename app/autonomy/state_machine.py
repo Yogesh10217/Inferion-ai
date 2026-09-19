@@ -25,9 +25,25 @@ class ExecutionStateMachine(BaseModel):
     def transition_to(self, new_state: ExecutionState) -> ExecutionState:
         valid_transitions = {
             ExecutionState.CREATED: [ExecutionState.PLANNING, ExecutionState.CANCELLED],
-            ExecutionState.PLANNING: [ExecutionState.EXECUTING, ExecutionState.WAITING_APPROVAL, ExecutionState.FAILED, ExecutionState.CANCELLED],
-            ExecutionState.EXECUTING: [ExecutionState.WAITING_APPROVAL, ExecutionState.PAUSED, ExecutionState.COMPLETED, ExecutionState.FAILED, ExecutionState.CANCELLED],
-            ExecutionState.WAITING_APPROVAL: [ExecutionState.EXECUTING, ExecutionState.PAUSED, ExecutionState.CANCELLED, ExecutionState.FAILED],
+            ExecutionState.PLANNING: [
+                ExecutionState.EXECUTING,
+                ExecutionState.WAITING_APPROVAL,
+                ExecutionState.FAILED,
+                ExecutionState.CANCELLED,
+            ],
+            ExecutionState.EXECUTING: [
+                ExecutionState.WAITING_APPROVAL,
+                ExecutionState.PAUSED,
+                ExecutionState.COMPLETED,
+                ExecutionState.FAILED,
+                ExecutionState.CANCELLED,
+            ],
+            ExecutionState.WAITING_APPROVAL: [
+                ExecutionState.EXECUTING,
+                ExecutionState.PAUSED,
+                ExecutionState.CANCELLED,
+                ExecutionState.FAILED,
+            ],
             ExecutionState.PAUSED: [ExecutionState.EXECUTING, ExecutionState.CANCELLED],
             ExecutionState.FAILED: [ExecutionState.PLANNING, ExecutionState.CANCELLED],
             ExecutionState.COMPLETED: [],

@@ -63,7 +63,17 @@ async def create_team(data: TeamCreateSchema):
 async def list_teams(tenant_id: str = "global"):
     """List all registered agent teams."""
     teams = [t for t in _teams_store.values() if t.config.tenant_id in (tenant_id, "global", "default_tenant")]
-    return {"teams": [{"team_id": t.team_id, "name": t.config.name, "type": t.config.team_type.value, "members_count": len(t.members)} for t in teams]}
+    return {
+        "teams": [
+            {
+                "team_id": t.team_id,
+                "name": t.config.name,
+                "type": t.config.team_type.value,
+                "members_count": len(t.members),
+            }
+            for t in teams
+        ]
+    }
 
 
 @router.get("/{id}")

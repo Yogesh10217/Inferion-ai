@@ -111,7 +111,9 @@ class DecisionManager:
         logger.info(f"[DECISION MANAGER] Created decision '{dec.decision_id}' for tenant '{tenant_id}'")
         return dec
 
-    def update_status(self, decision_id: str, tenant_id: str, new_status: DecisionStatus, approval_request_id: Optional[str] = None) -> Decision:
+    def update_status(
+        self, decision_id: str, tenant_id: str, new_status: DecisionStatus, approval_request_id: Optional[str] = None
+    ) -> Decision:
         dec = self.get_decision(decision_id, tenant_id)
         dec.status = new_status
         if approval_request_id:

@@ -54,7 +54,9 @@ class DataNormalizer:
         """Map raw dictionary to NormalizedRecord."""
         payload = dict(raw_data)
         if transformation and transformation.field_mapping:
-            payload = {target: raw_data.get(src) for target, src in transformation.field_mapping.items() if src in raw_data}
+            payload = {
+                target: raw_data.get(src) for target, src in transformation.field_mapping.items() if src in raw_data
+            }
 
         return NormalizedRecord(
             source_id=source_id,

@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 class ToolContext(BaseModel):
     """Execution context containing tenant isolation, RBAC credentials, and tracing metadata."""
+
     execution_id: str = Field(default_factory=lambda: f"exec_{uuid.uuid4().hex[:12]}")
     tenant_id: str = Field(default="default_tenant")
     organization_id: str = Field(default="default_org")

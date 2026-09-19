@@ -66,7 +66,14 @@ class IntegrationInvestigationManager:
         inv.status = InvestigationStatus.INVESTIGATING
         return inv
 
-    def record_finding(self, tenant_id: str, investigation_id: str, title: str, severity: str = "HIGH", details: Optional[Dict[str, Any]] = None) -> IntegrationInvestigation:
+    def record_finding(
+        self,
+        tenant_id: str,
+        investigation_id: str,
+        title: str,
+        severity: str = "HIGH",
+        details: Optional[Dict[str, Any]] = None,
+    ) -> IntegrationInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         if inv.is_concluded:
             raise ImmutableIntegrationRecordException(investigation_id)

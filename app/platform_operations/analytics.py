@@ -17,7 +17,7 @@ class OperationalReport(BaseModel):
     report_id: str = Field(default_factory=lambda: f"rep_{uuid.uuid4().hex[:10]}")
     tenant_id: str = "global"
     mtta_seconds: float = 120.0  # Mean Time To Acknowledge
-    mttd_seconds: float = 45.0   # Mean Time To Detect
+    mttd_seconds: float = 45.0  # Mean Time To Detect
     mttr_seconds: float = 450.0  # Mean Time To Remediate
     total_incidents: int = 0
     resolved_incidents: int = 0
@@ -53,5 +53,7 @@ class OperationalAnalyticsEngine:
             slo_compliance_pct=round(slo_compliance, 2),
             automation_rate_pct=round(min(100.0, auto_rate), 2),
         )
-        logger.info(f"[OPERATIONAL ANALYTICS] Generated report for tenant '{tenant_id}': MTTR={report.mttr_seconds}s, SuccessRate={report.remediation_success_rate_pct}%")
+        logger.info(
+            f"[OPERATIONAL ANALYTICS] Generated report for tenant '{tenant_id}': MTTR={report.mttr_seconds}s, SuccessRate={report.remediation_success_rate_pct}%"
+        )
         return report

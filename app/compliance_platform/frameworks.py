@@ -102,7 +102,9 @@ class FrameworkManager:
         if not fw:
             raise ComplianceFrameworkNotFoundException(framework_id=framework_id, tenant_id=tenant_id)
         if fw.tenant_id != tenant_id and tenant_id != "global" and fw.tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=fw.tenant_id, resource_id=framework_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=fw.tenant_id, resource_id=framework_id
+            )
         return fw
 
     def list_frameworks(self, tenant_id: str) -> List[ComplianceFramework]:

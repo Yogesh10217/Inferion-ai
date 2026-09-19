@@ -25,23 +25,20 @@ async def create_workspace(
     if not org_id:
         raise HTTPException(status_code=403, detail="Organization context required")
 
-    ws = Workspace(
-        organization_id=org_id,
-        name=ws_in.name,
-        description=ws_in.description
-    )
+    ws = Workspace(organization_id=org_id, name=ws_in.name, description=ws_in.description)
     db.add(ws)
     await db.flush()
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "workspace_created",
+        db,
+        "workspace_created",
         organization_id=org_id,
         workspace_id=ws.id,
         actor_id=current_user.id,
         resource_type="Workspace",
         resource_id=ws.id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()
@@ -51,9 +48,7 @@ async def create_workspace(
 
 @router.get("", response_model=List[WorkspaceResponse])
 async def list_workspaces(
-    request: Request,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    request: Request, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db_session)
 ):
     org_id = getattr(request.state, "organization_id", None)
     if not org_id:
@@ -70,7 +65,7 @@ async def update_workspace(
     ws_in: WorkspaceUpdate,
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     org_id = getattr(request.state, "organization_id", None)
     if not org_id:
@@ -89,13 +84,14 @@ async def update_workspace(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "workspace_updated",
+        db,
+        "workspace_updated",
         organization_id=org_id,
         workspace_id=ws.id,
         actor_id=current_user.id,
         resource_type="Workspace",
         resource_id=ws.id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()
@@ -108,7 +104,7 @@ async def delete_workspace(
     ws_id: str,
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ):
     org_id = getattr(request.state, "organization_id", None)
     if not org_id:
@@ -124,13 +120,14 @@ async def delete_workspace(
 
     ip_address = request.client.host if request.client else None
     await AuthService.log_audit_event(
-        db, "workspace_deleted",
+        db,
+        "workspace_deleted",
         organization_id=org_id,
         workspace_id=ws_id,
         actor_id=current_user.id,
         resource_type="Workspace",
         resource_id=ws_id,
-        ip_address=ip_address
+        ip_address=ip_address,
     )
 
     await db.commit()

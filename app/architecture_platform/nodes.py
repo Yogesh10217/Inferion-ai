@@ -123,7 +123,9 @@ class ArchitectureNodeManager:
         if not node:
             raise ArchitectureNodeNotFoundException(node_id=node_id, tenant_id=tenant_id)
         if node.tenant_id != tenant_id and tenant_id != "system":
-            raise CrossTenantArchitectureAccessException(request_tenant=tenant_id, target_tenant=node.tenant_id, resource_id=node_id)
+            raise CrossTenantArchitectureAccessException(
+                request_tenant=tenant_id, target_tenant=node.tenant_id, resource_id=node_id
+            )
         return node
 
     def list_nodes(

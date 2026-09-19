@@ -69,7 +69,9 @@ class ModelMonitoringManager:
             sampling_rate=sampling_rate,
         )
         self._profiles[model_id] = profile
-        logger.info(f"[MODEL MONITORING] Configured profile for model {model_id} (Tenant: {tenant_id}) Rate: {sampling_rate}")
+        logger.info(
+            f"[MODEL MONITORING] Configured profile for model {model_id} (Tenant: {tenant_id}) Rate: {sampling_rate}"
+        )
         return profile
 
     def record_signal(

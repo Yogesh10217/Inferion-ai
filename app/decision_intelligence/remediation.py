@@ -26,7 +26,9 @@ class DecisionRemediationEngine:
     def __init__(self) -> None:
         self._plans: Dict[str, DecisionRemediationPlan] = {}
 
-    def create_remediation_plan(self, decision_id: str, tenant_id: str, target_option_id: str, steps: Optional[List[str]] = None) -> DecisionRemediationPlan:
+    def create_remediation_plan(
+        self, decision_id: str, tenant_id: str, target_option_id: str, steps: Optional[List[str]] = None
+    ) -> DecisionRemediationPlan:
         plan = DecisionRemediationPlan(
             decision_id=decision_id,
             tenant_id=tenant_id,

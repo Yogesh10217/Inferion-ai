@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class RecoveryIntelligenceEngine:
     """Plans recovery intelligence strategies (RETRY, FAILOVER, ROLLBACK, RESTART, RESTORE, REBUILD) producing DelegationRequests."""
 
-    def plan_recovery(
-        self, tenant_id: str, service_id: str, strategy_str: str = "FAILOVER"
-    ) -> RecoveryPlan:
+    def plan_recovery(self, tenant_id: str, service_id: str, strategy_str: str = "FAILOVER") -> RecoveryPlan:
         try:
             strat = RecoveryStrategy(strategy_str.upper())
         except ValueError:

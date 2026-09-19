@@ -115,6 +115,7 @@ class HTTPTransport(MCPTransport):
             raise MCPConnectionError("HTTPTransport is not connected")
 
         import httpx
+
         async with httpx.AsyncClient() as client:
             resp = await client.post(self.endpoint_url, json=request.model_dump(), timeout=30.0)
             if resp.status_code != 200:

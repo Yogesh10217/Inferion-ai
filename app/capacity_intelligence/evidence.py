@@ -23,7 +23,9 @@ class CapacityEvidenceManager:
         self, tenant_id: str, assessment_id: str, raw_evidence: Optional[Dict[str, Any]] = None
     ) -> CapacityEvidenceBundle:
         clean_evidence = SensitiveDataSanitizer.sanitize(raw_evidence or {})
-        canonical = json.dumps({"tenant_id": tenant_id, "assessment_id": assessment_id, "ev": clean_evidence}, sort_keys=True)
+        canonical = json.dumps(
+            {"tenant_id": tenant_id, "assessment_id": assessment_id, "ev": clean_evidence}, sort_keys=True
+        )
         sha256_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
         bundle = CapacityEvidenceBundle(

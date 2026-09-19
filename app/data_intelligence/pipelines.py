@@ -129,8 +129,10 @@ class DataPipelineManager:
             successes = [e for e in execs if e.status == "SUCCESS"]
             success_rate = (len(successes) / len(execs)) * 100.0
             avg_dur = 45.0
-            health = PipelineHealth.HEALTHY if success_rate >= 90.0 else (
-                PipelineHealth.AT_RISK if success_rate >= 70.0 else PipelineHealth.UNHEALTHY
+            health = (
+                PipelineHealth.HEALTHY
+                if success_rate >= 90.0
+                else (PipelineHealth.AT_RISK if success_rate >= 70.0 else PipelineHealth.UNHEALTHY)
             )
 
         pipe.health = health

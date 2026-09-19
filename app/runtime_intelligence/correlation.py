@@ -47,5 +47,7 @@ class RuntimeCorrelationEngine:
             observation_ids=[primary_event_id] + correlated_event_ids,
             correlation_score=coeff,
         )
-        logger.info(f"Generated RuntimeCorrelation '{corr.correlation_id}' for event '{primary_event_id}' (Coeff: {coeff})")
+        logger.info(
+            f"Generated RuntimeCorrelation '{corr.correlation_id}' for event '{primary_event_id}' (Coeff: {coeff})"
+        )
         return corr

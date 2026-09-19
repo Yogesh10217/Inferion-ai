@@ -52,5 +52,7 @@ class WorkspaceManager:
         sess = WorkspaceSession(workspace_id=ws.workspace_id, secret_ref_id=sec_key, tenant_id=tenant_id)
         self._sessions[sess.session_id] = sess
 
-        logger.info(f"[WORKSPACE MANAGER] Created workspace '{ws.workspace_id}' with ephemeral session '{sess.session_id}'")
+        logger.info(
+            f"[WORKSPACE MANAGER] Created workspace '{ws.workspace_id}' with ephemeral session '{sess.session_id}'"
+        )
         return ws

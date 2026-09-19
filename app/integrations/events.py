@@ -33,5 +33,7 @@ class IntegrationEventRouter:
         self.event_dispatcher = event_dispatcher
 
     def route_event(self, event: IntegrationEvent) -> Dict[str, Any]:
-        logger.info(f"[INTEGRATION EVENT ROUTER] Routed event '{event.event_id}' ({event.event_type}) for tenant '{event.tenant_id}'")
+        logger.info(
+            f"[INTEGRATION EVENT ROUTER] Routed event '{event.event_id}' ({event.event_type}) for tenant '{event.tenant_id}'"
+        )
         return {"status": "ROUTED", "event_id": event.event_id, "correlation_id": event.correlation_id}

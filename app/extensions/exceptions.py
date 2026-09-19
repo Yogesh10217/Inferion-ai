@@ -33,9 +33,15 @@ class ExtensionDependencyConflictException(ExtensionFrameworkException):
 
 class InvalidExtensionLifecycleTransition(ExtensionFrameworkException):
     def __init__(self, current: str, target: str):
-        super().__init__(f"Invalid extension lifecycle transition from '{current}' to '{target}'", code="INVALID_LIFECYCLE", status_code=409)
+        super().__init__(
+            f"Invalid extension lifecycle transition from '{current}' to '{target}'",
+            code="INVALID_LIFECYCLE",
+            status_code=409,
+        )
 
 
 class ExtensionRuntimeExecutionException(ExtensionFrameworkException):
     def __init__(self, extension_id: str, reason: str):
-        super().__init__(f"Extension '{extension_id}' execution failed: {reason}", code="RUNTIME_EXECUTION_FAILED", status_code=500)
+        super().__init__(
+            f"Extension '{extension_id}' execution failed: {reason}", code="RUNTIME_EXECUTION_FAILED", status_code=500
+        )

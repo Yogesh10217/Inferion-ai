@@ -14,7 +14,9 @@ class ReliabilityIdempotencyManager:
         self._keys: Dict[str, Dict[str, Any]] = {}
 
     def generate_key(self, tenant_id: str, operation_type: str, payload: Dict[str, Any]) -> str:
-        canonical = json.dumps({"tenant_id": tenant_id, "operation_type": operation_type, "payload": payload}, sort_keys=True)
+        canonical = json.dumps(
+            {"tenant_id": tenant_id, "operation_type": operation_type, "payload": payload}, sort_keys=True
+        )
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
     def register_operation(self, key: str, result: Dict[str, Any]) -> bool:

@@ -106,8 +106,13 @@ class ChaosEngineeringEngine:
         # State transition sequence
         sm.transition_to(ChaosState.VALIDATING, reason="Validating experiment parameters")
 
-        if not authorized or (experiment.execution_mode == ChaosExecutionMode.PRODUCTION and not experiment.evidence.get("production_auth_verified", False)):
-            sm.transition_to(ChaosState.BLOCKED, reason="Experiment authorization denied or missing production authorization")
+        if not authorized or (
+            experiment.execution_mode == ChaosExecutionMode.PRODUCTION
+            and not experiment.evidence.get("production_auth_verified", False)
+        ):
+            sm.transition_to(
+                ChaosState.BLOCKED, reason="Experiment authorization denied or missing production authorization"
+            )
             fp = self._generate_fingerprint(experiment, ChaosState.BLOCKED)
             res = ChaosExperimentResult(
                 experiment_id=experiment.experiment_id,

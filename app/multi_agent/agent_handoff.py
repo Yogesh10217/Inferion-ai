@@ -53,7 +53,9 @@ class AgentHandoffManager:
             workflow_state=workflow_state or {},
         )
         self._handoff_records.append(state)
-        logger.info(f"[HANDOFF] State transferred from '{from_agent_id}' to '{to_agent_id}' (handoff: {state.handoff_id})")
+        logger.info(
+            f"[HANDOFF] State transferred from '{from_agent_id}' to '{to_agent_id}' (handoff: {state.handoff_id})"
+        )
         return state
 
     def get_last_handoff(self, agent_id: str) -> Optional[HandoffState]:

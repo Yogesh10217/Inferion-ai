@@ -115,13 +115,15 @@ class AgentExecutionManager:
             )
             delegations.append(del_req)
 
-            steps.append(AgentExecutionStep(
-                step_number=idx,
-                action=act.get("action", "execute"),
-                target_system=target_enum,
-                delegation_id=del_req.delegation_id,
-                status="DELEGATED",
-            ))
+            steps.append(
+                AgentExecutionStep(
+                    step_number=idx,
+                    action=act.get("action", "execute"),
+                    target_system=target_enum,
+                    delegation_id=del_req.delegation_id,
+                    status="DELEGATED",
+                )
+            )
 
         execution = AgentExecution(
             execution_id=eid,

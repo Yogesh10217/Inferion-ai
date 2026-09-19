@@ -80,7 +80,9 @@ class DecisionIntelligenceManager:
         self.metrics_collector = DecisionMetricsCollector()
         self.billing_tracker = DecisionBillingTracker()
 
-        logger.info("[DECISION INTELLIGENCE MASTER] DecisionIntelligenceManager initialized cleanly with all domain subsystems and provider decoupling.")
+        logger.info(
+            "[DECISION INTELLIGENCE MASTER] DecisionIntelligenceManager initialized cleanly with all domain subsystems and provider decoupling."
+        )
 
     def run_full_decision_flow(
         self,
@@ -152,9 +154,15 @@ class DecisionIntelligenceManager:
         dec.transition_to(DecisionLifecycleState.RISK_ASSESSED, reason="Evaluating risk and trust scores")
 
         # 4. Risk, Uncertainty & Simulation
-        risk_prof = self.risk_manager.evaluate_decision_risk(tenant_id, ctx.context_id, architecture_risk=20.0, compliance_risk=20.0)
-        trust_score = self.trust_engine.calculate_trust_score(tenant_id, ctx.context_id, architecture_trust=90.0, compliance_trust=90.0)
-        uncert = self.uncertainty_engine.assess_uncertainty(dec.decision_id, tenant_id, evidence_quality_score=ev_col.quality_score)
+        risk_prof = self.risk_manager.evaluate_decision_risk(
+            tenant_id, ctx.context_id, architecture_risk=20.0, compliance_risk=20.0
+        )
+        trust_score = self.trust_engine.calculate_trust_score(
+            tenant_id, ctx.context_id, architecture_trust=90.0, compliance_trust=90.0
+        )
+        uncert = self.uncertainty_engine.assess_uncertainty(
+            dec.decision_id, tenant_id, evidence_quality_score=ev_col.quality_score
+        )
 
         sim_result = self.simulation_engine.simulate_decision_options(
             decision_id=dec.decision_id,
@@ -191,14 +199,22 @@ class DecisionIntelligenceManager:
 
         # 6. Approval & Delegation
         # Transition: RECOMMENDED -> REQUIRES_APPROVAL -> APPROVED
-        dec.transition_to(DecisionLifecycleState.REQUIRES_APPROVAL, reason="Awaiting human approval for high-risk action")
-        appr_rec = self.approval_manager.submit_approval(dec.decision_id, tenant_id, approver="security_admin@enterprise.local", approved=True)
+        dec.transition_to(
+            DecisionLifecycleState.REQUIRES_APPROVAL, reason="Awaiting human approval for high-risk action"
+        )
+        appr_rec = self.approval_manager.submit_approval(
+            dec.decision_id, tenant_id, approver="security_admin@enterprise.local", approved=True
+        )
         dec.transition_to(DecisionLifecycleState.APPROVED, reason="Approved by human reviewer")
 
         # Transition: APPROVED -> DELEGATED
         dec.transition_to(DecisionLifecycleState.DELEGATED, reason="Delegating to downstream execution platform")
-        del_plan = self.delegation_manager.create_delegation_plan(tenant_id, dec.decision_id, DelegationTarget.PORTFOLIO_PLATFORM)
-        delegated_plan = self.delegation_manager.delegate_execution(del_plan.delegation_id, tenant_id, "PortfolioPlatformManager")
+        del_plan = self.delegation_manager.create_delegation_plan(
+            tenant_id, dec.decision_id, DelegationTarget.PORTFOLIO_PLATFORM
+        )
+        delegated_plan = self.delegation_manager.delegate_execution(
+            del_plan.delegation_id, tenant_id, "PortfolioPlatformManager"
+        )
 
         # Transition: DELEGATED -> VERIFIED
         dec.transition_to(DecisionLifecycleState.VERIFIED, reason="Verifying execution outcome")

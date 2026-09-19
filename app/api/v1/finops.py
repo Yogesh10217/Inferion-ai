@@ -36,7 +36,9 @@ class EvaluateExecutionSchema(BaseModel):
 
 # 1. Costs & Analytics Endpoints
 @router.get("/costs")
-async def list_costs(tenant_id: Optional[str] = None, component: Optional[str] = None, mgr: FinOpsManager = Depends(get_finops)):
+async def list_costs(
+    tenant_id: Optional[str] = None, component: Optional[str] = None, mgr: FinOpsManager = Depends(get_finops)
+):
     entries = mgr.cost_ledger.list_entries(tenant_id=tenant_id, component=component)
     total = mgr.cost_ledger.get_total_cost(tenant_id=tenant_id)
     return {"total_cost": str(total), "entries": [e.model_dump() for e in entries]}

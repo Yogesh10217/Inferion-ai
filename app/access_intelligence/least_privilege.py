@@ -19,6 +19,7 @@ class PrivilegeSeverity(str, Enum):
 
 class PrivilegeGap(BaseModel):
     """Identified privilege gap / excess entitlement."""
+
     gap_id: str = Field(default_factory=lambda: f"gap_{uuid.uuid4().hex[:8]}")
     identity_id: str
     entitlement_id: str
@@ -30,6 +31,7 @@ class PrivilegeGap(BaseModel):
 
 class PrivilegeRecommendation(BaseModel):
     """Non-mutating recommendation for privilege reduction."""
+
     recommendation_id: str = Field(default_factory=lambda: f"rec_{uuid.uuid4().hex[:8]}")
     gap_id: str
     action_type: str  # REVOKE_ENTITLEMENT, REDUCE_SCOPE, SPLIT_ROLE, EXPIRE_ACCESS
@@ -40,6 +42,7 @@ class PrivilegeRecommendation(BaseModel):
 
 class LeastPrivilegeAssessment(BaseModel):
     """Least Privilege Assessment Result."""
+
     assessment_id: str = Field(default_factory=lambda: f"lp_eval_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     target_identity_id: str

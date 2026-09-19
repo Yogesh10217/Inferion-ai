@@ -159,6 +159,7 @@ def traverse_graph(start_node_id: str = Query(...), tenant_id: str = Query(...),
 @router.post("/retrieval")
 def plan_and_retrieve(req: RetrievalApiRequest, tenant_id: str = Query(...)):
     from app.knowledge_intelligence.retrieval import KnowledgeRetrievalRequest, RetrievalConstraint
+
     ret_req = KnowledgeRetrievalRequest(
         tenant_id=tenant_id,
         query=req.query,

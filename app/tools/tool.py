@@ -37,7 +37,9 @@ class RetryPolicy(BaseModel):
     max_retries: int = Field(default=3, ge=0)
     initial_delay_seconds: float = Field(default=1.0, ge=0.0)
     backoff_factor: float = Field(default=2.0, ge=1.0)
-    retryable_exceptions: List[str] = Field(default_factory=lambda: ["ToolTimeoutException", "ConnectionError", "HTTPError"])
+    retryable_exceptions: List[str] = Field(
+        default_factory=lambda: ["ToolTimeoutException", "ConnectionError", "HTTPError"]
+    )
 
 
 class ToolMetadata(BaseModel):
@@ -114,6 +116,7 @@ class BaseTool(abc.ABC):
         if loop and loop.is_running():
             # Running inside an active event loop
             import nest_asyncio
+
             nest_asyncio.apply()
             return loop.run_until_complete(self.execute_async(parameters, context))
         else:

@@ -75,7 +75,8 @@ class RunbookManager:
             tenant_id=tenant_id,
             title=title,
             trigger=trigger,
-            steps=steps or [
+            steps=steps
+            or [
                 RunbookStep(step_number=1, name="Check service health metrics"),
                 RunbookStep(step_number=2, name="Isolate degraded worker nodes"),
                 RunbookStep(step_number=3, name="Scale out replica pool"),
@@ -94,7 +95,9 @@ class RunbookManager:
     def add_step_to_runbook(self, runbook_id: str, tenant_id: str, step: RunbookStep) -> OperationalRunbook:
         rb = self.get_runbook(runbook_id, tenant_id)
         if rb.is_immutable or rb.status == RunbookStatus.FINALIZED:
-            raise ImmutableResilienceRecordException(f"Runbook '{runbook_id}' is finalized and immutable. Cannot modify steps.")
+            raise ImmutableResilienceRecordException(
+                f"Runbook '{runbook_id}' is finalized and immutable. Cannot modify steps."
+            )
 
         rb.steps.append(step)
         rb.updated_at = datetime.now(timezone.utc)

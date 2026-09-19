@@ -15,14 +15,20 @@ class DataAssetNotFoundException(DataGovernanceException):
     """Raised when a requested data asset cannot be found."""
 
     def __init__(self, asset_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Data asset '{asset_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id, details={"asset_id": asset_id})
+        super().__init__(
+            f"Data asset '{asset_id}' not found for tenant '{tenant_id}'.",
+            tenant_id=tenant_id,
+            details={"asset_id": asset_id},
+        )
 
 
 class DataAccessDeniedException(DataGovernanceException):
     """Raised when access to a data asset is denied."""
 
     def __init__(self, reason: str, tenant_id: str = "global", asset_id: str | None = None) -> None:
-        super().__init__(f"Data access denied: {reason}", tenant_id=tenant_id, details={"asset_id": asset_id, "reason": reason})
+        super().__init__(
+            f"Data access denied: {reason}", tenant_id=tenant_id, details={"asset_id": asset_id, "reason": reason}
+        )
 
 
 class DataClassificationViolationException(DataGovernanceException):

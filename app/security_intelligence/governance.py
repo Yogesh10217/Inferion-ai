@@ -37,7 +37,12 @@ class SecurityGovernanceEngine:
                 subject_type="SECURITY_REMEDIATION_PLAN",
                 subject_id=plan.plan_id,
                 status=GovernanceDecisionStatus.REQUIRE_APPROVAL,
-                reasons=[GovernanceDecisionReason(code="HIGH_RISK_SECURITY_APPROVAL_REQUIRED", message="Human approval required for high-risk security remediation")],
+                reasons=[
+                    GovernanceDecisionReason(
+                        code="HIGH_RISK_SECURITY_APPROVAL_REQUIRED",
+                        message="Human approval required for high-risk security remediation",
+                    )
+                ],
             )
 
         return GovernanceDecision(

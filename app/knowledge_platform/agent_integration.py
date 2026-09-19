@@ -30,7 +30,9 @@ class AgentKnowledgeAdapter:
         # Validate delegation if provided
         if delegation_id:
             del_auth = self.agent_identity_manager.get_delegated_authorization(delegation_id)
-            self.agent_identity_manager.validate_agent_boundary(del_auth, requested_action=query, requested_scope="read")
+            self.agent_identity_manager.validate_agent_boundary(
+                del_auth, requested_action=query, requested_scope="read"
+            )
 
         req = RetrievalRequest(query=query, tenant_id=tenant_id, identity_id=f"agent_{agent_id}")
         return self.retrieval_pipeline.execute_retrieval(req)

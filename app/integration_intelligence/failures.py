@@ -35,6 +35,7 @@ class FailureEvidence(BaseModel):
 
 class IntegrationFailure(BaseModel):
     """Integration Failure Representation."""
+
     failure_id: str = Field(default_factory=lambda: f"fail_int_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     execution_id: str

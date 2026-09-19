@@ -37,6 +37,7 @@ async def create_chat_completion(
             request.state.provider = model_meta.provider
 
     if payload.stream:
+
         async def event_stream():
             try:
                 async for chunk in service.stream(payload):

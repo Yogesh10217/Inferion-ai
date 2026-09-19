@@ -104,9 +104,7 @@ class KnowledgeRemediationManager:
         self._plans[plan.plan_id] = plan
         return plan
 
-    def execute_plan_via_delegation(
-        self, tenant_id: str, plan_id: str
-    ) -> Dict[str, Any]:
+    def execute_plan_via_delegation(self, tenant_id: str, plan_id: str) -> Dict[str, Any]:
         plan = self.get_plan(tenant_id, plan_id)
 
         if plan.priority == KnowledgeRemediationPriority.CRITICAL:

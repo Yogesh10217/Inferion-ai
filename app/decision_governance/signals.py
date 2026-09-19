@@ -88,7 +88,9 @@ class DecisionSignalManager:
         self._signals[sig.signal_id] = sig
         return sig
 
-    def list_signals(self, tenant_id: str, source_domain: Optional[DecisionSignalSource] = None) -> List[DecisionSignal]:
+    def list_signals(
+        self, tenant_id: str, source_domain: Optional[DecisionSignalSource] = None
+    ) -> List[DecisionSignal]:
         sigs = [s for s in self._signals.values() if s.tenant_id == tenant_id]
         if source_domain:
             sigs = [s for s in sigs if s.source_domain == source_domain]

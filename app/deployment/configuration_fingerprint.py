@@ -7,8 +7,18 @@ from typing import Any, Dict
 from app.deployment.models import ConfigurationFingerprint, EnvironmentConfig
 
 SENSITIVE_KEYWORDS = {
-    "secret", "password", "key", "token", "auth", "credential",
-    "private", "cert", "dsn", "connection", "jwt", "api_key"
+    "secret",
+    "password",
+    "key",
+    "token",
+    "auth",
+    "credential",
+    "private",
+    "cert",
+    "dsn",
+    "connection",
+    "jwt",
+    "api_key",
 }
 
 

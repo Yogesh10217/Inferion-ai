@@ -73,10 +73,17 @@ class IdentityAssuranceEngine:
         avg_score = round(sum(dim_scores.values()) / len(dim_scores), 4)
 
         status = (
-            AssuranceStatus.EXCELLENT if avg_score >= 0.90
-            else (AssuranceStatus.GOOD if avg_score >= 0.75
-                  else (AssuranceStatus.MARGINAL if avg_score >= 0.60
-                        else (AssuranceStatus.POOR if avg_score >= 0.40 else AssuranceStatus.CRITICAL)))
+            AssuranceStatus.EXCELLENT
+            if avg_score >= 0.90
+            else (
+                AssuranceStatus.GOOD
+                if avg_score >= 0.75
+                else (
+                    AssuranceStatus.MARGINAL
+                    if avg_score >= 0.60
+                    else (AssuranceStatus.POOR if avg_score >= 0.40 else AssuranceStatus.CRITICAL)
+                )
+            )
         )
 
         score_obj = IdentityAssuranceScore(

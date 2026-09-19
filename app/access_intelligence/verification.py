@@ -18,6 +18,7 @@ class VerificationStatus(str, Enum):
 
 class VerificationCheck(BaseModel):
     """Specific assertion check performed during verification."""
+
     check_id: str = Field(default_factory=lambda: f"chk_{uuid.uuid4().hex[:8]}")
     target_resource_id: str
     expected_state: str
@@ -27,6 +28,7 @@ class VerificationCheck(BaseModel):
 
 class AccessVerification(BaseModel):
     """Access Action Verification Result."""
+
     verification_id: str = Field(default_factory=lambda: f"verif_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     remediation_plan_id: str

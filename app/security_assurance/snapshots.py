@@ -73,7 +73,9 @@ class SecurityAssuranceSnapshotManager:
         if idempotency_key:
             self._idempotency_map[idempotency_key] = snapshot.snapshot_id
 
-        logger.info(f"[SECURITY SNAPSHOT] Created immutable security snapshot {snapshot.snapshot_id} (SHA-256: {sha256_hash[:8]}...)")
+        logger.info(
+            f"[SECURITY SNAPSHOT] Created immutable security snapshot {snapshot.snapshot_id} (SHA-256: {sha256_hash[:8]}...)"
+        )
         return snapshot
 
     def get_snapshot(self, tenant_id: str, snapshot_id: str) -> SecurityAssuranceSnapshot:
@@ -81,7 +83,9 @@ class SecurityAssuranceSnapshotManager:
         if not snap:
             raise KeyError(f"Snapshot '{snapshot_id}' not found.")
         if snap.tenant_id != tenant_id:
-            raise CrossTenantSecurityAssuranceException(f"Tenant '{tenant_id}' cannot access snapshot for tenant '{snap.tenant_id}'.")
+            raise CrossTenantSecurityAssuranceException(
+                f"Tenant '{tenant_id}' cannot access snapshot for tenant '{snap.tenant_id}'."
+            )
         return snap
 
     def list_snapshots(self, tenant_id: str) -> List[SecurityAssuranceSnapshot]:

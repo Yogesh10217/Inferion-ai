@@ -52,5 +52,7 @@ class AgentExtensionAdapter:
         )
         agent = Agent(agent_id=f"agent_{template.template_id}", config=cfg)
         self.agent_registry.register_agent(agent.agent_id, cfg)
-        logger.info(f"[AGENT EXTENSION] Registered custom agent template '{template.name}' (Agent ID: {agent.agent_id})")
+        logger.info(
+            f"[AGENT EXTENSION] Registered custom agent template '{template.name}' (Agent ID: {agent.agent_id})"
+        )
         return agent

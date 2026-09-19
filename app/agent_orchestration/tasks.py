@@ -93,14 +93,41 @@ class AgentTaskManager:
 
     VALID_TRANSITIONS: Dict[AgentTaskStatus, Set[AgentTaskStatus]] = {
         AgentTaskStatus.CREATED: {AgentTaskStatus.VALIDATING, AgentTaskStatus.CANCELLED},
-        AgentTaskStatus.VALIDATING: {AgentTaskStatus.PLANNING, AgentTaskStatus.BLOCKED, AgentTaskStatus.FAILED, AgentTaskStatus.CANCELLED},
-        AgentTaskStatus.PLANNING: {AgentTaskStatus.GOVERNANCE_PENDING, AgentTaskStatus.READY, AgentTaskStatus.BLOCKED, AgentTaskStatus.FAILED, AgentTaskStatus.CANCELLED},
-        AgentTaskStatus.GOVERNANCE_PENDING: {AgentTaskStatus.APPROVAL_PENDING, AgentTaskStatus.READY, AgentTaskStatus.BLOCKED, AgentTaskStatus.FAILED, AgentTaskStatus.CANCELLED},
-        AgentTaskStatus.APPROVAL_PENDING: {AgentTaskStatus.READY, AgentTaskStatus.BLOCKED, AgentTaskStatus.CANCELLED, AgentTaskStatus.ESCALATED},
+        AgentTaskStatus.VALIDATING: {
+            AgentTaskStatus.PLANNING,
+            AgentTaskStatus.BLOCKED,
+            AgentTaskStatus.FAILED,
+            AgentTaskStatus.CANCELLED,
+        },
+        AgentTaskStatus.PLANNING: {
+            AgentTaskStatus.GOVERNANCE_PENDING,
+            AgentTaskStatus.READY,
+            AgentTaskStatus.BLOCKED,
+            AgentTaskStatus.FAILED,
+            AgentTaskStatus.CANCELLED,
+        },
+        AgentTaskStatus.GOVERNANCE_PENDING: {
+            AgentTaskStatus.APPROVAL_PENDING,
+            AgentTaskStatus.READY,
+            AgentTaskStatus.BLOCKED,
+            AgentTaskStatus.FAILED,
+            AgentTaskStatus.CANCELLED,
+        },
+        AgentTaskStatus.APPROVAL_PENDING: {
+            AgentTaskStatus.READY,
+            AgentTaskStatus.BLOCKED,
+            AgentTaskStatus.CANCELLED,
+            AgentTaskStatus.ESCALATED,
+        },
         AgentTaskStatus.READY: {AgentTaskStatus.EXECUTING, AgentTaskStatus.CANCELLED},
-        AgentTaskStatus.EXECUTING: {AgentTaskStatus.VERIFYING, AgentTaskStatus.BLOCKED, AgentTaskStatus.FAILED, AgentTaskStatus.ESCALATED, AgentTaskStatus.CANCELLED},
+        AgentTaskStatus.EXECUTING: {
+            AgentTaskStatus.VERIFYING,
+            AgentTaskStatus.BLOCKED,
+            AgentTaskStatus.FAILED,
+            AgentTaskStatus.ESCALATED,
+            AgentTaskStatus.CANCELLED,
+        },
         AgentTaskStatus.VERIFYING: {AgentTaskStatus.COMPLETED, AgentTaskStatus.FAILED, AgentTaskStatus.ESCALATED},
-
         # Terminal states can transition to ESCALATED or RECOVERY
         AgentTaskStatus.BLOCKED: {AgentTaskStatus.ESCALATED, AgentTaskStatus.CANCELLED, AgentTaskStatus.VALIDATING},
         AgentTaskStatus.FAILED: {AgentTaskStatus.ESCALATED, AgentTaskStatus.CANCELLED, AgentTaskStatus.VALIDATING},

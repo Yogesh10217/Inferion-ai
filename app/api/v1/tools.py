@@ -41,9 +41,20 @@ _global_tool_manager = ToolManager()
 
 def _init_builtins():
     for t in [
-        PythonTool(), HTTPTool(), SQLTool(), ShellTool(),
-        KnowledgeTool(), MemoryTool(), WorkflowTool(), AgentTool(),
-        GitHubTool(), SlackTool(), EmailTool(), JiraTool(), NotionTool(), ConfluenceTool()
+        PythonTool(),
+        HTTPTool(),
+        SQLTool(),
+        ShellTool(),
+        KnowledgeTool(),
+        MemoryTool(),
+        WorkflowTool(),
+        AgentTool(),
+        GitHubTool(),
+        SlackTool(),
+        EmailTool(),
+        JiraTool(),
+        NotionTool(),
+        ConfluenceTool(),
     ]:
         _global_tool_manager.register_tool(t, tenant_id="global")
 
@@ -79,7 +90,9 @@ async def register_tool(
     meta = ToolMetadata(
         name=data.name,
         description=data.description,
-        category=ToolCategory(data.category) if data.category in [c.value for c in ToolCategory] else ToolCategory.CUSTOM,
+        category=(
+            ToolCategory(data.category) if data.category in [c.value for c in ToolCategory] else ToolCategory.CUSTOM
+        ),
         parameters_schema=data.parameters_schema,
         cost_estimate=data.cost_estimate,
         requires_approval=data.requires_approval,
@@ -166,6 +179,7 @@ async def validate_tool_execution(
     try:
         tool = manager.get_tool(id)
         from app.tools.tool_validator import ToolValidator
+
         ToolValidator.validate_parameters(tool, data.parameters)
         return {"valid": True, "tool_name": id}
     except ToolNotFoundException:

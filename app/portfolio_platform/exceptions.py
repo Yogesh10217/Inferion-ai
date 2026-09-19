@@ -28,7 +28,9 @@ class BusinessCaseNotFoundException(PortfolioException):
 
 class InvestmentNotFoundException(PortfolioException):
     def __init__(self, investment_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Investment Proposal/Decision '{investment_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id)
+        super().__init__(
+            f"Investment Proposal/Decision '{investment_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id
+        )
 
 
 class FundingDecisionException(PortfolioException):
@@ -49,12 +51,18 @@ class BenefitsRealizationException(PortfolioException):
 
 class ImmutablePortfolioSnapshotException(PortfolioException):
     def __init__(self, snapshot_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Immutability Violation: Finalized portfolio snapshot '{snapshot_id}' cannot be modified.", tenant_id=tenant_id)
+        super().__init__(
+            f"Immutability Violation: Finalized portfolio snapshot '{snapshot_id}' cannot be modified.",
+            tenant_id=tenant_id,
+        )
 
 
 class ImmutableInvestmentDecisionException(PortfolioException):
     def __init__(self, decision_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Immutability Violation: Finalized investment decision '{decision_id}' cannot be modified.", tenant_id=tenant_id)
+        super().__init__(
+            f"Immutability Violation: Finalized investment decision '{decision_id}' cannot be modified.",
+            tenant_id=tenant_id,
+        )
 
 
 class CrossTenantPortfolioAccessException(PortfolioException):

@@ -39,9 +39,21 @@ class EventContextBuilder:
 
     def build_context(self, event: EnterpriseEvent) -> EventContext:
         refs = [
-            EventContextReference(source_system="RELIABILITY", reference_id=f"rel_{event.event_id}", summary="Reliability health & SLO status"),
-            EventContextReference(source_system="SECURITY", reference_id=f"sec_{event.event_id}", summary="Security posture & threat baseline"),
-            EventContextReference(source_system="ARCHITECTURE", reference_id=f"arch_{event.event_id}", summary="System topology & service dependencies"),
+            EventContextReference(
+                source_system="RELIABILITY",
+                reference_id=f"rel_{event.event_id}",
+                summary="Reliability health & SLO status",
+            ),
+            EventContextReference(
+                source_system="SECURITY",
+                reference_id=f"sec_{event.event_id}",
+                summary="Security posture & threat baseline",
+            ),
+            EventContextReference(
+                source_system="ARCHITECTURE",
+                reference_id=f"arch_{event.event_id}",
+                summary="System topology & service dependencies",
+            ),
         ]
         return EventContext(event_id=event.event_id, tenant_id=event.tenant_id, references=refs)
 

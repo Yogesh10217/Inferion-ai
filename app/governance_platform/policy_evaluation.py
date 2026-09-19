@@ -83,13 +83,16 @@ class UnifiedPolicyEvaluator:
 
         # 1. Authorization check
         if actor_id == "guest" or "admin" in action:
-            violations.append(f"Authorization denied for action '{action}' on resource '{resource_id}' by actor '{actor_id}'")
+            violations.append(
+                f"Authorization denied for action '{action}' on resource '{resource_id}' by actor '{actor_id}'"
+            )
             matched_policies.append("RBAC_PERMISSION_CHECK")
 
         # 2. Data Fabric governance evaluation
         if ctx.get("is_data_access") and hasattr(self.data_gov, "evaluate_access"):
             try:
                 from app.data_fabric.governance import DataClassification
+
                 d_res = self.data_gov.evaluate_access(
                     tenant_id=tenant_id,
                     resource_id=resource_id,
@@ -99,7 +102,9 @@ class UnifiedPolicyEvaluator:
                 if not getattr(d_res, "permitted", True):
                     violations.append(f"Data governance policy denied access to dataset '{resource_id}'")
                     matched_policies.append("DATA_GOVERNANCE_POLICY")
-                evidence.append({"source": "DataGovernanceEngine", "classification": getattr(d_res, "classification", "RESTRICTED")})
+                evidence.append(
+                    {"source": "DataGovernanceEngine", "classification": getattr(d_res, "classification", "RESTRICTED")}
+                )
             except Exception as e:
                 logger.warning(f"DataGovernance check failed: {e}")
 

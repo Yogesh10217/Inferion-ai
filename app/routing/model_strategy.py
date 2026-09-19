@@ -17,7 +17,9 @@ class ModelBasedRoutingStrategy(RoutingStrategy):
     without changing the router interface.
     """
 
-    async def determine_provider_name(self, *, model: ModelMetadata | None, request: RoutingRequest | None = None) -> str:
+    async def determine_provider_name(
+        self, *, model: ModelMetadata | None, request: RoutingRequest | None = None
+    ) -> str:
         if model is None:
             return "openai"
 

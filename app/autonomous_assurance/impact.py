@@ -35,7 +35,9 @@ class WorkflowImpactEngine:
         ops_impact: str = "MEDIUM",
         financial_impact: float = 0.0,
     ) -> AutonomousImpactAssessment:
-        rating = "HIGH" if (security_impact == "HIGH" or ops_impact == "HIGH" or financial_impact > 50000.0) else "MEDIUM"
+        rating = (
+            "HIGH" if (security_impact == "HIGH" or ops_impact == "HIGH" or financial_impact > 50000.0) else "MEDIUM"
+        )
         assessment = AutonomousImpactAssessment(
             workflow_id=workflow_id,
             tenant_id=tenant_id,

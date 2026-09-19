@@ -66,7 +66,9 @@ class DataGovernanceManager:
         self.metrics_collector = DataGovernanceMetricsCollector()
         self.billing_tracker = DataGovernanceBillingTracker()
 
-        logger.info("[DATA GOVERNANCE MASTER] DataGovernanceManager initialized successfully with all 23 platform modules.")
+        logger.info(
+            "[DATA GOVERNANCE MASTER] DataGovernanceManager initialized successfully with all 23 platform modules."
+        )
 
     def register_and_govern_asset(
         self,
@@ -122,7 +124,9 @@ class DataGovernanceManager:
 
         # 4. Calculate Trust
         trust_score = self.trust_engine.calculate_trust_score(tenant_id=tenant_id, asset_id=asset.asset_id)
-        self.billing_tracker.record_cost(tenant_id=tenant_id, operation_type="CLASSIFICATION", resource_id=asset.asset_id)
+        self.billing_tracker.record_cost(
+            tenant_id=tenant_id, operation_type="CLASSIFICATION", resource_id=asset.asset_id
+        )
 
         return {
             "asset": asset.model_dump(),

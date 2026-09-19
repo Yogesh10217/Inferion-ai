@@ -12,7 +12,17 @@ class SecurityRepository(TenantScopedRepository[Any]):
         self._store: Dict[str, Any] = {}
 
     def save(self, entity: Any) -> Any:
-        eid = getattr(entity, "asset_id", getattr(entity, "threat_id", getattr(entity, "incident_id", getattr(entity, "vulnerability_id", getattr(entity, "posture_id", None)))))
+        eid = getattr(
+            entity,
+            "asset_id",
+            getattr(
+                entity,
+                "threat_id",
+                getattr(
+                    entity, "incident_id", getattr(entity, "vulnerability_id", getattr(entity, "posture_id", None))
+                ),
+            ),
+        )
         if eid:
             self._store[eid] = entity
         return entity

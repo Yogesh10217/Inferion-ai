@@ -57,9 +57,21 @@ class FinOpsRiskManager:
         commitment_risk_score: float = 10.0,
     ) -> FinOpsRiskAssessment:
         factors = [
-            FinOpsRiskFactor(dimension=FinOpsRiskDimension.BUDGET_RISK, score=budget_risk_score, description="Budget utilization risk"),
-            FinOpsRiskFactor(dimension=FinOpsRiskDimension.FORECAST_RISK, score=forecast_risk_score, description="Spending forecast variance risk"),
-            FinOpsRiskFactor(dimension=FinOpsRiskDimension.COMMITMENT_RISK, score=commitment_risk_score, description="Long-term commitment lock-in risk"),
+            FinOpsRiskFactor(
+                dimension=FinOpsRiskDimension.BUDGET_RISK,
+                score=budget_risk_score,
+                description="Budget utilization risk",
+            ),
+            FinOpsRiskFactor(
+                dimension=FinOpsRiskDimension.FORECAST_RISK,
+                score=forecast_risk_score,
+                description="Spending forecast variance risk",
+            ),
+            FinOpsRiskFactor(
+                dimension=FinOpsRiskDimension.COMMITMENT_RISK,
+                score=commitment_risk_score,
+                description="Long-term commitment lock-in risk",
+            ),
         ]
         composite = round(sum(f.score for f in factors) / len(factors), 2)
 

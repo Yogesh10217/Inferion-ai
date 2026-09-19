@@ -34,7 +34,7 @@ class UnifiedInvestigation:
         hypotheses: List[CausalHypothesis],
         evidence_ids: List[str],
         created_at: Optional[datetime] = None,
-        updated_at: Optional[datetime] = None
+        updated_at: Optional[datetime] = None,
     ):
         self.investigation_id = investigation_id
         self.tenant_id = tenant_id
@@ -60,7 +60,7 @@ class UnifiedInvestigation:
             "hypotheses": [h.to_dict() for h in self.hypotheses],
             "evidence_ids": self.evidence_ids,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
         }
 
 
@@ -77,7 +77,7 @@ class UnifiedInvestigationEngine:
         tenant_id: str,
         situation: EnterpriseSituation,
         title: Optional[str] = None,
-        assigned_to: Optional[str] = None
+        assigned_to: Optional[str] = None,
     ) -> UnifiedInvestigation:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -102,5 +102,5 @@ class UnifiedInvestigationEngine:
             status="OPEN",
             assigned_to=assigned_to,
             hypotheses=hypotheses,
-            evidence_ids=situation.evidence_references
+            evidence_ids=situation.evidence_references,
         )

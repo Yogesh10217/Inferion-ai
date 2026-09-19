@@ -12,7 +12,9 @@ router = APIRouter(prefix="/budgets", tags=["Billing Budgets"])
 
 @router.get("", response_model=List[BudgetOut])
 @require_roles(["admin", "org_admin"])
-async def list_budgets(request: Request, workspace_id: Optional[str] = None, container: ServiceContainer = Depends(get_container)):
+async def list_budgets(
+    request: Request, workspace_id: Optional[str] = None, container: ServiceContainer = Depends(get_container)
+):
     org_id = request.state.organization_id
     budget = await container.budget_service.get_budget(org_id, workspace_id)
     if not budget:
@@ -33,6 +35,6 @@ async def set_budget(payload: BudgetCreate, request: Request, container: Service
         workspace_id=payload.workspace_id,
         hard_limit=payload.hard_limit,
         warning=payload.warning_threshold,
-        critical=payload.critical_threshold
+        critical=payload.critical_threshold,
     )
     return budget

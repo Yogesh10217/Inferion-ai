@@ -34,9 +34,9 @@ class ToolRegistry:
                 description="Runs Python code in an isolated environment",
                 parameters=[ToolParameter(name="code", type="string", description="Python code to execute")],
                 required_scopes=["developer"],
-                tool_type="python"
+                tool_type="python",
             ),
-            execute_python_code
+            execute_python_code,
         )
 
         # Shell command tool
@@ -46,9 +46,9 @@ class ToolRegistry:
                 description="Executes shell commands asynchronously",
                 parameters=[ToolParameter(name="command", type="string", description="Shell command string")],
                 required_scopes=["admin"],
-                tool_type="shell"
+                tool_type="shell",
             ),
-            execute_shell_command
+            execute_shell_command,
         )
 
     def register_tool(self, definition: ToolDefinition, handler: ToolHandler) -> None:

@@ -53,13 +53,21 @@ class FinOpsGovernanceEngine:
         reqs: List[FinOpsGovernanceRequirement] = []
 
         if is_blocked:
-            reqs.append(FinOpsGovernanceRequirement(code="POLICY_BLOCK", description="Financial policy block", satisfied=False))
+            reqs.append(
+                FinOpsGovernanceRequirement(code="POLICY_BLOCK", description="Financial policy block", satisfied=False)
+            )
             status = FinOpsGovernanceStatus.BLOCK
             reason = f"Financial action '{action_type}' blocked by policy."
         elif requires_approval or risk_score >= 80.0:
-            reqs.append(FinOpsGovernanceRequirement(code="APPROVAL_REQ", description="Human approval required for financial action", satisfied=False))
+            reqs.append(
+                FinOpsGovernanceRequirement(
+                    code="APPROVAL_REQ", description="Human approval required for financial action", satisfied=False
+                )
+            )
             status = FinOpsGovernanceStatus.REQUIRE_APPROVAL
-            reason = f"High-risk financial action '{action_type}' (risk: {risk_score}) requires explicit human approval."
+            reason = (
+                f"High-risk financial action '{action_type}' (risk: {risk_score}) requires explicit human approval."
+            )
         elif risk_score >= 60.0:
             status = FinOpsGovernanceStatus.RESTRICT
             reason = f"Elevated risk score ({risk_score}) enforces RESTRICT constraints."

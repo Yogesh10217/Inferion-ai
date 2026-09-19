@@ -84,7 +84,9 @@ class ModelExplainabilityManager:
         )
 
         self._explanations[e_id] = explanation
-        logger.info(f"[MODEL EXPLAINABILITY] Generated explanation for {model_id} (Tenant: {tenant_id}) Type: {explanation_type}")
+        logger.info(
+            f"[MODEL EXPLAINABILITY] Generated explanation for {model_id} (Tenant: {tenant_id}) Type: {explanation_type}"
+        )
         return explanation
 
     def get_explainability_assessment(self, model_id: str, tenant_id: str) -> ExplainabilityAssessment:

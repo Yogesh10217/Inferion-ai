@@ -26,6 +26,7 @@ DEFAULT_PRICING_TABLE: Dict[str, Dict[str, float]] = {
 @dataclass
 class UsageRecord:
     """Represents a single token and cost usage record."""
+
     execution_id: str
     tenant_id: str
     workspace_id: str

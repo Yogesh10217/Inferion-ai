@@ -49,7 +49,9 @@ class AccessPatternManager:
         patterns: Optional[List[AccessPattern]] = None,
     ) -> AccessPatternAssessment:
         p_list = patterns or [AccessPattern(pattern_type=AccessPatternType.NORMAL)]
-        high_risk_p = any(p.pattern_type in [AccessPatternType.UNUSUAL_HOURS, AccessPatternType.BATCH_EXPORT] for p in p_list)
+        high_risk_p = any(
+            p.pattern_type in [AccessPatternType.UNUSUAL_HOURS, AccessPatternType.BATCH_EXPORT] for p in p_list
+        )
 
         assessment = AccessPatternAssessment(
             identity_id=identity_id,

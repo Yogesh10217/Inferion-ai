@@ -47,5 +47,7 @@ class IntegrationMarketplace:
     def install_integration(self, listing_id: str, tenant_id: str = "global") -> InstallationRecord:
         inst = InstallationRecord(listing_id=listing_id, tenant_id=tenant_id)
         self._installations[inst.installation_id] = inst
-        logger.info(f"[MARKETPLACE] Installed listing '{listing_id}' for tenant '{tenant_id}' -> Installation '{inst.installation_id}'")
+        logger.info(
+            f"[MARKETPLACE] Installed listing '{listing_id}' for tenant '{tenant_id}' -> Installation '{inst.installation_id}'"
+        )
         return inst

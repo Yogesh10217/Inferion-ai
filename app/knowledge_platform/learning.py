@@ -42,8 +42,16 @@ class KnowledgeLearningEngine:
         self.knowledge_manager = knowledge_manager or KnowledgeManager()
         self._feedback_store: List[KnowledgeFeedback] = []
 
-    def submit_feedback(self, item_id: str, feedback_type: KnowledgeFeedbackType, submitted_by: str = "user", comments: Optional[str] = None) -> KnowledgeFeedback:
-        fb = KnowledgeFeedback(item_id=item_id, feedback_type=feedback_type, submitted_by=submitted_by, comments=comments)
+    def submit_feedback(
+        self,
+        item_id: str,
+        feedback_type: KnowledgeFeedbackType,
+        submitted_by: str = "user",
+        comments: Optional[str] = None,
+    ) -> KnowledgeFeedback:
+        fb = KnowledgeFeedback(
+            item_id=item_id, feedback_type=feedback_type, submitted_by=submitted_by, comments=comments
+        )
         self._feedback_store.append(fb)
 
         # Adjust item confidence score
@@ -53,7 +61,9 @@ class KnowledgeLearningEngine:
                 item.confidence_score = min(1.0, round(item.confidence_score + 0.05, 2))
             elif feedback_type in (KnowledgeFeedbackType.INCORRECT, KnowledgeFeedbackType.OUTDATED):
                 item.confidence_score = max(0.0, round(item.confidence_score - 0.20, 2))
-            logger.info(f"[LEARNING ENGINE] Applied feedback '{feedback_type.value}' to item '{item_id}': New confidence = {item.confidence_score}")
+            logger.info(
+                f"[LEARNING ENGINE] Applied feedback '{feedback_type.value}' to item '{item_id}': New confidence = {item.confidence_score}"
+            )
         except Exception as e:
             logger.warning(f"[LEARNING ENGINE] Could not update item confidence: {e}")
 

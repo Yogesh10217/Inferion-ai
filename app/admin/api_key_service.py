@@ -12,7 +12,9 @@ class APIKeyAdminService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def list_api_keys(self, user_id: Optional[str] = None, org_id: Optional[str] = None, limit: int = 100, offset: int = 0) -> List[APIKey]:
+    async def list_api_keys(
+        self, user_id: Optional[str] = None, org_id: Optional[str] = None, limit: int = 100, offset: int = 0
+    ) -> List[APIKey]:
         stmt = select(APIKey)
         if user_id:
             stmt = stmt.where(APIKey.user_id == user_id)

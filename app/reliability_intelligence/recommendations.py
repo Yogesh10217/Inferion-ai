@@ -22,5 +22,7 @@ class ReliabilityRecommendationEngine:
             confidence=0.93,
             auto_execute=False,  # Mandatory invariant
         )
-        logger.info(f"Generated ReliabilityRecommendation '{rec.recommendation_id}' for '{target_service}' (auto_execute=False)")
+        logger.info(
+            f"Generated ReliabilityRecommendation '{rec.recommendation_id}' for '{target_service}' (auto_execute=False)"
+        )
         return rec

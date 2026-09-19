@@ -43,18 +43,20 @@ class WorkflowExecutor:
         """Runs workflow graph execution to completion or pause point."""
         run_id = run_id or f"run_{int(time.time() * 1000)}"
         exec_context = context or {}
-        exec_context.update({
-            "workflow_id": workflow_id,
-            "run_id": run_id,
-            "initial_inputs": initial_inputs,
-            "variables": dict(initial_inputs),
-            "memory": exec_context.get("memory", {}),
-            "agent_outputs": exec_context.get("agent_outputs", {}),
-            "tool_outputs": exec_context.get("tool_outputs", {}),
-            "node_outputs": exec_context.get("node_outputs", {}),
-            "organization_id": exec_context.get("organization_id", "default_org"),
-            "workspace_id": exec_context.get("workspace_id", "default_workspace"),
-        })
+        exec_context.update(
+            {
+                "workflow_id": workflow_id,
+                "run_id": run_id,
+                "initial_inputs": initial_inputs,
+                "variables": dict(initial_inputs),
+                "memory": exec_context.get("memory", {}),
+                "agent_outputs": exec_context.get("agent_outputs", {}),
+                "tool_outputs": exec_context.get("tool_outputs", {}),
+                "node_outputs": exec_context.get("node_outputs", {}),
+                "organization_id": exec_context.get("organization_id", "default_org"),
+                "workspace_id": exec_context.get("workspace_id", "default_workspace"),
+            }
+        )
 
         graph.validate()
         topological_order = graph.get_topological_order()
@@ -62,7 +64,9 @@ class WorkflowExecutor:
         completed_nodes: Set[str] = set(exec_context.get("completed_nodes", []))
         node_outputs: Dict[str, Any] = exec_context.get("node_outputs", {})
 
-        await self.event_publisher.publish(WorkflowEventRegistry.WORKFLOW_STARTED, {"workflow_id": workflow_id, "run_id": run_id})
+        await self.event_publisher.publish(
+            WorkflowEventRegistry.WORKFLOW_STARTED, {"workflow_id": workflow_id, "run_id": run_id}
+        )
 
         wf_span = SpanFactory.create_workflow_start_span(workflow_id, run_id)
         status = WorkflowStatus.RUNNING
@@ -86,7 +90,7 @@ class WorkflowExecutor:
                 # Execute step with retries
                 await self.event_publisher.publish(
                     WorkflowEventRegistry.WORKFLOW_NODE_STARTED,
-                    {"workflow_id": workflow_id, "run_id": run_id, "node_id": node_id}
+                    {"workflow_id": workflow_id, "run_id": run_id, "node_id": node_id},
                 )
 
                 node_span = SpanFactory.create_workflow_node_span(workflow_id, run_id, node_id, node.node_type.value)
@@ -113,13 +117,13 @@ class WorkflowExecutor:
 
                 await self.event_publisher.publish(
                     WorkflowEventRegistry.WORKFLOW_NODE_COMPLETED,
-                    {"workflow_id": workflow_id, "run_id": run_id, "node_id": node_id}
+                    {"workflow_id": workflow_id, "run_id": run_id, "node_id": node_id},
                 )
 
             status = WorkflowStatus.COMPLETED
             await self.event_publisher.publish(
                 WorkflowEventRegistry.WORKFLOW_COMPLETED,
-                {"workflow_id": workflow_id, "run_id": run_id, "status": status.value}
+                {"workflow_id": workflow_id, "run_id": run_id, "status": status.value},
             )
             wf_span.end()
 
@@ -145,7 +149,7 @@ class WorkflowExecutor:
             )
             await self.event_publisher.publish(
                 WorkflowEventRegistry.WORKFLOW_APPROVAL_REQUESTED,
-                {"workflow_id": workflow_id, "run_id": run_id, "request_id": e.request_id}
+                {"workflow_id": workflow_id, "run_id": run_id, "request_id": e.request_id},
             )
             return {
                 "status": status.value,
@@ -161,8 +165,7 @@ class WorkflowExecutor:
             wf_span.record_exception(e)
             wf_span.end()
             await self.event_publisher.publish(
-                WorkflowEventRegistry.WORKFLOW_FAILED,
-                {"workflow_id": workflow_id, "run_id": run_id, "error": str(e)}
+                WorkflowEventRegistry.WORKFLOW_FAILED, {"workflow_id": workflow_id, "run_id": run_id, "error": str(e)}
             )
             return {
                 "status": status.value,

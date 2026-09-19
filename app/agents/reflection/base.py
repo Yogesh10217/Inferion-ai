@@ -11,10 +11,7 @@ from app.agents.agent_context import AgentContext
 class BaseReflection(ABC):
     @abstractmethod
     async def reflect(
-        self,
-        goal: str,
-        execution_history: List[Dict[str, Any]],
-        context: AgentContext
+        self, goal: str, execution_history: List[Dict[str, Any]], context: AgentContext
     ) -> Dict[str, Any]:
         """
         Reflects on execution trajectory.

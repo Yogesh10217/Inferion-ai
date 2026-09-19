@@ -76,7 +76,19 @@ class ModelDriftManager:
     ) -> ModelDrift:
         d_id = f"drift-{uuid.uuid4().hex[:8]}"
 
-        sev = DriftSeverity.NONE if drift_score < 0.05 else (DriftSeverity.LOW if drift_score < 0.15 else (DriftSeverity.MEDIUM if drift_score < 0.3 else (DriftSeverity.HIGH if drift_score < 0.5 else DriftSeverity.SEVERE)))
+        sev = (
+            DriftSeverity.NONE
+            if drift_score < 0.05
+            else (
+                DriftSeverity.LOW
+                if drift_score < 0.15
+                else (
+                    DriftSeverity.MEDIUM
+                    if drift_score < 0.3
+                    else (DriftSeverity.HIGH if drift_score < 0.5 else DriftSeverity.SEVERE)
+                )
+            )
+        )
 
         base_fp = hashlib.sha256(f"baseline:{model_id}:{tenant_id}".encode()).hexdigest()
         curr_fp = hashlib.sha256(f"current:{model_id}:{tenant_id}:{drift_score}".encode()).hexdigest()

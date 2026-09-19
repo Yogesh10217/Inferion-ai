@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class TrustDriftAnalyzer:
     """Analyzes trust score degradation across security, identity, workflow, model, and decisions."""
 
-    def analyze_trust_drift(
-        self, tenant_id: str, expected_trust: float, observed_trust: float
-    ) -> AssuranceDrift:
+    def analyze_trust_drift(self, tenant_id: str, expected_trust: float, observed_trust: float) -> AssuranceDrift:
         trust_drop = expected_trust - observed_trust
 
         if trust_drop > 0.2:

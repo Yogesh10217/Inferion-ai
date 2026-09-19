@@ -28,5 +28,7 @@ class AdaptiveControlEngine:
         )
 
         self.rec_repo.save(rec)
-        logger.info(f"Generated AdaptiveControlRecommendation '{rec.recommendation_id}' for control '{target_control}' (auto_execute=False)")
+        logger.info(
+            f"Generated AdaptiveControlRecommendation '{rec.recommendation_id}' for control '{target_control}' (auto_execute=False)"
+        )
         return rec

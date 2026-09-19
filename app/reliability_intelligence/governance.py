@@ -22,9 +22,7 @@ class ReliabilityGovernanceEngine:
         "large_scale_rollback",
     }
 
-    def evaluate_governance(
-        self, tenant_id: str, action_type: str, risk_level: str = "MEDIUM"
-    ) -> Dict[str, Any]:
+    def evaluate_governance(self, tenant_id: str, action_type: str, risk_level: str = "MEDIUM") -> Dict[str, Any]:
         action_clean = action_type.lower().strip()
         is_high_risk = action_clean in self.HIGH_RISK_ACTIONS or risk_level.upper() == "HIGH"
 
@@ -35,7 +33,9 @@ class ReliabilityGovernanceEngine:
             outcome = GovernanceOutcome.ALLOW
             rationale = f"Reliability action '{action_type}' within approved low/medium risk boundaries."
 
-        logger.info(f"Evaluated governance for action '{action_type}' (tenant: '{tenant_id}') -> Outcome: {outcome.value}")
+        logger.info(
+            f"Evaluated governance for action '{action_type}' (tenant: '{tenant_id}') -> Outcome: {outcome.value}"
+        )
 
         return {
             "outcome": outcome.value,

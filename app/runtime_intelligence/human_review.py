@@ -56,14 +56,16 @@ class RuntimeHumanReviewEngine:
         rev["decision"] = decision
         rev["reviewer_id"] = reviewer_id
         rev["justification"] = justification
-        rev["state"] = RuntimeHumanReviewState.APPROVED.value if decision.upper() == "APPROVED" else RuntimeHumanReviewState.REJECTED.value
+        rev["state"] = (
+            RuntimeHumanReviewState.APPROVED.value
+            if decision.upper() == "APPROVED"
+            else RuntimeHumanReviewState.REJECTED.value
+        )
         rev["reviewed_at"] = datetime.now(timezone.utc).isoformat()
         logger.info(f"Recorded human review decision '{decision}' for review '{review_id}' by '{reviewer_id}'")
         return rev
 
-    def escalate_review(
-        self, tenant_id: str, review_id: str, escalation_reason: str
-    ) -> Dict[str, Any]:
+    def escalate_review(self, tenant_id: str, review_id: str, escalation_reason: str) -> Dict[str, Any]:
         rev = self._reviews.get(review_id)
         if not rev:
             raise RuntimeIntelligenceException("Human review record not found")

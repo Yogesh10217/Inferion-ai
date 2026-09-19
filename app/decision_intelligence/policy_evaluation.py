@@ -29,7 +29,9 @@ class DecisionPolicyEvaluator:
     def __init__(self) -> None:
         self._evaluations: Dict[str, DecisionPolicyResult] = {}
 
-    def evaluate_policy(self, decision_id: str, tenant_id: str, context: Dict[str, Any], option_params: Optional[Dict[str, Any]] = None) -> DecisionPolicyResult:
+    def evaluate_policy(
+        self, decision_id: str, tenant_id: str, context: Dict[str, Any], option_params: Optional[Dict[str, Any]] = None
+    ) -> DecisionPolicyResult:
         passed = ["POL_SEC_001_ENCRYPTION_CHECK", "POL_OPS_002_CAPACITY_LIMIT", "POL_GOV_003_TENANT_ISOLATION"]
         violated = []
 

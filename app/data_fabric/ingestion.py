@@ -107,5 +107,7 @@ class DataIngestionEngine:
             status="COMPLETED",
         )
         self._history.append(res)
-        logger.info(f"[INGESTION ENGINE] Ingested {len(records)} records from source '{data_source.name}' (Req: {request.request_id})")
+        logger.info(
+            f"[INGESTION ENGINE] Ingested {len(records)} records from source '{data_source.name}' (Req: {request.request_id})"
+        )
         return res

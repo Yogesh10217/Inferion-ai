@@ -47,7 +47,9 @@ class DependencySecurityResult:
                 "is_valid": self.is_valid,
                 "risk": risk_str,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         risk_str = self.risk_level.value if isinstance(self.risk_level, Enum) else str(self.risk_level)

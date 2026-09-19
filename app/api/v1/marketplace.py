@@ -52,7 +52,9 @@ async def create_item(data: CreateItemSchema, mgr: MarketplaceManager = Depends(
 
 
 @router.get("/items")
-async def list_items(category: Optional[MarketplaceCategory] = None, mgr: MarketplaceManager = Depends(get_marketplace)):
+async def list_items(
+    category: Optional[MarketplaceCategory] = None, mgr: MarketplaceManager = Depends(get_marketplace)
+):
     items = mgr.registry.list_items(category=category, published_only=False)
     return {"items": [i.model_dump() for i in items]}
 
@@ -100,7 +102,9 @@ async def publish_item(id: str, mgr: MarketplaceManager = Depends(get_marketplac
 async def install_item(id: str, data: InstallItemSchema, mgr: MarketplaceManager = Depends(get_marketplace)):
     try:
         item = mgr.registry.get_item(id)
-        ext = mgr.installation_manager.install_marketplace_item(item, tenant_id=data.tenant_id, developer_id=data.developer_id)
+        ext = mgr.installation_manager.install_marketplace_item(
+            item, tenant_id=data.tenant_id, developer_id=data.developer_id
+        )
         return {"status": "installed", "extension": ext.model_dump()}
     except MarketplaceException as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)

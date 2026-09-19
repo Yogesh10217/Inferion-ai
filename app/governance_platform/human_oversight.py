@@ -77,7 +77,9 @@ class HumanOversightEngine:
             config_modification_allowed=config_modification_allowed,
         )
         self._policies[pol.policy_id] = pol
-        logger.info(f"[HUMAN OVERSIGHT] Registered policy '{pol.policy_id}' for '{target_resource_id}' ({autonomy_level.value})")
+        logger.info(
+            f"[HUMAN OVERSIGHT] Registered policy '{pol.policy_id}' for '{target_resource_id}' ({autonomy_level.value})"
+        )
         return pol
 
     def evaluate_action_autonomy(
@@ -93,7 +95,9 @@ class HumanOversightEngine:
         # 1. Boundary violations
         if is_restricted_data and not pol.restricted_data_access_allowed:
             req_id = f"appr_ovs_{pol.policy_id[:8]}"
-            logger.warning(f"[HUMAN OVERSIGHT] Action '{action}' attempts restricted data access -> APPROVAL_REQUIRED ({req_id})")
+            logger.warning(
+                f"[HUMAN OVERSIGHT] Action '{action}' attempts restricted data access -> APPROVAL_REQUIRED ({req_id})"
+            )
             return {
                 "allowed": False,
                 "requires_approval": True,
@@ -103,7 +107,9 @@ class HumanOversightEngine:
 
         if is_config_change and not pol.config_modification_allowed:
             req_id = f"appr_ovs_{pol.policy_id[:8]}"
-            logger.warning(f"[HUMAN OVERSIGHT] Action '{action}' attempts config change -> APPROVAL_REQUIRED ({req_id})")
+            logger.warning(
+                f"[HUMAN OVERSIGHT] Action '{action}' attempts config change -> APPROVAL_REQUIRED ({req_id})"
+            )
             return {
                 "allowed": False,
                 "requires_approval": True,

@@ -17,13 +17,44 @@ VALID_WORKFLOW_TRANSITIONS: Dict[WorkflowStatus, List[WorkflowStatus]] = {
     WorkflowStatus.PROPOSED: [WorkflowStatus.ANALYZING, WorkflowStatus.CANCELLED],
     WorkflowStatus.ANALYZING: [WorkflowStatus.PLANNED, WorkflowStatus.CANCELLED, WorkflowStatus.FAILED],
     WorkflowStatus.PLANNED: [WorkflowStatus.GOVERNANCE_EVALUATED, WorkflowStatus.CANCELLED, WorkflowStatus.FAILED],
-    WorkflowStatus.GOVERNANCE_EVALUATED: [WorkflowStatus.REQUIRES_APPROVAL, WorkflowStatus.APPROVED, WorkflowStatus.DENIED, WorkflowStatus.CANCELLED, WorkflowStatus.COMPLETED],
-    WorkflowStatus.REQUIRES_APPROVAL: [WorkflowStatus.APPROVED, WorkflowStatus.DENIED, WorkflowStatus.CANCELLED, WorkflowStatus.COMPLETED],
+    WorkflowStatus.GOVERNANCE_EVALUATED: [
+        WorkflowStatus.REQUIRES_APPROVAL,
+        WorkflowStatus.APPROVED,
+        WorkflowStatus.DENIED,
+        WorkflowStatus.CANCELLED,
+        WorkflowStatus.COMPLETED,
+    ],
+    WorkflowStatus.REQUIRES_APPROVAL: [
+        WorkflowStatus.APPROVED,
+        WorkflowStatus.DENIED,
+        WorkflowStatus.CANCELLED,
+        WorkflowStatus.COMPLETED,
+    ],
     WorkflowStatus.APPROVED: [WorkflowStatus.COORDINATING, WorkflowStatus.CANCELLED, WorkflowStatus.COMPLETED],
-    WorkflowStatus.COORDINATING: [WorkflowStatus.DELEGATED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED, WorkflowStatus.COMPLETED],
-    WorkflowStatus.DELEGATED: [WorkflowStatus.VERIFYING, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED, WorkflowStatus.COMPLETED],
-    WorkflowStatus.VERIFYING: [WorkflowStatus.COMPLETED, WorkflowStatus.FAILED, WorkflowStatus.RECOVERING, WorkflowStatus.COMPENSATING],
-    WorkflowStatus.RECOVERING: [WorkflowStatus.COORDINATING, WorkflowStatus.COMPLETED, WorkflowStatus.FAILED, WorkflowStatus.COMPENSATING],
+    WorkflowStatus.COORDINATING: [
+        WorkflowStatus.DELEGATED,
+        WorkflowStatus.FAILED,
+        WorkflowStatus.CANCELLED,
+        WorkflowStatus.COMPLETED,
+    ],
+    WorkflowStatus.DELEGATED: [
+        WorkflowStatus.VERIFYING,
+        WorkflowStatus.FAILED,
+        WorkflowStatus.CANCELLED,
+        WorkflowStatus.COMPLETED,
+    ],
+    WorkflowStatus.VERIFYING: [
+        WorkflowStatus.COMPLETED,
+        WorkflowStatus.FAILED,
+        WorkflowStatus.RECOVERING,
+        WorkflowStatus.COMPENSATING,
+    ],
+    WorkflowStatus.RECOVERING: [
+        WorkflowStatus.COORDINATING,
+        WorkflowStatus.COMPLETED,
+        WorkflowStatus.FAILED,
+        WorkflowStatus.COMPENSATING,
+    ],
     WorkflowStatus.COMPENSATING: [WorkflowStatus.COMPLETED, WorkflowStatus.FAILED, WorkflowStatus.PARTIALLY_COMPLETED],
     WorkflowStatus.COMPLETED: [],  # Terminal state
     WorkflowStatus.PARTIALLY_COMPLETED: [],  # Terminal state
@@ -36,9 +67,13 @@ VALID_WORKFLOW_TRANSITIONS: Dict[WorkflowStatus, List[WorkflowStatus]] = {
 class WorkflowStateMachine:
     """Enforces strict state transitions across workflow lifecycles."""
 
-    def transition(self, workflow: AutonomousWorkflow, target_status: WorkflowStatus, reason: Optional[str] = None) -> AutonomousWorkflow:
+    def transition(
+        self, workflow: AutonomousWorkflow, target_status: WorkflowStatus, reason: Optional[str] = None
+    ) -> AutonomousWorkflow:
         if workflow.is_finalized and target_status not in (WorkflowStatus.COMPLETED, WorkflowStatus.FAILED):
-            raise ImmutableAutonomousAssuranceRecordException(f"Cannot transition finalized workflow '{workflow.workflow_id}'")
+            raise ImmutableAutonomousAssuranceRecordException(
+                f"Cannot transition finalized workflow '{workflow.workflow_id}'"
+            )
 
         allowed = VALID_WORKFLOW_TRANSITIONS.get(workflow.status, [])
         if target_status not in allowed:
@@ -51,13 +86,21 @@ class WorkflowStateMachine:
         if reason:
             workflow.metadata.custom["last_transition_reason"] = reason
 
-        if target_status in (WorkflowStatus.COMPLETED, WorkflowStatus.DENIED, WorkflowStatus.CANCELLED, WorkflowStatus.PARTIALLY_COMPLETED):
+        if target_status in (
+            WorkflowStatus.COMPLETED,
+            WorkflowStatus.DENIED,
+            WorkflowStatus.CANCELLED,
+            WorkflowStatus.PARTIALLY_COMPLETED,
+        ):
             workflow.completed_at = datetime.now(timezone.utc)
 
         return workflow
 
-    def transition_state(self, workflow_id_or_obj: Any, tenant_id: str, target_status: WorkflowStatus, reason: Optional[str] = None) -> Any:
+    def transition_state(
+        self, workflow_id_or_obj: Any, tenant_id: str, target_status: WorkflowStatus, reason: Optional[str] = None
+    ) -> Any:
         from app.autonomous_assurance.repositories import WorkflowRepository
+
         repo = WorkflowRepository()
         if hasattr(workflow_id_or_obj, "status"):
             res = self.transition(workflow_id_or_obj, target_status, reason)

@@ -20,7 +20,9 @@ class ModelVulnerabilityAssessment(BaseModel):
 class ModelSecurityEngine:
     """Evaluates security vulnerabilities specific to AI models (e.g. Prompt Injection, Model Poisoning, Exfiltration)."""
 
-    def assess_model(self, tenant_id: str, model_id: str, prompt_injection_risk: str = "LOW") -> ModelVulnerabilityAssessment:
+    def assess_model(
+        self, tenant_id: str, model_id: str, prompt_injection_risk: str = "LOW"
+    ) -> ModelVulnerabilityAssessment:
         score = 95.0 if prompt_injection_risk == "LOW" else (70.0 if prompt_injection_risk == "MEDIUM" else 40.0)
         return ModelVulnerabilityAssessment(
             tenant_id=tenant_id,

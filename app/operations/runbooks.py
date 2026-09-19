@@ -55,7 +55,9 @@ class RunbookManager:
     def __init__(self) -> None:
         self._runbooks: Dict[str, Runbook] = {}
 
-    def create_runbook(self, name: str, steps: List[RunbookStep], tenant_id: str = "global", description: str = "") -> Runbook:
+    def create_runbook(
+        self, name: str, steps: List[RunbookStep], tenant_id: str = "global", description: str = ""
+    ) -> Runbook:
         rb = Runbook(name=name, steps=steps, tenant_id=tenant_id, description=description)
         self._runbooks[rb.runbook_id] = rb
         logger.info(f"[RUNBOOK MANAGER] Created runbook '{name}' (ID: {rb.runbook_id}) with {len(steps)} steps")
@@ -70,7 +72,15 @@ class RunbookManager:
             logs.append(msg)
             logger.info(f"[RUNBOOK MANAGER] {msg}")
 
-        exec_status = "DRY_RUN_PASSED" if mode == RunbookMode.DRY_RUN else ("VERIFIED" if mode == RunbookMode.VERIFY else ("ROLLED_BACK" if mode == RunbookMode.ROLLBACK else "COMPLETED"))
+        exec_status = (
+            "DRY_RUN_PASSED"
+            if mode == RunbookMode.DRY_RUN
+            else (
+                "VERIFIED"
+                if mode == RunbookMode.VERIFY
+                else ("ROLLED_BACK" if mode == RunbookMode.ROLLBACK else "COMPLETED")
+            )
+        )
 
         execution = RunbookExecution(
             runbook_id=runbook_id,

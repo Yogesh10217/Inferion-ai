@@ -21,5 +21,7 @@ class CapacityLearningEngine:
                 "auto_execute": False,
             }
         ]
-        logger.info(f"Generated {len(insights)} advisory capacity learning insights for tenant '{tenant_id}' (auto_execute=False)")
+        logger.info(
+            f"Generated {len(insights)} advisory capacity learning insights for tenant '{tenant_id}' (auto_execute=False)"
+        )
         return insights

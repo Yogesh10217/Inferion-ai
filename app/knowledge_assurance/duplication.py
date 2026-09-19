@@ -68,7 +68,9 @@ class KnowledgeDuplicationManager:
                 reference_id_a=ids[0],
                 reference_id_b=ids[1],
                 duplicate_type=DuplicateType.NEAR_DUPLICATE,
-                similarity=DuplicateSimilarity(similarity_score=0.92, overlapping_concepts=["incident_response", "escalation"]),
+                similarity=DuplicateSimilarity(
+                    similarity_score=0.92, overlapping_concepts=["incident_response", "escalation"]
+                ),
                 recommendation="FLAG_FOR_REVIEW",
                 auto_execute=False,  # MANDATORY
             )

@@ -40,8 +40,12 @@ class RecoveryManager:
         max_retries: int = 3,
     ) -> RecoveryStrategy:
         if attempt <= max_retries:
-            logger.info(f"[RECOVERY MANAGER] Step '{step_id}' failed (Attempt {attempt}/{max_retries}) -> Strategy: RETRY")
+            logger.info(
+                f"[RECOVERY MANAGER] Step '{step_id}' failed (Attempt {attempt}/{max_retries}) -> Strategy: RETRY"
+            )
             return RecoveryStrategy.RETRY
 
-        logger.warning(f"[RECOVERY MANAGER] Step '{step_id}' exceeded max retries ({max_retries}) -> Strategy: COMPENSATE")
+        logger.warning(
+            f"[RECOVERY MANAGER] Step '{step_id}' exceeded max retries ({max_retries}) -> Strategy: COMPENSATE"
+        )
         return RecoveryStrategy.COMPENSATE

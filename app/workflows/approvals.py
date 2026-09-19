@@ -50,10 +50,7 @@ class ApprovalRequest:
         ]
 
     def record_decision(
-        self,
-        decision: ApprovalDecision,
-        decided_by: str = "user",
-        feedback: Optional[str] = None
+        self, decision: ApprovalDecision, decided_by: str = "user", feedback: Optional[str] = None
     ) -> None:
         """Record an approval, rejection, or change request decision."""
         self.status = decision
@@ -61,12 +58,14 @@ class ApprovalRequest:
         self.decided_by = decided_by
         self.feedback = feedback
         self.decided_at = datetime.now(timezone.utc).isoformat()
-        self.audit_log.append({
-            "event": decision.value.lower(),
-            "decided_by": decided_by,
-            "feedback": feedback,
-            "timestamp": self.decided_at
-        })
+        self.audit_log.append(
+            {
+                "event": decision.value.lower(),
+                "decided_by": decided_by,
+                "feedback": feedback,
+                "timestamp": self.decided_at,
+            }
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -100,7 +99,7 @@ class ApprovalManager:
         workflow_id: str,
         prompt: str = "Approval required",
         approver_role: str = "approver",
-        timeout_seconds: Optional[float] = None
+        timeout_seconds: Optional[float] = None,
     ) -> ApprovalRequest:
         req = ApprovalRequest(
             run_id=run_id,
@@ -141,7 +140,9 @@ class ApprovalManager:
         req.record_decision(ApprovalDecision.REJECTED, decided_by=decided_by, feedback=feedback)
         return req
 
-    def request_changes(self, request_id: str, decided_by: str = "user", feedback: Optional[str] = None) -> ApprovalRequest:
+    def request_changes(
+        self, request_id: str, decided_by: str = "user", feedback: Optional[str] = None
+    ) -> ApprovalRequest:
         req = self._requests.get(request_id)
         if not req:
             raise KeyError(f"Approval request '{request_id}' not found")

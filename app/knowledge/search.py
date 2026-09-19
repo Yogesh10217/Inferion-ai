@@ -2,6 +2,7 @@
 Search Module.
 Implements Hybrid Search, BM25, Dense, Metadata, and Semantic Search.
 """
+
 import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
@@ -15,7 +16,9 @@ logger = logging.getLogger(__name__)
 
 class SparseStore(ABC):
     @abstractmethod
-    async def search(self, query: str, collection_name: str, top_k: int, filter_expr: Optional[Dict] = None) -> List[Dict[str, Any]]:
+    async def search(
+        self, query: str, collection_name: str, top_k: int, filter_expr: Optional[Dict] = None
+    ) -> List[Dict[str, Any]]:
         """Search the sparse store (e.g. BM25)."""
 
 
@@ -27,7 +30,7 @@ class SearchEngine:
         vector_store: Optional[VectorStore] = None,
         sparse_store: Optional[SparseStore] = None,
         embedding_provider: Optional[ProviderFactory] = None,
-        collection_name: str = "default"
+        collection_name: str = "default",
     ):
         self.vector_store = vector_store
         self.sparse_store = sparse_store
@@ -85,8 +88,9 @@ class SearchEngine:
                 id=res.get("id"),
                 text=res.get("metadata", {}).get("text", ""),
                 metadata=res.get("metadata", {}),
-                score=res.get("score", 0.0)
-            ) for res in results
+                score=res.get("score", 0.0),
+            )
+            for res in results
         ]
 
     async def sparse_search(self, query: str, top_k: int, filter: Optional[Dict] = None) -> List[DocumentInfo]:
@@ -104,11 +108,14 @@ class SearchEngine:
                 id=res.get("id"),
                 text=res.get("metadata", {}).get("text", ""),
                 metadata=res.get("metadata", {}),
-                score=res.get("score", 0.0)
-            ) for res in results
+                score=res.get("score", 0.0),
+            )
+            for res in results
         ]
 
-    async def hybrid_search(self, query: str, top_k: int, alpha: float = 0.5, filter: Optional[Dict] = None) -> List[DocumentInfo]:
+    async def hybrid_search(
+        self, query: str, top_k: int, alpha: float = 0.5, filter: Optional[Dict] = None
+    ) -> List[DocumentInfo]:
         """
         Performs hybrid search combining dense and sparse results.
         alpha = 1.0 means purely dense, alpha = 0.0 means purely sparse.

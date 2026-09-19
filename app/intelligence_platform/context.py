@@ -118,5 +118,7 @@ class ContextBuilder:
             context_window=win,
         )
 
-        logger.info(f"[CONTEXT BUILDER] Assembled intelligence context '{ctx.context_id}' with {len(evidences)} evidence items for tenant '{tenant_id}'")
+        logger.info(
+            f"[CONTEXT BUILDER] Assembled intelligence context '{ctx.context_id}' with {len(evidences)} evidence items for tenant '{tenant_id}'"
+        )
         return ctx

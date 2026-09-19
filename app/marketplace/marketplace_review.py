@@ -38,7 +38,9 @@ class MarketplaceReviewEngine:
     def review_item_submission(self, item: MarketplaceItem, publisher_verified: bool = True) -> ReviewResult:
         """Execute automated review pipeline: Manifest -> Integrity -> Permissions -> Risk -> Approvals."""
         item.status = ItemLifecycle.UNDER_REVIEW
-        sec_report = self.security_engine.analyze_extension_security(item.manifest, publisher_verified=publisher_verified)
+        sec_report = self.security_engine.analyze_extension_security(
+            item.manifest, publisher_verified=publisher_verified
+        )
 
         appr_req_id = None
         if sec_report.requires_approval:

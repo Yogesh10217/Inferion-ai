@@ -101,16 +101,24 @@ def run_analysis(tenant_id: str = "global", resource_id: str = "res_1"):
 @router.post("/forecast")
 def generate_forecast(req: ForecastRequest):
     signals = mgr.signal_manager.list_signals(req.tenant_id, resource_id=req.target_resource_id)
-    ctx = mgr.context_builder.assemble_context(req.tenant_id, primary_resource_id=req.target_resource_id, signals=signals)
-    fc = mgr.forecast_engine.forecast(req.tenant_id, req.target_resource_id, req.forecast_type, ctx, horizon=req.horizon)
+    ctx = mgr.context_builder.assemble_context(
+        req.tenant_id, primary_resource_id=req.target_resource_id, signals=signals
+    )
+    fc = mgr.forecast_engine.forecast(
+        req.tenant_id, req.target_resource_id, req.forecast_type, ctx, horizon=req.horizon
+    )
     return fc.model_dump(mode="json")
 
 
 @router.post("/simulate")
 def run_simulation(req: SimulationRequest):
     signals = mgr.signal_manager.list_signals(req.tenant_id, resource_id=req.target_resource_id)
-    ctx = mgr.context_builder.assemble_context(req.tenant_id, primary_resource_id=req.target_resource_id, signals=signals)
-    sim_in = SimulationInput(scenario_name=req.scenario.value, target_resource_id=req.target_resource_id, action_type=req.action_type)
+    ctx = mgr.context_builder.assemble_context(
+        req.tenant_id, primary_resource_id=req.target_resource_id, signals=signals
+    )
+    sim_in = SimulationInput(
+        scenario_name=req.scenario.value, target_resource_id=req.target_resource_id, action_type=req.action_type
+    )
     res = mgr.simulation_engine.simulate(req.tenant_id, req.scenario, sim_in, ctx)
     return res.model_dump(mode="json")
 

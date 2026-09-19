@@ -36,7 +36,9 @@ class ApprovalEngine:
             payload=payload or {},
         )
         self._requests[req.request_id] = req
-        logger.info(f"[APPROVAL ENGINE] Created approval request '{req.request_id}' for action '{action_type}' (risk: {risk_level.value})")
+        logger.info(
+            f"[APPROVAL ENGINE] Created approval request '{req.request_id}' for action '{action_type}' (risk: {risk_level.value})"
+        )
         return req
 
     def approve(self, request_id: str, approver_id: str) -> ApprovalRequest:
@@ -75,4 +77,8 @@ class ApprovalEngine:
         return req
 
     def get_pending_requests(self, tenant_id: str = "default_tenant") -> List[ApprovalRequest]:
-        return [r for r in self._requests.values() if r.status == ApprovalStatus.PENDING and r.tenant_id in (tenant_id, "global", "default_tenant")]
+        return [
+            r
+            for r in self._requests.values()
+            if r.status == ApprovalStatus.PENDING and r.tenant_id in (tenant_id, "global", "default_tenant")
+        ]

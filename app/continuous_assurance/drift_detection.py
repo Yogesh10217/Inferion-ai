@@ -59,5 +59,7 @@ class ContinuousDriftDetectionEngine:
         )
 
         self.drift_repo.save(drift)
-        logger.info(f"Analyzed drift '{drift.drift_id}' for tenant '{tenant_id}' -> Type: {d_type.value}, Summary: {summary}")
+        logger.info(
+            f"Analyzed drift '{drift.drift_id}' for tenant '{tenant_id}' -> Type: {d_type.value}, Summary: {summary}"
+        )
         return drift

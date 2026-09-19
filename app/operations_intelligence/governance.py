@@ -53,13 +53,23 @@ class OperationsGovernanceEngine:
         reqs: List[OperationsGovernanceRequirement] = []
 
         if is_blocked:
-            reqs.append(OperationsGovernanceRequirement(code="HARD_POLICY_BLOCK", description="Hard policy violation", satisfied=False))
+            reqs.append(
+                OperationsGovernanceRequirement(
+                    code="HARD_POLICY_BLOCK", description="Hard policy violation", satisfied=False
+                )
+            )
             status = OperationsGovernanceStatus.BLOCK
             reason = f"Operational action '{action_type}' triggered hard policy BLOCK."
         elif requires_approval or risk_score >= 80.0:
-            reqs.append(OperationsGovernanceRequirement(code="HUMAN_APPROVAL_REQ", description="Human approval for high-risk action", satisfied=False))
+            reqs.append(
+                OperationsGovernanceRequirement(
+                    code="HUMAN_APPROVAL_REQ", description="Human approval for high-risk action", satisfied=False
+                )
+            )
             status = OperationsGovernanceStatus.REQUIRE_APPROVAL
-            reason = f"High-risk operational action '{action_type}' (risk: {risk_score}) requires explicit human approval."
+            reason = (
+                f"High-risk operational action '{action_type}' (risk: {risk_score}) requires explicit human approval."
+            )
         elif risk_score >= 60.0:
             status = OperationsGovernanceStatus.RESTRICT
             reason = f"Elevated risk score ({risk_score}) enforces RESTRICT constraints."

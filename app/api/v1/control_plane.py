@@ -133,14 +133,22 @@ async def create_workspace(data: CreateWorkspaceSchema, cp: ControlPlaneManager 
 
 
 @router.get("/workspaces")
-async def list_workspaces(tenant_id: Optional[str] = None, organization_id: Optional[str] = None, cp: ControlPlaneManager = Depends(get_control_plane)):
+async def list_workspaces(
+    tenant_id: Optional[str] = None,
+    organization_id: Optional[str] = None,
+    cp: ControlPlaneManager = Depends(get_control_plane),
+):
     wss = cp.workspace_manager.list_workspaces(tenant_id=tenant_id, organization_id=organization_id)
     return {"workspaces": [w.model_dump() for w in wss]}
 
 
 # Resource Inventory
 @router.get("/resources")
-async def list_resources(tenant_id: Optional[str] = None, resource_type: Optional[str] = None, cp: ControlPlaneManager = Depends(get_control_plane)):
+async def list_resources(
+    tenant_id: Optional[str] = None,
+    resource_type: Optional[str] = None,
+    cp: ControlPlaneManager = Depends(get_control_plane),
+):
     rt = ResourceType(resource_type.upper()) if resource_type else None
     res = cp.resource_registry.list_resources(tenant_id=tenant_id, resource_type=rt)
     return {"resources": [r.model_dump() for r in res]}
@@ -148,7 +156,9 @@ async def list_resources(tenant_id: Optional[str] = None, resource_type: Optiona
 
 # Configuration
 @router.get("/configuration")
-async def get_configuration(scope: ConfigurationScope, target_id: str, cp: ControlPlaneManager = Depends(get_control_plane)):
+async def get_configuration(
+    scope: ConfigurationScope, target_id: str, cp: ControlPlaneManager = Depends(get_control_plane)
+):
     cfg = cp.configuration_manager.get_configuration(scope=scope, target_id=target_id)
     return {"scope": scope.value, "target_id": target_id, "configuration": cfg}
 
@@ -156,20 +166,28 @@ async def get_configuration(scope: ConfigurationScope, target_id: str, cp: Contr
 @router.post("/configuration")
 async def update_configuration(data: ConfigUpdateSchema, cp: ControlPlaneManager = Depends(get_control_plane)):
     cp.configuration_validator.validate_configuration(data.settings)
-    ver = cp.configuration_manager.update_configuration(scope=data.scope, target_id=data.target_id, settings_update=data.settings)
+    ver = cp.configuration_manager.update_configuration(
+        scope=data.scope, target_id=data.target_id, settings_update=data.settings
+    )
     return {"status": "updated", "version": ver.model_dump()}
 
 
 @router.post("/configuration/{version}/rollback")
-async def rollback_configuration(version: int, scope: ConfigurationScope, target_id: str, cp: ControlPlaneManager = Depends(get_control_plane)):
-    ver = cp.configuration_manager.rollback_configuration(scope=scope, target_id=target_id, target_version_number=version)
+async def rollback_configuration(
+    version: int, scope: ConfigurationScope, target_id: str, cp: ControlPlaneManager = Depends(get_control_plane)
+):
+    ver = cp.configuration_manager.rollback_configuration(
+        scope=scope, target_id=target_id, target_version_number=version
+    )
     return {"status": "rolled_back", "version": ver.model_dump()}
 
 
 # Policies
 @router.post("/policies", status_code=status.HTTP_201_CREATED)
 async def create_policy(data: CreatePolicySchema, cp: ControlPlaneManager = Depends(get_control_plane)):
-    pol = cp.policy_manager.create_policy(name=data.name, target_type=data.target_type, tenant_id=data.tenant_id, rules=data.rules)
+    pol = cp.policy_manager.create_policy(
+        name=data.name, target_type=data.target_type, tenant_id=data.tenant_id, rules=data.rules
+    )
     return {"status": "created", "policy": pol.model_dump()}
 
 
@@ -184,7 +202,9 @@ async def simulate_policy(id: str, cp: ControlPlaneManager = Depends(get_control
     pol = cp.policy_manager.get_policy(id)
     if not pol:
         raise HTTPException(status_code=404, detail="Policy not found")
-    sim = cp.policy_simulator.simulate_policy_impact(name=pol.name, target_type=pol.target_type, rules=pol.rules, tenant_id=pol.tenant_id)
+    sim = cp.policy_simulator.simulate_policy_impact(
+        name=pol.name, target_type=pol.target_type, rules=pol.rules, tenant_id=pol.tenant_id
+    )
     return {"impact_report": sim.model_dump()}
 
 
@@ -199,7 +219,9 @@ async def list_features(cp: ControlPlaneManager = Depends(get_control_plane)):
 @router.post("/operations")
 async def execute_operation(data: AdminOpSchema, cp: ControlPlaneManager = Depends(get_control_plane)):
     try:
-        res = cp.admin_operations.execute_operation(action=data.action, target_id=data.target_id, tenant_id=data.tenant_id, approved=data.approved)
+        res = cp.admin_operations.execute_operation(
+            action=data.action, target_id=data.target_id, tenant_id=data.tenant_id, approved=data.approved
+        )
         return {"operation": res.model_dump()}
     except ApprovalRequiredException as e:
         raise HTTPException(status_code=402, detail=e.message)

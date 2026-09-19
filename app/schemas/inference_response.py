@@ -33,7 +33,9 @@ class InferenceResponse(BaseModel):
     usage: Usage = Field(default_factory=Usage, description="Token usage statistics.")
     finish_reason: str = Field(default="stop", description="Reason generation stopped.")
     latency_ms: float = Field(default=0.0, ge=0.0, description="Provider latency in milliseconds.")
-    created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Timestamp of response creation.")
+    created: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), description="Timestamp of response creation."
+    )
     metadata: dict[str, Any] = Field(default_factory=dict, description="Provider-agnostic metadata.")
     request_id: str | None = Field(default=None, description="Optional request correlation identifier.")
     raw_response: Any | None = Field(default=None, description="Provider-specific raw payload, if any.")

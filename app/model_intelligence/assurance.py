@@ -60,7 +60,11 @@ class ModelAssuranceManager:
         control_assurance_ref: Optional[str] = None,
     ) -> AssuranceAssessment:
         overall = sum(s.score * s.weight for s in scores) / max(sum(s.weight for s in scores), 1.0)
-        status = AssuranceStatus.ASSURED if overall >= 0.85 else (AssuranceStatus.WARNING if overall >= 0.7 else AssuranceStatus.UNASSURED)
+        status = (
+            AssuranceStatus.ASSURED
+            if overall >= 0.85
+            else (AssuranceStatus.WARNING if overall >= 0.7 else AssuranceStatus.UNASSURED)
+        )
 
         assess = AssuranceAssessment(
             assessment_id=f"assr-{uuid.uuid4().hex[:8]}",
@@ -73,7 +77,9 @@ class ModelAssuranceManager:
         )
 
         self._assessments[model_id] = assess
-        logger.info(f"[MODEL ASSURANCE] Computed assurance for model {model_id} (Tenant: {tenant_id}) Score: {overall:.2f} Status: {status}")
+        logger.info(
+            f"[MODEL ASSURANCE] Computed assurance for model {model_id} (Tenant: {tenant_id}) Score: {overall:.2f} Status: {status}"
+        )
         return assess
 
     def get_latest_assurance(self, model_id: str, tenant_id: str) -> AssuranceAssessment:

@@ -45,12 +45,18 @@ class MemoryItemRecord:
             "organization_id": self.organization_id,
             "workspace_id": self.workspace_id,
             "user_id": self.user_id,
-            "memory_type": self.memory_type.value if isinstance(self.memory_type, MemoryType) else str(self.memory_type),
+            "memory_type": (
+                self.memory_type.value if isinstance(self.memory_type, MemoryType) else str(self.memory_type)
+            ),
             "content": self.content,
             "metadata": self.metadata,
             "importance_score": self.importance_score,
             "confidence_score": self.confidence_score,
-            "retention_policy": self.retention_policy.value if isinstance(self.retention_policy, RetentionPolicy) else str(self.retention_policy),
+            "retention_policy": (
+                self.retention_policy.value
+                if isinstance(self.retention_policy, RetentionPolicy)
+                else str(self.retention_policy)
+            ),
             "status": self.status.value if isinstance(self.status, MemoryStatus) else str(self.status),
             "created_at": self.created_at,
             "updated_at": self.updated_at,
@@ -78,7 +84,13 @@ class MemoryStore:
             raise TenantMemoryIsolationError(f"Tenant isolation mismatch for memory record '{memory_id}'")
         return rec
 
-    def update(self, memory_id: str, organization_id: str, content: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None) -> MemoryItemRecord:
+    def update(
+        self,
+        memory_id: str,
+        organization_id: str,
+        content: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> MemoryItemRecord:
         rec = self.get(memory_id, organization_id)
         if content:
             rec.content = content
@@ -97,14 +109,20 @@ class MemoryStore:
         rec.status = MemoryStatus.ARCHIVED
         return rec
 
-    def list(self, organization_id: str, workspace_id: Optional[str] = None, memory_type: Optional[str] = None) -> List[MemoryItemRecord]:
+    def list(
+        self, organization_id: str, workspace_id: Optional[str] = None, memory_type: Optional[str] = None
+    ) -> List[MemoryItemRecord]:
         results = []
         for rec in self._records.values():
             if rec.organization_id != organization_id:
                 continue
             if workspace_id and rec.workspace_id != workspace_id:
                 continue
-            if memory_type and (rec.memory_type.value if isinstance(rec.memory_type, MemoryType) else str(rec.memory_type)) != memory_type:
+            if (
+                memory_type
+                and (rec.memory_type.value if isinstance(rec.memory_type, MemoryType) else str(rec.memory_type))
+                != memory_type
+            ):
                 continue
             if rec.status == MemoryStatus.ACTIVE:
                 results.append(rec)

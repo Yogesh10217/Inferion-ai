@@ -147,7 +147,9 @@ class AutonomousAssuranceManager:
     def get_steps(self, workflow_id: str) -> List[WorkflowStep]:
         return self._workflow_steps.get(workflow_id, [])
 
-    def run_full_autonomous_assurance_flow(self, tenant_id: str, name: str = "Enterprise Autonomous Assurance Flow") -> Dict[str, Any]:
+    def run_full_autonomous_assurance_flow(
+        self, tenant_id: str, name: str = "Enterprise Autonomous Assurance Flow"
+    ) -> Dict[str, Any]:
         return self.run_full_autonomous_flow(tenant_id=tenant_id, title=name)
 
     def create_workflow(
@@ -177,10 +179,14 @@ class AutonomousAssuranceManager:
             raise AutonomousWorkflowNotFoundException(f"Workflow '{workflow_id}' not found for tenant '{tenant_id}'.")
         return wf
 
-    def create_plan(self, workflow_id: str, tenant_id: str, risk_score: float = 20.0, trust_score: float = 90.0) -> AutonomousPlan:
+    def create_plan(
+        self, workflow_id: str, tenant_id: str, risk_score: float = 20.0, trust_score: float = 90.0
+    ) -> AutonomousPlan:
         wf = self.get_workflow(workflow_id, tenant_id)
 
-        self.state_machine.transition(wf, WorkflowStatus.ANALYZING, reason="Analyzing cross-domain signals and dependencies")
+        self.state_machine.transition(
+            wf, WorkflowStatus.ANALYZING, reason="Analyzing cross-domain signals and dependencies"
+        )
 
         # Concurrency lock check
         self.concurrency_manager.acquire_lock(wf.metadata.target_resource_id, wf.workflow_id, tenant_id)
@@ -193,12 +199,16 @@ class AutonomousAssuranceManager:
         self.timeline_engine.add_event(wf.workflow_id, tenant_id, "PLAN_CREATED", f"Plan '{plan.plan_id}' generated.")
         return plan
 
-    def evaluate_governance(self, workflow_id: str, tenant_id: str, risk_score: float = 20.0, trust_score: float = 90.0) -> AutonomousGovernanceEvaluation:
+    def evaluate_governance(
+        self, workflow_id: str, tenant_id: str, risk_score: float = 20.0, trust_score: float = 90.0
+    ) -> AutonomousGovernanceEvaluation:
         wf = self.get_workflow(workflow_id, tenant_id)
 
         self.state_machine.transition(wf, WorkflowStatus.GOVERNANCE_EVALUATED, reason="Evaluating governance policies")
 
-        gov_eval = self.governance_engine.evaluate_workflow_governance(workflow_id, tenant_id, risk_score=risk_score, trust_score=trust_score)
+        gov_eval = self.governance_engine.evaluate_workflow_governance(
+            workflow_id, tenant_id, risk_score=risk_score, trust_score=trust_score
+        )
 
         if gov_eval.requires_approval:
             self.state_machine.transition(wf, WorkflowStatus.REQUIRES_APPROVAL, reason="Awaiting human approval")
@@ -209,14 +219,18 @@ class AutonomousAssuranceManager:
 
         return gov_eval
 
-    def approve_workflow(self, workflow_id: str, tenant_id: str, approver: str, approved: bool, comments: Optional[str] = None) -> AutonomousWorkflow:
+    def approve_workflow(
+        self, workflow_id: str, tenant_id: str, approver: str, approved: bool, comments: Optional[str] = None
+    ) -> AutonomousWorkflow:
         wf = self.get_workflow(workflow_id, tenant_id)
         self.approval_engine.submit_approval(workflow_id, tenant_id, approver, approved, comments)
         self.human_review_engine.resolve_ticket(workflow_id, tenant_id, approver, approved, comments)
 
         if approved:
             if wf.status == WorkflowStatus.REQUIRES_APPROVAL:
-                self.state_machine.transition(wf, WorkflowStatus.APPROVED, reason=f"Human approval granted by '{approver}'")
+                self.state_machine.transition(
+                    wf, WorkflowStatus.APPROVED, reason=f"Human approval granted by '{approver}'"
+                )
             self.timeline_engine.add_event(wf.workflow_id, tenant_id, "WORKFLOW_APPROVED", f"Approved by '{approver}'.")
         else:
             self.state_machine.transition(wf, WorkflowStatus.DENIED, reason=f"Denied by '{approver}'")
@@ -224,7 +238,9 @@ class AutonomousAssuranceManager:
 
         return wf
 
-    def delegate_workflow(self, workflow_id: str, tenant_id: str, action_name: str = "RESTART_SERVICE") -> DelegationPlan:
+    def delegate_workflow(
+        self, workflow_id: str, tenant_id: str, action_name: str = "RESTART_SERVICE"
+    ) -> DelegationPlan:
         wf = self.get_workflow(workflow_id, tenant_id)
         plan = self.planner.get_plan(workflow_id) or self.create_plan(workflow_id, tenant_id)
 
@@ -245,7 +261,9 @@ class AutonomousAssuranceManager:
         )
         wf.delegation_id = del_plan.delegation_id
         self.execution_tracker.track_execution(workflow_id, tenant_id, del_plan.delegation_id)
-        self.timeline_engine.add_event(wf.workflow_id, tenant_id, "DELEGATION_DISPATCHED", f"Delegation '{del_plan.delegation_id}' dispatched.")
+        self.timeline_engine.add_event(
+            wf.workflow_id, tenant_id, "DELEGATION_DISPATCHED", f"Delegation '{del_plan.delegation_id}' dispatched."
+        )
         self.metrics_collector.increment("ai_autonomous_assurance_delegation_total")
         return del_plan
 
@@ -257,29 +275,43 @@ class AutonomousAssuranceManager:
         self.state_machine.transition(wf, WorkflowStatus.VERIFYING, reason="Verifying outcome")
 
         try:
-            res = self.verification_engine.verify_workflow(workflow_id, tenant_id, del_id, simulate_failure=simulate_failure)
+            res = self.verification_engine.verify_workflow(
+                workflow_id, tenant_id, del_id, simulate_failure=simulate_failure
+            )
             wf.verification_id = res.verification_id
             self.execution_tracker.update_status(workflow_id, ExecutionStatus.SUCCEEDED, result=res.metrics_summary)
-            self.timeline_engine.add_event(wf.workflow_id, tenant_id, "VERIFICATION_PASSED", "Verification passed cleanly.")
+            self.timeline_engine.add_event(
+                wf.workflow_id, tenant_id, "VERIFICATION_PASSED", "Verification passed cleanly."
+            )
             self.metrics_collector.increment("ai_autonomous_assurance_verification_total")
             return res
         except Exception as e:
             self.execution_tracker.update_status(workflow_id, ExecutionStatus.FAILED, result={"error": str(e)})
-            self.timeline_engine.add_event(wf.workflow_id, tenant_id, "VERIFICATION_FAILED", f"Verification failed: {e}")
+            self.timeline_engine.add_event(
+                wf.workflow_id, tenant_id, "VERIFICATION_FAILED", f"Verification failed: {e}"
+            )
             raise
 
-    def recover_workflow(self, workflow_id: str, tenant_id: str, failure_reason: str = "Verification failed") -> RecoveryPlan:
+    def recover_workflow(
+        self, workflow_id: str, tenant_id: str, failure_reason: str = "Verification failed"
+    ) -> RecoveryPlan:
         wf = self.get_workflow(workflow_id, tenant_id)
-        self.state_machine.transition(wf, WorkflowStatus.RECOVERING, reason=f"Triggering recovery due to: {failure_reason}")
+        self.state_machine.transition(
+            wf, WorkflowStatus.RECOVERING, reason=f"Triggering recovery due to: {failure_reason}"
+        )
         rec_plan = self.recovery_planner.plan_recovery(workflow_id, tenant_id, failure_reason)
-        self.timeline_engine.add_event(wf.workflow_id, tenant_id, "RECOVERY_PLANNED", f"Recovery planned: {failure_reason}")
+        self.timeline_engine.add_event(
+            wf.workflow_id, tenant_id, "RECOVERY_PLANNED", f"Recovery planned: {failure_reason}"
+        )
         self.metrics_collector.increment("ai_autonomous_assurance_recovery_total")
         return rec_plan
 
     def finalize_workflow(self, workflow_id: str, tenant_id: str) -> Dict[str, Any]:
         wf = self.get_workflow(workflow_id, tenant_id)
         if wf.is_finalized:
-            raise ImmutableAutonomousAssuranceRecordException(f"Workflow '{workflow_id}' is already finalized and sealed as immutable evidence.")
+            raise ImmutableAutonomousAssuranceRecordException(
+                f"Workflow '{workflow_id}' is already finalized and sealed as immutable evidence."
+            )
 
         plan = self.planner.get_plan(workflow_id)
         del_plan = self.delegation_coordinator.get_delegation(workflow_id)
@@ -298,7 +330,9 @@ class AutonomousAssuranceManager:
         wf.evidence_id = sealed_ev.bundle_id
 
         # 2. Assurance Scoring
-        score = self.assurance_engine.calculate_assurance(workflow_id, tenant_id, verification_passed=(verif.status.value == "VERIFIED" if verif else True))
+        score = self.assurance_engine.calculate_assurance(
+            workflow_id, tenant_id, verification_passed=(verif.status.value == "VERIFIED" if verif else True)
+        )
 
         # 3. Explainability Record
         expl = self.explainability_engine.generate_explanation(
@@ -314,7 +348,9 @@ class AutonomousAssuranceManager:
         learning = self.learning_engine.process_workflow_outcome(workflow_id, tenant_id, outcome_status="COMPLETED")
 
         # 5. Snapshot & Complete Workflow
-        self.snapshot_store.capture_snapshot(workflow_id, tenant_id, status="COMPLETED", evidence_hash=sealed_ev.evidence_hash)
+        self.snapshot_store.capture_snapshot(
+            workflow_id, tenant_id, status="COMPLETED", evidence_hash=sealed_ev.evidence_hash
+        )
         wf.status = WorkflowStatus.COMPLETED
         wf.completed_at = datetime.now(timezone.utc)
         wf.is_finalized = True
@@ -341,7 +377,9 @@ class AutonomousAssuranceManager:
             "learning": learning.model_dump(),
         }
 
-    def run_full_autonomous_flow(self, tenant_id: str, title: str = "Enterprise Autonomous Assurance Flow") -> Dict[str, Any]:
+    def run_full_autonomous_flow(
+        self, tenant_id: str, title: str = "Enterprise Autonomous Assurance Flow"
+    ) -> Dict[str, Any]:
         """Runs end-to-end lifecycle flow: Create -> Plan -> Governance -> Approval -> Delegate -> Verify -> Evidence -> Assurance -> Complete."""
         wf = self.create_workflow(tenant_id, title)
         plan = self.create_plan(wf.workflow_id, tenant_id, risk_score=20.0, trust_score=90.0)

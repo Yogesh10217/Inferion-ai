@@ -41,7 +41,12 @@ class PlanningDecisionEngine:
             valid_options = options
 
         # Pick option with highest utility score: (confidence / (cost * duration))
-        best_opt = max(valid_options, key=lambda o: (o.confidence_score / (max(0.001, o.estimated_cost) * max(1.0, o.estimated_duration_seconds))))
+        best_opt = max(
+            valid_options,
+            key=lambda o: (
+                o.confidence_score / (max(0.001, o.estimated_cost) * max(1.0, o.estimated_duration_seconds))
+            ),
+        )
 
         outcome = DecisionOutcome(
             selected_option=best_opt,

@@ -17,7 +17,9 @@ class RuntimeIdempotencyManager:
         self._lock = threading.RLock()
 
     def generate_key(self, tenant_id: str, operation_name: str, payload: Dict[str, Any]) -> str:
-        serialized = json.dumps({"tenant": tenant_id, "op": operation_name, "data": payload}, sort_keys=True, default=str)
+        serialized = json.dumps(
+            {"tenant": tenant_id, "op": operation_name, "data": payload}, sort_keys=True, default=str
+        )
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def check_and_record(self, idempotency_key: str) -> bool:

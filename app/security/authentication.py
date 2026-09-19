@@ -23,7 +23,9 @@ class AuthenticationManager:
         self._registered_service_tokens: Dict[str, Dict[str, Any]] = {}
         self._audit_logs: list = []
 
-    def log_audit_event(self, action: str, identity_id: str, status: str, details: Optional[Dict[str, Any]] = None) -> None:
+    def log_audit_event(
+        self, action: str, identity_id: str, status: str, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         event = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "action": action,
@@ -120,7 +122,9 @@ class AuthenticationManager:
         self.log_audit_event("authenticate_api_key", identity.identity_id, "SUCCESS")
         return identity
 
-    def register_service_token(self, service_id: str, service_secret: str, tenant_id: str = "global", scopes: Optional[list] = None) -> str:
+    def register_service_token(
+        self, service_id: str, service_secret: str, tenant_id: str = "global", scopes: Optional[list] = None
+    ) -> str:
         """Register service token for internal service-to-service auth."""
         token = f"svc_{service_id}_{hash(service_secret)}"
         self._registered_service_tokens[token] = {

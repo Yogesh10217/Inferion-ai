@@ -20,7 +20,9 @@ class ReliabilityTrustScore(BaseModel):
 class ReliabilityTrustEngine:
     """Computes service reliability trust scores and adapts to TrustAssessment contract."""
 
-    def compute_trust_score(self, tenant_id: str, service_id: str, slo_achievement_pct: float = 99.5) -> ReliabilityTrustScore:
+    def compute_trust_score(
+        self, tenant_id: str, service_id: str, slo_achievement_pct: float = 99.5
+    ) -> ReliabilityTrustScore:
         score = min(100.0, slo_achievement_pct)
         return ReliabilityTrustScore(
             tenant_id=tenant_id,

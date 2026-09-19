@@ -20,6 +20,7 @@ class AuthorizationDecisionOutcome(str, Enum):
 
 class AuthorizationConstraint(BaseModel):
     """Constraint applied to authorization decision."""
+
     constraint_id: str = Field(default_factory=lambda: f"cnst_{uuid.uuid4().hex[:8]}")
     name: str
     constraint_type: str  # IP_RESTRICTION, TIME_WINDOW, MFA_REQUIRED, RATE_LIMIT, RESOURCE_BOUND
@@ -28,6 +29,7 @@ class AuthorizationConstraint(BaseModel):
 
 class AuthorizationEvidence(BaseModel):
     """Evidence evaluating authorization request."""
+
     evidence_id: str = Field(default_factory=lambda: f"evid_{uuid.uuid4().hex[:8]}")
     evaluator: str = "UnifiedPolicyEvaluator"
     policy_code: Optional[str] = None
@@ -38,6 +40,7 @@ class AuthorizationEvidence(BaseModel):
 
 class AuthorizationRequest(BaseModel):
     """Governed Authorization Request."""
+
     request_id: str = Field(default_factory=lambda: f"auth_req_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     subject_identity_id: str
@@ -50,6 +53,7 @@ class AuthorizationRequest(BaseModel):
 
 class AuthorizationDecision(BaseModel):
     """Governed Authorization Decision."""
+
     decision_id: str = Field(default_factory=lambda: f"auth_dec_{uuid.uuid4().hex[:12]}")
     request_id: str
     tenant_id: str
@@ -89,7 +93,11 @@ class AuthorizationManager:
         )
         self._requests[req.request_id] = req
 
-        is_high_risk = context.get("is_high_risk", False) or action.upper() in ["DELETE", "GRANT_ADMIN", "DISABLE_AUDIT"]
+        is_high_risk = context.get("is_high_risk", False) or action.upper() in [
+            "DELETE",
+            "GRANT_ADMIN",
+            "DISABLE_AUDIT",
+        ]
 
         if override_outcome:
             outcome = override_outcome
@@ -113,7 +121,12 @@ class AuthorizationManager:
         evid = AuthorizationEvidence(
             policy_code="POL_ACCESS_01",
             risk_score=85.0 if is_high_risk else 15.0,
-            passed=outcome in [AuthorizationDecisionOutcome.ALLOW, AuthorizationDecisionOutcome.RESTRICT, AuthorizationDecisionOutcome.REQUIRE_APPROVAL],
+            passed=outcome
+            in [
+                AuthorizationDecisionOutcome.ALLOW,
+                AuthorizationDecisionOutcome.RESTRICT,
+                AuthorizationDecisionOutcome.REQUIRE_APPROVAL,
+            ],
             details={"action": action, "resource_id": resource_id},
         )
 

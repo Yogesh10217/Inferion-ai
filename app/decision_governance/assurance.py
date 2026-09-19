@@ -54,22 +54,40 @@ class DecisionAssuranceManager:
         if not custom_factors:
             custom_factors = [
                 DecisionAssuranceFactor(
-                    dimension=DecisionAssuranceDimension.EVIDENCE_QUALITY, score=0.96, weight=0.20, findings=["Immutable SHA-256 evidence bundle verified"]
+                    dimension=DecisionAssuranceDimension.EVIDENCE_QUALITY,
+                    score=0.96,
+                    weight=0.20,
+                    findings=["Immutable SHA-256 evidence bundle verified"],
                 ),
                 DecisionAssuranceFactor(
-                    dimension=DecisionAssuranceDimension.GOVERNANCE_COMPLIANCE, score=1.0, weight=0.20, findings=["Zero policy breaches"]
+                    dimension=DecisionAssuranceDimension.GOVERNANCE_COMPLIANCE,
+                    score=1.0,
+                    weight=0.20,
+                    findings=["Zero policy breaches"],
                 ),
                 DecisionAssuranceFactor(
-                    dimension=DecisionAssuranceDimension.DECISION_CONFIDENCE, score=0.90, weight=0.15, findings=["High multi-factor signal confidence"]
+                    dimension=DecisionAssuranceDimension.DECISION_CONFIDENCE,
+                    score=0.90,
+                    weight=0.15,
+                    findings=["High multi-factor signal confidence"],
                 ),
                 DecisionAssuranceFactor(
-                    dimension=DecisionAssuranceDimension.RISK_ALIGNMENT, score=0.92, weight=0.15, findings=["Risk profile within approved boundaries"]
+                    dimension=DecisionAssuranceDimension.RISK_ALIGNMENT,
+                    score=0.92,
+                    weight=0.15,
+                    findings=["Risk profile within approved boundaries"],
                 ),
                 DecisionAssuranceFactor(
-                    dimension=DecisionAssuranceDimension.EXECUTION_VERIFICATION, score=0.95, weight=0.15, findings=["Delegated request verified"]
+                    dimension=DecisionAssuranceDimension.EXECUTION_VERIFICATION,
+                    score=0.95,
+                    weight=0.15,
+                    findings=["Delegated request verified"],
                 ),
                 DecisionAssuranceFactor(
-                    dimension=DecisionAssuranceDimension.OUTCOME_QUALITY, score=0.94, weight=0.15, findings=["Positive business impact achieved"]
+                    dimension=DecisionAssuranceDimension.OUTCOME_QUALITY,
+                    score=0.94,
+                    weight=0.15,
+                    findings=["Positive business impact achieved"],
                 ),
             ]
 

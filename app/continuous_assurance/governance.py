@@ -12,9 +12,7 @@ logger = logging.getLogger(__name__)
 class ContinuousAssuranceGovernanceEngine:
     """Evaluates continuous governance boundary rules (ALLOW, DENY, REQUIRE_APPROVAL, ADVISORY_ONLY)."""
 
-    def evaluate_governance(
-        self, tenant_id: str, action_type: str, risk_level: str = "MEDIUM"
-    ) -> Dict[str, Any]:
+    def evaluate_governance(self, tenant_id: str, action_type: str, risk_level: str = "MEDIUM") -> Dict[str, Any]:
         high_risk_actions = {
             "disable_identity",
             "rotate_credential",
@@ -36,7 +34,9 @@ class ContinuousAssuranceGovernanceEngine:
             outcome = GovernanceDecisionOutcome.ALLOW
             rationale = f"Action '{action_type}' within low/medium risk policy boundaries."
 
-        logger.info(f"Evaluated governance for tenant '{tenant_id}', action '{action_type}' -> Outcome: {outcome.value}")
+        logger.info(
+            f"Evaluated governance for tenant '{tenant_id}', action '{action_type}' -> Outcome: {outcome.value}"
+        )
 
         return {
             "outcome": outcome.value,

@@ -118,7 +118,9 @@ class FailoverManager:
 
         if is_high_risk:
             # High-risk failover requires approval
-            raise HighRiskRecoveryRequiresApprovalException(f"Failover request '{plan.plan_id}' for service '{service_id}' from '{source_region}' to '{target_region}' requires human approval.")
+            raise HighRiskRecoveryRequiresApprovalException(
+                f"Failover request '{plan.plan_id}' for service '{service_id}' from '{source_region}' to '{target_region}' requires human approval."
+            )
 
         return plan
 

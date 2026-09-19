@@ -43,10 +43,24 @@ class ObservabilityContext:
     def from_dict(cls, data: Dict[str, Any]) -> ObservabilityContext:
         """Create an ObservabilityContext from a dictionary."""
         valid_keys = {
-            "trace_id", "span_id", "parent_span_id", "request_id", "execution_id",
-            "workflow_id", "agent_id", "team_id", "worker_id", "tool_execution_id",
-            "tenant_id", "organization_id", "workspace_id", "user_id", "model_id",
-            "provider", "correlation_id", "baggage"
+            "trace_id",
+            "span_id",
+            "parent_span_id",
+            "request_id",
+            "execution_id",
+            "workflow_id",
+            "agent_id",
+            "team_id",
+            "worker_id",
+            "tool_execution_id",
+            "tenant_id",
+            "organization_id",
+            "workspace_id",
+            "user_id",
+            "model_id",
+            "provider",
+            "correlation_id",
+            "baggage",
         }
         filtered = {k: v for k, v in data.items() if k in valid_keys}
         if "baggage" in filtered and not isinstance(filtered["baggage"], dict):

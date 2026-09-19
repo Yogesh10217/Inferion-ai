@@ -60,7 +60,11 @@ class RemediationManager:
                 return RemediationPlan(**plan_dict)
 
         # Create delegation request for first action
-        first_action = actions[0] if actions else RemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="RESTART_POD")
+        first_action = (
+            actions[0]
+            if actions
+            else RemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="RESTART_POD")
+        )
         delegation = DelegationRequest(
             tenant_id=tenant_id,
             target=first_action.target_manager,

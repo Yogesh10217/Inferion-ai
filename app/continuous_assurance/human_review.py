@@ -9,8 +9,18 @@ class HumanReviewLifecycle:
     @staticmethod
     def transition(current: HumanReviewState, target: HumanReviewState) -> HumanReviewState:
         valid_targets = {
-            HumanReviewState.PENDING: {HumanReviewState.IN_REVIEW, HumanReviewState.APPROVED, HumanReviewState.REJECTED, HumanReviewState.CANCELLED},
-            HumanReviewState.IN_REVIEW: {HumanReviewState.APPROVED, HumanReviewState.REJECTED, HumanReviewState.ESCALATED, HumanReviewState.EXPIRED},
+            HumanReviewState.PENDING: {
+                HumanReviewState.IN_REVIEW,
+                HumanReviewState.APPROVED,
+                HumanReviewState.REJECTED,
+                HumanReviewState.CANCELLED,
+            },
+            HumanReviewState.IN_REVIEW: {
+                HumanReviewState.APPROVED,
+                HumanReviewState.REJECTED,
+                HumanReviewState.ESCALATED,
+                HumanReviewState.EXPIRED,
+            },
             HumanReviewState.APPROVED: set(),
             HumanReviewState.REJECTED: set(),
             HumanReviewState.ESCALATED: {HumanReviewState.APPROVED, HumanReviewState.REJECTED},

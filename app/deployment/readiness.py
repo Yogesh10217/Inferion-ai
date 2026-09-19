@@ -33,7 +33,9 @@ class DeploymentReadinessProbe:
         deps_ok = DeploymentDependencyValidator.evaluate_dependency_health(dep_results)
 
         # 3. Manager validation
-        managers_ok = len(PlatformServiceRegistry.get_registered_manager_names(self.container)) > 0 if self.container else True
+        managers_ok = (
+            len(PlatformServiceRegistry.get_registered_manager_names(self.container)) > 0 if self.container else True
+        )
 
         # 4. Startup state check
         startup_ok = self.startup_state in (StartupState.READY, StartupState.INITIALIZED)

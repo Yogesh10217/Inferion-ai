@@ -15,6 +15,7 @@ class PluginContext:
             if p.action == action and (p.resource == resource or p.resource == "*"):
                 return True
         from .exceptions import PluginPermissionError
+
         raise PluginPermissionError(f"Plugin {self.plugin_id} lacks permission {action} on {resource}")
 
     async def publish_event(self, event_type: str, data: dict):

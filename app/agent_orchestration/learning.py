@@ -62,20 +62,24 @@ class AgentLearningManager:
         recs = []
 
         if is_successful and execution_duration_sec > 10.0:
-            recs.append(AgentLearningRecommendation(
-                agent_id=agent_id,
-                proposed_optimization="Parallelize execution steps to reduce total runtime.",
-                requires_governance=False,
-                affects_autonomy=False,
-            ))
+            recs.append(
+                AgentLearningRecommendation(
+                    agent_id=agent_id,
+                    proposed_optimization="Parallelize execution steps to reduce total runtime.",
+                    requires_governance=False,
+                    affects_autonomy=False,
+                )
+            )
 
         if is_successful and cost_dollars < 0.10:
-            recs.append(AgentLearningRecommendation(
-                agent_id=agent_id,
-                proposed_optimization="Candidate for autonomy level expansion based on high efficiency.",
-                requires_governance=True,
-                affects_autonomy=True,
-            ))
+            recs.append(
+                AgentLearningRecommendation(
+                    agent_id=agent_id,
+                    proposed_optimization="Candidate for autonomy level expansion based on high efficiency.",
+                    requires_governance=True,
+                    affects_autonomy=True,
+                )
+            )
 
         record = AgentLearningRecord(
             tenant_id=tenant_id,

@@ -67,7 +67,12 @@ VALID_TRANSITIONS: Dict[ApplicationStatus, List[ApplicationStatus]] = {
     ApplicationStatus.VALIDATED: [ApplicationStatus.REVIEW, ApplicationStatus.DRAFT, ApplicationStatus.ARCHIVED],
     ApplicationStatus.REVIEW: [ApplicationStatus.APPROVED, ApplicationStatus.DRAFT, ApplicationStatus.ARCHIVED],
     ApplicationStatus.APPROVED: [ApplicationStatus.DEPLOYED, ApplicationStatus.DRAFT, ApplicationStatus.ARCHIVED],
-    ApplicationStatus.DEPLOYED: [ApplicationStatus.ACTIVE, ApplicationStatus.DEGRADED, ApplicationStatus.SUSPENDED, ApplicationStatus.DEPRECATED],
+    ApplicationStatus.DEPLOYED: [
+        ApplicationStatus.ACTIVE,
+        ApplicationStatus.DEGRADED,
+        ApplicationStatus.SUSPENDED,
+        ApplicationStatus.DEPRECATED,
+    ],
     ApplicationStatus.ACTIVE: [ApplicationStatus.DEGRADED, ApplicationStatus.SUSPENDED, ApplicationStatus.DEPRECATED],
     ApplicationStatus.DEGRADED: [ApplicationStatus.ACTIVE, ApplicationStatus.SUSPENDED, ApplicationStatus.DEPRECATED],
     ApplicationStatus.SUSPENDED: [ApplicationStatus.ACTIVE, ApplicationStatus.DEPRECATED, ApplicationStatus.ARCHIVED],
@@ -194,9 +199,7 @@ class ApplicationRegistry:
     def get_application(self, application_id: str, tenant_id: str) -> Application:
         raw = self.repository.get_application(application_id, tenant_id)
         if not raw:
-            raise ApplicationNotFoundException(
-                f"Application '{application_id}' not found for tenant '{tenant_id}'."
-            )
+            raise ApplicationNotFoundException(f"Application '{application_id}' not found for tenant '{tenant_id}'.")
         return Application(**raw)
 
     def list_applications(self, tenant_id: str) -> List[Application]:

@@ -57,7 +57,7 @@ class CreateInvestigationRequest(BaseModel):
 def ingest_signal(
     req: IngestSignalRequest,
     x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    mgr: UnifiedIntelligenceManager = Depends(get_manager),
 ):
     try:
         domain_enum = IntelligenceDomain(req.domain)
@@ -74,7 +74,7 @@ def ingest_signal(
         risk_score=req.risk_score,
         evidence_references=req.evidence_references,
         metadata=req.metadata,
-        idempotency_key=req.idempotency_key
+        idempotency_key=req.idempotency_key,
     )
 
     sig = mgr.ingest_domain_input(x_tenant_id, domain_input, req.idempotency_key)
@@ -83,8 +83,7 @@ def ingest_signal(
 
 @router.post("/situations/evaluate", response_model=List[Dict[str, Any]])
 def evaluate_situations(
-    x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    x_tenant_id: str = Header(default="default_tenant"), mgr: UnifiedIntelligenceManager = Depends(get_manager)
 ):
     situations = mgr.detect_situations(x_tenant_id)
     return [s.to_dict() for s in situations]
@@ -92,8 +91,7 @@ def evaluate_situations(
 
 @router.get("/risk", response_model=Dict[str, Any])
 def evaluate_risk(
-    x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    x_tenant_id: str = Header(default="default_tenant"), mgr: UnifiedIntelligenceManager = Depends(get_manager)
 ):
     risk = mgr.evaluate_risk(x_tenant_id)
     return risk.to_dict()
@@ -101,8 +99,7 @@ def evaluate_risk(
 
 @router.get("/assurance", response_model=Dict[str, Any])
 def evaluate_assurance(
-    x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    x_tenant_id: str = Header(default="default_tenant"), mgr: UnifiedIntelligenceManager = Depends(get_manager)
 ):
     assr = mgr.evaluate_assurance(x_tenant_id)
     return assr.to_dict()
@@ -112,7 +109,7 @@ def evaluate_assurance(
 def evaluate_trust(
     entity_ref: str,
     x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    mgr: UnifiedIntelligenceManager = Depends(get_manager),
 ):
     trust = mgr.evaluate_trust(x_tenant_id, entity_ref)
     return trust.to_dict()
@@ -122,7 +119,7 @@ def evaluate_trust(
 def generate_recommendations(
     situation_id: str,
     x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    mgr: UnifiedIntelligenceManager = Depends(get_manager),
 ):
     try:
         recs = mgr.generate_recommendations(x_tenant_id, situation_id)
@@ -135,7 +132,7 @@ def generate_recommendations(
 def evaluate_governance(
     req: EvaluateGovernanceRequest,
     x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    mgr: UnifiedIntelligenceManager = Depends(get_manager),
 ):
     try:
         recs = mgr.repository.list_recommendations(x_tenant_id)
@@ -153,7 +150,7 @@ def evaluate_governance(
 def create_investigation(
     req: CreateInvestigationRequest,
     x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    mgr: UnifiedIntelligenceManager = Depends(get_manager),
 ):
     try:
         inv = mgr.create_investigation(x_tenant_id, req.situation_id, title=req.title, assigned_to=req.assigned_to)
@@ -164,8 +161,7 @@ def create_investigation(
 
 @router.get("/snapshot", response_model=Dict[str, Any])
 def generate_snapshot(
-    x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    x_tenant_id: str = Header(default="default_tenant"), mgr: UnifiedIntelligenceManager = Depends(get_manager)
 ):
     snap = mgr.generate_snapshot(x_tenant_id)
     return snap.to_dict()
@@ -173,8 +169,7 @@ def generate_snapshot(
 
 @router.get("/analytics", response_model=Dict[str, Any])
 def get_analytics(
-    x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    x_tenant_id: str = Header(default="default_tenant"), mgr: UnifiedIntelligenceManager = Depends(get_manager)
 ):
     analytics = mgr.get_analytics_summary(x_tenant_id)
     return analytics.to_dict()
@@ -182,8 +177,7 @@ def get_analytics(
 
 @router.get("/billing", response_model=Dict[str, Any])
 def get_billing(
-    x_tenant_id: str = Header(default="default_tenant"),
-    mgr: UnifiedIntelligenceManager = Depends(get_manager)
+    x_tenant_id: str = Header(default="default_tenant"), mgr: UnifiedIntelligenceManager = Depends(get_manager)
 ):
     bill = mgr.get_billing(x_tenant_id)
     return bill.to_dict()

@@ -34,7 +34,9 @@ class DevelopmentEnvironment(BaseModel):
 class EnvironmentManager:
     """Manages cloud, local, remote, and ephemeral development environment templates."""
 
-    def create_environment(self, name: str, env_type: EnvironmentType = EnvironmentType.CLOUD, tenant_id: str = "global") -> DevelopmentEnvironment:
+    def create_environment(
+        self, name: str, env_type: EnvironmentType = EnvironmentType.CLOUD, tenant_id: str = "global"
+    ) -> DevelopmentEnvironment:
         env = DevelopmentEnvironment(name=name, env_type=env_type, tenant_id=tenant_id)
         logger.info(f"[ENVIRONMENT MANAGER] Created environment '{env.env_id}' ('{name}', {env_type.value})")
         return env

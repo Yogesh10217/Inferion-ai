@@ -96,5 +96,7 @@ class ZeroTrustEngine:
             trust_score=effective_trust,
             contributing_signals=signals,
         )
-        logger.info(f"[ZERO TRUST] Evaluated '{identity_id}' ({tenant_id}): Trust Score = {effective_trust:.1f} ({level.value}) -> Action = {action.value}")
+        logger.info(
+            f"[ZERO TRUST] Evaluated '{identity_id}' ({tenant_id}): Trust Score = {effective_trust:.1f} ({level.value}) -> Action = {action.value}"
+        )
         return res

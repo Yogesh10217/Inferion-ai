@@ -84,7 +84,9 @@ class EvaluationManager:
         name: str,
         definitions: Optional[List[EvaluationDefinition]] = None,
     ) -> EvaluationSuite:
-        defs = definitions or [EvaluationDefinition(name="Default Accuracy", category=EvaluationCategory.ACCURACY, threshold=0.8)]
+        defs = definitions or [
+            EvaluationDefinition(name="Default Accuracy", category=EvaluationCategory.ACCURACY, threshold=0.8)
+        ]
         suite = EvaluationSuite(tenant_id=tenant_id, name=name, definitions=defs)
         self._suites[suite.suite_id] = suite
         return suite
@@ -99,7 +101,13 @@ class EvaluationManager:
     ) -> EvaluationRun:
         ev_references = evidence_references or ["ev_ref_default"]
         metrics = [EvaluationMetric(name="Accuracy", value=0.92, threshold=0.8, passed=overall_passed)]
-        res = EvaluationResult(category=EvaluationCategory.QUALITY, score=0.92, passed=overall_passed, metrics=metrics, evidence_references=ev_references)
+        res = EvaluationResult(
+            category=EvaluationCategory.QUALITY,
+            score=0.92,
+            passed=overall_passed,
+            metrics=metrics,
+            evidence_references=ev_references,
+        )
 
         run = EvaluationRun(
             tenant_id=tenant_id,

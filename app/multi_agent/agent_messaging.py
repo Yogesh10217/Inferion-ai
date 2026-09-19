@@ -56,7 +56,9 @@ class MessageBus:
             self._history[team_id] = []
         self._history[team_id].append(message)
 
-        logger.debug(f"[BUS] Msg '{message.message_id}' ({message.message_type.value}) from {message.sender_id} -> {message.recipient_id}")
+        logger.debug(
+            f"[BUS] Msg '{message.message_id}' ({message.message_type.value}) from {message.sender_id} -> {message.recipient_id}"
+        )
 
         # Broadcast
         if message.recipient_id == "*":

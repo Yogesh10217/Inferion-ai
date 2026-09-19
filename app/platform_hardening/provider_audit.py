@@ -19,7 +19,9 @@ class ProviderIntegrationAuditEngine:
     def __init__(self, registry: PlatformHardeningProviderRegistry):
         self.registry = registry
 
-    def audit_providers(self, tenant_id: str = "system") -> Tuple[List[ProviderIntegrationStatus], List[PlatformAuditFinding]]:
+    def audit_providers(
+        self, tenant_id: str = "system"
+    ) -> Tuple[List[ProviderIntegrationStatus], List[PlatformAuditFinding]]:
         provider_ids = self.registry.list_registered_providers()
         statuses: List[ProviderIntegrationStatus] = []
         findings: List[PlatformAuditFinding] = []

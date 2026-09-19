@@ -27,7 +27,9 @@ class WorkflowResilienceEngine:
     def __init__(self) -> None:
         self._assessments: Dict[str, ResilienceAssessment] = {}
 
-    def assess_resilience(self, workflow_id: str, tenant_id: str, step_count: int = 3, has_dependencies: bool = True) -> ResilienceAssessment:
+    def assess_resilience(
+        self, workflow_id: str, tenant_id: str, step_count: int = 3, has_dependencies: bool = True
+    ) -> ResilienceAssessment:
         score = max(50.0, min(100.0, 95.0 - (step_count * 2.0)))
         res = ResilienceAssessment(
             workflow_id=workflow_id,

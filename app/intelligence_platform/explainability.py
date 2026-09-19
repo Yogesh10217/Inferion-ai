@@ -105,5 +105,7 @@ class ExplainabilityEngine:
             invalidation_triggers=invalidation_triggers,
         )
 
-        logger.info(f"[EXPLAINABILITY ENGINE] Generated deterministic explanation for recommendation '{recommendation.recommendation_id}'")
+        logger.info(
+            f"[EXPLAINABILITY ENGINE] Generated deterministic explanation for recommendation '{recommendation.recommendation_id}'"
+        )
         return exp

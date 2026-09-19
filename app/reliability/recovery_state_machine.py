@@ -177,7 +177,12 @@ class RecoveryStateMachine:
             event=f"transition:{self._current_state.value}->{to_state.value}",
             status="SUCCESS",
             evidence_level=self.evidence_level,
-            raw_payload={"from_state": self._current_state.value, "to_state": to_state.value, "reason": reason, "details": details},
+            raw_payload={
+                "from_state": self._current_state.value,
+                "to_state": to_state.value,
+                "reason": reason,
+                "details": details,
+            },
             timestamp=now,
         )
 

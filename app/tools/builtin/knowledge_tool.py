@@ -49,6 +49,7 @@ class KnowledgeTool(BaseTool):
                 output = {"results": [r.to_dict() if hasattr(r, "to_dict") else str(r) for r in results]}
             else:
                 from app.knowledge.search import SearchEngine
+
                 SearchEngine(collection_name=collection)
                 # Production execution output
                 output = {
@@ -56,7 +57,12 @@ class KnowledgeTool(BaseTool):
                     "collection": collection,
                     "top_k": top_k,
                     "results": [
-                        {"doc_id": "doc_01", "content": f"Document content matching query '{query}'", "score": 0.92, "source": "knowledge_base"}
+                        {
+                            "doc_id": "doc_01",
+                            "content": f"Document content matching query '{query}'",
+                            "score": 0.92,
+                            "source": "knowledge_base",
+                        }
                     ],
                 }
 

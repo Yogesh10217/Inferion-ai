@@ -21,5 +21,7 @@ class CapacityVerificationEngine:
             "status": "VERIFIED" if improved else "FAILED",
             "utilization_reduction_pct": round(pre_utilization_pct - post_utilization_pct, 2),
         }
-        logger.info(f"Verified outcome for capacity action '{action_id}' (tenant: '{tenant_id}') -> Status: {verif['status']}")
+        logger.info(
+            f"Verified outcome for capacity action '{action_id}' (tenant: '{tenant_id}') -> Status: {verif['status']}"
+        )
         return verif

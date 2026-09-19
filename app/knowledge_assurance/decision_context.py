@@ -62,8 +62,18 @@ class DecisionContextManager:
     ) -> DecisionKnowledgeContext:
         if not evidence_list:
             evidence_list = [
-                DecisionContextEvidence(reference_id="ref-sop-1", title="Operational SLA & Escalation SOP", relevance_score=0.92, trust_score=0.96),
-                DecisionContextEvidence(reference_id="ref-pol-2", title="Zero-Trust Access Control Policy", relevance_score=0.88, trust_score=0.98),
+                DecisionContextEvidence(
+                    reference_id="ref-sop-1",
+                    title="Operational SLA & Escalation SOP",
+                    relevance_score=0.92,
+                    trust_score=0.96,
+                ),
+                DecisionContextEvidence(
+                    reference_id="ref-pol-2",
+                    title="Zero-Trust Access Control Policy",
+                    relevance_score=0.88,
+                    trust_score=0.98,
+                ),
             ]
 
         avg_trust = sum(e.trust_score for e in evidence_list) / len(evidence_list) if evidence_list else 0.95

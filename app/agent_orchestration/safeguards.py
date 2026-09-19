@@ -106,42 +106,50 @@ class AgentSafeguardManager:
         # 1. Step safeguard
         if current_steps >= max_steps:
             triggered.append(SafeguardType.MAX_STEPS)
-            violations.append(SafeguardViolation(
-                safeguard_type=SafeguardType.MAX_STEPS,
-                threshold=max_steps,
-                actual=current_steps,
-                message=f"Safeguard MAX_STEPS triggered: current {current_steps} >= limit {max_steps}."
-            ))
+            violations.append(
+                SafeguardViolation(
+                    safeguard_type=SafeguardType.MAX_STEPS,
+                    threshold=max_steps,
+                    actual=current_steps,
+                    message=f"Safeguard MAX_STEPS triggered: current {current_steps} >= limit {max_steps}.",
+                )
+            )
 
         # 2. Cost safeguard
         if current_cost >= max_cost:
             triggered.append(SafeguardType.MAX_COST)
-            violations.append(SafeguardViolation(
-                safeguard_type=SafeguardType.MAX_COST,
-                threshold=max_cost,
-                actual=current_cost,
-                message=f"Safeguard MAX_COST triggered: current ${current_cost:.2f} >= limit ${max_cost:.2f}."
-            ))
+            violations.append(
+                SafeguardViolation(
+                    safeguard_type=SafeguardType.MAX_COST,
+                    threshold=max_cost,
+                    actual=current_cost,
+                    message=f"Safeguard MAX_COST triggered: current ${current_cost:.2f} >= limit ${max_cost:.2f}.",
+                )
+            )
 
         # 3. Recursion depth safeguard
         if recursion_depth >= max_recursion:
             triggered.append(SafeguardType.MAX_RECURSION_DEPTH)
-            violations.append(SafeguardViolation(
-                safeguard_type=SafeguardType.MAX_RECURSION_DEPTH,
-                threshold=max_recursion,
-                actual=recursion_depth,
-                message=f"Safeguard MAX_RECURSION_DEPTH triggered: recursion depth {recursion_depth} >= limit {max_recursion}."
-            ))
+            violations.append(
+                SafeguardViolation(
+                    safeguard_type=SafeguardType.MAX_RECURSION_DEPTH,
+                    threshold=max_recursion,
+                    actual=recursion_depth,
+                    message=f"Safeguard MAX_RECURSION_DEPTH triggered: recursion depth {recursion_depth} >= limit {max_recursion}.",
+                )
+            )
 
         # 4. Human approval required / Destructive safeguard
         if is_destructive or "DELETE" in proposed_action.upper():
             triggered.append(SafeguardType.HUMAN_APPROVAL_REQUIRED)
-            violations.append(SafeguardViolation(
-                safeguard_type=SafeguardType.HUMAN_APPROVAL_REQUIRED,
-                threshold="HUMAN_APPROVAL",
-                actual=proposed_action,
-                message=f"Safeguard HUMAN_APPROVAL_REQUIRED triggered for action '{proposed_action}'."
-            ))
+            violations.append(
+                SafeguardViolation(
+                    safeguard_type=SafeguardType.HUMAN_APPROVAL_REQUIRED,
+                    threshold="HUMAN_APPROVAL",
+                    actual=proposed_action,
+                    message=f"Safeguard HUMAN_APPROVAL_REQUIRED triggered for action '{proposed_action}'.",
+                )
+            )
 
         passed = len(violations) == 0
         eval_res = SafeguardEvaluation(

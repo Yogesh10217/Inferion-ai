@@ -67,7 +67,10 @@ class ContainerValidationEngine:
         exp_clean = expected_digest.strip().lstrip("@")
         act_clean = actual_runtime_digest.strip().lstrip("@")
         if exp_clean.lower() != act_clean.lower():
-            return False, f"DEPLOYMENT_ARTIFACT_MISMATCH: Expected digest {exp_clean} does not match runtime digest {act_clean}"
+            return (
+                False,
+                f"DEPLOYMENT_ARTIFACT_MISMATCH: Expected digest {exp_clean} does not match runtime digest {act_clean}",
+            )
         return True, "Runtime artifact digest matches expected deployment identity"
 
     @classmethod
@@ -81,12 +84,16 @@ class ContainerValidationEngine:
             else:
                 return False, f"Invalid image digest reference in tag: {msg_dig}"
         tag_clean = image_tag.split(":")[-1].strip().lower() if ":" in image_tag else image_tag.strip().lower()
-        if is_production and (tag_clean in cls.FORBIDDEN_PROD_TAGS or image_tag.strip().lower() in cls.FORBIDDEN_PROD_TAGS):
+        if is_production and (
+            tag_clean in cls.FORBIDDEN_PROD_TAGS or image_tag.strip().lower() in cls.FORBIDDEN_PROD_TAGS
+        ):
             return False, f"Ambiguous or forbidden image tag '{image_tag}' rejected in PRODUCTION environment"
         return True, "Image tag is production-safe"
 
     @classmethod
-    def validate_container_environment(cls, image_tag: str = "enterprise-ai-platform:5.61", is_production: bool = False) -> Dict[str, Any]:
+    def validate_container_environment(
+        cls, image_tag: str = "enterprise-ai-platform:5.61", is_production: bool = False
+    ) -> Dict[str, Any]:
         in_container = os.path.exists("/.dockerenv") or os.getenv("CONTAINERIZED", "false").lower() in ("true", "1")
         user_id = os.getuid() if hasattr(os, "getuid") else 10001
         is_non_root = user_id != 0
@@ -96,7 +103,11 @@ class ContainerValidationEngine:
         dockerignore_present = os.path.exists(".dockerignore")
 
         tag_valid, tag_msg = cls.validate_image_tag(image_tag, is_production=is_production)
-        status = DependencyStatus.AVAILABLE if (dockerfile_present and dockerignore_present and tag_valid) else DependencyStatus.DEGRADED
+        status = (
+            DependencyStatus.AVAILABLE
+            if (dockerfile_present and dockerignore_present and tag_valid)
+            else DependencyStatus.DEGRADED
+        )
 
         return {
             "status": status.value,
@@ -108,5 +119,7 @@ class ContainerValidationEngine:
             "image_tag": image_tag,
             "image_tag_valid": tag_valid,
             "image_tag_message": tag_msg,
-            "artifact_integrity": ArtifactIntegrityStatus.VALID.value if dockerfile_present else ArtifactIntegrityStatus.UNKNOWN.value,
+            "artifact_integrity": (
+                ArtifactIntegrityStatus.VALID.value if dockerfile_present else ArtifactIntegrityStatus.UNKNOWN.value
+            ),
         }

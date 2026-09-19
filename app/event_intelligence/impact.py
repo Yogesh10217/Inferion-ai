@@ -73,7 +73,11 @@ class EventImpactAnalyzer:
             event_id=event.event_id,
             tenant_id=event.tenant_id,
             overall_severity=sev,
-            business=BusinessImpact(severity=sev, score=80.0 if sev in (EventImpactSeverity.HIGH, EventImpactSeverity.CRITICAL) else 30.0),
-            technical=TechnicalImpact(severity=sev, impacted_services_count=3 if sev == EventImpactSeverity.CRITICAL else 1),
+            business=BusinessImpact(
+                severity=sev, score=80.0 if sev in (EventImpactSeverity.HIGH, EventImpactSeverity.CRITICAL) else 30.0
+            ),
+            technical=TechnicalImpact(
+                severity=sev, impacted_services_count=3 if sev == EventImpactSeverity.CRITICAL else 1
+            ),
             financial=FinancialImpact(estimated_cost_usd=500.0 if sev == EventImpactSeverity.CRITICAL else 0.0),
         )

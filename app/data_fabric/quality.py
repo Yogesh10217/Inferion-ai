@@ -43,7 +43,9 @@ class DataQualityResult(BaseModel):
 class DataQualityEngine:
     """Evaluates data quality metrics and produces comprehensive scorecards."""
 
-    def evaluate_quality(self, asset_id: str, records: List[Dict[str, Any]], tenant_id: str = "global") -> DataQualityResult:
+    def evaluate_quality(
+        self, asset_id: str, records: List[Dict[str, Any]], tenant_id: str = "global"
+    ) -> DataQualityResult:
         if not records:
             return DataQualityResult(
                 asset_id=asset_id,

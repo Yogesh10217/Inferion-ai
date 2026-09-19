@@ -45,7 +45,9 @@ def get_request_context(
 
 # Request Schemas
 class ReplayExecutionRequest(BaseModel):
-    force_external_effects: bool = Field(default=False, description="Disables safe replay mode to repeat external side effects.")
+    force_external_effects: bool = Field(
+        default=False, description="Disables safe replay mode to repeat external side effects."
+    )
 
 
 class CreateSLORequest(BaseModel):
@@ -64,6 +66,7 @@ class AcknowledgeAlertRequest(BaseModel):
 
 
 # --- Endpoints ---
+
 
 @router.get("/v1/observability/traces", response_model=Dict[str, Any])
 async def list_traces(

@@ -93,9 +93,7 @@ def get_reference(
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
     try:
-        ref = mgr.references_manager.get_reference(
-            tenant_id=x_tenant_id, reference_id=reference_id
-        )
+        ref = mgr.references_manager.get_reference(tenant_id=x_tenant_id, reference_id=reference_id)
         return ref.model_dump()
     except CrossTenantKnowledgeAssuranceException:
         raise HTTPException(status_code=403, detail="Access denied")
@@ -178,9 +176,7 @@ def assemble_context(
             required_concepts=req.required_concepts,
             min_trust_score=req.min_trust_score,
         )
-        result = mgr.context_assembly_manager.assemble_context(
-            tenant_id=x_tenant_id, request=assembly_req
-        )
+        result = mgr.context_assembly_manager.assemble_context(tenant_id=x_tenant_id, request=assembly_req)
         return result.model_dump()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -208,9 +204,7 @@ def evaluate_freshness(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    freshness = mgr.freshness_manager.evaluate_freshness(
-        tenant_id=x_tenant_id, target_resource_id=target_resource_id
-    )
+    freshness = mgr.freshness_manager.evaluate_freshness(tenant_id=x_tenant_id, target_resource_id=target_resource_id)
     return freshness.model_dump()
 
 
@@ -221,9 +215,7 @@ def evaluate_trust(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    trust = mgr.trust_engine.evaluate_trust(
-        tenant_id=x_tenant_id, target_resource_id=target_resource_id
-    )
+    trust = mgr.trust_engine.evaluate_trust(tenant_id=x_tenant_id, target_resource_id=target_resource_id)
     return trust.model_dump()
 
 
@@ -234,9 +226,7 @@ def evaluate_confidence(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    conf = mgr.confidence_manager.evaluate_confidence(
-        tenant_id=x_tenant_id, target_resource_id=target_resource_id
-    )
+    conf = mgr.confidence_manager.evaluate_confidence(tenant_id=x_tenant_id, target_resource_id=target_resource_id)
     return conf.model_dump()
 
 
@@ -247,9 +237,7 @@ def evaluate_relevance(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    rel = mgr.relevance_manager.evaluate_relevance(
-        tenant_id=x_tenant_id, target_resource_id=target_resource_id
-    )
+    rel = mgr.relevance_manager.evaluate_relevance(tenant_id=x_tenant_id, target_resource_id=target_resource_id)
     return rel.model_dump()
 
 
@@ -270,9 +258,7 @@ def assess_consistency(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    cons = mgr.consistency_manager.assess_consistency(
-        tenant_id=x_tenant_id, target_resource_id=target_resource_id
-    )
+    cons = mgr.consistency_manager.assess_consistency(tenant_id=x_tenant_id, target_resource_id=target_resource_id)
     return cons.model_dump()
 
 
@@ -317,9 +303,7 @@ def correlate_knowledge(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    corrs = mgr.correlation_manager.correlate_resource(
-        tenant_id=x_tenant_id, target_resource_id=resource_id
-    )
+    corrs = mgr.correlation_manager.correlate_resource(tenant_id=x_tenant_id, target_resource_id=resource_id)
     return [c.model_dump() for c in corrs]
 
 
@@ -330,9 +314,7 @@ def get_decision_context(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    dctx = mgr.decision_context_manager.enrich_decision_context(
-        tenant_id=x_tenant_id, decision_id=decision_id
-    )
+    dctx = mgr.decision_context_manager.enrich_decision_context(tenant_id=x_tenant_id, decision_id=decision_id)
     return dctx.model_dump()
 
 
@@ -383,9 +365,7 @@ def assess_assurance(
     x_tenant_id: str = Header(default="default_tenant"),
     mgr: KnowledgeAssuranceManager = Depends(get_manager),
 ):
-    ass = mgr.assurance_manager.assess_knowledge_assurance(
-        tenant_id=x_tenant_id, target_resource_id=target_resource_id
-    )
+    ass = mgr.assurance_manager.assess_knowledge_assurance(tenant_id=x_tenant_id, target_resource_id=target_resource_id)
     return ass.model_dump()
 
 

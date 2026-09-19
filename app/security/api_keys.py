@@ -50,7 +50,7 @@ class APIKeyManager:
 
     def __init__(self) -> None:
         self._keys_store: Dict[str, APIKey] = {}  # key_id -> APIKey
-        self._hash_index: Dict[str, str] = {}    # hashed_key -> key_id
+        self._hash_index: Dict[str, str] = {}  # hashed_key -> key_id
 
     @staticmethod
     def hash_key(raw_key: str) -> str:
@@ -155,6 +155,8 @@ class APIKeyManager:
         """List API key metadata without revealing secret hashes."""
         res = []
         for k in self._keys_store.values():
-            if tenant_id in (k.tenant_id, "global") and (organization_id is None or k.organization_id == organization_id):
+            if tenant_id in (k.tenant_id, "global") and (
+                organization_id is None or k.organization_id == organization_id
+            ):
                 res.append(k)
         return res

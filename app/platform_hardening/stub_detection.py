@@ -66,9 +66,7 @@ class ProductionStubDetectionEngine:
             classifications=classifications,
         )
 
-    def classify_finding(
-        self, file_path: str, finding: ASTNodeFinding, tree: ast.AST
-    ) -> StubClassification:
+    def classify_finding(self, file_path: str, finding: ASTNodeFinding, tree: ast.AST) -> StubClassification:
         # Check 1: Test path
         norm_path = os.path.normpath(file_path)
         if "tests" in norm_path.split(os.sep) or os.path.basename(file_path).startswith("test_"):

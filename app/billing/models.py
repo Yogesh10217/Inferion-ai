@@ -24,6 +24,7 @@ class InvoiceStatus(str, enum.Enum):
 
 class SubscriptionPlan(Base):
     """Available subscription tiers."""
+
     __tablename__ = "subscription_plans"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -43,6 +44,7 @@ class SubscriptionPlan(Base):
 
 class OrganizationSubscription(Base):
     """Maps an organization to its active subscription."""
+
     __tablename__ = "organization_subscriptions"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -59,6 +61,7 @@ class OrganizationSubscription(Base):
 
 class PricingRule(Base):
     """Cost mapping for providers/models per 1000 tokens."""
+
     __tablename__ = "pricing_rules"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -74,6 +77,7 @@ class PricingRule(Base):
 
 class Invoice(Base):
     """Monthly billing record."""
+
     __tablename__ = "invoices"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: f"INV-{uuid.uuid4().hex[:8]}")
@@ -94,6 +98,7 @@ class Invoice(Base):
 
 class InvoiceLineItem(Base):
     """Detailed breakdowns on an invoice."""
+
     __tablename__ = "invoice_line_items"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -109,6 +114,7 @@ class InvoiceLineItem(Base):
 
 class Budget(Base):
     """Spending limits at org or workspace level."""
+
     __tablename__ = "budgets"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -125,6 +131,7 @@ class Budget(Base):
 
 class BudgetAlert(Base):
     """History of budget alerts triggered."""
+
     __tablename__ = "budget_alerts"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -136,6 +143,7 @@ class BudgetAlert(Base):
 
 class PaymentHistory(Base):
     """Provider-agnostic payment tracking."""
+
     __tablename__ = "payment_history"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))

@@ -22,5 +22,7 @@ class ChaosExperimentGovernanceEngine:
             requires_approval=True,
             auto_execute=False,  # Strict invariant
         )
-        logger.info(f"Evaluated ChaosExperimentProposal '{proposal.proposal_id}' for service '{target_service}' (auto_execute=False)")
+        logger.info(
+            f"Evaluated ChaosExperimentProposal '{proposal.proposal_id}' for service '{target_service}' (auto_execute=False)"
+        )
         return proposal

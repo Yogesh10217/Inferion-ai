@@ -38,7 +38,11 @@ class EventGovernanceEngine:
                 subject_type="EVENT_AUTOMATION",
                 subject_id=event_id,
                 status=GovernanceDecisionStatus.BLOCK,
-                reasons=[GovernanceDecisionReason(code="DIRECT_MUTATION_FORBIDDEN", message="Direct infrastructure mutation is strictly forbidden")],
+                reasons=[
+                    GovernanceDecisionReason(
+                        code="DIRECT_MUTATION_FORBIDDEN", message="Direct infrastructure mutation is strictly forbidden"
+                    )
+                ],
             )
 
         if is_high_risk:
@@ -53,7 +57,11 @@ class EventGovernanceEngine:
                 subject_type="EVENT_AUTOMATION",
                 subject_id=event_id,
                 status=GovernanceDecisionStatus.REQUIRE_APPROVAL,
-                reasons=[GovernanceDecisionReason(code="HIGH_RISK_AUTOMATION", message="High risk automation requires human approval")],
+                reasons=[
+                    GovernanceDecisionReason(
+                        code="HIGH_RISK_AUTOMATION", message="High risk automation requires human approval"
+                    )
+                ],
             )
 
         return GovernanceDecision(

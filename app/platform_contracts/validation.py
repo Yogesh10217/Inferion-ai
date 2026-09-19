@@ -131,14 +131,18 @@ class CircularDependencyValidator:
                         if isinstance(node, ast.Import):
                             for alias in node.names:
                                 if any(p in alias.name for p in cls.PROHIBITED_MODULES):
-                                    raise CircularDependencyException(f"Forbidden import '{alias.name}' in '{full_path}'")
+                                    raise CircularDependencyException(
+                                        f"Forbidden import '{alias.name}' in '{full_path}'"
+                                    )
                         elif isinstance(node, ast.ImportFrom):
                             mod = node.module or ""
                             if any(p in mod for p in cls.PROHIBITED_MODULES):
                                 raise CircularDependencyException(f"Forbidden import from '{mod}' in '{full_path}'")
                             for alias in node.names:
                                 if alias.name in cls.PROHIBITED_IMPORTS:
-                                    raise CircularDependencyException(f"Forbidden symbol import '{alias.name}' in '{full_path}'")
+                                    raise CircularDependencyException(
+                                        f"Forbidden symbol import '{alias.name}' in '{full_path}'"
+                                    )
         return True
 
 

@@ -38,5 +38,7 @@ class RuntimeLearningEngine:
                 "auto_execute": False,  # Strict invariant
             },
         ]
-        logger.info(f"Generated {len(insights)} advisory learning insights for tenant '{tenant_id}' (auto_execute=False)")
+        logger.info(
+            f"Generated {len(insights)} advisory learning insights for tenant '{tenant_id}' (auto_execute=False)"
+        )
         return insights

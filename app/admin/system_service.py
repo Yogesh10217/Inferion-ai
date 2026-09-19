@@ -15,7 +15,9 @@ class SystemAdminService:
     async def get_system_stats(self) -> Dict[str, Any]:
         # Count organizations
         orgs_active = await self.db.scalar(select(func.count(Organization.id)).where(Organization.status == "active"))
-        orgs_suspended = await self.db.scalar(select(func.count(Organization.id)).where(Organization.status == "suspended"))
+        orgs_suspended = await self.db.scalar(
+            select(func.count(Organization.id)).where(Organization.status == "suspended")
+        )
 
         # Count users
         users_active = await self.db.scalar(select(func.count(User.id)).where(User.is_active == True))
@@ -29,7 +31,9 @@ class SystemAdminService:
         keys_revoked = await self.db.scalar(select(func.count(APIKey.id)).where(APIKey.revoked_at.is_not(None)))
 
         # Count Subscriptions
-        subs_active = await self.db.scalar(select(func.count(OrganizationSubscription.id)).where(OrganizationSubscription.status == "active"))
+        subs_active = await self.db.scalar(
+            select(func.count(OrganizationSubscription.id)).where(OrganizationSubscription.status == "active")
+        )
 
         return {
             "organizations": {
@@ -47,7 +51,5 @@ class SystemAdminService:
                 "active": keys_active or 0,
                 "revoked": keys_revoked or 0,
             },
-            "subscriptions": {
-                "active": subs_active or 0
-            }
+            "subscriptions": {"active": subs_active or 0},
         }

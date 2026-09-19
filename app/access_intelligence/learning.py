@@ -11,6 +11,7 @@ from app.access_intelligence.exceptions import CrossTenantAccessIntelligenceExce
 
 class AccessPattern(BaseModel):
     """Observed access pattern across identities or services."""
+
     pattern_id: str = Field(default_factory=lambda: f"pat_{uuid.uuid4().hex[:8]}")
     pattern_name: str
     frequency_count: int = 1
@@ -19,6 +20,7 @@ class AccessPattern(BaseModel):
 
 class AccessLearningRecommendation(BaseModel):
     """Non-mutating learning recommendation."""
+
     recommendation_id: str = Field(default_factory=lambda: f"lrn_rec_{uuid.uuid4().hex[:8]}")
     target_identity_id: str
     recommended_action: str  # e.g., "CONSIDER_REVOKING_ROLE", "REVIEW_JIT_ACCESS_PATTERN"
@@ -29,6 +31,7 @@ class AccessLearningRecommendation(BaseModel):
 
 class AccessLearningRecord(BaseModel):
     """Access Learning Record Representation."""
+
     record_id: str = Field(default_factory=lambda: f"lrn_rec_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     identity_id: str

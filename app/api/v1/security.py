@@ -61,7 +61,9 @@ async def revoke_api_key(id: str, manager: APIKeyManager = Depends(get_key_manag
 
 
 @router.post("/api-keys/{id}/rotate")
-async def rotate_api_key(id: str, expires_in_days: Optional[int] = None, manager: APIKeyManager = Depends(get_key_manager)):
+async def rotate_api_key(
+    id: str, expires_in_days: Optional[int] = None, manager: APIKeyManager = Depends(get_key_manager)
+):
     """Rotate an API key, issuing a new key with identical policy while revoking the old one."""
     try:
         res = manager.rotate_api_key(id, expires_in_days=expires_in_days)

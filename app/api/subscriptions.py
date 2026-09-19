@@ -19,13 +19,9 @@ async def get_active_subscription(request: Request, container: ServiceContainer 
     return {
         "id": sub.id,
         "organization_id": sub.organization_id,
-        "plan": {
-            "id": sub.plan.id,
-            "name": sub.plan.name,
-            "monthly_price": sub.plan.monthly_price
-        },
+        "plan": {"id": sub.plan.id, "name": sub.plan.name, "monthly_price": sub.plan.monthly_price},
         "status": sub.status,
-        "expires_at": sub.expires_at
+        "expires_at": sub.expires_at,
     }
 
 

@@ -10,9 +10,9 @@ from pydantic import BaseModel, Field
 
 class TrustBand(str, Enum):
     HIGH_TRUST = "HIGH_TRUST"  # 90-100
-    TRUSTED = "TRUSTED"        # 70-89
+    TRUSTED = "TRUSTED"  # 70-89
     RESTRICTED = "RESTRICTED"  # 50-69
-    UNTRUSTED = "UNTRUSTED"    # <50
+    UNTRUSTED = "UNTRUSTED"  # <50
 
 
 class TrustConfidence(str, Enum):

@@ -38,6 +38,7 @@ class AccessReviewDecision(str, Enum):
 
 class AccessReview(BaseModel):
     """Access Review representation."""
+
     review_id: str = Field(default_factory=lambda: f"ar_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     title: str
@@ -96,7 +97,9 @@ class AccessReviewManager:
         rev.status = AccessReviewStatus.REVIEWING
         return rev
 
-    def record_decision(self, tenant_id: str, review_id: str, decision: AccessReviewDecision, justification: str) -> AccessReview:
+    def record_decision(
+        self, tenant_id: str, review_id: str, decision: AccessReviewDecision, justification: str
+    ) -> AccessReview:
         rev = self.get_review(tenant_id, review_id)
         if rev.is_finalized:
             raise ImmutableAccessRecordException(review_id)

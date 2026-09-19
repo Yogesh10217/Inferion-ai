@@ -2,6 +2,7 @@
 Query Rewriter Module.
 Rewrites user questions before retrieval to optimize search.
 """
+
 import logging
 from typing import List, Optional
 

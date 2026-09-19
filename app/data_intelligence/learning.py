@@ -90,7 +90,9 @@ class DataLearningManager:
         self._recommendations[rec_id] = rec
         return rec
 
-    def list_recommendations(self, tenant_id: str, dataset_id: Optional[str] = None) -> List[DataLearningRecommendation]:
+    def list_recommendations(
+        self, tenant_id: str, dataset_id: Optional[str] = None
+    ) -> List[DataLearningRecommendation]:
         recs = [r for r in self._recommendations.values() if r.tenant_id == tenant_id]
         if dataset_id:
             recs = [r for r in recs if r.dataset_id == dataset_id]

@@ -10,11 +10,9 @@ from app.deployment.exceptions import SecretAccessError
 class SecretProvider(Protocol):
     """Protocol for environment and cloud secret resolution providers."""
 
-    def get_secret(self, key: str, default: Optional[str] = None) -> Optional[str]:
-        ...
+    def get_secret(self, key: str, default: Optional[str] = None) -> Optional[str]: ...
 
-    def require_secret(self, key: str) -> str:
-        ...
+    def require_secret(self, key: str) -> str: ...
 
 
 class EnvironmentSecretProvider:
@@ -56,13 +54,25 @@ class SecretsSanitizer:
     """SHA-256 backed string sanitizer masking passwords, keys, and tokens."""
 
     import re
+
     SECRET_PATTERN = re.compile(
         r"(password|passwd|secret|jwt_secret|api_key|token|private_key|auth_token)[:=]\s*([^\s,;&'\"]+)",
         re.IGNORECASE,
     )
     URL_CREDS_PATTERN = re.compile(r"://([^:@]+):([^@]+)@", re.IGNORECASE)
 
-    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production", "canary_secret", "secret_key", "super_secret_test_value"}
+    UNSAFE_CANARIES = {
+        "password123",
+        "123456",
+        "admin123",
+        "change_me",
+        "dev_secret",
+        "default_secret",
+        "super-secret-key-change-in-production",
+        "canary_secret",
+        "secret_key",
+        "super_secret_test_value",
+    }
 
     @classmethod
     def sanitize_string(cls, input_str: str) -> str:
@@ -98,7 +108,10 @@ class SecretsSanitizer:
             for k, v in data.items():
                 k_str = str(k)
                 k_lower = k_str.lower()
-                is_secret_key = any(s in k_lower for s in ("pass", "secret", "token", "api_key", "private_key", "auth_token", "jwt", "credential"))
+                is_secret_key = any(
+                    s in k_lower
+                    for s in ("pass", "secret", "token", "api_key", "private_key", "auth_token", "jwt", "credential")
+                )
                 if is_secret_key and isinstance(v, str):
                     val_hash = hashlib.sha256(v.encode("utf-8")).hexdigest()[:8]
                     sanitized[k_str] = f"[REDACTED:{val_hash}]"
@@ -127,7 +140,15 @@ def get_secrets_sanitizer() -> SecretsSanitizer:
 class SecretProviderReadinessEvaluator:
     """Evaluates production secret provider readiness without creating duplicate secret sanitizers."""
 
-    UNSAFE_CANARIES = {"password123", "123456", "admin123", "change_me", "dev_secret", "default_secret", "super-secret-key-change-in-production"}
+    UNSAFE_CANARIES = {
+        "password123",
+        "123456",
+        "admin123",
+        "change_me",
+        "dev_secret",
+        "default_secret",
+        "super-secret-key-change-in-production",
+    }
 
     @classmethod
     def evaluate_secret_provider_readiness(

@@ -29,13 +29,7 @@ class PlatformReleaseGateEngine:
         p1_count = sum(1 for f in findings if f.severity == PlatformAuditSeverity.HIGH)
 
         # Rule 1: Mandatory Blocks
-        if (
-            p0_count > 0
-            or cross_tenant_leak
-            or direct_infra_mutation
-            or approval_bypass
-            or broken_evidence_chain
-        ):
+        if p0_count > 0 or cross_tenant_leak or direct_infra_mutation or approval_bypass or broken_evidence_chain:
             reasons = []
             if p0_count > 0:
                 reasons.append(f"{p0_count} P0 critical finding(s) exist")

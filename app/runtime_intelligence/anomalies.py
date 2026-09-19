@@ -22,10 +22,18 @@ class RuntimeAnomalyDetector:
 
         # 1. Latency Check against baseline
         latency = float(metrics.get("latency_p99_ms", metrics.get("latency_p99", 120.0)))
-        bl_latency = self.baseline_manager.get_or_create_baseline(tenant_id, f"{subsystem}_latency", default_mean=150.0, default_std=30.0)
+        bl_latency = self.baseline_manager.get_or_create_baseline(
+            tenant_id, f"{subsystem}_latency", default_mean=150.0, default_std=30.0
+        )
         if latency > bl_latency.confidence_band_upper:
-            severity = RuntimeAnomalySeverity.CRITICAL if latency > (bl_latency.expected_mean * 2.5) else (
-                RuntimeAnomalySeverity.HIGH if latency > (bl_latency.expected_mean * 1.8) else RuntimeAnomalySeverity.MEDIUM
+            severity = (
+                RuntimeAnomalySeverity.CRITICAL
+                if latency > (bl_latency.expected_mean * 2.5)
+                else (
+                    RuntimeAnomalySeverity.HIGH
+                    if latency > (bl_latency.expected_mean * 1.8)
+                    else RuntimeAnomalySeverity.MEDIUM
+                )
             )
             anomalies.append(
                 RuntimeAnomaly(
@@ -42,10 +50,14 @@ class RuntimeAnomalyDetector:
 
         # 2. Error Rate Check against baseline
         error_rate = float(metrics.get("error_rate", 0.001))
-        bl_error = self.baseline_manager.get_or_create_baseline(tenant_id, f"{subsystem}_error_rate", default_mean=0.01, default_std=0.005)
+        bl_error = self.baseline_manager.get_or_create_baseline(
+            tenant_id, f"{subsystem}_error_rate", default_mean=0.01, default_std=0.005
+        )
         if error_rate > bl_error.confidence_band_upper:
-            severity = RuntimeAnomalySeverity.CRITICAL if error_rate > 0.10 else (
-                RuntimeAnomalySeverity.HIGH if error_rate > 0.05 else RuntimeAnomalySeverity.MEDIUM
+            severity = (
+                RuntimeAnomalySeverity.CRITICAL
+                if error_rate > 0.10
+                else (RuntimeAnomalySeverity.HIGH if error_rate > 0.05 else RuntimeAnomalySeverity.MEDIUM)
             )
             anomalies.append(
                 RuntimeAnomaly(
@@ -92,7 +104,7 @@ class RuntimeAnomalyDetector:
 
         mean_val = sum(values) / len(values)
         variance = sum((v - mean_val) ** 2 for v in values) / len(values)
-        std_dev = variance ** 0.5
+        std_dev = variance**0.5
 
         anomalies: List[RuntimeAnomaly] = []
         for point in time_series_data:

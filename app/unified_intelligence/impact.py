@@ -36,7 +36,7 @@ class UnifiedImpactAssessment:
         affected_entities: List[str],
         impact_summary: str,
         confidence_score: float,
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.impact_id = impact_id
         self.tenant_id = tenant_id
@@ -66,7 +66,7 @@ class UnifiedImpactAssessment:
             "affected_entities": self.affected_entities,
             "impact_summary": self.impact_summary,
             "confidence_score": round(self.confidence_score, 4),
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -78,11 +78,7 @@ class UnifiedImpactEngine:
     def __init__(self):
         pass
 
-    def evaluate_situation_impact(
-        self,
-        tenant_id: str,
-        situation: EnterpriseSituation
-    ) -> UnifiedImpactAssessment:
+    def evaluate_situation_impact(self, tenant_id: str, situation: EnterpriseSituation) -> UnifiedImpactAssessment:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
         if situation.tenant_id != tenant_id:
@@ -95,7 +91,7 @@ class UnifiedImpactEngine:
             SituationSeverity.LOW: 0.2,
             SituationSeverity.MEDIUM: 0.5,
             SituationSeverity.HIGH: 0.75,
-            SituationSeverity.CRITICAL: 1.0
+            SituationSeverity.CRITICAL: 1.0,
         }
         mult = severity_multipliers.get(situation.severity, 0.5)
 
@@ -127,5 +123,5 @@ class UnifiedImpactEngine:
             affected_domains=list(domain_set),
             affected_entities=situation.affected_entities,
             impact_summary=summary,
-            confidence_score=confidence
+            confidence_score=confidence,
         )

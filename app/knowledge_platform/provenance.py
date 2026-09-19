@@ -47,8 +47,16 @@ class ProvenanceManager:
     def __init__(self) -> None:
         self._chains: Dict[str, ProvenanceChain] = {}
 
-    def create_chain(self, item_id: str, tenant_id: str = "global", source_system: str = "DataFabric", connector_type: str = "REST_API") -> ProvenanceChain:
-        chain = ProvenanceChain(item_id=item_id, tenant_id=tenant_id, source_system=source_system, connector_type=connector_type)
+    def create_chain(
+        self,
+        item_id: str,
+        tenant_id: str = "global",
+        source_system: str = "DataFabric",
+        connector_type: str = "REST_API",
+    ) -> ProvenanceChain:
+        chain = ProvenanceChain(
+            item_id=item_id, tenant_id=tenant_id, source_system=source_system, connector_type=connector_type
+        )
         self._chains[item_id] = chain
         logger.info(f"[PROVENANCE MANAGER] Created provenance chain '{chain.chain_id}' for item '{item_id}'")
         return chain

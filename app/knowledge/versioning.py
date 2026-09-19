@@ -26,11 +26,7 @@ async def get_next_version(session: AsyncSession, knowledge_base_id: str, docume
 
 
 async def archive_previous_versions(
-    session: AsyncSession,
-    knowledge_base_id: str,
-    document_name: str,
-    current_version: int,
-    user_id: str
+    session: AsyncSession, knowledge_base_id: str, document_name: str, current_version: int, user_id: str
 ):
     """
     Marks all previous versions of a document as ARCHIVED.

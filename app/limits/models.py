@@ -14,6 +14,7 @@ def _now():
 
 class UsageRecord(Base):
     """Immutable log of inference usage."""
+
     __tablename__ = "usage_records"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -42,6 +43,7 @@ class UsageRecord(Base):
 
 class QuotaPolicy(Base):
     """Hierarchical quota configurations supporting inheritance."""
+
     __tablename__ = "quota_policies"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -67,6 +69,7 @@ class QuotaPolicy(Base):
 
 class RateLimitPolicy(Base):
     """Specific rate limiting strategy rules for an entity."""
+
     __tablename__ = "rate_limit_policies"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -82,6 +85,7 @@ class RateLimitPolicy(Base):
 
 class QuotaWindow(Base):
     """Tracks current utilization for a rolling time window."""
+
     __tablename__ = "quota_windows"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -103,6 +107,7 @@ class QuotaWindow(Base):
 
 class UsageSnapshot(Base):
     """Pre-aggregated usage for fast analytical querying."""
+
     __tablename__ = "usage_snapshots"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))

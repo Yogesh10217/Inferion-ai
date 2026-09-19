@@ -105,6 +105,7 @@ class DatabaseModelRegistry(ModelRegistry):
 
         try:
             import asyncio
+
             loop = asyncio.get_running_loop()
             loop.create_task(_persist())
         except RuntimeError:
@@ -136,6 +137,7 @@ class DatabaseModelRegistry(ModelRegistry):
 
         try:
             import asyncio
+
             loop = asyncio.get_running_loop()
             loop.create_task(_persist_update())
         except RuntimeError:
@@ -158,6 +160,7 @@ class DatabaseModelRegistry(ModelRegistry):
 
         try:
             import asyncio
+
             loop = asyncio.get_running_loop()
             loop.create_task(_persist_delete())
         except RuntimeError:

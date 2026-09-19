@@ -20,7 +20,9 @@ class SecurityRootCauseAssessment(BaseModel):
 class SecurityRootCauseEngine:
     """Analyzes security incidents to deduce root cause."""
 
-    def analyze_root_cause(self, tenant_id: str, incident_id: str, primary_cause: str, contributing_factors: Optional[List[str]] = None) -> SecurityRootCauseAssessment:
+    def analyze_root_cause(
+        self, tenant_id: str, incident_id: str, primary_cause: str, contributing_factors: Optional[List[str]] = None
+    ) -> SecurityRootCauseAssessment:
         return SecurityRootCauseAssessment(
             tenant_id=tenant_id,
             incident_id=incident_id,

@@ -62,7 +62,9 @@ class DataRiskManager:
         }
 
         overall = round(sum(dims.values()) / len(dims), 2)
-        risk_lvl = "CRITICAL" if overall >= 75.0 else ("HIGH" if overall >= 50.0 else ("MEDIUM" if overall >= 25.0 else "LOW"))
+        risk_lvl = (
+            "CRITICAL" if overall >= 75.0 else ("HIGH" if overall >= 50.0 else ("MEDIUM" if overall >= 25.0 else "LOW"))
+        )
 
         prof = DataRiskProfile(
             profile_id=pid,

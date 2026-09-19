@@ -13,22 +13,20 @@ try:
     UNIFIED_INTELLIGENCE_SIGNALS_COUNTER = Counter(
         "ai_unified_intelligence_signals_processed_total",
         "Total unified domain signals processed",
-        ["tenant_id", "domain"]
+        ["tenant_id", "domain"],
     )
     UNIFIED_INTELLIGENCE_SITUATIONS_COUNTER = Counter(
         "ai_unified_intelligence_situations_detected_total",
         "Total enterprise situations detected",
-        ["tenant_id", "severity"]
+        ["tenant_id", "severity"],
     )
     UNIFIED_INTELLIGENCE_RISK_SCORE_GAUGE = Gauge(
-        "ai_unified_intelligence_risk_score",
-        "Overall cross-domain risk score per tenant",
-        ["tenant_id"]
+        "ai_unified_intelligence_risk_score", "Overall cross-domain risk score per tenant", ["tenant_id"]
     )
     UNIFIED_INTELLIGENCE_ASSURANCE_SCORE_GAUGE = Gauge(
         "ai_unified_intelligence_assurance_score",
         "Overall cross-domain assurance posture score per tenant",
-        ["tenant_id"]
+        ["tenant_id"],
     )
     PROMETHEUS_AVAILABLE = True
 except Exception:

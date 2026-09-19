@@ -59,7 +59,9 @@ class AutonomousVerificationEngine:
                 metrics_summary={"health_score": 40.0},
             )
             self._verifications[workflow_id] = res
-            raise DelegationVerificationException(f"Verification failed for workflow '{workflow_id}': {res.failed_checks}")
+            raise DelegationVerificationException(
+                f"Verification failed for workflow '{workflow_id}': {res.failed_checks}"
+            )
 
         res = VerificationResult(
             workflow_id=workflow_id,

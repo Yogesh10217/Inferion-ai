@@ -28,10 +28,7 @@ def set_event_bus(bus: IEventBus) -> None:
 
 
 async def emit_agent_event(
-    event_type: str,
-    context: AgentContext,
-    payload: Dict[str, Any],
-    event_bus: Optional[IEventBus] = None
+    event_type: str, context: AgentContext, payload: Dict[str, Any], event_bus: Optional[IEventBus] = None
 ) -> EventEnvelope:
     bus = event_bus or get_event_bus()
     envelope = EventEnvelope(
@@ -41,7 +38,7 @@ async def emit_agent_event(
         workspace_id=context.workspace_id,
         actor=context.user_id,
         source="agent_framework",
-        metadata=context.metadata
+        metadata=context.metadata,
     )
     try:
         await bus.publish(envelope)

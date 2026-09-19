@@ -84,7 +84,9 @@ class RetrievalPipeline:
         )
         dec = self.access_control_manager.evaluate_access("read", ctx)
         if not dec.allow:
-            logger.warning(f"[RETRIEVAL PIPELINE] Pre-retrieval authorization DENIED for '{req.identity_id}' ({req.tenant_id})")
+            logger.warning(
+                f"[RETRIEVAL PIPELINE] Pre-retrieval authorization DENIED for '{req.identity_id}' ({req.tenant_id})"
+            )
             raise KnowledgeAccessDeniedException("ALL", f"Pre-retrieval policy check failed: {dec.reason}")
 
         # 2. Retrieve & filter by tenant and classification
@@ -95,16 +97,18 @@ class RetrievalPipeline:
             if item.classification in ("RESTRICTED", "SECRET", "CONFIDENTIAL") and req.user_role in ("guest", "viewer"):
                 continue
             if item.confidence_score >= req.min_confidence:
-                candidate_items.append({
-                    "item_id": item.item_id,
-                    "title": item.title,
-                    "content": item.current_version.content,
-                    "confidence_score": item.confidence_score,
-                    "classification": item.classification,
-                })
+                candidate_items.append(
+                    {
+                        "item_id": item.item_id,
+                        "title": item.title,
+                        "content": item.current_version.content,
+                        "confidence_score": item.confidence_score,
+                        "classification": item.classification,
+                    }
+                )
 
         # 3. Rerank candidates
-        sorted_candidates = sorted(candidate_items, key=lambda x: x["confidence_score"], reverse=True)[:req.top_k]
+        sorted_candidates = sorted(candidate_items, key=lambda x: x["confidence_score"], reverse=True)[: req.top_k]
 
         # 4. Attach citations
         citations = [{"source_id": c["item_id"], "title": c["title"]} for c in sorted_candidates]
@@ -116,7 +120,9 @@ class RetrievalPipeline:
             items=sorted_candidates,
             citations=citations,
         )
-        logger.info(f"[RETRIEVAL PIPELINE] Retrieved {len(sorted_candidates)} items for query '{req.query}' via {req.strategy.value}")
+        logger.info(
+            f"[RETRIEVAL PIPELINE] Retrieved {len(sorted_candidates)} items for query '{req.query}' via {req.strategy.value}"
+        )
         return res
 
 

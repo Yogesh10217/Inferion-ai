@@ -83,7 +83,9 @@ class WorkspaceManager:
             metadata=metadata or {},
         )
         self._workspaces[ws.workspace_id] = ws
-        logger.info(f"[WORKSPACE MANAGER] Created workspace '{name}' (ID: {ws.workspace_id}, Org: {organization_id}, Env: {environment.value})")
+        logger.info(
+            f"[WORKSPACE MANAGER] Created workspace '{name}' (ID: {ws.workspace_id}, Org: {organization_id}, Env: {environment.value})"
+        )
         return ws
 
     def get_workspace(self, workspace_id: str) -> Workspace:

@@ -52,12 +52,19 @@ class IntegrationResilienceManager:
         self.fallback_manager = fallback_manager or FallbackManager()
         self._idempotency_ledger: Dict[str, IntegrationExecutionState] = {}
 
-    def get_or_create_execution(self, integration_id: str, idempotency_key: Optional[str] = None, tenant_id: str = "global") -> IntegrationExecutionState:
+    def get_or_create_execution(
+        self, integration_id: str, idempotency_key: Optional[str] = None, tenant_id: str = "global"
+    ) -> IntegrationExecutionState:
         if idempotency_key and idempotency_key in self._idempotency_ledger:
             logger.info(f"[INTEGRATION RESILIENCE] Returning idempotent execution for key '{idempotency_key}'")
             return self._idempotency_ledger[idempotency_key]
 
-        state = IntegrationExecutionState(integration_id=integration_id, tenant_id=tenant_id, idempotency_key=idempotency_key, status=IntegrationExecutionStatus.RUNNING)
+        state = IntegrationExecutionState(
+            integration_id=integration_id,
+            tenant_id=tenant_id,
+            idempotency_key=idempotency_key,
+            status=IntegrationExecutionStatus.RUNNING,
+        )
         if idempotency_key:
             self._idempotency_ledger[idempotency_key] = state
         return state

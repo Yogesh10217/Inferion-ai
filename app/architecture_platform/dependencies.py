@@ -53,7 +53,7 @@ class DependencyGraph(BaseModel):
     tenant_id: str
     dependencies: Dict[str, ArchitectureDependency] = Field(default_factory=dict)
     adjacency_out: Dict[str, List[str]] = Field(default_factory=dict)  # source -> list[target]
-    adjacency_in: Dict[str, List[str]] = Field(default_factory=dict)   # target -> list[source]
+    adjacency_in: Dict[str, List[str]] = Field(default_factory=dict)  # target -> list[source]
 
 
 class DependencyManager:

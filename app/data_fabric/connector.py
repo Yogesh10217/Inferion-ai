@@ -63,7 +63,9 @@ class DataConnector(ABC):
         """Fetch records from data source."""
 
     @abstractmethod
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Fetch records updated since cursor."""
 
     @abstractmethod

@@ -72,22 +72,31 @@ class AutonomousExecutionEngine:
             # 1. PLANNING phase
             sm.transition_to(ExecutionState.PLANNING)
             plan = self.planner.create_plan(goal_prompt, tenant_id=tenant_id, workspace_id=workspace_id)
-            self.checkpoint_mgr.save_checkpoint(eid, step_number=1, state_data={"stage": "plan_created", "plan_id": plan.plan_id}, tenant_id=tenant_id)
+            self.checkpoint_mgr.save_checkpoint(
+                eid, step_number=1, state_data={"stage": "plan_created", "plan_id": plan.plan_id}, tenant_id=tenant_id
+            )
             autonomous_checkpoints_total.labels(tenant_id=tenant_id).inc()
 
             # 2. EXECUTING phase
             sm.transition_to(ExecutionState.EXECUTING)
             exec_output = f"Autonomous worker completed goal '{goal_prompt}' with plan '{plan.plan_id}'"
-            self.checkpoint_mgr.save_checkpoint(eid, step_number=2, state_data={"stage": "execution_completed", "output": exec_output}, tenant_id=tenant_id)
+            self.checkpoint_mgr.save_checkpoint(
+                eid,
+                step_number=2,
+                state_data={"stage": "execution_completed", "output": exec_output},
+                tenant_id=tenant_id,
+            )
 
             # 3. Publish Event
-            self.event_engine.publish(AutonomyEvent(
-                event_id=f"evt_{eid}",
-                event_type=AutonomyEventType.WORKFLOW_COMPLETED,
-                source="AutonomousExecutionEngine",
-                tenant_id=tenant_id,
-                payload={"execution_id": eid, "output": exec_output},
-            ))
+            self.event_engine.publish(
+                AutonomyEvent(
+                    event_id=f"evt_{eid}",
+                    event_type=AutonomyEventType.WORKFLOW_COMPLETED,
+                    source="AutonomousExecutionEngine",
+                    tenant_id=tenant_id,
+                    payload={"execution_id": eid, "output": exec_output},
+                )
+            )
 
             # 4. COMPLETED phase
             sm.transition_to(ExecutionState.COMPLETED)
@@ -99,7 +108,13 @@ class AutonomousExecutionEngine:
             autonomous_runs_completed.labels(tenant_id=tenant_id).inc()
             autonomous_runs_active.labels(tenant_id=tenant_id).dec()
 
-            self.audit_logger.log(eid, "execution_completed", actor_id="autonomous_engine", tenant_id=tenant_id, details={"cost": cost, "elapsed": elapsed})
+            self.audit_logger.log(
+                eid,
+                "execution_completed",
+                actor_id="autonomous_engine",
+                tenant_id=tenant_id,
+                details={"cost": cost, "elapsed": elapsed},
+            )
             return {
                 "execution_id": eid,
                 "status": "COMPLETED",
@@ -114,7 +129,9 @@ class AutonomousExecutionEngine:
             sm.transition_to(ExecutionState.FAILED)
             autonomous_runs_failed.labels(tenant_id=tenant_id, error_type=type(ex).__name__).inc()
             autonomous_runs_active.labels(tenant_id=tenant_id).dec()
-            self.audit_logger.log(eid, "execution_failed", actor_id="autonomous_engine", tenant_id=tenant_id, details={"error": str(ex)})
+            self.audit_logger.log(
+                eid, "execution_failed", actor_id="autonomous_engine", tenant_id=tenant_id, details={"error": str(ex)}
+            )
             logger.error(f"[AUTONOMOUS ENGINE] Execution '{eid}' failed: {ex}")
             raise ex
 
@@ -149,7 +166,12 @@ class AutonomousExecutionEngine:
             raise ValueError(f"No checkpoint snapshot available for recovery of '{execution_id}'")
 
         autonomous_recoveries_total.labels(tenant_id=tenant_id).inc()
-        self.audit_logger.log(execution_id, "execution_recovered", actor_id="autonomous_engine", details={"checkpoint_id": snapshot.checkpoint_id})
+        self.audit_logger.log(
+            execution_id,
+            "execution_recovered",
+            actor_id="autonomous_engine",
+            details={"checkpoint_id": snapshot.checkpoint_id},
+        )
 
         return {
             "execution_id": execution_id,

@@ -71,7 +71,9 @@ class SnapshotFactory:
             policy_version=policy_version,
             extra_metadata=extra_metadata or {},
         )
-        fp = FingerprintGenerator.generate({"metadata": meta.model_dump(exclude={"fingerprint"}), "payload": domain_payload}, contract_version)
+        fp = FingerprintGenerator.generate(
+            {"metadata": meta.model_dump(exclude={"fingerprint"}), "payload": domain_payload}, contract_version
+        )
         meta.fingerprint = fp
 
         return PlatformSnapshot(metadata=meta, domain_payload=domain_payload)

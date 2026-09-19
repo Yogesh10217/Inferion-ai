@@ -25,6 +25,7 @@ class AccessInvestigationStatus(str, Enum):
 
 class AccessFinding(BaseModel):
     """Specific finding recorded during investigation."""
+
     finding_id: str = Field(default_factory=lambda: f"find_{uuid.uuid4().hex[:8]}")
     title: str
     severity: str = "HIGH"
@@ -33,6 +34,7 @@ class AccessFinding(BaseModel):
 
 class AccessInvestigation(BaseModel):
     """Access Investigation Lifecycle Representation."""
+
     investigation_id: str = Field(default_factory=lambda: f"inv_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     title: str
@@ -76,7 +78,14 @@ class AccessInvestigationManager:
         inv.status = AccessInvestigationStatus.INVESTIGATING
         return inv
 
-    def record_finding(self, tenant_id: str, investigation_id: str, title: str, severity: str = "HIGH", details: Optional[Dict[str, Any]] = None) -> AccessInvestigation:
+    def record_finding(
+        self,
+        tenant_id: str,
+        investigation_id: str,
+        title: str,
+        severity: str = "HIGH",
+        details: Optional[Dict[str, Any]] = None,
+    ) -> AccessInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         if inv.is_concluded:
             raise ImmutableAccessRecordException(investigation_id)
@@ -85,7 +94,9 @@ class AccessInvestigationManager:
         inv.status = AccessInvestigationStatus.FINDINGS_RECORDED
         return inv
 
-    def set_remediation_planned(self, tenant_id: str, investigation_id: str, remediation_plan_id: str) -> AccessInvestigation:
+    def set_remediation_planned(
+        self, tenant_id: str, investigation_id: str, remediation_plan_id: str
+    ) -> AccessInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         if inv.is_concluded:
             raise ImmutableAccessRecordException(investigation_id)
@@ -95,7 +106,10 @@ class AccessInvestigationManager:
 
     def conclude_investigation(self, tenant_id: str, investigation_id: str) -> AccessInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
-        if inv.status not in [AccessInvestigationStatus.FINDINGS_RECORDED, AccessInvestigationStatus.REMEDIATION_PLANNED]:
+        if inv.status not in [
+            AccessInvestigationStatus.FINDINGS_RECORDED,
+            AccessInvestigationStatus.REMEDIATION_PLANNED,
+        ]:
             raise InvalidAccessStateTransitionException(inv.status.value, AccessInvestigationStatus.CONCLUDED.value)
         inv.status = AccessInvestigationStatus.CONCLUDED
         inv.is_concluded = True
@@ -117,7 +131,9 @@ class AccessInvestigationManager:
             raise CrossTenantAccessIntelligenceException()
         return inv
 
-    def list_investigations(self, tenant_id: str, status: Optional[AccessInvestigationStatus] = None) -> List[AccessInvestigation]:
+    def list_investigations(
+        self, tenant_id: str, status: Optional[AccessInvestigationStatus] = None
+    ) -> List[AccessInvestigation]:
         results = [i for i in self._investigations.values() if i.tenant_id == tenant_id]
         if status:
             results = [i for i in results if i.status == status]

@@ -50,7 +50,9 @@ class DeveloperGovernanceEngine:
         self.risk_manager = risk_manager or RiskManager()
         self.approval_engine = approval_engine or ApprovalEngine()
 
-    def evaluate_release_governance(self, project_id: str, action: str, risk_level: str = "LOW", tenant_id: str = "global") -> DeveloperAccessDecision:
+    def evaluate_release_governance(
+        self, project_id: str, action: str, risk_level: str = "LOW", tenant_id: str = "global"
+    ) -> DeveloperAccessDecision:
         if risk_level in ("HIGH", "CRITICAL"):
             appr = self.approval_engine.request_approval(
                 execution_id=f"dev_{project_id}",

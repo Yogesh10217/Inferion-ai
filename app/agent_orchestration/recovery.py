@@ -74,17 +74,21 @@ class AgentRecoveryManager:
 
         if is_unsafe_for_auto_recovery:
             strategy = RecoveryStrategy.ESCALATE_HUMAN
-            actions.append(RecoveryAction(
-                strategy=RecoveryStrategy.ESCALATE_HUMAN,
-                description=f"Automated recovery is unsafe for failure '{failure_reason}'. Escalating to human oversight.",
-            ))
+            actions.append(
+                RecoveryAction(
+                    strategy=RecoveryStrategy.ESCALATE_HUMAN,
+                    description=f"Automated recovery is unsafe for failure '{failure_reason}'. Escalating to human oversight.",
+                )
+            )
         elif fallback_agent_id:
             strategy = RecoveryStrategy.FALLBACK_AGENT
-            actions.append(RecoveryAction(
-                strategy=RecoveryStrategy.FALLBACK_AGENT,
-                target_agent_id=fallback_agent_id,
-                description=f"Routing task execution to fallback agent '{fallback_agent_id}'.",
-            ))
+            actions.append(
+                RecoveryAction(
+                    strategy=RecoveryStrategy.FALLBACK_AGENT,
+                    target_agent_id=fallback_agent_id,
+                    description=f"Routing task execution to fallback agent '{fallback_agent_id}'.",
+                )
+            )
         else:
             strategy = RecoveryStrategy.ROLLBACK_REQUEST
             # Emit governed delegation request to PLATFORM_OPERATIONS for rollback
@@ -94,11 +98,13 @@ class AgentRecoveryManager:
                 action="rollback_execution_state",
                 payload={"execution_id": execution_id, "reason": failure_reason},
             )
-            actions.append(RecoveryAction(
-                strategy=RecoveryStrategy.ROLLBACK_REQUEST,
-                delegation_id=del_req.delegation_id,
-                description=f"Delegated rollback request created ({del_req.delegation_id}).",
-            ))
+            actions.append(
+                RecoveryAction(
+                    strategy=RecoveryStrategy.ROLLBACK_REQUEST,
+                    delegation_id=del_req.delegation_id,
+                    description=f"Delegated rollback request created ({del_req.delegation_id}).",
+                )
+            )
 
         plan = AgentRecoveryPlan(
             tenant_id=tenant_id,
@@ -106,7 +112,9 @@ class AgentRecoveryManager:
             task_id=task_id,
             strategy=strategy,
             actions=actions,
-            status=RecoveryStatus.IN_PROGRESS if strategy != RecoveryStrategy.ESCALATE_HUMAN else RecoveryStatus.ESCALATED,
+            status=(
+                RecoveryStatus.IN_PROGRESS if strategy != RecoveryStrategy.ESCALATE_HUMAN else RecoveryStatus.ESCALATED
+            ),
         )
         self._plans[plan.plan_id] = plan
         return plan

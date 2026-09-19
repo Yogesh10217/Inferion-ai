@@ -37,14 +37,18 @@ class CrossDomainCorrelation(BaseModel):
         return {
             "correlation_id": self.correlation_id,
             "tenant_id": self.tenant_id,
-            "correlation_type": self.correlation_type.value if hasattr(self.correlation_type, 'value') else str(self.correlation_type),
-            "primary_domain": self.primary_domain.value if hasattr(self.primary_domain, 'value') else str(self.primary_domain),
-            "correlated_domains": [d.value if hasattr(d, 'value') else str(d) for d in self.correlated_domains],
+            "correlation_type": (
+                self.correlation_type.value if hasattr(self.correlation_type, "value") else str(self.correlation_type)
+            ),
+            "primary_domain": (
+                self.primary_domain.value if hasattr(self.primary_domain, "value") else str(self.primary_domain)
+            ),
+            "correlated_domains": [d.value if hasattr(d, "value") else str(d) for d in self.correlated_domains],
             "signal_ids": self.signal_ids,
             "correlation_strength": round(self.correlation_strength, 4),
             "composite_confidence": round(self.composite_confidence, 4),
             "summary": self.summary,
-            "correlated_at": self.correlated_at.isoformat()
+            "correlated_at": self.correlated_at.isoformat(),
         }
 
 
@@ -64,7 +68,7 @@ class CrossDomainCorrelationEngine:
 
         domains = list({s.domain for s in context.signals})
         primary = domains[0] if domains else IntelligenceDomain.SECURITY
-        avg_conf = sum(getattr(s, 'confidence_score', 0.85) for s in context.signals) / len(context.signals)
+        avg_conf = sum(getattr(s, "confidence_score", 0.85) for s in context.signals) / len(context.signals)
 
         corr = CrossDomainCorrelation(
             tenant_id=context.tenant_id,
@@ -75,11 +79,13 @@ class CrossDomainCorrelationEngine:
             correlation_strength=0.88,
             composite_confidence=avg_conf,
             confidence_score=avg_conf,
-            summary=f"Correlated {len(context.signals)} signals across {len(domains)} domains."
+            summary=f"Correlated {len(context.signals)} signals across {len(domains)} domains.",
         )
         return [corr]
 
-    def analyze_correlations(self, tenant_id: str, correlation_type: CorrelationType = CorrelationType.RISK) -> List[CrossDomainCorrelation]:
+    def analyze_correlations(
+        self, tenant_id: str, correlation_type: CorrelationType = CorrelationType.RISK
+    ) -> List[CrossDomainCorrelation]:
         if self.signal_store:
             signals = self.signal_store.list_signals(tenant_id)
         else:
@@ -99,6 +105,6 @@ class CrossDomainCorrelationEngine:
             correlation_strength=0.88,
             composite_confidence=0.90,
             confidence_score=0.90,
-            summary=f"Correlated {len(signals)} signals across {len(domains)} domains."
+            summary=f"Correlated {len(signals)} signals across {len(domains)} domains.",
         )
         return [corr]

@@ -70,4 +70,7 @@ class WorkerTemplate(BaseModel):
                 system_prompt="You are an autonomous data analyst worker.",
             ),
         }
-        return presets.get(template_type, WorkerTemplate(template_type=template_type, name=template_type.value, description="Custom worker"))
+        return presets.get(
+            template_type,
+            WorkerTemplate(template_type=template_type, name=template_type.value, description="Custom worker"),
+        )

@@ -10,7 +10,7 @@ class PluginPermission(BaseModel):
 
 
 class PluginManifest(BaseModel):
-    id: str = Field(..., pattern=r'^[a-z0-9_-]+$')
+    id: str = Field(..., pattern=r"^[a-z0-9_-]+$")
     name: str
     version: str
     description: str

@@ -81,7 +81,11 @@ class ProductionReleaseManifest:
         configuration_fingerprint: str = "",
         metadata: Optional[Dict[str, Any]] = None,
     ) -> ProductionReleaseManifest:
-        img_ref = f"{identity.image_tag}@{identity.image_digest}" if identity.image_digest != "NOT_AVAILABLE" else identity.image_tag
+        img_ref = (
+            f"{identity.image_tag}@{identity.image_digest}"
+            if identity.image_digest != "NOT_AVAILABLE"
+            else identity.image_tag
+        )
         return cls(
             application_version=identity.application_version,
             deployment_version=identity.deployment_version,

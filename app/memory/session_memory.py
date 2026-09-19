@@ -37,7 +37,9 @@ class SessionMemory:
     def __init__(self):
         self._sessions: Dict[str, SessionContext] = {}
 
-    def create_session(self, session_id: str, context_data: Optional[Dict[str, Any]] = None, ttl_seconds: float = 86400.0) -> SessionContext:
+    def create_session(
+        self, session_id: str, context_data: Optional[Dict[str, Any]] = None, ttl_seconds: float = 86400.0
+    ) -> SessionContext:
         session = SessionContext(session_id=session_id, context_data=context_data, ttl_seconds=ttl_seconds)
         self._sessions[session_id] = session
         return session

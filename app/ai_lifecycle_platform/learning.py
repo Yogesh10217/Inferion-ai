@@ -43,7 +43,11 @@ class LifecycleLearningManager:
         recommendation_title: str,
     ) -> LifecycleLearningRecord:
         pat = LifecyclePattern(pattern_name=pattern_name)
-        rec = LifecycleRecommendation(title=recommendation_title, description=f"Recommended action for {pattern_name}", action_type="UPDATE_EVALUATION_THRESHOLD")
+        rec = LifecycleRecommendation(
+            title=recommendation_title,
+            description=f"Recommended action for {pattern_name}",
+            action_type="UPDATE_EVALUATION_THRESHOLD",
+        )
         record = LifecycleLearningRecord(
             tenant_id=tenant_id,
             asset_id=asset_id,

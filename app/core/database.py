@@ -26,8 +26,7 @@ elif "postgresql+asyncpg" in db_url or "postgres+asyncpg" in db_url:
     if "?" in db_url:
         base_url, query_str = db_url.split("?", 1)
         params = [
-            p for p in query_str.split("&")
-            if not p.startswith("sslmode=") and not p.startswith("channel_binding=")
+            p for p in query_str.split("&") if not p.startswith("sslmode=") and not p.startswith("channel_binding=")
         ]
         db_url = base_url + ("?" + "&".join(params) if params else "")
 
@@ -44,9 +43,7 @@ engine = create_async_engine(
     connect_args=connect_args,
 )
 
-async_session_maker = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False, autoflush=False
-)
+async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False, autoflush=False)
 
 Base = declarative_base()
 

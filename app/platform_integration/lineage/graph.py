@@ -59,7 +59,9 @@ class LineageGraph:
 
         # Cycle prevention check
         if self._path_exists(child_id, parent_id):
-            raise IntelligenceLineageException(f"Adding edge {parent_id} -> {child_id} would introduce a lineage cycle.")
+            raise IntelligenceLineageException(
+                f"Adding edge {parent_id} -> {child_id} would introduce a lineage cycle."
+            )
 
         self.edges[parent_id].add(child_id)
         self.reverse_edges[child_id].add(parent_id)

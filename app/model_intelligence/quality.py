@@ -69,7 +69,15 @@ class ModelQualityManager:
         sample_count: int = 50,
     ) -> ModelQualityAssessment:
         overall = sum(s.score * s.weight for s in scores) / max(sum(s.weight for s in scores), 1.0)
-        status = QualityStatus.EXCELLENT if overall >= 0.9 else (QualityStatus.GOOD if overall >= 0.75 else (QualityStatus.ACCEPTABLE if overall >= 0.6 else QualityStatus.POOR))
+        status = (
+            QualityStatus.EXCELLENT
+            if overall >= 0.9
+            else (
+                QualityStatus.GOOD
+                if overall >= 0.75
+                else (QualityStatus.ACCEPTABLE if overall >= 0.6 else QualityStatus.POOR)
+            )
+        )
 
         ev_hash = hashlib.sha256(f"{model_id}:{tenant_id}:{overall}:{sample_count}".encode()).hexdigest()
         evidence = QualityEvidence(
@@ -90,7 +98,9 @@ class ModelQualityManager:
         )
 
         self._assessments[assess_id] = assessment
-        logger.info(f"[MODEL QUALITY] Evaluated model {model_id} (Tenant: {tenant_id}) Score: {overall:.2f} Status: {status}")
+        logger.info(
+            f"[MODEL QUALITY] Evaluated model {model_id} (Tenant: {tenant_id}) Score: {overall:.2f} Status: {status}"
+        )
         return assessment
 
     def get_latest_assessment(self, model_id: str, tenant_id: str) -> Optional[ModelQualityAssessment]:

@@ -20,7 +20,9 @@ class SecurityImpactScore(BaseModel):
 class SecurityImpactEngine:
     """Calculates CIA security impact score for assets or incidents."""
 
-    def evaluate_impact(self, tenant_id: str, target_id: str, c: float = 5.0, i: float = 5.0, a: float = 5.0) -> SecurityImpactScore:
+    def evaluate_impact(
+        self, tenant_id: str, target_id: str, c: float = 5.0, i: float = 5.0, a: float = 5.0
+    ) -> SecurityImpactScore:
         overall = round((c + i + a) / 3.0, 2)
         return SecurityImpactScore(
             tenant_id=tenant_id,

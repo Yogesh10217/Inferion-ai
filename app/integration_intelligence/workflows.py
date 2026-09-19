@@ -40,6 +40,7 @@ class WorkflowTrigger(str, Enum):
 
 class WorkflowStep(BaseModel):
     """Step definition within an integration workflow."""
+
     step_id: str = Field(default_factory=lambda: f"step_{uuid.uuid4().hex[:8]}")
     name: str
     target_connector_id: str
@@ -52,6 +53,7 @@ class WorkflowStep(BaseModel):
 
 class IntegrationWorkflow(BaseModel):
     """Governed Integration Workflow Representation."""
+
     workflow_id: str = Field(default_factory=lambda: f"wf_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     name: str

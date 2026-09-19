@@ -53,7 +53,7 @@ class AuditAdminService:
         start_time: Optional[datetime] = None,
         end_time: Optional[datetime] = None,
         limit: int = 100,
-        offset: int = 0
+        offset: int = 0,
     ) -> List[AuditEvent]:
         stmt = select(AuditEvent)
         conditions = []

@@ -19,15 +19,17 @@ class DeploymentFailureRecord:
     detected_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "failure_type": self.failure_type,
-            "rollback_trigger": self.rollback_trigger.value,
-            "target_state": self.target_state.value,
-            "rollback_required": self.rollback_required,
-            "description": self.description,
-            "evidence_details": self.evidence_details,
-            "detected_at": self.detected_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "failure_type": self.failure_type,
+                "rollback_trigger": self.rollback_trigger.value,
+                "target_state": self.target_state.value,
+                "rollback_required": self.rollback_required,
+                "description": self.description,
+                "evidence_details": self.evidence_details,
+                "detected_at": self.detected_at,
+            }
+        )
 
 
 class DeploymentFailureDetector:
@@ -115,11 +117,14 @@ class DeploymentFailureDetector:
     def detect_failure(
         cls, failure_key: str, error_message: str, evidence: Optional[Dict[str, Any]] = None
     ) -> DeploymentFailureRecord:
-        mapping = cls.FAILURE_MAPPING.get(failure_key, {
-            "trigger": RollbackTrigger.READINESS_FAILURE,
-            "state": ProductionDeploymentState.FAILED,
-            "rollback_required": True,
-        })
+        mapping = cls.FAILURE_MAPPING.get(
+            failure_key,
+            {
+                "trigger": RollbackTrigger.READINESS_FAILURE,
+                "state": ProductionDeploymentState.FAILED,
+                "rollback_required": True,
+            },
+        )
 
         return DeploymentFailureRecord(
             failure_type=failure_key,

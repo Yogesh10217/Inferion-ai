@@ -77,7 +77,11 @@ class IntegrationGovernanceEngine:
                 approval_request_id=appr.request_id,
                 reason=f"High-risk external action '{action}' requires administrator approval",
             )
-            logger.info(f"[INTEGRATION GOVERNANCE] External action '{action}' REQUIRES_APPROVAL -> Request '{appr.request_id}'")
+            logger.info(
+                f"[INTEGRATION GOVERNANCE] External action '{action}' REQUIRES_APPROVAL -> Request '{appr.request_id}'"
+            )
             return dec
 
-        return IntegrationAccessDecision(integration_id=integration_id, tenant_id=tenant_id, decision=IntegrationDecisionType.ALLOW)
+        return IntegrationAccessDecision(
+            integration_id=integration_id, tenant_id=tenant_id, decision=IntegrationDecisionType.ALLOW
+        )

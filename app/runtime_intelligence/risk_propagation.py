@@ -37,7 +37,7 @@ class RuntimeRiskPropagationEngine:
             chain = [origin_component, "workflow_engine", "decision_router", target_component]
 
         hops = len(chain) - 1
-        propagated_risk = round(initial_risk * (decay_factor ** hops), 3)
+        propagated_risk = round(initial_risk * (decay_factor**hops), 3)
 
         if propagated_risk >= 0.70:
             impact = f"CRITICAL_OPERATIONAL_IMPACT_ON_{target_component.upper()}"
@@ -54,5 +54,7 @@ class RuntimeRiskPropagationEngine:
             risk_score=propagated_risk,
             business_impact=impact,
         )
-        logger.info(f"Analyzed RuntimeRiskPropagationPath '{rpath.path_id}' from '{origin_component}' to '{target_component}' (Score: {propagated_risk})")
+        logger.info(
+            f"Analyzed RuntimeRiskPropagationPath '{rpath.path_id}' from '{origin_component}' to '{target_component}' (Score: {propagated_risk})"
+        )
         return rpath

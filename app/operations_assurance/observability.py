@@ -1,6 +1,5 @@
 """Prometheus metrics using ai_operations_* naming conventions."""
 
-
 try:
     from prometheus_client import Counter, Gauge
 

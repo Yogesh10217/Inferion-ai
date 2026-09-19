@@ -9,9 +9,7 @@ logger = logging.getLogger(__name__)
 class RecoverySimulationEngine:
     """Simulates recovery scenarios analytically without modifying runtime infrastructure."""
 
-    def simulate_recovery(
-        self, tenant_id: str, service_id: str, strategy: str = "FAILOVER"
-    ) -> Dict[str, Any]:
+    def simulate_recovery(self, tenant_id: str, service_id: str, strategy: str = "FAILOVER") -> Dict[str, Any]:
         return {
             "tenant_id": tenant_id,
             "service_id": service_id,

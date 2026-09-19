@@ -25,9 +25,7 @@ class ContinuousAssuranceEngine:
         self.provider_registry = provider_registry
         self.assurance_repo = assurance_repo
 
-    def evaluate_assurance(
-        self, tenant_id: str, scope: Optional[str] = None
-    ) -> ContinuousAssuranceAssessment:
+    def evaluate_assurance(self, tenant_id: str, scope: Optional[str] = None) -> ContinuousAssuranceAssessment:
         domains = self.provider_registry.list_domains()
         scores: Dict[str, float] = {}
 
@@ -78,5 +76,7 @@ class ContinuousAssuranceEngine:
         )
 
         self.assurance_repo.save(assessment)
-        logger.info(f"Generated ContinuousAssuranceAssessment '{assessment.assessment_id}' (State: {state.value}, Score: {score_obj.overall_score})")
+        logger.info(
+            f"Generated ContinuousAssuranceAssessment '{assessment.assessment_id}' (State: {state.value}, Score: {score_obj.overall_score})"
+        )
         return assessment

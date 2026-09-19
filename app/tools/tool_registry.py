@@ -89,7 +89,9 @@ class ToolRegistry:
                     if v and ("global", name, v) in self._tools:
                         return self._tools[("global", name, v)]
 
-            raise ToolNotFoundException(f"Tool '{name}' (version: {version or 'latest'}) not found for tenant '{tenant_id}'")
+            raise ToolNotFoundException(
+                f"Tool '{name}' (version: {version or 'latest'}) not found for tenant '{tenant_id}'"
+            )
 
     def tool_exists(self, name: str, tenant_id: str = "global", version: Optional[str] = None) -> bool:
         """Check if a tool is registered."""

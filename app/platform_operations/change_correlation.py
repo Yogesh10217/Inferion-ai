@@ -74,7 +74,9 @@ class ChangeIntelligenceEngine:
         except Exception:
             pass
 
-        logger.info(f"[CHANGE INTELLIGENCE] Recorded change '{chg.change_id}' ({change_type}) for resource {resource_id}")
+        logger.info(
+            f"[CHANGE INTELLIGENCE] Recorded change '{chg.change_id}' ({change_type}) for resource {resource_id}"
+        )
         return chg
 
     def correlate_incident_with_changes(
@@ -88,7 +90,9 @@ class ChangeIntelligenceEngine:
         correlations: List[ChangeCorrelation] = []
         cutoff = incident_timestamp - timedelta(minutes=lookback_minutes)
 
-        tenant_changes = [c for c in self._changes.values() if c.tenant_id in (tenant_id, "global") and c.timestamp >= cutoff]
+        tenant_changes = [
+            c for c in self._changes.values() if c.tenant_id in (tenant_id, "global") and c.timestamp >= cutoff
+        ]
 
         for chg in tenant_changes:
             if chg.resource_id in service_resource_ids or not service_resource_ids:
@@ -110,5 +114,7 @@ class ChangeIntelligenceEngine:
                 )
                 correlations.append(corr)
 
-        logger.info(f"[CHANGE INTELLIGENCE] Correlated incident '{incident_id}' with {len(correlations)} recent changes.")
+        logger.info(
+            f"[CHANGE INTELLIGENCE] Correlated incident '{incident_id}' with {len(correlations)} recent changes."
+        )
         return correlations

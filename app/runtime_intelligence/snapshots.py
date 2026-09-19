@@ -189,9 +189,7 @@ class RuntimeSnapshotManager:
             "is_finalized": snap.is_finalized,
         }
 
-    def compare_snapshots(
-        self, tenant_id: str, snapshot_id_1: str, snapshot_id_2: str
-    ) -> Dict[str, Any]:
+    def compare_snapshots(self, tenant_id: str, snapshot_id_1: str, snapshot_id_2: str) -> Dict[str, Any]:
         """Compares two runtime snapshots and detects drift/state differences."""
         s1 = self.get_snapshot(tenant_id, snapshot_id_1)
         s2 = self.get_snapshot(tenant_id, snapshot_id_2)

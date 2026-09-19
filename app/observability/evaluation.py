@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class EvaluationScore:
     """Holds computed quality and evaluation metrics for an execution or model."""
+
     execution_id: str
     agent_id: Optional[str]
     workflow_id: Optional[str]

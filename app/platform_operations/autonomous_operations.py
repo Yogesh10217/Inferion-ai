@@ -29,7 +29,9 @@ class AutonomyLevel(str, Enum):
 class AutonomousActionPolicy(BaseModel):
     policy_id: str = Field(default_factory=lambda: f"autopol_{uuid.uuid4().hex[:8]}")
     tenant_id: str = "global"
-    allowed_strategies: List[RemediationStrategy] = Field(default_factory=lambda: [RemediationStrategy.RETRY, RemediationStrategy.RESTART, RemediationStrategy.FALLBACK])
+    allowed_strategies: List[RemediationStrategy] = Field(
+        default_factory=lambda: [RemediationStrategy.RETRY, RemediationStrategy.RESTART, RemediationStrategy.FALLBACK]
+    )
     max_allowed_risk: RiskLevel = RiskLevel.LOW
     timeout_seconds: int = 300
     is_active: bool = True
@@ -56,7 +58,9 @@ class AutonomousOperationsEngine:
 
     def register_policy(self, policy: AutonomousActionPolicy) -> AutonomousActionPolicy:
         self._policies[policy.tenant_id] = policy
-        logger.info(f"[AUTONOMOUS OPERATIONS] Registered policy for tenant '{policy.tenant_id}' (Max risk: {policy.max_allowed_risk.value})")
+        logger.info(
+            f"[AUTONOMOUS OPERATIONS] Registered policy for tenant '{policy.tenant_id}' (Max risk: {policy.max_allowed_risk.value})"
+        )
         return policy
 
     def execute_autonomous_remediation(
@@ -74,7 +78,10 @@ class AutonomousOperationsEngine:
             raise AutonomousActionDeniedException(f"Autonomous operations policy is inactive for tenant '{tenant_id}'.")
 
         # 1. Enforce max allowed risk
-        if plan.overall_risk_level in (RiskLevel.HIGH, RiskLevel.CRITICAL) and policy.max_allowed_risk in (RiskLevel.LOW, RiskLevel.MEDIUM):
+        if plan.overall_risk_level in (RiskLevel.HIGH, RiskLevel.CRITICAL) and policy.max_allowed_risk in (
+            RiskLevel.LOW,
+            RiskLevel.MEDIUM,
+        ):
             raise AutonomousActionDeniedException(
                 f"Autonomous execution denied: Plan overall risk is {plan.overall_risk_level.value}, but policy max allowed risk is {policy.max_allowed_risk.value}. Approval is required."
             )

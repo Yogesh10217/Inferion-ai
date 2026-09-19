@@ -86,5 +86,7 @@ class WorkflowRuntimeEngine:
         if not record:
             record = self.init_runtime(workflow_id, tenant_id)
         if record.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantAutonomousAssuranceException(f"Unauthorized cross-tenant access to workflow runtime '{workflow_id}'")
+            raise CrossTenantAutonomousAssuranceException(
+                f"Unauthorized cross-tenant access to workflow runtime '{workflow_id}'"
+            )
         return record

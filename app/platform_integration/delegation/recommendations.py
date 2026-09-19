@@ -28,7 +28,11 @@ class CrossPhaseRecommendationEngine:
 
         for p_str in degraded_platforms:
             p_upper = p_str.upper()
-            target_plat = IntegrationPlatform[p_upper] if p_upper in IntegrationPlatform.__members__ else IntegrationPlatform.RUNTIME
+            target_plat = (
+                IntegrationPlatform[p_upper]
+                if p_upper in IntegrationPlatform.__members__
+                else IntegrationPlatform.RUNTIME
+            )
 
             r_id = f"rec-{uuid.uuid4().hex[:10]}"
             if target_plat == IntegrationPlatform.RUNTIME:

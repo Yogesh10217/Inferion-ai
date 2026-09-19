@@ -37,7 +37,9 @@ class CrossPhaseIntegrationAuditEngine:
                     rule_id="RULE-INT-001",
                     title=f"Subsystem Integration Unhealthy: '{sub.subsystem_name}'",
                     description=f"Subsystem '{sub.subsystem_name}' (Phase {sub.phase}) reported status {sub.status.value}: {sub.error_message}",
-                    severity=PlatformAuditSeverity.CRITICAL if sub.phase in ["5.51", "5.58"] else PlatformAuditSeverity.HIGH,
+                    severity=(
+                        PlatformAuditSeverity.CRITICAL if sub.phase in ["5.51", "5.58"] else PlatformAuditSeverity.HIGH
+                    ),
                     subsystem=sub.subsystem_name,
                     affected_component=f"Phase {sub.phase}",
                     root_cause_hypothesis="Provider failure, network partition, or missing initialization.",

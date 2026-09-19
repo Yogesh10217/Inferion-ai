@@ -32,5 +32,7 @@ class AgentIntegrationAdapter:
                 requested_scope=req_scope,
             )
 
-        logger.info(f"[AGENT INTEGRATION ADAPTER] Agent '{agent_id}' executed action '{action}' on integration '{integration_name}'")
+        logger.info(
+            f"[AGENT INTEGRATION ADAPTER] Agent '{agent_id}' executed action '{action}' on integration '{integration_name}'"
+        )
         return {"status": "SUCCESS", "agent_id": agent_id, "integration": integration_name, "action": action}

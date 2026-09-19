@@ -93,25 +93,33 @@ def get_project(project_id: str):
 
 @router.post("/apis", status_code=status.HTTP_201_CREATED)
 def register_api(req: RegisterAPIRequestDTO):
-    svc = _global_manager.api_management_engine.register_api_service(name=req.name, version=req.version, tenant_id=req.tenant_id)
+    svc = _global_manager.api_management_engine.register_api_service(
+        name=req.name, version=req.version, tenant_id=req.tenant_id
+    )
     return svc.model_dump()
 
 
 @router.post("/sdk/generate", status_code=status.HTTP_201_CREATED)
 def generate_sdk(req: GenerateSDKRequestDTO):
-    sdk = _global_manager.sdk_manager.generate_sdk(language=req.language, service_id=req.service_id, version=req.version, tenant_id=req.tenant_id)
+    sdk = _global_manager.sdk_manager.generate_sdk(
+        language=req.language, service_id=req.service_id, version=req.version, tenant_id=req.tenant_id
+    )
     return sdk.model_dump()
 
 
 @router.post("/workspaces", status_code=status.HTTP_201_CREATED)
 def create_workspace(req: CreateWorkspaceRequestDTO):
-    ws = _global_manager.workspace_manager.create_workspace(project_id=req.project_id, developer_id=req.developer_id, tenant_id=req.tenant_id)
+    ws = _global_manager.workspace_manager.create_workspace(
+        project_id=req.project_id, developer_id=req.developer_id, tenant_id=req.tenant_id
+    )
     return ws.model_dump()
 
 
 @router.post("/pipelines", status_code=status.HTTP_201_CREATED)
 def trigger_pipeline(req: TriggerPipelineRequestDTO):
-    pipe = _global_manager.pipeline_manager.create_pipeline(project_id=req.project_id, name=req.name, tenant_id=req.tenant_id)
+    pipe = _global_manager.pipeline_manager.create_pipeline(
+        project_id=req.project_id, name=req.name, tenant_id=req.tenant_id
+    )
     run = _global_manager.pipeline_manager.trigger_pipeline_run(pipeline_id=pipe.pipeline_id, tenant_id=req.tenant_id)
     return run.model_dump()
 
@@ -119,8 +127,12 @@ def trigger_pipeline(req: TriggerPipelineRequestDTO):
 @router.post("/quality/evaluate")
 def evaluate_quality(req: EvaluateQualityRequestDTO):
     try:
-        gate = QualityGate(name="API Gate", min_coverage_pct=req.min_coverage_pct, max_critical_bugs=req.max_critical_bugs)
-        passed = _global_manager.quality_manager.evaluate_quality(gate, coverage_pct=req.coverage_pct, critical_bugs=req.critical_bugs)
+        gate = QualityGate(
+            name="API Gate", min_coverage_pct=req.min_coverage_pct, max_critical_bugs=req.max_critical_bugs
+        )
+        passed = _global_manager.quality_manager.evaluate_quality(
+            gate, coverage_pct=req.coverage_pct, critical_bugs=req.critical_bugs
+        )
         return {"status": "PASSED" if passed else "FAILED"}
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))

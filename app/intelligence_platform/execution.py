@@ -74,9 +74,18 @@ class DecisionExecutionManager:
         self.developer_platform_manager = developer_platform_manager or DeveloperPlatformManager()
         self._executions: Dict[str, DecisionExecution] = {}
 
-    def delegate_execution(self, tenant_id: str, recommendation: Recommendation, target: ExecutionTarget) -> DecisionExecution:
-        if recommendation.status not in (RecommendationStatus.APPROVED, RecommendationStatus.VALIDATED, RecommendationStatus.GENERATED, RecommendationStatus.EXECUTING):
-            raise IntelligenceException(f"Cannot execute recommendation '{recommendation.recommendation_id}' with status {recommendation.status.value}")
+    def delegate_execution(
+        self, tenant_id: str, recommendation: Recommendation, target: ExecutionTarget
+    ) -> DecisionExecution:
+        if recommendation.status not in (
+            RecommendationStatus.APPROVED,
+            RecommendationStatus.VALIDATED,
+            RecommendationStatus.GENERATED,
+            RecommendationStatus.EXECUTING,
+        ):
+            raise IntelligenceException(
+                f"Cannot execute recommendation '{recommendation.recommendation_id}' with status {recommendation.status.value}"
+            )
 
         delegated_ref: Optional[str] = None
 
@@ -111,11 +120,15 @@ class DecisionExecutionManager:
             target=ExecutionTarget(target_name),
             status="SUCCESSFUL",
             delegated_execution_ref=delegated_ref,
-            verification=ExecutionVerification(is_verified=True, verification_message=f"Delegated to {target_name} ({delegated_ref})"),
+            verification=ExecutionVerification(
+                is_verified=True, verification_message=f"Delegated to {target_name} ({delegated_ref})"
+            ),
         )
 
         self._executions[exec_obj.execution_id] = exec_obj
-        logger.info(f"[EXECUTION DELEGATOR] Delegated recommendation '{recommendation.recommendation_id}' to {target_name} (Ref: '{delegated_ref}')")
+        logger.info(
+            f"[EXECUTION DELEGATOR] Delegated recommendation '{recommendation.recommendation_id}' to {target_name} (Ref: '{delegated_ref}')"
+        )
         return exec_obj
 
     def get_execution(self, execution_id: str, tenant_id: str) -> DecisionExecution:

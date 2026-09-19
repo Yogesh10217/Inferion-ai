@@ -63,10 +63,14 @@ class ChangeCorrelationEngine:
             except Exception:
                 pass
 
-        logger.info(f"[CHANGE INTELLIGENCE] Recorded change '{chg.change_id}' ({change_type}) on resource '{resource_id}'")
+        logger.info(
+            f"[CHANGE INTELLIGENCE] Recorded change '{chg.change_id}' ({change_type}) on resource '{resource_id}'"
+        )
         return chg
 
-    def find_recent_changes(self, tenant_id: Optional[str] = None, resource_id: Optional[str] = None) -> List[OperationalChange]:
+    def find_recent_changes(
+        self, tenant_id: Optional[str] = None, resource_id: Optional[str] = None
+    ) -> List[OperationalChange]:
         res = self._recent_changes
         if tenant_id:
             res = [c for c in res if c.tenant_id in (tenant_id, "global")]

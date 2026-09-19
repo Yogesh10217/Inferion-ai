@@ -25,6 +25,7 @@ class RoleType(str, Enum):
 
 class AgentRole(BaseModel):
     """Defines capabilities, permissions, delegation rules, and limits for an Agent Role."""
+
     role_type: RoleType = RoleType.EXECUTOR
     name: str = "Executor"
     description: str = "Standard Execution Agent Role"

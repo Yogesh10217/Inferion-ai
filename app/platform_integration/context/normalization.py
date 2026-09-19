@@ -25,7 +25,11 @@ class DomainNormalizer:
         raw_signal: Dict[str, Any],
         trace_context: Optional[TraceContext] = None,
     ) -> CrossPhaseSignal:
-        p_enum = IntegrationPlatform[platform.upper()] if platform.upper() in IntegrationPlatform.__members__ else IntegrationPlatform.RUNTIME
+        p_enum = (
+            IntegrationPlatform[platform.upper()]
+            if platform.upper() in IntegrationPlatform.__members__
+            else IntegrationPlatform.RUNTIME
+        )
         sig_id = raw_signal.get("signal_id", f"sig-{p_enum.value.lower()}-{uuid.uuid4().hex[:8]}")
         sig_type = raw_signal.get("signal_type", raw_signal.get("type", "TELEMETRY"))
         severity = raw_signal.get("severity", "INFO")
@@ -56,7 +60,11 @@ class DomainNormalizer:
         raw_finding: Dict[str, Any],
         trace_context: Optional[TraceContext] = None,
     ) -> CrossPhaseFinding:
-        p_enum = IntegrationPlatform[platform.upper()] if platform.upper() in IntegrationPlatform.__members__ else IntegrationPlatform.RUNTIME
+        p_enum = (
+            IntegrationPlatform[platform.upper()]
+            if platform.upper() in IntegrationPlatform.__members__
+            else IntegrationPlatform.RUNTIME
+        )
         f_id = raw_finding.get("finding_id", f"find-{p_enum.value.lower()}-{uuid.uuid4().hex[:8]}")
         title = raw_finding.get("title", f"{p_enum.value} Finding")
         desc = raw_finding.get("description", raw_finding.get("summary", ""))
@@ -89,7 +97,11 @@ class DomainNormalizer:
         raw_assessment: Dict[str, Any],
         trace_context: Optional[TraceContext] = None,
     ) -> CrossPhaseAssessment:
-        p_enum = IntegrationPlatform[platform.upper()] if platform.upper() in IntegrationPlatform.__members__ else IntegrationPlatform.RUNTIME
+        p_enum = (
+            IntegrationPlatform[platform.upper()]
+            if platform.upper() in IntegrationPlatform.__members__
+            else IntegrationPlatform.RUNTIME
+        )
         a_id = raw_assessment.get("assessment_id", f"ass-{p_enum.value.lower()}-{uuid.uuid4().hex[:8]}")
         a_type = raw_assessment.get("assessment_type", f"{p_enum.value}_POSTURE")
         score = float(raw_assessment.get("score", raw_assessment.get("assurance_score", 0.9)))

@@ -79,7 +79,9 @@ class DriftDetector:
             except Exception:
                 pass
 
-            logger.warning(f"[DRIFT DETECTOR] Detected '{drift_type.value}' ({dev_percent:.1f}% deviation) on deployment '{deployment_id}' -> Marked DEGRADED")
+            logger.warning(
+                f"[DRIFT DETECTOR] Detected '{drift_type.value}' ({dev_percent:.1f}% deviation) on deployment '{deployment_id}' -> Marked DEGRADED"
+            )
             return res
 
         return None
@@ -98,11 +100,14 @@ class DriftDetector:
             b_pct = (b / b_sum) + eps
             c_pct = (c / c_sum) + eps
             import math
+
             psi += (c_pct - b_pct) * math.log(c_pct / b_pct)
 
         return round(psi, 4)
 
-    def list_drift_events(self, deployment_id: Optional[str] = None, tenant_id: Optional[str] = None) -> List[DriftResult]:
+    def list_drift_events(
+        self, deployment_id: Optional[str] = None, tenant_id: Optional[str] = None
+    ) -> List[DriftResult]:
         res = self._events
         if deployment_id:
             res = [e for e in res if e.deployment_id == deployment_id]

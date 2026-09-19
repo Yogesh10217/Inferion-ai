@@ -11,7 +11,9 @@ class SubscriptionAdminService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def list_subscriptions(self, organization_id: Optional[str] = None, status: Optional[str] = None, limit: int = 100, offset: int = 0) -> List[OrganizationSubscription]:
+    async def list_subscriptions(
+        self, organization_id: Optional[str] = None, status: Optional[str] = None, limit: int = 100, offset: int = 0
+    ) -> List[OrganizationSubscription]:
         stmt = select(OrganizationSubscription)
         if organization_id:
             stmt = stmt.where(OrganizationSubscription.organization_id == organization_id)

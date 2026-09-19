@@ -68,7 +68,9 @@ class DataRemediationManager:
     ) -> DataRemediationPlan:
         pid = plan_id or f"rem-plan-{uuid.uuid4().hex[:8]}"
 
-        has_high_risk = any(a.is_high_risk or a.action_type in ("DATASET_ROLLBACK", "DATA_REPAIR", "DATA_DELETION") for a in actions)
+        has_high_risk = any(
+            a.is_high_risk or a.action_type in ("DATASET_ROLLBACK", "DATA_REPAIR", "DATA_DELETION") for a in actions
+        )
         status = DataRemediationStatus.REQUIRE_APPROVAL if has_high_risk else DataRemediationStatus.PROPOSED
 
         plan = DataRemediationPlan(
@@ -98,7 +100,10 @@ class DataRemediationManager:
     ) -> DataRemediationPlan:
         plan = self.get_plan(plan_id, tenant_id)
 
-        has_high_risk = any(a.is_high_risk or a.action_type in ("DATASET_ROLLBACK", "DATA_REPAIR", "DATA_DELETION") for a in plan.actions)
+        has_high_risk = any(
+            a.is_high_risk or a.action_type in ("DATASET_ROLLBACK", "DATA_REPAIR", "DATA_DELETION")
+            for a in plan.actions
+        )
 
         if has_high_risk and not approved:
             raise HighRiskDataActionRequiresApprovalException(
@@ -109,7 +114,15 @@ class DataRemediationManager:
         del_requests = []
         for action in plan.actions:
             target_name = action.target_subsystem.upper()
-            if target_name not in ("PLATFORM_OPERATIONS", "APPLICATION_PLATFORM", "DEVELOPER_PLATFORM", "ORCHESTRATION", "INTEGRATION", "ARCHITECTURE_PLATFORM", "PORTFOLIO_PLATFORM"):
+            if target_name not in (
+                "PLATFORM_OPERATIONS",
+                "APPLICATION_PLATFORM",
+                "DEVELOPER_PLATFORM",
+                "ORCHESTRATION",
+                "INTEGRATION",
+                "ARCHITECTURE_PLATFORM",
+                "PORTFOLIO_PLATFORM",
+            ):
                 target_name = "ORCHESTRATION"
             del_req = DelegationRequest(
                 delegation_id=f"del-rem-{uuid.uuid4().hex[:8]}",

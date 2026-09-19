@@ -72,7 +72,8 @@ class IdentityCertificationManager:
 
     def assess_certification(self, tenant_id: str, identity_id: str) -> CertificationAssessment:
         active_certs = [
-            c for c in self._certifications.values()
+            c
+            for c in self._certifications.values()
             if c.tenant_id == tenant_id and c.identity_id == identity_id and c.status == CertificationStatus.ACTIVE
         ]
         return CertificationAssessment(

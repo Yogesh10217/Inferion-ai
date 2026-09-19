@@ -20,5 +20,7 @@ class CapacityPropagationEngine:
             "cascade_risk_score": 0.68,
             "propagation_probability": 0.75,
         }
-        logger.info(f"Analyzed CapacityPropagation from '{origin_resource}' across {len(downstream_resources)} downstream nodes")
+        logger.info(
+            f"Analyzed CapacityPropagation from '{origin_resource}' across {len(downstream_resources)} downstream nodes"
+        )
         return path

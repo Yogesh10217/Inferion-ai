@@ -20,10 +20,10 @@ class ArchitectureTrustDimension(str, Enum):
 
 
 class ArchitectureTrustBand(str, Enum):
-    HIGH_TRUST = "HIGH_TRUST"   # 90-100
-    TRUSTED = "TRUSTED"         # 70-89
-    RESTRICTED = "RESTRICTED"   # 50-69
-    UNTRUSTED = "UNTRUSTED"     # <50
+    HIGH_TRUST = "HIGH_TRUST"  # 90-100
+    TRUSTED = "TRUSTED"  # 70-89
+    RESTRICTED = "RESTRICTED"  # 50-69
+    UNTRUSTED = "UNTRUSTED"  # <50
 
 
 class ArchitectureTrustScore(BaseModel):

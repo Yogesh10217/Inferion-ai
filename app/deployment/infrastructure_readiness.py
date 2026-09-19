@@ -27,22 +27,24 @@ class InfrastructureReadinessResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status,
-            "overall_classification": self.overall_classification.value,
-            "requirements": [
-                {
-                    "category": r.category,
-                    "name": r.name,
-                    "status": r.status,
-                    "evidence_level": r.evidence_level,
-                    "message": r.message,
-                }
-                for r in self.requirements
-            ],
-            "classifications": self.classifications,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status,
+                "overall_classification": self.overall_classification.value,
+                "requirements": [
+                    {
+                        "category": r.category,
+                        "name": r.name,
+                        "status": r.status,
+                        "evidence_level": r.evidence_level,
+                        "message": r.message,
+                    }
+                    for r in self.requirements
+                ],
+                "classifications": self.classifications,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class InfrastructureReadinessEvaluator:

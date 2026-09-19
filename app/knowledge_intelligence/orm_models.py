@@ -41,9 +41,7 @@ class KnowledgeSourceModel(Base):
     metadata_json = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
 
-    __table_args__ = (
-        Index("idx_ki_sources_tenant_type", "tenant_id", "source_type"),
-    )
+    __table_args__ = (Index("idx_ki_sources_tenant_type", "tenant_id", "source_type"),)
 
 
 class KnowledgeProvenanceModel(Base):
@@ -58,9 +56,7 @@ class KnowledgeProvenanceModel(Base):
     fingerprint = Column(String(128), nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
 
-    __table_args__ = (
-        Index("idx_ki_prov_tenant_target", "tenant_id", "target_id"),
-    )
+    __table_args__ = (Index("idx_ki_prov_tenant_target", "tenant_id", "target_id"),)
 
 
 class KnowledgeRelationshipModel(Base):
@@ -74,9 +70,7 @@ class KnowledgeRelationshipModel(Base):
     strength = Column(String(64), nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
 
-    __table_args__ = (
-        Index("idx_ki_rel_tenant_src_tgt", "tenant_id", "source_id", "target_id"),
-    )
+    __table_args__ = (Index("idx_ki_rel_tenant_src_tgt", "tenant_id", "source_id", "target_id"),)
 
 
 class KnowledgeContradictionModel(Base):

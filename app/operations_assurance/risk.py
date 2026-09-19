@@ -57,7 +57,9 @@ class OperationsRiskEngine:
             OperationalRiskCategory.BUSINESS: max(availability_risk, capacity_risk),
         }
         overall = sum(cat_scores.values()) / len(cat_scores)
-        level = "CRITICAL" if overall >= 0.7 else ("HIGH" if overall >= 0.4 else ("MEDIUM" if overall >= 0.2 else "LOW"))
+        level = (
+            "CRITICAL" if overall >= 0.7 else ("HIGH" if overall >= 0.4 else ("MEDIUM" if overall >= 0.2 else "LOW"))
+        )
 
         factors = []
         if availability_risk > 0.3:

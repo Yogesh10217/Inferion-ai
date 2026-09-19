@@ -84,9 +84,7 @@ class KnowledgeEvidenceManager:
     ) -> KnowledgeEvidence:
         bundle = self.get_bundle(tenant_id, bundle_id)
         if bundle.is_finalized:
-            raise ImmutableKnowledgeRecordException(
-                f"Bundle {bundle_id} is finalized and immutable."
-            )
+            raise ImmutableKnowledgeRecordException(f"Bundle {bundle_id} is finalized and immutable.")
 
         sanitized_payload = SensitiveDataSanitizer.sanitize(payload)
         evd = KnowledgeEvidence(
@@ -102,18 +100,14 @@ class KnowledgeEvidenceManager:
     def finalize_bundle(self, tenant_id: str, bundle_id: str) -> KnowledgeEvidenceBundle:
         bundle = self.get_bundle(tenant_id, bundle_id)
         if bundle.is_finalized:
-            raise ImmutableKnowledgeRecordException(
-                f"Bundle {bundle_id} is already finalized."
-            )
+            raise ImmutableKnowledgeRecordException(f"Bundle {bundle_id} is already finalized.")
 
         bundle.sha256_fingerprint = bundle.compute_fingerprint()
         bundle.is_finalized = True
         bundle.finalized_at = datetime.now(timezone.utc)
         return bundle
 
-    def verify_bundle_integrity(
-        self, tenant_id: str, bundle_id: str
-    ) -> KnowledgeEvidenceIntegrity:
+    def verify_bundle_integrity(self, tenant_id: str, bundle_id: str) -> KnowledgeEvidenceIntegrity:
         bundle = self.get_bundle(tenant_id, bundle_id)
         if not bundle.is_finalized:
             return KnowledgeEvidenceIntegrity(

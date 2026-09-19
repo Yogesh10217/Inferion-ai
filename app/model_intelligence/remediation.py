@@ -70,7 +70,9 @@ class ModelRemediationManager:
             actions=actions,
         )
         self._plans[plan_id] = plan
-        logger.info(f"[MODEL REMEDIATION] Created plan {plan_id} for model {model_id} (Tenant: {tenant_id}) Priority: {priority}")
+        logger.info(
+            f"[MODEL REMEDIATION] Created plan {plan_id} for model {model_id} (Tenant: {tenant_id}) Priority: {priority}"
+        )
         return plan
 
     def execute_plan_via_delegation(

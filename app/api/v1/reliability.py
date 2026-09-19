@@ -95,7 +95,9 @@ async def plan_remediation(
     from app.reliability_platform.remediation import RemediationAction, RemediationRisk
 
     risk = RemediationRisk.HIGH if req.is_high_risk else RemediationRisk.LOW
-    action = RemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name=req.action_name, risk=risk)
+    action = RemediationAction(
+        target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name=req.action_name, risk=risk
+    )
 
     plan = mgr.remediation_manager.plan_remediation(
         tenant_id=tenant_id,

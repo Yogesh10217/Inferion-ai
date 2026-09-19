@@ -37,8 +37,19 @@ class DataPolicy(BaseModel):
     policy_id: str = Field(default_factory=lambda: f"pol_{uuid.uuid4().hex[:10]}")
     name: str
     tenant_id: str = "global"
-    allowed_classifications: List[DataClassification] = Field(default_factory=lambda: [DataClassification.PUBLIC, DataClassification.INTERNAL])
-    require_approval_for: List[DataClassification] = Field(default_factory=lambda: [DataClassification.CONFIDENTIAL, DataClassification.RESTRICTED, DataClassification.PII, DataClassification.FINANCIAL, DataClassification.HEALTH, DataClassification.SECRET])
+    allowed_classifications: List[DataClassification] = Field(
+        default_factory=lambda: [DataClassification.PUBLIC, DataClassification.INTERNAL]
+    )
+    require_approval_for: List[DataClassification] = Field(
+        default_factory=lambda: [
+            DataClassification.CONFIDENTIAL,
+            DataClassification.RESTRICTED,
+            DataClassification.PII,
+            DataClassification.FINANCIAL,
+            DataClassification.HEALTH,
+            DataClassification.SECRET,
+        ]
+    )
     retention_days: int = 365
     created_at: datetime = Field(default_factory=_now)
 
@@ -76,7 +87,13 @@ class DataGovernanceEngine:
         """Evaluate data access request against tenant governance policies."""
 
         # 1. High risk classification requires explicit approval
-        if classification in (DataClassification.SECRET, DataClassification.RESTRICTED, DataClassification.PII, DataClassification.HEALTH, DataClassification.FINANCIAL):
+        if classification in (
+            DataClassification.SECRET,
+            DataClassification.RESTRICTED,
+            DataClassification.PII,
+            DataClassification.HEALTH,
+            DataClassification.FINANCIAL,
+        ):
             req = self.approval_engine.request_approval(
                 execution_id=resource_id,
                 action_type="data_fabric_access",
@@ -84,7 +101,9 @@ class DataGovernanceEngine:
                 requester=requester_id,
                 payload={"resource_id": resource_id, "classification": classification.value, "purpose": purpose},
             )
-            logger.warning(f"[DATA GOVERNANCE] High-risk data access to '{resource_id}' ({classification.value}) requires approval (ID: {req.request_id})")
+            logger.warning(
+                f"[DATA GOVERNANCE] High-risk data access to '{resource_id}' ({classification.value}) requires approval (ID: {req.request_id})"
+            )
             return DataAccessDecision(
                 permitted=False,
                 requires_approval=True,

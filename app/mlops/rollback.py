@@ -37,14 +37,18 @@ class RollbackResult(BaseModel):
 class RollbackManager:
     """Manages deployment, model, prompt, agent, workflow, and full release rollback plans."""
 
-    def __init__(self, deployment_manager: Optional[DeploymentManager] = None, registry: Optional[AIAssetRegistry] = None) -> None:
+    def __init__(
+        self, deployment_manager: Optional[DeploymentManager] = None, registry: Optional[AIAssetRegistry] = None
+    ) -> None:
         self.deployment_manager = deployment_manager or DeploymentManager()
         self.registry = registry or AIAssetRegistry()
         self._history: List[RollbackResult] = []
 
     def create_rollback_plan(self, deployment_id: str, target_version_number: str, reason: str = "") -> RollbackPlan:
         plan = RollbackPlan(deployment_id=deployment_id, target_version_number=target_version_number, reason=reason)
-        logger.info(f"[ROLLBACK MANAGER] Created rollback plan for deployment '{deployment_id}' -> v{target_version_number}")
+        logger.info(
+            f"[ROLLBACK MANAGER] Created rollback plan for deployment '{deployment_id}' -> v{target_version_number}"
+        )
         return plan
 
     def execute_rollback(self, plan: RollbackPlan) -> RollbackResult:
@@ -58,5 +62,7 @@ class RollbackManager:
             success=True,
         )
         self._history.append(result)
-        logger.info(f"[ROLLBACK MANAGER] Successfully executed rollback for deployment '{plan.deployment_id}' to v{plan.target_version_number}")
+        logger.info(
+            f"[ROLLBACK MANAGER] Successfully executed rollback for deployment '{plan.deployment_id}' to v{plan.target_version_number}"
+        )
         return result

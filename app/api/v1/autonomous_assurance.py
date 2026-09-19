@@ -39,8 +39,16 @@ def get_tenant_id(x_tenant_id: Optional[str] = Header("default", alias="X-Tenant
 def create_workflow(request: WorkflowCreateRequest, tenant_id: str = Depends(get_tenant_id)) -> WorkflowResponse:
     """Create a new autonomous workflow."""
     try:
-        wtype = WorkflowType(request.workflow_type) if request.workflow_type in WorkflowType.__members__ else WorkflowType.CROSS_DOMAIN_COORDINATION
-        wpri = WorkflowPriority(request.priority) if request.priority in WorkflowPriority.__members__ else WorkflowPriority.MEDIUM
+        wtype = (
+            WorkflowType(request.workflow_type)
+            if request.workflow_type in WorkflowType.__members__
+            else WorkflowType.CROSS_DOMAIN_COORDINATION
+        )
+        wpri = (
+            WorkflowPriority(request.priority)
+            if request.priority in WorkflowPriority.__members__
+            else WorkflowPriority.MEDIUM
+        )
         wf = _manager.create_workflow(
             tenant_id=tenant_id,
             title=request.title,
@@ -125,7 +133,9 @@ def list_workflows(tenant_id: str = Depends(get_tenant_id)) -> List[WorkflowResp
 def create_plan(workflow_id: str, request: PlanCreateRequest, tenant_id: str = Depends(get_tenant_id)) -> PlanResponse:
     """Generate workflow plan."""
     try:
-        plan = _manager.create_plan(workflow_id, tenant_id, risk_score=request.risk_score, trust_score=request.trust_score)
+        plan = _manager.create_plan(
+            workflow_id, tenant_id, risk_score=request.risk_score, trust_score=request.trust_score
+        )
         return PlanResponse(
             plan_id=plan.plan_id,
             workflow_id=plan.workflow_id,
@@ -141,7 +151,9 @@ def create_plan(workflow_id: str, request: PlanCreateRequest, tenant_id: str = D
 
 
 @router.post("/workflows/{workflow_id}/governance")
-def evaluate_governance(workflow_id: str, risk_score: float = 20.0, trust_score: float = 90.0, tenant_id: str = Depends(get_tenant_id)) -> Dict[str, Any]:
+def evaluate_governance(
+    workflow_id: str, risk_score: float = 20.0, trust_score: float = 90.0, tenant_id: str = Depends(get_tenant_id)
+) -> Dict[str, Any]:
     """Evaluate workflow governance policies."""
     try:
         gov = _manager.evaluate_governance(workflow_id, tenant_id, risk_score=risk_score, trust_score=trust_score)
@@ -151,27 +163,37 @@ def evaluate_governance(workflow_id: str, risk_score: float = 20.0, trust_score:
 
 
 @router.post("/workflows/{workflow_id}/approve", response_model=WorkflowResponse)
-def approve_workflow(workflow_id: str, request: WorkflowApprovalRequest, tenant_id: str = Depends(get_tenant_id)) -> WorkflowResponse:
+def approve_workflow(
+    workflow_id: str, request: WorkflowApprovalRequest, tenant_id: str = Depends(get_tenant_id)
+) -> WorkflowResponse:
     """Approve a workflow requiring review."""
     try:
-        wf = _manager.approve_workflow(workflow_id, tenant_id, approver=request.approved_by, approved=True, comments=request.comments)
+        wf = _manager.approve_workflow(
+            workflow_id, tenant_id, approver=request.approved_by, approved=True, comments=request.comments
+        )
         return get_workflow(wf.workflow_id, tenant_id)
     except AutonomousWorkflowNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
 @router.post("/workflows/{workflow_id}/reject", response_model=WorkflowResponse)
-def reject_workflow(workflow_id: str, request: WorkflowApprovalRequest, tenant_id: str = Depends(get_tenant_id)) -> WorkflowResponse:
+def reject_workflow(
+    workflow_id: str, request: WorkflowApprovalRequest, tenant_id: str = Depends(get_tenant_id)
+) -> WorkflowResponse:
     """Reject a workflow."""
     try:
-        wf = _manager.approve_workflow(workflow_id, tenant_id, approver=request.approved_by, approved=False, comments=request.comments)
+        wf = _manager.approve_workflow(
+            workflow_id, tenant_id, approver=request.approved_by, approved=False, comments=request.comments
+        )
         return get_workflow(wf.workflow_id, tenant_id)
     except AutonomousWorkflowNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
 @router.post("/workflows/{workflow_id}/delegate", response_model=DelegationResponse)
-def delegate_workflow(workflow_id: str, action_name: str = "RESTART_SERVICE", tenant_id: str = Depends(get_tenant_id)) -> DelegationResponse:
+def delegate_workflow(
+    workflow_id: str, action_name: str = "RESTART_SERVICE", tenant_id: str = Depends(get_tenant_id)
+) -> DelegationResponse:
     """Dispatch formal DelegationRequest (Zero direct execution)."""
     try:
         del_plan = _manager.delegate_workflow(workflow_id, tenant_id, action_name=action_name)
@@ -191,7 +213,9 @@ def delegate_workflow(workflow_id: str, action_name: str = "RESTART_SERVICE", te
 
 
 @router.post("/workflows/{workflow_id}/verify", response_model=VerificationResponse)
-def verify_workflow(workflow_id: str, simulate_failure: bool = False, tenant_id: str = Depends(get_tenant_id)) -> VerificationResponse:
+def verify_workflow(
+    workflow_id: str, simulate_failure: bool = False, tenant_id: str = Depends(get_tenant_id)
+) -> VerificationResponse:
     """Verify outcome post-delegation."""
     try:
         res = _manager.verify_workflow(workflow_id, tenant_id, simulate_failure=simulate_failure)
@@ -210,7 +234,9 @@ def verify_workflow(workflow_id: str, simulate_failure: bool = False, tenant_id:
 
 
 @router.post("/workflows/{workflow_id}/recover", response_model=RecoveryResponse)
-def recover_workflow(workflow_id: str, failure_reason: str = "Verification failed", tenant_id: str = Depends(get_tenant_id)) -> RecoveryResponse:
+def recover_workflow(
+    workflow_id: str, failure_reason: str = "Verification failed", tenant_id: str = Depends(get_tenant_id)
+) -> RecoveryResponse:
     """Plan recovery for a failed workflow step."""
     try:
         plan = _manager.recover_workflow(workflow_id, tenant_id, failure_reason=failure_reason)
@@ -240,7 +266,9 @@ def get_evidence(workflow_id: str, tenant_id: str = Depends(get_tenant_id)) -> D
 def get_assurance(workflow_id: str, tenant_id: str = Depends(get_tenant_id)) -> AssuranceResponse:
     """Retrieve assurance score."""
     try:
-        score = _manager.assurance_engine.get_assurance(workflow_id) or _manager.assurance_engine.calculate_assurance(workflow_id, tenant_id)
+        score = _manager.assurance_engine.get_assurance(workflow_id) or _manager.assurance_engine.calculate_assurance(
+            workflow_id, tenant_id
+        )
         return AssuranceResponse(
             score_id=score.score_id,
             workflow_id=score.workflow_id,
@@ -254,7 +282,9 @@ def get_assurance(workflow_id: str, tenant_id: str = Depends(get_tenant_id)) -> 
 
 
 @router.post("/flow")
-def run_flow(title: str = "Enterprise Autonomous Assurance Flow", tenant_id: str = Depends(get_tenant_id)) -> Dict[str, Any]:
+def run_flow(
+    title: str = "Enterprise Autonomous Assurance Flow", tenant_id: str = Depends(get_tenant_id)
+) -> Dict[str, Any]:
     """Run full end-to-end autonomous assurance workflow lifecycle."""
     try:
         return _manager.run_full_autonomous_flow(tenant_id=tenant_id, title=title)

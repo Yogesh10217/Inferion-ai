@@ -76,7 +76,11 @@ class IdentityRiskManager:
         weighted_r = sum(f.risk_score * f.weight for f in fact_list) / total_w if total_w > 0 else 0.1
         overall_score = round(weighted_r, 4)
 
-        risk_level = "CRITICAL" if overall_score >= 0.8 else ("HIGH" if overall_score >= 0.6 else ("MEDIUM" if overall_score >= 0.3 else "LOW"))
+        risk_level = (
+            "CRITICAL"
+            if overall_score >= 0.8
+            else ("HIGH" if overall_score >= 0.6 else ("MEDIUM" if overall_score >= 0.3 else "LOW"))
+        )
 
         profile = IdentityRiskProfile(
             identity_id=identity_id,

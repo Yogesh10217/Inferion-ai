@@ -90,7 +90,8 @@ class RecoveryManager:
             tenant_id=tenant_id,
             incident_id=incident_id,
             affected_service_id=affected_service_id,
-            steps=steps or [
+            steps=steps
+            or [
                 RecoveryStep(action="isolate_faulty_instance", target_system="PLATFORM_OPERATIONS"),
                 RecoveryStep(action="provision_replacement_capacity", target_system="PLATFORM_OPERATIONS"),
                 RecoveryStep(action="rebalance_traffic", target_system="PLATFORM_OPERATIONS"),

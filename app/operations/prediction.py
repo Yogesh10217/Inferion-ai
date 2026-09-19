@@ -55,7 +55,9 @@ class FailurePredictionEngine:
                 predictive_signal="QUEUE_GROWTH",
                 recommended_action="SCALE_WORKER_POOL",
             )
-            logger.warning(f"[FAILURE PREDICTION] High capacity risk predicted for '{resource_id}' (Utilization: {utilization:.1f}%) -> {pred.risk_level.value}")
+            logger.warning(
+                f"[FAILURE PREDICTION] High capacity risk predicted for '{resource_id}' (Utilization: {utilization:.1f}%) -> {pred.risk_level.value}"
+            )
             return pred
 
         return None

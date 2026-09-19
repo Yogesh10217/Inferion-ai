@@ -66,7 +66,9 @@ class LifecycleGateManager:
         is_hard_gate: bool = True,
     ) -> LifecycleGate:
         req = GateRequirement(name=f"{gate_type.value}_Check", is_hard_constraint=is_hard_gate)
-        gate = LifecycleGate(tenant_id=tenant_id, name=name, gate_type=gate_type, is_hard_gate=is_hard_gate, requirements=[req])
+        gate = LifecycleGate(
+            tenant_id=tenant_id, name=name, gate_type=gate_type, is_hard_gate=is_hard_gate, requirements=[req]
+        )
         self._gates[gate.gate_id] = gate
         return gate
 
@@ -85,6 +87,12 @@ class LifecycleGateManager:
                 raise CrossTenantLifecycleAccessException(tenant_id, gate.tenant_id)
 
             status = GateStatus.PASSED if gate_override_pass else GateStatus.FAILED
-            evaluations.append(GateEvaluation(gate_type=gate.gate_type, status=status, message="Passed" if gate_override_pass else "Hard gate failure"))
+            evaluations.append(
+                GateEvaluation(
+                    gate_type=gate.gate_type,
+                    status=status,
+                    message="Passed" if gate_override_pass else "Hard gate failure",
+                )
+            )
 
         return evaluations

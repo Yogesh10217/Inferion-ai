@@ -55,5 +55,7 @@ class KnowledgeTrustEngine:
             overall_score=round(avg_score, 2),
             dimension_scores=dim_scores,
         )
-        logger.info(f"[TRUST ENGINE] Evaluated trust for item '{item.item_id}': Overall Score = {score_obj.overall_score}/100")
+        logger.info(
+            f"[TRUST ENGINE] Evaluated trust for item '{item.item_id}': Overall Score = {score_obj.overall_score}/100"
+        )
         return score_obj

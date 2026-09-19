@@ -78,13 +78,17 @@ class DeveloperManager:
         if auto_activate:
             dev.verified_at = datetime.now(timezone.utc)
 
-        dev.audit_history.append({
-            "action": "REGISTERED",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "status": status.value,
-        })
+        dev.audit_history.append(
+            {
+                "action": "REGISTERED",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "status": status.value,
+            }
+        )
         self._developers[dev.developer_id] = dev
-        logger.info(f"[DEVELOPER MANAGER] Registered developer '{full_name}' (ID: {dev.developer_id}, Tenant: {tenant_id})")
+        logger.info(
+            f"[DEVELOPER MANAGER] Registered developer '{full_name}' (ID: {dev.developer_id}, Tenant: {tenant_id})"
+        )
         return dev
 
     def get_developer(self, developer_id: str) -> Developer:
@@ -98,21 +102,25 @@ class DeveloperManager:
         dev.status = DeveloperStatus.ACTIVE
         dev.verified_at = datetime.now(timezone.utc)
         dev.updated_at = datetime.now(timezone.utc)
-        dev.audit_history.append({
-            "action": "VERIFIED",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        })
+        dev.audit_history.append(
+            {
+                "action": "VERIFIED",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+        )
         return dev
 
     def suspend_developer(self, developer_id: str, reason: str = "Administrative action") -> Developer:
         dev = self.get_developer(developer_id)
         dev.status = DeveloperStatus.SUSPENDED
         dev.updated_at = datetime.now(timezone.utc)
-        dev.audit_history.append({
-            "action": "SUSPENDED",
-            "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        })
+        dev.audit_history.append(
+            {
+                "action": "SUSPENDED",
+                "reason": reason,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+        )
         logger.warning(f"[DEVELOPER MANAGER] Suspended developer '{developer_id}': {reason}")
         return dev
 
@@ -120,11 +128,13 @@ class DeveloperManager:
         dev = self.get_developer(developer_id)
         dev.status = DeveloperStatus.REVOKED
         dev.updated_at = datetime.now(timezone.utc)
-        dev.audit_history.append({
-            "action": "REVOKED",
-            "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        })
+        dev.audit_history.append(
+            {
+                "action": "REVOKED",
+                "reason": reason,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+        )
         logger.error(f"[DEVELOPER MANAGER] Revoked developer '{developer_id}'")
         return dev
 

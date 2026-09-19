@@ -72,7 +72,9 @@ class AutomationManager:
     ) -> AutomationDefinition:
         auto = AutomationDefinition(name=name, trigger_type=trigger_type, action_type=action_type, tenant_id=tenant_id)
         self._automations[auto.automation_id] = auto
-        logger.info(f"[AUTOMATION MANAGER] Created automation '{auto.automation_id}' ('{name}') for tenant '{tenant_id}'")
+        logger.info(
+            f"[AUTOMATION MANAGER] Created automation '{auto.automation_id}' ('{name}') for tenant '{tenant_id}'"
+        )
         return auto
 
     def trigger_automation(self, automation_id: str, payload: Optional[Dict[str, Any]] = None) -> AutomationExecution:

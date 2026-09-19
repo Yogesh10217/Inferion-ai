@@ -16,7 +16,7 @@ class ParallelExecutor:
     async def execute_parallel(
         nodes: List[BaseNode],
         context: Dict[str, Any],
-        executor_fn: Callable[[BaseNode, Dict[str, Any]], Awaitable[Dict[str, Any]]]
+        executor_fn: Callable[[BaseNode, Dict[str, Any]], Awaitable[Dict[str, Any]]],
     ) -> Dict[str, Dict[str, Any]]:
         """
         Runs node execution tasks concurrently using asyncio.gather.
@@ -46,7 +46,7 @@ class ParallelExecutor:
             raise NodeExecutionError(
                 node_id="parallel_batch",
                 message=f"Parallel execution encountered {len(errors)} error(s): {errors[0]}",
-                cause=errors[0]
+                cause=errors[0],
             )
 
         return merged_outputs

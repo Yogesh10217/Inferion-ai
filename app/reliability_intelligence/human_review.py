@@ -7,13 +7,28 @@ class ReliabilityHumanReviewLifecycle:
     """Manages human review lifecycle state machine."""
 
     @staticmethod
-    def transition(current: ReliabilityHumanReviewState, target: ReliabilityHumanReviewState) -> ReliabilityHumanReviewState:
+    def transition(
+        current: ReliabilityHumanReviewState, target: ReliabilityHumanReviewState
+    ) -> ReliabilityHumanReviewState:
         valid_targets = {
-            ReliabilityHumanReviewState.PENDING: {ReliabilityHumanReviewState.IN_REVIEW, ReliabilityHumanReviewState.APPROVED, ReliabilityHumanReviewState.REJECTED, ReliabilityHumanReviewState.CANCELLED},
-            ReliabilityHumanReviewState.IN_REVIEW: {ReliabilityHumanReviewState.APPROVED, ReliabilityHumanReviewState.REJECTED, ReliabilityHumanReviewState.ESCALATED, ReliabilityHumanReviewState.EXPIRED},
+            ReliabilityHumanReviewState.PENDING: {
+                ReliabilityHumanReviewState.IN_REVIEW,
+                ReliabilityHumanReviewState.APPROVED,
+                ReliabilityHumanReviewState.REJECTED,
+                ReliabilityHumanReviewState.CANCELLED,
+            },
+            ReliabilityHumanReviewState.IN_REVIEW: {
+                ReliabilityHumanReviewState.APPROVED,
+                ReliabilityHumanReviewState.REJECTED,
+                ReliabilityHumanReviewState.ESCALATED,
+                ReliabilityHumanReviewState.EXPIRED,
+            },
             ReliabilityHumanReviewState.APPROVED: set(),
             ReliabilityHumanReviewState.REJECTED: set(),
-            ReliabilityHumanReviewState.ESCALATED: {ReliabilityHumanReviewState.APPROVED, ReliabilityHumanReviewState.REJECTED},
+            ReliabilityHumanReviewState.ESCALATED: {
+                ReliabilityHumanReviewState.APPROVED,
+                ReliabilityHumanReviewState.REJECTED,
+            },
             ReliabilityHumanReviewState.EXPIRED: set(),
             ReliabilityHumanReviewState.CANCELLED: set(),
         }

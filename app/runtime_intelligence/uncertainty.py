@@ -34,7 +34,9 @@ class RuntimeUncertaintyAssessmentEngine:
         }
         overall = sum(dimensions.values()) / len(dimensions)
 
-        logger.info(f"Evaluated RuntimeUncertainty for tenant '{tenant_id}' ({assessment_type}): CI=[{ci_lower}, {ci_upper}]")
+        logger.info(
+            f"Evaluated RuntimeUncertainty for tenant '{tenant_id}' ({assessment_type}): CI=[{ci_lower}, {ci_upper}]"
+        )
         return {
             "tenant_id": tenant_id,
             "assessment_type": assessment_type,

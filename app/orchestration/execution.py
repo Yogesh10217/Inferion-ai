@@ -55,7 +55,9 @@ class WorkflowExecutionEngine:
         # Idempotency check: if key already completed, return existing execution!
         if idempotency_key and idempotency_key in self._idempotency_ledger:
             existing_id = self._idempotency_ledger[idempotency_key]
-            logger.info(f"[EXECUTION ENGINE] Idempotent key '{idempotency_key}' matched existing execution '{existing_id}'")
+            logger.info(
+                f"[EXECUTION ENGINE] Idempotent key '{idempotency_key}' matched existing execution '{existing_id}'"
+            )
             return self._executions[existing_id]
 
         exec_obj = WorkflowExecution(
@@ -73,8 +75,16 @@ class WorkflowExecutionEngine:
             self._idempotency_ledger[idempotency_key] = exec_obj.execution_id
 
         # Save initial checkpoint
-        self.save_checkpoint(exec_obj.execution_id, exec_obj.current_step_id or "start", {"status": "STARTED"}, tenant_id=tenant_id, idempotency_key=idempotency_key or "")
-        logger.info(f"[EXECUTION ENGINE] Started durable execution '{exec_obj.execution_id}' for workflow '{definition.workflow_id}'")
+        self.save_checkpoint(
+            exec_obj.execution_id,
+            exec_obj.current_step_id or "start",
+            {"status": "STARTED"},
+            tenant_id=tenant_id,
+            idempotency_key=idempotency_key or "",
+        )
+        logger.info(
+            f"[EXECUTION ENGINE] Started durable execution '{exec_obj.execution_id}' for workflow '{definition.workflow_id}'"
+        )
         return exec_obj
 
     def execute_step(self, execution_id: str, step_id: str, step_output: Dict[str, Any]) -> WorkflowExecution:
@@ -85,7 +95,9 @@ class WorkflowExecutionEngine:
         self.save_checkpoint(execution_id, step_id, step_output, tenant_id=exec_obj.tenant_id)
         return exec_obj
 
-    def complete_execution(self, execution_id: str, final_outputs: Optional[Dict[str, Any]] = None) -> WorkflowExecution:
+    def complete_execution(
+        self, execution_id: str, final_outputs: Optional[Dict[str, Any]] = None
+    ) -> WorkflowExecution:
         exec_obj = self.get_execution(execution_id)
         exec_obj.status = WorkflowExecutionStatus.COMPLETED
         if final_outputs:
@@ -111,7 +123,9 @@ class WorkflowExecutionEngine:
             idempotency_key=idempotency_key,
         )
         self._checkpoints[chk.checkpoint_id] = chk
-        logger.info(f"[EXECUTION ENGINE] Checkpoint '{chk.checkpoint_id}' saved for execution '{execution_id}' step '{step_id}'")
+        logger.info(
+            f"[EXECUTION ENGINE] Checkpoint '{chk.checkpoint_id}' saved for execution '{execution_id}' step '{step_id}'"
+        )
         return chk
 
     def get_execution(self, execution_id: str) -> WorkflowExecution:

@@ -32,7 +32,9 @@ class CapacityGovernanceEngine:
         else:
             outcome = CapacityGovernanceOutcome.ALLOW
 
-        logger.info(f"Evaluated Capacity Governance for action '{action_name}' (tenant: '{tenant_id}') -> Outcome: {outcome.value}")
+        logger.info(
+            f"Evaluated Capacity Governance for action '{action_name}' (tenant: '{tenant_id}') -> Outcome: {outcome.value}"
+        )
         return {
             "tenant_id": tenant_id,
             "action_name": action_name,

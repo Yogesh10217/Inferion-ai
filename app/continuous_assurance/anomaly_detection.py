@@ -15,12 +15,14 @@ class RuntimeAnomalyDetectionEngine:
         anomalies = []
         for obs in observations:
             if obs.severity.value in ("HIGH", "CRITICAL"):
-                anomalies.append({
-                    "observation_id": obs.observation_id,
-                    "tenant_id": obs.tenant_id,
-                    "anomaly_type": "RULE_BASED_SEVERITY",
-                    "severity": obs.severity.value,
-                    "confidence": 0.95,
-                    "explanation": f"Observed high severity signal '{obs.observation_type.value}' from '{obs.source_domain}'",
-                })
+                anomalies.append(
+                    {
+                        "observation_id": obs.observation_id,
+                        "tenant_id": obs.tenant_id,
+                        "anomaly_type": "RULE_BASED_SEVERITY",
+                        "severity": obs.severity.value,
+                        "confidence": 0.95,
+                        "explanation": f"Observed high severity signal '{obs.observation_type.value}' from '{obs.source_domain}'",
+                    }
+                )
         return anomalies

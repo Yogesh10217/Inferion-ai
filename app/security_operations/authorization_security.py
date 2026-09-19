@@ -36,7 +36,9 @@ class AuthorizationSecurityResult:
                 "classification": self.classification,
                 "is_valid": self.is_valid,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         return {

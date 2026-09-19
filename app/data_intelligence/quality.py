@@ -150,8 +150,10 @@ class DataQualityManager:
             )
 
         avg_score = round(sum(scores_list) / max(1, len(scores_list)), 4)
-        overall_status = DataQualityStatus.PASSED if avg_score >= 0.90 and total_failed == 0 else (
-            DataQualityStatus.WARNING if avg_score >= 0.75 else DataQualityStatus.FAILED
+        overall_status = (
+            DataQualityStatus.PASSED
+            if avg_score >= 0.90 and total_failed == 0
+            else (DataQualityStatus.WARNING if avg_score >= 0.75 else DataQualityStatus.FAILED)
         )
 
         res_id = f"dqr-res-{uuid.uuid4().hex[:8]}"

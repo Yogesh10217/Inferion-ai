@@ -30,7 +30,7 @@ class Agent:
         config: AgentConfig,
         tool_registry: Optional[ToolRegistry] = None,
         tool_executor: Optional[ToolExecutor] = None,
-        memory_coordinator: Optional[MemoryCoordinator] = None
+        memory_coordinator: Optional[MemoryCoordinator] = None,
     ):
         self.agent_id = agent_id
         self.config = config
@@ -43,18 +43,10 @@ class Agent:
         self.checkpoint_manager = CheckpointManager()
         self.artifact_manager = ArtifactManager()
 
-    async def run(
-        self,
-        user_request: str,
-        context: AgentContext,
-        state: AgentState
-    ) -> AgentState:
+    async def run(self, user_request: str, context: AgentContext, state: AgentState) -> AgentState:
         logger.info(f"Agent '{self.config.name}' starting execution for goal: '{user_request}'")
         state.status = AgentStatus.PLANNING
-        budget = AgentBudgetTracker(
-            max_cost_dollars=self.config.max_cost_dollars,
-            max_tokens=self.config.max_tokens
-        )
+        budget = AgentBudgetTracker(max_cost_dollars=self.config.max_cost_dollars, max_tokens=self.config.max_tokens)
 
         self.memory.working_memory.goal = user_request
         self.memory.conversation_memory.add_message("user", user_request)
@@ -78,10 +70,7 @@ class Agent:
             state.status = AgentStatus.PLANNING
             history_repr = [step.model_dump() for step in state.execution_history]
             plan = await self.planner.create_plan(
-                goal=user_request,
-                available_tools=available_tools,
-                execution_history=history_repr,
-                context=context
+                goal=user_request, available_tools=available_tools, execution_history=history_repr, context=context
             )
             state.plan_steps = plan
 
@@ -103,7 +92,7 @@ class Agent:
                         tool_args=tool_input,
                         required_tools=self.config.require_approval_tools,
                         session_id=state.session_id,
-                        state=state
+                        state=state,
                     )
                 except ApprovalRequiredException:
                     logger.info(f"Session '{state.session_id}' paused for human approval.")
@@ -114,10 +103,7 @@ class Agent:
                 state.status = AgentStatus.EXECUTING_TOOL
                 try:
                     exec_res = await self.tool_executor.execute_tool(
-                        tool_name=tool_name,
-                        kwargs=tool_input,
-                        context=context,
-                        budget_tracker=budget
+                        tool_name=tool_name, kwargs=tool_input, context=context, budget_tracker=budget
                     )
                     obs_status = "SUCCESS"
                     obs_output = exec_res.get("result", {})
@@ -136,7 +122,7 @@ class Agent:
                     output_data={"result": obs_output},
                     status=obs_status,
                     error=obs_error,
-                    duration_ms=(time.time() - start_step_time) * 1000
+                    duration_ms=(time.time() - start_step_time) * 1000,
                 )
                 state.execution_history.append(step_record)
                 self.memory.working_memory.add_step(tool_name, obs_output if obs_status == "SUCCESS" else obs_error)
@@ -147,7 +133,7 @@ class Agent:
                 refl_res = await self.reflection.reflect(
                     goal=user_request,
                     execution_history=[s.model_dump() for s in state.execution_history],
-                    context=context
+                    context=context,
                 )
                 if refl_res.get("retry_recommended") and retry_count < max_retries:
                     retry_count += 1

@@ -37,16 +37,14 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # 1. Evaluate Quotas
         try:
             await self.quota_service.evaluate_quotas(
-                organization_id=org_id,
-                workspace_id=workspace_id,
-                api_key_id=api_key_id,
-                user_id=user_id
+                organization_id=org_id, workspace_id=workspace_id, api_key_id=api_key_id, user_id=user_id
             )
         except QuotaExceededException as e:
             return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
         except Exception as e:
             # Failsafe open for unhandled db errors in quota
             import logging
+
             logging.getLogger(__name__).error(f"Quota check error: {e}")
 
         # 2. Evaluate Rate Limits
@@ -56,11 +54,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # In a full implementation, RateLimitService would fetch the specific RateLimitPolicy
         # For this walkthrough, we apply the default limit to the org
         try:
-            await self.rate_limit_service.check_rate_limit(
-                scope_id=f"org:{org_id}",
-                limit=limit,
-                window_seconds=window
-            )
+            await self.rate_limit_service.check_rate_limit(scope_id=f"org:{org_id}", limit=limit, window_seconds=window)
         except RateLimitExceededException as e:
             return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
 
@@ -68,9 +62,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         lease_id = None
         try:
             lease_id = await self.rate_limit_service.acquire_concurrency_lease(
-                scope_id=f"org:{org_id}",
-                limit=self.settings.default_concurrent_requests,
-                ttl_seconds=120
+                scope_id=f"org:{org_id}", limit=self.settings.default_concurrent_requests, ttl_seconds=120
             )
         except RateLimitExceededException as e:
             return JSONResponse(status_code=e.status_code, content={"detail": e.detail})
@@ -81,7 +73,4 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             return response
         finally:
             if lease_id:
-                await self.rate_limit_service.release_concurrency_lease(
-                    scope_id=f"org:{org_id}",
-                    lease_id=lease_id
-                )
+                await self.rate_limit_service.release_concurrency_lease(scope_id=f"org:{org_id}", lease_id=lease_id)

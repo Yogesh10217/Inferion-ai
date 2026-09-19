@@ -67,7 +67,14 @@ class OperationalInvestigationManager:
         inv.status = InvestigationStatus.INVESTIGATING
         return inv
 
-    def record_finding(self, tenant_id: str, investigation_id: str, title: str, severity: str = "HIGH", details: Optional[Dict[str, Any]] = None) -> OperationalInvestigation:
+    def record_finding(
+        self,
+        tenant_id: str,
+        investigation_id: str,
+        title: str,
+        severity: str = "HIGH",
+        details: Optional[Dict[str, Any]] = None,
+    ) -> OperationalInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         if inv.is_concluded:
             raise ImmutableOperationsRecordException(investigation_id)
@@ -76,7 +83,9 @@ class OperationalInvestigationManager:
         inv.status = InvestigationStatus.FINDINGS_RECORDED
         return inv
 
-    def set_root_cause_analyzed(self, tenant_id: str, investigation_id: str, root_cause_analysis_id: str) -> OperationalInvestigation:
+    def set_root_cause_analyzed(
+        self, tenant_id: str, investigation_id: str, root_cause_analysis_id: str
+    ) -> OperationalInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         if inv.is_concluded:
             raise ImmutableOperationsRecordException(investigation_id)
@@ -86,7 +95,11 @@ class OperationalInvestigationManager:
 
     def conclude_investigation(self, tenant_id: str, investigation_id: str) -> OperationalInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
-        if inv.status not in [InvestigationStatus.FINDINGS_RECORDED, InvestigationStatus.ROOT_CAUSE_ANALYZED, InvestigationStatus.REMEDIATION_PLANNED]:
+        if inv.status not in [
+            InvestigationStatus.FINDINGS_RECORDED,
+            InvestigationStatus.ROOT_CAUSE_ANALYZED,
+            InvestigationStatus.REMEDIATION_PLANNED,
+        ]:
             raise InvalidAccessStateTransitionException(inv.status.value, InvestigationStatus.CONCLUDED.value)
         inv.status = InvestigationStatus.CONCLUDED
         inv.is_concluded = True

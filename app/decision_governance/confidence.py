@@ -52,12 +52,21 @@ class DecisionConfidenceManager:
     ) -> ConfidenceAssessment:
         if not factors:
             factors = [
-                ConfidenceFactor(name="evidence_quality", weight=0.25, score=0.90, rationale="High quality telemetry data"),
-                ConfidenceFactor(name="signal_reliability", weight=0.20, score=0.95, rationale="Multi-source correlation verified"),
+                ConfidenceFactor(
+                    name="evidence_quality", weight=0.25, score=0.90, rationale="High quality telemetry data"
+                ),
+                ConfidenceFactor(
+                    name="signal_reliability", weight=0.20, score=0.95, rationale="Multi-source correlation verified"
+                ),
                 ConfidenceFactor(name="data_freshness", weight=0.20, score=0.98, rationale="Signals < 30 seconds old"),
                 ConfidenceFactor(name="model_trust", weight=0.15, score=0.88, rationale="High model trust score"),
                 ConfidenceFactor(name="uncertainty", weight=0.10, score=0.85, rationale="Low parameter variance"),
-                ConfidenceFactor(name="historical_outcomes", weight=0.10, score=0.80, rationale="Previous similar decisions succeeded"),
+                ConfidenceFactor(
+                    name="historical_outcomes",
+                    weight=0.10,
+                    score=0.80,
+                    rationale="Previous similar decisions succeeded",
+                ),
             ]
 
         total_weight = sum(f.weight for f in factors)
@@ -76,7 +85,9 @@ class DecisionConfidenceManager:
         assessment = ConfidenceAssessment(
             tenant_id=tenant_id,
             decision_id=decision_id,
-            confidence=DecisionConfidence(confidence_score=score_val, level=lvl, uncertainty_margin=round(1.0 - score_val, 2)),
+            confidence=DecisionConfidence(
+                confidence_score=score_val, level=lvl, uncertainty_margin=round(1.0 - score_val, 2)
+            ),
             factors=factors,
         )
         self._assessments[assessment.assessment_id] = assessment

@@ -35,12 +35,16 @@ class ApprovalRoutingEngine:
     def __init__(self) -> None:
         self._approvals: Dict[str, AutonomousApprovalRequirement] = {}
 
-    def create_approval_request(self, workflow_id: str, tenant_id: str, approver_role: str = "SECURITY_ADMIN") -> AutonomousApprovalRequirement:
+    def create_approval_request(
+        self, workflow_id: str, tenant_id: str, approver_role: str = "SECURITY_ADMIN"
+    ) -> AutonomousApprovalRequirement:
         req = AutonomousApprovalRequirement(workflow_id=workflow_id, tenant_id=tenant_id, approver_role=approver_role)
         self._approvals[workflow_id] = req
         return req
 
-    def submit_approval(self, workflow_id: str, tenant_id: str, approved_by: str, approved: bool, comments: Optional[str] = None) -> AutonomousApprovalRequirement:
+    def submit_approval(
+        self, workflow_id: str, tenant_id: str, approved_by: str, approved: bool, comments: Optional[str] = None
+    ) -> AutonomousApprovalRequirement:
         req = self.get_approval(workflow_id, tenant_id)
         req.is_approved = approved
         req.approved_by = approved_by
@@ -53,7 +57,9 @@ class ApprovalRoutingEngine:
         if not req:
             req = self.create_approval_request(workflow_id, tenant_id)
         if req.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantAutonomousAssuranceException(f"Unauthorized cross-tenant access to approval request for workflow '{workflow_id}'")
+            raise CrossTenantAutonomousAssuranceException(
+                f"Unauthorized cross-tenant access to approval request for workflow '{workflow_id}'"
+            )
         return req
 
     def is_approved(self, workflow_id: str, tenant_id: str) -> bool:

@@ -60,20 +60,24 @@ class SimulationDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
     """Adapter for simulation-based deployment execution."""
 
     def validate_target(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "target_id": self.target.target_id,
-            "status": "VALIDATED",
-            "adapter_type": "SIMULATION",
-            "classification": "SIMULATION_RUNTIME_VALIDATED",
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "target_id": self.target.target_id,
+                "status": "VALIDATED",
+                "adapter_type": "SIMULATION",
+                "classification": "SIMULATION_RUNTIME_VALIDATED",
+            }
+        )
 
     def deploy_artifact(self, artifact_digest: str, release_manifest_id: str) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": "SIMULATION_DEPLOYED",
-            "artifact_digest": artifact_digest,
-            "release_manifest_id": release_manifest_id,
-            "classification": "SIMULATION_RUNTIME_VALIDATED",
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": "SIMULATION_DEPLOYED",
+                "artifact_digest": artifact_digest,
+                "release_manifest_id": release_manifest_id,
+                "classification": "SIMULATION_RUNTIME_VALIDATED",
+            }
+        )
 
     def get_deployment_status(self) -> Dict[str, Any]:
         return {"status": "HEALTHY", "mode": "SIMULATION"}
@@ -97,27 +101,35 @@ class SimulationDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
         return {"status": "RESTARTED", "mode": "SIMULATION"}
 
     def rollback(self, previous_digest: str) -> Dict[str, Any]:
-        return {"status": "ROLLED_BACK", "previous_digest": previous_digest, "classification": "ROLLBACK_SIMULATION_VALIDATED"}
+        return {
+            "status": "ROLLED_BACK",
+            "previous_digest": previous_digest,
+            "classification": "ROLLBACK_SIMULATION_VALIDATED",
+        }
 
 
 class ContainerDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
     """Adapter for Docker container runtime execution."""
 
     def validate_target(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "target_id": self.target.target_id,
-            "status": "VALIDATED",
-            "adapter_type": "CONTAINER",
-            "classification": PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "target_id": self.target.target_id,
+                "status": "VALIDATED",
+                "adapter_type": "CONTAINER",
+                "classification": PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value,
+            }
+        )
 
     def deploy_artifact(self, artifact_digest: str, release_manifest_id: str) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": "CONTAINER_DEPLOYED",
-            "artifact_digest": artifact_digest,
-            "release_manifest_id": release_manifest_id,
-            "classification": PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": "CONTAINER_DEPLOYED",
+                "artifact_digest": artifact_digest,
+                "release_manifest_id": release_manifest_id,
+                "classification": PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value,
+            }
+        )
 
     def get_deployment_status(self) -> Dict[str, Any]:
         return {"status": "HEALTHY", "mode": "CONTAINER_RUNTIME"}
@@ -141,7 +153,11 @@ class ContainerDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
         return {"status": "RESTARTED", "mode": "CONTAINER_RUNTIME"}
 
     def rollback(self, previous_digest: str) -> Dict[str, Any]:
-        return {"status": "ROLLED_BACK", "previous_digest": previous_digest, "classification": PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value}
+        return {
+            "status": "ROLLED_BACK",
+            "previous_digest": previous_digest,
+            "classification": PlatformReadinessClassification.CONTAINER_RUNTIME_VALIDATED.value,
+        }
 
 
 class ProductionDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
@@ -150,40 +166,45 @@ class ProductionDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
     def validate_target(self) -> Dict[str, Any]:
         res = self.target.validate_target()
         if res.get("status") == "NOT_AVAILABLE":
-            return SecretsSanitizer.sanitize_structure({
+            return SecretsSanitizer.sanitize_structure(
+                {
+                    "target_id": self.target.target_id,
+                    "status": "NOT_AVAILABLE",
+                    "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE",
+                    "production_deployed": "NOT_EXECUTED",
+                    "live_production_validated": "NOT_EXECUTED",
+                }
+            )
+        return SecretsSanitizer.sanitize_structure(
+            {
                 "target_id": self.target.target_id,
-                "status": "NOT_AVAILABLE",
-                "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE",
+                "status": "VALIDATED",
+                "adapter_type": "PRODUCTION",
                 "production_deployed": "NOT_EXECUTED",
-                "live_production_validated": "NOT_EXECUTED",
-            })
-        return SecretsSanitizer.sanitize_structure({
-            "target_id": self.target.target_id,
-            "status": "VALIDATED",
-            "adapter_type": "PRODUCTION",
-            "production_deployed": "NOT_EXECUTED",
-        })
+            }
+        )
 
     def deploy_artifact(self, artifact_digest: str, release_manifest_id: str) -> Dict[str, Any]:
-        has_real_prod = bool(
-            os.getenv("PRODUCTION_KUBERNETES_CLUSTER")
-            or os.getenv("PRODUCTION_CLOUD_ENDPOINT")
-        )
+        has_real_prod = bool(os.getenv("PRODUCTION_KUBERNETES_CLUSTER") or os.getenv("PRODUCTION_CLOUD_ENDPOINT"))
         if not has_real_prod:
-            return SecretsSanitizer.sanitize_structure({
-                "status": "NOT_EXECUTED",
-                "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE: Real production infrastructure unconfigured",
-                "production_deployed": "NOT_EXECUTED",
-                "live_production_validated": "NOT_EXECUTED",
-            })
+            return SecretsSanitizer.sanitize_structure(
+                {
+                    "status": "NOT_EXECUTED",
+                    "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE: Real production infrastructure unconfigured",
+                    "production_deployed": "NOT_EXECUTED",
+                    "live_production_validated": "NOT_EXECUTED",
+                }
+            )
 
-        return SecretsSanitizer.sanitize_structure({
-            "status": "PRODUCTION_DEPLOYED",
-            "artifact_digest": artifact_digest,
-            "release_manifest_id": release_manifest_id,
-            "production_deployed": "EXECUTED",
-            "live_production_validated": "VALIDATED",
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": "PRODUCTION_DEPLOYED",
+                "artifact_digest": artifact_digest,
+                "release_manifest_id": release_manifest_id,
+                "production_deployed": "EXECUTED",
+                "live_production_validated": "VALIDATED",
+            }
+        )
 
     def get_deployment_status(self) -> Dict[str, Any]:
         has_real_prod = bool(os.getenv("PRODUCTION_KUBERNETES_CLUSTER") or os.getenv("PRODUCTION_CLOUD_ENDPOINT"))
@@ -221,5 +242,9 @@ class ProductionDeploymentRuntimeAdapter(DeploymentRuntimeAdapter):
     def rollback(self, previous_digest: str) -> Dict[str, Any]:
         has_real_prod = bool(os.getenv("PRODUCTION_KUBERNETES_CLUSTER") or os.getenv("PRODUCTION_CLOUD_ENDPOINT"))
         if not has_real_prod:
-            return {"status": "NOT_EXECUTED", "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE", "production_rollback_executed": "NOT_EXECUTED"}
+            return {
+                "status": "NOT_EXECUTED",
+                "reason": "PRODUCTION_RUNTIME_TARGET_NOT_AVAILABLE",
+                "production_rollback_executed": "NOT_EXECUTED",
+            }
         return {"status": "ROLLED_BACK", "previous_digest": previous_digest, "production_rollback_executed": "EXECUTED"}

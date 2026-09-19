@@ -157,7 +157,9 @@ async def allocate_funding(
     amount = float(payload.get("amount_usd", 50000.0))
 
     if not init_id or not idemp_key:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="initiative_id and idempotency_key are required.")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="initiative_id and idempotency_key are required."
+        )
 
     try:
         alloc = mgr.funding_manager.allocate_funding(tenant_id, init_id, idemp_key, amount)

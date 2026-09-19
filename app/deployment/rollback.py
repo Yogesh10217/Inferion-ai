@@ -154,7 +154,9 @@ class RollbackStrategyEngine:
         from app.deployment.container_validation import ContainerValidationEngine
         from app.deployment.service_registry import PlatformServiceRegistry
 
-        prev_ref = previous_reference or (previous_identity.canonical_fingerprint() if previous_identity else "NO_PREVIOUS_DEPLOYMENT_REFERENCE")
+        prev_ref = previous_reference or (
+            previous_identity.canonical_fingerprint() if previous_identity else "NO_PREVIOUS_DEPLOYMENT_REFERENCE"
+        )
 
         # Truthfulness check: If no previous deployment identity exists, do NOT claim rollback execution or validation
         if not previous_identity or prev_ref == "NO_PREVIOUS_DEPLOYMENT_REFERENCE":

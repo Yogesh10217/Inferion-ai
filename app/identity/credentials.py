@@ -81,7 +81,9 @@ class CredentialManager:
             expires_at=now + timedelta(days=expires_days),
         )
         self._credentials[cred.credential_id] = cred
-        logger.info(f"[CREDENTIAL MANAGER] Created credential '{cred.credential_id}' ({name}) for '{identity_id}' (Tenant: {tenant_id})")
+        logger.info(
+            f"[CREDENTIAL MANAGER] Created credential '{cred.credential_id}' ({name}) for '{identity_id}' (Tenant: {tenant_id})"
+        )
         return cred
 
     def rotate_credential(self, credential_id: str) -> Credential:
@@ -96,7 +98,9 @@ class CredentialManager:
             tenant_id=old_cred.tenant_id,
             scopes=old_cred.scopes,
         )
-        logger.info(f"[CREDENTIAL MANAGER] Rotated credential '{credential_id}' -> New Credential '{new_cred.credential_id}'")
+        logger.info(
+            f"[CREDENTIAL MANAGER] Rotated credential '{credential_id}' -> New Credential '{new_cred.credential_id}'"
+        )
         return new_cred
 
     def revoke_credential(self, credential_id: str, reason: str = "Revoked by policy") -> Credential:

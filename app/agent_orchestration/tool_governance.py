@@ -58,7 +58,7 @@ class AgentTool(BaseModel):
     tool_type: AgentToolType = AgentToolType.READ_ONLY
     target_system: str = "PLATFORM_OPERATIONS"
     data_classification: str = "INTERNAL"  # PUBLIC, INTERNAL, CONFIDENTIAL, RESTRICTED
-    risk_level: str = "LOW"                # LOW, MEDIUM, HIGH, CRITICAL
+    risk_level: str = "LOW"  # LOW, MEDIUM, HIGH, CRITICAL
     is_destructive: bool = False
     permission: ToolPermission = Field(default_factory=ToolPermission)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -160,7 +160,11 @@ class AgentToolGovernanceManager:
 
         auth = ToolAuthorization(
             is_authorized=not requires_app,
-            reason="Tool authorization granted based on policy and boundary evaluation." if not requires_app else "Tool requires human approval due to risk level / destructive action.",
+            reason=(
+                "Tool authorization granted based on policy and boundary evaluation."
+                if not requires_app
+                else "Tool requires human approval due to risk level / destructive action."
+            ),
             governance_decision_id=f"govdec_{uuid.uuid4().hex[:8]}",
             requires_approval=requires_app,
         )

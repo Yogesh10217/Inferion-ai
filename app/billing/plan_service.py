@@ -30,7 +30,9 @@ class PlanService:
         examples = [
             SubscriptionPlan(name="Free", monthly_price=0.0, max_users=1, max_workspaces=1),
             SubscriptionPlan(name="Pro", monthly_price=49.0, max_users=5, max_workspaces=3),
-            SubscriptionPlan(name="Business", monthly_price=199.0, max_users=20, max_workspaces=10, priority_support=True),
+            SubscriptionPlan(
+                name="Business", monthly_price=199.0, max_users=20, max_workspaces=10, priority_support=True
+            ),
             SubscriptionPlan(name="Enterprise", monthly_price=999.0, priority_support=True),
         ]
         async with self.session_factory() as db:
@@ -44,8 +46,7 @@ class SubscriptionService:
 
     async def get_active_subscription(self, org_id: str) -> Optional[OrganizationSubscription]:
         stmt = select(OrganizationSubscription).where(
-            OrganizationSubscription.organization_id == org_id,
-            OrganizationSubscription.status == "active"
+            OrganizationSubscription.organization_id == org_id, OrganizationSubscription.status == "active"
         )
         async with self.session_factory() as db:
             result = await db.execute(stmt)
@@ -62,8 +63,7 @@ class SubscriptionService:
 
             # Check existing
             existing_stmt = select(OrganizationSubscription).where(
-                OrganizationSubscription.organization_id == org_id,
-                OrganizationSubscription.status == "active"
+                OrganizationSubscription.organization_id == org_id, OrganizationSubscription.status == "active"
             )
             existing_res = await db.execute(existing_stmt)
             existing = existing_res.scalars().first()
@@ -72,11 +72,7 @@ class SubscriptionService:
                 existing.status = "canceled"
                 db.add(existing)
 
-            new_sub = OrganizationSubscription(
-                organization_id=org_id,
-                plan_id=plan_id,
-                status="active"
-            )
+            new_sub = OrganizationSubscription(organization_id=org_id, plan_id=plan_id, status="active")
             db.add(new_sub)
             await db.commit()
             await db.refresh(new_sub)

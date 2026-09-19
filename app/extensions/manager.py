@@ -37,7 +37,9 @@ class ExtensionManager:
         self.workflow_template_engine = WorkflowTemplateEngine()
         self.mcp_package_manager = MCPPackageManager()
 
-        logger.info("[EXTENSION MANAGER MASTER] ExtensionManager initialized with all 12 extensibility framework modules")
+        logger.info(
+            "[EXTENSION MANAGER MASTER] ExtensionManager initialized with all 12 extensibility framework modules"
+        )
 
     def get_summary(self) -> Dict[str, Any]:
         """Aggregate extension framework summary."""

@@ -48,7 +48,9 @@ class SDKConsistencyValidator:
                 missing.append(req_ep)
 
         is_compliant = len(missing) == 0
-        logger.info(f"[SDK VALIDATOR] Validated {language} SDK: {len(self.REQUIRED_ENDPOINTS) - len(missing)}/{len(self.REQUIRED_ENDPOINTS)} endpoints covered")
+        logger.info(
+            f"[SDK VALIDATOR] Validated {language} SDK: {len(self.REQUIRED_ENDPOINTS) - len(missing)}/{len(self.REQUIRED_ENDPOINTS)} endpoints covered"
+        )
 
         return SDKContractReport(
             sdk_language=language,

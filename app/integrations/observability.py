@@ -15,7 +15,9 @@ class IntegrationMetricsCollector:
         self.metrics = metrics or ObservabilityMetrics()
 
     def record_execution(self, tenant_id: str, connector: str, count: int = 1) -> None:
-        logger.info(f"[INTEGRATION METRICS] Recorded execution counter for tenant '{tenant_id}': connector='{connector}', count={count}")
+        logger.info(
+            f"[INTEGRATION METRICS] Recorded execution counter for tenant '{tenant_id}': connector='{connector}', count={count}"
+        )
 
     def record_webhook_event(self, tenant_id: str, event_type: str) -> None:
         logger.info(f"[INTEGRATION METRICS] Recorded webhook event for tenant '{tenant_id}': event_type='{event_type}'")

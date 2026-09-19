@@ -77,7 +77,8 @@ class AuditFindingRepository:
     def list_by_audit(self, tenant_id: str, audit_id: str) -> List[PlatformAuditFinding]:
         with self._lock:
             return [
-                f for f in self._findings.values()
+                f
+                for f in self._findings.values()
                 if f.tenant_id == tenant_id and f.metadata.get("audit_id") == audit_id
             ]
 

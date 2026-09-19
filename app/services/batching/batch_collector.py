@@ -108,7 +108,9 @@ class BatchCollector:
 
     async def _flush_loop(self) -> None:
         """Periodically check all buckets for timeouts."""
-        check_interval = max(0.01, self._policy._config.max_batch_wait_ms / 2000.0)  # Check roughly twice per timeout window
+        check_interval = max(
+            0.01, self._policy._config.max_batch_wait_ms / 2000.0
+        )  # Check roughly twice per timeout window
 
         while self._is_running:
             try:

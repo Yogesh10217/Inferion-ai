@@ -35,7 +35,9 @@ class ControlPlaneUsageManager:
     def __init__(self) -> None:
         self._usage_records: Dict[str, AggregatedUsageRecord] = {}
 
-    def _get_or_create(self, tenant_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None) -> AggregatedUsageRecord:
+    def _get_or_create(
+        self, tenant_id: str, organization_id: Optional[str] = None, workspace_id: Optional[str] = None
+    ) -> AggregatedUsageRecord:
         key = f"{tenant_id}:{organization_id or 'none'}:{workspace_id or 'none'}"
         if key not in self._usage_records:
             self._usage_records[key] = AggregatedUsageRecord(
@@ -76,5 +78,7 @@ class ControlPlaneUsageManager:
         rec.timestamp = datetime.now(timezone.utc)
         return rec
 
-    def get_usage(self, tenant_id: str = "global", organization_id: Optional[str] = None, workspace_id: Optional[str] = None) -> AggregatedUsageRecord:
+    def get_usage(
+        self, tenant_id: str = "global", organization_id: Optional[str] = None, workspace_id: Optional[str] = None
+    ) -> AggregatedUsageRecord:
         return self._get_or_create(tenant_id, organization_id, workspace_id)

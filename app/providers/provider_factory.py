@@ -39,7 +39,9 @@ class ProviderFactory:
         self.register_provider("embedding", OpenAIProvider)  # Mock registration
         self.register_provider("reranking", OllamaProvider)  # Mock registration
 
-    def register_provider(self, name: str, provider: type[BaseProvider] | Callable[[], BaseProvider] | BaseProvider) -> None:
+    def register_provider(
+        self, name: str, provider: type[BaseProvider] | Callable[[], BaseProvider] | BaseProvider
+    ) -> None:
         """Register a provider factory by name."""
         if not name or not name.strip():
             raise ValueError("Provider name must be a non-empty string")

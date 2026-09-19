@@ -52,7 +52,9 @@ class PlatformIntegrationApprovalManager:
         logger.info(f"Requested approval {app_id} for action '{action}' (tenant: '{tenant_id}')")
         return appr
 
-    def approve(self, approval_id: str, approver: str, reason: str = "Approved by admin") -> PlatformIntegrationApproval:
+    def approve(
+        self, approval_id: str, approver: str, reason: str = "Approved by admin"
+    ) -> PlatformIntegrationApproval:
         appr = self._approvals.get(approval_id)
         if not appr:
             raise KeyError(f"Approval request '{approval_id}' not found.")

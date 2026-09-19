@@ -73,7 +73,11 @@ class RecoveryAuditEngine:
             canonical_obj = {
                 "component": rec.component,
                 "event": rec.event,
-                "evidence_level": rec.evidence_level.value if isinstance(rec.evidence_level, ReliabilityEvidenceLevel) else str(rec.evidence_level),
+                "evidence_level": (
+                    rec.evidence_level.value
+                    if isinstance(rec.evidence_level, ReliabilityEvidenceLevel)
+                    else str(rec.evidence_level)
+                ),
                 "sanitized_payload": rec.sanitized_payload,
                 "status": rec.status,
                 "timestamp": rec.timestamp,

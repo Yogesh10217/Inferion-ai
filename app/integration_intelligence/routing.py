@@ -25,6 +25,7 @@ class RouteHealth(str, Enum):
 
 class IntegrationRoute(BaseModel):
     """Integration Route Representation."""
+
     route_id: str = Field(default_factory=lambda: f"route_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     target_connector_id: str
@@ -37,6 +38,7 @@ class IntegrationRoute(BaseModel):
 
 class RouteDecision(BaseModel):
     """Outcome of routing decision."""
+
     decision_id: str = Field(default_factory=lambda: f"route_dec_{uuid.uuid4().hex[:8]}")
     selected_route_id: str
     selected_connector_id: str
@@ -71,11 +73,14 @@ class IntegrationRoutingManager:
 
     def resolve_route(self, tenant_id: str, connector_id: str) -> RouteDecision:
         routes = [
-            r for r in self._routes.values()
+            r
+            for r in self._routes.values()
             if r.tenant_id == tenant_id and r.target_connector_id == connector_id and r.is_active
         ]
 
-        healthy_primary = [r for r in routes if r.strategy == RoutingStrategy.PRIMARY and r.health == RouteHealth.HEALTHY]
+        healthy_primary = [
+            r for r in routes if r.strategy == RoutingStrategy.PRIMARY and r.health == RouteHealth.HEALTHY
+        ]
         if healthy_primary:
             best = min(healthy_primary, key=lambda x: x.priority)
             return RouteDecision(

@@ -68,7 +68,9 @@ async def create_asset(data: CreateAssetSchema, mgr: MLOpsManager = Depends(get_
 
 
 @router.get("/assets")
-async def list_assets(tenant_id: Optional[str] = None, asset_type: Optional[AIAssetType] = None, mgr: MLOpsManager = Depends(get_mlops)):
+async def list_assets(
+    tenant_id: Optional[str] = None, asset_type: Optional[AIAssetType] = None, mgr: MLOpsManager = Depends(get_mlops)
+):
     assets = mgr.registry.list_assets(tenant_id=tenant_id, asset_type=asset_type)
     return {"assets": [a.model_dump() for a in assets]}
 
@@ -123,7 +125,11 @@ async def create_deployment(data: CreateDeploymentSchema, mgr: MLOpsManager = De
 
 
 @router.get("/deployments")
-async def list_deployments(tenant_id: Optional[str] = None, environment: Optional[DeploymentEnvironment] = None, mgr: MLOpsManager = Depends(get_mlops)):
+async def list_deployments(
+    tenant_id: Optional[str] = None,
+    environment: Optional[DeploymentEnvironment] = None,
+    mgr: MLOpsManager = Depends(get_mlops),
+):
     deps = mgr.deployment_manager.list_deployments(tenant_id=tenant_id, environment=environment)
     return {"deployments": [d.model_dump() for d in deps]}
 
@@ -192,7 +198,9 @@ async def deploy_release(id: str, mgr: MLOpsManager = Depends(get_mlops)):
 
 # 4. Drift Endpoints
 @router.get("/drift")
-async def list_drift_events(deployment_id: Optional[str] = None, tenant_id: Optional[str] = None, mgr: MLOpsManager = Depends(get_mlops)):
+async def list_drift_events(
+    deployment_id: Optional[str] = None, tenant_id: Optional[str] = None, mgr: MLOpsManager = Depends(get_mlops)
+):
     events = mgr.drift_detector.list_drift_events(deployment_id=deployment_id, tenant_id=tenant_id)
     return {"drift_events": [e.model_dump() for e in events]}
 
@@ -201,6 +209,7 @@ async def list_drift_events(deployment_id: Optional[str] = None, tenant_id: Opti
 @router.post("/fine-tuning/jobs")
 async def create_fine_tuning_job(payload: Dict[str, Any]):
     from app.mlops.fine_tuning.job_service import FineTuningService
+
     service = FineTuningService()
     model = payload.get("model", "llama3.1")
     dataset_uri = payload.get("dataset_uri", "s3://datasets/train.jsonl")

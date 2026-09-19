@@ -17,7 +17,7 @@ class BackupMetadata(BaseModel):
     backup_id: str = Field(default_factory=lambda: f"bak_{uuid.uuid4().hex[:10]}")
     backend_type: str = "sqlite"  # 'sqlite', 'postgresql', 'export'
     size_bytes: int = 0
-    status: str = "COMPLETED"     # 'PENDING', 'IN_PROGRESS', 'COMPLETED', 'FAILED', 'VERIFIED'
+    status: str = "COMPLETED"  # 'PENDING', 'IN_PROGRESS', 'COMPLETED', 'FAILED', 'VERIFIED'
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     verified_at: Optional[datetime] = None
     checksum: Optional[str] = None

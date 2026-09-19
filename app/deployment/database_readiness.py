@@ -25,20 +25,22 @@ class DatabaseReleaseReadinessResult:
     evaluated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "status": self.status,
-            "configuration_ready": self.configuration_ready,
-            "connectivity_available": self.connectivity_available,
-            "migration_system_present": self.migration_system_present,
-            "migration_plan_available": self.migration_plan_available,
-            "rollback_strategy_defined": self.rollback_strategy_defined,
-            "backup_plan_ready": self.backup_plan_ready,
-            "restore_plan_ready": self.restore_plan_ready,
-            "schema_compatible": self.schema_compatible,
-            "classifications": self.classifications,
-            "blocking_reasons": self.blocking_reasons,
-            "evaluated_at": self.evaluated_at,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "status": self.status,
+                "configuration_ready": self.configuration_ready,
+                "connectivity_available": self.connectivity_available,
+                "migration_system_present": self.migration_system_present,
+                "migration_plan_available": self.migration_plan_available,
+                "rollback_strategy_defined": self.rollback_strategy_defined,
+                "backup_plan_ready": self.backup_plan_ready,
+                "restore_plan_ready": self.restore_plan_ready,
+                "schema_compatible": self.schema_compatible,
+                "classifications": self.classifications,
+                "blocking_reasons": self.blocking_reasons,
+                "evaluated_at": self.evaluated_at,
+            }
+        )
 
 
 class DatabaseReleaseReadinessEvaluator:
@@ -60,7 +62,9 @@ class DatabaseReleaseReadinessEvaluator:
         if config.is_production() and ("localhost" in config.database_url or "127.0.0.1" in config.database_url):
             # In production simulation or production, check if using default unsecure connection
             if "postgres:postgres" in config.database_url:
-                blocking_reasons.append("DATABASE_SECURITY_VIOLATION: Default postgres credentials used in production configuration")
+                blocking_reasons.append(
+                    "DATABASE_SECURITY_VIOLATION: Default postgres credentials used in production configuration"
+                )
 
         # 2. Migration system evaluation (Alembic or SQL migrations)
         alembic_exists = os.path.exists("alembic") or os.path.exists("migrations")

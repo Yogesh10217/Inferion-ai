@@ -40,9 +40,7 @@ async def get_policies(engine: DecisionEngine = Depends(get_engine)):
 
 
 @router.post("/policies", status_code=status.HTTP_201_CREATED)
-async def create_policy(
-    data: PolicyCreateSchema, engine: DecisionEngine = Depends(get_engine)
-):
+async def create_policy(data: PolicyCreateSchema, engine: DecisionEngine = Depends(get_engine)):
     """Create a new routing policy."""
     policy = RoutingPolicy(
         name=data.name,
@@ -65,9 +63,7 @@ async def update_policy(
     """Update an existing routing policy by name/id."""
     existing = engine.policy_registry.get_policy(id)
     if not existing:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Policy '{id}' not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Policy '{id}' not found")
     if data.weights is not None:
         existing.weights = existing._normalize_weights(data.weights)
     if data.priority is not None:
@@ -82,9 +78,7 @@ async def delete_policy(id: str, engine: DecisionEngine = Depends(get_engine)):
     """Delete a routing policy."""
     success = engine.policy_registry.remove_policy(id)
     if not success:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Policy '{id}' not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Policy '{id}' not found")
     return {"status": "deleted", "id": id}
 
 
@@ -96,9 +90,7 @@ async def get_provider_rankings(
     """Get calculated provider rankings for a policy."""
     policy = engine.policy_registry.get_policy(policy_name)
     if not policy:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Policy '{policy_name}' not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Policy '{policy_name}' not found")
 
     providers = ["openai_provider", "anthropic_provider", "mock_provider"]
     rankings = engine.ranker.rank(

@@ -78,7 +78,9 @@ class SecurityThreatStore:
         if not threat:
             raise SecurityThreatNotFoundException(f"Threat '{threat_id}' not found.")
         if threat.tenant_id != tenant_id:
-            raise CrossTenantSecurityAssuranceException(f"Tenant '{tenant_id}' cannot access threat for tenant '{threat.tenant_id}'.")
+            raise CrossTenantSecurityAssuranceException(
+                f"Tenant '{tenant_id}' cannot access threat for tenant '{threat.tenant_id}'."
+            )
         return threat
 
     def list_threats(self, tenant_id: str, status: Optional[str] = None) -> List[SecurityThreat]:

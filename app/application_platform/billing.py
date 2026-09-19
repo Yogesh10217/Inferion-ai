@@ -73,6 +73,7 @@ class ApplicationBillingTracker:
 
         # Forward directly into UnifiedCostLedger for FinOps tracking
         from decimal import Decimal
+
         self.cost_ledger.record_cost(
             component=f"application:{application_id}:{application_version}",
             cost_category=category,
@@ -95,6 +96,7 @@ class ApplicationBillingTracker:
 
     def get_application_total_cost(self, tenant_id: str, application_id: str) -> float:
         return sum(
-            evt.amount_usd for evt in self._events
+            evt.amount_usd
+            for evt in self._events
             if evt.tenant_id == tenant_id and evt.application_id == application_id
         )

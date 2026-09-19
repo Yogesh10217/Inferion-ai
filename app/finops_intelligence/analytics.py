@@ -45,7 +45,9 @@ class FinOpsAnalyticsEngine:
                 impact_level="HIGH",
             )
             op_insights.append(ins)
-            plat_insights.append(PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level))
+            plat_insights.append(
+                PlatformInsight(title=ins.title, description=ins.description, impact_level=ins.impact_level)
+            )
 
         metrics = [
             AnalyticsMetric(metric_name="total_spend_usd", metric_value=total_spend_usd),

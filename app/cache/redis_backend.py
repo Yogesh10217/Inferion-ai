@@ -9,6 +9,7 @@ logger = logging.getLogger("app.cache.redis_backend")
 try:
     import redis.asyncio as redis
     from redis.exceptions import RedisError
+
     REDIS_AVAILABLE = True
 except ImportError:
     REDIS_AVAILABLE = False
@@ -27,9 +28,7 @@ class RedisCacheBackend(BaseCacheBackend):
         else:
             try:
                 self._pool = redis.ConnectionPool.from_url(
-                    redis_url,
-                    max_connections=max_connections,
-                    decode_responses=True
+                    redis_url, max_connections=max_connections, decode_responses=True
                 )
                 self._client = redis.Redis(connection_pool=self._pool)
             except Exception as exc:

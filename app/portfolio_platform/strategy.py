@@ -24,9 +24,9 @@ class StrategyStatus(str, Enum):
 
 
 class StrategyHorizon(str, Enum):
-    NEAR_TERM = "NEAR_TERM"      # 1 Year
+    NEAR_TERM = "NEAR_TERM"  # 1 Year
     MEDIUM_TERM = "MEDIUM_TERM"  # 2-3 Years
-    LONG_TERM = "LONG_TERM"      # 5+ Years
+    LONG_TERM = "LONG_TERM"  # 5+ Years
 
 
 class StrategicTheme(str, Enum):
@@ -152,7 +152,9 @@ class StrategyManager:
         if not strat:
             raise StrategyAlignmentException(f"Strategy '{strategy_id}' not found.")
         if strat.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=strat.tenant_id, resource_id=strategy_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=strat.tenant_id, resource_id=strategy_id
+            )
         return strat
 
     def list_strategies(self, tenant_id: str) -> List[EnterpriseStrategy]:

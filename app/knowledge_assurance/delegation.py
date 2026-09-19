@@ -99,9 +99,7 @@ class KnowledgeDelegationManager:
             raise CrossTenantKnowledgeAssuranceException()
         return plan
 
-    def get_delegation_request(
-        self, tenant_id: str, request_id: str
-    ) -> DelegationRequest:
+    def get_delegation_request(self, tenant_id: str, request_id: str) -> DelegationRequest:
         if request_id not in self._requests:
             raise KnowledgeReferenceNotFoundException(f"Delegation request {request_id} not found.")
         req = self._requests[request_id]

@@ -26,6 +26,7 @@ class AccessCorrelationConfidence(str, Enum):
 
 class AccessCorrelationEvidence(BaseModel):
     """Evidence linking correlated events."""
+
     evidence_id: str = Field(default_factory=lambda: f"corr_evid_{uuid.uuid4().hex[:8]}")
     correlated_resource_ids: List[str] = Field(default_factory=list)
     correlation_reason: str = ""
@@ -33,6 +34,7 @@ class AccessCorrelationEvidence(BaseModel):
 
 class AccessCorrelation(BaseModel):
     """Access Correlation Representation."""
+
     correlation_id: str = Field(default_factory=lambda: f"corr_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     correlation_type: AccessCorrelationType
@@ -82,7 +84,9 @@ class AccessCorrelationManager:
             raise CrossTenantAccessIntelligenceException()
         return corr
 
-    def list_correlations(self, tenant_id: str, correlation_type: Optional[AccessCorrelationType] = None) -> List[AccessCorrelation]:
+    def list_correlations(
+        self, tenant_id: str, correlation_type: Optional[AccessCorrelationType] = None
+    ) -> List[AccessCorrelation]:
         results = [c for c in self._correlations.values() if c.tenant_id == tenant_id]
         if correlation_type:
             results = [c for c in results if c.correlation_type == correlation_type]

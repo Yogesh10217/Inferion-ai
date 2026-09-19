@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 class PostgresConnector(DataConnector):
     async def connect(self) -> bool:
         self.is_connected = True
-        logger.info(f"[POSTGRES CONNECTOR] Connected to host '{self.data_source.configuration.get('host', 'localhost')}'")
+        logger.info(
+            f"[POSTGRES CONNECTOR] Connected to host '{self.data_source.configuration.get('host', 'localhost')}'"
+        )
         return True
 
     async def disconnect(self) -> None:
@@ -50,7 +52,9 @@ class PostgresConnector(DataConnector):
             {"id": 2, "email": "user2@example.com", "created_at": "2026-01-02T00:00:00Z"},
         ][:limit]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         new_cursor = str(time.time())
         data = [{"id": 3, "email": "user3@example.com", "created_at": "2026-02-01T00:00:00Z"}]
         return data, new_cursor
@@ -94,7 +98,9 @@ class MySQLConnector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"sku": "SKU-001", "name": "Enterprise AI License", "price": 9999.00}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -128,7 +134,9 @@ class RESTConnector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"metric": "cpu_utilization", "value": 42.5, "unit": "percent"}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -159,7 +167,9 @@ class GraphQLConnector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"id": "usr_gql_1", "name": "GraphQL User"}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -191,7 +201,9 @@ class S3Connector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"key": "documents/report.pdf", "size": 1048576, "last_modified": "2026-08-20T12:00:00Z"}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -222,7 +234,9 @@ class GoogleDriveConnector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"file_id": "gdrive_doc_1", "name": "Architecture Specification", "mime_type": "application/pdf"}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -253,7 +267,9 @@ class SlackConnector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"channel": "#engineering", "user": "U12345", "text": "Deployment of Phase 5.12 completed cleanly."}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -279,12 +295,17 @@ class GitHubConnector(DataConnector):
         return True
 
     async def discover_schema(self) -> Dict[str, Any]:
-        return {"repository": self.data_source.configuration.get("repo", "acme/llm-inference-engine"), "branches": ["main", "develop"]}
+        return {
+            "repository": self.data_source.configuration.get("repo", "acme/llm-inference-engine"),
+            "branches": ["main", "develop"],
+        }
 
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"path": "README.md", "commit": "sha_123456", "content": "# LLM Engine Platform"}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -310,12 +331,17 @@ class FileSystemConnector(DataConnector):
         return True
 
     async def discover_schema(self) -> Dict[str, Any]:
-        return {"root_path": self.data_source.configuration.get("path", "./data"), "file_types": ["*.json", "*.csv", "*.pdf"]}
+        return {
+            "root_path": self.data_source.configuration.get("path", "./data"),
+            "file_types": ["*.json", "*.csv", "*.pdf"],
+        }
 
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"filename": "dataset.csv", "size_bytes": 4096}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -346,7 +372,9 @@ class GenericWebhookConnector(DataConnector):
     async def fetch(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         return [{"event_type": "webhook.received", "payload": {"status": "ok"}}]
 
-    async def fetch_incremental(self, cursor: Optional[str] = None, limit: int = 100) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    async def fetch_incremental(
+        self, cursor: Optional[str] = None, limit: int = 100
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         return [], cursor
 
     async def get_changes(self, last_checkpoint: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -361,15 +389,54 @@ class GenericWebhookConnector(DataConnector):
 
 def register_all_initial_connectors(registry: Any) -> None:
     """Helper registering all 10 production connectors into ConnectorRegistry."""
-    all_caps = [ConnectorCapabilities.READ, ConnectorCapabilities.SCHEMA_DISCOVERY, ConnectorCapabilities.INCREMENTAL_SYNC, ConnectorCapabilities.CHANGE_DATA_CAPTURE]
+    all_caps = [
+        ConnectorCapabilities.READ,
+        ConnectorCapabilities.SCHEMA_DISCOVERY,
+        ConnectorCapabilities.INCREMENTAL_SYNC,
+        ConnectorCapabilities.CHANGE_DATA_CAPTURE,
+    ]
 
-    registry.register_connector("POSTGRES", PostgresConnector, ConnectorMetadata(connector_type="POSTGRES", display_name="PostgreSQL", capabilities=all_caps))
-    registry.register_connector("MYSQL", MySQLConnector, ConnectorMetadata(connector_type="MYSQL", display_name="MySQL", capabilities=all_caps))
-    registry.register_connector("REST_API", RESTConnector, ConnectorMetadata(connector_type="REST_API", display_name="REST API", capabilities=all_caps))
-    registry.register_connector("GRAPHQL", GraphQLConnector, ConnectorMetadata(connector_type="GRAPHQL", display_name="GraphQL", capabilities=all_caps))
-    registry.register_connector("S3", S3Connector, ConnectorMetadata(connector_type="S3", display_name="Amazon S3", capabilities=all_caps))
-    registry.register_connector("GOOGLE_DRIVE", GoogleDriveConnector, ConnectorMetadata(connector_type="GOOGLE_DRIVE", display_name="Google Drive", capabilities=all_caps))
-    registry.register_connector("SLACK", SlackConnector, ConnectorMetadata(connector_type="SLACK", display_name="Slack", capabilities=all_caps))
-    registry.register_connector("GITHUB", GitHubConnector, ConnectorMetadata(connector_type="GITHUB", display_name="GitHub", capabilities=all_caps))
-    registry.register_connector("FILESYSTEM", FileSystemConnector, ConnectorMetadata(connector_type="FILESYSTEM", display_name="Local FileSystem", capabilities=all_caps))
-    registry.register_connector("WEBHOOK", GenericWebhookConnector, ConnectorMetadata(connector_type="WEBHOOK", display_name="Generic Webhook", capabilities=all_caps))
+    registry.register_connector(
+        "POSTGRES",
+        PostgresConnector,
+        ConnectorMetadata(connector_type="POSTGRES", display_name="PostgreSQL", capabilities=all_caps),
+    )
+    registry.register_connector(
+        "MYSQL", MySQLConnector, ConnectorMetadata(connector_type="MYSQL", display_name="MySQL", capabilities=all_caps)
+    )
+    registry.register_connector(
+        "REST_API",
+        RESTConnector,
+        ConnectorMetadata(connector_type="REST_API", display_name="REST API", capabilities=all_caps),
+    )
+    registry.register_connector(
+        "GRAPHQL",
+        GraphQLConnector,
+        ConnectorMetadata(connector_type="GRAPHQL", display_name="GraphQL", capabilities=all_caps),
+    )
+    registry.register_connector(
+        "S3", S3Connector, ConnectorMetadata(connector_type="S3", display_name="Amazon S3", capabilities=all_caps)
+    )
+    registry.register_connector(
+        "GOOGLE_DRIVE",
+        GoogleDriveConnector,
+        ConnectorMetadata(connector_type="GOOGLE_DRIVE", display_name="Google Drive", capabilities=all_caps),
+    )
+    registry.register_connector(
+        "SLACK", SlackConnector, ConnectorMetadata(connector_type="SLACK", display_name="Slack", capabilities=all_caps)
+    )
+    registry.register_connector(
+        "GITHUB",
+        GitHubConnector,
+        ConnectorMetadata(connector_type="GITHUB", display_name="GitHub", capabilities=all_caps),
+    )
+    registry.register_connector(
+        "FILESYSTEM",
+        FileSystemConnector,
+        ConnectorMetadata(connector_type="FILESYSTEM", display_name="Local FileSystem", capabilities=all_caps),
+    )
+    registry.register_connector(
+        "WEBHOOK",
+        GenericWebhookConnector,
+        ConnectorMetadata(connector_type="WEBHOOK", display_name="Generic Webhook", capabilities=all_caps),
+    )

@@ -31,7 +31,11 @@ class EmailTool(BaseTool):
                     "to": {"type": "string", "description": "Recipient email address"},
                     "subject": {"type": "string", "description": "Email subject line"},
                     "body": {"type": "string", "description": "Email body content"},
-                    "attachments": {"type": "array", "items": {"type": "string"}, "description": "Attachment file paths"},
+                    "attachments": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Attachment file paths",
+                    },
                 },
                 "required": ["action"],
             },

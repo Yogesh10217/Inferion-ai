@@ -42,6 +42,7 @@ class EntitlementStatus(str, Enum):
 
 class EntitlementReference(BaseModel):
     """Reference pointing to IAM entitlement without direct mutation."""
+
     external_entitlement_id: str
     target_resource_type: str
     target_resource_id: str
@@ -50,6 +51,7 @@ class EntitlementReference(BaseModel):
 
 class Entitlement(BaseModel):
     """Enterprise Entitlement Representation."""
+
     entitlement_id: str = Field(default_factory=lambda: f"ent_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     code: str

@@ -55,6 +55,7 @@ class SignalType(str, Enum):
 
 class OperationalSignal(BaseModel):
     """Normalized operational signal."""
+
     signal_id: str = Field(default_factory=lambda: f"sig_{uuid.uuid4().hex[:12]}")
     tenant_id: str = "global"
     source: SignalSource
@@ -155,7 +156,9 @@ class SignalManager:
             payload=payload,
         )
         self._signals[signal.signal_id] = signal
-        logger.info(f"[SIGNAL MANAGER] Ingested signal {signal.signal_id} [{signal.severity.value}] for tenant {tenant_id}")
+        logger.info(
+            f"[SIGNAL MANAGER] Ingested signal {signal.signal_id} [{signal.severity.value}] for tenant {tenant_id}"
+        )
         return signal
 
     def list_signals(

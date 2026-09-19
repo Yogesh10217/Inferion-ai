@@ -30,7 +30,13 @@ class CrossDomainSecurityCorrelationEngine:
         policy_violations_count: int = 0,
     ) -> CrossDomainCorrelationResult:
         domains = []
-        base_risk = (identity_risk * 2.0) + (data_exposure_score * 0.5) + (model_vulnerability_score * 0.5) + (operational_incident_count * 10.0) + (policy_violations_count * 5.0)
+        base_risk = (
+            (identity_risk * 2.0)
+            + (data_exposure_score * 0.5)
+            + (model_vulnerability_score * 0.5)
+            + (operational_incident_count * 10.0)
+            + (policy_violations_count * 5.0)
+        )
 
         if identity_risk > 0:
             domains.append("Identity")

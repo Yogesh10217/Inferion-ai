@@ -40,10 +40,14 @@ class RepositoryManager:
         self.integration_manager = integration_manager or IntegrationManager()
         self._repositories: Dict[str, ProjectRepository] = {}
 
-    def register_repository(self, project_id: str, name: str, provider: str = "github", tenant_id: str = "global") -> ProjectRepository:
+    def register_repository(
+        self, project_id: str, name: str, provider: str = "github", tenant_id: str = "global"
+    ) -> ProjectRepository:
         repo = ProjectRepository(project_id=project_id, name=name, provider=provider, tenant_id=tenant_id)
         self._repositories[repo.repository_id] = repo
-        logger.info(f"[REPOSITORY MANAGER] Registered repository '{repo.repository_id}' ('{name}') for project '{project_id}'")
+        logger.info(
+            f"[REPOSITORY MANAGER] Registered repository '{repo.repository_id}' ('{name}') for project '{project_id}'"
+        )
         return repo
 
     def get_repository(self, repository_id: str) -> ProjectRepository:

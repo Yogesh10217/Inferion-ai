@@ -19,7 +19,9 @@ class EnvironmentManager:
         try:
             return DeploymentEnvironment(normalized)
         except ValueError:
-            raise ConfigurationValidationError(f"Invalid deployment environment: '{env_str}'. Must be one of {[e.value for e in DeploymentEnvironment]}")
+            raise ConfigurationValidationError(
+                f"Invalid deployment environment: '{env_str}'. Must be one of {[e.value for e in DeploymentEnvironment]}"
+            )
 
     def load_environment_config(self) -> EnvironmentConfig:
         env = self.current_environment
@@ -65,24 +67,45 @@ class EnvironmentManager:
                 raise UnsafeConfigurationError("ENVIRONMENT_POLICY_VIOLATION: Debug mode enabled in PRODUCTION")
 
             if not config.database_url or config.database_url.strip() == "":
-                raise ConfigurationValidationError("CONFIGURATION_MISSING: DATABASE_URL is missing in PRODUCTION environment")
+                raise ConfigurationValidationError(
+                    "CONFIGURATION_MISSING: DATABASE_URL is missing in PRODUCTION environment"
+                )
 
             if "sqlite" in config.database_url.lower():
-                raise UnsafeConfigurationError("ENVIRONMENT_POLICY_VIOLATION: Production environment MUST NOT use SQLite database")
+                raise UnsafeConfigurationError(
+                    "ENVIRONMENT_POLICY_VIOLATION: Production environment MUST NOT use SQLite database"
+                )
 
             if config.cache_enabled and (not config.redis_url or config.redis_url.strip() == ""):
-                raise ConfigurationValidationError("CONFIGURATION_MISSING: REDIS_URL is required when cache is enabled in PRODUCTION environment")
+                raise ConfigurationValidationError(
+                    "CONFIGURATION_MISSING: REDIS_URL is required when cache is enabled in PRODUCTION environment"
+                )
 
             unsafe_secrets = [
-                "fallback", "password123", "123456", "admin123", "change_me",
-                "dev_secret", "default_secret", "placeholder", "canary_secret",
-                "example_secret", "super-secret-key-change-in-production"
+                "fallback",
+                "password123",
+                "123456",
+                "admin123",
+                "change_me",
+                "dev_secret",
+                "default_secret",
+                "placeholder",
+                "canary_secret",
+                "example_secret",
+                "super-secret-key-change-in-production",
             ]
 
             jwt_secret = os.getenv("JWT_SECRET") or os.getenv("SECRET_KEY") or "prod_secure_key_hash_8849"
             if any(unsafe in jwt_secret.lower() for unsafe in unsafe_secrets):
-                raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Production environment contains an unsafe fallback/canary secret")
+                raise UnsafeConfigurationError(
+                    "SECRET_POLICY_VIOLATION: Production environment contains an unsafe fallback/canary secret"
+                )
 
             db_user_pass = config.database_url.split("@")[0] if "@" in config.database_url else ""
-            if any(unsafe in db_user_pass.lower() for unsafe in ["postgres:postgres", "admin:admin", "root:root", "user:pass"]):
-                raise UnsafeConfigurationError("SECRET_POLICY_VIOLATION: Default database credentials rejected in PRODUCTION environment")
+            if any(
+                unsafe in db_user_pass.lower()
+                for unsafe in ["postgres:postgres", "admin:admin", "root:root", "user:pass"]
+            ):
+                raise UnsafeConfigurationError(
+                    "SECRET_POLICY_VIOLATION: Default database credentials rejected in PRODUCTION environment"
+                )

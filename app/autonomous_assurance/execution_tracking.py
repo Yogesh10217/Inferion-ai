@@ -42,7 +42,13 @@ class ExecutionTracker:
     def __init__(self) -> None:
         self._executions: Dict[str, DelegatedExecution] = {}
 
-    def track_execution(self, workflow_id: str, tenant_id: str, delegation_request_id: str, status: ExecutionStatus = ExecutionStatus.SUBMITTED) -> DelegatedExecution:
+    def track_execution(
+        self,
+        workflow_id: str,
+        tenant_id: str,
+        delegation_request_id: str,
+        status: ExecutionStatus = ExecutionStatus.SUBMITTED,
+    ) -> DelegatedExecution:
         ex = DelegatedExecution(
             workflow_id=workflow_id,
             tenant_id=tenant_id,
@@ -74,7 +80,9 @@ class ExecutionTracker:
         ex.updated_at = datetime.now(timezone.utc)
         return ex
 
-    def update_status(self, workflow_id: str, status: ExecutionStatus, result: Optional[Dict[str, Any]] = None) -> Optional[DelegatedExecution]:
+    def update_status(
+        self, workflow_id: str, status: ExecutionStatus, result: Optional[Dict[str, Any]] = None
+    ) -> Optional[DelegatedExecution]:
         ex = self._executions.get(workflow_id)
         if ex:
             ex.status = status

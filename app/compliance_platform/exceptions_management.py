@@ -79,7 +79,9 @@ class ExceptionManager:
         if not exc:
             raise KeyError(f"Compliance exception '{exception_id}' not found.")
         if exc.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=exc.tenant_id, resource_id=exception_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=exc.tenant_id, resource_id=exception_id
+            )
 
         if not exc.is_active() and exc.status == ExceptionStatus.ACTIVE:
             exc.status = ExceptionStatus.EXPIRED

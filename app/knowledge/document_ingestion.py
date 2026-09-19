@@ -7,8 +7,7 @@ from app.knowledge.pipeline import DocumentContext, PipelineStage
 class StorageProvider(Protocol):
     """Protocol for fetching documents from storage."""
 
-    async def get_document(self, document_id: str) -> bytes:
-        ...
+    async def get_document(self, document_id: str) -> bytes: ...
 
 
 class DocumentIngestionStage(PipelineStage):
@@ -31,6 +30,7 @@ class DocumentIngestionStage(PipelineStage):
 
             if "pdf" in mime_type or file_name.endswith(".pdf"):
                 import fitz
+
                 doc = fitz.open(stream=raw_data, filetype="pdf")
                 global_offset = 0
                 for page_num, page in enumerate(doc):
@@ -49,16 +49,19 @@ class DocumentIngestionStage(PipelineStage):
 
                             full_text += block_text
 
-                            blocks.append({
-                                "text": block_text,
-                                "page_number": page_num + 1,
-                                "start_offset": start_offset,
-                                "end_offset": end_offset,
-                                "type": "text"
-                            })
+                            blocks.append(
+                                {
+                                    "text": block_text,
+                                    "page_number": page_num + 1,
+                                    "start_offset": start_offset,
+                                    "end_offset": end_offset,
+                                    "type": "text",
+                                }
+                            )
                 context.metadata["mime_type"] = "application/pdf"
             elif "wordprocessingml" in mime_type or file_name.endswith(".docx"):
                 import docx
+
                 doc = docx.Document(io.BytesIO(raw_data))
                 global_offset = 0
                 for para in doc.paragraphs:
@@ -75,25 +78,25 @@ class DocumentIngestionStage(PipelineStage):
                     if para.style and para.style.name.startswith("Heading"):
                         heading = para.text.strip()
 
-                    blocks.append({
-                        "text": block_text,
-                        "page_number": 1,
-                        "start_offset": start_offset,
-                        "end_offset": end_offset,
-                        "section_heading": heading,
-                        "type": "text"
-                    })
-                context.metadata["mime_type"] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    blocks.append(
+                        {
+                            "text": block_text,
+                            "page_number": 1,
+                            "start_offset": start_offset,
+                            "end_offset": end_offset,
+                            "section_heading": heading,
+                            "type": "text",
+                        }
+                    )
+                context.metadata["mime_type"] = (
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
             else:
-                text = raw_data.decode('utf-8', errors='ignore')
+                text = raw_data.decode("utf-8", errors="ignore")
                 full_text = text
-                blocks.append({
-                    "text": text,
-                    "page_number": 1,
-                    "start_offset": 0,
-                    "end_offset": len(text),
-                    "type": "text"
-                })
+                blocks.append(
+                    {"text": text, "page_number": 1, "start_offset": 0, "end_offset": len(text), "type": "text"}
+                )
                 context.metadata["mime_type"] = "text/plain"
 
             context.parsed_content = full_text

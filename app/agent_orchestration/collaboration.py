@@ -140,7 +140,9 @@ class AgentCollaborationManager:
             recipient_agent_id=recipient_agent_id,
             tenant_id=tenant_id,
             message_type=message_type,
-            content_sanitized=sanitized_content if isinstance(sanitized_content, dict) else {"data": str(sanitized_content)},
+            content_sanitized=(
+                sanitized_content if isinstance(sanitized_content, dict) else {"data": str(sanitized_content)}
+            ),
             references=references or [],
         )
 

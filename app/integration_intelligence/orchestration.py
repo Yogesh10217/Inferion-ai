@@ -20,6 +20,7 @@ class IntegrationPlanStatus(str, Enum):
 
 class IntegrationPlanStep(BaseModel):
     """Step in an integration execution plan."""
+
     step_id: str = Field(default_factory=lambda: f"plan_step_{uuid.uuid4().hex[:8]}")
     step_order: int
     name: str
@@ -31,6 +32,7 @@ class IntegrationPlanStep(BaseModel):
 
 class IntegrationPlan(BaseModel):
     """Governed Integration Plan Representation."""
+
     plan_id: str = Field(default_factory=lambda: f"plan_int_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     workflow_id: str

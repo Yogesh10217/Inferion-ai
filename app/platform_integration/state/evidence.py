@@ -106,4 +106,6 @@ class CrossPhaseEvidenceManager:
 
     def modify_evidence_attempt(self, tenant_id: str, evidence_id: str) -> None:
         """Helper to verify that modification attempts raise ImmutablePlatformIntegrationRecordException."""
-        raise ImmutablePlatformIntegrationRecordException("Sealed evidence records are immutable and cannot be modified.")
+        raise ImmutablePlatformIntegrationRecordException(
+            "Sealed evidence records are immutable and cannot be modified."
+        )

@@ -33,7 +33,4 @@ class InMemoryArtifactStore(IArtifactStore):
         return self._artifacts.get(artifact_id)
 
     async def list_by_session(self, session_id: str) -> List[Dict[str, Any]]:
-        return [
-            item for item in self._artifacts.values()
-            if item.get("session_id") == session_id
-        ]
+        return [item for item in self._artifacts.values() if item.get("session_id") == session_id]

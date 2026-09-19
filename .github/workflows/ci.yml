@@ -6,8 +6,11 @@ on:
   push:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  test-python-platform:
     name: Lint & Test Platform (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
@@ -31,10 +34,6 @@ jobs:
           pip install -e .
           pip install pytest pytest-cov pytest-asyncio flake8 black pip-audit
 
-      - name: Security Vulnerability Audit
-        run: |
-          pip-audit --desc
-
       - name: Code Formatting Check (Black)
         run: |
           black --check app/
@@ -52,3 +51,56 @@ jobs:
         with:
           name: code-coverage-python-${{ matrix.python-version }}
           path: coverage.xml
+
+  sdk-python-validation:
+    name: Validate Python SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Test Python SDK
+        run: |
+          cd sdk/python
+          python -m pip install --upgrade pip build twine
+          python -m pip install -e ".[test]"
+          python -m pytest tests/
+      - name: Build Package
+        run: |
+          cd sdk/python
+          python -m build
+
+  sdk-typescript-validation:
+    name: Validate TypeScript SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install & Test TypeScript SDK
+        run: |
+          cd sdk/typescript
+          npm ci
+          npm run build
+          npm test
+
+  sdk-go-validation:
+    name: Validate Go SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Test Go SDK
+        run: |
+          cd sdk/go
+          go mod tidy
+          go vet ./...
+          go test ./...

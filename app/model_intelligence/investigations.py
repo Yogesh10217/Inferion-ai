@@ -70,7 +70,9 @@ class ModelInvestigationManager:
             status=InvestigationStatus.OPEN,
         )
         self._investigations[inv_id] = inv
-        logger.info(f"[MODEL INVESTIGATION] Started investigation {inv_id} for incident {incident_id} (Tenant: {tenant_id})")
+        logger.info(
+            f"[MODEL INVESTIGATION] Started investigation {inv_id} for incident {incident_id} (Tenant: {tenant_id})"
+        )
         return inv
 
     def add_finding(
@@ -116,7 +118,9 @@ class ModelInvestigationManager:
             domain_payload=snapshot_data,
         )
 
-        logger.info(f"[MODEL INVESTIGATION] Concluded investigation {investigation_id} and generated snapshot {inv.snapshot.metadata.snapshot_id}")
+        logger.info(
+            f"[MODEL INVESTIGATION] Concluded investigation {investigation_id} and generated snapshot {inv.snapshot.metadata.snapshot_id}"
+        )
         return inv
 
     def get_investigation(self, investigation_id: str, tenant_id: str) -> ModelInvestigation:

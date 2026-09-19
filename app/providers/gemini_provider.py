@@ -45,7 +45,9 @@ class GeminiProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> InferenceResponse:
-        request_obj = request or InferenceRequest(model=model or "gemini-1.5-flash", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "gemini-1.5-flash", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "gemini-1.5-flash"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -95,7 +97,9 @@ class GeminiProvider(BaseProvider):
         if request_obj.max_tokens is not None:
             generation_config["maxOutputTokens"] = request_obj.max_tokens
         if request_obj.stop:
-            generation_config["stopSequences"] = request_obj.stop if isinstance(request_obj.stop, list) else [request_obj.stop]
+            generation_config["stopSequences"] = (
+                request_obj.stop if isinstance(request_obj.stop, list) else [request_obj.stop]
+            )
         if generation_config:
             payload["generationConfig"] = generation_config
 
@@ -111,7 +115,9 @@ class GeminiProvider(BaseProvider):
 
                     latency_ms = (time.perf_counter() - start_time) * 1000.0
                     if response.status_code != 200:
-                        raise ProviderUnavailableException(f"Gemini error status {response.status_code}: {response.text}")
+                        raise ProviderUnavailableException(
+                            f"Gemini error status {response.status_code}: {response.text}"
+                        )
 
                     resp_json = response.json()
                     candidates = resp_json.get("candidates", [])
@@ -155,7 +161,9 @@ class GeminiProvider(BaseProvider):
         prompt: str | None = None,
         **kwargs: Any,
     ) -> AsyncIterator[InferenceResponse]:
-        request_obj = request or InferenceRequest(model=model or "gemini-1.5-flash", messages=[ChatMessage(role="user", content=prompt or "")])
+        request_obj = request or InferenceRequest(
+            model=model or "gemini-1.5-flash", messages=[ChatMessage(role="user", content=prompt or "")]
+        )
         model_name = request_obj.model or model or "gemini-1.5-flash"
         prompt_text = prompt or self._extract_prompt(request_obj)
 
@@ -222,7 +230,13 @@ class GeminiProvider(BaseProvider):
 
     async def list_models(self) -> list[ProviderModel]:
         return [
-            ProviderModel(id="gemini-1.5-pro", provider="gemini", description="Google Gemini 1.5 Pro", context_window=1000000),
-            ProviderModel(id="gemini-1.5-flash", provider="gemini", description="Google Gemini 1.5 Flash", context_window=1000000),
-            ProviderModel(id="gemini-2.0-flash", provider="gemini", description="Google Gemini 2.0 Flash", context_window=1000000),
+            ProviderModel(
+                id="gemini-1.5-pro", provider="gemini", description="Google Gemini 1.5 Pro", context_window=1000000
+            ),
+            ProviderModel(
+                id="gemini-1.5-flash", provider="gemini", description="Google Gemini 1.5 Flash", context_window=1000000
+            ),
+            ProviderModel(
+                id="gemini-2.0-flash", provider="gemini", description="Google Gemini 2.0 Flash", context_window=1000000
+            ),
         ]

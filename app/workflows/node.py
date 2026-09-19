@@ -138,12 +138,7 @@ class AgentNode(BaseNode):
     """Integrates directly with Phase 5.1 Agents or Agent Execution logic."""
 
     def __init__(
-        self,
-        node_id: str,
-        name: str,
-        agent_id: str,
-        role: str = "general",
-        config: Optional[Dict[str, Any]] = None
+        self, node_id: str, name: str, agent_id: str, role: str = "general", config: Optional[Dict[str, Any]] = None
     ):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.AGENT, config=config)
         self.agent_id = agent_id
@@ -178,7 +173,7 @@ class AgentNode(BaseNode):
                 "role": self.role,
                 "prompt": prompt,
                 "output": f"Output from agent [{self.agent_id}] ({self.role}): Executed prompt successfully.",
-                "status": "completed"
+                "status": "completed",
             }
 
         self.input_data = {"prompt": prompt}
@@ -197,7 +192,7 @@ class ToolNode(BaseNode):
         name: str,
         tool_name: str,
         tool_type: str = "custom",
-        config: Optional[Dict[str, Any]] = None
+        config: Optional[Dict[str, Any]] = None,
     ):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.TOOL, config=config)
         self.tool_name = tool_name
@@ -217,7 +212,9 @@ class ToolNode(BaseNode):
         user_roles = context.get("roles", ["user"])
         required_role = self.config.get("required_role")
         if required_role and required_role not in user_roles and "admin" not in user_roles:
-            raise RBACPermissionDeniedError(f"User with roles {user_roles} lacks required role '{required_role}' for tool execution")
+            raise RBACPermissionDeniedError(
+                f"User with roles {user_roles} lacks required role '{required_role}' for tool execution"
+            )
 
         params = self.config.get("parameters", {})
 
@@ -234,7 +231,7 @@ class ToolNode(BaseNode):
                 "tool": self.tool_name,
                 "tool_type": self.tool_type,
                 "status": "executed",
-                "result": f"Executed tool '{self.tool_name}' with parameters {params}"
+                "result": f"Executed tool '{self.tool_name}' with parameters {params}",
             }
 
         self.input_data = params
@@ -248,11 +245,7 @@ class HumanApprovalNode(BaseNode):
     """Pauses workflow execution and requests human approval."""
 
     def __init__(
-        self,
-        node_id: str,
-        name: str,
-        approver_role: str = "approver",
-        config: Optional[Dict[str, Any]] = None
+        self, node_id: str, name: str, approver_role: str = "approver", config: Optional[Dict[str, Any]] = None
     ):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.HUMAN_APPROVAL, config=config)
         self.approver_role = approver_role
@@ -269,7 +262,7 @@ class HumanApprovalNode(BaseNode):
                     "approved": True,
                     "feedback": approval_decision.get("feedback", "Approved by human"),
                     "decided_by": approval_decision.get("decided_by", "user"),
-                    "decided_at": datetime.now(timezone.utc).isoformat()
+                    "decided_at": datetime.now(timezone.utc).isoformat(),
                 }
                 self.completed_at = datetime.now(timezone.utc).isoformat()
                 return self.output_data
@@ -289,11 +282,7 @@ class ConditionNode(BaseNode):
     """Evaluates condition expressions to direct workflow branching."""
 
     def __init__(
-        self,
-        node_id: str,
-        name: str,
-        condition_expression: str = "True",
-        config: Optional[Dict[str, Any]] = None
+        self, node_id: str, name: str, condition_expression: str = "True", config: Optional[Dict[str, Any]] = None
     ):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.CONDITION, config=config)
         self.condition_expression = condition_expression
@@ -322,7 +311,9 @@ class ConditionNode(BaseNode):
 class ParallelNode(BaseNode):
     """Spawns parallel paths."""
 
-    def __init__(self, node_id: str, name: str, branch_nodes: Optional[List[str]] = None, config: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, node_id: str, name: str, branch_nodes: Optional[List[str]] = None, config: Optional[Dict[str, Any]] = None
+    ):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.PARALLEL, config=config)
         self.branch_nodes = branch_nodes or []
 
@@ -354,7 +345,9 @@ class JoinNode(BaseNode):
 class KnowledgeNode(BaseNode):
     """Integrates with Phase 5.0 Knowledge & RAG subsystem."""
 
-    def __init__(self, node_id: str, name: str, action: str = "search", query: str = "", config: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, node_id: str, name: str, action: str = "search", query: str = "", config: Optional[Dict[str, Any]] = None
+    ):
         super().__init__(node_id=node_id, name=name, node_type=NodeType.KNOWLEDGE, config=config)
         self.action = action
         self.query = query
@@ -372,11 +365,13 @@ class KnowledgeNode(BaseNode):
                 "query": query_text,
                 "action": self.action,
                 "documents": [
-                    {"document_id": "doc_1", "score": 0.95, "content": f"Retrieved knowledge content for '{query_text}'"}
+                    {
+                        "document_id": "doc_1",
+                        "score": 0.95,
+                        "content": f"Retrieved knowledge content for '{query_text}'",
+                    }
                 ],
-                "citations": [
-                    {"citation_id": "cite_1", "source": "knowledge_base", "text": "Document 1 excerpt"}
-                ]
+                "citations": [{"citation_id": "cite_1", "source": "knowledge_base", "text": "Document 1 excerpt"}],
             }
 
         self.input_data = {"query": query_text, "action": self.action}
@@ -394,7 +389,11 @@ class WebhookNode(BaseNode):
     async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
         self.started_at = datetime.now(timezone.utc).isoformat()
         self.status = NodeStatus.RUNNING
-        self.output_data = {"status": "delivered", "url": self.config.get("url", self.url), "payload": context.get("variables")}
+        self.output_data = {
+            "status": "delivered",
+            "url": self.config.get("url", self.url),
+            "payload": context.get("variables"),
+        }
         self.status = NodeStatus.COMPLETED
         self.completed_at = datetime.now(timezone.utc).isoformat()
         return self.output_data

@@ -13,12 +13,16 @@ class ComplianceException(Exception):
 
 class ComplianceFrameworkNotFoundException(ComplianceException):
     def __init__(self, framework_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Compliance framework '{framework_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id)
+        super().__init__(
+            f"Compliance framework '{framework_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id
+        )
 
 
 class ComplianceRequirementNotFoundException(ComplianceException):
     def __init__(self, requirement_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Compliance requirement '{requirement_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id)
+        super().__init__(
+            f"Compliance requirement '{requirement_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id
+        )
 
 
 class ControlNotFoundException(ComplianceException):
@@ -32,7 +36,9 @@ class ControlMappingException(ComplianceException):
 
 class EvidenceNotFoundException(ComplianceException):
     def __init__(self, evidence_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Compliance evidence '{evidence_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id)
+        super().__init__(
+            f"Compliance evidence '{evidence_id}' not found for tenant '{tenant_id}'.", tenant_id=tenant_id
+        )
 
 
 class EvidenceIntegrityException(ComplianceException):
@@ -45,7 +51,10 @@ class EvidenceCollectionException(ComplianceException):
 
 class ImmutableEvidenceBundleException(ComplianceException):
     def __init__(self, bundle_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Immutability Violation: Finalized evidence bundle/package '{bundle_id}' cannot be modified.", tenant_id=tenant_id)
+        super().__init__(
+            f"Immutability Violation: Finalized evidence bundle/package '{bundle_id}' cannot be modified.",
+            tenant_id=tenant_id,
+        )
 
 
 class ComplianceAssessmentException(ComplianceException):
@@ -83,4 +92,6 @@ class AuditTrailIntegrityException(ComplianceException):
 
 class ImmutableAssuranceReportException(ComplianceException):
     def __init__(self, report_id: str, tenant_id: str = "global") -> None:
-        super().__init__(f"Immutability Violation: Finalized assurance report '{report_id}' cannot be modified.", tenant_id=tenant_id)
+        super().__init__(
+            f"Immutability Violation: Finalized assurance report '{report_id}' cannot be modified.", tenant_id=tenant_id
+        )

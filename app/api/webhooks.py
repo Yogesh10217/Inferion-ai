@@ -30,6 +30,7 @@ def _get_webhook_service(db: AsyncSession) -> WebhookService:
 
 # Pydantic Schemas
 
+
 class WebhookEndpointCreate(BaseModel):
     organization_id: str
     url: str
@@ -48,6 +49,7 @@ class WebhookEndpointUpdate(BaseModel):
 
 
 # Endpoints
+
 
 @router.get("", response_model=List[Dict[str, Any]])
 async def list_webhook_endpoints(
@@ -167,7 +169,9 @@ async def list_webhook_events(
     db: AsyncSession = Depends(get_db_session),
 ):
     service = _get_webhook_service(db)
-    events = await service.list_events(organization_id=organization_id, event_type=event_type, limit=limit, offset=offset)
+    events = await service.list_events(
+        organization_id=organization_id, event_type=event_type, limit=limit, offset=offset
+    )
     return [
         {
             "id": e.id,

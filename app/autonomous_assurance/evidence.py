@@ -74,7 +74,9 @@ class AutonomousEvidenceManager:
     def seal_evidence_bundle(self, workflow_id: str, tenant_id: str) -> AutonomousEvidenceBundle:
         bundle = self.get_evidence_bundle(workflow_id, tenant_id)
         if bundle.is_sealed:
-            raise ImmutableAutonomousAssuranceRecordException(f"Evidence bundle for workflow '{workflow_id}' is already sealed.")
+            raise ImmutableAutonomousAssuranceRecordException(
+                f"Evidence bundle for workflow '{workflow_id}' is already sealed."
+            )
 
         canonical_payload = {
             "bundle_id": bundle.bundle_id,
@@ -94,8 +96,12 @@ class AutonomousEvidenceManager:
         bundle.sealed_at = datetime.now(timezone.utc)
         return bundle
 
-    def seal_evidence(self, workflow_id: str, tenant_id: str, execution_trace: Optional[List[str]] = None) -> AutonomousEvidenceBundle:
-        bundle = self.create_evidence_bundle(workflow_id, tenant_id, evidence_references=[{"trace": t} for t in (execution_trace or [])])
+    def seal_evidence(
+        self, workflow_id: str, tenant_id: str, execution_trace: Optional[List[str]] = None
+    ) -> AutonomousEvidenceBundle:
+        bundle = self.create_evidence_bundle(
+            workflow_id, tenant_id, evidence_references=[{"trace": t} for t in (execution_trace or [])]
+        )
         return self.seal_evidence_bundle(workflow_id, tenant_id)
 
     def get_evidence_bundle(self, workflow_id: str, tenant_id: str) -> AutonomousEvidenceBundle:
@@ -103,5 +109,7 @@ class AutonomousEvidenceManager:
         if not bundle:
             bundle = self.create_evidence_bundle(workflow_id, tenant_id)
         if bundle.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantAutonomousAssuranceException(f"Unauthorized cross-tenant access to evidence bundle for workflow '{workflow_id}'")
+            raise CrossTenantAutonomousAssuranceException(
+                f"Unauthorized cross-tenant access to evidence bundle for workflow '{workflow_id}'"
+            )
         return bundle

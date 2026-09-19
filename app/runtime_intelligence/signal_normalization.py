@@ -14,7 +14,9 @@ class RuntimeSignalNormalizer:
 
     def normalize(self, signal: RuntimeSignal) -> NormalizedRuntimeSignal:
         domain = signal.metadata.source_domain if signal.metadata else "unknown"
-        raw_str = json.dumps({"tenant": signal.tenant_id, "type": signal.signal_type.value, "payload": signal.payload}, sort_keys=True)
+        raw_str = json.dumps(
+            {"tenant": signal.tenant_id, "type": signal.signal_type.value, "payload": signal.payload}, sort_keys=True
+        )
         fp = hashlib.sha256(raw_str.encode("utf-8")).hexdigest()
 
         normalized = NormalizedRuntimeSignal(

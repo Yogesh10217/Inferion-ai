@@ -76,7 +76,9 @@ class WorkflowSafetyBoundaryEngine:
         mode = self.boundaries.get(action_name.upper(), OperationalBoundaryMode.APPROVAL_REQUIRED)
         return EvaluationResult(mode=mode)
 
-    def evaluate_action_boundary(self, action_name: str, workflow_id: str, is_approved: bool = False) -> OperationalBoundaryMode:
+    def evaluate_action_boundary(
+        self, action_name: str, workflow_id: str, is_approved: bool = False
+    ) -> OperationalBoundaryMode:
         mode = self.boundaries.get(action_name.upper(), OperationalBoundaryMode.APPROVAL_REQUIRED)
 
         if mode == OperationalBoundaryMode.PROHIBITED:

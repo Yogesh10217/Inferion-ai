@@ -107,7 +107,9 @@ class InitiativeManager:
         if not init:
             raise InitiativeNotFoundException(initiative_id=initiative_id, tenant_id=tenant_id)
         if init.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantPortfolioAccessException(request_tenant=tenant_id, target_tenant=init.tenant_id, resource_id=initiative_id)
+            raise CrossTenantPortfolioAccessException(
+                request_tenant=tenant_id, target_tenant=init.tenant_id, resource_id=initiative_id
+            )
         return init
 
     def update_status(self, initiative_id: str, tenant_id: str, status: InitiativeStatus) -> AIInitiative:

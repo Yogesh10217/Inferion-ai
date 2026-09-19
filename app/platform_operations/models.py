@@ -14,6 +14,7 @@ def _now():
 
 class ServiceModel(Base):
     """SQLAlchemy model for Service catalog entries."""
+
     __tablename__ = "platform_services"
 
     service_id = Column(String(64), primary_key=True)
@@ -34,6 +35,7 @@ class ServiceModel(Base):
 
 class ServiceDependencyModel(Base):
     """SQLAlchemy model for Service Dependency relationships."""
+
     __tablename__ = "platform_service_dependencies"
 
     dependency_id = Column(String(64), primary_key=True)
@@ -48,6 +50,7 @@ class ServiceDependencyModel(Base):
 
 class OperationalSignalModel(Base):
     """SQLAlchemy model for Operational Signals."""
+
     __tablename__ = "platform_operational_signals"
 
     signal_id = Column(String(64), primary_key=True)
@@ -67,6 +70,7 @@ class OperationalSignalModel(Base):
 
 class RemediationPlanModel(Base):
     """SQLAlchemy model for Remediation Plans."""
+
     __tablename__ = "platform_remediation_plans"
 
     plan_id = Column(String(64), primary_key=True)

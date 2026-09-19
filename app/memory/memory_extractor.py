@@ -37,32 +37,28 @@ class MemoryExtractor:
         for line in lines:
             lowered = line.lower()
             if "prefer" in lowered or "i like" in lowered or "my stack is" in lowered:
-                candidates.append(ExtractedMemoryCandidate(
-                    candidate_type="preference",
-                    content=line,
-                    confidence=0.9,
-                    metadata={"source": source}
-                ))
+                candidates.append(
+                    ExtractedMemoryCandidate(
+                        candidate_type="preference", content=line, confidence=0.9, metadata={"source": source}
+                    )
+                )
             elif "uses" in lowered or "framework" in lowered or "technology" in lowered:
-                candidates.append(ExtractedMemoryCandidate(
-                    candidate_type="technology",
-                    content=line,
-                    confidence=0.85,
-                    metadata={"source": source}
-                ))
+                candidates.append(
+                    ExtractedMemoryCandidate(
+                        candidate_type="technology", content=line, confidence=0.85, metadata={"source": source}
+                    )
+                )
             elif "decided to" in lowered or "configured" in lowered:
-                candidates.append(ExtractedMemoryCandidate(
-                    candidate_type="decision",
-                    content=line,
-                    confidence=0.8,
-                    metadata={"source": source}
-                ))
+                candidates.append(
+                    ExtractedMemoryCandidate(
+                        candidate_type="decision", content=line, confidence=0.8, metadata={"source": source}
+                    )
+                )
             else:
-                candidates.append(ExtractedMemoryCandidate(
-                    candidate_type="fact",
-                    content=line,
-                    confidence=0.7,
-                    metadata={"source": source}
-                ))
+                candidates.append(
+                    ExtractedMemoryCandidate(
+                        candidate_type="fact", content=line, confidence=0.7, metadata={"source": source}
+                    )
+                )
 
         return candidates

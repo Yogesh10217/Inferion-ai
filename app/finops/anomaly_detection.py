@@ -89,7 +89,9 @@ class CostAnomalyDetector:
                 recommended_action="PAUSE_AGENT_EXECUTION",
             )
             self._anomalies.append(anom)
-            logger.warning(f"[COST ANOMALY] Runaway execution detected on tenant '{tenant_id}' (Observed: ${obs_dec}, Baseline: ${base_dec}) -> CRITICAL")
+            logger.warning(
+                f"[COST ANOMALY] Runaway execution detected on tenant '{tenant_id}' (Observed: ${obs_dec}, Baseline: ${base_dec}) -> CRITICAL"
+            )
             return anom
 
         return None

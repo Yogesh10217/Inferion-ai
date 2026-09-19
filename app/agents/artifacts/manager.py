@@ -16,12 +16,7 @@ class ArtifactManager:
         self.store = store or InMemoryArtifactStore()
 
     async def create_artifact(
-        self,
-        session_id: str,
-        name: str,
-        content_type: str,
-        content: Any,
-        metadata: Optional[Dict[str, Any]] = None
+        self, session_id: str, name: str, content_type: str, content: Any, metadata: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         artifact_id = f"art_{uuid.uuid4().hex[:12]}"
         artifact_data = {
@@ -30,7 +25,7 @@ class ArtifactManager:
             "name": name,
             "content_type": content_type,
             "content": content,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
         await self.store.save(artifact_id, artifact_data)
         logger.info(f"Created artifact '{name}' ({artifact_id}) for session '{session_id}'")

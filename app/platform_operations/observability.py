@@ -4,6 +4,7 @@ import logging
 
 try:
     from prometheus_client import Counter
+
     PROMETHEUS_AVAILABLE = True
 except ImportError:
     PROMETHEUS_AVAILABLE = False
@@ -11,16 +12,42 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 if PROMETHEUS_AVAILABLE:
-    SIGNALS_TOTAL = Counter("ai_platform_operations_signals_total", "Total operational signals ingested", ["tenant_id", "source", "severity"])
-    ANOMALIES_TOTAL = Counter("ai_platform_operations_anomalies_total", "Total operational anomalies detected", ["tenant_id", "anomaly_type", "severity"])
-    INCIDENTS_CORRELATED_TOTAL = Counter("ai_platform_operations_incidents_correlated_total", "Total incidents correlated", ["tenant_id", "severity"])
-    DIAGNOSIS_TOTAL = Counter("ai_platform_operations_diagnosis_total", "Total root cause diagnoses performed", ["tenant_id", "category"])
-    REMEDIATION_TOTAL = Counter("ai_platform_operations_remediation_total", "Total remediation plans created", ["tenant_id", "strategy"])
-    REMEDIATION_SUCCESS_TOTAL = Counter("ai_platform_operations_remediation_success_total", "Total successful remediations", ["tenant_id"])
-    REMEDIATION_FAILURE_TOTAL = Counter("ai_platform_operations_remediation_failure_total", "Total failed remediations", ["tenant_id"])
-    AUTONOMOUS_ACTIONS_TOTAL = Counter("ai_platform_operations_autonomous_actions_total", "Total autonomous operational actions executed", ["tenant_id", "autonomy_level"])
-    ROLLBACK_TOTAL = Counter("ai_platform_operations_rollback_total", "Total remediation rollbacks executed", ["tenant_id"])
-    SLO_VIOLATIONS_TOTAL = Counter("ai_platform_operations_slo_violations_total", "Total SLO violations detected", ["tenant_id", "slo_type"])
+    SIGNALS_TOTAL = Counter(
+        "ai_platform_operations_signals_total",
+        "Total operational signals ingested",
+        ["tenant_id", "source", "severity"],
+    )
+    ANOMALIES_TOTAL = Counter(
+        "ai_platform_operations_anomalies_total",
+        "Total operational anomalies detected",
+        ["tenant_id", "anomaly_type", "severity"],
+    )
+    INCIDENTS_CORRELATED_TOTAL = Counter(
+        "ai_platform_operations_incidents_correlated_total", "Total incidents correlated", ["tenant_id", "severity"]
+    )
+    DIAGNOSIS_TOTAL = Counter(
+        "ai_platform_operations_diagnosis_total", "Total root cause diagnoses performed", ["tenant_id", "category"]
+    )
+    REMEDIATION_TOTAL = Counter(
+        "ai_platform_operations_remediation_total", "Total remediation plans created", ["tenant_id", "strategy"]
+    )
+    REMEDIATION_SUCCESS_TOTAL = Counter(
+        "ai_platform_operations_remediation_success_total", "Total successful remediations", ["tenant_id"]
+    )
+    REMEDIATION_FAILURE_TOTAL = Counter(
+        "ai_platform_operations_remediation_failure_total", "Total failed remediations", ["tenant_id"]
+    )
+    AUTONOMOUS_ACTIONS_TOTAL = Counter(
+        "ai_platform_operations_autonomous_actions_total",
+        "Total autonomous operational actions executed",
+        ["tenant_id", "autonomy_level"],
+    )
+    ROLLBACK_TOTAL = Counter(
+        "ai_platform_operations_rollback_total", "Total remediation rollbacks executed", ["tenant_id"]
+    )
+    SLO_VIOLATIONS_TOTAL = Counter(
+        "ai_platform_operations_slo_violations_total", "Total SLO violations detected", ["tenant_id", "slo_type"]
+    )
 
 
 class PlatformOperationsMetricsCollector:

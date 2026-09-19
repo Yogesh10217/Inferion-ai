@@ -197,7 +197,9 @@ class AccessIntelligenceManager:
         )
 
         # 13. Investigation
-        inv = self.investigation_manager.open_investigation(tenant_id, "Agent Access Anomaly Investigation", ident.identity_id)
+        inv = self.investigation_manager.open_investigation(
+            tenant_id, "Agent Access Anomaly Investigation", ident.identity_id
+        )
         self.investigation_manager.start_investigating(tenant_id, inv.investigation_id)
         self.investigation_manager.record_finding(tenant_id, inv.investigation_id, "Unused admin permission found")
 
@@ -216,17 +218,29 @@ class AccessIntelligenceManager:
         verif = self.verification_manager.verify_remediation(
             tenant_id=tenant_id,
             remediation_plan_id=rem_plan.plan_id,
-            checks=[VerificationCheck(target_resource_id="rel_prod_01", expected_state="REVOKED", observed_state="REVOKED", passed=True)],
+            checks=[
+                VerificationCheck(
+                    target_resource_id="rel_prod_01", expected_state="REVOKED", observed_state="REVOKED", passed=True
+                )
+            ],
         )
 
         # 17. Evidence Finalization
         evidence_bundle = self.evidence_manager.create_bundle(tenant_id, "Full Access Governance Evidence")
-        self.evidence_manager.add_evidence(tenant_id, evidence_bundle.bundle_id, "AUTHORIZATION_DECISION", auth_dec.decision_id, {"outcome": auth_dec.outcome.value})
+        self.evidence_manager.add_evidence(
+            tenant_id,
+            evidence_bundle.bundle_id,
+            "AUTHORIZATION_DECISION",
+            auth_dec.decision_id,
+            {"outcome": auth_dec.outcome.value},
+        )
         finalized_bundle = self.evidence_manager.finalize_bundle(tenant_id, evidence_bundle.bundle_id)
 
         # 18. Snapshot Generation
         concluded_inv = self.investigation_manager.conclude_investigation(tenant_id, inv.investigation_id)
-        snap = self.snapshot_manager.capture_snapshot(tenant_id, concluded_inv.investigation_id, "ACCESS_INVESTIGATION", concluded_inv.model_dump(mode="json"))
+        snap = self.snapshot_manager.capture_snapshot(
+            tenant_id, concluded_inv.investigation_id, "ACCESS_INVESTIGATION", concluded_inv.model_dump(mode="json")
+        )
 
         # 19. Trust Evaluation
         trust_asm = self.trust_engine.evaluate_identity_trust(tenant_id, ident.identity_id)
@@ -242,7 +256,9 @@ class AccessIntelligenceManager:
         )
 
         # 21. Analytics Generation
-        analytics_report = self.analytics_engine.generate_report(tenant_id=tenant_id, privileged_identities_count=1, toxic_combinations_count=len(tc_findings))
+        analytics_report = self.analytics_engine.generate_report(
+            tenant_id=tenant_id, privileged_identities_count=1, toxic_combinations_count=len(tc_findings)
+        )
 
         return {
             "status": "COMPLETED",

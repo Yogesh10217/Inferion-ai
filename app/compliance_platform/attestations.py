@@ -73,7 +73,9 @@ class AttestationManager:
         if not att:
             raise KeyError(f"Attestation '{attestation_id}' not found.")
         if att.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=att.tenant_id, resource_id=attestation_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=att.tenant_id, resource_id=attestation_id
+            )
         if att.is_expired():
             att.status = AttestationStatus.EXPIRED
             raise AttestationExpiredException(attestation_id=attestation_id, tenant_id=tenant_id)

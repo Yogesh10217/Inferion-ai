@@ -68,7 +68,9 @@ class DecisionOptionsRegistry:
         opts = self._options.get(decision_id, [])
         for opt in opts:
             if opt.tenant_id != tenant_id and tenant_id != "global":
-                raise CrossTenantDecisionIntelligenceException(f"Unauthorized access to decision options for decision '{decision_id}'")
+                raise CrossTenantDecisionIntelligenceException(
+                    f"Unauthorized access to decision options for decision '{decision_id}'"
+                )
         return opts
 
     def get_option(self, option_id: str, tenant_id: str) -> DecisionOption:
@@ -76,6 +78,8 @@ class DecisionOptionsRegistry:
             for opt in opts:
                 if opt.option_id == option_id:
                     if opt.tenant_id != tenant_id and tenant_id != "global":
-                        raise CrossTenantDecisionIntelligenceException(f"Unauthorized access to decision option '{option_id}'")
+                        raise CrossTenantDecisionIntelligenceException(
+                            f"Unauthorized access to decision option '{option_id}'"
+                        )
                     return opt
         raise DecisionOptionNotFoundException(f"Decision option '{option_id}' not found.")

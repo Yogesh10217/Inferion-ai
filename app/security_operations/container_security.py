@@ -37,7 +37,9 @@ class ContainerSecurityResult:
                 "is_secure": self.is_secure,
                 "non_root": self.non_root_user,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     @property
     def is_non_root(self) -> bool:

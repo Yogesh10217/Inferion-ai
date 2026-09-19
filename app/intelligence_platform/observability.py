@@ -5,14 +5,24 @@ import logging
 try:
     from prometheus_client import Counter, Gauge
 
-    SIGNALS_TOTAL = Counter("ai_intelligence_signals_total", "Total intelligence signals ingested", ["tenant_id", "source"])
-    INSIGHTS_TOTAL = Counter("ai_intelligence_insights_total", "Total insights generated", ["tenant_id", "insight_type"])
-    RECOMMENDATIONS_TOTAL = Counter("ai_intelligence_recommendations_total", "Total recommendations generated", ["tenant_id", "recommendation_type"])
+    SIGNALS_TOTAL = Counter(
+        "ai_intelligence_signals_total", "Total intelligence signals ingested", ["tenant_id", "source"]
+    )
+    INSIGHTS_TOTAL = Counter(
+        "ai_intelligence_insights_total", "Total insights generated", ["tenant_id", "insight_type"]
+    )
+    RECOMMENDATIONS_TOTAL = Counter(
+        "ai_intelligence_recommendations_total", "Total recommendations generated", ["tenant_id", "recommendation_type"]
+    )
     DECISIONS_TOTAL = Counter("ai_intelligence_decisions_total", "Total decisions processed", ["tenant_id", "status"])
     EXECUTION_TOTAL = Counter("ai_intelligence_execution_total", "Total executions delegated", ["tenant_id", "target"])
-    HUMAN_OVERRIDES_TOTAL = Counter("ai_intelligence_human_overrides_total", "Total human overrides/rejections", ["tenant_id"])
+    HUMAN_OVERRIDES_TOTAL = Counter(
+        "ai_intelligence_human_overrides_total", "Total human overrides/rejections", ["tenant_id"]
+    )
     FORECAST_ACCURACY = Gauge("ai_intelligence_forecast_accuracy", "Forecast accuracy percentage", ["tenant_id"])
-    OPTIMIZATION_SAVINGS = Gauge("ai_intelligence_optimization_savings", "Cumulative optimization savings in USD", ["tenant_id"])
+    OPTIMIZATION_SAVINGS = Gauge(
+        "ai_intelligence_optimization_savings", "Cumulative optimization savings in USD", ["tenant_id"]
+    )
     PROMETHEUS_AVAILABLE = True
 except ImportError:
     PROMETHEUS_AVAILABLE = False

@@ -66,9 +66,17 @@ class ArchitectureGovernanceEngine:
         affected_count = impact_analysis.blast_radius.total_affected_count
         action_type = impact_analysis.action_type
 
-        factors = [f"Blast radius severity: {severity.value}", f"Affected nodes: {affected_count}", f"Action type: {action_type}"]
+        factors = [
+            f"Blast radius severity: {severity.value}",
+            f"Affected nodes: {affected_count}",
+            f"Action type: {action_type}",
+        ]
 
-        if severity in (ImpactSeverity.HIGH, ImpactSeverity.CRITICAL) or action_type in ("REMOVE", "MIGRATE", "REPLACE") or affected_count >= 5:
+        if (
+            severity in (ImpactSeverity.HIGH, ImpactSeverity.CRITICAL)
+            or action_type in ("REMOVE", "MIGRATE", "REPLACE")
+            or affected_count >= 5
+        ):
             risk_score = 85.0
             risk_level = "HIGH" if severity == ImpactSeverity.HIGH or action_type == "REMOVE" else "CRITICAL"
         elif severity == ImpactSeverity.MEDIUM:

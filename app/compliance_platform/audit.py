@@ -90,5 +90,7 @@ class AuditManager:
         if not pkg:
             raise ImmutableEvidenceBundleException(bundle_id=package_id, tenant_id=tenant_id)
         if pkg.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=pkg.tenant_id, resource_id=package_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=pkg.tenant_id, resource_id=package_id
+            )
         return pkg

@@ -15,6 +15,7 @@ from app.unified_intelligence.situation_awareness import SituationSeverity, Situ
 @dataclass
 class DomainSignalEntity:
     """Internal domain signal model."""
+
     signal_id: str
     tenant_id: str
     domain: IntelligenceDomain
@@ -31,6 +32,7 @@ class DomainSignalEntity:
 @dataclass
 class EnterpriseSituationEntity:
     """Internal enterprise situation model."""
+
     situation_id: str
     tenant_id: str
     title: str

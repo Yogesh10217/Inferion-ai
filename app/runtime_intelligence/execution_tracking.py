@@ -35,7 +35,11 @@ class RuntimeExecutionTracker:
         self._tracking_records: Dict[str, DelegationExecutionRecord] = {}
 
     def track_delegation(
-        self, tenant_id: str, delegation_id: str, action_type: str, state: DelegationExecutionState = DelegationExecutionState.REQUESTED
+        self,
+        tenant_id: str,
+        delegation_id: str,
+        action_type: str,
+        state: DelegationExecutionState = DelegationExecutionState.REQUESTED,
     ) -> DelegationExecutionRecord:
         rec = DelegationExecutionRecord(
             tenant_id=tenant_id,

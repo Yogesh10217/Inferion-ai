@@ -25,7 +25,9 @@ class DatabaseDependencyValidator:
             return "localhost", 5432
 
     @classmethod
-    def validate_database(cls, db_url: str, required: bool = True, timeout_sec: float = 2.0) -> DependencyValidationResult:
+    def validate_database(
+        cls, db_url: str, required: bool = True, timeout_sec: float = 2.0
+    ) -> DependencyValidationResult:
         start = time.perf_counter()
         is_sqlite = "sqlite" in db_url.lower()
         host, port = cls._parse_host_port(db_url)

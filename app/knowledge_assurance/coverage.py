@@ -64,9 +64,24 @@ class KnowledgeCoverageManager:
     ) -> CoverageAssessment:
         if not custom_coverages:
             custom_coverages = [
-                KnowledgeCoverage(tenant_id=tenant_id, dimension=CoverageDimension.SERVICES, coverage_pct=92.0, covered_items=["srv-auth", "srv-billing"]),
-                KnowledgeCoverage(tenant_id=tenant_id, dimension=CoverageDimension.MODELS, coverage_pct=88.0, covered_items=["gpt-4", "claude-3"]),
-                KnowledgeCoverage(tenant_id=tenant_id, dimension=CoverageDimension.CONTROLS, coverage_pct=95.0, covered_items=["SOC2-1", "ISO-27001"]),
+                KnowledgeCoverage(
+                    tenant_id=tenant_id,
+                    dimension=CoverageDimension.SERVICES,
+                    coverage_pct=92.0,
+                    covered_items=["srv-auth", "srv-billing"],
+                ),
+                KnowledgeCoverage(
+                    tenant_id=tenant_id,
+                    dimension=CoverageDimension.MODELS,
+                    coverage_pct=88.0,
+                    covered_items=["gpt-4", "claude-3"],
+                ),
+                KnowledgeCoverage(
+                    tenant_id=tenant_id,
+                    dimension=CoverageDimension.CONTROLS,
+                    coverage_pct=95.0,
+                    covered_items=["SOC2-1", "ISO-27001"],
+                ),
             ]
 
         dim_scores = {c.dimension.value: c.coverage_pct / 100.0 for c in custom_coverages}

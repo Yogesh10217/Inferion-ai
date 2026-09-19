@@ -83,5 +83,7 @@ class ExecutionRouter:
             estimated_cost=est_cost,
             reasoning=reasoning,
         )
-        logger.info(f"[EXECUTION ROUTER] Routed '{task_name}' ({tenant_id}) -> Target '{target}' ({target_type}) via {strategy.value}")
+        logger.info(
+            f"[EXECUTION ROUTER] Routed '{task_name}' ({tenant_id}) -> Target '{target}' ({target_type}) via {strategy.value}"
+        )
         return decision

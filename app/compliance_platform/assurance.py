@@ -92,5 +92,7 @@ class AssuranceManager:
         if not rep:
             raise ImmutableAssuranceReportException(report_id=report_id, tenant_id=tenant_id)
         if rep.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=rep.tenant_id, resource_id=report_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=rep.tenant_id, resource_id=report_id
+            )
         return rep

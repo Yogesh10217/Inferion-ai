@@ -44,6 +44,7 @@ class EndpointHealth(str, Enum):
 
 class IntegrationEndpoint(BaseModel):
     """Integration Endpoint Representation."""
+
     endpoint_id: str = Field(default_factory=lambda: f"ep_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     connector_id: str

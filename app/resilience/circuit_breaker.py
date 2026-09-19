@@ -14,17 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 class CircuitState(str, Enum):
-    CLOSED = "CLOSED"      # Normal operation
-    OPEN = "OPEN"          # Failing, fast reject requests
+    CLOSED = "CLOSED"  # Normal operation
+    OPEN = "OPEN"  # Failing, fast reject requests
     HALF_OPEN = "HALF_OPEN"  # Testing recovery with limited requests
 
 
 class CircuitBreakerPolicy(BaseModel):
     """Configuration rules for circuit breaker behavior."""
 
-    failure_threshold: int = 5          # Consecutive or total failures to open
+    failure_threshold: int = 5  # Consecutive or total failures to open
     recovery_timeout_seconds: float = 30.0  # Time in OPEN before going HALF_OPEN
-    success_threshold: int = 2          # Consecutive successes in HALF_OPEN to close
+    success_threshold: int = 2  # Consecutive successes in HALF_OPEN to close
     allowed_exceptions: list = Field(default_factory=list)
 
 

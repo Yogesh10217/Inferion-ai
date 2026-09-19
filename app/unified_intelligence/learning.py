@@ -26,7 +26,7 @@ class AdvisoryModelInsight:
         confidence_score: float,
         supporting_evidence_count: int,
         auto_execute: bool = False,  # Strict invariant: MUST be False
-        created_at: Optional[datetime] = None
+        created_at: Optional[datetime] = None,
     ):
         self.insight_id = insight_id
         self.tenant_id = tenant_id
@@ -46,7 +46,7 @@ class AdvisoryModelInsight:
             "confidence_score": round(self.confidence_score, 4),
             "supporting_evidence_count": self.supporting_evidence_count,
             "auto_execute": self.auto_execute,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -58,11 +58,7 @@ class AdvisoryLearningEngine:
     def __init__(self):
         pass
 
-    def analyze_situation_pattern(
-        self,
-        tenant_id: str,
-        situation_data: Dict[str, Any]
-    ) -> AdvisoryModelInsight:
+    def analyze_situation_pattern(self, tenant_id: str, situation_data: Dict[str, Any]) -> AdvisoryModelInsight:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
 
@@ -76,5 +72,5 @@ class AdvisoryLearningEngine:
             recommended_action="Execute automated advisory cross-domain isolation check.",
             confidence_score=0.82,
             supporting_evidence_count=len(situation_data.get("evidence_ids", [])),
-            auto_execute=False
+            auto_execute=False,
         )

@@ -43,9 +43,7 @@ class TenantIsolatedRepository(Generic[T]):
         is_finalized: bool = False,
     ) -> T:
         if entity_id in self._finalized_ids:
-            raise ImmutableKnowledgeRecordException(
-                f"{self.resource_name} {entity_id} is finalized and immutable."
-            )
+            raise ImmutableKnowledgeRecordException(f"{self.resource_name} {entity_id} is finalized and immutable.")
 
         # Ensure entity fields match tenant_id if present
         if hasattr(entity, "tenant_id") and getattr(entity, "tenant_id") != tenant_id:
@@ -68,9 +66,7 @@ class TenantIsolatedRepository(Generic[T]):
 
     def get(self, tenant_id: str, entity_id: str) -> T:
         if entity_id not in self._store:
-            raise KnowledgeReferenceNotFoundException(
-                f"{self.resource_name} not found."
-            )
+            raise KnowledgeReferenceNotFoundException(f"{self.resource_name} not found.")
         owner_tenant = self._tenant_map.get(entity_id)
         if owner_tenant != tenant_id:
             # ZERO metadata leakage
@@ -78,11 +74,7 @@ class TenantIsolatedRepository(Generic[T]):
         return self._store[entity_id]
 
     def list_all(self, tenant_id: str) -> List[T]:
-        return [
-            entity
-            for eid, entity in self._store.items()
-            if self._tenant_map.get(eid) == tenant_id
-        ]
+        return [entity for eid, entity in self._store.items() if self._tenant_map.get(eid) == tenant_id]
 
     def verify_integrity(self, tenant_id: str, entity_id: str) -> bool:
         entity = self.get(tenant_id, entity_id)

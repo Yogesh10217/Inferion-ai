@@ -675,7 +675,9 @@ class ResourceRegistry:
         if resource_id not in self._type_index[resource_type]:
             self._type_index[resource_type].append(resource_id)
 
-        logger.info(f"[RESOURCE REGISTRY] Registered resource '{name}' (ID: {resource_id}, Type: {resource_type.value})")
+        logger.info(
+            f"[RESOURCE REGISTRY] Registered resource '{name}' (ID: {resource_id}, Type: {resource_type.value})"
+        )
         return res
 
     def unregister_resource(self, resource_id: str) -> bool:

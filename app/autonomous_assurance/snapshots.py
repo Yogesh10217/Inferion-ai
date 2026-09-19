@@ -54,5 +54,7 @@ class AutonomousSnapshotStore:
         snaps = self._snapshots.get(workflow_id, [])
         for s in snaps:
             if s.tenant_id != tenant_id and tenant_id != "global":
-                raise CrossTenantAutonomousAssuranceException(f"Unauthorized access to snapshots for workflow '{workflow_id}'")
+                raise CrossTenantAutonomousAssuranceException(
+                    f"Unauthorized access to snapshots for workflow '{workflow_id}'"
+                )
         return snaps

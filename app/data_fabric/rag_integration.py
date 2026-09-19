@@ -49,7 +49,9 @@ class DataSourceKnowledgeAdapter:
                 relationship_type="INDEXED_INTO_RAG",
             )
 
-        logger.info(f"[RAG INTEGRATION] Indexed {indexed_count} records from source '{data_source.name}' into Knowledge/RAG")
+        logger.info(
+            f"[RAG INTEGRATION] Indexed {indexed_count} records from source '{data_source.name}' into Knowledge/RAG"
+        )
         return KnowledgeSyncRecord(
             sync_id=f"rag_sync_{data_source.id}",
             source_id=data_source.id,

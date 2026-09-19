@@ -27,12 +27,21 @@ class DecisionHumanReviewEngine:
     def __init__(self) -> None:
         self._tickets: Dict[str, DecisionHumanReviewTicket] = {}
 
-    def create_review_ticket(self, decision_id: str, tenant_id: str, reviewer: Optional[str] = None) -> DecisionHumanReviewTicket:
+    def create_review_ticket(
+        self, decision_id: str, tenant_id: str, reviewer: Optional[str] = None
+    ) -> DecisionHumanReviewTicket:
         ticket = DecisionHumanReviewTicket(decision_id=decision_id, tenant_id=tenant_id, reviewer=reviewer)
         self._tickets[decision_id] = ticket
         return ticket
 
-    def complete_review(self, decision_id: str, tenant_id: str, reviewer: str, status: str = "COMPLETED", review_notes: Optional[str] = None) -> DecisionHumanReviewTicket:
+    def complete_review(
+        self,
+        decision_id: str,
+        tenant_id: str,
+        reviewer: str,
+        status: str = "COMPLETED",
+        review_notes: Optional[str] = None,
+    ) -> DecisionHumanReviewTicket:
         ticket = self._tickets.get(decision_id) or self.create_review_ticket(decision_id, tenant_id, reviewer)
         ticket.reviewer = reviewer
         ticket.status = status

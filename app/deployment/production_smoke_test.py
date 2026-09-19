@@ -27,22 +27,32 @@ class ProductionSmokeTestPlan:
             SmokeTestCase("ST-02", "/ready", 200, "HTTP_GET", "Verify application readiness probe"),
             SmokeTestCase("ST-03", "/health", 200, "HTTP_GET", "Verify application health and dependency status"),
             SmokeTestCase("ST-04", "/health", 200, "HEADERS", "Verify security headers (HSTS, NoSniff, CSP)"),
-            SmokeTestCase("ST-05", "/docs", 404, "HTTP_GET", "Verify OpenAPI documentation protection in production mode"),
-            SmokeTestCase("ST-06", "/redoc", 404, "HTTP_GET", "Verify ReDoc documentation protection in production mode"),
-            SmokeTestCase("ST-07", "/openapi.json", 404, "HTTP_GET", "Verify OpenAPI JSON spec protection in production mode"),
-            SmokeTestCase("ST-08", "/health", 200, "MANAGERS", "Verify 9 Intelligence Managers registered in ServiceContainer"),
+            SmokeTestCase(
+                "ST-05", "/docs", 404, "HTTP_GET", "Verify OpenAPI documentation protection in production mode"
+            ),
+            SmokeTestCase(
+                "ST-06", "/redoc", 404, "HTTP_GET", "Verify ReDoc documentation protection in production mode"
+            ),
+            SmokeTestCase(
+                "ST-07", "/openapi.json", 404, "HTTP_GET", "Verify OpenAPI JSON spec protection in production mode"
+            ),
+            SmokeTestCase(
+                "ST-08", "/health", 200, "MANAGERS", "Verify 9 Intelligence Managers registered in ServiceContainer"
+            ),
         ]
     )
     execution_status: str = "PRODUCTION_SMOKE_TEST_NOT_EXECUTED"
 
     def sanitized_dict(self) -> Dict[str, Any]:
-        return SecretsSanitizer.sanitize_structure({
-            "plan_name": self.plan_name,
-            "target_url": self.target_url,
-            "target_environment": self.target_environment,
-            "test_cases_count": len(self.test_cases),
-            "execution_status": self.execution_status,
-        })
+        return SecretsSanitizer.sanitize_structure(
+            {
+                "plan_name": self.plan_name,
+                "target_url": self.target_url,
+                "target_environment": self.target_environment,
+                "test_cases_count": len(self.test_cases),
+                "execution_status": self.execution_status,
+            }
+        )
 
 
 @dataclass

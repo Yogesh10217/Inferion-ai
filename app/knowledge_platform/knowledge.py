@@ -109,10 +109,14 @@ class KnowledgeManager:
             history=[ver],
         )
         self._items[item.item_id] = item
-        logger.info(f"[KNOWLEDGE MANAGER] Created knowledge item '{item.item_id}' ('{title}', {knowledge_type.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[KNOWLEDGE MANAGER] Created knowledge item '{item.item_id}' ('{title}', {knowledge_type.value}) for tenant '{tenant_id}'"
+        )
         return item
 
-    def update_version(self, item_id: str, new_content: str, metadata: Optional[Dict[str, Any]] = None) -> KnowledgeItem:
+    def update_version(
+        self, item_id: str, new_content: str, metadata: Optional[Dict[str, Any]] = None
+    ) -> KnowledgeItem:
         item = self.get_item(item_id)
         next_ver_num = len(item.history) + 1
         new_ver = KnowledgeVersion(version_number=next_ver_num, content=new_content, metadata=metadata or {})

@@ -72,7 +72,11 @@ async def create_data_source(data: CreateDataSourceSchema, mgr: DataFabricManage
 
 
 @router.get("/v1/data-sources")
-async def list_data_sources(tenant_id: Optional[str] = None, source_type: Optional[DataSourceType] = None, mgr: DataFabricManager = Depends(get_data_fabric)):
+async def list_data_sources(
+    tenant_id: Optional[str] = None,
+    source_type: Optional[DataSourceType] = None,
+    mgr: DataFabricManager = Depends(get_data_fabric),
+):
     sources = mgr.source_manager.list_sources(tenant_id=tenant_id, source_type=source_type)
     return {"data_sources": [s.model_dump() for s in sources]}
 
@@ -128,7 +132,9 @@ async def discover_data_source_schema(id: str, mgr: DataFabricManager = Depends(
 @router.post("/v1/data-sources/{id}/sync")
 async def start_data_source_sync(id: str, data: CreateSyncJobSchema, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
-        job = mgr.sync_manager.create_sync_job(source_id=id, tenant_id=data.tenant_id, strategy=data.strategy, idempotency_key=data.idempotency_key)
+        job = mgr.sync_manager.create_sync_job(
+            source_id=id, tenant_id=data.tenant_id, strategy=data.strategy, idempotency_key=data.idempotency_key
+        )
         updated_job = await mgr.sync_manager.run_sync_job(job.job_id)
         return {"status": "started", "sync_job": updated_job.model_dump()}
     except DataFabricException as e:
@@ -137,7 +143,9 @@ async def start_data_source_sync(id: str, data: CreateSyncJobSchema, mgr: DataFa
 
 # 2. Synchronization Endpoints
 @router.get("/v1/data-sync/history")
-async def list_sync_history(tenant_id: Optional[str] = None, source_id: Optional[str] = None, mgr: DataFabricManager = Depends(get_data_fabric)):
+async def list_sync_history(
+    tenant_id: Optional[str] = None, source_id: Optional[str] = None, mgr: DataFabricManager = Depends(get_data_fabric)
+):
     jobs = mgr.sync_manager.list_jobs(tenant_id=tenant_id, source_id=source_id)
     return {"sync_history": [j.model_dump() for j in jobs]}
 
@@ -180,7 +188,11 @@ async def cancel_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fab
 
 # 3. Data Catalog Endpoints
 @router.get("/v1/data-catalog")
-async def list_catalog(tenant_id: Optional[str] = None, classification: Optional[str] = None, mgr: DataFabricManager = Depends(get_data_fabric)):
+async def list_catalog(
+    tenant_id: Optional[str] = None,
+    classification: Optional[str] = None,
+    mgr: DataFabricManager = Depends(get_data_fabric),
+):
     datasets = mgr.catalog.list_datasets(tenant_id=tenant_id, classification=classification)
     return {"datasets": [d.model_dump() for d in datasets]}
 

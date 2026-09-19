@@ -65,6 +65,7 @@ class StructuredLogger:
         """Construct structured payload populated with context and sanitized extras."""
         ctx = get_current_context()
         from datetime import datetime, timezone
+
         now = datetime.now(timezone.utc).isoformat()
 
         payload: Dict[str, Any] = {

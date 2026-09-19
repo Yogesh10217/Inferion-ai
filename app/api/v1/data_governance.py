@@ -128,7 +128,9 @@ async def classify_asset(asset_id: str, req: ClassifyAssetRequest):
 
 @router.post("/assets/{asset_id}/quality")
 async def evaluate_quality(asset_id: str, tenant_id: str = "global"):
-    res = mgr.quality_manager.evaluate_quality(tenant_id=tenant_id, asset_id=asset_id, sample_records=[{"id": "1", "data": "test"}])
+    res = mgr.quality_manager.evaluate_quality(
+        tenant_id=tenant_id, asset_id=asset_id, sample_records=[{"id": "1", "data": "test"}]
+    )
     return res.model_dump()
 
 

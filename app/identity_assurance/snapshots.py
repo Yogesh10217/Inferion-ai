@@ -41,7 +41,8 @@ class IdentityAssuranceSnapshotManager:
             tenant_id=tenant_id,
             resource_type="IDENTITY",
             resource_id=identity_id,
-            domain_payload=domain_payload or {
+            domain_payload=domain_payload
+            or {
                 "assurance_score": assurance_score,
                 "trust_score": trust_score,
                 "risk_level": risk_level,

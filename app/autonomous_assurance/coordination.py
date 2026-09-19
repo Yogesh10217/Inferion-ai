@@ -43,7 +43,9 @@ class WorkflowCoordinator:
     def __init__(self) -> None:
         self._coordinations: Dict[str, CoordinationPlan] = {}
 
-    def build_coordination_plan(self, workflow_id: str, tenant_id: str, domain_actions: List[Dict[str, Any]]) -> CoordinationPlan:
+    def build_coordination_plan(
+        self, workflow_id: str, tenant_id: str, domain_actions: List[Dict[str, Any]]
+    ) -> CoordinationPlan:
         steps = []
         for idx, act in enumerate(domain_actions):
             steps.append(

@@ -76,28 +76,36 @@ class ConfigurationException(ControlPlaneException):
 class ConfigurationConflictException(ControlPlaneException):
     """Raised when configuration changes conflict with higher/lower scope policies."""
 
-    def __init__(self, message: str = "Configuration conflict detected", details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, message: str = "Configuration conflict detected", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, code="CONFIGURATION_CONFLICT", status_code=409, details=details)
 
 
 class PolicyViolationException(ControlPlaneException):
     """Raised when an administrative action violates active control plane policy."""
 
-    def __init__(self, message: str = "Control plane policy violation", details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, message: str = "Control plane policy violation", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, code="POLICY_VIOLATION", status_code=403, details=details)
 
 
 class LifecycleException(ControlPlaneException):
     """Raised when invalid resource state transitions are attempted."""
 
-    def __init__(self, message: str = "Invalid lifecycle state transition", details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, message: str = "Invalid lifecycle state transition", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, code="LIFECYCLE_ERROR", status_code=400, details=details)
 
 
 class AdministrativePermissionDenied(ControlPlaneException):
     """Raised when an identity lacks required administrative rights."""
 
-    def __init__(self, message: str = "Administrative permission denied", details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, message: str = "Administrative permission denied", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, code="ADMIN_PERMISSION_DENIED", status_code=403, details=details)
 
 

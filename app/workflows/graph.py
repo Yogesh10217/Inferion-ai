@@ -44,20 +44,14 @@ class WorkflowGraph:
         """Find start nodes (explicit START type or nodes with 0 in-degree)."""
         start_nodes = [node for node in self.nodes.values() if node.node_type == NodeType.START]
         if not start_nodes:
-            start_nodes = [
-                node for node_id, node in self.nodes.items()
-                if len(self.in_edges.get(node_id, [])) == 0
-            ]
+            start_nodes = [node for node_id, node in self.nodes.items() if len(self.in_edges.get(node_id, [])) == 0]
         return start_nodes
 
     def get_end_nodes(self) -> List[BaseNode]:
         """Find end nodes (explicit END type or nodes with 0 out-degree)."""
         end_nodes = [node for node in self.nodes.values() if node.node_type == NodeType.END]
         if not end_nodes:
-            end_nodes = [
-                node for node_id, node in self.nodes.items()
-                if len(self.adjacency.get(node_id, [])) == 0
-            ]
+            end_nodes = [node for node_id, node in self.nodes.items() if len(self.adjacency.get(node_id, [])) == 0]
         return end_nodes
 
     def get_outgoing_edges(self, node_id: str) -> List[Edge]:

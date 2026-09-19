@@ -61,9 +61,7 @@ class AssuranceLifecycleMachine:
     }
 
     @classmethod
-    def validate_transition(
-        cls, current_state: AssuranceLifecycleState, target_state: AssuranceLifecycleState
-    ) -> None:
+    def validate_transition(cls, current_state: AssuranceLifecycleState, target_state: AssuranceLifecycleState) -> None:
         if current_state == target_state:
             return
 

@@ -39,12 +39,16 @@ class AutonomousHumanReviewEngine:
     def __init__(self) -> None:
         self._tickets: Dict[str, AutonomousHumanReviewTicket] = {}
 
-    def create_ticket(self, workflow_id: str, tenant_id: str, reviewer: Optional[str] = None) -> AutonomousHumanReviewTicket:
+    def create_ticket(
+        self, workflow_id: str, tenant_id: str, reviewer: Optional[str] = None
+    ) -> AutonomousHumanReviewTicket:
         t = AutonomousHumanReviewTicket(workflow_id=workflow_id, tenant_id=tenant_id, reviewer=reviewer)
         self._tickets[workflow_id] = t
         return t
 
-    def resolve_ticket(self, workflow_id: str, tenant_id: str, reviewer: str, approved: bool, notes: Optional[str] = None) -> AutonomousHumanReviewTicket:
+    def resolve_ticket(
+        self, workflow_id: str, tenant_id: str, reviewer: str, approved: bool, notes: Optional[str] = None
+    ) -> AutonomousHumanReviewTicket:
         t = self._tickets.get(workflow_id) or self.create_ticket(workflow_id, tenant_id, reviewer)
         t.reviewer = reviewer
         t.status = HumanReviewStatus.APPROVED if approved else HumanReviewStatus.REJECTED

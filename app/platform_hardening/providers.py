@@ -25,35 +25,25 @@ logger = logging.getLogger(__name__)
 class PlatformHardeningProvider(Protocol):
     """Protocol contract for platform phase providers."""
 
-    def collect_integration_status(self) -> SubsystemIntegrationStatus:
-        ...
+    def collect_integration_status(self) -> SubsystemIntegrationStatus: ...
 
-    def collect_context(self) -> Dict:
-        ...
+    def collect_context(self) -> Dict: ...
 
-    def collect_traceability(self) -> Dict:
-        ...
+    def collect_traceability(self) -> Dict: ...
 
-    def collect_lineage(self) -> Dict:
-        ...
+    def collect_lineage(self) -> Dict: ...
 
-    def collect_governance(self) -> Dict:
-        ...
+    def collect_governance(self) -> Dict: ...
 
-    def collect_delegations(self) -> Dict:
-        ...
+    def collect_delegations(self) -> Dict: ...
 
-    def collect_verifications(self) -> Dict:
-        ...
+    def collect_verifications(self) -> Dict: ...
 
-    def collect_evidence(self) -> Dict:
-        ...
+    def collect_evidence(self) -> Dict: ...
 
-    def collect_health(self) -> IntegrationHealthStatus:
-        ...
+    def collect_health(self) -> IntegrationHealthStatus: ...
 
-    def collect_engine_status(self) -> List[EngineConnectionStatus]:
-        ...
+    def collect_engine_status(self) -> List[EngineConnectionStatus]: ...
 
 
 class PlatformHardeningProviderRegistry:
@@ -92,9 +82,7 @@ class PlatformHardeningProviderRegistry:
         ]
         for m in required_methods:
             if not hasattr(provider, m) or not callable(getattr(provider, m)):
-                raise ProviderContractViolationException(
-                    f"Provider missing required method '{m}'"
-                )
+                raise ProviderContractViolationException(f"Provider missing required method '{m}'")
 
     def check_provider_health(self, provider_id: str) -> ProviderIntegrationStatus:
         provider = self.get_provider(provider_id)
@@ -169,6 +157,7 @@ class PlatformHardeningProviderRegistry:
         for provider_id, provider in self._providers.items():
             try:
                 with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+
                     def _collect():
                         return {
                             "integration_status": provider.collect_integration_status(),
@@ -182,6 +171,7 @@ class PlatformHardeningProviderRegistry:
                             "health": provider.collect_health(),
                             "engine_status": provider.collect_engine_status(),
                         }
+
                     future = executor.submit(_collect)
                     res = future.result(timeout=self._timeout_seconds)
                     results[provider_id] = res

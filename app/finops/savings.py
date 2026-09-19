@@ -52,13 +52,21 @@ class SavingsVerificationEngine:
         quality_score_pre: float = 95.0,
     ) -> SavingsRecord:
         base_dec = Decimal(str(baseline_cost)) if isinstance(baseline_cost, (float, int, str)) else baseline_cost
-        post_dec = Decimal(str(post_optimization_cost)) if isinstance(post_optimization_cost, (float, int, str)) else post_optimization_cost
+        post_dec = (
+            Decimal(str(post_optimization_cost))
+            if isinstance(post_optimization_cost, (float, int, str))
+            else post_optimization_cost
+        )
 
         realized = (base_dec - post_dec).quantize(Decimal("0.000001"))
         has_regression = quality_score_post < (quality_score_pre - 2.0)
 
         verified = realized if not has_regression and realized > Decimal("0.0") else Decimal("0.0")
-        status = "VERIFIED" if not has_regression and realized > Decimal("0.0") else ("FAILED_REGRESSION" if has_regression else "UNVERIFIED")
+        status = (
+            "VERIFIED"
+            if not has_regression and realized > Decimal("0.0")
+            else ("FAILED_REGRESSION" if has_regression else "UNVERIFIED")
+        )
 
         rec = SavingsRecord(
             recommendation_id=recommendation_id,
@@ -70,5 +78,7 @@ class SavingsVerificationEngine:
             verification_status=status,
         )
         self._savings.append(rec)
-        logger.info(f"[SAVINGS VERIFICATION] Verified recommendation '{recommendation_id}': Realized = ${realized}, Verified = ${verified}, Status = {status}")
+        logger.info(
+            f"[SAVINGS VERIFICATION] Verified recommendation '{recommendation_id}': Realized = ${realized}, Verified = ${verified}, Status = {status}"
+        )
         return rec

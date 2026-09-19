@@ -59,16 +59,36 @@ class KnowledgeTrustEngine:
         factors = []
 
         fresh_score = 95.0 if is_fresh else 40.0
-        factors.append(KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.FRESHNESS, score=fresh_score, reasoning="Freshness check"))
+        factors.append(
+            KnowledgeTrustFactor(
+                dimension=KnowledgeTrustDimension.FRESHNESS, score=fresh_score, reasoning="Freshness check"
+            )
+        )
 
         prov_score = 90.0 if has_provenance else 30.0
-        factors.append(KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.PROVENANCE_COMPLETENESS, score=prov_score, reasoning="Provenance completeness"))
+        factors.append(
+            KnowledgeTrustFactor(
+                dimension=KnowledgeTrustDimension.PROVENANCE_COMPLETENESS,
+                score=prov_score,
+                reasoning="Provenance completeness",
+            )
+        )
 
         ev_score = min(100.0, 60.0 + (evidence_count * 15.0))
-        factors.append(KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.EVIDENCE_STRENGTH, score=ev_score, reasoning="Evidence count"))
+        factors.append(
+            KnowledgeTrustFactor(
+                dimension=KnowledgeTrustDimension.EVIDENCE_STRENGTH, score=ev_score, reasoning="Evidence count"
+            )
+        )
 
         cons_score = max(10.0, 95.0 - (contradiction_count * 35.0))
-        factors.append(KnowledgeTrustFactor(dimension=KnowledgeTrustDimension.CROSS_SOURCE_CONSISTENCY, score=cons_score, reasoning="Contradiction impact"))
+        factors.append(
+            KnowledgeTrustFactor(
+                dimension=KnowledgeTrustDimension.CROSS_SOURCE_CONSISTENCY,
+                score=cons_score,
+                reasoning="Contradiction impact",
+            )
+        )
 
         total_weight = sum(f.weight for f in factors)
         weighted_sum = sum(f.score * f.weight for f in factors)

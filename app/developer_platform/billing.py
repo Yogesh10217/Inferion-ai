@@ -22,15 +22,30 @@ class DeveloperBillingAdapter:
     def __init__(self, finops_manager: Optional[FinOpsManager] = None) -> None:
         self.finops_manager = finops_manager or FinOpsManager()
 
-    def record_build_cost(self, tenant_id: str, build_duration_minutes: float, resource_type: str = "standard_build") -> float:
+    def record_build_cost(
+        self, tenant_id: str, build_duration_minutes: float, resource_type: str = "standard_build"
+    ) -> float:
         rate = 0.05 if resource_type == "standard_build" else 0.20
         cost = round(build_duration_minutes * rate, 4)
-        logger.info(f"[DEVELOPER BILLING] Recorded build cost for tenant '{tenant_id}' ({build_duration_minutes} min @ {resource_type}): ${cost}")
+        logger.info(
+            f"[DEVELOPER BILLING] Recorded build cost for tenant '{tenant_id}' ({build_duration_minutes} min @ {resource_type}): ${cost}"
+        )
         return cost
 
-    def record_usage(self, tenant_id: str = "global", developer_id: str = "dev", compute_seconds: float = 0.0, cost_dollars: float = 0.0, **kwargs) -> DeveloperBillingRecord:
-        logger.info(f"[DEVELOPER BILLING] Recorded usage for developer '{developer_id}' in tenant '{tenant_id}': ${cost_dollars}")
-        return DeveloperBillingRecord(total_extension_executions=1, total_compute_seconds=compute_seconds, total_cost_dollars=cost_dollars)
+    def record_usage(
+        self,
+        tenant_id: str = "global",
+        developer_id: str = "dev",
+        compute_seconds: float = 0.0,
+        cost_dollars: float = 0.0,
+        **kwargs,
+    ) -> DeveloperBillingRecord:
+        logger.info(
+            f"[DEVELOPER BILLING] Recorded usage for developer '{developer_id}' in tenant '{tenant_id}': ${cost_dollars}"
+        )
+        return DeveloperBillingRecord(
+            total_extension_executions=1, total_compute_seconds=compute_seconds, total_cost_dollars=cost_dollars
+        )
 
 
 DeveloperBillingTracker = DeveloperBillingAdapter

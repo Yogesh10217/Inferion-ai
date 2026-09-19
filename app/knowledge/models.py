@@ -17,6 +17,7 @@ class KnowledgeBase(Base):
     Represents a collection of knowledge documents.
     Multi-tenant aware via workspace_id and organization_id.
     """
+
     __tablename__ = "knowledge_bases"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -29,7 +30,9 @@ class KnowledgeBase(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
-    documents: Mapped[List["KnowledgeDocument"]] = relationship(back_populates="knowledge_base", cascade="all, delete-orphan")
+    documents: Mapped[List["KnowledgeDocument"]] = relationship(
+        back_populates="knowledge_base", cascade="all, delete-orphan"
+    )
     jobs: Mapped[List["IndexJob"]] = relationship(back_populates="knowledge_base", cascade="all, delete-orphan")
 
 
@@ -37,10 +40,13 @@ class KnowledgeDocument(Base):
     """
     Represents a single document in a knowledge base, supporting versioning and soft-deletes.
     """
+
     __tablename__ = "knowledge_documents"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    knowledge_base_id: Mapped[str] = mapped_column(ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False)
+    knowledge_base_id: Mapped[str] = mapped_column(
+        ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False
+    )
 
     name: Mapped[str] = mapped_column(String, nullable=False)
     content_uri: Mapped[Optional[str]] = mapped_column(String, nullable=True)
@@ -66,10 +72,13 @@ class KnowledgeChunk(Base):
     """
     Represents a chunk of text extracted from a KnowledgeDocument.
     """
+
     __tablename__ = "knowledge_chunks"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    document_id: Mapped[str] = mapped_column(ForeignKey("knowledge_documents.id", ondelete="CASCADE"), index=True, nullable=False)
+    document_id: Mapped[str] = mapped_column(
+        ForeignKey("knowledge_documents.id", ondelete="CASCADE"), index=True, nullable=False
+    )
 
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
     text_content: Mapped[str] = mapped_column(Text, nullable=False)
@@ -87,17 +96,22 @@ class KnowledgeChunk(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     document: Mapped["KnowledgeDocument"] = relationship(back_populates="chunks")
-    embedding_records: Mapped[List["EmbeddingRecord"]] = relationship(back_populates="chunk", cascade="all, delete-orphan")
+    embedding_records: Mapped[List["EmbeddingRecord"]] = relationship(
+        back_populates="chunk", cascade="all, delete-orphan"
+    )
 
 
 class EmbeddingRecord(Base):
     """
     Stores the vector embedding for a KnowledgeChunk.
     """
+
     __tablename__ = "embedding_records"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    chunk_id: Mapped[str] = mapped_column(ForeignKey("knowledge_chunks.id", ondelete="CASCADE"), index=True, nullable=False)
+    chunk_id: Mapped[str] = mapped_column(
+        ForeignKey("knowledge_chunks.id", ondelete="CASCADE"), index=True, nullable=False
+    )
 
     model_name: Mapped[str] = mapped_column(String, nullable=False)
     vector: Mapped[Any] = mapped_column(JSON, nullable=False)
@@ -111,6 +125,7 @@ class RetrievalSession(Base):
     """
     Tracks a retrieval session/query to link citations.
     """
+
     __tablename__ = "retrieval_sessions"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -127,11 +142,16 @@ class Citation(Base):
     """
     Links a chunk to a retrieval session, indicating it was cited.
     """
+
     __tablename__ = "citations"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    session_id: Mapped[str] = mapped_column(ForeignKey("retrieval_sessions.id", ondelete="CASCADE"), index=True, nullable=False)
-    chunk_id: Mapped[str] = mapped_column(ForeignKey("knowledge_chunks.id", ondelete="CASCADE"), index=True, nullable=False)
+    session_id: Mapped[str] = mapped_column(
+        ForeignKey("retrieval_sessions.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    chunk_id: Mapped[str] = mapped_column(
+        ForeignKey("knowledge_chunks.id", ondelete="CASCADE"), index=True, nullable=False
+    )
 
     score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
@@ -143,10 +163,13 @@ class IndexJob(Base):
     """
     Tracks the asynchronous status of a document indexing process.
     """
+
     __tablename__ = "index_jobs"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    knowledge_base_id: Mapped[str] = mapped_column(ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False)
+    knowledge_base_id: Mapped[str] = mapped_column(
+        ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False
+    )
 
     status: Mapped[str] = mapped_column(String, default="PENDING")  # PENDING, IN_PROGRESS, COMPLETED, FAILED
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

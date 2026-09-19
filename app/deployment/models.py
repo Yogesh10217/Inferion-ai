@@ -181,6 +181,7 @@ class DeploymentIdentity:
     def canonical_fingerprint(self) -> str:
         import hashlib
         import json
+
         payload = {
             "application_version": self.application_version,
             "deployment_version": self.deployment_version,
@@ -336,6 +337,7 @@ class DeploymentReleaseValidationResult:
 
 
 # Phase 5.67 — Controlled Production Deployment Execution Models
+
 
 class ProductionDeploymentState(Enum):
     NOT_EXECUTED = "NOT_EXECUTED"

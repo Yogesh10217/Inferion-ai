@@ -13,7 +13,9 @@ class ContinuousAssuranceEscalationEngine:
         self, tenant_id: str, incident_type: str, severity: str, details: Dict[str, Any]
     ) -> Dict[str, Any]:
         esc_id = f"esc_{incident_type}_01"
-        logger.warning(f"Escalating continuous assurance incident '{esc_id}' for tenant '{tenant_id}' (Severity: {severity})")
+        logger.warning(
+            f"Escalating continuous assurance incident '{esc_id}' for tenant '{tenant_id}' (Severity: {severity})"
+        )
 
         return {
             "escalation_id": esc_id,

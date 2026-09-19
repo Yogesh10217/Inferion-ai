@@ -7,6 +7,7 @@ from .exceptions import StateTransitionError
 
 class DocumentState(str, Enum):
     """Allowed states for a knowledge document lifecycle."""
+
     ACTIVE = "ACTIVE"
     ARCHIVED = "ARCHIVED"
     PURGED = "PURGED"

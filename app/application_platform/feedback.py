@@ -95,7 +95,9 @@ class FeedbackManager:
             signal=sig,
         )
         self._feedback_records[fb.feedback_id] = fb
-        logger.info(f"[FEEDBACK MANAGER] Submitted feedback {fb.feedback_id} ({feedback_type.value}) for app {application_id}")
+        logger.info(
+            f"[FEEDBACK MANAGER] Submitted feedback {fb.feedback_id} ({feedback_type.value}) for app {application_id}"
+        )
 
         # Automatically generate improvement recommendation if correction is supplied
         if corrected_output:
@@ -128,12 +130,14 @@ class FeedbackManager:
 
     def list_feedback(self, tenant_id: str, application_id: str) -> List[ApplicationFeedback]:
         return [
-            fb for fb in self._feedback_records.values()
+            fb
+            for fb in self._feedback_records.values()
             if fb.tenant_id == tenant_id and fb.application_id == application_id
         ]
 
     def list_recommendations(self, tenant_id: str, application_id: str) -> List[ImprovementRecommendation]:
         return [
-            rec for rec in self._recommendations.values()
+            rec
+            for rec in self._recommendations.values()
             if rec.tenant_id == tenant_id and rec.application_id == application_id
         ]

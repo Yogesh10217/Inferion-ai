@@ -99,10 +99,7 @@ class ApplicationAnalyticsEngine:
         time_window: str = "24H",
     ) -> ApplicationReport:
         """Aggregate recorded metrics for an application within tenant isolation."""
-        tenant_metrics = [
-            m for m in self._metrics
-            if m.tenant_id == tenant_id and m.application_id == application_id
-        ]
+        tenant_metrics = [m for m in self._metrics if m.tenant_id == tenant_id and m.application_id == application_id]
 
         total_execs = sum(1 for m in tenant_metrics if m.metric_name == "execution_count")
         total_cost = sum(m.metric_value for m in tenant_metrics if m.metric_name == "cost_usd")
@@ -114,13 +111,15 @@ class ApplicationAnalyticsEngine:
 
         insights = []
         if fallbacks > 2:
-            insights.append(UsageInsight(
-                application_id=application_id,
-                tenant_id=tenant_id,
-                insight_type="RELIABILITY",
-                summary=f"Detected {fallbacks} model/agent fallbacks.",
-                recommendation="Consider reviewing primary model availability or fallback thresholds.",
-            ))
+            insights.append(
+                UsageInsight(
+                    application_id=application_id,
+                    tenant_id=tenant_id,
+                    insight_type="RELIABILITY",
+                    summary=f"Detected {fallbacks} model/agent fallbacks.",
+                    recommendation="Consider reviewing primary model availability or fallback thresholds.",
+                )
+            )
 
         return ApplicationReport(
             application_id=application_id,

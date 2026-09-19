@@ -52,7 +52,9 @@ class AttackSurfaceManager:
         tenant_id: str,
         entries: List[AttackSurfaceEntry],
     ) -> AttackSurface:
-        has_public_unauth = any(e.exposure == AttackSurfaceExposure.INTERNET_FACING and not e.requires_auth for e in entries)
+        has_public_unauth = any(
+            e.exposure == AttackSurfaceExposure.INTERNET_FACING and not e.requires_auth for e in entries
+        )
         has_privileged = any(e.privileged_access for e in entries)
 
         if has_public_unauth or has_privileged:

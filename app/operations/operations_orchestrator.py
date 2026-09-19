@@ -208,14 +208,19 @@ class OperationsOrchestrator:
             active_alerts_count=len(dedup_alerts),
             active_incidents_count=len(active_incidents),
             deployment_health_score=dep_health.health_score,
-            dependency_status={k: v.get("status", "HEALTHY") if isinstance(v, dict) else "HEALTHY" for k, v in observation.dependency_metrics.items()},
+            dependency_status={
+                k: v.get("status", "HEALTHY") if isinstance(v, dict) else "HEALTHY"
+                for k, v in observation.dependency_metrics.items()
+            },
             certification_status=certification.certification_status.value,
             evidence_level=evidence_level,
             details={"certification_summary": certification.summary},
         )
 
         # 15. SRE Metrics
-        all_incidents = list(self.incident_manager.active_incidents.values()) + list(self.incident_manager.closed_incidents.values())
+        all_incidents = list(self.incident_manager.active_incidents.values()) + list(
+            self.incident_manager.closed_incidents.values()
+        )
         sre_metrics = self.sre_metrics_calculator.calculate_metrics(all_incidents)
 
         return OperationalPipelineResult(

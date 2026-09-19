@@ -11,11 +11,11 @@ from app.security_intelligence.exceptions import CrossTenantSecurityAccessExcept
 
 
 class SecurityPostureBand(str, Enum):
-    CRITICAL = "CRITICAL"     # <40
-    HIGH_RISK = "HIGH_RISK"   # 40-59
-    ELEVATED = "ELEVATED"     # 60-74
-    MODERATE = "MODERATE"     # 75-89
-    STRONG = "STRONG"         # 90-100
+    CRITICAL = "CRITICAL"  # <40
+    HIGH_RISK = "HIGH_RISK"  # 40-59
+    ELEVATED = "ELEVATED"  # 60-74
+    MODERATE = "MODERATE"  # 75-89
+    STRONG = "STRONG"  # 90-100
 
 
 class SecurityPostureDimension(BaseModel):

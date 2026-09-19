@@ -1,6 +1,5 @@
 """Tenant-Scoped Event Intelligence Analytics Subsystem (Phase 5.34)."""
 
-
 from app.platform_contracts.analytics import AnalyticsMetric, AnalyticsPeriod, PlatformInsight, PlatformReport
 
 
@@ -15,7 +14,11 @@ class EventAnalyticsEngine:
             AnalyticsMetric(metric_name="automations_triggered_count", metric_value=8.0),
         ]
         insights = [
-            PlatformInsight(title="High Correlation Accuracy", description="Cross-platform correlation reduced mean time to detect root cause.", impact_level="LOW"),
+            PlatformInsight(
+                title="High Correlation Accuracy",
+                description="Cross-platform correlation reduced mean time to detect root cause.",
+                impact_level="LOW",
+            ),
         ]
 
         return PlatformReport(

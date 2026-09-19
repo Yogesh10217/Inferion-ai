@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 class UnifiedSignalORM(BaseModel):
     """ORM representation of unified signals."""
+
     signal_id: str
     tenant_id: str
     domain: str
@@ -26,6 +27,7 @@ class UnifiedSignalORM(BaseModel):
 
 class EnterpriseSituationORM(BaseModel):
     """ORM representation of enterprise situations."""
+
     situation_id: str
     tenant_id: str
     title: str

@@ -37,5 +37,7 @@ class ProcessAnalyticsEngine:
 
     def generate_insight(self, tenant_id: str = "global") -> ProcessInsight:
         insight = ProcessInsight(tenant_id=tenant_id)
-        logger.info(f"[PROCESS ANALYTICS] Generated process insight for tenant '{tenant_id}': Automation Rate = {insight.automation_rate}%")
+        logger.info(
+            f"[PROCESS ANALYTICS] Generated process insight for tenant '{tenant_id}': Automation Rate = {insight.automation_rate}%"
+        )
         return insight

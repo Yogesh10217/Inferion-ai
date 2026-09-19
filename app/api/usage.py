@@ -23,7 +23,7 @@ async def list_usage(
     model: Optional[str] = None,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
-    limit: int = Query(default=50, le=100)
+    limit: int = Query(default=50, le=100),
 ):
     # Dummy implementation for walkthrough
     return []
@@ -34,15 +34,10 @@ async def get_usage_summary(
     organization_id: Optional[str] = None,
     workspace_id: Optional[str] = None,
     start_date: Optional[datetime] = None,
-    end_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None,
 ):
     # Dummy implementation for walkthrough
-    return UsageSummary(
-        total_requests=0,
-        total_tokens=0,
-        average_latency_ms=0,
-        total_errors=0
-    )
+    return UsageSummary(total_requests=0, total_tokens=0, average_latency_ms=0, total_errors=0)
 
 
 @router.get("/organizations/{org_id}", response_model=UsageSummary)

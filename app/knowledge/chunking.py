@@ -18,7 +18,9 @@ class ChunkingStrategy(Enum):
 class ChunkingStage(PipelineStage):
     """Splits parsed content into configurable chunks."""
 
-    def __init__(self, strategy: ChunkingStrategy = ChunkingStrategy.TOKEN_AWARE, chunk_size: int = 500, chunk_overlap: int = 50):
+    def __init__(
+        self, strategy: ChunkingStrategy = ChunkingStrategy.TOKEN_AWARE, chunk_size: int = 500, chunk_overlap: int = 50
+    ):
         self.strategy = strategy
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
@@ -32,12 +34,14 @@ class ChunkingStage(PipelineStage):
             return blocks[-1]
         return {"page_number": 1, "section_heading": None}
 
-    def _create_chunk_metadata(self, text: str, start_char: int, document_id: str, index: int, blocks: List[Dict]) -> Dict:
+    def _create_chunk_metadata(
+        self, text: str, start_char: int, document_id: str, index: int, blocks: List[Dict]
+    ) -> Dict:
         block_info = self._get_block_info(start_char, blocks)
         tokens = self.tokenizer.encode(text)
         token_count = len(tokens)
         end_char = start_char + len(text)
-        chunk_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
+        chunk_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
 
         return {
             "chunk_id": f"{document_id}_chunk_{index}",
@@ -50,7 +54,7 @@ class ChunkingStage(PipelineStage):
             "token_count": token_count,
             "chunk_hash": chunk_hash,
             "parent_chunk": None,
-            "version": 1
+            "version": 1,
         }
 
     def _split_recursive(self, text: str) -> List[Tuple[str, int]]:
@@ -83,7 +87,7 @@ class ChunkingStage(PipelineStage):
         return chunks
 
     def _split_sentence(self, text: str) -> List[Tuple[str, int]]:
-        sentences = re.split(r'(?<=[.!?]) +', text)
+        sentences = re.split(r"(?<=[.!?]) +", text)
         chunks = []
         current_chunk = ""
         current_offset = 0
@@ -130,7 +134,7 @@ class ChunkingStage(PipelineStage):
         current_char_idx = 0
 
         for i in range(0, len(tokens), max(1, self.chunk_size - self.chunk_overlap)):
-            chunk_tokens = tokens[i:i + self.chunk_size]
+            chunk_tokens = tokens[i : i + self.chunk_size]
             chunk_text = self.tokenizer.decode(chunk_tokens)
 
             start_idx = text.find(chunk_text[:20], current_char_idx)

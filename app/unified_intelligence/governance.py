@@ -32,7 +32,7 @@ class GovernanceEvaluationResult:
         policy_status: str,  # APPROVED, REQUIRE_APPROVAL, REJECTED, VIOLATED
         reasons: List[str],
         risk_score: float,
-        evaluated_at: Optional[datetime] = None
+        evaluated_at: Optional[datetime] = None,
     ):
         self.evaluation_id = evaluation_id
         self.tenant_id = tenant_id
@@ -52,7 +52,7 @@ class GovernanceEvaluationResult:
             "policy_status": self.policy_status,
             "reasons": self.reasons,
             "risk_score": round(self.risk_score, 4),
-            "evaluated_at": self.evaluated_at.isoformat()
+            "evaluated_at": self.evaluated_at.isoformat(),
         }
 
 
@@ -65,10 +65,7 @@ class GovernancePolicyEvaluatorEngine:
         pass
 
     def evaluate_recommendation(
-        self,
-        tenant_id: str,
-        recommendation: UnifiedRecommendation,
-        approved_by: Optional[str] = None
+        self, tenant_id: str, recommendation: UnifiedRecommendation, approved_by: Optional[str] = None
     ) -> GovernanceEvaluationResult:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -84,7 +81,9 @@ class GovernancePolicyEvaluatorEngine:
         is_high_risk = recommendation.priority in ["HIGH", "CRITICAL"] or recommendation.requires_human_approval
 
         if is_high_risk and not approved_by:
-            reasons.append(f"Recommendation {recommendation.recommendation_id} is high risk and requires explicit human approval.")
+            reasons.append(
+                f"Recommendation {recommendation.recommendation_id} is high risk and requires explicit human approval."
+            )
             raise HighRiskUnifiedActionRequiresApprovalException(
                 f"Governance policy requires human approval for action '{recommendation.title}' in tenant '{tenant_id}'."
             )
@@ -100,14 +99,11 @@ class GovernancePolicyEvaluatorEngine:
             recommendation_id=recommendation.recommendation_id,
             policy_status=status,
             reasons=reasons,
-            risk_score=0.3 if approved_by else 0.5
+            risk_score=0.3 if approved_by else 0.5,
         )
 
     def evaluate_coordination_plan(
-        self,
-        tenant_id: str,
-        plan: CoordinationPlan,
-        approved_by: Optional[str] = None
+        self, tenant_id: str, plan: CoordinationPlan, approved_by: Optional[str] = None
     ) -> GovernanceEvaluationResult:
         if not tenant_id:
             raise InvalidUnifiedIntelligenceInputException("tenant_id is required")
@@ -133,5 +129,5 @@ class GovernancePolicyEvaluatorEngine:
             recommendation_id=plan.recommendation_id,
             policy_status="APPROVED" if approved_by or not requires_appr else "REQUIRE_APPROVAL",
             reasons=["Plan evaluated successfully."],
-            risk_score=0.2 if approved_by else 0.4
+            risk_score=0.2 if approved_by else 0.4,
         )

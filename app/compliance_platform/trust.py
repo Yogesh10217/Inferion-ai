@@ -21,9 +21,9 @@ class ComplianceTrustDimension(str, Enum):
 
 class ComplianceTrustBand(str, Enum):
     HIGH_ASSURANCE = "HIGH_ASSURANCE"  # 90-100
-    ASSURED = "ASSURED"               # 70-89
-    RESTRICTED = "RESTRICTED"         # 50-69
-    UNTRUSTED = "UNTRUSTED"           # <50
+    ASSURED = "ASSURED"  # 70-89
+    RESTRICTED = "RESTRICTED"  # 50-69
+    UNTRUSTED = "UNTRUSTED"  # <50
 
 
 class ComplianceTrustScore(BaseModel):

@@ -60,7 +60,9 @@ class DeveloperPlatformManager:
         self.metrics_collector = DeveloperMetricsCollector()
         self.billing_adapter = DeveloperBillingAdapter()
 
-        logger.info("[DEVELOPER PLATFORM MANAGER] Master DeveloperPlatformManager initialized with all 23 software delivery subsystems")
+        logger.info(
+            "[DEVELOPER PLATFORM MANAGER] Master DeveloperPlatformManager initialized with all 23 software delivery subsystems"
+        )
 
     def create_project_with_repository(
         self,
@@ -71,6 +73,8 @@ class DeveloperPlatformManager:
         tenant_id: str = "global",
     ) -> DeveloperProject:
         proj = self.project_manager.create_project(name=name, description=description, tenant_id=tenant_id)
-        repo = self.repository_manager.register_repository(project_id=proj.project_id, name=repo_name, provider=provider, tenant_id=tenant_id)
+        repo = self.repository_manager.register_repository(
+            project_id=proj.project_id, name=repo_name, provider=provider, tenant_id=tenant_id
+        )
         proj.repository_ids.append(repo.repository_id)
         return proj

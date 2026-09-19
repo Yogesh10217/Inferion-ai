@@ -135,7 +135,19 @@ class ContinuousAssuranceManager:
         logger.info("Initialized ContinuousAssuranceManager with specialized engines")
 
     def _register_default_providers(self) -> None:
-        domains = ["security", "identity", "operations", "knowledge", "unified", "decision", "autonomous", "policy", "control", "risk", "trust"]
+        domains = [
+            "security",
+            "identity",
+            "operations",
+            "knowledge",
+            "unified",
+            "decision",
+            "autonomous",
+            "policy",
+            "control",
+            "risk",
+            "trust",
+        ]
         for domain in domains:
             self.provider_registry.register_provider(domain, MockContinuousAssuranceProvider(domain=domain))
 
@@ -145,7 +157,9 @@ class ContinuousAssuranceManager:
     ) -> RuntimeObservation:
         obs = self.obs_manager.create_observation(tenant_id, source_domain, observation_type, payload, severity)
         self.monitoring_engine.ingest_and_monitor(obs)
-        self.timeline.record_event(tenant_id, "OBSERVATION_INGESTED", f"Observed '{observation_type}' from '{source_domain}'")
+        self.timeline.record_event(
+            tenant_id, "OBSERVATION_INGESTED", f"Observed '{observation_type}' from '{source_domain}'"
+        )
         self.observability.increment("ai_continuous_assurance_observations_total")
         self.billing.record_usage(tenant_id, "OBSERVATION_INGESTION")
         return obs
@@ -156,7 +170,9 @@ class ContinuousAssuranceManager:
     # Assessment
     def evaluate_tenant_assurance(self, tenant_id: str, scope: Optional[str] = None) -> ContinuousAssuranceAssessment:
         ass = self.assurance_engine.evaluate_assurance(tenant_id, scope)
-        self.timeline.record_event(tenant_id, "ASSURANCE_EVALUATED", f"Assurance score: {ass.score.overall_score:.4f} ({ass.state.value})")
+        self.timeline.record_event(
+            tenant_id, "ASSURANCE_EVALUATED", f"Assurance score: {ass.score.overall_score:.4f} ({ass.state.value})"
+        )
         self.observability.increment("ai_continuous_assurance_assessments_total")
         self.billing.record_usage(tenant_id, "ASSURANCE_ASSESSMENT")
         return ass
@@ -165,34 +181,48 @@ class ContinuousAssuranceManager:
         return self.assurance_repo.get_latest_by_tenant(tenant_id)
 
     # Controls & Validation
-    def evaluate_control(self, tenant_id: str, control_id: str, evidence_data: Optional[Dict[str, Any]] = None) -> ControlEffectivenessAssessment:
+    def evaluate_control(
+        self, tenant_id: str, control_id: str, evidence_data: Optional[Dict[str, Any]] = None
+    ) -> ControlEffectivenessAssessment:
         ctrl = self.ctrl_engine.evaluate_control(tenant_id, control_id, evidence_data)
         self.ctrl_validator.validate_control(ctrl)
         return ctrl
 
     # Drift Analysis
-    def analyze_drift(self, tenant_id: str, drift_type: str, expected_state: Dict[str, Any], observed_state: Dict[str, Any]) -> AssuranceDrift:
+    def analyze_drift(
+        self, tenant_id: str, drift_type: str, expected_state: Dict[str, Any], observed_state: Dict[str, Any]
+    ) -> AssuranceDrift:
         drift = self.drift_engine.analyze_drift(tenant_id, drift_type, expected_state, observed_state)
-        self.timeline.record_event(tenant_id, "DRIFT_DETECTED", f"Drift detected in '{drift_type}': {drift.difference_summary}")
+        self.timeline.record_event(
+            tenant_id, "DRIFT_DETECTED", f"Drift detected in '{drift_type}': {drift.difference_summary}"
+        )
         self.observability.increment("ai_continuous_assurance_drift_events_total")
         return drift
 
     # Verification & Reverification
-    def verify_resource(self, tenant_id: str, target_resource_id: str, expected_hash: str, actual_hash: str) -> ContinuousVerificationResult:
+    def verify_resource(
+        self, tenant_id: str, target_resource_id: str, expected_hash: str, actual_hash: str
+    ) -> ContinuousVerificationResult:
         ver = self.verification_engine.verify_resource(tenant_id, target_resource_id, expected_hash, actual_hash)
-        self.timeline.record_event(tenant_id, "RESOURCE_VERIFIED", f"Resource '{target_resource_id}' verification status: {ver.status.value}")
+        self.timeline.record_event(
+            tenant_id, "RESOURCE_VERIFIED", f"Resource '{target_resource_id}' verification status: {ver.status.value}"
+        )
         self.observability.increment("ai_continuous_assurance_verifications_total")
         return ver
 
     # Recommendations & Governance
-    def create_recommendation(self, tenant_id: str, target_control: str, action_description: str) -> AdaptiveControlRecommendation:
+    def create_recommendation(
+        self, tenant_id: str, target_control: str, action_description: str
+    ) -> AdaptiveControlRecommendation:
         return self.rec_engine.create_recommendation(tenant_id, target_control, action_description)
 
     def evaluate_governance(self, tenant_id: str, action_type: str, risk_level: str = "MEDIUM") -> Dict[str, Any]:
         return self.governance_engine.evaluate_governance(tenant_id, action_type, risk_level)
 
     # Delegation Creation
-    def create_delegation(self, tenant_id: str, action_name: str, parameters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def create_delegation(
+        self, tenant_id: str, action_name: str, parameters: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         # Enforce governance approval for high-risk actions
         self.governance_engine.enforce_approval_check(tenant_id, action_name, is_approved=True)
         return self.delegation_coordinator.create_delegation_request(tenant_id, action_name, parameters)

@@ -144,9 +144,7 @@ class KnowledgeContinuousAssuranceManager:
         self._assessments[assessment.assessment_id] = assessment
         return assessment
 
-    def get_assessment(
-        self, tenant_id: str, assessment_id: str
-    ) -> KnowledgeAssuranceAssessment:
+    def get_assessment(self, tenant_id: str, assessment_id: str) -> KnowledgeAssuranceAssessment:
         if assessment_id not in self._assessments:
             raise CrossTenantKnowledgeAssuranceException()
         ass = self._assessments[assessment_id]

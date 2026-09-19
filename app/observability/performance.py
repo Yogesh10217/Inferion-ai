@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 @dataclass
 class PerformanceMetricsSummary:
     """Summary of component performance metrics."""
+
     component: str
     count: int
     p50_ms: float

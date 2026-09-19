@@ -72,6 +72,8 @@ class ResilienceVerificationManager:
         self._verifications[ver.verification_id] = ver
 
         if not all_passed:
-            raise RecoveryVerificationFailedException(f"Resilience outcome verification failed for resource '{resource_id}'.")
+            raise RecoveryVerificationFailedException(
+                f"Resilience outcome verification failed for resource '{resource_id}'."
+            )
 
         return ver

@@ -103,7 +103,9 @@ class TelemetryManager:
             payload=clean_payload,
         )
         self._events.append(evt)
-        logger.debug(f"[TELEMETRY] Recorded event '{evt.event_id}' ({telemetry_type.value}/{severity.value}): {evt.message}")
+        logger.debug(
+            f"[TELEMETRY] Recorded event '{evt.event_id}' ({telemetry_type.value}/{severity.value}): {evt.message}"
+        )
         return evt
 
     def list_events(

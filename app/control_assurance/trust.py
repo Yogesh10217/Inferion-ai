@@ -44,7 +44,9 @@ class ControlAssuranceTrustEngine:
     def __init__(self, tenant_guard: Optional[TenantAccessGuard] = None) -> None:
         self.tenant_guard = tenant_guard or TenantAccessGuard()
 
-    def calculate_control_trust(self, tenant_id: str, control_id: str, is_degraded: bool = False) -> ControlAssuranceTrustScore:
+    def calculate_control_trust(
+        self, tenant_id: str, control_id: str, is_degraded: bool = False
+    ) -> ControlAssuranceTrustScore:
         score = 45.0 if is_degraded else 92.5
         band = TrustBand.LOW_TRUST if is_degraded else TrustBand.HIGH_TRUST
 

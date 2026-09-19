@@ -41,7 +41,9 @@ class FinOpsInvestigationManager:
     def __init__(self) -> None:
         self._investigations: Dict[str, FinOpsInvestigation] = {}
 
-    def open_investigation(self, tenant_id: str, title: str, target_anomaly_id: Optional[str] = None) -> FinOpsInvestigation:
+    def open_investigation(
+        self, tenant_id: str, title: str, target_anomaly_id: Optional[str] = None
+    ) -> FinOpsInvestigation:
         inv = FinOpsInvestigation(
             tenant_id=tenant_id,
             title=title,
@@ -55,7 +57,9 @@ class FinOpsInvestigationManager:
         inv.status = FinOpsInvestigationStatus.INVESTIGATING
         return inv
 
-    def record_finding(self, tenant_id: str, investigation_id: str, summary: str, details: Optional[Dict[str, Any]] = None) -> FinOpsInvestigation:
+    def record_finding(
+        self, tenant_id: str, investigation_id: str, summary: str, details: Optional[Dict[str, Any]] = None
+    ) -> FinOpsInvestigation:
         inv = self.get_investigation(tenant_id, investigation_id)
         if inv.is_concluded:
             raise ImmutableFinOpsRecordException(investigation_id)

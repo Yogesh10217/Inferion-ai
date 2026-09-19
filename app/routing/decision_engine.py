@@ -64,17 +64,19 @@ class DecisionEngine:
         self.metrics.observe_cache_miss()
 
         # Candidates pool
-        candidates = available_providers if available_providers is not None else [
-            "openai_provider",
-            "anthropic_provider",
-            "mock_provider",
-        ]
+        candidates = (
+            available_providers
+            if available_providers is not None
+            else [
+                "openai_provider",
+                "anthropic_provider",
+                "mock_provider",
+            ]
+        )
 
         # Stage 1: Capability Filtering
         req_caps = ctx.required_capabilities or ctx.request_metadata.get("capabilities", [])
-        stage1_candidates = self.capability_registry.filter_providers_by_capabilities(
-            candidates, req_caps
-        )
+        stage1_candidates = self.capability_registry.filter_providers_by_capabilities(candidates, req_caps)
         if not stage1_candidates:
             stage1_candidates = list(candidates)
         ctx.record_trace("capability_filtering", {"remaining": stage1_candidates})
@@ -90,9 +92,7 @@ class DecisionEngine:
                 self.metrics.observe_decision("rule_override", selected, time.time() - start_time)
                 return selected
             target_policy_name = rule_directives.get("target_policy")
-            stage1_candidates = self.rule_engine.filter_excluded_providers(
-                stage1_candidates, ctx
-            )
+            stage1_candidates = self.rule_engine.filter_excluded_providers(stage1_candidates, ctx)
         ctx.record_trace("rule_evaluation", {"remaining": stage1_candidates})
 
         # Stage 3: Policy Evaluation

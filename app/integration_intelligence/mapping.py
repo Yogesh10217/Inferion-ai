@@ -23,6 +23,7 @@ class MappingTransformation(str, Enum):
 
 class MappingRule(BaseModel):
     """Rule specifying field-level transformation mapping."""
+
     rule_id: str = Field(default_factory=lambda: f"map_rule_{uuid.uuid4().hex[:8]}")
     source_field: str
     target_field: str
@@ -33,6 +34,7 @@ class MappingRule(BaseModel):
 
 class MappingValidation(BaseModel):
     """Declarative validation result for data mapping."""
+
     validation_id: str = Field(default_factory=lambda: f"map_val_{uuid.uuid4().hex[:8]}")
     is_valid: bool = True
     missing_required_fields: List[str] = Field(default_factory=list)
@@ -41,6 +43,7 @@ class MappingValidation(BaseModel):
 
 class IntegrationMapping(BaseModel):
     """Declarative Cross-System Data Mapping Representation."""
+
     mapping_id: str = Field(default_factory=lambda: f"map_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     name: str
@@ -86,7 +89,9 @@ class IntegrationMappingManager:
             missing_required_fields=missing,
         )
         if not is_valid:
-            raise IntegrationValidationException(f"Mapping '{mapping_id}' missing required target fields: {', '.join(missing)}")
+            raise IntegrationValidationException(
+                f"Mapping '{mapping_id}' missing required target fields: {', '.join(missing)}"
+            )
         return val
 
     def get_mapping(self, tenant_id: str, mapping_id: str) -> IntegrationMapping:

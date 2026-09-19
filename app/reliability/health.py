@@ -61,6 +61,7 @@ class SystemHealthManager:
                     res = await checker.check_health()
                 elif callable(checker):
                     import asyncio
+
                     res = await checker() if asyncio.iscoroutinefunction(checker) else checker()
                 else:
                     res = {"status": "HEALTHY"}

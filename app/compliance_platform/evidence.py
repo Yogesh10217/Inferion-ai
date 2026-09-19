@@ -117,7 +117,10 @@ class EvidenceManager:
         meta = metadata or {}
 
         # Calculate SHA-256 integrity hash from canonical metadata & references
-        canonical_str = json.dumps({"tenant_id": tenant_id, "subject_id": subject_id, "ref": source_reference, "type": evidence_type.value}, sort_keys=True)
+        canonical_str = json.dumps(
+            {"tenant_id": tenant_id, "subject_id": subject_id, "ref": source_reference, "type": evidence_type.value},
+            sort_keys=True,
+        )
         hash_val = hashlib.sha256(canonical_str.encode("utf-8")).hexdigest()
 
         evidence = Evidence(
@@ -140,7 +143,9 @@ class EvidenceManager:
         if not ev:
             raise EvidenceNotFoundException(evidence_id=evidence_id, tenant_id=tenant_id)
         if ev.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=ev.tenant_id, resource_id=evidence_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=ev.tenant_id, resource_id=evidence_id
+            )
         return ev
 
     def list_evidence_for_subject(self, tenant_id: str, subject_id: str) -> List[Evidence]:
@@ -165,5 +170,7 @@ class EvidenceManager:
         if not bundle:
             raise ImmutableEvidenceBundleException(bundle_id=bundle_id, tenant_id=tenant_id)
         if bundle.tenant_id != tenant_id and tenant_id != "global":
-            raise CrossTenantComplianceAccessException(request_tenant=tenant_id, target_tenant=bundle.tenant_id, resource_id=bundle_id)
+            raise CrossTenantComplianceAccessException(
+                request_tenant=tenant_id, target_tenant=bundle.tenant_id, resource_id=bundle_id
+            )
         return bundle

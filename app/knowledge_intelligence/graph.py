@@ -60,7 +60,14 @@ class KnowledgeGraphManager:
             self._graphs[tenant_id] = KnowledgeGraph(tenant_id=tenant_id)
         return self._graphs[tenant_id]
 
-    def add_node(self, tenant_id: str, node_id: str, label: str, node_type: str = "KNOWLEDGE_ITEM", metadata: Optional[Dict[str, Any]] = None) -> KnowledgeGraphNode:
+    def add_node(
+        self,
+        tenant_id: str,
+        node_id: str,
+        label: str,
+        node_type: str = "KNOWLEDGE_ITEM",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> KnowledgeGraphNode:
         graph = self.get_or_create_graph(tenant_id)
         sanitized_meta = SensitiveDataSanitizer.sanitize(metadata or {})
         node = KnowledgeGraphNode(
@@ -94,7 +101,9 @@ class KnowledgeGraphManager:
         graph.edges[edge.edge_id] = edge
         return edge
 
-    def traverse(self, tenant_id: str, start_node_id: str, depth: int = 2, direction: str = "BOTH") -> GraphTraversalResult:
+    def traverse(
+        self, tenant_id: str, start_node_id: str, depth: int = 2, direction: str = "BOTH"
+    ) -> GraphTraversalResult:
         graph = self.get_or_create_graph(tenant_id)
         if start_node_id not in graph.nodes:
             # Check cross-tenant leak

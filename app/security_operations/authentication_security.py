@@ -36,7 +36,9 @@ class AuthenticationSecurityResult:
                 "classification": self.classification,
                 "is_valid": self.is_valid,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -77,7 +79,9 @@ class AuthenticationSecurityEvaluator:
         if auth_config:
             res.is_valid = not auth_disabled and mfa_enabled
             res.score = 100.0 if res.is_valid else 0.0
-            res.classification = "AUTHENTICATION_SECURITY_VALIDATED" if res.is_valid else "AUTHENTICATION_SECURITY_BLOCKED"
+            res.classification = (
+                "AUTHENTICATION_SECURITY_VALIDATED" if res.is_valid else "AUTHENTICATION_SECURITY_BLOCKED"
+            )
         return res
 
     def evaluate_authentication(

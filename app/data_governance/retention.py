@@ -91,7 +91,9 @@ class RetentionManager:
         self._policies[tenant_id] = policy
         return policy
 
-    def place_legal_hold(self, tenant_id: str, asset_id: str, reason: str, case_reference: str, placed_by: str) -> LegalHold:
+    def place_legal_hold(
+        self, tenant_id: str, asset_id: str, reason: str, case_reference: str, placed_by: str
+    ) -> LegalHold:
         hold = LegalHold(
             tenant_id=tenant_id,
             asset_id=asset_id,
@@ -176,7 +178,9 @@ class RetentionManager:
         self._executions[idempotency_key] = exec_record
         return exec_record
 
-    def update_execution_state(self, idempotency_key: str, state: LifecycleState, details: Optional[Dict[str, Any]] = None) -> RetentionExecutionRecord:
+    def update_execution_state(
+        self, idempotency_key: str, state: LifecycleState, details: Optional[Dict[str, Any]] = None
+    ) -> RetentionExecutionRecord:
         rec = self._executions.get(idempotency_key)
         if not rec:
             raise RetentionPolicyViolationException(f"Execution record '{idempotency_key}' not found.")

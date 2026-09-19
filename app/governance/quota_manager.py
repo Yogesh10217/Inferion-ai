@@ -122,13 +122,21 @@ class QuotaManager:
         if agent_executions > 0 and (u.agent_executions_today + agent_executions) > defn.max_agent_executions_per_day:
             raise QuotaExceededError(f"Daily agent execution quota exceeded ({defn.max_agent_executions_per_day})")
 
-        if workflow_executions > 0 and (u.workflow_executions_today + workflow_executions) > defn.max_workflow_executions_per_day:
-            raise QuotaExceededError(f"Daily workflow execution quota exceeded ({defn.max_workflow_executions_per_day})")
+        if (
+            workflow_executions > 0
+            and (u.workflow_executions_today + workflow_executions) > defn.max_workflow_executions_per_day
+        ):
+            raise QuotaExceededError(
+                f"Daily workflow execution quota exceeded ({defn.max_workflow_executions_per_day})"
+            )
 
         if tool_executions > 0 and (u.tool_executions_today + tool_executions) > defn.max_tool_executions_per_day:
             raise QuotaExceededError(f"Daily tool execution quota exceeded ({defn.max_tool_executions_per_day})")
 
-        if concurrent_delta > 0 and (u.current_concurrent_executions + concurrent_delta) > defn.max_concurrent_executions:
+        if (
+            concurrent_delta > 0
+            and (u.current_concurrent_executions + concurrent_delta) > defn.max_concurrent_executions
+        ):
             raise QuotaExceededError(f"Max concurrent execution quota exceeded ({defn.max_concurrent_executions})")
 
         if workers_delta > 0 and (u.active_digital_workers + workers_delta) > defn.max_digital_workers:
@@ -203,7 +211,9 @@ class QuotaManager:
             "remaining_cost_month": max(0.0, defn.max_cost_dollars_per_month - u.cost_this_month),
             "remaining_storage_bytes": max(0, defn.max_storage_bytes - u.storage_bytes_used),
             "remaining_agent_executions_today": max(0, defn.max_agent_executions_per_day - u.agent_executions_today),
-            "remaining_workflow_executions_today": max(0, defn.max_workflow_executions_per_day - u.workflow_executions_today),
+            "remaining_workflow_executions_today": max(
+                0, defn.max_workflow_executions_per_day - u.workflow_executions_today
+            ),
             "remaining_tool_executions_today": max(0, defn.max_tool_executions_per_day - u.tool_executions_today),
             "remaining_concurrent_slots": max(0, defn.max_concurrent_executions - u.current_concurrent_executions),
             "remaining_worker_slots": max(0, defn.max_digital_workers - u.active_digital_workers),

@@ -20,5 +20,7 @@ class CapacityTelemetryEngine:
             metric_value=metric_value,
             unit=unit,
         )
-        logger.info(f"Ingested CapacityTelemetry '{telem.telemetry_id}' for resource '{resource_id}' ({metric_name}={metric_value})")
+        logger.info(
+            f"Ingested CapacityTelemetry '{telem.telemetry_id}' for resource '{resource_id}' ({metric_name}={metric_value})"
+        )
         return telem

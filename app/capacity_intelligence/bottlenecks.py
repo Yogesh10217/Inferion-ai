@@ -15,9 +15,7 @@ class BottleneckDetectionEngine:
     def __init__(self, repo: BottleneckRepository) -> None:
         self.repo = repo
 
-    def detect_bottlenecks(
-        self, tenant_id: str, resource_id: str, metric_value: float = 88.0
-    ) -> List[Bottleneck]:
+    def detect_bottlenecks(self, tenant_id: str, resource_id: str, metric_value: float = 88.0) -> List[Bottleneck]:
         bottlenecks: List[Bottleneck] = []
         if metric_value >= 85.0:
             bot = Bottleneck(

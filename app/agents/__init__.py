@@ -26,5 +26,5 @@ __all__ = [
     "AgentNotFoundError",
     "ToolError",
     "BudgetExceededException",
-    "ApprovalRequiredException"
+    "ApprovalRequiredException",
 ]

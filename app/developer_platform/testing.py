@@ -34,7 +34,17 @@ class TestSuite(BaseModel):
 class TestIntelligenceEngine:
     """Parses and evaluates unit, integration, E2E, and contract test executions."""
 
-    def record_test_suite(self, project_id: str, total_tests: int, failed_tests: int, coverage_pct: float, tenant_id: str = "global") -> TestSuite:
-        suite = TestSuite(project_id=project_id, total_tests=total_tests, failed_tests=failed_tests, coverage_pct=coverage_pct, tenant_id=tenant_id)
-        logger.info(f"[TEST INTELLIGENCE] Recorded test suite for project '{project_id}': {total_tests - failed_tests}/{total_tests} passed ({coverage_pct}% coverage)")
+    def record_test_suite(
+        self, project_id: str, total_tests: int, failed_tests: int, coverage_pct: float, tenant_id: str = "global"
+    ) -> TestSuite:
+        suite = TestSuite(
+            project_id=project_id,
+            total_tests=total_tests,
+            failed_tests=failed_tests,
+            coverage_pct=coverage_pct,
+            tenant_id=tenant_id,
+        )
+        logger.info(
+            f"[TEST INTELLIGENCE] Recorded test suite for project '{project_id}': {total_tests - failed_tests}/{total_tests} passed ({coverage_pct}% coverage)"
+        )
         return suite

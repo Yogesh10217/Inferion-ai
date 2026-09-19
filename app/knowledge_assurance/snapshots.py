@@ -64,13 +64,9 @@ class KnowledgeAssuranceSnapshotManager:
         self._snapshots[kasnap.assurance_snapshot_id] = kasnap
         return kasnap
 
-    def get_snapshot(
-        self, tenant_id: str, assurance_snapshot_id: str
-    ) -> KnowledgeAssuranceSnapshot:
+    def get_snapshot(self, tenant_id: str, assurance_snapshot_id: str) -> KnowledgeAssuranceSnapshot:
         if assurance_snapshot_id not in self._snapshots:
-            raise KnowledgeReferenceNotFoundException(
-                f"Snapshot {assurance_snapshot_id} not found."
-            )
+            raise KnowledgeReferenceNotFoundException(f"Snapshot {assurance_snapshot_id} not found.")
         snap = self._snapshots[assurance_snapshot_id]
         if snap.tenant_id != tenant_id:
             raise CrossTenantKnowledgeAssuranceException()

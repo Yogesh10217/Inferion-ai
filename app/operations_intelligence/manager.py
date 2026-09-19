@@ -96,7 +96,9 @@ class OperationsIntelligenceManager:
         self.service_repo.save(svc)
 
         # 2. Ingest Alert
-        alert = self.alert_manager.ingest_alert(tenant_id, "Prometheus", svc.service_id, "LatencySpike", f"fp_{service_name}_lat")
+        alert = self.alert_manager.ingest_alert(
+            tenant_id, "Prometheus", svc.service_id, "LatencySpike", f"fp_{service_name}_lat"
+        )
         self.alert_repo.save(alert)
         self.metrics_collector.increment("alerts_ingested_total")
 
@@ -110,14 +112,23 @@ class OperationsIntelligenceManager:
         corr = self.correlation_manager.correlate_events(tenant_id, inc.incident_id, [corr_ev])
 
         # 5. Open Investigation
-        inv = self.investigation_manager.open_investigation(tenant_id, f"Investigation: {incident_title}", inc.incident_id)
+        inv = self.investigation_manager.open_investigation(
+            tenant_id, f"Investigation: {incident_title}", inc.incident_id
+        )
         self.investigation_manager.start_investigating(tenant_id, inv.investigation_id)
         self.investigation_manager.record_finding(tenant_id, inv.investigation_id, "High CPU memory pressure")
 
         # 6. Root Cause Analysis
-        hypo = RootCauseHypothesis(title="Memory Leak in Worker", component_name=svc.name, likelihood_score=90.0, reasoning="Garbage collection pressure")
+        hypo = RootCauseHypothesis(
+            title="Memory Leak in Worker",
+            component_name=svc.name,
+            likelihood_score=90.0,
+            reasoning="Garbage collection pressure",
+        )
         ev = RootCauseEvidence(source="METRICS", description="Heap usage at 98%")
-        rca = self.root_cause_manager.analyze_root_cause(tenant_id, inc.incident_id, "Memory leak in worker thread pool", [hypo], [ev])
+        rca = self.root_cause_manager.analyze_root_cause(
+            tenant_id, inc.incident_id, "Memory leak in worker thread pool", [hypo], [ev]
+        )
         self.investigation_manager.set_root_cause_analyzed(tenant_id, inv.investigation_id, rca.analysis_id)
 
         # 7. Problem Creation & Known Error
@@ -125,12 +136,16 @@ class OperationsIntelligenceManager:
         self.problem_manager.set_root_cause(tenant_id, prob.problem_id, rca.analysis_id)
         self.problem_repo.save(prob)
 
-        ke = self.known_error_manager.publish_known_error(tenant_id, f"Known Error: {incident_title}", "Restart worker pool process", prob.problem_id)
+        ke = self.known_error_manager.publish_known_error(
+            tenant_id, f"Known Error: {incident_title}", "Restart worker pool process", prob.problem_id
+        )
         self.known_error_repo.save(ke)
 
         # 8. Remediation Planning & Governance
         action = RemediationAction(action_name="RESTART_SERVICE", target_service_id=svc.service_id, is_high_risk=False)
-        rem_plan = self.remediation_manager.create_remediation_plan(tenant_id, inc.incident_id, idempotency_key, [action])
+        rem_plan = self.remediation_manager.create_remediation_plan(
+            tenant_id, inc.incident_id, idempotency_key, [action]
+        )
 
         gov_dec = self.governance_engine.evaluate_governance(tenant_id, "RESTART_SERVICE", risk_score=20.0)
         del_req = self.remediation_manager.delegate_remediation(tenant_id, rem_plan.plan_id)
@@ -143,11 +158,18 @@ class OperationsIntelligenceManager:
         # 10. Conclude Investigation & Capture Snapshot
         concluded_inv = self.investigation_manager.conclude_investigation(tenant_id, inv.investigation_id)
         self.investigation_repo.save(concluded_inv)
-        snap = self.snapshot_manager.capture_snapshot(tenant_id, concluded_inv.investigation_id, "OPERATIONAL_INVESTIGATION", concluded_inv.model_dump(mode="json"))
+        snap = self.snapshot_manager.capture_snapshot(
+            tenant_id,
+            concluded_inv.investigation_id,
+            "OPERATIONAL_INVESTIGATION",
+            concluded_inv.model_dump(mode="json"),
+        )
 
         # 11. Evidence Bundle Finalization
         bundle = self.evidence_manager.create_bundle(tenant_id, f"Evidence for {incident_title}")
-        self.evidence_manager.add_evidence(tenant_id, bundle.bundle_id, "ALERT_LOG", alert.alert_id, {"raw": "alert data"})
+        self.evidence_manager.add_evidence(
+            tenant_id, bundle.bundle_id, "ALERT_LOG", alert.alert_id, {"raw": "alert data"}
+        )
         finalized_bundle = self.evidence_manager.finalize_bundle(tenant_id, bundle.bundle_id)
 
         # 12. Learning Recommendation
@@ -162,7 +184,9 @@ class OperationsIntelligenceManager:
 
         # 13. Billing & Analytics
         self.billing_tracker.record_cost(tenant_id, "FULL_LIFECYCLE_TRIAGE", 0.05)
-        report = self.analytics_engine.generate_report(tenant_id, active_services_count=1, open_incidents_count=0, mttr_minutes=12.0)
+        report = self.analytics_engine.generate_report(
+            tenant_id, active_services_count=1, open_incidents_count=0, mttr_minutes=12.0
+        )
 
         return {
             "status": "COMPLETED",

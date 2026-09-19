@@ -50,7 +50,9 @@ class SecurityThreat:
                 "severity": sev_str,
                 "decision": dec_str,
             }
-            self.fingerprint = f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            self.fingerprint = (
+                f"sha256:{hashlib.sha256(json.dumps(payload, sort_keys=True).encode('utf-8')).hexdigest()}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         sev_str = self.severity.value if isinstance(self.severity, Enum) else str(self.severity)
@@ -86,7 +88,11 @@ class SecurityThreatClassifier:
             sev_enum = severity
 
         if sev_enum in (ThreatSeverity.EMERGENCY, ThreatSeverity.CRITICAL):
-            decision = ThreatDecision.BLOCK_RELEASE.value if threat_type != "ARTIFACT_TAMPERING" else ThreatDecision.ROLLBACK_RECOMMENDED.value
+            decision = (
+                ThreatDecision.BLOCK_RELEASE.value
+                if threat_type != "ARTIFACT_TAMPERING"
+                else ThreatDecision.ROLLBACK_RECOMMENDED.value
+            )
         elif sev_enum == ThreatSeverity.HIGH:
             decision = ThreatDecision.ESCALATE.value
         elif sev_enum == ThreatSeverity.MEDIUM:

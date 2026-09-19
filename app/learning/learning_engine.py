@@ -20,7 +20,9 @@ class LearningEngine:
         self.pattern_detector = PatternDetector()
         self.optimization_engine = OptimizationEngine()
 
-    def learn_from_episode(self, episode_id: str, episode_data: Dict[str, Any], tenant_id: str = "default_tenant") -> Dict[str, Any]:
+    def learn_from_episode(
+        self, episode_id: str, episode_data: Dict[str, Any], tenant_id: str = "default_tenant"
+    ) -> Dict[str, Any]:
         """Process completed or failed episode to extract lessons and update memory."""
         status = episode_data.get("status", "completed")
         history = episode_data.get("history", [episode_data])

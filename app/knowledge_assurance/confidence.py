@@ -72,9 +72,13 @@ class KnowledgeConfidenceManager:
                 ConfidenceFactor(name="source_reliability", weight=0.25, score=0.92, rationale="High authority source"),
                 ConfidenceFactor(name="provenance", weight=0.20, score=0.95, rationale="Complete origin chain"),
                 ConfidenceFactor(name="freshness", weight=0.20, score=0.98, rationale="Updated within SLA boundary"),
-                ConfidenceFactor(name="evidence", weight=0.15, score=0.90, rationale="Multiple supporting evidence references"),
+                ConfidenceFactor(
+                    name="evidence", weight=0.15, score=0.90, rationale="Multiple supporting evidence references"
+                ),
                 ConfidenceFactor(name="consistency", weight=0.10, score=0.94, rationale="Zero policy conflicts"),
-                ConfidenceFactor(name="historical_verification", weight=0.10, score=0.88, rationale="Verified in prior audits"),
+                ConfidenceFactor(
+                    name="historical_verification", weight=0.10, score=0.88, rationale="Verified in prior audits"
+                ),
             ]
 
         total_weight = sum(f.weight for f in factors)

@@ -70,7 +70,9 @@ class AdministrativeAuditLedger:
             approval_id=approval_id,
         )
         self._audit_records.append(event)
-        logger.info(f"[ADMIN AUDIT] Action '{action}' by '{actor_id}' on target '{target_resource_id}' (Tenant: {tenant_id})")
+        logger.info(
+            f"[ADMIN AUDIT] Action '{action}' by '{actor_id}' on target '{target_resource_id}' (Tenant: {tenant_id})"
+        )
         return event
 
     def _sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -85,7 +87,9 @@ class AdministrativeAuditLedger:
                 sanitized[k] = v
         return sanitized
 
-    def list_records(self, tenant_id: Optional[str] = None, actor_id: Optional[str] = None) -> List[AdministrativeAuditEvent]:
+    def list_records(
+        self, tenant_id: Optional[str] = None, actor_id: Optional[str] = None
+    ) -> List[AdministrativeAuditEvent]:
         res = list(self._audit_records)
         if tenant_id:
             res = [r for r in res if r.tenant_id in (tenant_id, "global")]

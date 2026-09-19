@@ -35,5 +35,7 @@ class RuntimeOptimizationEngine:
             expected_improvement_pct=18.5,
             auto_execute=False,
         )
-        logger.info(f"Generated optimization proposal '{proposal.proposal_id}' for '{target_resource_id}' (auto_execute=False)")
+        logger.info(
+            f"Generated optimization proposal '{proposal.proposal_id}' for '{target_resource_id}' (auto_execute=False)"
+        )
         return proposal

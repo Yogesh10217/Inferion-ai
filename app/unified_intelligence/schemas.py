@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 
 class IngestSignalRequestSchema(BaseModel):
     """API request schema for ingesting a domain signal."""
+
     tenant_id: str = Field(..., description="Tenant identifier")
     domain: str = Field(..., description="Intelligence domain name")
     entity_reference: str = Field(..., description="Reference ID or URI of target entity")
@@ -26,6 +27,7 @@ class IngestSignalRequestSchema(BaseModel):
 
 class UnifiedSignalResponseSchema(BaseModel):
     """API response schema for unified signal."""
+
     signal_id: str
     tenant_id: str
     domain: str
@@ -40,6 +42,7 @@ class UnifiedSignalResponseSchema(BaseModel):
 
 class EnterpriseSituationResponseSchema(BaseModel):
     """API response schema for enterprise situations."""
+
     situation_id: str
     tenant_id: str
     title: str
@@ -56,6 +59,7 @@ class EnterpriseSituationResponseSchema(BaseModel):
 
 class EvaluateSituationRequestSchema(BaseModel):
     """API request schema for evaluating enterprise situations."""
+
     tenant_id: str
     max_signals: int = 100
     max_domains: int = 8

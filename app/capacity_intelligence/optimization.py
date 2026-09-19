@@ -16,7 +16,11 @@ class CapacityOptimizationEngine:
     def analyze_optimization(
         self, tenant_id: str, target_resource_id: str, opt_type: str = "RIGHT_SIZING"
     ) -> CapacityOptimization:
-        oType = OptimizationType[opt_type.upper()] if opt_type.upper() in OptimizationType.__members__ else OptimizationType.RIGHT_SIZING
+        oType = (
+            OptimizationType[opt_type.upper()]
+            if opt_type.upper() in OptimizationType.__members__
+            else OptimizationType.RIGHT_SIZING
+        )
 
         opt = CapacityOptimization(
             tenant_id=tenant_id,
@@ -26,5 +30,7 @@ class CapacityOptimizationEngine:
             estimated_cost_impact_usd=65.0,
             auto_execute=False,  # Enforce advisory invariant
         )
-        logger.info(f"Generated CapacityOptimization '{opt.optimization_id}' for resource '{target_resource_id}' (auto_execute=False)")
+        logger.info(
+            f"Generated CapacityOptimization '{opt.optimization_id}' for resource '{target_resource_id}' (auto_execute=False)"
+        )
         return opt

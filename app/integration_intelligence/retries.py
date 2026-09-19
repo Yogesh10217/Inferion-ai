@@ -52,13 +52,15 @@ class RetryManager:
 
         if attempt_count >= policy.max_retries:
             dlq_id = f"dlq_{uuid.uuid4().hex[:8]}"
-            self._dead_letter_queue.append({
-                "tenant_id": tenant_id,
-                "execution_id": execution_id,
-                "attempt_count": attempt_count,
-                "dead_letter_id": dlq_id,
-                "queued_at": datetime.now(timezone.utc).isoformat(),
-            })
+            self._dead_letter_queue.append(
+                {
+                    "tenant_id": tenant_id,
+                    "execution_id": execution_id,
+                    "attempt_count": attempt_count,
+                    "dead_letter_id": dlq_id,
+                    "queued_at": datetime.now(timezone.utc).isoformat(),
+                }
+            )
 
             dec = RetryDecision(
                 execution_id=execution_id,
@@ -72,7 +74,7 @@ class RetryManager:
 
         backoff = min(
             policy.max_backoff_seconds,
-            int(policy.initial_backoff_seconds * (policy.backoff_multiplier ** (attempt_count - 1)))
+            int(policy.initial_backoff_seconds * (policy.backoff_multiplier ** (attempt_count - 1))),
         )
 
         dec = RetryDecision(

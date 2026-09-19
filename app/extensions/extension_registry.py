@@ -22,7 +22,9 @@ class ExtensionRegistry:
         with self._lock:
             extension.manifest.validate_manifest()
             self._extensions[extension.extension_id] = extension
-            logger.info(f"[EXTENSION REGISTRY] Registered extension '{extension.manifest.name}' (ID: {extension.extension_id}, Tenant: {extension.tenant_id})")
+            logger.info(
+                f"[EXTENSION REGISTRY] Registered extension '{extension.manifest.name}' (ID: {extension.extension_id}, Tenant: {extension.tenant_id})"
+            )
             return extension
 
     def unregister_extension(self, extension_id: str) -> bool:
@@ -74,7 +76,8 @@ class ExtensionRegistry:
         q_norm = query.lower()
         res_list = self.list_extensions(tenant_id=tenant_id)
         return [
-            e for e in res_list
+            e
+            for e in res_list
             if q_norm in e.manifest.name.lower()
             or q_norm in e.manifest.identifier.lower()
             or q_norm in e.manifest.description.lower()

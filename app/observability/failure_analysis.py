@@ -28,6 +28,7 @@ SYSTEM_FAILURE = "SYSTEM_FAILURE"
 @dataclass
 class FailureReport:
     """Comprehensive diagnostic report summarizing execution failure root cause."""
+
     execution_id: str
     trace_id: str
     primary_category: str
@@ -56,7 +57,13 @@ class FailureAnalyzer:
             return RATE_LIMIT
         elif "budget" in msg_lower or "cost limit" in msg_lower or "insufficient funds" in msg_lower:
             return BUDGET_EXCEEDED
-        elif "unauthorized" in msg_lower or "forbidden" in msg_lower or "401" in msg_lower or "403" in msg_lower or "permission" in msg_lower:
+        elif (
+            "unauthorized" in msg_lower
+            or "forbidden" in msg_lower
+            or "401" in msg_lower
+            or "403" in msg_lower
+            or "permission" in msg_lower
+        ):
             return AUTHORIZATION_FAILURE
         elif "rejected" in msg_lower or "approval denied" in msg_lower:
             return APPROVAL_REJECTED
@@ -86,13 +93,16 @@ class FailureAnalyzer:
             status = s.get("status", "OK")
             attrs = s.get("attributes", {})
             if status.upper() in ["ERROR", "FAILED"] or attrs.get("error"):
-                failed_spans.append({
-                    "span_id": s.get("span_id"),
-                    "name": s.get("name"),
-                    "component": attrs.get("component") or s.get("name", "").split(".")[0],
-                    "status_description": s.get("status_description") or attrs.get("error.message", "Unknown error"),
-                    "start_time": s.get("start_time"),
-                })
+                failed_spans.append(
+                    {
+                        "span_id": s.get("span_id"),
+                        "name": s.get("name"),
+                        "component": attrs.get("component") or s.get("name", "").split(".")[0],
+                        "status_description": s.get("status_description")
+                        or attrs.get("error.message", "Unknown error"),
+                        "start_time": s.get("start_time"),
+                    }
+                )
         # Sort by start_time ascending
         failed_spans.sort(key=lambda x: x.get("start_time", 0))
         return failed_spans

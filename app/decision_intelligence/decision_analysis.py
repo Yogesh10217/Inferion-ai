@@ -28,7 +28,9 @@ class DecisionAnalyzer:
     def __init__(self) -> None:
         self._analyses: Dict[str, DecisionAnalysisResult] = {}
 
-    def analyze_decision_context(self, decision_id: str, tenant_id: str, cross_domain_signals: List[Dict[str, Any]]) -> DecisionAnalysisResult:
+    def analyze_decision_context(
+        self, decision_id: str, tenant_id: str, cross_domain_signals: List[Dict[str, Any]]
+    ) -> DecisionAnalysisResult:
         if cross_domain_signals is None:
             raise DecisionAnalysisException(f"Invalid cross-domain signals for decision '{decision_id}'")
 

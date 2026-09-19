@@ -4,6 +4,7 @@ import logging
 
 try:
     from prometheus_client import Counter, Gauge
+
     PROMETHEUS_AVAILABLE = True
 except ImportError:
     PROMETHEUS_AVAILABLE = False
@@ -12,15 +13,31 @@ logger = logging.getLogger(__name__)
 
 if PROMETHEUS_AVAILABLE:
     IDENTITY_AUTH_TOTAL = Counter("ai_identity_authentication_total", "Total authentications", ["tenant_id", "status"])
-    IDENTITY_AUTH_FAILED_TOTAL = Counter("ai_identity_authentication_failed_total", "Total failed authentications", ["tenant_id"])
-    IDENTITY_AUTHZ_TOTAL = Counter("ai_identity_authorization_total", "Total authorization evaluations", ["tenant_id", "decision"])
-    IDENTITY_AUTHZ_DENIED_TOTAL = Counter("ai_identity_authorization_denied_total", "Total authorization denials", ["tenant_id"])
-    IDENTITY_PRIVILEGED_ACCESS_TOTAL = Counter("ai_identity_privileged_access_total", "Total JIT privileged access grants", ["tenant_id", "role"])
+    IDENTITY_AUTH_FAILED_TOTAL = Counter(
+        "ai_identity_authentication_failed_total", "Total failed authentications", ["tenant_id"]
+    )
+    IDENTITY_AUTHZ_TOTAL = Counter(
+        "ai_identity_authorization_total", "Total authorization evaluations", ["tenant_id", "decision"]
+    )
+    IDENTITY_AUTHZ_DENIED_TOTAL = Counter(
+        "ai_identity_authorization_denied_total", "Total authorization denials", ["tenant_id"]
+    )
+    IDENTITY_PRIVILEGED_ACCESS_TOTAL = Counter(
+        "ai_identity_privileged_access_total", "Total JIT privileged access grants", ["tenant_id", "role"]
+    )
     IDENTITY_ACTIVE_SESSIONS = Gauge("ai_identity_active_sessions", "Active sessions count", ["tenant_id"])
-    IDENTITY_RISK_EVENTS_TOTAL = Counter("ai_identity_risk_events_total", "Total behavioral risk events", ["tenant_id", "severity"])
-    IDENTITY_STEP_UP_AUTH_TOTAL = Counter("ai_identity_step_up_auth_total", "Total step-up authentication challenges", ["tenant_id"])
-    IDENTITY_TOKEN_REVOCATIONS_TOTAL = Counter("ai_identity_token_revocations_total", "Total token revocations", ["tenant_id"])
-    IDENTITY_ZERO_TRUST_DECISIONS_TOTAL = Counter("ai_identity_zero_trust_decisions_total", "Total Zero-Trust evaluations", ["tenant_id", "action"])
+    IDENTITY_RISK_EVENTS_TOTAL = Counter(
+        "ai_identity_risk_events_total", "Total behavioral risk events", ["tenant_id", "severity"]
+    )
+    IDENTITY_STEP_UP_AUTH_TOTAL = Counter(
+        "ai_identity_step_up_auth_total", "Total step-up authentication challenges", ["tenant_id"]
+    )
+    IDENTITY_TOKEN_REVOCATIONS_TOTAL = Counter(
+        "ai_identity_token_revocations_total", "Total token revocations", ["tenant_id"]
+    )
+    IDENTITY_ZERO_TRUST_DECISIONS_TOTAL = Counter(
+        "ai_identity_zero_trust_decisions_total", "Total Zero-Trust evaluations", ["tenant_id", "action"]
+    )
 
 
 class IdentityMetricsCollector:

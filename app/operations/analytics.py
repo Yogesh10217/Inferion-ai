@@ -45,5 +45,7 @@ class OperationsAnalyticsEngine:
             slo_compliance_rate=99.95,
             remediation_success_rate=100.0,
         )
-        logger.info(f"[OPERATIONS ANALYTICS] Generated report for tenant '{tenant_id}': MTTR = {rep.mttr_minutes} min, SLO Compliance = {rep.slo_compliance_rate}%")
+        logger.info(
+            f"[OPERATIONS ANALYTICS] Generated report for tenant '{tenant_id}': MTTR = {rep.mttr_minutes} min, SLO Compliance = {rep.slo_compliance_rate}%"
+        )
         return rep

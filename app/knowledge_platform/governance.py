@@ -74,7 +74,12 @@ class KnowledgeGovernanceEngine:
             return dec
 
         if classification == "SECRET":
-            appr = self.approval_engine.request_approval(execution_id="access_sec", action_type="Secret Knowledge Access Request", requester=identity_id, tenant_id=tenant_id)
+            appr = self.approval_engine.request_approval(
+                execution_id="access_sec",
+                action_type="Secret Knowledge Access Request",
+                requester=identity_id,
+                tenant_id=tenant_id,
+            )
             dec = KnowledgeAccessDecision(
                 identity_id=identity_id,
                 tenant_id=tenant_id,
@@ -82,7 +87,11 @@ class KnowledgeGovernanceEngine:
                 approval_request_id=appr.request_id,
                 reason="Secret classification requires administrator approval",
             )
-            logger.info(f"[GOVERNANCE ENGINE] Knowledge access REQUIRES_APPROVAL for identity '{identity_id}' -> Request '{appr.request_id}'")
+            logger.info(
+                f"[GOVERNANCE ENGINE] Knowledge access REQUIRES_APPROVAL for identity '{identity_id}' -> Request '{appr.request_id}'"
+            )
             return dec
 
-        return KnowledgeAccessDecision(identity_id=identity_id, tenant_id=tenant_id, policy_decision=PolicyDecisionType.ALLOW)
+        return KnowledgeAccessDecision(
+            identity_id=identity_id, tenant_id=tenant_id, policy_decision=PolicyDecisionType.ALLOW
+        )

@@ -89,7 +89,9 @@ class IdentityManager:
             profile=IdentityProfile(display_name=display_name or username),
         )
         self._identities[ident.identity_id] = ident
-        logger.info(f"[IDENTITY MANAGER] Registered identity '{ident.identity_id}' ({username}, {identity_type.value}) for tenant '{tenant_id}'")
+        logger.info(
+            f"[IDENTITY MANAGER] Registered identity '{ident.identity_id}' ({username}, {identity_type.value}) for tenant '{tenant_id}'"
+        )
         return ident
 
     def update_status(self, identity_id: str, new_status: IdentityStatus) -> Identity:

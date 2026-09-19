@@ -49,7 +49,9 @@ class ArchitecturePlatformManager:
         self.impact_analyzer = ImpactAnalyzer(dependency_manager=self.dependency_manager)
         self.governance_engine = ArchitectureGovernanceEngine()
         self.decision_manager = ArchitectureDecisionManager()
-        self.drift_detector = ArchitectureDriftDetector(topology_manager=self.topology_manager, node_manager=self.node_manager)
+        self.drift_detector = ArchitectureDriftDetector(
+            topology_manager=self.topology_manager, node_manager=self.node_manager
+        )
 
         self.simulation_engine = ArchitectureSimulationEngine(impact_analyzer=self.impact_analyzer)
         self.resilience_analyzer = ResilienceAnalyzer(dependency_manager=self.dependency_manager)
@@ -63,7 +65,9 @@ class ArchitecturePlatformManager:
             trust_engine=self.trust_engine,
         )
 
-        logger.info("[ARCHITECTURE MASTER] ArchitecturePlatformManager initialized cleanly with all 20 domain subsystems.")
+        logger.info(
+            "[ARCHITECTURE MASTER] ArchitecturePlatformManager initialized cleanly with all 20 domain subsystems."
+        )
 
     def discover_and_register_node(
         self,
@@ -135,7 +139,9 @@ class ArchitecturePlatformManager:
         self.metrics_collector.increment("ai_architecture_impact_analysis_total")
 
         # 3. Simulation
-        sim_result = self.simulation_engine.run_simulation(tenant_id, target_id, scenario=SimulationScenario.MODEL_REPLACEMENT)
+        sim_result = self.simulation_engine.run_simulation(
+            tenant_id, target_id, scenario=SimulationScenario.MODEL_REPLACEMENT
+        )
 
         # 4. Governance Evaluation & Approval Request if High Risk
         pol_decision = self.governance_engine.evaluate_change_governance(
@@ -158,7 +164,9 @@ class ArchitecturePlatformManager:
             "governance_decision": pol_decision.model_dump(),
         }
 
-    def delegate_approved_change(self, change_id: str, tenant_id: str, delegated_subsystem: str = "PlatformOperationsManager") -> ArchitectureChange:
+    def delegate_approved_change(
+        self, change_id: str, tenant_id: str, delegated_subsystem: str = "PlatformOperationsManager"
+    ) -> ArchitectureChange:
         """Delegate approved architecture change to execution subsystem."""
         change = self.change_manager.get_change(change_id, tenant_id)
         if change.status not in (ArchitectureChangeStatus.APPROVED, ArchitectureChangeStatus.REQUIRES_APPROVAL):

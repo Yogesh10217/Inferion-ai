@@ -22,6 +22,7 @@ class AccessRiskDimension(str, Enum):
 
 class AccessRiskFactor(BaseModel):
     """Contributing factor to access risk score."""
+
     dimension: AccessRiskDimension
     score: float  # 0.0 to 100.0
     weight: float = 1.0
@@ -30,6 +31,7 @@ class AccessRiskFactor(BaseModel):
 
 class AccessRiskProfile(BaseModel):
     """Access Risk Profile for an Identity or Resource."""
+
     profile_id: str = Field(default_factory=lambda: f"risk_prof_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     target_id: str
@@ -42,6 +44,7 @@ class AccessRiskProfile(BaseModel):
 
 class AccessRiskAssessment(BaseModel):
     """Access Risk Assessment Outcome."""
+
     assessment_id: str = Field(default_factory=lambda: f"risk_eval_{uuid.uuid4().hex[:12]}")
     tenant_id: str
     subject_identity_id: str
@@ -72,16 +75,45 @@ class AccessRiskManager:
         threshold: float = 75.0,
     ) -> AccessRiskAssessment:
         factors = [
-            AccessRiskFactor(dimension=AccessRiskDimension.PRIVILEGE_LEVEL, score=privilege_score, weight=1.2, description="Privilege elevation score"),
-            AccessRiskFactor(dimension=AccessRiskDimension.RESOURCE_SENSITIVITY, score=resource_sensitivity_score, weight=1.5, description="Sensitivity level of target resource"),
-            AccessRiskFactor(dimension=AccessRiskDimension.IDENTITY_TRUST, score=100.0 - identity_trust_score, weight=1.0, description="Inverse identity trust score"),
+            AccessRiskFactor(
+                dimension=AccessRiskDimension.PRIVILEGE_LEVEL,
+                score=privilege_score,
+                weight=1.2,
+                description="Privilege elevation score",
+            ),
+            AccessRiskFactor(
+                dimension=AccessRiskDimension.RESOURCE_SENSITIVITY,
+                score=resource_sensitivity_score,
+                weight=1.5,
+                description="Sensitivity level of target resource",
+            ),
+            AccessRiskFactor(
+                dimension=AccessRiskDimension.IDENTITY_TRUST,
+                score=100.0 - identity_trust_score,
+                weight=1.0,
+                description="Inverse identity trust score",
+            ),
         ]
 
         if has_toxic_combinations:
-            factors.append(AccessRiskFactor(dimension=AccessRiskDimension.TOXIC_COMBINATION, score=90.0, weight=2.0, description="Segregation of duties violation detected"))
+            factors.append(
+                AccessRiskFactor(
+                    dimension=AccessRiskDimension.TOXIC_COMBINATION,
+                    score=90.0,
+                    weight=2.0,
+                    description="Segregation of duties violation detected",
+                )
+            )
 
         if is_production:
-            factors.append(AccessRiskFactor(dimension=AccessRiskDimension.PRODUCTION_IMPACT, score=85.0, weight=1.5, description="Target is a production resource"))
+            factors.append(
+                AccessRiskFactor(
+                    dimension=AccessRiskDimension.PRODUCTION_IMPACT,
+                    score=85.0,
+                    weight=1.5,
+                    description="Target is a production resource",
+                )
+            )
 
         total_weighted_score = sum(f.score * f.weight for f in factors)
         total_weight = sum(f.weight for f in factors)

@@ -63,7 +63,9 @@ class OperationsDelegationManager:
         self._plans[tenant_id][plan.delegation_plan_id] = plan
         return plan
 
-    def list_delegation_plans(self, tenant_id: str, service_id: Optional[str] = None) -> List[OperationalDelegationPlan]:
+    def list_delegation_plans(
+        self, tenant_id: str, service_id: Optional[str] = None
+    ) -> List[OperationalDelegationPlan]:
         tenant_plans = self._plans.get(tenant_id, {})
         if service_id:
             return [p for p in tenant_plans.values() if p.service_id == service_id]

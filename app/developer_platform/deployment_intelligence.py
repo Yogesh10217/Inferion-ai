@@ -31,7 +31,9 @@ class DeploymentIntelligenceEngine:
     def __init__(self, approval_engine: Optional[ApprovalEngine] = None) -> None:
         self.approval_engine = approval_engine or ApprovalEngine()
 
-    def evaluate_deployment_health(self, release_id: str, error_rate_pct: float, tenant_id: str = "global") -> Optional[RollbackRecommendation]:
+    def evaluate_deployment_health(
+        self, release_id: str, error_rate_pct: float, tenant_id: str = "global"
+    ) -> Optional[RollbackRecommendation]:
         if error_rate_pct > 5.0:
             appr = self.approval_engine.request_approval(
                 execution_id=f"rollback_{release_id}",
@@ -44,6 +46,8 @@ class DeploymentIntelligenceEngine:
                 approval_request_id=appr.request_id,
                 reason=f"High error rate ({error_rate_pct}%) detected post-deployment",
             )
-            logger.warning(f"[DEPLOYMENT INTELLIGENCE] High error rate post-deployment! Rollback recommendation generated -> Approval '{appr.request_id}'")
+            logger.warning(
+                f"[DEPLOYMENT INTELLIGENCE] High error rate post-deployment! Rollback recommendation generated -> Approval '{appr.request_id}'"
+            )
             return rec
         return None

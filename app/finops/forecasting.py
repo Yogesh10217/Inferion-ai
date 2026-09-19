@@ -70,7 +70,11 @@ class CostForecastingEngine:
 
         exhaustion_days = None
         if current_budget_limit and daily_proj > Decimal("0.0"):
-            limit_dec = Decimal(str(current_budget_limit)) if isinstance(current_budget_limit, (float, int, str)) else current_budget_limit
+            limit_dec = (
+                Decimal(str(current_budget_limit))
+                if isinstance(current_budget_limit, (float, int, str))
+                else current_budget_limit
+            )
             remaining = max(Decimal("0.0"), limit_dec - total_historical)
             exhaustion_days = int((remaining / daily_proj).quantize(Decimal("1")))
 
@@ -83,5 +87,7 @@ class CostForecastingEngine:
             estimated_budget_exhaustion_days=exhaustion_days,
             confidence_score=0.92,
         )
-        logger.info(f"[COST FORECAST] Forecasted for tenant '{tenant_id}': Monthly = ${monthly_proj}, Exhaustion in = {exhaustion_days} days")
+        logger.info(
+            f"[COST FORECAST] Forecasted for tenant '{tenant_id}': Monthly = ${monthly_proj}, Exhaustion in = {exhaustion_days} days"
+        )
         return res

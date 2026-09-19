@@ -34,10 +34,7 @@ class BudgetMiddleware(BaseHTTPMiddleware):
 
         except BudgetExceededException as e:
             logger.warning(f"Budget hard limit exceeded for org_id={org_id}, workspace_id={workspace_id}")
-            return JSONResponse(
-                status_code=e.status_code,
-                content={"error": "payment_required", "message": e.detail}
-            )
+            return JSONResponse(status_code=e.status_code, content={"error": "payment_required", "message": e.detail})
 
         response = await call_next(request)
         return response

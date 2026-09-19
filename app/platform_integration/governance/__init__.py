@@ -1,4 +1,5 @@
 """Governance Package Init."""
+
 from app.platform_integration.governance.approvals import (
     PlatformIntegrationApproval,
     PlatformIntegrationApprovalManager,

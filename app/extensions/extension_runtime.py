@@ -53,7 +53,9 @@ class IsolatedExtensionRuntime:
             duration = time.time() - start_time
             if duration > timeout_sec:
                 cb.record_failure()
-                raise ExtensionRuntimeExecutionException(extension.extension_id, f"Execution timed out ({duration:.2f}s > {timeout_sec}s)")
+                raise ExtensionRuntimeExecutionException(
+                    extension.extension_id, f"Execution timed out ({duration:.2f}s > {timeout_sec}s)"
+                )
 
             cb.record_success()
             logger.info(f"[EXTENSION RUNTIME] Executed extension '{extension.extension_id}' in {duration:.3f}s")

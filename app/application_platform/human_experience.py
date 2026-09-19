@@ -97,7 +97,11 @@ class HumanExperienceManager:
             tenant_id=tenant_id,
             title=f"Application Escalation [{reason.value}] - App {application_id}",
             execution_id=execution_id,
-            priority=TaskPriority.HIGH if reason in {EscalationReason.HIGH_RISK, EscalationReason.SAFETY_CONCERN} else TaskPriority.MEDIUM,
+            priority=(
+                TaskPriority.HIGH
+                if reason in {EscalationReason.HIGH_RISK, EscalationReason.SAFETY_CONCERN}
+                else TaskPriority.MEDIUM
+            ),
         )
 
         esc = HumanEscalation(
@@ -109,7 +113,9 @@ class HumanExperienceManager:
             status="OPEN",
         )
         self._escalations[esc.escalation_id] = esc
-        logger.info(f"[HUMAN EXPERIENCE] Escalation {esc.escalation_id} created for execution {execution_id}: {reason.value}")
+        logger.info(
+            f"[HUMAN EXPERIENCE] Escalation {esc.escalation_id} created for execution {execution_id}: {reason.value}"
+        )
         return esc
 
     def resolve_escalation(

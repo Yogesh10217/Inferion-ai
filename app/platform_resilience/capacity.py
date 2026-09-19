@@ -83,7 +83,9 @@ class CapacityManager:
         return prof
 
     def evaluate_capacity(self, tenant_id: str, resource_id: str) -> CapacityAssessment:
-        profile = next((p for p in self._profiles.values() if p.resource_id == resource_id and p.tenant_id == tenant_id), None)
+        profile = next(
+            (p for p in self._profiles.values() if p.resource_id == resource_id and p.tenant_id == tenant_id), None
+        )
         if not profile:
             # Default normal assessment
             return CapacityAssessment(tenant_id=tenant_id, resource_id=resource_id, status=CapacityStatus.NORMAL)

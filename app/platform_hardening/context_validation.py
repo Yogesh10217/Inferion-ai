@@ -47,7 +47,11 @@ class CrossPhaseContextValidationEngine:
                         rule_id="RULE-CTX-001",
                         title=f"Context Field Missing: '{field}'",
                         description=f"Context field '{field}' was dropped during cross-phase context propagation.",
-                        severity=PlatformAuditSeverity.HIGH if field in ["tenant_id", "trace_id"] else PlatformAuditSeverity.MEDIUM,
+                        severity=(
+                            PlatformAuditSeverity.HIGH
+                            if field in ["tenant_id", "trace_id"]
+                            else PlatformAuditSeverity.MEDIUM
+                        ),
                         subsystem="context_flow",
                         affected_component="CrossPhaseContext",
                         remediation_suggestion=f"Ensure '{field}' is passed into context builder across all phases.",

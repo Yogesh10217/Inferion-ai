@@ -20,7 +20,7 @@ class ReportAdminService:
             status="pending",
             created_by=created_by,
             parameters=parameters,
-            created_at=datetime.now(timezone.utc)
+            created_at=datetime.now(timezone.utc),
         )
         self.db.add(job)
         await self.db.commit()
@@ -35,7 +35,9 @@ class ReportAdminService:
             raise ResourceNotFoundException(f"Report Job {job_id} not found")
         return job
 
-    async def list_report_jobs(self, created_by: Optional[str] = None, limit: int = 100, offset: int = 0) -> List[ReportJob]:
+    async def list_report_jobs(
+        self, created_by: Optional[str] = None, limit: int = 100, offset: int = 0
+    ) -> List[ReportJob]:
         stmt = select(ReportJob)
         if created_by:
             stmt = stmt.where(ReportJob.created_by == created_by)

@@ -2,6 +2,7 @@
 Citation Engine Module.
 Ensures every answer contains source document, chunk id, page, confidence, and similarity.
 """
+
 import math
 from typing import Any, Dict, List
 
@@ -9,7 +10,16 @@ from .reranker import DocumentInfo
 
 
 class Citation:
-    def __init__(self, doc_id: str, chunk_id: str, page: int, source: str, similarity: float, confidence_score: float, text_snippet: str):
+    def __init__(
+        self,
+        doc_id: str,
+        chunk_id: str,
+        page: int,
+        source: str,
+        similarity: float,
+        confidence_score: float,
+        text_snippet: str,
+    ):
         self.doc_id = doc_id
         self.chunk_id = chunk_id
         self.page = page
@@ -26,7 +36,7 @@ class Citation:
             "source": self.source,
             "similarity": self.similarity,
             "confidence_score": self.confidence_score,
-            "text_snippet": self.text_snippet
+            "text_snippet": self.text_snippet,
         }
 
 
@@ -86,15 +96,17 @@ class CitationEngine:
             snippet = doc.text.strip().replace("\n", " ")
             text_snippet = snippet[:snippet_length] + "..." if len(snippet) > snippet_length else snippet
 
-            citations.append(Citation(
-                doc_id=meta.get("doc_id", "unknown_doc"),
-                chunk_id=doc.id,
-                page=page,
-                source=meta.get("source", meta.get("filename", "unknown_source")),
-                similarity=doc.score,
-                confidence_score=confidence,
-                text_snippet=text_snippet
-            ))
+            citations.append(
+                Citation(
+                    doc_id=meta.get("doc_id", "unknown_doc"),
+                    chunk_id=doc.id,
+                    page=page,
+                    source=meta.get("source", meta.get("filename", "unknown_source")),
+                    similarity=doc.score,
+                    confidence_score=confidence,
+                    text_snippet=text_snippet,
+                )
+            )
         return citations
 
     def format_inline_citations(self, text: str, citations: List[Citation]) -> str:

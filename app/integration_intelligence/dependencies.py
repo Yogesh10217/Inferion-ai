@@ -62,8 +62,12 @@ class IntegrationDependencyManager:
     ) -> IntegrationDependency:
         graph = self.get_or_create_graph(tenant_id)
 
-        src_node = DependencyNode(node_id=source_system_id, tenant_id=tenant_id, node_type="SYSTEM", name=source_system_id)
-        tgt_node = DependencyNode(node_id=target_system_id, tenant_id=tenant_id, node_type="SYSTEM", name=target_system_id)
+        src_node = DependencyNode(
+            node_id=source_system_id, tenant_id=tenant_id, node_type="SYSTEM", name=source_system_id
+        )
+        tgt_node = DependencyNode(
+            node_id=target_system_id, tenant_id=tenant_id, node_type="SYSTEM", name=target_system_id
+        )
 
         graph.nodes[source_system_id] = src_node
         graph.nodes[target_system_id] = tgt_node

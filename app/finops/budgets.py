@@ -81,7 +81,9 @@ class Budget(BaseModel):
 
     created_at: datetime = Field(default_factory=_now)
 
-    @field_validator("limit_amount", "current_usage", "warning_threshold_percent", "critical_threshold_percent", mode="before")
+    @field_validator(
+        "limit_amount", "current_usage", "warning_threshold_percent", "critical_threshold_percent", mode="before"
+    )
     @classmethod
     def parse_decimal(cls, value: Any) -> Decimal:
         if isinstance(value, float):
@@ -125,7 +127,9 @@ class BudgetManager:
             enforcement_action=enforcement_action,
         )
         self._budgets[budget.budget_id] = budget
-        logger.info(f"[BUDGET MANAGER] Created budget '{name}' (ID: {budget.budget_id}, Limit: ${limit_dec}, Action: {enforcement_action.value})")
+        logger.info(
+            f"[BUDGET MANAGER] Created budget '{name}' (ID: {budget.budget_id}, Limit: ${limit_dec}, Action: {enforcement_action.value})"
+        )
         return budget
 
     def record_usage(self, budget_id: str, cost_amount: Decimal) -> Budget:
@@ -134,7 +138,11 @@ class BudgetManager:
         budget.current_usage = (budget.current_usage + cost_dec).quantize(Decimal("0.000001"))
 
         # Update budget status
-        usage_percent = (budget.current_usage / budget.limit_amount * Decimal("100.0")) if budget.limit_amount > Decimal("0.0") else Decimal("0.0")
+        usage_percent = (
+            (budget.current_usage / budget.limit_amount * Decimal("100.0"))
+            if budget.limit_amount > Decimal("0.0")
+            else Decimal("0.0")
+        )
 
         if budget.current_usage >= budget.limit_amount:
             budget.status = BudgetStatus.EXCEEDED
@@ -145,7 +153,9 @@ class BudgetManager:
         else:
             budget.status = BudgetStatus.HEALTHY
 
-        logger.info(f"[BUDGET MANAGER] Updated budget '{budget.name}': Usage = ${budget.current_usage} / ${budget.limit_amount} ({usage_percent:.1f}%) -> Status: {budget.status.value}")
+        logger.info(
+            f"[BUDGET MANAGER] Updated budget '{budget.name}': Usage = ${budget.current_usage} / ${budget.limit_amount} ({usage_percent:.1f}%) -> Status: {budget.status.value}"
+        )
         return budget
 
     def evaluate_execution(self, tenant_id: str, projected_cost: Decimal) -> BudgetEvaluationDecision:
@@ -159,23 +169,56 @@ class BudgetManager:
                     action = b.enforcement_action
 
                     if action == BudgetAction.BLOCK:
-                        logger.warning(f"[BUDGET MANAGER] BLOCKing execution on tenant '{tenant_id}': Budget '${b.limit_amount}' exceeded")
-                        return BudgetEvaluationDecision(budget_id=b.budget_id, action=BudgetAction.BLOCK, permitted=False, reason=f"Budget '{b.name}' exceeded")
+                        logger.warning(
+                            f"[BUDGET MANAGER] BLOCKing execution on tenant '{tenant_id}': Budget '${b.limit_amount}' exceeded"
+                        )
+                        return BudgetEvaluationDecision(
+                            budget_id=b.budget_id,
+                            action=BudgetAction.BLOCK,
+                            permitted=False,
+                            reason=f"Budget '{b.name}' exceeded",
+                        )
 
                     elif action == BudgetAction.FALLBACK_TO_CHEAPER_MODEL:
-                        logger.info(f"[BUDGET MANAGER] FALLBACK_TO_CHEAPER_MODEL triggered on tenant '{tenant_id}': Switching model to gpt-3.5-turbo")
-                        return BudgetEvaluationDecision(budget_id=b.budget_id, action=BudgetAction.FALLBACK_TO_CHEAPER_MODEL, permitted=True, fallback_model_id="gpt-3.5-turbo", reason=f"Budget '{b.name}' exceeded -> Fallback to cheaper model")
+                        logger.info(
+                            f"[BUDGET MANAGER] FALLBACK_TO_CHEAPER_MODEL triggered on tenant '{tenant_id}': Switching model to gpt-3.5-turbo"
+                        )
+                        return BudgetEvaluationDecision(
+                            budget_id=b.budget_id,
+                            action=BudgetAction.FALLBACK_TO_CHEAPER_MODEL,
+                            permitted=True,
+                            fallback_model_id="gpt-3.5-turbo",
+                            reason=f"Budget '{b.name}' exceeded -> Fallback to cheaper model",
+                        )
 
                     elif action == BudgetAction.THROTTLE:
-                        logger.info(f"[BUDGET MANAGER] THROTTLE triggered on tenant '{tenant_id}': Concurrency reduced to 2")
-                        return BudgetEvaluationDecision(budget_id=b.budget_id, action=BudgetAction.THROTTLE, permitted=True, throttle_rate_limit=2, reason=f"Budget '{b.name}' near limit -> Throttled")
+                        logger.info(
+                            f"[BUDGET MANAGER] THROTTLE triggered on tenant '{tenant_id}': Concurrency reduced to 2"
+                        )
+                        return BudgetEvaluationDecision(
+                            budget_id=b.budget_id,
+                            action=BudgetAction.THROTTLE,
+                            permitted=True,
+                            throttle_rate_limit=2,
+                            reason=f"Budget '{b.name}' near limit -> Throttled",
+                        )
 
                     elif action == BudgetAction.REQUIRE_APPROVAL:
                         req_id = f"bg_appr_{uuid.uuid4().hex[:8]}"
-                        logger.info(f"[BUDGET MANAGER] REQUIRE_APPROVAL triggered on tenant '{tenant_id}': Request ID = {req_id}")
-                        return BudgetEvaluationDecision(budget_id=b.budget_id, action=BudgetAction.REQUIRE_APPROVAL, permitted=False, approval_request_id=req_id, reason=f"Budget '{b.name}' exceeded -> Requires approval")
+                        logger.info(
+                            f"[BUDGET MANAGER] REQUIRE_APPROVAL triggered on tenant '{tenant_id}': Request ID = {req_id}"
+                        )
+                        return BudgetEvaluationDecision(
+                            budget_id=b.budget_id,
+                            action=BudgetAction.REQUIRE_APPROVAL,
+                            permitted=False,
+                            approval_request_id=req_id,
+                            reason=f"Budget '{b.name}' exceeded -> Requires approval",
+                        )
 
-        return BudgetEvaluationDecision(budget_id="global", action=BudgetAction.ALLOW, permitted=True, reason="Within budget limits")
+        return BudgetEvaluationDecision(
+            budget_id="global", action=BudgetAction.ALLOW, permitted=True, reason="Within budget limits"
+        )
 
     def get_budget(self, budget_id: str) -> Budget:
         b = self._budgets.get(budget_id)

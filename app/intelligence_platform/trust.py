@@ -40,7 +40,9 @@ class IntelligenceTrustScore(BaseModel):
 class IntelligenceTrustEngine:
     """Evaluates multi-dimensional trust score and enforces Trust x Risk Decision Matrix."""
 
-    def evaluate_trust(self, context: IntelligenceContext, forecast_confidence: float = 0.85, simulation_confidence: float = 0.90) -> IntelligenceTrustScore:
+    def evaluate_trust(
+        self, context: IntelligenceContext, forecast_confidence: float = 0.85, simulation_confidence: float = 0.90
+    ) -> IntelligenceTrustScore:
         ev_score = min(100.0, len(context.evidences) * 20.0 + 40.0) if context.evidences else 50.0
         sig_score = min(100.0, len(context.signals) * 15.0 + 50.0) if context.signals else 60.0
         fc_score = forecast_confidence * 100.0
@@ -80,7 +82,10 @@ class IntelligenceTrustEngine:
             return False, f"Trust score {trust_score:.1f} is LOW (<50.0); autonomous execution blocked."
 
         if trust_score < configurable_trust_threshold:
-            return False, f"Trust score {trust_score:.1f} is below configured threshold {configurable_trust_threshold:.1f}; human review required."
+            return (
+                False,
+                f"Trust score {trust_score:.1f} is below configured threshold {configurable_trust_threshold:.1f}; human review required.",
+            )
 
         if policy_decision == IntelligencePolicyDecision.REQUIRE_APPROVAL:
             return False, "Policy decision requires explicit approval."
