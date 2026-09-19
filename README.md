@@ -378,6 +378,7 @@ pip install pre-commit && pre-commit install
 | [📦 SDKs](docs/sdk.md) | Python, TypeScript, Go, and Java SDK reference |
 | [📝 Changelog](CHANGELOG.md) | Version history |
 | [🤝 Contributing](CONTRIBUTING.md) | Code of conduct and PR workflow |
+| [⚖️ Code of Conduct](CODE_OF_CONDUCT.md) | Community standards and enforcement |
 | [📜 License](LICENSE) | MIT License terms |
 
 ---

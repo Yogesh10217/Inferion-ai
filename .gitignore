@@ -55,3 +55,10 @@ pytest.log
 test_output.txt
 traceback.txt
 replacements.txt
+
+# Test Artifacts & Snapshots
+snapshot_failures/
+coverage.xml
+htmlcov/
+.coverage
+.coverage.*

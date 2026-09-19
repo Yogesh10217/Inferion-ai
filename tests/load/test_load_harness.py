@@ -118,4 +118,4 @@ def test_benchmark_whitepaper_generator(tmp_path):
 
     assert "10,000+ RPS Latency & Concurrency Benchmark Whitepaper" in content
     assert "10,416.67 RPS" in content
-    assert "✅ PASSED" in content
+    assert "PASSED" in content

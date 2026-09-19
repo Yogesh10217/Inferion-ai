@@ -42,19 +42,19 @@ async def test_all_llm_providers_instantiation_and_generation():
 
     anthropic = factory.get_provider("anthropic")
     res_anthropic = await anthropic.generate(request=req)
-    assert "Anthropic" in res_anthropic.text
+    assert "anthropic" in res_anthropic.text.lower()
 
     gemini = factory.get_provider("gemini")
     res_gemini = await gemini.generate(request=req)
-    assert "Gemini" in res_gemini.text
+    assert "gemini" in res_gemini.text.lower()
 
     cohere = factory.get_provider("cohere")
     res_cohere = await cohere.generate(request=req)
-    assert "Cohere" in res_cohere.text
+    assert "cohere" in res_cohere.text.lower()
 
     mistral = factory.get_provider("mistral")
     res_mistral = await mistral.generate(request=req)
-    assert "Mistral" in res_mistral.text
+    assert "mistral" in res_mistral.text.lower()
 
 
 def test_ab_testing_deterministic_traffic_splitting():

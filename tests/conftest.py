@@ -2,6 +2,12 @@ import os
 os.environ["AUTH_ENABLED"] = "true"
 os.environ["ALLOW_ANONYMOUS"] = "true"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
+os.environ["OPENAI_API_KEY"] = "mock"
+os.environ["ANTHROPIC_API_KEY"] = "mock"
+os.environ["GEMINI_API_KEY"] = "mock"
+os.environ["COHERE_API_KEY"] = "mock"
+os.environ["MISTRAL_API_KEY"] = "mock"
+os.environ["AZURE_OPENAI_API_KEY"] = "mock"
 
 try:
     from app.core.config import get_settings

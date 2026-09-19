@@ -33,11 +33,11 @@ jobs:
 
       - name: Security Vulnerability Audit
         run: |
-          pip-audit --desc || true
+          pip-audit --desc
 
       - name: Code Formatting Check (Black)
         run: |
-          black --check app/ || true
+          black --check app/
 
       - name: Flake8 Linting
         run: |
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Full Test Suite with Coverage Gate
         run: |
-          PYTHONPATH="${PYTHONPATH}:." pytest tests/ -v --cov=app --cov-report=xml
+          PYTHONPATH="${PYTHONPATH}:." pytest tests/ -v --cov=app --cov-report=xml --cov-fail-under=60
 
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
