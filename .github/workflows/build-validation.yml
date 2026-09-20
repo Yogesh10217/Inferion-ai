@@ -74,4 +74,10 @@ jobs:
         run: |
           curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.6.3/kubeconform-linux-amd64.tar.gz | tar xz
           sudo mv kubeconform /usr/local/bin/
-          find infra deploy -name "*.yaml" -o -name "*.yml" 2>/dev/null | xargs kubeconform -strict -summary
+          echo "=== Validating Rendered Helm Charts with Kubeconform ==="
+          helm template test-release deploy/helm/llm-engine | kubeconform -strict -summary -ignore-missing-schemas
+          echo "=== Validating Standalone Kubernetes Manifests with Kubeconform ==="
+          MANIFEST_FILES=$(find deploy/kubernetes infra/k8s -type f \( -name "*.yaml" -o -name "*.yml" \) 2>/dev/null | grep -v "/helm/" || true)
+          if [ -n "$MANIFEST_FILES" ]; then
+            echo "$MANIFEST_FILES" | xargs kubeconform -strict -summary -ignore-missing-schemas
+          fi
