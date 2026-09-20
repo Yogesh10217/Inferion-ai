@@ -65,14 +65,14 @@
 
 ---
 
-### 🟢 v1.0 Release Status: 100% Production Ready
+### 🟢 v1.0 Release Status: Backend 100% Complete — UI & Infra In Progress
 
 1. 💻 **Interactive Control Plane Web UI (Next.js Admin Dashboard)**
-   - *Status*: ✅ **Completed**. Production Next.js 15 App Router admin control plane built at `/dashboard` featuring Overview, Routing Tracer, Agent Sandbox, API Key Governance, RAG Visualizer, 6-Tier Memory, FinOps Cost Analytics, Tenants & Orgs, Plugin Registry, and Settings.
+   - *Status*: 🟡 **In Progress** — Production Next.js 15 App Router admin control plane built at `/dashboard` featuring Overview, Routing Tracer, Agent Sandbox, API Key Governance, RAG Visualizer, 6-Tier Memory, FinOps Cost Analytics, Tenants & Orgs, Plugin Registry, and Settings. Currently running on **demo/mock data** — real API wiring in progress.
 2. 🔑 **Secret Manager & Production Provider Credentials Integration**
    - *Status*: ✅ **Completed**. HashiCorp Vault (KV v2) and AWS Secrets Manager/KMS integrated into `SecretManager`. Native adapters registered for OpenAI, Anthropic, AWS Bedrock, Azure OpenAI, Ollama, Gemini, Cohere, and Mistral. Credential verification via `scripts/verify_credentials.py`.
 3. ☸️ **Kubernetes & Cloud Infrastructure Verification**
-   - *Status*: ✅ **Completed**. Production Helm chart (`deploy/helm/llm-engine`) enhanced with HPA, PodDisruptionBudget, and Vault secret mappings. Automated PostgreSQL HA & Redis Sentinel cluster failover via `deploy/scripts/dr/pg_redis_failover.py` and validation via `scripts/validate_helm_k8s.py`.
+   - *Status*: 🟡 **In Progress** — Docker Compose & Terraform standard modules ready. Helm chart (`deploy/helm/llm-engine`) is present with HPA and PodDisruptionBudget. Full K8s validation and PostgreSQL HA / Redis Sentinel failover verification in progress.
 4. ⚡ **High-Concurrency Load & Stress Testing**
    - *Status*: ✅ **Completed**. Production Locust (`FastHttpUser`) and K6 load testing suite targeting 10,000+ RPS sustained throughput. Published official whitepaper: [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md).
 

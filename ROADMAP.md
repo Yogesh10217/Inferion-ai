@@ -19,28 +19,31 @@ As a senior software architecture assessment, this document tracks completed fea
 | **Multi-Language SDKs** | ✅ **85% Complete** | Python, TypeScript, Go, Java client wrappers available |
 | **CLI Tools Suite** | ✅ **90% Complete** | Python CLI supporting 34 domain modules |
 | **Test Suite** | ✅ **1,800+ Tests** | Unit, integration, container simulation, and workflow tests |
-| **Web UI (Control Plane Dashboard)**| 🟡 **Pending (20% Complete)**| Next.js frontend currently contains marketing landing page; UI Dashboard pending |
-| **Production K8s & Cloud Infra**| 🟡 **Pending (60% Complete)**| Docker Compose & Terraform standard modules ready; Helm & K8s verification pending |
+| **Web UI (Control Plane Dashboard)**| 🟡 **In Progress (UI built, API wiring pending)**| Dashboard UI built in Next.js 15; currently runs on demo data — real backend API integration pending |
+| **Production K8s & Cloud Infra**| 🟡 **In Progress (60% Complete)**| Docker Compose & Terraform modules ready; Helm chart present with HPA; full K8s validation pending |
 
 ---
 
 ## 🎯 Detailed Pending Roadmap to 1.0 Release
 
-### Phase 1: Interactive Enterprise Control Plane Web Dashboard (High Priority)
-- [x] **API Key & Tenant Management UI**: Add visual interface for creating/revoking API keys, managing workspace quotas, and configuring RBAC roles.
-- [x] **Live Routing Tracer Visualizer**: Build interactive UI to view real-time 9-stage routing decisions, provider latencies, and circuit breaker states.
-- [x] **Agent & Workflow Playground**: Visual canvas to design DAG workflows, monitor step-by-step agent executions, and approve pending human-in-the-loop actions.
-- [x] **RAG & Knowledge Base Manager**: Drag-and-drop document upload interface, chunk inspection, and embedding search sandbox.
-- [x] **FinOps Cost & Usage Dashboard**: Interactive charts (Recharts/Chart.js) for model spending, usage trends, and invoice generation.
+### Phase 1: Interactive Enterprise Control Plane Web Dashboard (In Progress)
+- [x] **Dashboard UI Shell**: Next.js 15 App Router admin control plane with sidebar navigation, Topbar, StatCards, Charts, and routing decision tables built.
+- [ ] **Live API Wiring**: Connect dashboard components to real backend API endpoints (`/v1/metrics`, `/v1/routing/decide`, `/v1/agents`, etc.) — replacing current mock data.
+- [ ] **API Key & Tenant Management UI**: Visual interface for creating/revoking API keys, managing workspace quotas, and configuring RBAC roles wired to live backend.
+- [ ] **Live Routing Tracer Visualizer**: Connect routing tracer UI to real-time 9-stage routing decisions from the API.
+- [ ] **Agent & Workflow Playground**: Wire agent execution sandbox to `/v1/agents/{id}/run` with real step-by-step results.
+- [ ] **RAG & Knowledge Base Manager**: Connect document upload UI to `/v1/knowledge/ingest` and search sandbox to `/v1/knowledge/search`.
+- [ ] **FinOps Cost & Usage Dashboard**: Wire cost charts to real `/v1/usage` and billing endpoints.
 
 ### Phase 2: Live Cloud Provider Integrations & Credentials Hardening
 - [x] **Full Native Adapters**: Expand live production testing for OpenAI, Anthropic, AWS Bedrock, Azure OpenAI, Cohere, Gemini, Mistral, and Ollama.
 - [x] **Vault / KMS Secret Integration**: Support HashiCorp Vault (KV v2) and AWS Secrets Manager/KMS for dynamic API key rotation and secret redaction.
 
 ### Phase 3: Infrastructure, Kubernetes & CI/CD Verification
-- [x] **Helm Chart Verification**: Complete and validate Helm values for HA production deployments with auto-scaling (HPA) and PodDisruptionBudget.
-- [x] **Database Migration Pipelines**: Verify Alembic migrations against high-availability managed PostgreSQL clusters (RDS/Cloud SQL) with zero-downtime migrations.
-- [x] **Redis Cluster Support**: Validate multi-region Redis Sentinel / Cluster failover for distributed rate limiting.
+- [x] **Helm Chart Present**: Helm chart at `deploy/helm/llm-engine` with HPA and PodDisruptionBudget values.
+- [ ] **Helm Chart Full Validation**: Complete and validate Helm values against a real K8s cluster for HA production deployments.
+- [ ] **Database Migration Pipelines**: Verify Alembic migrations against managed PostgreSQL (RDS/Cloud SQL) with zero-downtime.
+- [ ] **Redis Cluster Support**: Validate Redis Sentinel / Cluster failover for distributed rate limiting.
 
 ### Phase 4: Production Hardening & Benchmarking
 - [x] **Concurrency & Stress Benchmarks**: Execute Locust / K6 load tests for 10,000+ RPS sustained throughput and record benchmark whitepaper ([BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md)).
