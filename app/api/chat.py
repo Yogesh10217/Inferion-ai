@@ -1,4 +1,5 @@
 import json
+import logging
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
@@ -8,7 +9,10 @@ from app.schemas.request import ChatCompletionRequest
 from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage
 from app.services.inference_service import InferenceService, build_inference_service
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(tags=["chat"])
+
 
 
 def get_inference_service(request: Request) -> InferenceService:
@@ -39,8 +43,8 @@ async def create_chat_completion(
                 cb = ContextBuilder()
                 context_str, _ = cb.build_context(context_docs)
                 payload.messages[-1].content = f"Context:\n{context_str}\n\nUser Question:\n{user_prompt}"
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Failed to retrieve RAG knowledge context: %s", exc)
 
     if hasattr(request.app.state, "container"):
         model_meta = request.app.state.container.registry.get_model(payload.model)
