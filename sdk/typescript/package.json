@@ -11,7 +11,7 @@
     "test": "npm run build && node --test dist/tests/client.test.js"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^26.6.1",
     "typescript": "^5.4.0"
   },
   "keywords": ["llm", "ai", "sdk", "typescript"],
