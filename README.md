@@ -342,7 +342,7 @@ Full endpoint listing: [API.md](API.md) · Interactive explorer: http://localhos
 | Load Testing | 10,000+ RPS via Locust & K6 — see [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md) |
 | Test Suite | **1,800+ automated tests** — unit, integration, platform simulation |
 
-Full milestone detail: [ROADMAP.md](ROADMAP.md)
+
 
 ---
 
