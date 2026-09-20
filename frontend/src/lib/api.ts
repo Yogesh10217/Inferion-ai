@@ -9,12 +9,11 @@ import {
   providerVolume,
   systemHealth,
   recentRoutingDecisions,
-  agentsList,
-  knowledgeDocs,
-  finopsData,
-  apiKeysList,
-  organizationsList,
-  workspacesList,
+  agents,
+  knowledgeBases,
+  workspaceBudgets,
+  apiKeys,
+  organizations,
 } from "./mock-data";
 
 export const API_BASE_URL =
@@ -141,7 +140,7 @@ export async function getAgentsList() {
   } catch {
     // Fallback
   }
-  return agentsList;
+  return agents;
 }
 
 export async function runAgentExecution(agentId: string, inputPrompt: string) {
@@ -179,7 +178,7 @@ export async function getKnowledgeDocs() {
   } catch {
     // Fallback
   }
-  return knowledgeDocs;
+  return knowledgeBases;
 }
 
 export async function searchKnowledgeBase(query: string) {
@@ -211,7 +210,7 @@ export async function getFinopsUsageData() {
   } catch {
     // Fallback
   }
-  return finopsData;
+  return workspaceBudgets;
 }
 
 // ── API Keys & Organizations ──────────────────────────────────────────────────
@@ -224,7 +223,7 @@ export async function getApiKeys() {
   } catch {
     // Fallback
   }
-  return apiKeysList;
+  return apiKeys;
 }
 
 export async function getOrganizations() {
@@ -236,17 +235,5 @@ export async function getOrganizations() {
   } catch {
     // Fallback
   }
-  return organizationsList;
-}
-
-export async function getWorkspaces() {
-  try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/v1/workspaces`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch {
-    // Fallback
-  }
-  return workspacesList;
+  return organizations;
 }

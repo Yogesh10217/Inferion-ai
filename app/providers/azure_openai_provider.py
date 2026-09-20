@@ -4,6 +4,7 @@ import logging
 import os
 import time
 from typing import Any, AsyncIterator, Optional
+
 from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import InferenceRequest
@@ -51,8 +52,8 @@ class AzureOpenAIProvider(BaseProvider):
             )
 
         try:
-            import urllib.request
             import json
+            import urllib.request
 
             deployment_name = model_id.replace(".", "-")
             req_url = f"{self.azure_endpoint.rstrip('/')}/openai/deployments/{deployment_name}/chat/completions?api-version={self.api_version}"

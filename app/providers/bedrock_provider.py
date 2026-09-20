@@ -4,6 +4,7 @@ import logging
 import os
 import time
 from typing import Any, AsyncIterator, Optional
+
 from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import InferenceRequest
@@ -49,8 +50,9 @@ class BedrockProvider(BaseProvider):
             )
 
         try:
-            import boto3
             import json
+
+            import boto3
 
             client = boto3.client(
                 "bedrock-runtime",

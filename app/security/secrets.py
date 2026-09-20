@@ -73,8 +73,8 @@ class VaultSecretProvider(SecretProvider):
             return os.environ.get(key)
 
         try:
-            import urllib.request
             import json
+            import urllib.request
 
             req_url = f"{self.vault_url}/v1/{self.mount_point}/data/{key}"
             req = urllib.request.Request(
@@ -98,8 +98,8 @@ class VaultSecretProvider(SecretProvider):
             return
 
         try:
-            import urllib.request
             import json
+            import urllib.request
 
             req_url = f"{self.vault_url}/v1/{self.mount_point}/data/{key}"
             payload = json.dumps({"data": {"value": value}}).encode("utf-8")
