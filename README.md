@@ -18,22 +18,25 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Version](https://img.shields.io/badge/Version-v0.9.0--beta-FF6B6B?style=for-the-badge)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F7DF1E?style=for-the-badge)](LICENSE)
 [![OpenAI Compatible](https://img.shields.io/badge/OpenAI-Compatible-412991?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/docs)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Redis](https://img.shields.io/badge/Redis-Powered-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
 [![Prometheus](https://img.shields.io/badge/Prometheus-Monitored-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io)
+[![Tests](https://img.shields.io/badge/Tests-1800%2B_passing-22C55E?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/Yogesh10217/Inferion-ai/actions)
 
 <br/>
 
 <p align="center">
-  <a href="#-current-project-status--pending-roadmap">Project Status</a> •
+  <a href="#-what-is-inferion-ai">What Is This?</a> •
   <a href="#-quick-start">Quick Start</a> •
-  <a href="#-architecture">Architecture</a> •
+  <a href="#️-architecture">Architecture</a> •
   <a href="#-key-features">Features</a> •
   <a href="#-api-reference-highlights">API Reference</a> •
   <a href="#-vs-alternatives">Comparison</a> •
+  <a href="#-project-status--roadmap">Status</a> •
   <a href="#-documentation-links">Docs</a>
 </p>
 
@@ -46,47 +49,14 @@
 
 ---
 
-## 🚦 Current Project Status & Pending Roadmap
-
-> **Senior Engineer Assessment**: The core backend architecture, routing engine, agent framework, memory platform, and test suites are **fully operational** with over 1,800+ passing automated tests. The project is currently at **v0.9.0-beta**. Below is the status matrix of what is completed and what remains to reach **v1.0 Production Release**.
-
-### ✅ Completed Subsystems (Production Ready Backend)
-
-- 🔀 **9-Stage Intelligent Routing Engine**: Capability filter, rules, policy, health check, weighted scoring, provider ranking, selection, failover execution, and full decision traces.
-- 🏢 **Enterprise Multi-Tenancy & Security**: JWT & API Key (`sk_...`) auth, Organization → Workspace → User hierarchy, RBAC, Redis token bucket rate limiting, and hard budget enforcement.
-- 🤖 **Autonomous Agent Framework**: 4 planning strategies (ZeroShot, ReAct, PlanExecute, TreeOfThought), human-in-the-loop approvals, and multi-agent team coordination (supervisor, consensus, peer-to-peer).
-- 🧠 **6-Tier Enterprise Memory System**: Working, Conversation, Semantic, Profile, Session, and Episodic memory with composite ranking score formulas.
-- 📚 **Knowledge & RAG Base**: Document ingestion, chunking, embedding, vector store integrations (Pinecone, Milvus, Qdrant, FAISS local), hybrid search, and cross-encoder reranking.
-- 📡 **Event Platform & Webhooks**: HMAC-SHA256 signed event notifications across 19 event types, dead-letter queues, and event replay.
-- 🧩 **Plugin Framework**: 7-state plugin lifecycle with 10 lifecycle hooks and hot-reload support.
-- 🔭 **Observability Stack**: Prometheus metrics export, OpenTelemetry distributed tracing across 5 exporters (Console, OTLP HTTP/gRPC, Jaeger, Zipkin).
-- 📦 **Multi-Language SDKs & CLI**: Python, TypeScript, Go, Java SDK client wrappers, and a Python CLI covering 34 domain modules.
-- 🧪 **Comprehensive Test Suite**: **1,800+** automated tests covering unit, integration, and platform simulation tests.
-
 ---
-
-### 🟢 v1.0 Release Status: Backend 100% Complete — UI & Infra In Progress
-
-1. 💻 **Interactive Control Plane Web UI (Next.js Admin Dashboard)**
-   - *Status*: 🟡 **In Progress** — Production Next.js 15 App Router admin control plane built at `/dashboard` featuring Overview, Routing Tracer, Agent Sandbox, API Key Governance, RAG Visualizer, 6-Tier Memory, FinOps Cost Analytics, Tenants & Orgs, Plugin Registry, and Settings. Currently running on **demo/mock data** — real API wiring in progress.
-2. 🔑 **Secret Manager & Production Provider Credentials Integration**
-   - *Status*: ✅ **Completed**. HashiCorp Vault (KV v2) and AWS Secrets Manager/KMS integrated into `SecretManager`. Native adapters registered for OpenAI, Anthropic, AWS Bedrock, Azure OpenAI, Ollama, Gemini, Cohere, and Mistral. Credential verification via `scripts/verify_credentials.py`.
-3. ☸️ **Kubernetes & Cloud Infrastructure Verification**
-   - *Status*: 🟡 **In Progress** — Docker Compose & Terraform standard modules ready. Helm chart (`deploy/helm/llm-engine`) is present with HPA and PodDisruptionBudget. Full K8s validation and PostgreSQL HA / Redis Sentinel failover verification in progress.
-4. ⚡ **High-Concurrency Load & Stress Testing**
-   - *Status*: ✅ **Completed**. Production Locust (`FastHttpUser`) and K6 load testing suite targeting 10,000+ RPS sustained throughput. Published official whitepaper: [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md).
-
-*Track full milestone details in [ROADMAP.md](ROADMAP.md).*
-
----
-
-## 🧠 What Is This?
+## 🧠 What Is Inferion AI?
 
 Most teams hit a wall when scaling AI in production:
 
 - 💸 **Runaway costs** — everyone calls GPT-4 even for simple tasks
 - 🔒 **No access control** — a single leaked API key = game over
-- 📊 **Zero visibility** — you have no idea who's using what
+- 📊 **Zero visibility** — you have no idea who's using what or how much it costs
 - 🔀 **Vendor lock-in** — OpenAI goes down, your product goes down
 - 🤖 **LLMs just answer** — they can't actually *do things* for you
 
@@ -115,27 +85,39 @@ client = OpenAI(base_url="http://your-engine:8002/v1", api_key="sk-...")
 
 ## ⚡ Quick Start
 
+### Prerequisites
+
+| Requirement | Minimum Version |
+|---|---|
+| Python | 3.10+ |
+| Docker & Docker Compose | 24+ (for full-stack mode) |
+| Redis | 7+ (optional — required for rate limiting) |
+| Git | any |
+
+### Local Development
+
 ```bash
-# Clone
+# 1. Clone the repository
 git clone https://github.com/Yogesh10217/Inferion-ai.git
 cd Inferion-ai
 
-# Setup virtual environment
-python -m venv .venv && .venv\Scripts\activate   # Windows
-# source .venv/bin/activate                       # Linux/macOS
+# 2. Create and activate virtual environment
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate   # Linux / macOS
 
-# Install dependencies
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# Configure environment
+# 4. Configure environment
 cp .env.example .env
-# Add your OPENAI_API_KEY to .env
+# Edit .env and add your OPENAI_API_KEY (and any other provider keys)
 
-# Launch 🚀
+# 5. Launch 🚀
 uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
 ```
 
-**Visit http://localhost:8002/docs** → Interactive API explorer with every endpoint.
+**Visit [http://localhost:8002/docs](http://localhost:8002/docs)** → Interactive Swagger API explorer.
 
 ### 🐳 Full Stack (App + Ollama + Prometheus + Grafana)
 
@@ -190,13 +172,14 @@ docker compose up -d --build
                         └─────────────────────────────────────────────────────────┘
 ```
 
-Detailed architectural diagrams and flow explanations available in [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md).
+For a detailed deep-dive, see [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md).
 
 ---
 
 ## 🚀 Key Features
 
 ### 🔀 Intelligent 9-Stage Routing Engine
+
 Route every request to the optimal provider automatically.
 
 ```
@@ -227,7 +210,7 @@ Your Company (Organization)
 
 ---
 
-### 🤖 Enterprise Agent Framework
+### 🤖 Autonomous Agent Framework
 
 ```python
 agent = client.agents.create(
@@ -244,10 +227,13 @@ result = client.agents.run("dev_assistant",
 ```
 
 **4 Planning Strategies:**
-- **ZeroShot**: Simple, direct tasks
-- **ReAct**: Iterative reasoning with tool execution
-- **Plan-Execute**: Complex multi-step DAG workflows
-- **Tree of Thought**: Multi-path solution exploration
+
+| Strategy | Best For |
+|---|---|
+| **ZeroShot** | Simple, direct single-step tasks |
+| **ReAct** | Iterative reasoning with tool execution |
+| **Plan-Execute** | Complex multi-step DAG workflows |
+| **Tree of Thought** | Multi-path solution exploration |
 
 ---
 
@@ -266,20 +252,27 @@ result = client.agents.run("dev_assistant",
 
 ### 📚 Knowledge & RAG Platform
 
-- **Pipeline**: Document Parsing → Chunking → Embedding → Vector Store → Hybrid Search → Reranking → Citation Tracking
-- **Supported Vector Stores**: Pinecone · Milvus · Qdrant · FAISS (local)
+**Pipeline:** Document Parsing → Chunking → Embedding → Vector Store → Hybrid Search → Reranking → Citation Tracking
+
+**Supported Vector Stores:** Pinecone · Milvus · Qdrant · FAISS (local)
 
 ---
 
 ### 📡 Event Platform & Webhooks
 
-**19 built-in event types** with HMAC-SHA256 signatures, retry queues, and replay capabilities.
+**19 built-in event types** with HMAC-SHA256 signatures, dead-letter queues, retry logic, and replay capabilities.
 
 ---
 
 ### 🔭 Observability & OpenTelemetry
 
-Pre-built Prometheus metrics and OpenTelemetry exporters (**Console · OTLP HTTP · OTLP gRPC · Jaeger · Zipkin**).
+Pre-built Prometheus metrics and OpenTelemetry exporters — **Console · OTLP HTTP · OTLP gRPC · Jaeger · Zipkin**.
+
+---
+
+### 🧩 Plugin Framework
+
+7-state lifecycle with 10 lifecycle hooks, hot-reload support, and a plugin registry (`plugins_registry.json`).
 
 ---
 
@@ -288,7 +281,7 @@ Pre-built Prometheus metrics and OpenTelemetry exporters (**Console · OTLP HTTP
 ```http
 # Inference
 POST   /v1/chat/completions      # Chat completions (OpenAI-compatible)
-GET    /v1/models                # List models
+GET    /v1/models                # List available models
 GET    /v1/health                # Health probe
 
 # Auth & Tenants
@@ -312,7 +305,7 @@ POST   /v1/routing/decide        # Explain routing decision
 GET    /v1/metrics               # Prometheus metrics
 ```
 
-Full details available in [API.md](API.md).
+Full details in [API.md](API.md).
 
 ---
 
@@ -335,6 +328,40 @@ Full details available in [API.md](API.md).
 | **Self-hostable** | ✅ | ✅ | ❌ SaaS | ✅ | ❌ Cloud |
 | **Open Source** | ✅ MIT | ✅ MIT | ❌ Paid | ✅ MIT | ❌ |
 | SDK (Python/TS/Go/Java) | ✅ All 4 | ✅ | ✅ | ❌ | ✅ |
+
+---
+
+## 🚦 Project Status & Roadmap
+
+> **Current release: `v0.9.0-beta`** — Backend fully operational with 1,800+ passing tests. UI wiring and infrastructure validation are the remaining blockers for `v1.0 GA`.
+
+### ✅ Completed Subsystems
+
+| Subsystem | Status |
+|---|---|
+| 9-Stage Intelligent Routing Engine | ✅ Complete |
+| Enterprise Multi-Tenancy & Security (JWT, API Keys, RBAC, Redis rate limiting) | ✅ Complete |
+| Autonomous Agent Framework (4 planners, human-in-the-loop, multi-agent teams) | ✅ Complete |
+| 6-Tier Enterprise Memory System | ✅ Complete |
+| Knowledge & RAG Platform (Pinecone, Milvus, Qdrant, FAISS, hybrid search, reranking) | ✅ Complete |
+| Event Platform & Webhooks (19 event types, HMAC-SHA256, dead-letter queues) | ✅ Complete |
+| Plugin Framework (7-state lifecycle, 10 hooks, hot-reload) | ✅ Complete |
+| Observability Stack (Prometheus, OpenTelemetry — 5 exporters) | ✅ Complete |
+| Multi-Language SDKs (Python, TypeScript, Go, Java) | ✅ Complete |
+| CLI Tools (34 domain modules) | ✅ Complete |
+| Test Suite | ✅ **1,800+ tests** |
+| Secret Manager (HashiCorp Vault, AWS Secrets Manager/KMS) | ✅ Complete |
+| Load Testing (10,000+ RPS via Locust & K6) | ✅ Complete |
+
+### 🟡 In Progress (v1.0 Blockers)
+
+| Item | Status |
+|---|---|
+| **Web UI Dashboard** (Next.js 15 control plane — API wiring) | 🟡 UI built, backend wiring in progress |
+| **Kubernetes / Helm Chart** full validation | 🟡 Docker Compose & Terraform ready; K8s HA validation pending |
+| **Database HA** — Alembic migrations against PostgreSQL RDS / Redis Sentinel | 🟡 In progress |
+
+*Full milestone details in [ROADMAP.md](ROADMAP.md).*
 
 ---
 
