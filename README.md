@@ -16,197 +16,197 @@
 
 <br/>
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Version](https://img.shields.io/badge/Version-v0.9.0--beta-FF6B6B?style=for-the-badge)](CHANGELOG.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-F7DF1E?style=for-the-badge)](LICENSE)
-[![OpenAI Compatible](https://img.shields.io/badge/OpenAI-Compatible-412991?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/docs)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
-[![Redis](https://img.shields.io/badge/Redis-Powered-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
-[![Prometheus](https://img.shields.io/badge/Prometheus-Monitored-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io)
-[![Tests](https://img.shields.io/badge/Tests-1800%2B_passing-22C55E?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
-[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/Yogesh10217/Inferion-ai/actions)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Version](https://img.shields.io/badge/Version-v0.9.0--beta-FF6B6B?style=flat-square)](CHANGELOG.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F7DF1E?style=flat-square)](LICENSE)
+[![OpenAI Compatible](https://img.shields.io/badge/OpenAI-Compatible-412991?style=flat-square&logo=openai&logoColor=white)](https://platform.openai.com/docs)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
+[![Tests](https://img.shields.io/badge/Tests-1800%2B_passing-22C55E?style=flat-square&logo=pytest&logoColor=white)](tests/)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)](https://github.com/Yogesh10217/Inferion-ai/actions)
 
 <br/>
 
-<p align="center">
-  <a href="#-what-is-inferion-ai">What Is This?</a> •
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#️-architecture">Architecture</a> •
-  <a href="#-key-features">Features</a> •
-  <a href="#-api-reference-highlights">API Reference</a> •
-  <a href="#-vs-alternatives">Comparison</a> •
-  <a href="#-project-status--roadmap">Status</a> •
-  <a href="#-documentation-links">Docs</a>
-</p>
+[![GitHub stars](https://img.shields.io/github/stars/Yogesh10217/Inferion-ai?style=flat-square)](https://github.com/Yogesh10217/Inferion-ai/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Yogesh10217/Inferion-ai?style=flat-square)](https://github.com/Yogesh10217/Inferion-ai/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/Yogesh10217/Inferion-ai?style=flat-square)](https://github.com/Yogesh10217/Inferion-ai/issues)
+[![Contributors](https://img.shields.io/github/contributors/Yogesh10217/Inferion-ai?style=flat-square)](https://github.com/Yogesh10217/Inferion-ai/graphs/contributors)
 
 <br/>
 
-> **⚡ One platform. Infinite scale. Zero vendor lock-in.**  
-> Route AI traffic intelligently, run autonomous agents, store enterprise memory, enforce compliance — all from a single self-hosted API that's 100% OpenAI-compatible.
+**Python**  ·  **FastAPI**  ·  **Docker**  ·  **Redis**  ·  **PostgreSQL**  ·  **TypeScript**  ·  **Go**  ·  **Java**
 
 </div>
 
 ---
 
----
-## 🧠 What Is Inferion AI?
-
-Most teams hit a wall when scaling AI in production:
-
-- 💸 **Runaway costs** — everyone calls GPT-4 even for simple tasks
-- 🔒 **No access control** — a single leaked API key = game over
-- 📊 **Zero visibility** — you have no idea who's using what or how much it costs
-- 🔀 **Vendor lock-in** — OpenAI goes down, your product goes down
-- 🤖 **LLMs just answer** — they can't actually *do things* for you
-
-**Inferion AI solves all of this.**
-
-It's an **enterprise-grade AI gateway and autonomous agent platform** that sits between your apps and every AI model in the world — adding intelligent routing, multi-tenancy, billing, compliance, RAG, memory, and full autonomous agent execution.
-
-```
-Your App  ──►  Inferion AI  ──►  OpenAI
-                    (this project)    ──►  Ollama (local)
-                                      ──►  Anthropic
-                                      ──►  Any LLM
-```
-
-**Drop-in compatible.** Change one line of code:
-
-```python
-# Before
-client = OpenAI(base_url="https://api.openai.com/v1", api_key="sk-...")
-
-# After — full enterprise control, zero other changes
-client = OpenAI(base_url="http://your-engine:8002/v1", api_key="sk-...")
-```
+> [!WARNING]
+> **Official sources only.** Install or clone Inferion AI only from the verified repository: [github.com/Yogesh10217/Inferion-ai](https://github.com/Yogesh10217/Inferion-ai). Third-party mirrors or re-uploads are not reviewed by the project and may contain malware.
 
 ---
 
-## ⚡ Quick Start
+## Inferion AI
 
-### Prerequisites
+Your apps can call LLMs, but Inferion AI gives them a **coordinated enterprise control plane**: it routes requests intelligently to the cheapest healthy provider, enforces team budgets, runs autonomous agents, stores persistent memory, retrieves knowledge from your documents, and keeps a full audit trail — all behind one OpenAI-compatible API.
 
-| Requirement | Minimum Version |
-|---|---|
-| Python | 3.10+ |
-| Docker & Docker Compose | 24+ (for full-stack mode) |
-| Redis | 7+ (optional — required for rate limiting) |
-| Git | any |
+```
+route → authenticate → enforce budget → run agent → recall memory → respond → observe
+```
 
-### Local Development
+Instead of wiring that together in every project, you deploy it once and every team shares it.
+
+**Optimize the token spend. Persist the context. Control the access.**
+
+Inferion AI is MIT-licensed open source. It works with any OpenAI-compatible client today — Python, TypeScript, Go, Java, cURL — with zero client-side changes.
+
+| Included | Count | What it gives you |
+|---|---|---|
+| Routing stages | **9 stages** | Capability filter, rules, policy, health, scoring, ranking, selection, failover, decision trace |
+| Agent planners | **4 strategies** | ZeroShot, ReAct, Plan-Execute, Tree of Thought |
+| Memory tiers | **6 tiers** | Working, Conversation, Semantic, Profile, Session, Episodic |
+| Webhook event types | **19 types** | HMAC-SHA256 signed, dead-letter queues, replay |
+| Plugin lifecycle hooks | **10 hooks** | Hot-reload, 7-state lifecycle |
+| Observability exporters | **5 exporters** | Console, OTLP HTTP, OTLP gRPC, Jaeger, Zipkin |
+| SDK languages | **4 languages** | Python, TypeScript, Go, Java |
+| Automated tests | **1,800+** | Unit, integration, platform simulation |
+| API endpoint groups | **50+** | Inference, agents, memory, knowledge, routing, tenants, billing |
+
+---
+
+## Install Inferion AI
+
+> [!IMPORTANT]
+> **Requirements:** Python 3.10+, Git (any version). Docker 24+ and Docker Compose are required for full-stack mode. Redis 7+ is required for rate limiting.
+
+### Recommended: Docker full stack
+
+One command brings up the API, Ollama local model runner, Prometheus metrics, and Grafana dashboards.
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/Yogesh10217/Inferion-ai.git
 cd Inferion-ai
-
-# 2. Create and activate virtual environment
-python -m venv .venv
-.venv\Scripts\activate        # Windows
-# source .venv/bin/activate   # Linux / macOS
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Configure environment
-cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY (and any other provider keys)
-
-# 5. Launch 🚀
-uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
-```
-
-**Visit [http://localhost:8002/docs](http://localhost:8002/docs)** → Interactive Swagger API explorer.
-
-### 🐳 Full Stack (App + Ollama + Prometheus + Grafana)
-
-```bash
+cp .env.example .env        # then add OPENAI_API_KEY and other provider keys
 docker compose up -d --build
 ```
 
-| Service | URL | Credentials |
+| Service | URL | Default Credentials |
 |---|---|---|
-| **API + Swagger** | http://localhost:8002/docs | — |
+| **API + Swagger UI** | http://localhost:8002/docs | — |
 | **Grafana Dashboards** | http://localhost:3000 | admin / admin |
 | **Prometheus** | http://localhost:9090 | — |
 | **Metrics Endpoint** | http://localhost:8002/metrics | — |
 
----
+### Local Python (dev server)
 
-## 🏗️ Architecture
+```bash
+git clone https://github.com/Yogesh10217/Inferion-ai.git
+cd Inferion-ai
 
-```
-                        ┌─────────────────────────────────────────────────────────┐
-                        │                   INFERION AI                           │
-                        │                                                          │
-   Your Apps ──────────►│  FastAPI Gateway                                         │
-   OpenAI SDK ─────────►│    │                                                    │
-   REST Clients ────────►│    ├── Auth Middleware (JWT / API Keys / RBAC)          │
-                        │    ├── Tenant Middleware (Org → Workspace → User)       │
-                        │    ├── Rate Limit Middleware (Redis Token Bucket)       │
-                        │    └── Budget Middleware (Hard Limit Enforcement)       │
-                        │                  │                                       │
-                        │    ┌─────────────▼────────────────────────────┐         │
-                        │    │     9-Stage Intelligent Router           │         │
-                        │    │  Capability → Rules → Policy → Health    │         │
-                        │    │  → Scoring → Ranking → Selection         │         │
-                        │    │  → Failover → Final Decision             │         │
-                        │    └──────┬─────────────┬──────────┬──────────┘         │
-                        │          │             │          │                     │
-                        │       OpenAI        Ollama    Anthropic                 │
-                        │       (Cloud)       (Local)   (+ more)                 │
-                        │                                                          │
-                        │  ┌──────────┐  ┌──────────┐  ┌──────────┐             │
-                        │  │  Agent   │  │Workflows │  │ Memory   │             │
-                        │  │Framework │  │  Engine  │  │Platform  │             │
-                        │  │4 Planners│  │DAG + DAGs│  │6 Tiers   │             │
-                        │  └──────────┘  └──────────┘  └──────────┘             │
-                        │                                                          │
-                        │  ┌──────────┐  ┌──────────┐  ┌──────────┐             │
-                        │  │Knowledge │  │ FinOps + │  │Compliance│             │
-                        │  │RAG+Vector│  │  MLOps   │  │SOC2/GDPR │             │
-                        │  └──────────┘  └──────────┘  └──────────┘             │
-                        │                                                          │
-                        │  Observability: Prometheus + Grafana + OpenTelemetry   │
-                        └─────────────────────────────────────────────────────────┘
+# Windows
+python -m venv .venv && .venv\Scripts\activate
+
+# Linux / macOS
+# python -m venv .venv && source .venv/bin/activate
+
+pip install -r requirements.txt
+cp .env.example .env        # add your provider keys
+uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
 ```
 
-For a detailed deep-dive, see [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md).
+Visit **http://localhost:8002/docs** — interactive Swagger explorer with every endpoint.
+
+### Pick one deployment path only
+
+| Path | What it installs | Use when |
+|---|---|---|
+| `docker compose up` | Full stack — API + observability + local model | Production-like local setup |
+| `uvicorn` dev server | API only | Active development / debugging |
+| `make run` | Same as uvicorn, via Makefile shortcut | Team convention |
+
+Do not run both a manual Python process and Docker Compose pointing at the same ports simultaneously.
+
+> **Install trouble?** Open a [GitHub Issue](https://github.com/Yogesh10217/Inferion-ai/issues). Inferion AI never uploads diagnostics automatically.
 
 ---
 
-## 🚀 Key Features
+## Drop-in Compatible
 
-### 🔀 Intelligent 9-Stage Routing Engine
+Change **one line** of code in any existing OpenAI client:
 
-Route every request to the optimal provider automatically.
+```python
+# Before — calling OpenAI directly
+client = OpenAI(base_url="https://api.openai.com/v1", api_key="sk-...")
 
+# After — full enterprise control, zero other changes
+client = OpenAI(base_url="http://your-inferion:8002/v1", api_key="sk-...")
 ```
-Request → Capability Filter → Rule Evaluation → Policy Evaluation → Health Check
-        → Weighted Scoring → Provider Ranking → Selection → Failover → Decision
-```
 
-- **Cost-optimized**: Automatically prefer cheaper models for simple tasks
-- **Latency-optimized**: Route to the fastest healthy provider
-- **Custom policies**: Define custom scoring weights per organization
-- **Circuit breaker**: Automatically skip degraded providers
-- **Full trace**: Every routing decision is explained and logged
+Same for TypeScript, Go, Java, and cURL. No client-side refactoring required.
 
 ---
 
-### 🏢 Enterprise Multi-Tenancy
+## Start Using Inferion AI
+
+Start with the workflow you need, not the full feature list.
+
+| What you are doing | Start here |
+|---|---|
+| Calling a model with cost control | `POST /v1/chat/completions` with your existing client |
+| Seeing which provider was chosen and why | `POST /v1/routing/decide` |
+| Creating a team workspace with a budget | `POST /v1/organizations` → `POST /v1/workspaces` |
+| Generating an API key for a teammate | `POST /v1/auth/api-keys` |
+| Running an autonomous agent | `POST /v1/agents` then `POST /v1/agents/{id}/run` |
+| Indexing documents for RAG | `POST /v1/knowledge/ingest` |
+| Searching your knowledge base | `POST /v1/knowledge/search` |
+| Storing and recalling context | `POST /v1/memory/search` |
+| Watching live metrics | Grafana at http://localhost:3000 |
+| Setting up pre-commit checks | `pip install pre-commit && pre-commit install` |
+
+---
+
+## Why Inferion AI?
+
+| Without a gateway | With Inferion AI |
+|---|---|
+| Every team calls GPT-4 regardless of task complexity | Router picks the cheapest model that can handle the task |
+| One leaked API key exposes everything | Per-tenant keys with RBAC, budgets, and hard limits |
+| No visibility into who spends what | Per-workspace usage, cost, and quota dashboards |
+| OpenAI outage = your product outage | Circuit breaker fails over to the next healthy provider |
+| LLMs answer but can't act | Autonomous agents with 4 planners and human-in-the-loop gates |
+| Context lost between sessions | 6-tier memory persists working state, conversation, and learned facts |
+| Model provider changes require app rewrites | One OpenAI-compatible URL to update |
+
+### The full routing flow
+
+```
+POST /v1/chat/completions
+  +-- Capability Filter      -- does this model support vision / streaming / function calling?
+  +-- Rule Evaluation        -- tenant-defined routing rules
+  +-- Policy Evaluation      -- cost vs latency weight for this workspace
+  +-- Health Check           -- circuit breaker: skip degraded providers
+  +-- Weighted Scoring       -- multi-criteria score from real-time metrics
+  +-- Provider Ranking       -- sort healthy candidates
+  +-- Provider Selection     -- pick optimal provider
+  +-- Failover Execution     -- retry on upstream error
+  +-- Decision Trace         -- full explainable log stored for audit
+```
+
+A result is not just a response. It's a decision trail: which providers were considered, why the winner was chosen, and what the fallback would have been.
+
+---
+
+## Key Features
+
+### 🏢 Multi-Tenancy
 
 ```
 Your Company (Organization)
-├── Engineering Team (Workspace)  →  Budget: $2,000/mo  |  Quota: 50k req/day
-├── Sales Team (Workspace)        →  Budget: $500/mo   |  Quota: 10k req/day
-└── Finance Team (Workspace)      →  Budget: $1,000/mo |  Quota: 5k req/day
+├── Engineering  →  Budget: $2,000/mo  |  Quota: 50,000 req/day
+├── Sales        →  Budget:   $500/mo  |  Quota: 10,000 req/day
+└── Finance      →  Budget: $1,000/mo  |  Quota:  5,000 req/day
 ```
 
-- Organizations → Workspaces → Users hierarchy
-- Per-tenant API keys (`sk_...`), JWT tokens, and RBAC roles
-- Complete resource isolation — one team's usage never affects another
+Per-tenant API keys (`sk_...`), JWT auth, RBAC roles, Redis token-bucket rate limiting, and hard budget enforcement. One team's usage never bleeds into another.
 
 ---
 
@@ -215,173 +215,157 @@ Your Company (Organization)
 ```python
 agent = client.agents.create(
     agent_id="dev_assistant",
-    planner_strategy="react",       # ZeroShot | ReAct | PlanExecute | TreeOfThought
-    tools=["calculator", "python", "shell", "rest_api", "knowledge_search"],
+    planner_strategy="react",        # ZeroShot | ReAct | PlanExecute | TreeOfThought
+    tools=["python", "shell", "rest_api", "knowledge_search"],
     budget={"max_tokens": 50000, "max_cost_usd": 2.00},
-    require_approval_for=["shell"]  # Human-in-the-loop gate
+    require_approval_for=["shell"]   # human-in-the-loop gate
 )
-
-result = client.agents.run("dev_assistant", 
-    prompt="Find all failing tests in the project, fix them, and run pytest to verify"
+result = client.agents.run("dev_assistant",
+    prompt="Find all failing tests, fix them, and run pytest to verify."
 )
 ```
 
-**4 Planning Strategies:**
-
-| Strategy | Best For |
+| Planner | Best for |
 |---|---|
-| **ZeroShot** | Simple, direct single-step tasks |
-| **ReAct** | Iterative reasoning with tool execution |
-| **Plan-Execute** | Complex multi-step DAG workflows |
-| **Tree of Thought** | Multi-path solution exploration |
+| **ZeroShot** | Single-step, direct tasks |
+| **ReAct** | Iterative tool use with reasoning steps |
+| **Plan-Execute** | Multi-step DAG workflows |
+| **Tree of Thought** | Multi-path exploratory problems |
+
+Multi-agent coordination supports supervisor, consensus, and peer-to-peer team topologies.
 
 ---
 
-### 🧠 Enterprise Memory Platform — 6 Tiers
+### 🧠 6-Tier Memory Platform
 
-| Tier | What It Stores |
+| Tier | Stores |
 |---|---|
-| 🔴 **Working** | Current execution scratchpad (planner state, tool outputs) |
-| 🟠 **Conversation** | Multi-turn message history with token budgeting |
-| 🟡 **Semantic** | Learned facts, preferences, domain knowledge (vector-indexed) |
-| 🟢 **Profile** | User preferences, coding patterns, communication style |
-| 🔵 **Session** | Active project/task context with auto-expiry |
-| 🟣 **Episodic** | Historical agent/workflow runs for experience-based recall |
+| 🔴 **Working** | Current execution scratchpad — planner state, tool outputs |
+| 🟠 **Conversation** | Multi-turn history with token budgeting |
+| 🟡 **Semantic** | Learned facts and domain knowledge (vector-indexed) |
+| 🟢 **Profile** | User preferences and communication style |
+| 🔵 **Session** | Active task context with auto-expiry |
+| 🟣 **Episodic** | Historical agent runs for experience-based recall |
 
 ---
 
-### 📚 Knowledge & RAG Platform
+### 📚 Knowledge & RAG
 
-**Pipeline:** Document Parsing → Chunking → Embedding → Vector Store → Hybrid Search → Reranking → Citation Tracking
+**Pipeline:** Parse → Chunk → Embed → Store → Hybrid Search → Rerank → Cite
 
-**Supported Vector Stores:** Pinecone · Milvus · Qdrant · FAISS (local)
-
----
-
-### 📡 Event Platform & Webhooks
-
-**19 built-in event types** with HMAC-SHA256 signatures, dead-letter queues, retry logic, and replay capabilities.
+**Vector stores:** Pinecone · Milvus · Qdrant · FAISS (local, no server needed)
 
 ---
 
-### 🔭 Observability & OpenTelemetry
+### 🔭 Observability
 
-Pre-built Prometheus metrics and OpenTelemetry exporters — **Console · OTLP HTTP · OTLP gRPC · Jaeger · Zipkin**.
-
----
-
-### 🧩 Plugin Framework
-
-7-state lifecycle with 10 lifecycle hooks, hot-reload support, and a plugin registry (`plugins_registry.json`).
+Prometheus metrics export + OpenTelemetry distributed tracing with five exporters: Console, OTLP HTTP, OTLP gRPC, Jaeger, Zipkin. Pre-built Grafana dashboards included in the Docker Compose stack.
 
 ---
 
-## 🔌 API Reference Highlights
+## API Reference
 
 ```http
-# Inference
-POST   /v1/chat/completions      # Chat completions (OpenAI-compatible)
-GET    /v1/models                # List available models
-GET    /v1/health                # Health probe
+# Inference (OpenAI-compatible)
+POST   /v1/chat/completions         # Chat completions
+GET    /v1/models                   # List available models
 
 # Auth & Tenants
-POST   /v1/auth/login            # JWT login
-POST   /v1/auth/api-keys         # Create API key
-GET    /v1/organizations         # Manage Organizations
-GET    /v1/workspaces            # Manage Workspaces
+POST   /v1/auth/login               # JWT login
+POST   /v1/auth/api-keys            # Issue API key
+GET    /v1/organizations            # Manage orgs
+GET    /v1/workspaces               # Manage workspaces
 
 # Agents & Workflows
-POST   /v1/agents                # Create agent
-POST   /v1/agents/{id}/run       # Execute agent
-POST   /v1/workflows             # Create DAG workflow
+POST   /v1/agents                   # Create agent
+POST   /v1/agents/{id}/run          # Execute agent
+POST   /v1/workflows                # Create DAG workflow
 
 # Memory & Knowledge
-POST   /v1/memory/search         # Search memories
-POST   /v1/knowledge/ingest      # Index documents
-POST   /v1/knowledge/search      # Hybrid RAG search
+POST   /v1/memory/search            # Search memory tiers
+POST   /v1/knowledge/ingest         # Index documents
+POST   /v1/knowledge/search         # Hybrid RAG search
 
 # Routing & Observability
-POST   /v1/routing/decide        # Explain routing decision
-GET    /v1/metrics               # Prometheus metrics
+POST   /v1/routing/decide           # Explain a routing decision
+GET    /v1/metrics                  # Prometheus metrics
+GET    /v1/health                   # Health probe
 ```
 
-Full details in [API.md](API.md).
+Full endpoint listing: [API.md](API.md) · Interactive explorer: http://localhost:8002/docs
 
 ---
 
-## 🆚 vs Alternatives
+## vs Alternatives
 
 | Feature | **Inferion AI** | LiteLLM | Portkey | Dify | AWS Bedrock |
 |---|:---:|:---:|:---:|:---:|:---:|
 | Multi-provider routing | ✅ 9-stage | ✅ Basic | ✅ | ✅ | ✅ |
-| Hierarchical rate limiting | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Autonomous agent framework | ✅ 4 planners | ❌ | ❌ | ✅ | ✅ |
+| Enterprise memory (6 tiers) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Multi-agent coordination | ✅ Teams + consensus | ❌ | ❌ | ❌ | ❌ |
+| RAG / Knowledge platform | ✅ Full pipeline | ❌ | ❌ | ✅ | ✅ |
 | Multi-tenancy (Org/Workspace) | ✅ Full | ✅ Basic | ✅ | ✅ | ✅ |
-| Billing & Invoicing | ✅ Full | ✅ Basic | ✅ | ❌ | ✅ |
+| Hard budget enforcement | ✅ | ✅ Basic | ✅ | ❌ | ✅ |
 | Webhook event platform | ✅ 19 types | ❌ | ✅ | ❌ | ✅ |
 | Plugin framework | ✅ 7-state | ❌ | ❌ | ✅ | ❌ |
-| Autonomous agent framework | ✅ 4 planners | ❌ | ❌ | ✅ | ✅ |
-| RAG / Knowledge platform | ✅ Full pipeline | ❌ | ❌ | ✅ | ✅ |
-| Enterprise memory (6 tiers) | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Multi-agent coordination | ✅ Teams+consensus | ❌ | ❌ | ❌ | ❌ |
 | OpenTelemetry tracing | ✅ 5 exporters | ✅ | ✅ | ❌ | ✅ |
-| Automated test suite | ✅ 1,800+ tests | ✅ | — | — | — |
-| **Self-hostable** | ✅ | ✅ | ❌ SaaS | ✅ | ❌ Cloud |
-| **Open Source** | ✅ MIT | ✅ MIT | ❌ Paid | ✅ MIT | ❌ |
-| SDK (Python/TS/Go/Java) | ✅ All 4 | ✅ | ✅ | ❌ | ✅ |
+| Self-hostable | ✅ | ✅ | ❌ SaaS | ✅ | ❌ Cloud |
+| Open Source | ✅ MIT | ✅ MIT | ❌ Paid | ✅ MIT | ❌ |
+| SDK (Python / TS / Go / Java) | ✅ All 4 | ✅ | ✅ | ❌ | ✅ |
+| Test suite | ✅ 1,800+ | ✅ | — | — | — |
 
 ---
 
-## 🚦 Project Status & Roadmap
+## Project Status
 
-> **Current release: `v0.9.0-beta`** — Backend fully operational with 1,800+ passing tests. UI wiring and infrastructure validation are the remaining blockers for `v1.0 GA`.
+> **Current release: `v0.9.0-beta`** — Backend fully operational. The remaining blockers for `v1.0 GA` are UI live-wiring and Kubernetes HA validation.
 
-### ✅ Completed Subsystems
+### ✅ Complete
 
-| Subsystem | Status |
+| Subsystem | Notes |
 |---|---|
-| 9-Stage Intelligent Routing Engine | ✅ Complete |
-| Enterprise Multi-Tenancy & Security (JWT, API Keys, RBAC, Redis rate limiting) | ✅ Complete |
-| Autonomous Agent Framework (4 planners, human-in-the-loop, multi-agent teams) | ✅ Complete |
-| 6-Tier Enterprise Memory System | ✅ Complete |
-| Knowledge & RAG Platform (Pinecone, Milvus, Qdrant, FAISS, hybrid search, reranking) | ✅ Complete |
-| Event Platform & Webhooks (19 event types, HMAC-SHA256, dead-letter queues) | ✅ Complete |
-| Plugin Framework (7-state lifecycle, 10 hooks, hot-reload) | ✅ Complete |
-| Observability Stack (Prometheus, OpenTelemetry — 5 exporters) | ✅ Complete |
-| Multi-Language SDKs (Python, TypeScript, Go, Java) | ✅ Complete |
-| CLI Tools (34 domain modules) | ✅ Complete |
-| Test Suite | ✅ **1,800+ tests** |
-| Secret Manager (HashiCorp Vault, AWS Secrets Manager/KMS) | ✅ Complete |
-| Load Testing (10,000+ RPS via Locust & K6) | ✅ Complete |
+| 9-Stage Routing Engine | Capability, rules, policy, health, scoring, ranking, selection, failover, trace |
+| Multi-Tenancy & Auth | JWT, API Keys (`sk_...`), RBAC, Redis rate limiting, budget enforcement |
+| Agent Framework | 4 planners, human-in-the-loop, supervisor / consensus / peer-to-peer teams |
+| 6-Tier Memory | Working, Conversation, Semantic, Profile, Session, Episodic |
+| Knowledge & RAG | Pinecone, Milvus, Qdrant, FAISS, hybrid search, cross-encoder reranking |
+| Event Platform | 19 event types, HMAC-SHA256, dead-letter queues, replay |
+| Plugin Framework | 7-state lifecycle, 10 hooks, hot-reload |
+| Observability | Prometheus + OpenTelemetry (5 exporters) + Grafana dashboards |
+| SDKs & CLI | Python, TypeScript, Go, Java clients · 34-module Python CLI |
+| Secret Manager | HashiCorp Vault KV v2 + AWS Secrets Manager / KMS |
+| Load Testing | 10,000+ RPS via Locust & K6 — see [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md) |
+| Test Suite | **1,800+ automated tests** — unit, integration, platform simulation |
 
-### 🟡 In Progress (v1.0 Blockers)
+### In Progress
 
 | Item | Status |
 |---|---|
-| **Web UI Dashboard** (Next.js 15 control plane — API wiring) | 🟡 UI built, backend wiring in progress |
-| **Kubernetes / Helm Chart** full validation | 🟡 Docker Compose & Terraform ready; K8s HA validation pending |
-| **Database HA** — Alembic migrations against PostgreSQL RDS / Redis Sentinel | 🟡 In progress |
+| **Web UI Dashboard** — Next.js 15 control plane, API live-wiring | UI built on mock data; backend wiring in progress |
+| **Kubernetes HA** — Helm chart full validation, Redis Sentinel, PostgreSQL HA | Docker Compose + Terraform ready; full K8s validation pending |
 
-*Full milestone details in [ROADMAP.md](ROADMAP.md).*
+Full milestone detail: [ROADMAP.md](ROADMAP.md)
 
 ---
 
-## 🛠️ Developer Experience
+## Developer Experience
 
-### Makefile Commands
+### Makefile
 
 ```bash
-make install      # Install all dependencies
-make run          # Start dev server with auto-reload
-make test         # Run pytest suite
-make lint         # Ruff linting
-make format       # Black + Ruff auto-fix
-make docker       # Build Docker image
-make compose-up   # Full stack (app + Ollama + Grafana)
-make compose-down # Stop all services
-make clean        # Remove cache artifacts
+make install       # Install all dependencies
+make run           # Start dev server with auto-reload
+make test          # Run the full pytest suite
+make lint          # Ruff linting
+make format        # Black + Ruff auto-fix
+make docker        # Build Docker image
+make compose-up    # Full stack (API + Ollama + Grafana)
+make compose-down  # Stop all services
+make clean         # Remove cache artifacts
 ```
 
-### Pre-commit Hooks
+### Pre-commit hooks
 
 ```bash
 pip install pre-commit && pre-commit install
@@ -389,54 +373,93 @@ pip install pre-commit && pre-commit install
 
 ---
 
-## 📚 Documentation Links
+## Platform Support
 
-| Document | Description |
+| Provider | Status | Notes |
+|---|---|---|
+| OpenAI | ✅ Stable | Full streaming + function calling |
+| Anthropic | ✅ Stable | Full streaming |
+| AWS Bedrock | ✅ Stable | Via Secrets Manager credential adapter |
+| Azure OpenAI | ✅ Stable | Endpoint + deployment name routing |
+| Ollama (local) | ✅ Stable | Included in Docker Compose stack |
+| Gemini | ✅ Stable | Native adapter registered |
+| Cohere | ✅ Stable | Native adapter registered |
+| Mistral | ✅ Stable | Native adapter registered |
+
+---
+
+## Security
+
+> [!CAUTION]
+> Install Inferion AI only from the official repository: **https://github.com/Yogesh10217/Inferion-ai**. Third-party re-uploads are not reviewed and may contain malware.
+
+- **API Keys**: All tenant keys are hashed at rest; raw values are never stored.
+- **HMAC-SHA256 Webhooks**: Every outbound webhook event is signed.
+- **Secret Manager**: Provider credentials are fetched from HashiCorp Vault or AWS Secrets Manager at runtime — not stored in the database.
+- **Budget Enforcement**: Hard spend limits are enforced before the request reaches any provider.
+- **Compliance**: SOC 2 and GDPR evidence exporter scripts included under `scripts/`.
+
+To report a vulnerability, use [GitHub private vulnerability reporting](https://github.com/Yogesh10217/Inferion-ai/security/advisories/new). Do not open a public issue for security reports.
+
+---
+
+## What's Inside
+
+```
+Inferion-ai/
+├── app/              # FastAPI application — routers, middleware, services, models
+├── tests/            # 1,800+ automated tests (unit, integration, simulation)
+├── sdk/              # Python, TypeScript, Go, Java client wrappers
+├── cli/              # Python CLI covering 34 domain modules
+├── frontend/         # Next.js 15 admin control plane (in progress)
+├── deploy/           # Helm chart, Terraform modules, Docker configs
+├── monitoring/       # Prometheus rules, Grafana dashboard JSON
+├── docs/             # Architecture, API, and operational guides
+├── scripts/          # Credential verification, compliance evidence, utilities
+└── alembic/          # Database migration scripts
+```
+
+---
+
+## Documentation
+
+| Document | What it covers |
 |---|---|
-| [📖 Architecture Overview](ARCHITECTURE_OVERVIEW.md) | Deep-dive system topology and pipeline details |
-| [📈 Roadmap & Status](ROADMAP.md) | Comprehensive checklist of completed vs pending 1.0 items |
-| [🔌 API Reference](API.md) | Detailed endpoint listing and request formats |
-| [🤖 Agent Framework](docs/agents.md) | Agent lifecycle, planners, and tool execution |
-| [🧠 Memory Platform](docs/memory.md) | 6-tier memory architecture and scoring |
-| [🔀 Routing Engine](docs/routing.md) | 9-stage routing logic and policy scoring |
-| [📚 Knowledge & RAG](docs/knowledge.md) | Document ingestion and hybrid retrieval |
-| [🧩 Plugin Framework](docs/plugins.md) | Plugin lifecycle hooks and extension guides |
-| [🔭 Distributed Tracing](docs/tracing.md) | OpenTelemetry configuration and exporters |
-| [📦 SDKs](docs/sdk.md) | Python, TypeScript, Go, and Java SDK reference |
+| [📚 Architecture Overview](ARCHITECTURE_OVERVIEW.md) | System topology, middleware stack, data flows |
+| [📊 Roadmap](ROADMAP.md) | Completed vs pending milestones toward v1.0 |
+| [🔌 API Reference](API.md) | Full endpoint listing and request formats |
+| [Routing Engine](docs/routing.md) | 9-stage logic, policy scoring, decision traces |
+| [🤖 Agent Framework](docs/agents.md) | Planners, tool execution, multi-agent teams |
+| [🧠 Memory Platform](docs/memory.md) | 6-tier architecture, scoring formulas |
+| [📚 Knowledge & RAG](docs/knowledge.md) | Ingestion pipeline, vector store adapters |
+| [Plugin Framework](docs/plugins.md) | Lifecycle hooks and extension guide |
+| [🔭 Distributed Tracing](docs/tracing.md) | OpenTelemetry exporters and configuration |
+| [📦 SDKs](docs/sdk.md) | Python, TypeScript, Go, Java client reference |
+| [📊 Benchmark Report](docs/BENCHMARK_REPORT_10K_RPS.md) | 10,000+ RPS load test results |
 | [📝 Changelog](CHANGELOG.md) | Version history |
-| [🤝 Contributing](CONTRIBUTING.md) | Code of conduct and PR workflow |
-| [⚖️ Code of Conduct](CODE_OF_CONDUCT.md) | Community standards and enforcement |
-| [📜 License](LICENSE) | MIT License terms |
+| [🤝 Contributing](CONTRIBUTING.md) | PR workflow and code standards |
+| [⚖️ Code of Conduct](CODE_OF_CONDUCT.md) | Community standards |
 
 ---
 
-## 📊 Project Metrics
+## Contributing
 
-| Metric | Count |
-|---|---|
-| Backend modules | **85+** |
-| API endpoint groups | **50+** |
-| Automated test cases | **1,800+** |
-| Agent planner strategies | **4** |
-| Memory tiers | **6** |
-| Routing pipeline stages | **9** |
-| Webhook event types | **19** |
-| Plugin lifecycle hooks | **10** |
-| Tracing exporters | **5** |
-| SDK languages | **4** |
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for the PR workflow, branch conventions, and how to run the test suite locally before submitting.
 
 ---
 
-## 📜 License
+## License
 
 MIT © [Inferion AI Contributors](LICENSE)
+
+OSS stays free. This repo is MIT-licensed. If you find Inferion AI useful, please ⭐ [star the repo](https://github.com/Yogesh10217/Inferion-ai) — it helps others discover it.
 
 ---
 
 <div align="center">
 
-**Built with ❤️ for the open-source AI community**
+**Built for teams that need real AI infrastructure, not another demo.**
 
-If this project saved you time or money, please ⭐ **star the repo** — it helps others discover it!
+[GitHub](https://github.com/Yogesh10217/Inferion-ai)  ·  [Issues](https://github.com/Yogesh10217/Inferion-ai/issues)  ·  [Changelog](CHANGELOG.md)  ·  [MIT License](LICENSE)
 
 </div>
