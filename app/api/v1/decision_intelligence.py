@@ -26,7 +26,7 @@ from app.decision_intelligence.schemas import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/decisions", tags=["Decision Intelligence"])
+router = APIRouter(prefix="/decisions", tags=["Decision Intelligence"])
 
 # Shared manager instance for API requests
 _decision_manager = DecisionIntelligenceManager()

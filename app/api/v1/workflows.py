@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 from app.workflows.exceptions import CheckpointNotFoundError, GraphValidationError, WorkflowError
 from app.workflows.workflow_manager import WorkflowManager
 
-router = APIRouter(prefix="/v1/workflows", tags=["Workflows"])
+router = APIRouter(prefix="/workflows", tags=["Workflows"])
 
 # Shared global manager instance
 _workflow_manager = WorkflowManager()

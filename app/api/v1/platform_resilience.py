@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from app.platform_resilience.exceptions import PlatformResilienceException
 from app.platform_resilience.manager import PlatformResilienceManager
 
-router = APIRouter(prefix="/v1/resilience", tags=["Platform Resilience"])
+router = APIRouter(prefix="/resilience", tags=["Platform Resilience"])
 
 _global_resilience_manager = PlatformResilienceManager()
 

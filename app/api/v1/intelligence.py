@@ -13,7 +13,7 @@ from app.intelligence_platform.recommendations import RecommendationType
 from app.intelligence_platform.signals import SignalClassification, SignalSource, SignalType
 from app.intelligence_platform.simulation import SimulationInput, SimulationScenario
 
-router = APIRouter(prefix="/v1/intelligence", tags=["intelligence-platform"])
+router = APIRouter(prefix="/intelligence", tags=["intelligence-platform"])
 
 mgr = EnterpriseIntelligenceManager()
 

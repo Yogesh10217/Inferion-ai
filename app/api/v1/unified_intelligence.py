@@ -15,7 +15,7 @@ from app.unified_intelligence.exceptions import (
 from app.unified_intelligence.manager import UnifiedIntelligenceManager
 from app.unified_intelligence.normalization_contracts import UnifiedDomainInput
 
-router = APIRouter(prefix="/v1/intelligence", tags=["Unified Intelligence"])
+router = APIRouter(prefix="/intelligence", tags=["Unified Intelligence"])
 
 _manager = UnifiedIntelligenceManager()
 

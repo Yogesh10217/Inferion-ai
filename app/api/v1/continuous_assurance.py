@@ -27,7 +27,7 @@ from app.continuous_assurance.schemas import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/continuous-assurance", tags=["Continuous Assurance"])
+router = APIRouter(prefix="/continuous-assurance", tags=["Continuous Assurance"])
 
 # Dependency container provider helper
 _manager_instance: Optional[ContinuousAssuranceManager] = None

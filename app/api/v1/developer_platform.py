@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from app.developer_platform.manager import DeveloperPlatformManager
 from app.developer_platform.quality import QualityGate
 
-router = APIRouter(prefix="/v1/developer-platform", tags=["developer-platform"])
+router = APIRouter(prefix="/developer-platform", tags=["developer-platform"])
 _global_manager = DeveloperPlatformManager()
 
 

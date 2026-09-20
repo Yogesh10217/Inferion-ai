@@ -16,7 +16,7 @@ from app.operations_assurance.manager import OperationsAssuranceManager
 from app.operations_assurance.service_dependencies import DependencyCriticality, DependencyType
 from app.operations_assurance.services import ServiceCriticality, ServiceTier, ServiceType
 
-router = APIRouter(prefix="/v1/operations", tags=["Operations Assurance"])
+router = APIRouter(prefix="/operations", tags=["Operations Assurance"])
 
 _manager = OperationsAssuranceManager()
 

@@ -11,7 +11,7 @@ from app.data_intelligence.exceptions import (
 )
 from app.data_intelligence.manager import DataIntelligenceManager
 
-router = APIRouter(prefix="/v1/data", tags=["Data Intelligence"])
+router = APIRouter(prefix="/data", tags=["Data Intelligence"])
 _mgr = DataIntelligenceManager()
 
 

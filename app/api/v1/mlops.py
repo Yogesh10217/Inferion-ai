@@ -10,7 +10,7 @@ from app.mlops.exceptions import MLOpsException
 from app.mlops.manager import MLOpsManager
 from app.mlops.registry import AIAssetType
 
-router = APIRouter(prefix="/v1/mlops", tags=["mlops"])
+router = APIRouter(prefix="/mlops", tags=["mlops"])
 
 _global_mlops_manager = MLOpsManager()
 

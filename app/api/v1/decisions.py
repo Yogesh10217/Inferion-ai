@@ -12,7 +12,7 @@ from app.decision_intelligence.exceptions import (
 from app.decision_intelligence.manager import DecisionIntelligenceManager
 from app.decision_intelligence.scenarios import ScenarioType
 
-router = APIRouter(prefix="/v1/decisions", tags=["decision-intelligence"])
+router = APIRouter(prefix="/decisions", tags=["decision-intelligence"])
 mgr = DecisionIntelligenceManager()
 
 

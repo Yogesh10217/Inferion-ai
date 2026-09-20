@@ -17,7 +17,7 @@ from app.security_assurance.manager import SecurityAssuranceManager
 from app.security_assurance.threats import ThreatSeverity, ThreatType
 from app.security_assurance.vulnerabilities import VulnerabilitySeverity
 
-router = APIRouter(prefix="/v1/security", tags=["Security Assurance"])
+router = APIRouter(prefix="/security", tags=["Security Assurance"])
 
 _manager = SecurityAssuranceManager()
 

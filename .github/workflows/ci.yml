@@ -32,19 +32,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -e .
-          pip install pytest pytest-cov pytest-asyncio flake8 black pip-audit
+          pip install pytest pytest-cov pytest-asyncio ruff pyright alembic
 
-      - name: Code Formatting Check (Black)
+      - name: Ruff Linter & Formatter Check
         run: |
-          black --check app/
+          ruff check app/
+          ruff format --check app/
 
-      - name: Flake8 Linting
+      - name: Static Type Check (Pyright)
         run: |
-          flake8 app/ --max-line-length=160 --ignore=E501,W503,E203,F841,E704,E741,W291,E712,E302,E303,W293
+          pyright app/ --level warning
 
-      - name: Run Full Test Suite with Coverage Gate
+      - name: Alembic Schema Drift Check
         run: |
-          PYTHONPATH="${PYTHONPATH}:." pytest tests/ -v --cov=app --cov-report=xml --cov-fail-under=60
+          alembic check
+
+      - name: Run Full Test Suite with Coverage Gate (80%)
+        run: |
+          PYTHONPATH="${PYTHONPATH}:." pytest tests/ -v --cov=app --cov-report=xml --cov-fail-under=80
 
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
@@ -104,3 +109,18 @@ jobs:
           go mod tidy
           go vet ./...
           go test ./...
+
+  sdk-java-validation:
+    name: Validate Java SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: |
+          cd sdk/java
+          mvn clean test

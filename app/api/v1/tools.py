@@ -31,7 +31,7 @@ from app.tools.tool_context import ToolContext
 from app.tools.tool_factory import ToolFactory
 from app.tools.tool_manager import ToolManager
 
-router = APIRouter(prefix="/v1/tools", tags=["tools"])
+router = APIRouter(prefix="/tools", tags=["tools"])
 
 # Global ToolManager instance
 _global_tool_manager = ToolManager()

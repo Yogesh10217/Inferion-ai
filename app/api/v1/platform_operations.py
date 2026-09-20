@@ -12,7 +12,7 @@ from app.platform_operations.services import ServiceTier
 from app.platform_operations.signals import SignalSeverity, SignalSource, SignalType
 from app.platform_operations.slo import SLOType
 
-router = APIRouter(prefix="/v1/platform-operations", tags=["Platform Operations"])
+router = APIRouter(prefix="/platform-operations", tags=["Platform Operations"])
 
 # Initialize singleton manager instance for API
 mgr = PlatformOperationsManager()

@@ -12,7 +12,7 @@ from app.control_plane.policy_manager import PolicyTargetType
 from app.control_plane.resource_registry import ResourceType
 from app.control_plane.workspace import WorkspaceEnvironment
 
-router = APIRouter(prefix="/v1/control-plane", tags=["control-plane"])
+router = APIRouter(prefix="/control-plane", tags=["control-plane"])
 
 _global_control_plane = ControlPlaneManager()
 

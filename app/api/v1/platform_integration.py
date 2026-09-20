@@ -24,7 +24,7 @@ from app.platform_integration.schemas import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/platform-integration", tags=["Platform Integration Fabric"])
+router = APIRouter(prefix="/platform-integration", tags=["Platform Integration Fabric"])
 
 _manager_instance: Optional[PlatformIntegrationManager] = None
 

@@ -31,8 +31,9 @@ elif "postgresql+asyncpg" in db_url or "postgres+asyncpg" in db_url:
         db_url = base_url + ("?" + "&".join(params) if params else "")
 
     ssl_ctx = ssl.create_default_context()
-    ssl_ctx.check_hostname = False
-    ssl_ctx.verify_mode = ssl.CERT_NONE
+    if not settings.db_ssl_verify:
+        ssl_ctx.check_hostname = False
+        ssl_ctx.verify_mode = ssl.CERT_NONE
     connect_args["ssl"] = ssl_ctx
 
 engine = create_async_engine(

@@ -14,7 +14,7 @@ from app.security_intelligence.signals import SecuritySignalSeverity, SecuritySi
 from app.security_intelligence.threats import ThreatSeverity, ThreatType
 from app.security_intelligence.vulnerabilities import VulnerabilitySeverity
 
-router = APIRouter(prefix="/v1/security", tags=["security-intelligence"])
+router = APIRouter(prefix="/security", tags=["security-intelligence"])
 mgr = SecurityIntelligenceManager()
 
 

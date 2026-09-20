@@ -13,7 +13,7 @@ from app.decision_governance.exceptions import (
 )
 from app.decision_governance.manager import DecisionGovernanceManager
 
-router = APIRouter(prefix="/v1/decisions", tags=["Decision Governance"])
+router = APIRouter(prefix="/decisions", tags=["Decision Governance"])
 
 # Singleton manager instance
 _manager = DecisionGovernanceManager()

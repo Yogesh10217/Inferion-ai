@@ -10,7 +10,7 @@ from app.identity.identity import IdentityType
 from app.identity.manager import IdentitySecurityManager
 from app.identity.privileged_access import PrivilegedRole
 
-router = APIRouter(prefix="/v1/identity", tags=["Identity Platform"])
+router = APIRouter(prefix="/identity", tags=["Identity Platform"])
 
 _global_identity = IdentitySecurityManager()
 

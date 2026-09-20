@@ -10,7 +10,7 @@ from app.marketplace.exceptions import MarketplaceException
 from app.marketplace.manager import MarketplaceManager
 from app.marketplace.marketplace_item import ItemLifecycle, MarketplaceCategory, MarketplaceItem
 
-router = APIRouter(prefix="/v1/marketplace", tags=["marketplace"])
+router = APIRouter(prefix="/marketplace", tags=["marketplace"])
 
 _global_mkt_manager = MarketplaceManager()
 

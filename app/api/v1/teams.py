@@ -13,7 +13,7 @@ from app.multi_agent.agent_role import AgentRole, RoleType
 from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext, TeamType
 from app.multi_agent.exceptions import RolePermissionDenied
 
-router = APIRouter(prefix="/v1/teams", tags=["teams"])
+router = APIRouter(prefix="/teams", tags=["teams"])
 
 # Shared registry of Agent Teams
 _teams_store: Dict[str, AgentTeam] = {}

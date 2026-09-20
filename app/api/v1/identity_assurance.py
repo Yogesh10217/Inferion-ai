@@ -11,7 +11,7 @@ from app.identity_assurance.exceptions import (
 from app.identity_assurance.identities import IdentityCategory, IdentityType
 from app.identity_assurance.manager import IdentityAssuranceManager
 
-router = APIRouter(prefix="/v1/identities", tags=["Identity Assurance"])
+router = APIRouter(prefix="/identities", tags=["Identity Assurance"])
 
 _manager = IdentityAssuranceManager()
 

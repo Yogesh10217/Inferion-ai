@@ -55,6 +55,7 @@ class Settings(BaseSettings):
     # Authentication & Database Configuration
     auth_enabled: bool = Field(default=True, alias="AUTH_ENABLED")
     database_url: str = Field(default="sqlite+aiosqlite:///./data/engine.db", alias="DATABASE_URL")
+    db_ssl_verify: bool = Field(default=True, alias="DB_SSL_VERIFY")
     jwt_secret: str = Field(default="super-secret-key-change-in-production", alias="JWT_SECRET")
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
     access_token_expire_minutes: int = Field(default=30, alias="ACCESS_TOKEN_EXPIRE_MINUTES")
@@ -74,8 +75,11 @@ class Settings(BaseSettings):
     @classmethod
     def validate_jwt_secret(cls, value: str, info: ValidationInfo) -> str:
         env = info.data.get("environment", "development")
-        if env.lower() == "production" and value == "super-secret-key-change-in-production":
-            raise ValueError("JWT_SECRET must be changed from default in production environment!")
+        if env.lower() == "production":
+            if value == "super-secret-key-change-in-production":
+                raise ValueError("JWT_SECRET must be changed from default in production environment!")
+            if len(value) < 32:
+                raise ValueError("JWT_SECRET must be at least 32 characters in production environment!")
         return value
 
     @field_validator("cors_origins", mode="before")

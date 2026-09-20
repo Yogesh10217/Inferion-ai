@@ -10,7 +10,7 @@ from app.operations.manager import OperationsManager
 from app.operations.runbooks import RunbookMode
 from app.operations.slo import SLOType
 
-router = APIRouter(prefix="/v1/operations", tags=["operations"])
+router = APIRouter(prefix="/operations", tags=["operations"])
 
 _global_operations_manager = OperationsManager()
 

@@ -30,7 +30,7 @@ from app.reliability_intelligence.schemas import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/reliability", tags=["Reliability Intelligence"])
+router = APIRouter(prefix="/reliability", tags=["Reliability Intelligence"])
 
 _manager_instance: Optional[ReliabilityIntelligenceManager] = None
 

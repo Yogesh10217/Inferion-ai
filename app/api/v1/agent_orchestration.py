@@ -18,7 +18,7 @@ from app.agent_orchestration.exceptions import (
 from app.agent_orchestration.manager import AgentOrchestrationManager
 from app.agent_orchestration.tasks import AgentTaskPriority, AgentTaskType
 
-router = APIRouter(prefix="/v1/agents", tags=["Agent Orchestration"])
+router = APIRouter(prefix="/agents", tags=["Agent Orchestration"])
 manager = AgentOrchestrationManager()
 
 

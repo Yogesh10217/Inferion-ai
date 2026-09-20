@@ -26,7 +26,7 @@ from app.autonomous_assurance.workflows import WorkflowPriority, WorkflowType
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/autonomous", tags=["Autonomous Assurance"])
+router = APIRouter(prefix="/autonomous", tags=["Autonomous Assurance"])
 
 _manager = AutonomousAssuranceManager()
 

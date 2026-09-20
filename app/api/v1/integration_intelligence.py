@@ -15,7 +15,7 @@ from app.integration_intelligence.exceptions import (
 from app.integration_intelligence.manager import IntegrationIntelligenceManager
 from app.integration_intelligence.workflows import WorkflowStep, WorkflowTrigger, WorkflowType
 
-router = APIRouter(prefix="/v1/integrations", tags=["Integration Intelligence"])
+router = APIRouter(prefix="/integrations", tags=["Integration Intelligence"])
 manager = IntegrationIntelligenceManager()
 
 

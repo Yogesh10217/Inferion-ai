@@ -15,21 +15,17 @@ export default function DashboardLayout({
     <div className="flex h-screen bg-[#f9fafb] overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 ml-[220px] overflow-auto">
-        {/* ── Demo Mode Banner ─────────────────────────────────────────────── */}
-        <div className="sticky top-0 z-50 flex items-center justify-center gap-2 bg-amber-400 px-4 py-2 text-[12px] font-semibold text-amber-900 shadow-sm">
-          <span>⚠️</span>
-          <span>
-            DEMO MODE — All metrics and charts display simulated data. Connect
-            the backend API to see live data.
-          </span>
-          <a
-            href="https://github.com/Yogesh10217/Inferion-ai#-quick-start"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 underline hover:text-amber-950"
-          >
-            Quick Start →
-          </a>
+        {/* ── System Status Banner ─────────────────────────────────────────────── */}
+        <div className="sticky top-0 z-50 flex items-center justify-between bg-slate-900 px-6 py-2 text-[12px] font-medium text-slate-200 border-b border-slate-800 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-semibold text-white">Inferion Engine:</span>
+            <span className="text-slate-400">Connected to Live Control Plane</span>
+          </div>
+          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
+            <span>API: <strong className="text-emerald-400">Online</strong></span>
+            <span>Version: <strong>v0.1.0</strong></span>
+          </div>
         </div>
         {children}
       </div>

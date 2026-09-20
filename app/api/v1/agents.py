@@ -11,7 +11,7 @@ from app.agents.agent_context import AgentContext
 from app.agents.agent_manager import AgentManager
 from app.agents.exceptions import AgentNotFoundError, ApprovalRequiredException, BudgetExceededException, ToolError
 
-router = APIRouter(prefix="/v1/agents", tags=["Agents"])
+router = APIRouter(prefix="/agents", tags=["Agents"])
 
 # Shared global manager instance
 _agent_manager = AgentManager()

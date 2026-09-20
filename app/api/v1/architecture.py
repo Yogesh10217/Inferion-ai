@@ -15,7 +15,7 @@ from app.architecture_platform.exceptions import (
 from app.architecture_platform.manager import ArchitecturePlatformManager
 from app.architecture_platform.nodes import ArchitectureNodeType
 
-router = APIRouter(prefix="/v1/architecture", tags=["architecture-platform"])
+router = APIRouter(prefix="/architecture", tags=["architecture-platform"])
 mgr = ArchitecturePlatformManager()
 
 

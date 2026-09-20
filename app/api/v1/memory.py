@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from app.memory.exceptions import MemoryNotFoundError, TenantMemoryIsolationError
 from app.memory.memory_manager import MemoryManager
 
-router = APIRouter(prefix="/v1/memory", tags=["Memory"])
+router = APIRouter(prefix="/memory", tags=["Memory"])
 
 _memory_manager = MemoryManager()
 

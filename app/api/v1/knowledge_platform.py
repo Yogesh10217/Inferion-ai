@@ -12,7 +12,7 @@ from app.knowledge_platform.manager import KnowledgePlatformManager
 from app.knowledge_platform.memory import MemoryScope, MemoryType
 from app.knowledge_platform.retrieval import RetrievalStrategy
 
-router = APIRouter(prefix="/v1/knowledge_platform", tags=["knowledge_platform"])
+router = APIRouter(prefix="/knowledge_platform", tags=["knowledge_platform"])
 _global_manager = KnowledgePlatformManager()
 
 

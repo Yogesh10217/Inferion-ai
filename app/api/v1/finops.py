@@ -10,7 +10,7 @@ from app.finops.budgets import BudgetAction, BudgetPeriod, BudgetScope
 from app.finops.exceptions import FinOpsException
 from app.finops.manager import FinOpsManager
 
-router = APIRouter(prefix="/v1/finops", tags=["finops"])
+router = APIRouter(prefix="/finops", tags=["finops"])
 
 _global_finops_manager = FinOpsManager()
 

@@ -34,6 +34,11 @@ class InferenceService(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def generate_chat(self, request: InferenceRequest, **kwargs: Any) -> InferenceResponse:
+        """Generate a completion preserving multi-message conversation history."""
+        raise NotImplementedError
+
+    @abstractmethod
     async def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
         """Stream a completion for the given model and prompt."""
         raise NotImplementedError
@@ -132,6 +137,54 @@ class DefaultInferenceService(InferenceService):
             presence_penalty=request.presence_penalty,
             metadata=request.metadata,
         )
+
+    async def generate_chat(self, request: InferenceRequest, **kwargs: Any) -> InferenceResponse:
+        with _tracer.start_span("inference.generate_chat", attributes={"model_id": request.model}):
+            if self._request_scheduler is None:
+                raise RuntimeError("RequestScheduler not configured")
+
+            start_time = time.time()
+            try:
+                response = await self._request_scheduler.generate(request=request)
+                duration_ms = int((time.time() - start_time) * 1000)
+
+                if self._usage_emitter:
+                    self._usage_emitter.emit(
+                        UsageEvent(
+                            organization_id=kwargs.get("organization_id", "default"),
+                            workspace_id=kwargs.get("workspace_id"),
+                            user_id=kwargs.get("user_id"),
+                            api_key_id=kwargs.get("api_key_id"),
+                            provider=response.model.split("/")[0] if "/" in response.model else "unknown",
+                            model=response.model,
+                            request_tokens=response.usage.prompt_tokens if response.usage else 0,
+                            response_tokens=response.usage.completion_tokens if response.usage else 0,
+                            status_code="200",
+                            is_streaming=False,
+                            is_cached=False,
+                            duration_ms=duration_ms,
+                        )
+                    )
+                return response
+            except Exception as exc:
+                duration_ms = int((time.time() - start_time) * 1000)
+                if self._usage_emitter:
+                    self._usage_emitter.emit(
+                        UsageEvent(
+                            organization_id=kwargs.get("organization_id", "default"),
+                            workspace_id=kwargs.get("workspace_id"),
+                            user_id=kwargs.get("user_id"),
+                            api_key_id=kwargs.get("api_key_id"),
+                            provider="unknown",
+                            model=request.model,
+                            status_code="500",
+                            error_type=type(exc).__name__,
+                            duration_ms=duration_ms,
+                        )
+                    )
+                if isinstance(exc, AppException):
+                    raise exc
+                raise ProviderUnavailableError(f"Provider failed for model '{request.model}'") from exc
 
     async def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
         self._validate_request(model_id=model_id, prompt=prompt)

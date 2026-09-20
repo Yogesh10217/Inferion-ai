@@ -9,9 +9,15 @@ from app.schemas.request import ChatCompletionRequest
 from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage
 from app.services.inference_service import InferenceService, build_inference_service
 
+from app.knowledge.context_builder import ContextBuilder
+from app.knowledge.retriever import KnowledgeRetriever
+from app.validation.prompt_validator import PromptValidator
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["chat"])
+
+_prompt_validator = PromptValidator()
 
 
 def get_inference_service(request: Request) -> InferenceService:
@@ -28,14 +34,13 @@ async def create_chat_completion(
     service: InferenceService = Depends(get_inference_service),
 ) -> ChatCompletionResponse | StreamingResponse:
     """Create a chat completion response or stream it when requested."""
+    _prompt_validator.validate_messages(payload.messages)
     request.state.model = payload.model
+
     # Optional RAG Knowledge retrieval & Context enrichment
     if payload.metadata and payload.metadata.get("rag") is True and payload.messages:
         user_prompt = payload.messages[-1].content
         try:
-            from app.knowledge.retriever import KnowledgeRetriever
-            from app.knowledge.context_builder import ContextBuilder
-
             retriever = KnowledgeRetriever()
             context_docs = retriever.retrieve(user_prompt)
             if context_docs:
@@ -70,11 +75,7 @@ async def create_chat_completion(
             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )
 
-    response = await service.complete(
-        model_id=payload.model,
-        prompt=payload.messages[-1].content,
-        metadata=payload.metadata,
-    )
+    response = await service.generate_chat(payload)
     request.state.provider = getattr(response, "provider", None)
     request.state.model = getattr(response, "model", payload.model)
 

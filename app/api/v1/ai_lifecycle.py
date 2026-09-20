@@ -16,7 +16,7 @@ from app.ai_lifecycle_platform.promotion import PromotionTarget
 from app.ai_lifecycle_platform.releases import ReleaseRisk
 from app.ai_lifecycle_platform.retirement import RetirementReason
 
-router = APIRouter(prefix="/v1/ai-lifecycle", tags=["ai-lifecycle"])
+router = APIRouter(prefix="/ai-lifecycle", tags=["ai-lifecycle"])
 mgr = AILifecyclePlatformManager()
 
 

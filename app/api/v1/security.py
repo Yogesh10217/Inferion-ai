@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from app.security.api_keys import APIKeyManager, APIKeyPolicy
 from app.security.exceptions import InvalidAPIKeyError
 
-router = APIRouter(prefix="/v1/security", tags=["security"])
+router = APIRouter(prefix="/security", tags=["security"])
 
 _global_key_manager = APIKeyManager()
 

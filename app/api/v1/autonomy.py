@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from app.autonomy.exceptions import AutonomyException, EmergencyStopException
 from app.autonomy.execution_engine import AutonomousExecutionEngine
 
-router = APIRouter(prefix="/v1/autonomy", tags=["autonomy"])
+router = APIRouter(prefix="/autonomy", tags=["autonomy"])
 
 _global_autonomy = AutonomousExecutionEngine()
 

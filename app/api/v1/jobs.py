@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from app.jobs.job import Job, JobMetadata, JobPriority
 from app.jobs.job_queue import JobQueue
 
-router = APIRouter(prefix="/v1/jobs", tags=["jobs"])
+router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 _global_job_queue = JobQueue()
 

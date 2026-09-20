@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from app.extensions.exceptions import ExtensionFrameworkException
 from app.extensions.manager import ExtensionManager
 
-router = APIRouter(prefix="/v1/extensions", tags=["extensions"])
+router = APIRouter(prefix="/extensions", tags=["extensions"])
 
 _global_ext_manager = ExtensionManager()
 

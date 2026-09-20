@@ -11,7 +11,7 @@ from app.knowledge_assurance.exceptions import (
 )
 from app.knowledge_assurance.manager import KnowledgeAssuranceManager
 
-router = APIRouter(prefix="/v1/knowledge", tags=["Knowledge Assurance"])
+router = APIRouter(prefix="/knowledge", tags=["Knowledge Assurance"])
 
 # Singleton manager instance
 _manager = KnowledgeAssuranceManager()

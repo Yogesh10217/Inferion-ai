@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from app.tracing.sampling import AlwaysOffSampler, AlwaysOnSampler, TraceIdRatioBasedSampler
 from app.tracing.tracer import TracerProvider, get_tracer_provider
 
-router = APIRouter(prefix="/v1/tracing", tags=["tracing"])
+router = APIRouter(prefix="/tracing", tags=["tracing"])
 
 
 class TracingConfigUpdateSchema(BaseModel):

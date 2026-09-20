@@ -10,7 +10,7 @@ from app.orchestration.human_tasks import TaskPriority
 from app.orchestration.manager import OrchestrationManager
 from app.orchestration.workflow import WorkflowStep
 
-router = APIRouter(prefix="/v1/orchestration", tags=["Orchestration Platform"])
+router = APIRouter(prefix="/orchestration", tags=["Orchestration Platform"])
 
 _global_orchestration = OrchestrationManager()
 

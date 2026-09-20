@@ -7,7 +7,7 @@ from app.routing.decision_engine import DecisionEngine
 from app.routing.routing_context import RoutingContext
 from app.routing.routing_policy import RoutingPolicy
 
-router = APIRouter(prefix="/v1/routing", tags=["routing"])
+router = APIRouter(prefix="/routing", tags=["routing"])
 
 # Shared singleton DecisionEngine instance for Admin APIs
 _global_engine = DecisionEngine()

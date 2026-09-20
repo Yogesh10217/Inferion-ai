@@ -11,7 +11,7 @@ from app.event_intelligence.manager import EventIntelligenceManager
 from app.event_intelligence.resolution import EventResolutionStatus
 from app.event_intelligence.response import ResponseTarget
 
-router = APIRouter(prefix="/v1/events", tags=["event-intelligence"])
+router = APIRouter(prefix="/events", tags=["event-intelligence"])
 mgr = EventIntelligenceManager()
 
 

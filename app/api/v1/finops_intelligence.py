@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from app.finops_intelligence.manager import FinOpsIntelligenceManager
 
-router = APIRouter(prefix="/v1/finops", tags=["FinOps Intelligence"])
+router = APIRouter(prefix="/finops", tags=["FinOps Intelligence"])
 _mgr = FinOpsIntelligenceManager()
 
 

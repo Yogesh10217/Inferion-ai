@@ -1,0 +1,13 @@
+# Global Codeowners
+*       @Yogesh10217
+
+# Platform Core & Security
+/app/core/        @Yogesh10217
+/app/auth/        @Yogesh10217
+/SECURITY.md      @Yogesh10217
+
+# SDKs
+/sdk/             @Yogesh10217
+
+# Frontend
+/frontend/        @Yogesh10217

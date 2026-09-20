@@ -11,7 +11,7 @@ from app.governance_platform.remediation import EnforcementAction
 from app.governance_platform.risk import RiskCategory, RiskFactor
 from app.governance_platform.violations import ViolationSeverity, ViolationType
 
-router = APIRouter(prefix="/v1/governance", tags=["Governance Platform"])
+router = APIRouter(prefix="/governance", tags=["Governance Platform"])
 
 _global_governance = GovernancePlatformManager()
 

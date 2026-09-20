@@ -14,7 +14,7 @@ from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
 from app.knowledge_intelligence.relationships import RelationshipStrength, RelationshipType
 from app.knowledge_intelligence.sources import KnowledgeSourceType
 
-router = APIRouter(prefix="/v1/knowledge", tags=["Knowledge Intelligence"])
+router = APIRouter(prefix="/knowledge", tags=["Knowledge Intelligence"])
 manager = KnowledgeIntelligenceManager()
 
 

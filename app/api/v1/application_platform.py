@@ -17,7 +17,7 @@ from app.application_platform.interactions import InteractionType
 from app.application_platform.manager import ApplicationPlatformManager
 from app.application_platform.runtime import ApplicationRuntime
 
-router = APIRouter(prefix="/v1/applications", tags=["Application Platform"])
+router = APIRouter(prefix="/applications", tags=["Application Platform"])
 
 _global_app_platform = ApplicationPlatformManager()
 

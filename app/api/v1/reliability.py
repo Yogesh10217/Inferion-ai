@@ -9,7 +9,7 @@ from app.reliability_platform.incidents import IncidentSeverity
 from app.reliability_platform.manager import ReliabilityPlatformManager
 from app.reliability_platform.services import ServiceTier
 
-router = APIRouter(prefix="/v1/reliability", tags=["reliability-platform"])
+router = APIRouter(prefix="/reliability", tags=["reliability-platform"])
 mgr = ReliabilityPlatformManager()
 
 

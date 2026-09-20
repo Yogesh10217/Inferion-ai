@@ -16,7 +16,7 @@ from app.planning.planning_billing import PlanningBillingTracker
 from app.reasoning.reasoning_engine import ReasoningEngine
 from app.simulation.simulator import ExecutionSimulator
 
-router = APIRouter(prefix="/v1/plans", tags=["planning"])
+router = APIRouter(prefix="/plans", tags=["planning"])
 
 # In-memory plan store and subsystems
 _plans_store: Dict[str, ExecutionPlan] = {}

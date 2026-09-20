@@ -11,7 +11,7 @@ from app.access_intelligence.identities import IdentityType
 from app.access_intelligence.manager import AccessIntelligenceManager
 from app.access_intelligence.privileged_access import PrivilegedAccessScope
 
-router = APIRouter(prefix="/v1/access", tags=["Access Intelligence"])
+router = APIRouter(prefix="/access", tags=["Access Intelligence"])
 
 _global_access_manager = AccessIntelligenceManager()
 

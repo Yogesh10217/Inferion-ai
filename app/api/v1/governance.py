@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from app.governance.quota_manager import QuotaManager
 from app.governance.resource_governance import ResourceGovernanceEngine
 
-router = APIRouter(prefix="/v1/governance", tags=["governance"])
+router = APIRouter(prefix="/governance", tags=["governance"])
 
 _global_quota_manager = QuotaManager()
 _global_resource_governance = ResourceGovernanceEngine(quota_manager=_global_quota_manager)

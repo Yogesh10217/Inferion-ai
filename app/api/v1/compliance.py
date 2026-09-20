@@ -15,7 +15,7 @@ from app.compliance_platform.findings import FindingStatus
 from app.compliance_platform.frameworks import FrameworkType
 from app.compliance_platform.manager import CompliancePlatformManager
 
-router = APIRouter(prefix="/v1/compliance", tags=["compliance-platform"])
+router = APIRouter(prefix="/compliance", tags=["compliance-platform"])
 mgr = CompliancePlatformManager()
 
 

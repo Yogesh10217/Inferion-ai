@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ModelIntelligenceException
 from app.model_intelligence.manager import ModelIntelligenceManager
 
-router = APIRouter(prefix="/v1/models", tags=["model-intelligence"])
+router = APIRouter(prefix="/models", tags=["model-intelligence"])
 model_intel_manager = ModelIntelligenceManager()
 
 

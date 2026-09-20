@@ -35,7 +35,7 @@ from app.capacity_intelligence.schemas import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/capacity", tags=["Capacity Intelligence"])
+router = APIRouter(prefix="/capacity", tags=["Capacity Intelligence"])
 
 _manager_instance: Optional[CapacityIntelligenceManager] = None
 

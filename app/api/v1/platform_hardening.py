@@ -25,7 +25,7 @@ from app.platform_hardening.schemas import (
     SubsystemHealthSchema,
 )
 
-router = APIRouter(prefix="/v1/platform-hardening", tags=["Platform Hardening"])
+router = APIRouter(prefix="/platform-hardening", tags=["Platform Hardening"])
 
 
 def get_hardening_manager() -> PlatformHardeningManager:

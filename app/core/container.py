@@ -337,7 +337,6 @@ class ServiceContainer:
 
         self.identity_security_manager = IdentitySecurityManager()
 
-        from app.developer_platform.manager import DeveloperPlatformManager
         from app.integrations.manager import IntegrationManager
         from app.knowledge_platform.manager import KnowledgePlatformManager
         from app.orchestration.manager import OrchestrationManager
@@ -345,7 +344,6 @@ class ServiceContainer:
         self.orchestration_manager = OrchestrationManager()
         self.knowledge_platform_manager = KnowledgePlatformManager()
         self.integration_manager = IntegrationManager()
-        self.developer_platform_manager = DeveloperPlatformManager()
 
         # Phase 5.22 Application Platform Manager
         from app.application_platform.manager import ApplicationPlatformManager

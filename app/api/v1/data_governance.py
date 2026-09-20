@@ -12,7 +12,7 @@ from app.data_governance.contracts import ContractSchema
 from app.data_governance.manager import DataGovernanceManager
 from app.data_governance.sharing import DataSharingScope
 
-router = APIRouter(prefix="/v1/data-governance", tags=["data-governance"])
+router = APIRouter(prefix="/data-governance", tags=["data-governance"])
 
 mgr = DataGovernanceManager()
 

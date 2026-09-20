@@ -10,7 +10,7 @@ from app.operations_intelligence.exceptions import (
 )
 from app.operations_intelligence.manager import OperationsIntelligenceManager
 
-router = APIRouter(prefix="/v1/operations", tags=["Operations Intelligence"])
+router = APIRouter(prefix="/operations", tags=["Operations Intelligence"])
 _mgr = OperationsIntelligenceManager()
 
 

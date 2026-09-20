@@ -10,7 +10,7 @@ from app.integrations.integration import IntegrationType
 from app.integrations.manager import IntegrationManager
 from app.integrations.plugins import PluginManifest
 
-router = APIRouter(prefix="/v1/integrations", tags=["integrations"])
+router = APIRouter(prefix="/integrations", tags=["integrations"])
 _global_manager = IntegrationManager()
 
 

@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from app.workers.worker_manager import WorkerManager
 
-router = APIRouter(prefix="/v1/workers", tags=["workers"])
+router = APIRouter(prefix="/workers", tags=["workers"])
 
 _global_worker_manager = WorkerManager()
 

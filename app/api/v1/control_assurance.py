@@ -8,7 +8,7 @@ from app.control_assurance.controls import ControlCategory, ControlCriticality
 from app.control_assurance.exceptions import ControlAssuranceException
 from app.control_assurance.manager import ControlAssuranceManager
 
-router = APIRouter(prefix="/v1/control-assurance", tags=["Control Assurance"])
+router = APIRouter(prefix="/control-assurance", tags=["Control Assurance"])
 
 _global_assurance_manager = ControlAssuranceManager()
 

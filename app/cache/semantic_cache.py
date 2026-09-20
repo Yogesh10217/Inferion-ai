@@ -41,17 +41,34 @@ class SemanticCacheEntry:
         self.created_at = time.time()
 
 
+from app.cache.embedding_provider import DummyEmbeddingProvider, EmbeddingProvider
+
+
 class SemanticCache:
     """Semantic vector cache supporting prompt similarity lookup."""
 
-    def __init__(self, similarity_threshold: float = 0.95, max_entries: int = 1000):
+    def __init__(
+        self,
+        similarity_threshold: float = 0.95,
+        max_entries: int = 1000,
+        embedding_provider: Optional[EmbeddingProvider] = None,
+    ):
         self.similarity_threshold = similarity_threshold
         self.max_entries = max_entries
+        self.embedding_provider = embedding_provider or DummyEmbeddingProvider()
         self._entries: List[SemanticCacheEntry] = []
+
+    async def get_async(self, prompt: str, model_id: str) -> Optional[Tuple[InferenceResponse, float]]:
+        """Async query semantic cache using configured embedding provider."""
+        query_vec = await self.embedding_provider.embed(prompt)
+        return self._lookup_vector(query_vec, model_id)
 
     def get(self, prompt: str, model_id: str) -> Optional[Tuple[InferenceResponse, float]]:
         """Query semantic cache for nearest prompt match. Returns (response, similarity) if >= threshold."""
         query_vec = _dummy_embed(prompt)
+        return self._lookup_vector(query_vec, model_id)
+
+    def _lookup_vector(self, query_vec: List[float], model_id: str) -> Optional[Tuple[InferenceResponse, float]]:
         best_entry: Optional[SemanticCacheEntry] = None
         best_sim = 0.0
 
@@ -64,9 +81,16 @@ class SemanticCache:
                 best_entry = entry
 
         if best_entry and best_sim >= self.similarity_threshold:
-            resp = best_entry.response
-            return resp, best_sim
+            return best_entry.response, best_sim
         return None
+
+    async def put_async(self, prompt: str, model_id: str, response: InferenceResponse) -> None:
+        """Async store prompt vector and response in semantic cache."""
+        if len(self._entries) >= self.max_entries:
+            self._entries.pop(0)
+
+        vec = await self.embedding_provider.embed(prompt)
+        self._entries.append(SemanticCacheEntry(prompt=prompt, embedding=vec, response=response, model_id=model_id))
 
     def put(self, prompt: str, model_id: str, response: InferenceResponse) -> None:
         """Store prompt vector and response in semantic cache."""

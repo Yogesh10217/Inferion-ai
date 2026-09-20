@@ -33,7 +33,7 @@ from app.runtime_intelligence.schemas import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/v1/runtime", tags=["Runtime Intelligence"])
+router = APIRouter(prefix="/runtime", tags=["Runtime Intelligence"])
 
 _manager_instance: Optional[RuntimeIntelligenceManager] = None
 

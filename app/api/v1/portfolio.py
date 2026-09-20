@@ -11,7 +11,7 @@ from app.portfolio_platform.investment import InvestmentRisk
 from app.portfolio_platform.manager import PortfolioPlatformManager
 from app.portfolio_platform.strategy import StrategyHorizon
 
-router = APIRouter(prefix="/v1/portfolio", tags=["portfolio-platform"])
+router = APIRouter(prefix="/portfolio", tags=["portfolio-platform"])
 mgr = PortfolioPlatformManager()
 
 
