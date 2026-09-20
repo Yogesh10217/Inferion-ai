@@ -1,14 +1,20 @@
-{{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "llm-engine.fullname" . }}
+  {{- if .Values.ingress.annotations }}
   annotations:
     {{- toYaml .Values.ingress.annotations | nindent 4 }}
+  {{- end }}
 spec:
+  {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
   tls:
     {{- toYaml .Values.ingress.tls | nindent 4 }}
+  {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host }}
@@ -21,7 +27,7 @@ spec:
               service:
                 name: {{ include "llm-engine.fullname" $ }}-gateway
                 port:
-                  number: 80
+                  number: {{ if $.Values.service }}{{ default 8000 $.Values.service.port }}{{ else }}8000{{ end }}
           {{- end }}
     {{- end }}
 {{- end }}

@@ -6,7 +6,7 @@ metadata:
     {{- include "llm-engine.labels" . | nindent 4 }}
     app.kubernetes.io/component: gateway
 spec:
-  replicas: {{ .Values.gateway.replicaCount }}
+  replicas: {{ if and .Values.gateway .Values.gateway.replicaCount }}{{ .Values.gateway.replicaCount }}{{ else if .Values.replicaCount }}{{ .Values.replicaCount }}{{ else }}3{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,15 +20,19 @@ spec:
       labels:
         app.kubernetes.io/component: gateway
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ if and .Values.serviceAccount .Values.serviceAccount.name }}{{ .Values.serviceAccount.name }}{{ else }}{{ include "llm-engine.fullname" . }}{{ end }}
+      {{- if .Values.securityContext }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: gateway
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ if .Values.image }}{{ default "llm-inference-engine" .Values.image.repository }}:{{ default "1.0.0" .Values.image.tag }}{{ else }}llm-inference-engine:1.0.0{{ end }}"
+          imagePullPolicy: {{ if and .Values.image .Values.image.pullPolicy }}{{ .Values.image.pullPolicy }}{{ else }}IfNotPresent{{ end }}
+          {{- if .Values.containerSecurityContext }}
           securityContext:
             {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8000
@@ -36,11 +40,28 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "llm-engine.fullname" . }}-config
+          {{- if and .Values.gateway .Values.gateway.resources }}
           resources:
             {{- toYaml .Values.gateway.resources | nindent 12 }}
+          {{- else if .Values.resources }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.gateway .Values.gateway.probes .Values.gateway.probes.liveness }}
           livenessProbe:
             {{- toYaml .Values.gateway.probes.liveness | nindent 12 }}
+          {{- else if and .Values.healthCheck .Values.healthCheck.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.healthCheck.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.gateway .Values.gateway.probes .Values.gateway.probes.readiness }}
           readinessProbe:
             {{- toYaml .Values.gateway.probes.readiness | nindent 12 }}
+          {{- else if and .Values.healthCheck .Values.healthCheck.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.healthCheck.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.gateway .Values.gateway.probes .Values.gateway.probes.startup }}
           startupProbe:
             {{- toYaml .Values.gateway.probes.startup | nindent 12 }}
+          {{- end }}

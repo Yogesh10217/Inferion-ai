@@ -1,10 +1,19 @@
-{{- if .Values.pdb.enabled }}
+{{- $enabled := false -}}
+{{- $minAvail := 2 -}}
+{{- if .Values.podDisruptionBudget -}}
+  {{- $enabled = .Values.podDisruptionBudget.enabled -}}
+  {{- $minAvail = default 2 .Values.podDisruptionBudget.minAvailable -}}
+{{- else if .Values.pdb -}}
+  {{- $enabled = .Values.pdb.enabled -}}
+  {{- $minAvail = default 2 .Values.pdb.minAvailable -}}
+{{- end -}}
+{{- if $enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "llm-engine.fullname" . }}-gateway
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  minAvailable: {{ $minAvail }}
   selector:
     matchLabels:
       app.kubernetes.io/component: gateway
