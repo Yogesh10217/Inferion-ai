@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["chat"])
 
 
-
 def get_inference_service(request: Request) -> InferenceService:
     """Dependency injection provider for the inference service."""
     if hasattr(request.app.state, "container"):
