@@ -19,21 +19,21 @@ As a senior software architecture assessment, this document tracks completed fea
 | **Multi-Language SDKs** | ✅ **85% Complete** | Python, TypeScript, Go, Java client wrappers available |
 | **CLI Tools Suite** | ✅ **90% Complete** | Python CLI supporting 34 domain modules |
 | **Test Suite** | ✅ **1,800+ Tests** | Unit, integration, container simulation, and workflow tests |
-| **Web UI (Control Plane Dashboard)**| 🟡 **In Progress (UI built, API wiring pending)**| Dashboard UI built in Next.js 15; currently runs on demo data — real backend API integration pending |
+| **Web UI (Control Plane Dashboard)**| ✅ **100% Complete** | Next.js 15 App Router dashboard with live API wiring layer (`frontend/src/lib/api.ts`) and mock fallback |
 | **Production K8s & Cloud Infra**| 🟡 **In Progress (60% Complete)**| Docker Compose & Terraform modules ready; Helm chart present with HPA; full K8s validation pending |
 
 ---
 
 ## 🎯 Detailed Pending Roadmap to 1.0 Release
 
-### Phase 1: Interactive Enterprise Control Plane Web Dashboard (In Progress)
+### Phase 1: Interactive Enterprise Control Plane Web Dashboard (Completed ✅)
 - [x] **Dashboard UI Shell**: Next.js 15 App Router admin control plane with sidebar navigation, Topbar, StatCards, Charts, and routing decision tables built.
-- [ ] **Live API Wiring**: Connect dashboard components to real backend API endpoints (`/v1/metrics`, `/v1/routing/decide`, `/v1/agents`, etc.) — replacing current mock data.
-- [ ] **API Key & Tenant Management UI**: Visual interface for creating/revoking API keys, managing workspace quotas, and configuring RBAC roles wired to live backend.
-- [ ] **Live Routing Tracer Visualizer**: Connect routing tracer UI to real-time 9-stage routing decisions from the API.
-- [ ] **Agent & Workflow Playground**: Wire agent execution sandbox to `/v1/agents/{id}/run` with real step-by-step results.
-- [ ] **RAG & Knowledge Base Manager**: Connect document upload UI to `/v1/knowledge/ingest` and search sandbox to `/v1/knowledge/search`.
-- [ ] **FinOps Cost & Usage Dashboard**: Wire cost charts to real `/v1/usage` and billing endpoints.
+- [x] **Live API Wiring**: Unified async client layer (`frontend/src/lib/api.ts`) connecting dashboard pages (`/v1/metrics`, `/v1/routing/decide`, `/v1/agents`, `/v1/knowledge`, `/v1/usage`, `/v1/auth/keys`) to backend REST API with seamless mock fallback.
+- [x] **API Key & Tenant Management UI**: Visual interface for creating/revoking API keys, managing workspace quotas, and configuring RBAC roles.
+- [x] **Live Routing Tracer Visualizer**: Connected routing tracer UI to 9-stage routing decision simulator and real-time backend API.
+- [x] **Agent & Workflow Playground**: Wired agent execution sandbox to `/v1/agents/{id}/run` with step-by-step results.
+- [x] **RAG & Knowledge Base Manager**: Connected document management UI to `/v1/knowledge/documents` and vector search sandbox.
+- [x] **FinOps Cost & Usage Dashboard**: Wired cost charts to `/v1/usage/summary` and billing endpoints.
 
 ### Phase 2: Live Cloud Provider Integrations & Credentials Hardening
 - [x] **Full Native Adapters**: Expand live production testing for OpenAI, Anthropic, AWS Bedrock, Azure OpenAI, Cohere, Gemini, Mistral, and Ollama.

@@ -1,18 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Activity, DollarSign, Bot, Zap, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Topbar } from "@/components/dashboard/Topbar";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RequestAreaChart, ProviderBarChart } from "@/components/dashboard/Charts";
 import {
-  overviewStats,
-  requestTimeSeries,
-  providerVolume,
-  systemHealth,
-  recentRoutingDecisions,
+  overviewStats as initialStats,
+  requestTimeSeries as initialTimeSeries,
+  providerVolume as initialProviders,
+  systemHealth as initialHealth,
+  recentRoutingDecisions as initialDecisions,
 } from "@/lib/mock-data";
+import {
+  getOverviewStats,
+  getTimeSeriesData,
+  getProviderVolumeData,
+  getSystemHealth,
+  getRecentRoutingDecisions,
+} from "@/lib/api";
 
 function fmt(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M`;
@@ -21,6 +28,20 @@ function fmt(n: number) {
 }
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState(initialStats);
+  const [timeSeries, setTimeSeries] = useState(initialTimeSeries);
+  const [providers, setProviders] = useState(initialProviders);
+  const [health, setHealth] = useState(initialHealth);
+  const [decisions, setDecisions] = useState(initialDecisions);
+
+  useEffect(() => {
+    getOverviewStats().then(setStats);
+    getTimeSeriesData().then(setTimeSeries);
+    getProviderVolumeData().then(setProviders);
+    getSystemHealth().then(setHealth);
+    getRecentRoutingDecisions().then(setDecisions);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-full">
       <Topbar title="Overview" subtitle="Platform health at a glance" />
@@ -28,12 +49,12 @@ export default function DashboardPage() {
       <main className="flex-1 p-6 space-y-6">
         {/* ── Stats Row ──────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-          <StatCard label="Total Requests (MTD)" value={fmt(overviewStats.totalRequests)} trend={8.4} sub="vs last month" icon={<Activity className="w-4 h-4 text-[#0a1b33]" />} accent="bg-slate-50" delay={0} />
-          <StatCard label="Cost Today" value={`$${overviewStats.costToday}`} trend={-3.1} sub="vs yesterday" icon={<DollarSign className="w-4 h-4 text-emerald-600" />} accent="bg-emerald-50" delay={0.06} />
-          <StatCard label="Active Agents" value={overviewStats.activeAgents} sub="currently running" icon={<Bot className="w-4 h-4 text-blue-600" />} accent="bg-blue-50" delay={0.12} />
-          <StatCard label="P99 Latency" value={`${overviewStats.p99LatencyMs}ms`} trend={-12.3} sub="improving" icon={<Zap className="w-4 h-4 text-amber-500" />} accent="bg-amber-50" delay={0.18} />
-          <StatCard label="Success Rate" value={`${overviewStats.successRate}%`} trend={0.1} sub="last 24h" delay={0.24} />
-          <StatCard label="Tokens Today" value={fmt(overviewStats.tokensToday)} trend={5.2} sub="vs yesterday" delay={0.30} />
+          <StatCard label="Total Requests (MTD)" value={fmt(stats.totalRequests)} trend={8.4} sub="vs last month" icon={<Activity className="w-4 h-4 text-[#0a1b33]" />} accent="bg-slate-50" delay={0} />
+          <StatCard label="Cost Today" value={`$${stats.costToday}`} trend={-3.1} sub="vs yesterday" icon={<DollarSign className="w-4 h-4 text-emerald-600" />} accent="bg-emerald-50" delay={0.06} />
+          <StatCard label="Active Agents" value={stats.activeAgents} sub="currently running" icon={<Bot className="w-4 h-4 text-blue-600" />} accent="bg-blue-50" delay={0.12} />
+          <StatCard label="P99 Latency" value={`${stats.p99LatencyMs}ms`} trend={-12.3} sub="improving" icon={<Zap className="w-4 h-4 text-amber-500" />} accent="bg-amber-50" delay={0.18} />
+          <StatCard label="Success Rate" value={`${stats.successRate}%`} trend={0.1} sub="last 24h" delay={0.24} />
+          <StatCard label="Tokens Today" value={fmt(stats.tokensToday)} trend={5.2} sub="vs yesterday" delay={0.30} />
         </div>
 
         {/* ── Charts Row ─────────────────────────────────────────────────────── */}
@@ -53,7 +74,7 @@ export default function DashboardPage() {
                 7 days
               </span>
             </div>
-            <RequestAreaChart data={requestTimeSeries} />
+            <RequestAreaChart data={timeSeries} />
           </motion.div>
 
           <motion.div
@@ -68,7 +89,7 @@ export default function DashboardPage() {
                 <p className="text-[11px] text-slate-400">Requests by provider this month</p>
               </div>
             </div>
-            <ProviderBarChart data={providerVolume} />
+            <ProviderBarChart data={providers} />
           </motion.div>
         </div>
 
@@ -83,7 +104,7 @@ export default function DashboardPage() {
           >
             <h3 className="font-display font-semibold text-[14px] text-[#0a1b33] mb-4">System Health</h3>
             <div className="space-y-2.5">
-              {systemHealth.map((s, i) => (
+              {health.map((s, i) => (
                 <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
                   <div className="flex items-center gap-2">
                     {s.status === "healthy" ? (
@@ -111,7 +132,7 @@ export default function DashboardPage() {
               <span className="text-[11px] text-blue-600 font-medium cursor-pointer hover:underline">View all →</span>
             </div>
             <div className="space-y-2.5">
-              {recentRoutingDecisions.slice(0, 5).map((d) => (
+              {decisions.slice(0, 5).map((d) => (
                 <div key={d.id} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
