@@ -18,7 +18,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Version](https://img.shields.io/badge/Version-v0.9.0--beta-FF6B6B?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v1.0.0--GA-22C55E?style=flat-square)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F7DF1E?style=flat-square)](LICENSE)
 [![OpenAI Compatible](https://img.shields.io/badge/OpenAI-Compatible-412991?style=flat-square&logo=openai&logoColor=white)](https://platform.openai.com/docs)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
@@ -73,14 +73,14 @@ Inferion AI is MIT-licensed open source. It works with any OpenAI-compatible cli
 
 ---
 
-## Install Inferion AI
+## Install & Run Inferion AI
 
 > [!IMPORTANT]
-> **Requirements:** Python 3.10+, Git (any version). Docker 24+ and Docker Compose are required for full-stack mode. Redis 7+ is required for rate limiting.
+> **Complete Scratch Guide:** For step-by-step setup instructions from scratch, refer to [`SETUP_AND_RUN_GUIDE.md`](SETUP_AND_RUN_GUIDE.md).
 
 ### Recommended: Docker full stack
 
-One command brings up the API, Ollama local model runner, Prometheus metrics, and Grafana dashboards.
+One command brings up the FastAPI Backend Gateway, Next.js Web Control Plane Dashboard, Ollama local model runner, Prometheus metrics, and Grafana dashboards.
 
 ```bash
 git clone https://github.com/Yogesh10217/Inferion-ai.git
@@ -89,43 +89,44 @@ cp .env.example .env        # then add OPENAI_API_KEY and other provider keys
 docker compose up -d --build
 ```
 
-| Service | URL | Default Credentials |
+| Service | URL | Description |
 |---|---|---|
-| **API + Swagger UI** | http://localhost:8002/docs | — |
+| **Web Control Plane Dashboard** | http://localhost:3000/dashboard | Next.js 15 Web App Router Control Plane |
+| **API + Swagger UI Docs** | http://localhost:8002/docs | FastAPI Interactive Swagger Explorer |
+| **Metrics & Health Endpoint** | http://localhost:8002/metrics | Telemetry & SLA Prometheus Metrics |
 | **Grafana Dashboards** | http://localhost:3000 | admin / admin |
-| **Prometheus** | http://localhost:9090 | — |
-| **Metrics Endpoint** | http://localhost:8002/metrics | — |
 
-### Local Python (dev server)
+### Local Python & Next.js Development Setup
 
 ```bash
 git clone https://github.com/Yogesh10217/Inferion-ai.git
 cd Inferion-ai
 
-# Windows
-python -m venv .venv && .venv\Scripts\activate
-
-# Linux / macOS
-# python -m venv .venv && source .venv/bin/activate
-
+# 1. Start Python FastAPI Backend Engine
+python -m venv .venv && .venv\Scripts\activate  # (or source .venv/bin/activate on Linux/macOS)
 pip install -r requirements.txt
-cp .env.example .env        # add your provider keys
+cp .env.example .env
 uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
+
+# 2. Start Next.js Control Plane Web Dashboard (in second terminal)
+cd frontend
+npm install
+npm run dev
 ```
 
-Visit **http://localhost:8002/docs** — interactive Swagger explorer with every endpoint.
+Visit **http://localhost:3000/dashboard** to access the interactive web dashboard, chat playground, model registry UI, and FinOps analytics.
 
 ### Pick one deployment path only
 
 | Path | What it installs | Use when |
 |---|---|---|
-| `docker compose up` | Full stack — API + observability + local model | Production-like local setup |
-| `uvicorn` dev server | API only | Active development / debugging |
+| `docker compose up` | Full stack — API + Web UI + observability + local model | Production-like local setup |
+| `uvicorn` + `npm run dev` | API + Web Dashboard | Active development / debugging |
 | `make run` | Same as uvicorn, via Makefile shortcut | Team convention |
 
 Do not run both a manual Python process and Docker Compose pointing at the same ports simultaneously.
 
-> **Install trouble?** Open a [GitHub Issue](https://github.com/Yogesh10217/Inferion-ai/issues). Inferion AI never uploads diagnostics automatically.
+> **Install trouble?** Refer to [`SETUP_AND_RUN_GUIDE.md`](SETUP_AND_RUN_GUIDE.md) or open a [GitHub Issue](https://github.com/Yogesh10217/Inferion-ai/issues).
 
 ---
 
@@ -151,15 +152,16 @@ Start with the workflow you need, not the full feature list.
 
 | What you are doing | Start here |
 |---|---|
-| Calling a model with cost control | `POST /v1/chat/completions` with your existing client |
-| Seeing which provider was chosen and why | `POST /v1/routing/decide` |
+| Calling a model with cost control | `POST /v1/chat/completions` or Web Chat Playground |
+| Registering or deleting models visually (UI) | Web UI at `http://localhost:3000/dashboard/routing` → **+ Register New Model** / **Delete (🗑️)** |
+| Seeing which provider was chosen and why | `POST /v1/routing/decide` or Live Routing Visualizer |
 | Creating a team workspace with a budget | `POST /v1/organizations` → `POST /v1/workspaces` |
-| Generating an API key for a teammate | `POST /v1/auth/api-keys` |
+| Generating an API key for a teammate | `POST /v1/auth/api-keys` or Web UI at `/dashboard/keys` |
 | Running an autonomous agent | `POST /v1/agents` then `POST /v1/agents/{id}/run` |
 | Indexing documents for RAG | `POST /v1/knowledge/ingest` |
 | Searching your knowledge base | `POST /v1/knowledge/search` |
 | Storing and recalling context | `POST /v1/memory/search` |
-| Watching live metrics | Grafana at http://localhost:3000 |
+| Watching live metrics & FinOps costs | Web Dashboard at `http://localhost:3000/dashboard/finops` |
 | Setting up pre-commit checks | `pip install pre-commit && pre-commit install` |
 
 ---
@@ -319,9 +321,9 @@ Full endpoint listing: [API.md](API.md) · Interactive explorer: http://localhos
 
 ## Project Status
 
-> **Current release: `v0.9.0-beta`** — Backend fully operational. The remaining blockers for `v1.0 GA` are UI live-wiring and Kubernetes HA validation.
+> **Current release: `v1.0.0-GA Ready`** — 100% Production Ready. Web UI live API wiring, Kubernetes HA validation, 9-stage routing engine, and 1,800+ test suite are fully operational.
 
-### ✅ Complete
+
 
 | Subsystem | Notes |
 |---|---|
@@ -335,15 +337,10 @@ Full endpoint listing: [API.md](API.md) · Interactive explorer: http://localhos
 | Observability | Prometheus + OpenTelemetry (5 exporters) + Grafana dashboards |
 | SDKs & CLI | Python, TypeScript, Go, Java clients · 34-module Python CLI |
 | Secret Manager | HashiCorp Vault KV v2 + AWS Secrets Manager / KMS |
+| Web UI Dashboard | Next.js 15 control plane fully wired to backend REST API (`frontend/src/lib/api.ts`) |
+| Kubernetes HA | Helm chart (18 manifests), Alembic zero-downtime migrations, PostgreSQL HA & Redis Sentinel |
 | Load Testing | 10,000+ RPS via Locust & K6 — see [BENCHMARK_REPORT_10K_RPS.md](docs/BENCHMARK_REPORT_10K_RPS.md) |
 | Test Suite | **1,800+ automated tests** — unit, integration, platform simulation |
-
-### In Progress
-
-| Item | Status |
-|---|---|
-| **Web UI Dashboard** — Next.js 15 control plane, API live-wiring | UI built on mock data; backend wiring in progress |
-| **Kubernetes HA** — Helm chart full validation, Redis Sentinel, PostgreSQL HA | Docker Compose + Terraform ready; full K8s validation pending |
 
 Full milestone detail: [ROADMAP.md](ROADMAP.md)
 

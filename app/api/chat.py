@@ -26,10 +26,21 @@ async def create_chat_completion(
 ) -> ChatCompletionResponse | StreamingResponse:
     """Create a chat completion response or stream it when requested."""
     request.state.model = payload.model
-    # TODO: Integrate Knowledge/Retrieval before inference here
-    # Example:
-    # context = retrieval_service.search(payload.messages[-1].content)
-    # payload = context_builder.inject(payload, context)
+    # Optional RAG Knowledge retrieval & Context enrichment
+    if payload.metadata and payload.metadata.get("rag") is True and payload.messages:
+        user_prompt = payload.messages[-1].content
+        try:
+            from app.knowledge.retriever import KnowledgeRetriever
+            from app.knowledge.context_builder import ContextBuilder
+
+            retriever = KnowledgeRetriever()
+            context_docs = retriever.retrieve(user_prompt)
+            if context_docs:
+                cb = ContextBuilder()
+                context_str, _ = cb.build_context(context_docs)
+                payload.messages[-1].content = f"Context:\n{context_str}\n\nUser Question:\n{user_prompt}"
+        except Exception:
+            pass
 
     if hasattr(request.app.state, "container"):
         model_meta = request.app.state.container.registry.get_model(payload.model)
