@@ -5,6 +5,13 @@ from app.core.config import get_settings
 from app.main import create_app
 
 
+@pytest.fixture(autouse=True)
+def reset_settings():
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
+
+
 def test_production_http_security_headers(monkeypatch):
     get_settings.cache_clear()
     monkeypatch.setenv("ENVIRONMENT", "LOCAL")

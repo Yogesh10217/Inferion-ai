@@ -68,3 +68,7 @@ class Retriever:
             results = await self.reranker.rerank(query, results, profile.reranker_top_n)
 
         return results[: profile.top_k]
+
+
+# Alias for backward compatibility and API caller convenience
+KnowledgeRetriever = Retriever

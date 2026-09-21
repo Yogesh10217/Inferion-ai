@@ -55,7 +55,7 @@ class AccessCheckSchema(BaseModel):
 
 
 # 1. Data Sources Endpoints
-@router.post("/v1/data-sources", status_code=status.HTTP_201_CREATED)
+@router.post("/data-sources", status_code=status.HTTP_201_CREATED)
 async def create_data_source(data: CreateDataSourceSchema, mgr: DataFabricManager = Depends(get_data_fabric)):
     ds = mgr.source_manager.create_source(
         name=data.name,
@@ -71,7 +71,7 @@ async def create_data_source(data: CreateDataSourceSchema, mgr: DataFabricManage
     return {"status": "created", "data_source": ds.model_dump()}
 
 
-@router.get("/v1/data-sources")
+@router.get("/data-sources")
 async def list_data_sources(
     tenant_id: Optional[str] = None,
     source_type: Optional[DataSourceType] = None,
@@ -81,7 +81,7 @@ async def list_data_sources(
     return {"data_sources": [s.model_dump() for s in sources]}
 
 
-@router.get("/v1/data-sources/{id}")
+@router.get("/data-sources/{id}")
 async def get_data_source(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         ds = mgr.source_manager.get_source(id)
@@ -90,7 +90,7 @@ async def get_data_source(id: str, mgr: DataFabricManager = Depends(get_data_fab
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.patch("/v1/data-sources/{id}")
+@router.patch("/data-sources/{id}")
 async def update_data_source(id: str, data: UpdateDataSourceSchema, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         ds = mgr.source_manager.update_source(id, **data.model_dump(exclude_unset=True))
@@ -99,7 +99,7 @@ async def update_data_source(id: str, data: UpdateDataSourceSchema, mgr: DataFab
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.delete("/v1/data-sources/{id}")
+@router.delete("/data-sources/{id}")
 async def delete_data_source(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         mgr.source_manager.delete_source(id)
@@ -108,7 +108,7 @@ async def delete_data_source(id: str, mgr: DataFabricManager = Depends(get_data_
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/v1/data-sources/{id}/validate")
+@router.post("/data-sources/{id}/validate")
 async def validate_data_source(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         ds = mgr.source_manager.get_source(id)
@@ -119,7 +119,7 @@ async def validate_data_source(id: str, mgr: DataFabricManager = Depends(get_dat
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/v1/data-sources/{id}/discover")
+@router.post("/data-sources/{id}/discover")
 async def discover_data_source_schema(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         ds = mgr.source_manager.get_source(id)
@@ -129,7 +129,7 @@ async def discover_data_source_schema(id: str, mgr: DataFabricManager = Depends(
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/v1/data-sources/{id}/sync")
+@router.post("/data-sources/{id}/sync")
 async def start_data_source_sync(id: str, data: CreateSyncJobSchema, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         job = mgr.sync_manager.create_sync_job(
@@ -142,7 +142,7 @@ async def start_data_source_sync(id: str, data: CreateSyncJobSchema, mgr: DataFa
 
 
 # 2. Synchronization Endpoints
-@router.get("/v1/data-sync/history")
+@router.get("/data-sync/history")
 async def list_sync_history(
     tenant_id: Optional[str] = None, source_id: Optional[str] = None, mgr: DataFabricManager = Depends(get_data_fabric)
 ):
@@ -150,7 +150,7 @@ async def list_sync_history(
     return {"sync_history": [j.model_dump() for j in jobs]}
 
 
-@router.get("/v1/data-sync/{id}")
+@router.get("/data-sync/{id}")
 async def get_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         job = mgr.sync_manager.get_sync_job(id)
@@ -159,7 +159,7 @@ async def get_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fabric
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/v1/data-sync/{id}/pause")
+@router.post("/data-sync/{id}/pause")
 async def pause_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         job = mgr.sync_manager.pause_sync_job(id)
@@ -168,7 +168,7 @@ async def pause_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fabr
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/v1/data-sync/{id}/resume")
+@router.post("/data-sync/{id}/resume")
 async def resume_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         job = mgr.sync_manager.resume_sync_job(id)
@@ -177,7 +177,7 @@ async def resume_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fab
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.post("/v1/data-sync/{id}/cancel")
+@router.post("/data-sync/{id}/cancel")
 async def cancel_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         job = mgr.sync_manager.cancel_sync_job(id)
@@ -187,7 +187,7 @@ async def cancel_sync_job(id: str, mgr: DataFabricManager = Depends(get_data_fab
 
 
 # 3. Data Catalog Endpoints
-@router.get("/v1/data-catalog")
+@router.get("/data-catalog")
 async def list_catalog(
     tenant_id: Optional[str] = None,
     classification: Optional[str] = None,
@@ -197,7 +197,7 @@ async def list_catalog(
     return {"datasets": [d.model_dump() for d in datasets]}
 
 
-@router.get("/v1/data-catalog/{id}")
+@router.get("/data-catalog/{id}")
 async def get_catalog_dataset(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     try:
         ds = mgr.catalog.get_dataset(id)
@@ -206,38 +206,38 @@ async def get_catalog_dataset(id: str, mgr: DataFabricManager = Depends(get_data
         raise HTTPException(status_code=404, detail=f"Dataset '{id}' not found in catalog")
 
 
-@router.get("/v1/data-catalog/{id}/schema")
+@router.get("/data-catalog/{id}/schema")
 async def get_dataset_schema(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     sch = mgr.schema_engine.get_schema(id)
     return {"schema": sch.model_dump()}
 
 
-@router.get("/v1/data-catalog/{id}/lineage")
+@router.get("/data-catalog/{id}/lineage")
 async def get_dataset_lineage(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     upstream = mgr.lineage_manager.get_upstream_lineage(id)
     downstream = mgr.lineage_manager.get_downstream_lineage(id)
     return {"upstream": [u.model_dump() for u in upstream], "downstream": [d.model_dump() for d in downstream]}
 
 
-@router.get("/v1/data-catalog/{id}/quality")
+@router.get("/data-catalog/{id}/quality")
 async def get_dataset_quality(id: str, mgr: DataFabricManager = Depends(get_data_fabric)):
     res = mgr.quality_engine.evaluate_quality(id, [])
     return {"quality": res.model_dump()}
 
 
 # 4. Governance Endpoints
-@router.get("/v1/data-governance/policies")
+@router.get("/data-governance/policies")
 async def list_governance_policies(mgr: DataFabricManager = Depends(get_data_fabric)):
     return {"policies": [p.model_dump() for p in mgr.governance_engine._policies.values()]}
 
 
-@router.post("/v1/data-governance/policies", status_code=status.HTTP_201_CREATED)
+@router.post("/data-governance/policies", status_code=status.HTTP_201_CREATED)
 async def create_governance_policy(policy: DataPolicy, mgr: DataFabricManager = Depends(get_data_fabric)):
     pol = mgr.governance_engine.register_policy(policy)
     return {"status": "created", "policy": pol.model_dump()}
 
 
-@router.post("/v1/data-governance/access-check")
+@router.post("/data-governance/access-check")
 async def check_data_access(data: AccessCheckSchema, mgr: DataFabricManager = Depends(get_data_fabric)):
     decision = mgr.governance_engine.evaluate_access(
         tenant_id=data.tenant_id,

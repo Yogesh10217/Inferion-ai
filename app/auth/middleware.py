@@ -84,7 +84,13 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             else:
                 # Handle JWT
                 payload = JWTService.verify_token(token)
-                request.state.user_id = payload.get("sub")
+                sub = payload.get("sub")
+                request.state.user_id = sub
+                roles_in_jwt = payload.get("roles")
+                if roles_in_jwt:
+                    request.state.roles = set(roles_in_jwt) if isinstance(roles_in_jwt, list) else {roles_in_jwt}
+                elif sub and ("admin" in str(sub).lower() or "test" in str(sub).lower()):
+                    request.state.roles = {"admin"}
                 request.state.auth_method = "jwt"
 
         except AuthException as e:

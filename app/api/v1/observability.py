@@ -68,7 +68,7 @@ class AcknowledgeAlertRequest(BaseModel):
 # --- Endpoints ---
 
 
-@router.get("/v1/observability/traces", response_model=Dict[str, Any])
+@router.get("/observability/traces", response_model=Dict[str, Any])
 async def list_traces(
     manager: ObservabilityManager = Depends(get_observability_manager),
     context: ObservabilityContext = Depends(get_request_context),
@@ -82,7 +82,7 @@ async def list_traces(
     }
 
 
-@router.get("/v1/observability/traces/{trace_id}", response_model=Dict[str, Any])
+@router.get("/observability/traces/{trace_id}", response_model=Dict[str, Any])
 async def get_trace(
     trace_id: str,
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -95,7 +95,7 @@ async def get_trace(
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@router.get("/v1/observability/executions/{execution_id}", response_model=Dict[str, Any])
+@router.get("/observability/executions/{execution_id}", response_model=Dict[str, Any])
 async def get_execution(
     execution_id: str,
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -107,7 +107,7 @@ async def get_execution(
     return {"execution_id": execution_id, "spans_count": len(spans), "spans": spans}
 
 
-@router.get("/v1/observability/executions/{execution_id}/timeline", response_model=Dict[str, Any])
+@router.get("/observability/executions/{execution_id}/timeline", response_model=Dict[str, Any])
 async def get_execution_timeline(
     execution_id: str,
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -120,7 +120,7 @@ async def get_execution_timeline(
     return manager.get_execution_timeline(trace_id)
 
 
-@router.post("/v1/observability/executions/{execution_id}/replay", response_model=Dict[str, Any])
+@router.post("/observability/executions/{execution_id}/replay", response_model=Dict[str, Any])
 async def replay_execution(
     execution_id: str,
     req: ReplayExecutionRequest,
@@ -139,7 +139,7 @@ async def replay_execution(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/v1/observability/costs", response_model=Dict[str, Any])
+@router.get("/observability/costs", response_model=Dict[str, Any])
 async def get_costs(
     execution_id: Optional[str] = Query(None),
     agent_id: Optional[str] = Query(None),
@@ -157,7 +157,7 @@ async def get_costs(
     return manager.cost_tracker.get_tenant_cost(context.tenant_id or "default")
 
 
-@router.get("/v1/observability/costs/breakdown", response_model=Dict[str, Any])
+@router.get("/observability/costs/breakdown", response_model=Dict[str, Any])
 async def get_cost_breakdown(
     manager: ObservabilityManager = Depends(get_observability_manager),
     context: ObservabilityContext = Depends(get_request_context),
@@ -169,7 +169,7 @@ async def get_cost_breakdown(
     )
 
 
-@router.get("/v1/observability/performance", response_model=Dict[str, Any])
+@router.get("/observability/performance", response_model=Dict[str, Any])
 async def get_performance(
     component: Optional[str] = Query(None),
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -190,7 +190,7 @@ async def get_performance(
     return manager.performance.get_all_performance()
 
 
-@router.get("/v1/observability/failures", response_model=Dict[str, Any])
+@router.get("/observability/failures", response_model=Dict[str, Any])
 async def get_failures(
     execution_id: str = Query(...),
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -201,7 +201,7 @@ async def get_failures(
     return report.to_dict()
 
 
-@router.get("/v1/observability/anomalies", response_model=List[Dict[str, Any]])
+@router.get("/observability/anomalies", response_model=List[Dict[str, Any]])
 async def get_anomalies(
     limit: int = Query(50),
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -210,7 +210,7 @@ async def get_anomalies(
     return manager.anomaly_detector.get_recent_anomalies(limit=limit)
 
 
-@router.get("/v1/observability/alerts", response_model=List[Dict[str, Any]])
+@router.get("/observability/alerts", response_model=List[Dict[str, Any]])
 async def get_alerts(
     status_filter: Optional[str] = Query(None, alias="status"),
     level_filter: Optional[str] = Query(None, alias="level"),
@@ -225,7 +225,7 @@ async def get_alerts(
     )
 
 
-@router.post("/v1/observability/alerts/{id}/acknowledge", response_model=Dict[str, Any])
+@router.post("/observability/alerts/{id}/acknowledge", response_model=Dict[str, Any])
 async def acknowledge_alert(
     id: str,
     req: AcknowledgeAlertRequest,
@@ -239,7 +239,7 @@ async def acknowledge_alert(
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@router.get("/v1/observability/slos", response_model=List[Dict[str, Any]])
+@router.get("/observability/slos", response_model=List[Dict[str, Any]])
 async def get_slos(
     manager: ObservabilityManager = Depends(get_observability_manager),
     context: ObservabilityContext = Depends(get_request_context),
@@ -248,7 +248,7 @@ async def get_slos(
     return manager.sla_engine.get_all_slo_statuses(tenant_id=context.tenant_id)
 
 
-@router.post("/v1/observability/slos", response_model=Dict[str, Any])
+@router.post("/observability/slos", response_model=Dict[str, Any])
 async def create_slo(
     req: CreateSLORequest,
     manager: ObservabilityManager = Depends(get_observability_manager),
@@ -273,7 +273,7 @@ async def create_slo(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/v1/observability/evaluations", response_model=List[Dict[str, Any]])
+@router.get("/observability/evaluations", response_model=List[Dict[str, Any]])
 async def get_evaluations(
     manager: ObservabilityManager = Depends(get_observability_manager),
 ):
@@ -281,7 +281,7 @@ async def get_evaluations(
     return [e.to_dict() for e in manager.evaluation_engine._evaluations]
 
 
-@router.get("/v1/operations/status", response_model=Dict[str, Any])
+@router.get("/operations/status", response_model=Dict[str, Any])
 async def get_operations_status(
     manager: ObservabilityManager = Depends(get_observability_manager),
 ):
@@ -289,7 +289,7 @@ async def get_operations_status(
     return manager.get_operations_status()
 
 
-@router.get("/v1/operations/dashboard", response_model=Dict[str, Any])
+@router.get("/operations/dashboard", response_model=Dict[str, Any])
 async def get_operations_dashboard(
     manager: ObservabilityManager = Depends(get_observability_manager),
     context: ObservabilityContext = Depends(get_request_context),

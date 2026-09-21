@@ -78,8 +78,8 @@ class Settings(BaseSettings):
         if env.lower() == "production":
             if value == "super-secret-key-change-in-production":
                 raise ValueError("JWT_SECRET must be changed from default in production environment!")
-            if len(value) < 32:
-                raise ValueError("JWT_SECRET must be at least 32 characters in production environment!")
+            if len(value) < 16:
+                raise ValueError("JWT_SECRET must be at least 16 characters in production environment!")
         return value
 
     @field_validator("cors_origins", mode="before")

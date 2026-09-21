@@ -225,6 +225,7 @@ def create_app() -> FastAPI:
     # Register exception handlers
     register_exception_handlers(app)
 
+    app.include_router(health_router)
     app.include_router(health_router, prefix=settings.api_prefix)
     app.include_router(models_router, prefix=settings.api_prefix)
     app.include_router(chat_router, prefix=settings.api_prefix)

@@ -29,7 +29,7 @@ def get_deployment_manager(request: Request) -> DeploymentPlatformManager:
 
 
 @router.get("/health")
-@router.get("/v1/deployment/health")
+@router.get("/deployment/health")
 async def health_check(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:
@@ -51,7 +51,7 @@ async def health_check(
 
 
 @router.get("/ready")
-@router.get("/v1/deployment/ready")
+@router.get("/deployment/ready")
 async def readiness_check(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:
@@ -62,14 +62,14 @@ async def readiness_check(
 
 
 @router.get("/live")
-@router.get("/v1/deployment/live")
+@router.get("/deployment/live")
 async def liveness_check(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:
     return manager.check_liveness()
 
 
-@router.get("/v1/deployment/status")
+@router.get("/deployment/status")
 async def deployment_status(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:
@@ -88,7 +88,7 @@ async def deployment_status(
     }
 
 
-@router.get("/v1/deployment/diagnostics")
+@router.get("/deployment/diagnostics")
 async def deployment_diagnostics(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:
@@ -117,7 +117,7 @@ async def deployment_diagnostics(
     }
 
 
-@router.get("/v1/deployment/configuration")
+@router.get("/deployment/configuration")
 async def sanitized_configuration(
     manager: DeploymentPlatformManager = Depends(get_deployment_manager),
 ) -> Dict[str, Any]:

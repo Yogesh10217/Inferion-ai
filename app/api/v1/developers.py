@@ -49,7 +49,7 @@ class CreateSubscriptionSchema(BaseModel):
 
 
 # Developer Endpoints
-@router.post("/v1/developers", status_code=status.HTTP_201_CREATED)
+@router.post("/developers", status_code=status.HTTP_201_CREATED)
 async def register_developer(data: RegisterDeveloperSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
     dev = mgr.developer_manager.register_developer(
         user_id=data.user_id,
@@ -61,7 +61,7 @@ async def register_developer(data: RegisterDeveloperSchema, mgr: DeveloperPlatfo
     return {"status": "registered", "developer": dev.model_dump()}
 
 
-@router.get("/v1/developers/me")
+@router.get("/developers/me")
 async def get_current_developer(
     developer_id: str = "dev_default", mgr: DeveloperPlatformManager = Depends(get_dev_platform)
 ):
@@ -73,7 +73,7 @@ async def get_current_developer(
 
 
 # Project Endpoints
-@router.post("/v1/developers/projects", status_code=status.HTTP_201_CREATED)
+@router.post("/developers/projects", status_code=status.HTTP_201_CREATED)
 async def create_project(data: CreateProjectSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
     proj = mgr.project_manager.create_project(
         name=data.name,
@@ -87,7 +87,7 @@ async def create_project(data: CreateProjectSchema, mgr: DeveloperPlatformManage
     return {"status": "created", "project": proj.model_dump()}
 
 
-@router.get("/v1/developers/projects")
+@router.get("/developers/projects")
 async def list_projects(
     tenant_id: Optional[str] = None,
     developer_id: Optional[str] = None,
@@ -97,7 +97,7 @@ async def list_projects(
     return {"projects": [p.model_dump() for p in projs]}
 
 
-@router.get("/v1/developers/projects/{id}")
+@router.get("/developers/projects/{id}")
 async def get_project(id: str, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
     try:
         proj = mgr.project_manager.get_project(id)
@@ -106,7 +106,7 @@ async def get_project(id: str, mgr: DeveloperPlatformManager = Depends(get_dev_p
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
 
-@router.patch("/v1/developers/projects/{id}")
+@router.patch("/developers/projects/{id}")
 async def transition_project(
     id: str, data: TransitionProjectSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)
 ):
@@ -118,7 +118,7 @@ async def transition_project(
 
 
 # Event & Webhook Endpoints
-@router.post("/v1/events/subscriptions", status_code=status.HTTP_201_CREATED)
+@router.post("/events/subscriptions", status_code=status.HTTP_201_CREATED)
 async def create_subscription(
     data: CreateSubscriptionSchema, mgr: DeveloperPlatformManager = Depends(get_dev_platform)
 ):
@@ -131,7 +131,7 @@ async def create_subscription(
     return {"status": "created", "subscription": sub.model_dump()}
 
 
-@router.get("/v1/events/subscriptions")
+@router.get("/events/subscriptions")
 async def list_subscriptions(
     tenant_id: Optional[str] = None,
     developer_id: Optional[str] = None,
@@ -141,7 +141,7 @@ async def list_subscriptions(
     return {"subscriptions": [s.model_dump() for s in subs]}
 
 
-@router.delete("/v1/events/subscriptions/{id}")
+@router.delete("/events/subscriptions/{id}")
 async def delete_subscription(id: str, mgr: DeveloperPlatformManager = Depends(get_dev_platform)):
     try:
         mgr.event_engine.delete_subscription(id)
