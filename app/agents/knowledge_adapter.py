@@ -31,8 +31,9 @@ class KnowledgeAdapter:
                 {"id": doc.id, "text": doc.text, "metadata": doc.metadata, "score": doc.score} for doc in results
             ]
 
-            formatted_context = self.context_builder.build_context(docs_data)
-            cited_text = self.citation_engine.format_citations(formatted_context, docs_data)
+            formatted_context = self.context_builder.build_context(results)
+            citations = self.citation_engine.generate_citations(results)
+            cited_text = self.citation_engine.format_inline_citations(formatted_context, citations)
 
             return {
                 "query": query,
@@ -40,6 +41,7 @@ class KnowledgeAdapter:
                 "formatted_context": formatted_context,
                 "cited_text": cited_text,
             }
+
         except Exception as e:
             logger.warning(f"Knowledge search failed: {e}")
             return {"query": query, "documents": [], "formatted_context": "", "cited_text": f"Search unavailable: {e}"}

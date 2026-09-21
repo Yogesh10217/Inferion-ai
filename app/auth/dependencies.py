@@ -40,7 +40,7 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db_s
     return user
 
 
-async def require_admin(current_user: User = Depends(get_current_user)) -> User:
+async def require_admin(current_user: Optional[User] = Depends(get_current_user)) -> Optional[User]:
     """Dependency that requires the current user to be an admin."""
     if not settings.auth_enabled:
         return None

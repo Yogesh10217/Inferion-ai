@@ -2,13 +2,12 @@ from typing import Any, Dict
 
 import redis.asyncio as redis
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 
 
 class HealthAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
         self.settings = get_settings()
 

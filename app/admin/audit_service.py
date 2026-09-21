@@ -1,14 +1,13 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from sqlalchemy import and_, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.models import AuditEvent
 
 
 class AuditAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def record_event(
@@ -84,4 +83,4 @@ class AuditAdminService:
 
         stmt = stmt.order_by(AuditEvent.timestamp.desc()).limit(limit).offset(offset)
         result = await self.db.execute(stmt)
-        return result.scalars().all()
+        return list(result.scalars().all())

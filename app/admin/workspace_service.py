@@ -1,14 +1,13 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.exceptions import ResourceNotFoundException
 from app.tenant.models import Workspace
 
 
 class WorkspaceAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def create_workspace(
@@ -28,7 +27,7 @@ class WorkspaceAdminService:
             stmt = stmt.where(Workspace.organization_id == organization_id)
         stmt = stmt.limit(limit).offset(offset)
         result = await self.db.execute(stmt)
-        return result.scalars().all()
+        return list(result.scalars().all())
 
     async def get_workspace(self, workspace_id: str) -> Workspace:
         workspace = await self.db.get(Workspace, workspace_id)

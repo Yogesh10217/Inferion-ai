@@ -1,7 +1,6 @@
 from typing import Any, Dict
 
 from sqlalchemy import func, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.models import APIKey, User
 from app.billing.models import OrganizationSubscription
@@ -9,7 +8,7 @@ from app.tenant.models import Organization, Workspace
 
 
 class SystemAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def get_system_stats(self) -> Dict[str, Any]:
@@ -20,8 +19,8 @@ class SystemAdminService:
         )
 
         # Count users
-        users_active = await self.db.scalar(select(func.count(User.id)).where(User.is_active))
-        users_disabled = await self.db.scalar(select(func.count(User.id)).where(not User.is_active))
+        users_active = await self.db.scalar(select(func.count(User.id)).where(User.is_active.is_(True)))
+        users_disabled = await self.db.scalar(select(func.count(User.id)).where(User.is_active.is_(False)))
 
         # Count workspaces
         workspaces_total = await self.db.scalar(select(func.count(Workspace.id)))

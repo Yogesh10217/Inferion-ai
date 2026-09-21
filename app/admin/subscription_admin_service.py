@@ -1,14 +1,13 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.exceptions import ResourceNotFoundException
 from app.billing.models import OrganizationSubscription, SubscriptionPlan
 
 
 class SubscriptionAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def list_subscriptions(
@@ -21,7 +20,7 @@ class SubscriptionAdminService:
             stmt = stmt.where(OrganizationSubscription.status == status)
         stmt = stmt.limit(limit).offset(offset)
         result = await self.db.execute(stmt)
-        return result.scalars().all()
+        return list(result.scalars().all())
 
     async def get_subscription(self, subscription_id: str) -> OrganizationSubscription:
         sub = await self.db.get(OrganizationSubscription, subscription_id)
@@ -31,4 +30,4 @@ class SubscriptionAdminService:
 
     async def list_plans(self, limit: int = 100, offset: int = 0) -> List[SubscriptionPlan]:
         result = await self.db.execute(select(SubscriptionPlan).limit(limit).offset(offset))
-        return result.scalars().all()
+        return list(result.scalars().all())

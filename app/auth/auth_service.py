@@ -15,7 +15,7 @@ class AuthService:
     async def log_audit_event(
         db: AsyncSession,
         action: str,
-        organization_id: str,
+        organization_id: Optional[str] = None,
         actor_id: Optional[str] = None,
         workspace_id: Optional[str] = None,
         resource_type: Optional[str] = None,
@@ -26,7 +26,7 @@ class AuthService:
         """Log an audit event to the database."""
         event = AuditEvent(
             action=action,
-            organization_id=organization_id,
+            organization_id=organization_id or "system",
             actor_id=actor_id,
             workspace_id=workspace_id,
             resource_type=resource_type,
@@ -50,7 +50,7 @@ class AuthService:
             await AuthService.log_audit_event(
                 db,
                 "failed_authentication",
-                user_id=user.id if user else None,
+                actor_id=user.id if user else None,
                 ip_address=ip_address,
                 details=f"Failed login for {username}",
             )

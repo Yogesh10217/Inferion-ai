@@ -1,19 +1,18 @@
-from typing import List
+from typing import Any, List
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.exceptions import ResourceNotFoundException
 from app.auth.models import User
 
 
 class UserAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def list_users(self, limit: int = 100, offset: int = 0) -> List[User]:
         result = await self.db.execute(select(User).limit(limit).offset(offset))
-        return result.scalars().all()
+        return list(result.scalars().all())
 
     async def get_user(self, user_id: str) -> User:
         user = await self.db.get(User, user_id)

@@ -1,15 +1,14 @@
 from datetime import datetime, timezone
-from typing import List
+from typing import Any, List
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.exceptions import InvalidOperationException, ResourceNotFoundException
 from app.tenant.models import Organization
 
 
 class OrganizationAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def create_organization(self, name: str, slug: str) -> Organization:
@@ -21,7 +20,7 @@ class OrganizationAdminService:
 
     async def list_organizations(self, limit: int = 100, offset: int = 0) -> List[Organization]:
         result = await self.db.execute(select(Organization).limit(limit).offset(offset))
-        return result.scalars().all()
+        return list(result.scalars().all())
 
     async def get_organization(self, org_id: str) -> Organization:
         org = await self.db.get(Organization, org_id)

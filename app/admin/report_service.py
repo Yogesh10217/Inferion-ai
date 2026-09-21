@@ -1,16 +1,15 @@
 import uuid
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.exceptions import ResourceNotFoundException
 from app.admin.models import ReportJob
 
 
 class ReportAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def create_report_job(self, type: str, created_by: str, parameters: Optional[dict] = None) -> ReportJob:
@@ -43,4 +42,4 @@ class ReportAdminService:
             stmt = stmt.where(ReportJob.created_by == created_by)
         stmt = stmt.order_by(ReportJob.created_at.desc()).limit(limit).offset(offset)
         result = await self.db.execute(stmt)
-        return result.scalars().all()
+        return list(result.scalars().all())

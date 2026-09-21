@@ -87,7 +87,9 @@ class Settings(BaseSettings):
     def parse_cors_origins(cls, value: object, info: ValidationInfo) -> list[str]:
         if isinstance(value, str):
             return [item.strip() for item in value.split(",") if item.strip()]
-        return value
+        if isinstance(value, list):
+            return [str(item) for item in value]
+        return []
 
 
 @lru_cache(maxsize=1)

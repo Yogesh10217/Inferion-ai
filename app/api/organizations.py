@@ -17,9 +17,9 @@ router = APIRouter(prefix="/organizations", tags=["Organizations"])
 @router.post("", response_model=OrganizationResponse, status_code=201)
 async def create_organization(
     org_in: OrganizationCreate,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session),
-    request: Request = None,
 ):
     # Check if slug exists
     stmt = select(Organization).where(Organization.slug == org_in.slug)
@@ -73,7 +73,7 @@ async def list_organizations(
             .where(Membership.user_id == current_user.id)
         )
     result = await db.execute(stmt)
-    return result.scalars().all()
+    return list(result.scalars().all())
 
 
 @router.get("/{org_id}", response_model=OrganizationResponse)

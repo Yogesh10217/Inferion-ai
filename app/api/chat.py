@@ -40,11 +40,24 @@ async def create_chat_completion(
     if payload.metadata and payload.metadata.get("rag") is True and payload.messages:
         user_prompt = payload.messages[-1].content
         try:
-            retriever = KnowledgeRetriever()
-            context_docs = retriever.retrieve(user_prompt)
+            from app.knowledge.search import SearchEngine
+
+            search_engine = SearchEngine()
+            retriever = KnowledgeRetriever(search_engine=search_engine)
+            org_id = (
+                payload.metadata.get("organization_id", "default_org")
+                if isinstance(payload.metadata, dict)
+                else "default_org"
+            )
+            ws_id = (
+                payload.metadata.get("workspace_id", "default_ws")
+                if isinstance(payload.metadata, dict)
+                else "default_ws"
+            )
+            context_docs = await retriever.retrieve(query=user_prompt, workspace_id=ws_id, organization_id=org_id)
             if context_docs:
                 cb = ContextBuilder()
-                context_str, _ = cb.build_context(context_docs)
+                context_str = cb.build_context(context_docs)
                 payload.messages[-1].content = f"Context:\n{context_str}\n\nUser Question:\n{user_prompt}"
         except Exception as exc:
             logger.warning("Failed to retrieve RAG knowledge context: %s", exc)

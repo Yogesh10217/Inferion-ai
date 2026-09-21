@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta, timezone
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from sqlalchemy import select, update
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.admin.exceptions import ResourceNotFoundException
 from app.auth.models import APIKey
 
 
 class APIKeyAdminService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Any):
         self.db = db
 
     async def list_api_keys(
@@ -22,7 +21,7 @@ class APIKeyAdminService:
             stmt = stmt.where(APIKey.organization_id == org_id)
         stmt = stmt.limit(limit).offset(offset)
         result = await self.db.execute(stmt)
-        return result.scalars().all()
+        return list(result.scalars().all())
 
     async def get_api_key(self, api_key_id: str) -> APIKey:
         key = await self.db.get(APIKey, api_key_id)
@@ -56,4 +55,4 @@ class APIKeyAdminService:
 
         result = await self.db.execute(stmt)
         await self.db.commit()
-        return result.rowcount
+        return getattr(result, "rowcount", 0)

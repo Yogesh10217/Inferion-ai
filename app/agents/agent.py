@@ -83,6 +83,7 @@ class Agent:
             step = plan[0]
             tool_name = step.get("tool")
             tool_input = step.get("tool_input", {})
+            obs_status = ""
 
             # 2. Human Approval Check
             if tool_name:
