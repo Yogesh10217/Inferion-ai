@@ -1,7 +1,6 @@
 """Unit tests for CaseManager case creation and timeline events."""
 
-import pytest
-from app.orchestration.case_management import CaseManager, CaseType, CaseStatus
+from app.orchestration.case_management import CaseManager, CaseStatus, CaseType
 
 
 def test_case_management_lifecycle():

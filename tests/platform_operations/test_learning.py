@@ -1,6 +1,5 @@
 """Unit tests for Operational Learning & Post-Incident Insight Engine."""
 
-import pytest
 from app.platform_operations.learning import OperationalLearningManager, PreventionRule
 
 

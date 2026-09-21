@@ -3,12 +3,12 @@ Tests for ToolRegistry Subsystem
 """
 
 import pytest
-import threading
-from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, ToolCapability
-from app.tools.tool_registry import ToolRegistry
+
+from app.tools.exceptions import ToolNotFoundException
+from app.tools.tool import BaseTool, ToolCategory, ToolMetadata
 from app.tools.tool_context import ToolContext
-from app.tools.tool_result import ToolResult, ToolExecutionStatus
-from app.tools.exceptions import ToolNotFoundException, ToolValidationError
+from app.tools.tool_registry import ToolRegistry
+from app.tools.tool_result import ToolExecutionStatus, ToolResult
 
 
 class DummyTestTool(BaseTool):

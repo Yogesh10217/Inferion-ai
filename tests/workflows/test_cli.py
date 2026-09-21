@@ -3,6 +3,7 @@ Tests for CLI Workflows Commands
 """
 
 import argparse
+
 from cli.commands.workflows import add_workflows_parser, handle_list
 
 

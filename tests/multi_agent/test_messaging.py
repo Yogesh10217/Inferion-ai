@@ -3,7 +3,8 @@ Tests for Agent MessageBus & Messaging Layer
 """
 
 import pytest
-from app.multi_agent.agent_messaging import MessageBus, AgentMessage, MessageType
+
+from app.multi_agent.agent_messaging import AgentMessage, MessageBus, MessageType
 
 
 @pytest.mark.asyncio

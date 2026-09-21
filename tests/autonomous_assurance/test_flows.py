@@ -4,22 +4,20 @@ Mandatory 20 E2E Verification Test Flows for Phase 5.53 Enterprise AI Autonomous
 
 import pytest
 
-from app.autonomous_assurance.manager import AutonomousAssuranceManager
-from app.autonomous_assurance.workflows import WorkflowState, WorkflowType, WorkflowPriority
-from app.autonomous_assurance.workflow_steps import StepActionType
-from app.autonomous_assurance.boundaries import BoundaryMode, ActionCategory
-from app.autonomous_assurance.providers import MockAutonomousAssuranceProvider
+from app.autonomous_assurance.boundaries import ActionCategory, BoundaryMode
 from app.autonomous_assurance.exceptions import (
     CrossTenantAutonomousAssuranceException,
-    InvalidWorkflowStateTransitionException,
+    DependencyCycleException,
     HighRiskAutonomousActionRequiresApprovalException,
+    ImmutableAutonomousAssuranceRecordException,
+    InvalidWorkflowStateTransitionException,
     ProhibitedAutonomousActionException,
     WorkflowConcurrencyConflictException,
-    WorkflowLimitExceededException,
-    DependencyCycleException,
-    ImmutableAutonomousAssuranceRecordException,
-    AutonomousWorkflowNotFoundException,
 )
+from app.autonomous_assurance.manager import AutonomousAssuranceManager
+from app.autonomous_assurance.providers import MockAutonomousAssuranceProvider
+from app.autonomous_assurance.workflow_steps import StepActionType
+from app.autonomous_assurance.workflows import WorkflowPriority, WorkflowState
 
 
 @pytest.fixture
@@ -72,8 +70,10 @@ def test_05_workflow_planning(manager):
     """05: Workflow planning engine step generation and structuring."""
     tenant = "tenant_gamma"
     wf = manager.workflow_manager.create_workflow(tenant, "Planning Test")
-    s1 = manager.step_manager.add_step(wf.workflow_id, tenant, "Analyze Health", StepActionType.ANALYZE, "health_service")
-    s2 = manager.step_manager.add_step(
+    s1 = manager.step_manager.add_step(
+        wf.workflow_id, tenant, "Analyze Health", StepActionType.ANALYZE, "health_service"
+    )
+    manager.step_manager.add_step(
         wf.workflow_id, tenant, "Restart Node", StepActionType.RESTART_SERVICE, "k8s_node", dependencies=[s1.step_id]
     )
     plan = manager.planning_engine.generate_plan(wf.workflow_id, tenant)
@@ -147,7 +147,9 @@ def test_11_policy_boundary_enforcement(manager):
     assert eval_res.mode == BoundaryMode.PROHIBITED
 
     wf = manager.workflow_manager.create_workflow(tenant, "Prohibited Boundary Test")
-    manager.step_manager.add_step(wf.workflow_id, tenant, "Delete DB", ActionCategory.DELETE_PRODUCTION_DATA.value, "prod_db")
+    manager.step_manager.add_step(
+        wf.workflow_id, tenant, "Delete DB", ActionCategory.DELETE_PRODUCTION_DATA.value, "prod_db"
+    )
 
     with pytest.raises(ProhibitedAutonomousActionException):
         manager.boundary_evaluator.enforce_boundaries(wf.workflow_id, tenant)
@@ -160,7 +162,9 @@ def test_12_human_approval_enforcement(manager):
     assert eval_res.mode == BoundaryMode.APPROVAL_REQUIRED
 
     wf = manager.workflow_manager.create_workflow(tenant, "Approval Required Test")
-    manager.step_manager.add_step(wf.workflow_id, tenant, "Restart Core Node", ActionCategory.RESTART_SERVICE.value, "node-1")
+    manager.step_manager.add_step(
+        wf.workflow_id, tenant, "Restart Core Node", ActionCategory.RESTART_SERVICE.value, "node-1"
+    )
 
     with pytest.raises(HighRiskAutonomousActionRequiresApprovalException):
         manager.approval_manager.require_approval_check(wf.workflow_id, tenant)
@@ -211,7 +215,10 @@ def test_16_failure_recovery_planning(manager):
     """16: Automated failure recovery planning upon step verification failure."""
     tenant = "tenant_nu"
     plan = manager.recovery_planner.plan_recovery(
-        workflow_id="wf_rec_1", tenant_id=tenant, failed_step_id="step_failed_1", trigger_reason="Node status unresponsive"
+        workflow_id="wf_rec_1",
+        tenant_id=tenant,
+        failed_step_id="step_failed_1",
+        trigger_reason="Node status unresponsive",
     )
     assert plan.recovery_id.startswith("rec_")
     assert plan.recovery_strategy == "FALLBACK_RETRY"

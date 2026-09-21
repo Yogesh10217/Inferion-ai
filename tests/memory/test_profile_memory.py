@@ -7,11 +7,14 @@ from app.memory.profile_memory import ProfileMemory
 
 def test_profile_memory_lifecycle():
     pm = ProfileMemory()
-    prof = pm.create_profile("user_101", {
-        "preferred_language": "python",
-        "preferred_framework": "fastapi",
-        "interests": ["ai", "microservices"],
-    })
+    prof = pm.create_profile(
+        "user_101",
+        {
+            "preferred_language": "python",
+            "preferred_framework": "fastapi",
+            "interests": ["ai", "microservices"],
+        },
+    )
 
     assert prof.user_id == "user_101"
     assert prof.preferred_framework == "fastapi"

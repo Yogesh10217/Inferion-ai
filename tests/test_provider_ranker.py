@@ -1,7 +1,6 @@
-import pytest
 from app.routing.provider_ranker import ProviderRanker
-from app.routing.routing_policy import RoutingPolicy
 from app.routing.routing_metrics import RoutingMetrics
+from app.routing.routing_policy import RoutingPolicy
 
 
 def test_provider_ranker_scoring():

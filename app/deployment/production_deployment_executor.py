@@ -201,7 +201,7 @@ class ProductionDeploymentExecutor:
             )
 
         sm.transition_to(ProductionDeploymentState.BACKUP_VALIDATING, "Evaluating backup execution guard")
-        bk_res = BackupExecutionGuard.evaluate_backup_guard(
+        BackupExecutionGuard.evaluate_backup_guard(
             is_production=target.is_production(), explicit_backup_authorized=explicit_backup_authorized
         )
 
@@ -265,7 +265,7 @@ class ProductionDeploymentExecutor:
                     ProductionDeploymentState.ROLLBACK_REQUIRED, "Smoke test failure triggered rollback requirement"
                 )
                 sm.transition_to(ProductionDeploymentState.ROLLBACK_EXECUTING, "Executing rollback procedure")
-                rb_res = adapter.rollback(previous_digest="previous_sha256_hash_reference")
+                adapter.rollback(previous_digest="previous_sha256_hash_reference")
                 sm.transition_to(ProductionDeploymentState.ROLLBACK_VALIDATING, "Validating rollback execution")
                 sm.transition_to(ProductionDeploymentState.ROLLED_BACK, "Rollback completed successfully")
 
@@ -321,7 +321,7 @@ class ProductionDeploymentExecutor:
                 ProductionDeploymentState.ROLLBACK_REQUIRED, "Traffic failure triggered rollback requirement"
             )
             sm.transition_to(ProductionDeploymentState.ROLLBACK_EXECUTING, "Executing rollback procedure")
-            rb_res = adapter.rollback(previous_digest="previous_sha256_hash_reference")
+            adapter.rollback(previous_digest="previous_sha256_hash_reference")
             sm.transition_to(ProductionDeploymentState.ROLLBACK_VALIDATING, "Validating rollback execution")
             sm.transition_to(ProductionDeploymentState.ROLLED_BACK, "Rollback completed successfully")
 

@@ -1,8 +1,7 @@
 """Unit tests for RetrievalPipeline pre-retrieval authorization."""
 
-import pytest
 from app.knowledge_platform.knowledge import KnowledgeManager
-from app.knowledge_platform.retrieval import RetrievalPipeline, RetrievalRequest, RetrievalStrategy
+from app.knowledge_platform.retrieval import RetrievalPipeline, RetrievalRequest
 
 
 def test_retrieval_pre_authorization():

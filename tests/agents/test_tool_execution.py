@@ -3,10 +3,10 @@ Tool Execution Unit Tests
 """
 
 import pytest
-from app.agents.tools.registry import ToolRegistry
-from app.agents.tools.executor import ToolExecutor
+
 from app.agents.agent_context import AgentContext
-from app.agents.exceptions import ToolPermissionDeniedError, ToolNotFoundError
+from app.agents.exceptions import ToolNotFoundError, ToolPermissionDeniedError
+from app.agents.tools.executor import ToolExecutor
 
 
 @pytest.mark.asyncio

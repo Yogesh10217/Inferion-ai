@@ -182,7 +182,7 @@ class QdrantStore(VectorStore):
         try:
 
             async def _do_health():
-                collections = await self.client.get_collections()
+                await self.client.get_collections()
                 return True
 
             return await self._execute_with_retry(_do_health)

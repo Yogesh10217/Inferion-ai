@@ -1,8 +1,7 @@
 """Unit tests for ContextBuilder window assembly."""
 
-import pytest
-from app.knowledge_platform.retrieval import RetrievalResult, RetrievalStrategy
 from app.knowledge_platform.context import ContextBuilder, ContextStrategy
+from app.knowledge_platform.retrieval import RetrievalResult, RetrievalStrategy
 
 
 def test_context_builder_window_assembly():

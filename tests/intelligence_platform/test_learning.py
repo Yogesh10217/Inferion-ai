@@ -1,9 +1,10 @@
 """Unit tests for Continuous Learning & Poisoning Resistance."""
 
 import pytest
-from app.intelligence_platform.outcomes import OutcomeEvaluator
-from app.intelligence_platform.learning import ContinuousLearningManager
+
 from app.intelligence_platform.exceptions import IntelligenceException
+from app.intelligence_platform.learning import ContinuousLearningManager
+from app.intelligence_platform.outcomes import OutcomeEvaluator
 
 
 def test_continuous_learning_and_feedback_poisoning_protection():

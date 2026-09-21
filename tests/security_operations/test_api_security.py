@@ -2,7 +2,6 @@
 Tests for API Security Evaluator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.api_security import APISecurityEvaluator, APISecurityResult
 
 

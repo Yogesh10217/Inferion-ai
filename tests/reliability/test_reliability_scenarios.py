@@ -3,7 +3,7 @@ Tests for Reliability Scenarios Engine.
 """
 
 from app.reliability.reliability_evidence import ReliabilityEvidenceLevel
-from app.reliability.reliability_scenarios import ReliabilityScenarioEngine, ScenarioType
+from app.reliability.reliability_scenarios import ReliabilityScenarioEngine
 
 
 def test_evaluate_all_canonical_scenarios():

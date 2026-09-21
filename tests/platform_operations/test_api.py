@@ -17,12 +17,16 @@ async def test_platform_operations_api_services_crud(get_client, admin_token_hea
         svc_id = svc["service_id"]
 
         # Get service
-        get_res = await client.get(f"/v1/platform-operations/services/{svc_id}?tenant_id=tenant_api", headers=admin_token_headers)
+        get_res = await client.get(
+            f"/v1/platform-operations/services/{svc_id}?tenant_id=tenant_api", headers=admin_token_headers
+        )
         assert get_res.status_code == 200
         assert get_res.json()["name"] == "API Gateway Core"
 
         # List services
-        list_res = await client.get("/v1/platform-operations/services?tenant_id=tenant_api", headers=admin_token_headers)
+        list_res = await client.get(
+            "/v1/platform-operations/services?tenant_id=tenant_api", headers=admin_token_headers
+        )
         assert list_res.status_code == 200
         assert len(list_res.json()) >= 1
 

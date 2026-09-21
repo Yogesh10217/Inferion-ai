@@ -1,8 +1,7 @@
 """Unit tests for PromptManager and PromptOps."""
 
-import pytest
-from app.mlops.registry import AIAssetRegistry
 from app.mlops.prompt_management import PromptManager
+from app.mlops.registry import AIAssetRegistry
 
 
 def test_prompt_rendering_and_versioning():

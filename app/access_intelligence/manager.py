@@ -106,7 +106,7 @@ class AccessIntelligenceManager:
         )
 
         # 3. Access Relationship Mapping
-        rel = self.relationship_manager.create_relationship(
+        self.relationship_manager.create_relationship(
             tenant_id=tenant_id,
             source_identity_id=ident.identity_id,
             target_resource_id="kb_prod_01",
@@ -129,7 +129,7 @@ class AccessIntelligenceManager:
         )
 
         # 6. Least Privilege Assessment
-        lp_asm = self.least_privilege_manager.assess_identity(
+        self.least_privilege_manager.assess_identity(
             tenant_id=tenant_id,
             identity_id=ident.identity_id,
             assigned_entitlement_ids=[ent1.entitlement_id, ent2.entitlement_id],
@@ -160,7 +160,7 @@ class AccessIntelligenceManager:
             source_telemetry_ref="tel_sig_001",
             subject_identity_id=ident.identity_id,
         )
-        anom = self.anomaly_manager.detect_anomaly(
+        self.anomaly_manager.detect_anomaly(
             tenant_id=tenant_id,
             subject_identity_id=ident.identity_id,
             anomaly_type=AccessAnomalyType.UNUSUAL_PRIVILEGE_USAGE,
@@ -170,7 +170,7 @@ class AccessIntelligenceManager:
         )
 
         # 10. Cross-Platform Correlation
-        corr = self.correlation_manager.correlate_event(
+        self.correlation_manager.correlate_event(
             tenant_id=tenant_id,
             correlation_type=AccessCorrelationType.AGENT_EXECUTION_ACCESS,
             subject_identity_id=ident.identity_id,
@@ -188,7 +188,7 @@ class AccessIntelligenceManager:
         )
 
         # 12. Privileged/Emergency Access Handling
-        priv_req = self.privileged_access_manager.request_privileged_access(
+        self.privileged_access_manager.request_privileged_access(
             tenant_id=tenant_id,
             requester_identity_id=ident.identity_id,
             target_role_or_entitlement="ADMIN_ROLE",
@@ -215,7 +215,7 @@ class AccessIntelligenceManager:
         del_req = self.remediation_manager.delegate_remediation(tenant_id, rem_plan.plan_id)
 
         # 16. External Verification
-        verif = self.verification_manager.verify_remediation(
+        self.verification_manager.verify_remediation(
             tenant_id=tenant_id,
             remediation_plan_id=rem_plan.plan_id,
             checks=[
@@ -246,7 +246,7 @@ class AccessIntelligenceManager:
         trust_asm = self.trust_engine.evaluate_identity_trust(tenant_id, ident.identity_id)
 
         # 20. Learning Recommendation
-        learn_rec = self.learning_manager.record_access_pattern(
+        self.learning_manager.record_access_pattern(
             tenant_id=tenant_id,
             identity_id=ident.identity_id,
             pattern_name="Off-Hours Admin Escalation",
@@ -256,7 +256,7 @@ class AccessIntelligenceManager:
         )
 
         # 21. Analytics Generation
-        analytics_report = self.analytics_engine.generate_report(
+        self.analytics_engine.generate_report(
             tenant_id=tenant_id, privileged_identities_count=1, toxic_combinations_count=len(tc_findings)
         )
 

@@ -3,8 +3,9 @@ Tests for Multi-Tenant Scoping & Isolation
 """
 
 import pytest
-from app.memory.memory_manager import MemoryManager
+
 from app.memory.exceptions import TenantMemoryIsolationError
+from app.memory.memory_manager import MemoryManager
 
 
 def test_tenant_isolation_in_memory_platform():

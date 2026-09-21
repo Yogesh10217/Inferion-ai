@@ -1,7 +1,7 @@
-from app.deployment.database_validation import DatabaseDependencyValidator
 from app.deployment.cache_validation import CacheDependencyValidator
+from app.deployment.database_validation import DatabaseDependencyValidator
 from app.deployment.dependency_validation import DeploymentDependencyValidator
-from app.deployment.models import DependencyStatus, DependencyCategory, EnvironmentConfig, DeploymentEnvironment
+from app.deployment.models import DependencyCategory, DependencyStatus, DeploymentEnvironment, EnvironmentConfig
 
 
 def test_real_postgres_socket_probe():
@@ -38,7 +38,6 @@ def test_optional_dependency_degradation():
         application_version="1.0.0",
         deployment_version="5.60A",
         region="us-east-1",
-
         instance_id="inst-01",
         debug_enabled=False,
         database_url="sqlite:///./test.db",

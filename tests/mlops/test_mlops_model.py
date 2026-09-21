@@ -1,8 +1,7 @@
 """Unit tests for ModelLifecycleManager."""
 
-import pytest
-from app.mlops.registry import AIAssetRegistry
 from app.mlops.model_lifecycle import ModelLifecycleManager, ModelProvider
+from app.mlops.registry import AIAssetRegistry
 
 
 def test_model_registration_and_capability_validation():

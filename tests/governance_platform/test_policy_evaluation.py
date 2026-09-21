@@ -1,7 +1,6 @@
 """Unit tests for UnifiedPolicyEvaluator orchestration across subsystem engines."""
 
-import pytest
-from app.governance_platform.policy_evaluation import UnifiedPolicyEvaluator, GovernanceDecision
+from app.governance_platform.policy_evaluation import GovernanceDecision, UnifiedPolicyEvaluator
 
 
 def test_unified_policy_evaluation_allow_and_block():

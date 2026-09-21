@@ -103,7 +103,7 @@ class KnowledgeIntelligenceManager:
         norm_res = self.normalizer.normalize(tenant_id, kitem)
 
         # 4. Provenance capture
-        prov_rec = self.provenance_manager.record_provenance(
+        self.provenance_manager.record_provenance(
             tenant_id=tenant_id,
             target_id=kitem.item_id,
             provenance_type=ProvenanceType.SOURCE,

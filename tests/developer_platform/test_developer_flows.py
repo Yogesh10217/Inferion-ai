@@ -1,11 +1,13 @@
 """Mandatory End-to-End Delivery Flows for Phase 5.21."""
 
 import pytest
-from app.developer_platform.manager import DeveloperPlatformManager
+
 from app.developer_platform.api_contracts import APIContract
-from app.developer_platform.exceptions import APIContractBreakingChangeException, DependencyRiskViolationException, QualityGateViolationException
-from app.developer_platform.quality import QualityGate
-from app.developer_platform.governance import DeveloperDecisionType
+from app.developer_platform.exceptions import (
+    APIContractBreakingChangeException,
+    DependencyRiskViolationException,
+)
+from app.developer_platform.manager import DeveloperPlatformManager
 
 
 def test_flow_1_api_breaking_change_governance():
@@ -35,11 +37,15 @@ def test_flow_3_deployment_regression():
     mgr = DeveloperPlatformManager()
     rel = mgr.release_manager.create_release("p_reg", "1.1.0", tenant_id="t_flow3")
 
-    rec = mgr.deployment_intelligence.evaluate_deployment_health(rel.release_id, error_rate_pct=12.5, tenant_id="t_flow3")
+    rec = mgr.deployment_intelligence.evaluate_deployment_health(
+        rel.release_id, error_rate_pct=12.5, tenant_id="t_flow3"
+    )
     assert rec is not None
     assert rec.approval_request_id is not None
 
-    appr = mgr.deployment_intelligence.approval_engine.approve(rec.approval_request_id, approver_id="sre_lead@company.com")
+    appr = mgr.deployment_intelligence.approval_engine.approve(
+        rec.approval_request_id, approver_id="sre_lead@company.com"
+    )
     assert appr.status.value == "APPROVED"
 
 
@@ -55,7 +61,9 @@ def test_flow_4_dependency_risk():
 def test_flow_5_authorized_ai_developer_assistance():
     """FLOW 5 — Authorized AI Developer Assistance"""
     mgr = DeveloperPlatformManager()
-    rec = mgr.developer_assistant.assist_developer("Explain error handling", repository_id="repo_flow5", tenant_id="t_flow5")
+    rec = mgr.developer_assistant.assist_developer(
+        "Explain error handling", repository_id="repo_flow5", tenant_id="t_flow5"
+    )
 
     assert rec.guidance is not None
     assert len(rec.source_references) > 0
@@ -85,5 +93,7 @@ def test_flow_7_strict_cross_tenant_isolation():
 def test_flow_8_budget_aware_build_routing():
     """FLOW 8 — Budget-Aware Build Cost Attribution"""
     mgr = DeveloperPlatformManager()
-    cost = mgr.billing_adapter.record_build_cost(tenant_id="t_flow8", build_duration_minutes=10.0, resource_type="standard_build")
+    cost = mgr.billing_adapter.record_build_cost(
+        tenant_id="t_flow8", build_duration_minutes=10.0, resource_type="standard_build"
+    )
     assert cost == 0.50

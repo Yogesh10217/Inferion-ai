@@ -1,6 +1,5 @@
 """Unit tests for secret redaction in task inputs and execution metadata."""
 
-import pytest
 from app.security.secrets import SecretManager
 
 

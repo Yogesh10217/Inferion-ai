@@ -1,8 +1,9 @@
 import pytest
+
 from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.deployment_metadata import DeploymentIdentityBuilder
 from app.deployment.exceptions import ConfigurationValidationError
-from app.deployment.models import EnvironmentConfig, DeploymentEnvironment
+from app.deployment.models import DeploymentEnvironment, EnvironmentConfig
 
 
 def test_valid_sha256_digest_validation():
@@ -62,6 +63,7 @@ def test_deployment_identity_builder_require_digest():
 
     # Missing digest when required must fail
     import os
+
     os.environ["IMAGE_DIGEST"] = "NOT_AVAILABLE"
     with pytest.raises(ConfigurationValidationError):
         DeploymentIdentityBuilder.build_identity(config, require_digest=True)

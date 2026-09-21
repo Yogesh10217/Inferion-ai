@@ -1,8 +1,9 @@
 """Unit tests for QualityManager."""
 
 import pytest
-from app.developer_platform.quality import QualityManager, QualityGate
+
 from app.developer_platform.exceptions import QualityGateViolationException
+from app.developer_platform.quality import QualityGate, QualityManager
 
 
 def test_quality_gate_evaluation():

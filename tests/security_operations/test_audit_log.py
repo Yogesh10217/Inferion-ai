@@ -2,8 +2,7 @@
 Tests for Security Audit Logger (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.audit_log import SecurityAuditLogger, SecurityAuditRecord
+from app.security_operations.audit_log import SecurityAuditLogger
 
 
 def test_audit_logging_chain():

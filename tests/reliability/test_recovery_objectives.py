@@ -2,7 +2,7 @@
 Tests for Recovery Objectives Module.
 """
 
-from app.reliability.recovery_objectives import RecoveryObjective, RecoveryObjectivesEvaluator
+from app.reliability.recovery_objectives import RecoveryObjectivesEvaluator
 
 
 def test_rto_rpo_evaluation():

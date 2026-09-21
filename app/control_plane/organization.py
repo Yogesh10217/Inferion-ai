@@ -121,7 +121,7 @@ class OrganizationManager:
 
     def delete_organization(self, organization_id: str) -> bool:
         """Delete an organization."""
-        org = self.get_organization(organization_id)
+        self.get_organization(organization_id)
         del self._organizations[organization_id]
         logger.warning(f"[ORG MANAGER] Deleted organization '{organization_id}'")
         return True

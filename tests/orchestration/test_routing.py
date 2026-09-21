@@ -1,6 +1,5 @@
 """Unit tests for ExecutionRouter strategies."""
 
-import pytest
 from app.orchestration.routing import ExecutionRouter, RoutingStrategy
 
 

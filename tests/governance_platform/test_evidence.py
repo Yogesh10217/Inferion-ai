@@ -1,6 +1,5 @@
 """Unit tests for EvidenceCollector collection and indexing."""
 
-import pytest
 from app.governance_platform.evidence import EvidenceCollector, EvidenceSource
 
 

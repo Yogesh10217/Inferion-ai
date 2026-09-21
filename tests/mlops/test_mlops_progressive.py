@@ -1,9 +1,8 @@
 """Unit tests for ProgressiveDeliveryManager (Canary, Blue-Green, Shadow)."""
 
-import pytest
-from app.mlops.registry import AIAssetRegistry, AIAssetType
 from app.mlops.deployment import DeploymentManager
 from app.mlops.progressive_delivery import ProgressiveDeliveryManager
+from app.mlops.registry import AIAssetRegistry, AIAssetType
 
 
 def test_canary_deployment_scaling_and_auto_rollback():

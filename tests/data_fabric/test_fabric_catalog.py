@@ -1,7 +1,6 @@
 """Unit tests for DataCatalog."""
 
-import pytest
-from app.data_fabric.catalog import DataCatalog, Dataset, DataAsset
+from app.data_fabric.catalog import DataAsset, DataCatalog, Dataset
 
 
 def test_data_catalog_search_and_scoping():

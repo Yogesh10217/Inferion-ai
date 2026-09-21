@@ -242,7 +242,7 @@ class AutonomousAssuranceManager:
         self, workflow_id: str, tenant_id: str, action_name: str = "RESTART_SERVICE"
     ) -> DelegationPlan:
         wf = self.get_workflow(workflow_id, tenant_id)
-        plan = self.planner.get_plan(workflow_id) or self.create_plan(workflow_id, tenant_id)
+        self.planner.get_plan(workflow_id) or self.create_plan(workflow_id, tenant_id)
 
         is_approved = self.approval_engine.is_approved(workflow_id, tenant_id) or (wf.status == WorkflowStatus.APPROVED)
 
@@ -318,7 +318,7 @@ class AutonomousAssuranceManager:
         verif = self.verification_engine.get_verification(workflow_id)
 
         # 1. Evidence Bundle & SHA-256 Seal
-        ev_bundle = self.evidence_manager.create_evidence_bundle(
+        self.evidence_manager.create_evidence_bundle(
             workflow_id=workflow_id,
             tenant_id=tenant_id,
             governance_id="gov_001",
@@ -382,11 +382,11 @@ class AutonomousAssuranceManager:
     ) -> Dict[str, Any]:
         """Runs end-to-end lifecycle flow: Create -> Plan -> Governance -> Approval -> Delegate -> Verify -> Evidence -> Assurance -> Complete."""
         wf = self.create_workflow(tenant_id, title)
-        plan = self.create_plan(wf.workflow_id, tenant_id, risk_score=20.0, trust_score=90.0)
-        gov = self.evaluate_governance(wf.workflow_id, tenant_id, risk_score=20.0, trust_score=90.0)
+        self.create_plan(wf.workflow_id, tenant_id, risk_score=20.0, trust_score=90.0)
+        self.evaluate_governance(wf.workflow_id, tenant_id, risk_score=20.0, trust_score=90.0)
         self.approve_workflow(wf.workflow_id, tenant_id, approver="security_admin", approved=True)
-        del_plan = self.delegate_workflow(wf.workflow_id, tenant_id, action_name="RESTART_SERVICE")
-        verif = self.verify_workflow(wf.workflow_id, tenant_id, simulate_failure=False)
+        self.delegate_workflow(wf.workflow_id, tenant_id, action_name="RESTART_SERVICE")
+        self.verify_workflow(wf.workflow_id, tenant_id, simulate_failure=False)
         return self.finalize_workflow(wf.workflow_id, tenant_id)
 
     def get_summary(self, tenant_id: str = "global") -> Dict[str, Any]:

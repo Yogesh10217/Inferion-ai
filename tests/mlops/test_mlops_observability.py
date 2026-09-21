@@ -1,6 +1,5 @@
 """Unit tests for MLOpsMetricsCollector."""
 
-import pytest
 from app.mlops.observability import MLOpsMetricsCollector
 
 

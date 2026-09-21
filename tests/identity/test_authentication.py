@@ -1,7 +1,8 @@
 """Unit tests for AuthenticationManager assurance levels and verification."""
 
 import pytest
-from app.identity.authentication import AuthenticationManager, AuthenticationMethod, AuthenticationAssuranceLevel
+
+from app.identity.authentication import AuthenticationAssuranceLevel, AuthenticationManager, AuthenticationMethod
 from app.identity.exceptions import AuthenticationAssuranceException
 
 

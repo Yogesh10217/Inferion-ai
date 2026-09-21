@@ -1,8 +1,7 @@
 """Tests for EvaluationEngine metrics."""
 
-import pytest
-from app.observability.evaluation import EvaluationEngine
 from app.observability.context import ObservabilityContext
+from app.observability.evaluation import EvaluationEngine
 
 
 def test_evaluation_engine_metrics():

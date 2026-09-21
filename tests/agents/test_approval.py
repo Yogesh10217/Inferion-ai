@@ -3,8 +3,9 @@ Approval Controller Unit Tests
 """
 
 import pytest
-from app.agents.approval import ApprovalController
+
 from app.agents.agent_state import AgentState, AgentStatus
+from app.agents.approval import ApprovalController
 from app.agents.exceptions import ApprovalRequiredException
 
 
@@ -18,7 +19,7 @@ def test_human_approval_flow():
             tool_args={"command": "ls"},
             required_tools=["shell_executor"],
             session_id="sess_456",
-            state=state
+            state=state,
         )
 
     assert state.status == AgentStatus.AWAITING_APPROVAL

@@ -1,8 +1,7 @@
 """Unit tests for ControlPlaneUsageAnalytics."""
 
-import pytest
-from app.control_plane.usage_manager import ControlPlaneUsageManager
 from app.control_plane.usage_analytics import ControlPlaneUsageAnalytics
+from app.control_plane.usage_manager import ControlPlaneUsageManager
 
 
 def test_usage_and_cost_reporting():

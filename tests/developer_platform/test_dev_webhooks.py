@@ -1,13 +1,12 @@
 """Unit tests for Webhooks HMAC SHA-256 signing and event engine."""
 
-import pytest
-from app.developer_platform.events import DeveloperEventEngine, DeveloperEvent
+from app.developer_platform.events import DeveloperEvent, DeveloperEventEngine
 
 
 def test_webhook_signing_and_dispatch():
     engine = DeveloperEventEngine()
 
-    sub = engine.create_subscription(
+    engine.create_subscription(
         developer_id="dev_web",
         target_url="https://example.com/webhook",
         event_types=["agent.completed"],

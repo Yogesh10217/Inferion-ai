@@ -3,12 +3,13 @@ Tests for Multi-tenant Isolation and Boundary Rules
 """
 
 import pytest
+
+from app.tools.exceptions import ToolNotFoundException
 from app.tools.tool import BaseTool, ToolMetadata
 from app.tools.tool_context import ToolContext
-from app.tools.tool_registry import ToolRegistry
 from app.tools.tool_executor import ToolExecutor
-from app.tools.tool_result import ToolResult, ToolExecutionStatus
-from app.tools.exceptions import ToolNotFoundException, ToolPermissionDenied
+from app.tools.tool_registry import ToolRegistry
+from app.tools.tool_result import ToolExecutionStatus, ToolResult
 
 
 class TenantTestTool(BaseTool):

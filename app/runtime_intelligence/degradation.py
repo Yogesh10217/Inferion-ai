@@ -24,10 +24,9 @@ class RuntimeDegradationEngine:
             initial = scores[0]
             latest = scores[-1]
             delta = initial - latest
-            rate_of_degradation = delta / max(1, len(scores) - 1)
+            delta / max(1, len(scores) - 1)
         else:
             delta = 0.10
-            rate_of_degradation = 0.05
             latest = scores[0] if scores else 0.85
 
         impact_score = round(min(1.0, max(0.0, delta * 1.5 + (1.0 - latest))), 3)

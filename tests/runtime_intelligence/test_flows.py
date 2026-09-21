@@ -1,15 +1,14 @@
 """Comprehensive End-to-End Test Suite for Phase 5.57 Runtime Intelligence Platform (22 Test Flows)."""
 
 import pytest
-import datetime
-from app.runtime_intelligence.manager import RuntimeIntelligenceManager
+
 from app.runtime_intelligence.exceptions import (
     CrossTenantRuntimeIntelligenceException,
     HighRiskRuntimeActionRequiresApprovalException,
     ImmutableRuntimeIntelligenceRecordException,
-    RuntimeIntelligenceProviderException,
 )
-from app.runtime_intelligence.models import RiskLevel, DelegationStatus, HealthStatus, GovernanceDecision
+from app.runtime_intelligence.manager import RuntimeIntelligenceManager
+from app.runtime_intelligence.models import DelegationStatus, GovernanceDecision, HealthStatus, RiskLevel
 
 
 @pytest.fixture
@@ -37,7 +36,7 @@ def test_flow_01_signal_ingestion_and_normalization(manager):
 def test_flow_02_multidimensional_telemetry_correlation(manager):
     obs1 = manager.ingest_observation("tenant_a", "database", "query_latency", 250.0)
     obs2 = manager.ingest_observation("tenant_a", "database", "cpu_utilization", 92.5)
-    
+
     corr = manager.correlate_telemetry("tenant_a", "database", [obs1.observation_id, obs2.observation_id])
     assert corr.correlation_id.startswith("corr")
     assert corr.tenant_id == "tenant_a"
@@ -241,7 +240,9 @@ def test_flow_18_delegation_request(manager):
         manager.execute_delegation(tenant_id="tenant_a", delegation_id=del_req.delegation_id)
 
     # Approving delegation enables execution
-    approved_req = manager.approve_delegation(tenant_id="tenant_a", delegation_id=del_req.delegation_id, approver_id="usr_admin")
+    approved_req = manager.approve_delegation(
+        tenant_id="tenant_a", delegation_id=del_req.delegation_id, approver_id="usr_admin"
+    )
     assert approved_req.status == DelegationStatus.APPROVED
 
     exec_res = manager.execute_delegation(tenant_id="tenant_a", delegation_id=del_req.delegation_id)
@@ -295,7 +296,7 @@ def test_flow_22_cross_tenant_isolation(manager):
     # Tenant B accessing Tenant A's evidence raises CrossTenantRuntimeIntelligenceException with no metadata leakage
     with pytest.raises(CrossTenantRuntimeIntelligenceException) as exc_info:
         manager.get_evidence("tenant_b", eb.bundle_id)
-    
+
     assert "Access denied" in str(exc_info.value)
 
 
@@ -316,15 +317,21 @@ def test_full_runtime_intelligence_lifecycle(manager):
     assert obs.observation_id.startswith("obs")
 
     # 2. Evaluate Health
-    health = manager.evaluate_health(tenant_id=tenant_id, subsystem=subsystem, raw_telemetry={"latency_p99_ms": 350.0, "error_rate": 0.002})
+    health = manager.evaluate_health(
+        tenant_id=tenant_id, subsystem=subsystem, raw_telemetry={"latency_p99_ms": 350.0, "error_rate": 0.002}
+    )
     assert health.overall_status == HealthStatus.HEALTHY
     assert health.overall_score >= 0.85
 
     # 3. Detect Anomalies & Drift
-    anom_result = manager.detect_anomalies(tenant_id=tenant_id, subsystem=subsystem, time_series_data=[{"value": 100}, {"value": 110}, {"value": 450}])
+    anom_result = manager.detect_anomalies(
+        tenant_id=tenant_id, subsystem=subsystem, time_series_data=[{"value": 100}, {"value": 110}, {"value": 450}]
+    )
     assert anom_result["anomalies_count"] == 1
 
-    drift = manager.detect_drift(tenant_id=tenant_id, subsystem=subsystem, current_data={"temperature": 0.7}, baseline_data={"temperature": 0.2})
+    drift = manager.detect_drift(
+        tenant_id=tenant_id, subsystem=subsystem, current_data={"temperature": 0.7}, baseline_data={"temperature": 0.2}
+    )
     assert drift.drift_detected is True
 
     # 4. Analyze Causal & Risk Propagation
@@ -357,7 +364,9 @@ def test_full_runtime_intelligence_lifecycle(manager):
     )
     assert del_req.status == DelegationStatus.PENDING_APPROVAL
 
-    approved_del = manager.approve_delegation(tenant_id=tenant_id, delegation_id=del_req.delegation_id, approver_id="admin_user")
+    approved_del = manager.approve_delegation(
+        tenant_id=tenant_id, delegation_id=del_req.delegation_id, approver_id="admin_user"
+    )
     assert approved_del.status == DelegationStatus.APPROVED
 
     executed_del = manager.execute_delegation(tenant_id=tenant_id, delegation_id=del_req.delegation_id)
@@ -393,8 +402,8 @@ def test_full_runtime_intelligence_lifecycle(manager):
 
 # Flow 24: Lifecycle State Machine Transitions & Invariant Validation
 def test_flow_24_canonical_lifecycle_transitions():
-    from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleManager, RuntimeLifecycleState
     from app.runtime_intelligence.exceptions import InvalidRuntimeStateTransitionException
+    from app.runtime_intelligence.runtime_lifecycle import RuntimeLifecycleManager, RuntimeLifecycleState
 
     lm = RuntimeLifecycleManager()
     assert lm.current_state == RuntimeLifecycleState.OBSERVED

@@ -2,7 +2,6 @@
 Tests for Dependency Security Evaluator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.dependency_security import DependencySecurityEvaluator, DependencySecurityResult
 
 

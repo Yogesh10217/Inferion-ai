@@ -1,8 +1,9 @@
 """Unit tests for LifecycleManager."""
 
 import pytest
-from app.control_plane.lifecycle_manager import LifecycleManager, LifecycleState
+
 from app.control_plane.exceptions import LifecycleException
+from app.control_plane.lifecycle_manager import LifecycleManager, LifecycleState
 
 
 def test_lifecycle_state_machine():

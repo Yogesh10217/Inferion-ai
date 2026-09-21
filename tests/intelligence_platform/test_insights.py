@@ -1,14 +1,15 @@
 """Unit tests for Evidence-Backed Insights Engine."""
 
-import pytest
-from app.intelligence_platform.signals import IntelligenceSignalManager, SignalSource, SignalType
 from app.intelligence_platform.context import ContextBuilder
 from app.intelligence_platform.insights import InsightManager, InsightType
+from app.intelligence_platform.signals import IntelligenceSignalManager, SignalSource, SignalType
 
 
 def test_insight_generation_requires_context_evidence():
     sig_mgr = IntelligenceSignalManager()
-    sig = sig_mgr.ingest_signal("t1", SignalSource.MLOPS, SignalType.MODEL_DRIFT, "Model accuracy dropped 5%", resource_id="model_v1")
+    sig = sig_mgr.ingest_signal(
+        "t1", SignalSource.MLOPS, SignalType.MODEL_DRIFT, "Model accuracy dropped 5%", resource_id="model_v1"
+    )
 
     ctx = ContextBuilder().assemble_context("t1", primary_resource_id="model_v1", signals=[sig])
     mgr = InsightManager()

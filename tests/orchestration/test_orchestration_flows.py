@@ -1,15 +1,16 @@
 """Mandatory End-to-End Integration Flow Tests for Phase 5.18 Enterprise Orchestration Platform."""
 
 import pytest
-from app.orchestration.manager import OrchestrationManager
-from app.orchestration.workflow import WorkflowStep, WorkflowExecutionStatus
-from app.orchestration.human_tasks import TaskStatus
-from app.orchestration.case_management import CaseType, CaseStatus
-from app.orchestration.routing import RoutingStrategy
+
+from app.identity.exceptions import AgentBoundaryViolationException
 from app.orchestration.agent_orchestration import AgentTask
+from app.orchestration.case_management import CaseStatus, CaseType
 from app.orchestration.compensation import SagaStep, SagaStepStatus
 from app.orchestration.governance import GovernanceAction
-from app.identity.exceptions import AgentBoundaryViolationException
+from app.orchestration.human_tasks import TaskStatus
+from app.orchestration.manager import OrchestrationManager
+from app.orchestration.routing import RoutingStrategy
+from app.orchestration.workflow import WorkflowExecutionStatus, WorkflowStep
 
 
 def test_flow_1_enterprise_human_plus_ai_workflow():
@@ -29,9 +30,14 @@ def test_flow_1_enterprise_human_plus_ai_workflow():
     assert exec_obj.status == WorkflowExecutionStatus.RUNNING
 
     # 3. Create Human Task for approval step
-    task = mgr.human_task_manager.create_task("Approve AI Analysis", assigned_user_id="user_manager", assigned_role="manager", tenant_id="t_f1", execution_id=exec_obj.execution_id)
+    task = mgr.human_task_manager.create_task(
+        "Approve AI Analysis",
+        assigned_user_id="user_manager",
+        assigned_role="manager",
+        tenant_id="t_f1",
+        execution_id=exec_obj.execution_id,
+    )
     assert task.status == TaskStatus.ASSIGNED
-
 
     # 4. Human approves
     mgr.human_task_manager.complete_task(task.task_id, outputs={"decision": "APPROVED"})
@@ -44,7 +50,9 @@ def test_flow_1_enterprise_human_plus_ai_workflow():
 def test_flow_2_durable_recovery():
     """FLOW 2 — Durable Recovery: Checkpointing & Idempotent re-execution prevention."""
     mgr = OrchestrationManager()
-    wf_def = mgr.definition_manager.create_definition("Durable Flow", steps=[WorkflowStep(step_id="s1", name="S1")], tenant_id="t_f2")
+    wf_def = mgr.definition_manager.create_definition(
+        "Durable Flow", steps=[WorkflowStep(step_id="s1", name="S1")], tenant_id="t_f2"
+    )
 
     # 1. Step completes & Checkpoint stored
     exec_obj = mgr.execution_engine.start_execution(wf_def, tenant_id="t_f2", idempotency_key="idemp_key_f2")
@@ -70,12 +78,16 @@ def test_flow_3_agent_delegated_authorization():
     )
 
     # Agent executes allowed action -> Success
-    task_ok = AgentTask(agent_id="agent_f3", action="analyze_report", tenant_id="t_f3", delegation_id=del_auth.delegation_id)
+    task_ok = AgentTask(
+        agent_id="agent_f3", action="analyze_report", tenant_id="t_f3", delegation_id=del_auth.delegation_id
+    )
     res_ok = mgr.agent_orchestration_manager.execute_agent_task(task_ok, requested_scope="analyze")
     assert res_ok["status"] == "SUCCESS"
 
     # Agent attempts privileged action outside boundary -> Exception!
-    task_bad = AgentTask(agent_id="agent_f3", action="override_security", tenant_id="t_f3", delegation_id=del_auth.delegation_id)
+    task_bad = AgentTask(
+        agent_id="agent_f3", action="override_security", tenant_id="t_f3", delegation_id=del_auth.delegation_id
+    )
     with pytest.raises(AgentBoundaryViolationException):
         mgr.agent_orchestration_manager.execute_agent_task(task_bad, requested_scope="admin")
 
@@ -122,7 +134,9 @@ def test_flow_6_long_running_case():
     case = mgr.case_manager.create_case("ACME Onboarding", case_type=CaseType.CUSTOMER_ONBOARDING, tenant_id="t_f6")
     assert case.status == CaseStatus.NEW
 
-    task = mgr.human_task_manager.create_task("Verify KYC Documents", assigned_user_id="officer_1", tenant_id="t_f6", case_id=case.case_id)
+    task = mgr.human_task_manager.create_task(
+        "Verify KYC Documents", assigned_user_id="officer_1", tenant_id="t_f6", case_id=case.case_id
+    )
 
     # SLA delayed -> Escalate task
     esc_task = mgr.human_task_manager.escalate_task(task.task_id, escalation_reason="KYC deadline missed")
@@ -138,14 +152,18 @@ def test_flow_7_cross_tenant_isolation():
     mgr = OrchestrationManager()
 
     # Tenant A Setup
-    wf_A = mgr.definition_manager.create_definition("WF A", steps=[WorkflowStep(step_id="s1", name="S1")], tenant_id="Tenant_A")
-    exec_A = mgr.execution_engine.start_execution(wf_A, tenant_id="Tenant_A")
-    case_A = mgr.case_manager.create_case("Case A", tenant_id="Tenant_A")
+    wf_A = mgr.definition_manager.create_definition(
+        "WF A", steps=[WorkflowStep(step_id="s1", name="S1")], tenant_id="Tenant_A"
+    )
+    mgr.execution_engine.start_execution(wf_A, tenant_id="Tenant_A")
+    mgr.case_manager.create_case("Case A", tenant_id="Tenant_A")
 
     # Tenant B Setup
-    wf_B = mgr.definition_manager.create_definition("WF B", steps=[WorkflowStep(step_id="s1", name="S1")], tenant_id="Tenant_B")
-    exec_B = mgr.execution_engine.start_execution(wf_B, tenant_id="Tenant_B")
-    case_B = mgr.case_manager.create_case("Case B", tenant_id="Tenant_B")
+    wf_B = mgr.definition_manager.create_definition(
+        "WF B", steps=[WorkflowStep(step_id="s1", name="S1")], tenant_id="Tenant_B"
+    )
+    mgr.execution_engine.start_execution(wf_B, tenant_id="Tenant_B")
+    mgr.case_manager.create_case("Case B", tenant_id="Tenant_B")
 
     # Verify zero cross-tenant leakage
     assert len(mgr.definition_manager.list_definitions("Tenant_A")) == 1
@@ -159,11 +177,15 @@ def test_flow_8_budget_aware_routing():
     mgr = OrchestrationManager()
 
     # Max budget < $0.50 -> Route to cheaper standard worker
-    dec_cheap = mgr.execution_router.route_task("batch_translation", strategy=RoutingStrategy.COST_AWARE, max_budget=0.30)
+    dec_cheap = mgr.execution_router.route_task(
+        "batch_translation", strategy=RoutingStrategy.COST_AWARE, max_budget=0.30
+    )
     assert dec_cheap.target_type == "WORKER"
     assert dec_cheap.selected_target == "worker_cheaper_standard"
 
     # Max budget >= $1.00 -> Route to premium agent team
-    dec_prem = mgr.execution_router.route_task("batch_translation", strategy=RoutingStrategy.COST_AWARE, max_budget=1.50)
+    dec_prem = mgr.execution_router.route_task(
+        "batch_translation", strategy=RoutingStrategy.COST_AWARE, max_budget=1.50
+    )
     assert dec_prem.target_type == "TEAM"
     assert dec_prem.selected_target == "agent_premium_team"

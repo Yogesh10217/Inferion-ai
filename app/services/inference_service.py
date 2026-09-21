@@ -140,6 +140,7 @@ class DefaultInferenceService(InferenceService):
 
     async def generate_chat(self, request: InferenceRequest, **kwargs: Any) -> InferenceResponse:
         import unittest.mock
+
         with _tracer.start_span("inference.generate_chat", attributes={"model_id": request.model}):
             if isinstance(getattr(self, "complete", None), (unittest.mock.AsyncMock, unittest.mock.MagicMock)):
                 return await self.complete(

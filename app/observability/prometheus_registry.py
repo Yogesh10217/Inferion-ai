@@ -9,7 +9,6 @@ class PrometheusRegistry:
         self.namespace = namespace
         self.subsystem = subsystem
 
-        prefix = f"{namespace}_{subsystem}_"
 
         # --- Operational Metrics ---
         self.uptime_seconds = Gauge(

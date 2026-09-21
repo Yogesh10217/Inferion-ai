@@ -78,7 +78,7 @@ class EventStorage:
         self, event_type: str, organization_id: Optional[str] = None
     ) -> List[WebhookEndpoint]:
         """Find active endpoints subscribed to event_type or wildcard '*'."""
-        stmt = select(WebhookEndpoint).where(WebhookEndpoint.enabled == True)
+        stmt = select(WebhookEndpoint).where(WebhookEndpoint.enabled)
         if organization_id:
             stmt = stmt.where(WebhookEndpoint.organization_id == organization_id)
         res = await self.db.execute(stmt)

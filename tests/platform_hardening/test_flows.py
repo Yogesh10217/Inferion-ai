@@ -2,11 +2,12 @@
 Phase 5.59 — Comprehensive Integration Audit, Hardening & End-to-End Certification Test Suite.
 """
 
-import pytest
 import time
+
+import pytest
+
 from app.platform_hardening.exceptions import (
     CrossTenantPlatformHardeningException,
-    ImmutablePlatformAuditRecordException,
 )
 from app.platform_hardening.manager import PlatformHardeningManager
 from app.platform_hardening.models import (
@@ -20,7 +21,6 @@ from app.platform_hardening.models import (
     SubsystemIntegrationStatus,
 )
 from app.platform_hardening.providers import (
-    PlatformHardeningProvider,
     PlatformHardeningProviderRegistry,
 )
 
@@ -39,7 +39,14 @@ class DummyTestProvider:
         )
 
     def collect_context(self) -> dict:
-        return {"tenant_id": "tenant-a", "trace_id": "trace-123", "correlation_id": "corr-123", "causation_id": "caus-123", "confidence": 0.95, "evidence_reference": "ev-123"}
+        return {
+            "tenant_id": "tenant-a",
+            "trace_id": "trace-123",
+            "correlation_id": "corr-123",
+            "causation_id": "caus-123",
+            "confidence": 0.95,
+            "evidence_reference": "ev-123",
+        }
 
     def collect_traceability(self) -> dict:
         return {"trace_id": "trace-123"}
@@ -63,21 +70,48 @@ class DummyTestProvider:
         return IntegrationHealthStatus.HEALTHY if self._healthy else IntegrationHealthStatus.UNHEALTHY
 
     def collect_engine_status(self) -> list:
-        return [EngineConnectionStatus(engine_name="TestEngine", subsystem_name=self.name, is_instantiated=True, is_called=True, is_connected_to_pipeline=True)]
+        return [
+            EngineConnectionStatus(
+                engine_name="TestEngine",
+                subsystem_name=self.name,
+                is_instantiated=True,
+                is_called=True,
+                is_connected_to_pipeline=True,
+            )
+        ]
 
 
 # Dummy failing provider that raises an exception
 class ExceptionProvider:
-    def collect_integration_status(self): raise RuntimeError("Provider crash")
-    def collect_context(self): raise RuntimeError("Provider crash")
-    def collect_traceability(self): raise RuntimeError("Provider crash")
-    def collect_lineage(self): raise RuntimeError("Provider crash")
-    def collect_governance(self): raise RuntimeError("Provider crash")
-    def collect_delegations(self): raise RuntimeError("Provider crash")
-    def collect_verifications(self): raise RuntimeError("Provider crash")
-    def collect_evidence(self): raise RuntimeError("Provider crash")
-    def collect_health(self): raise RuntimeError("Provider crash")
-    def collect_engine_status(self): raise RuntimeError("Provider crash")
+    def collect_integration_status(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_context(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_traceability(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_lineage(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_governance(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_delegations(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_verifications(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_evidence(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_health(self):
+        raise RuntimeError("Provider crash")
+
+    def collect_engine_status(self):
+        raise RuntimeError("Provider crash")
 
 
 def test_01_subsystem_registry_validation():
@@ -166,7 +200,14 @@ def test_06_trace_propagation():
 def test_07_correlation_id_propagation():
     """Verify correlation ID is tracked across phases."""
     mgr = PlatformHardeningManager()
-    ctx = {"tenant_id": "t1", "trace_id": "t1", "correlation_id": "corr-99", "causation_id": "c99", "confidence": 0.8, "evidence_reference": "ev-1"}
+    ctx = {
+        "tenant_id": "t1",
+        "trace_id": "t1",
+        "correlation_id": "corr-99",
+        "causation_id": "c99",
+        "confidence": 0.8,
+        "evidence_reference": "ev-1",
+    }
     res, _ = mgr.context_validation.validate_context_flow(ctx)
     assert res.correlation_id_preserved is True
 
@@ -174,7 +215,14 @@ def test_07_correlation_id_propagation():
 def test_08_causation_id_propagation():
     """Verify causation ID tracking and status progression."""
     mgr = PlatformHardeningManager()
-    ctx = {"tenant_id": "t1", "trace_id": "t1", "correlation_id": "c1", "causation_id": "caus-99", "confidence": 0.8, "evidence_reference": "ev-1"}
+    ctx = {
+        "tenant_id": "t1",
+        "trace_id": "t1",
+        "correlation_id": "c1",
+        "causation_id": "caus-99",
+        "confidence": 0.8,
+        "evidence_reference": "ev-1",
+    }
     res, _ = mgr.context_validation.validate_context_flow(ctx)
     assert res.causation_id_preserved is True
 
@@ -250,7 +298,15 @@ def test_14_cross_tenant_metadata_protection():
 def test_15_manager_engine_connectivity():
     """Verify managers correctly initialize and call constituent engines."""
     mgr = PlatformHardeningManager()
-    statuses = [EngineConnectionStatus(engine_name="EngineA", subsystem_name="SubA", is_instantiated=True, is_called=True, is_connected_to_pipeline=True)]
+    statuses = [
+        EngineConnectionStatus(
+            engine_name="EngineA",
+            subsystem_name="SubA",
+            is_instantiated=True,
+            is_called=True,
+            is_connected_to_pipeline=True,
+        )
+    ]
     _, findings = mgr.engine_connectivity.audit_engine_connectivity(statuses)
     assert len(findings) == 0
 
@@ -258,7 +314,15 @@ def test_15_manager_engine_connectivity():
 def test_16_disconnected_engine_detection():
     """Detect instantiated but uninvoked dead engines."""
     mgr = PlatformHardeningManager()
-    statuses = [EngineConnectionStatus(engine_name="DeadEngine", subsystem_name="SubA", is_instantiated=True, is_called=False, is_connected_to_pipeline=False)]
+    statuses = [
+        EngineConnectionStatus(
+            engine_name="DeadEngine",
+            subsystem_name="SubA",
+            is_instantiated=True,
+            is_called=False,
+            is_connected_to_pipeline=False,
+        )
+    ]
     _, findings = mgr.engine_connectivity.audit_engine_connectivity(statuses)
     assert len(findings) > 0
     assert "Dead Engine" in findings[0].title
@@ -378,8 +442,14 @@ def test_29_remediation_generation():
     """Verify remediation recommendation generation enforcing auto_execute=False."""
     mgr = PlatformHardeningManager()
     finding = PlatformAuditFinding(
-        finding_id="f1", tenant_id="t1", rule_id="r1", title="Title", description="Desc",
-        severity=PlatformAuditSeverity.HIGH, subsystem="sub", affected_component="comp"
+        finding_id="f1",
+        tenant_id="t1",
+        rule_id="r1",
+        title="Title",
+        description="Desc",
+        severity=PlatformAuditSeverity.HIGH,
+        subsystem="sub",
+        affected_component="comp",
     )
     rems = mgr.remediation_planner.generate_remediations([finding], tenant_id="t1")
     assert len(rems) == 1
@@ -391,8 +461,14 @@ def test_30_high_risk_remediation_approval():
     """Verify high risk remediations require approval."""
     mgr = PlatformHardeningManager()
     finding = PlatformAuditFinding(
-        finding_id="f2", tenant_id="t1", rule_id="r1", title="Critical Title", description="Desc",
-        severity=PlatformAuditSeverity.CRITICAL, subsystem="sub", affected_component="comp"
+        finding_id="f2",
+        tenant_id="t1",
+        rule_id="r1",
+        title="Critical Title",
+        description="Desc",
+        severity=PlatformAuditSeverity.CRITICAL,
+        subsystem="sub",
+        affected_component="comp",
     )
     rems = mgr.remediation_planner.generate_remediations([finding], tenant_id="t1")
     assert rems[0].requires_approval is True
@@ -411,8 +487,14 @@ def test_32_production_readiness_score():
     mgr = PlatformHardeningManager()
     findings = [
         PlatformAuditFinding(
-            finding_id="f1", tenant_id="system", rule_id="RULE-INT-001", title="Title", description="Desc",
-            severity=PlatformAuditSeverity.HIGH, subsystem="Runtime Intelligence", affected_component="comp"
+            finding_id="f1",
+            tenant_id="system",
+            rule_id="RULE-INT-001",
+            title="Title",
+            description="Desc",
+            severity=PlatformAuditSeverity.HIGH,
+            subsystem="Runtime Intelligence",
+            affected_component="comp",
         )
     ]
     scores = mgr.readiness_engine.calculate_readiness_report(findings)
@@ -424,7 +506,9 @@ def test_33_certification_failure():
     """Verify certification blocks when P0 findings exist."""
     mgr = PlatformHardeningManager()
     release_gate = mgr.release_gate_engine.evaluate_release_gate([], cross_tenant_leak=True)
-    cert = mgr.certification_engine.certify_platform("t1", "a1", readiness_score=40.0, release_gate=release_gate, findings=[])
+    cert = mgr.certification_engine.certify_platform(
+        "t1", "a1", readiness_score=40.0, release_gate=release_gate, findings=[]
+    )
     assert cert.status == PlatformCertificationStatus.BLOCKED
 
 
@@ -432,7 +516,9 @@ def test_34_integration_validated_certification():
     """Verify platform certification issuing CERTIFIED or PRODUCTION_READY."""
     mgr = PlatformHardeningManager()
     release_gate = mgr.release_gate_engine.evaluate_release_gate([])
-    cert = mgr.certification_engine.certify_platform("t1", "a1", readiness_score=95.0, release_gate=release_gate, findings=[])
+    cert = mgr.certification_engine.certify_platform(
+        "t1", "a1", readiness_score=95.0, release_gate=release_gate, findings=[]
+    )
     assert cert.status == PlatformCertificationStatus.PRODUCTION_READY
 
 
@@ -453,20 +539,30 @@ def test_flow_01_runtime_failure_propagation():
     # 1. Collect integration & provider statuses
     health, int_findings = mgr.integration_audit.audit_integration(tenant_id="flow1")
     # 2. Check context propagation
-    ctx_res, _ = mgr.context_validation.validate_context_flow({
-        "tenant_id": "flow1", "trace_id": "tr-flow1", "correlation_id": "corr-flow1",
-        "causation_id": "caus-flow1", "confidence": 0.9, "evidence_reference": "ev-flow1"
-    })
+    ctx_res, _ = mgr.context_validation.validate_context_flow(
+        {
+            "tenant_id": "flow1",
+            "trace_id": "tr-flow1",
+            "correlation_id": "corr-flow1",
+            "causation_id": "caus-flow1",
+            "confidence": 0.9,
+            "evidence_reference": "ev-flow1",
+        }
+    )
     assert ctx_res.is_valid is True
 
 
 def test_flow_02_high_risk_approval_gate():
     """Flow 2: Recommendation with CRITICAL risk -> Governance -> REQUIRE_APPROVAL -> Unapproved state yields BLOCKED."""
     mgr = PlatformHardeningManager()
-    res, _ = mgr.governance_validation.validate_governance_flow({
-        "risk_level": "CRITICAL", "governance_decision": "REQUIRE_APPROVAL",
-        "has_human_approval": False, "delegation_created": True
-    })
+    res, _ = mgr.governance_validation.validate_governance_flow(
+        {
+            "risk_level": "CRITICAL",
+            "governance_decision": "REQUIRE_APPROVAL",
+            "has_human_approval": False,
+            "delegation_created": True,
+        }
+    )
     gate_res = mgr.release_gate_engine.evaluate_release_gate([], approval_bypass=not res.is_valid)
     assert gate_res.decision == ReleaseReadinessDecision.BLOCKED
 

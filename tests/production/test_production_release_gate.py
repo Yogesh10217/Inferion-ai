@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.configuration import RuntimeConfigurationManager
 from app.deployment.models import DeploymentDecision, DeploymentReleaseStatus, PlatformReadinessClassification
 from app.deployment.release_validation import DeploymentReleaseValidator
@@ -11,7 +10,6 @@ def test_production_release_gate_allow_path(monkeypatch):
     monkeypatch.setenv("REDIS_URL", "redis://prod-redis:6379")
     monkeypatch.setenv("JWT_SECRET", "valid-complex-production-secret-999")
     monkeypatch.setenv("IMAGE_TAG", "enterprise-ai-platform:5.61.0")
-
 
     config_mgr = RuntimeConfigurationManager()
     validator = DeploymentReleaseValidator(config_manager=config_mgr)
@@ -47,7 +45,6 @@ def test_production_release_gate_rollback_required_on_secret_canary(monkeypatch)
     monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://prod_app_user:prod_secure_db_pass_9988@prod-db:5432/app")
     monkeypatch.setenv("REDIS_URL", "redis://prod-redis:6379")
     monkeypatch.setenv("JWT_SECRET", "password123")
-
 
     config_mgr = RuntimeConfigurationManager()
     validator = DeploymentReleaseValidator(config_manager=config_mgr)

@@ -1,7 +1,7 @@
 """Unit tests for Python SDK IntelligenceClient."""
 
-import pytest
 from unittest.mock import MagicMock
+
 from sdk.python.llm_engine.intelligence import IntelligenceClient
 
 

@@ -1,5 +1,4 @@
-import pytest
-from app.deployment.deployment_runtime_adapter import ContainerDeploymentRuntimeAdapter, SimulationDeploymentRuntimeAdapter
+from app.deployment.deployment_runtime_adapter import SimulationDeploymentRuntimeAdapter
 from app.deployment.deployment_target import DeploymentTarget
 from app.deployment.models import SmokeTestExecutionStatus
 from app.deployment.production_smoke_test_executor import ProductionSmokeTestExecutor

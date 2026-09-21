@@ -1,6 +1,5 @@
 """Unit tests for Python SDK DeveloperPlatformClient."""
 
-import pytest
 from sdk.python.llm_engine.client import LLMEngineClient
 from sdk.python.llm_engine.developer_platform import DeveloperPlatformClient
 

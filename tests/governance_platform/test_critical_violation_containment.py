@@ -1,7 +1,6 @@
 """Unit tests for critical violation automatic operations incident integration."""
 
-import pytest
-from app.governance_platform.violations import ViolationManager, ViolationType, ViolationSeverity
+from app.governance_platform.violations import ViolationManager, ViolationSeverity, ViolationType
 
 
 def test_critical_violation_triggers_operations_incident():

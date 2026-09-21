@@ -89,7 +89,7 @@ class ModelVersionManager:
         accuracy_delta: float = 0.0,
         breaking_changes: Optional[List[str]] = None,
     ) -> VersionAssessment:
-        vers = self.get_versions(model_id, tenant_id)
+        self.get_versions(model_id, tenant_id)
         breaking = breaking_changes or []
         rec = "PROCEED" if not breaking and accuracy_delta >= 0 else "REQUIRE_APPROVAL"
         risk = "HIGH" if breaking or accuracy_delta < -0.05 else ("MEDIUM" if accuracy_delta < 0 else "LOW")

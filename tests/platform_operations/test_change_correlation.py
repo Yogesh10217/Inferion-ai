@@ -1,7 +1,7 @@
 """Unit tests for Change Correlation Intelligence Engine."""
 
 from datetime import datetime, timezone
-import pytest
+
 from app.platform_operations.change_correlation import ChangeIntelligenceEngine
 
 

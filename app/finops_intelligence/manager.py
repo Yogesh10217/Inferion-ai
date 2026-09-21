@@ -93,7 +93,7 @@ class FinOpsIntelligenceManager:
 
         # 2. Allocate Spend
         rule = AllocationRule(dimension=AllocationDimension.TEAM, target_entity="DataScience", percentage=100.0)
-        alloc_results = self.allocation_manager.allocate_cost(tenant_id, cost_rec.record_id, amount_usd, [rule])
+        self.allocation_manager.allocate_cost(tenant_id, cost_rec.record_id, amount_usd, [rule])
 
         # 3. Budget & Forecast
         bdg = self.budget_manager.create_budget(tenant_id, "Monthly AIBudget", amount_usd=1000.0)
@@ -101,7 +101,7 @@ class FinOpsIntelligenceManager:
         bdg_asm = self.budget_manager.evaluate_budget(tenant_id, bdg.budget_id, amount_usd)
         self.metrics_collector.set_gauge("budget_utilization", bdg_asm.utilization_pct)
 
-        fcst = self.forecast_manager.generate_forecast(tenant_id, [800.0, 950.0, amount_usd], ForecastScenario.BASELINE)
+        self.forecast_manager.generate_forecast(tenant_id, [800.0, 950.0, amount_usd], ForecastScenario.BASELINE)
 
         # 4. Anomaly Detection & Optimization
         anomaly = self.anomaly_manager.detect_anomaly(
@@ -141,7 +141,7 @@ class FinOpsIntelligenceManager:
         v_chk = VerificationCheck(
             check_name="Verify Resource Downsize", passed=True, details="Resource downsized successfully"
         )
-        verif = self.verification_manager.verify_action(tenant_id, del_plan.plan_id, [v_chk])
+        self.verification_manager.verify_action(tenant_id, del_plan.plan_id, [v_chk])
 
         # 7. Investigation & Snapshot
         inv = self.investigation_manager.open_investigation(
@@ -174,7 +174,7 @@ class FinOpsIntelligenceManager:
 
         # 9. Analytics & Billing
         self.billing_tracker.record_cost_event(tenant_id, "FINOPS_INTELLIGENCE", 0.01)
-        report = self.analytics_engine.generate_report(
+        self.analytics_engine.generate_report(
             tenant_id,
             total_spend_usd=amount_usd,
             budget_utilization_pct=bdg_asm.utilization_pct,

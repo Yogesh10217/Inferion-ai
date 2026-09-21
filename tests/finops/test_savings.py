@@ -1,7 +1,7 @@
 """Unit tests for SavingsVerificationEngine (Estimated vs. Realized vs. Verified)."""
 
 from decimal import Decimal
-import pytest
+
 from app.finops.savings import SavingsVerificationEngine
 
 

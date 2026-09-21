@@ -2,16 +2,13 @@
 Tests for Multi-Agent Prometheus Metrics
 """
 
-import pytest
 from app.multi_agent.agent_metrics import (
-    agent_team_runs_total,
-    agent_team_failures_total,
-    agent_messages_total,
-    agent_delegations_total,
     agent_consensus_total,
-    agent_negotiations_total,
+    agent_delegations_total,
     agent_handoffs_total,
-    agent_team_duration_seconds,
+    agent_messages_total,
+    agent_team_failures_total,
+    agent_team_runs_total,
 )
 
 

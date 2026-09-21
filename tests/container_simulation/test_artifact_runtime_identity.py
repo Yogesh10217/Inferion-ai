@@ -1,5 +1,6 @@
 import pytest
-from app.deployment.container_validation import DockerPreflightValidator, ContainerValidationEngine
+
+from app.deployment.container_validation import ContainerValidationEngine, DockerPreflightValidator
 
 
 def test_artifact_runtime_identity_matching_logic():

@@ -1,9 +1,10 @@
 import pytest
+
 from app.deployment.deployment_simulation import (
     FailureInjectionPolicy,
     ProductionSimulationEngine,
 )
-from app.deployment.models import RollbackTrigger, PlatformReadinessClassification, DependencyStatus, DependencyCategory
+from app.deployment.models import DependencyCategory, DependencyStatus, RollbackTrigger
 
 
 def test_failure_injection_policy_gating():
@@ -49,7 +50,7 @@ def test_controlled_failure_injection_all_triggers():
 def test_dependency_recovery_requires_explicit_revalidation():
     # Verify stopping a dependency degrades readiness
     from app.deployment.dependency_validation import DeploymentDependencyValidator
-    from app.deployment.models import EnvironmentConfig, DeploymentEnvironment
+    from app.deployment.models import DeploymentEnvironment, EnvironmentConfig
 
     config = EnvironmentConfig(
         environment=DeploymentEnvironment.PRODUCTION,
@@ -87,4 +88,3 @@ def test_dependency_recovery_requires_explicit_revalidation():
     # Must re-evaluate explicitly
     health_restored = DeploymentDependencyValidator.evaluate_dependency_health(dep_res)
     assert health_restored is True
-

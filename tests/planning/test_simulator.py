@@ -2,7 +2,6 @@
 Tests for Execution Simulator
 """
 
-import pytest
 from app.planning.execution_plan import ExecutionPlan
 from app.simulation.simulator import ExecutionSimulator
 

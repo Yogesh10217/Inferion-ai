@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.models import TrafficValidationStatus
 from app.deployment.traffic_validation import TrafficValidationEngine
 

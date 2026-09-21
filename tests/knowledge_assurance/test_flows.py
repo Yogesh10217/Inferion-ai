@@ -1,18 +1,19 @@
 """Mandatory 20 End-to-End Test Flows for Phase 5.46 Knowledge Assurance Platform."""
 
 import pytest
-from app.knowledge_assurance.manager import KnowledgeAssuranceManager
+
+from app.knowledge_assurance.conflicts import ConflictSeverity, KnowledgeConflictType
+from app.knowledge_assurance.context_assembly import ContextAssemblyRequest
 from app.knowledge_assurance.exceptions import (
     CrossTenantKnowledgeAssuranceException,
     HighRiskKnowledgeActionRequiresApprovalException,
     ImmutableKnowledgeRecordException,
 )
-from app.knowledge_assurance.knowledge_references import KnowledgeReferenceClassification
-from app.knowledge_assurance.sources import KnowledgeSourceAuthority
-from app.knowledge_assurance.context_assembly import ContextAssemblyRequest
-from app.knowledge_assurance.conflicts import KnowledgeConflictType, ConflictSeverity
-from app.knowledge_assurance.remediation import KnowledgeRemediationPriority
 from app.knowledge_assurance.governance import KnowledgeGovernanceOutcome
+from app.knowledge_assurance.knowledge_references import KnowledgeReferenceClassification
+from app.knowledge_assurance.manager import KnowledgeAssuranceManager
+from app.knowledge_assurance.remediation import KnowledgeRemediationPriority
+from app.knowledge_assurance.sources import KnowledgeSourceAuthority
 
 
 @pytest.fixture
@@ -78,9 +79,7 @@ def test_flow_04_semantic_context_creation(manager: KnowledgeAssuranceManager):
         {"name": "DataPrivacy", "description": "GDPR compliance constraints"},
         {"name": "Encryption", "description": "AES-256 requirement"},
     ]
-    rels = [
-        {"source_concept": "Encryption", "target_concept": "DataPrivacy", "relationship_type": "ENFORCES"}
-    ]
+    rels = [{"source_concept": "Encryption", "target_concept": "DataPrivacy", "relationship_type": "ENFORCES"}]
     sem_ctx = manager.semantic_context_manager.create_semantic_context(
         tenant_id="tenant_alpha",
         domain="SECURITY_GOVERNANCE",
@@ -142,7 +141,17 @@ def test_flow_08_knowledge_trust_assessment(manager: KnowledgeAssuranceManager):
     )
     assert trust.overall_score >= 0.0
     assert trust.overall_score <= 1.0
-    assert trust.trust_band in ["CRITICAL", "LOW", "MODERATE", "HIGH", "HIGH_TRUST", "TRUSTED", "RESTRICTED", "UNTRUSTED", "EXCELLENT"]
+    assert trust.trust_band in [
+        "CRITICAL",
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "HIGH_TRUST",
+        "TRUSTED",
+        "RESTRICTED",
+        "UNTRUSTED",
+        "EXCELLENT",
+    ]
 
 
 def test_flow_09_knowledge_confidence_evaluation(manager: KnowledgeAssuranceManager):
@@ -303,7 +312,7 @@ def test_flow_20_full_enterprise_knowledge_assurance_lifecycle(manager: Knowledg
     tenant = "tenant_enterprise"
 
     # Step 1: Register Source & Reference
-    src = manager.sources_manager.register_source(
+    manager.sources_manager.register_source(
         tenant_id=tenant,
         name="Enterprise Policy Hub",
         source_type="DOCUMENT_REPOSITORY",
@@ -326,10 +335,10 @@ def test_flow_20_full_enterprise_knowledge_assurance_lifecycle(manager: Knowledg
         target_resource_id=ctx.context_id,
         required_concepts=["Compliance"],
     )
-    assembly = manager.context_assembly_manager.assemble_context(tenant, req)
+    manager.context_assembly_manager.assemble_context(tenant, req)
 
     # Step 3: Trust & Assurance Evaluation
-    trust = manager.trust_engine.evaluate_trust(tenant, ctx.context_id)
+    manager.trust_engine.evaluate_trust(tenant, ctx.context_id)
     ass = manager.assurance_manager.assess_knowledge_assurance(tenant, ctx.context_id)
     assert ass.assurance_score.overall_score > 0.0
 
@@ -350,7 +359,7 @@ def test_flow_20_full_enterprise_knowledge_assurance_lifecycle(manager: Knowledg
     assert concluded_inv.snapshot_id is not None
 
     # Step 5: Advisory Learning Recommendation
-    rec_event = manager.learning_manager.record_learning_event(
+    manager.learning_manager.record_learning_event(
         tenant_id=tenant,
         source_event="INVESTIGATION_CONCLUDED",
         patterns=[{"pattern_name": "FrequentFreshnessGaps"}],

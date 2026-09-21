@@ -3,6 +3,7 @@ Budget Unit Tests
 """
 
 import pytest
+
 from app.agents.budget import AgentBudgetTracker
 from app.agents.exceptions import BudgetExceededException
 

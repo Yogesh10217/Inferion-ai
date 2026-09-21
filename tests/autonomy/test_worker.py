@@ -3,6 +3,7 @@ Tests for Digital Worker Model
 """
 
 import pytest
+
 from app.workers.worker import DigitalWorker
 from app.workers.worker_templates import WorkerTemplateType
 

@@ -1,7 +1,8 @@
 import pytest
+
+from app.plugins.exceptions import PluginDependencyError
 from app.plugins.plugin_loader import PluginLoader
 from app.plugins.plugin_manifest import PluginManifest
-from app.plugins.exceptions import PluginDependencyError
 
 
 def test_dependency_validation_and_topological_sort():

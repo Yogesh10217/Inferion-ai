@@ -3,9 +3,10 @@ Tests for Multi-Tenant Isolation & Security Governance in Planning
 """
 
 import pytest
+
+from app.planning.exceptions import ResourcePlanningError
 from app.planning.execution_plan import ExecutionPlan
 from app.planning.governance import PlanningGovernanceEngine
-from app.planning.exceptions import ResourcePlanningError
 
 
 def test_tenant_isolation_in_planning():

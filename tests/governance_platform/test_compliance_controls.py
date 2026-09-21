@@ -1,7 +1,6 @@
 """Unit tests for compliance control gap detection."""
 
-import pytest
-from app.governance_platform.compliance import ComplianceManager, FrameworkType, ComplianceControl, ComplianceStatus
+from app.governance_platform.compliance import ComplianceControl, ComplianceManager, ComplianceStatus, FrameworkType
 
 
 def test_compliance_control_gap_detection():

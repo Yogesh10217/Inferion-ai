@@ -2,7 +2,6 @@
 Tests for Optimization Engine
 """
 
-import pytest
 from app.learning.optimization_engine import OptimizationEngine
 
 

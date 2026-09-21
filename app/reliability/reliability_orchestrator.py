@@ -172,7 +172,7 @@ class ReliabilityOperationsOrchestrator:
         chaos_res = self.chaos_engine.run_chaos_experiment(chaos_exp)
 
         # 5. Run Recovery Orchestration
-        rec_orch_res = self.recovery_orchestrator.orchestrate_recovery(
+        self.recovery_orchestrator.orchestrate_recovery(
             component_name="database",
             failure_severity=FailureSeverity.HIGH,
         )

@@ -1,5 +1,7 @@
 import pytest
-from app.knowledge.embedding_service import OpenAIProvider, EmbeddingCache
+
+from app.knowledge.embedding_service import EmbeddingCache
+
 
 @pytest.mark.asyncio
 async def test_embedding_provider_cache():

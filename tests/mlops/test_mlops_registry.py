@@ -1,8 +1,9 @@
 """Unit tests for AI Asset Registry and Immutable Production Versioning."""
 
 import pytest
-from app.mlops.registry import AIAssetRegistry, AIAssetType, AIAssetStatus
-from app.mlops.exceptions import AssetNotFoundException, VersionNotFoundException
+
+from app.mlops.exceptions import AssetNotFoundException
+from app.mlops.registry import AIAssetRegistry, AIAssetStatus, AIAssetType
 
 
 def test_asset_registration_versioning_and_immutability():

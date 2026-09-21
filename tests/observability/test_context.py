@@ -1,11 +1,9 @@
 """Tests for ObservabilityContext propagation."""
 
-import pytest
 from app.observability.context import (
     ObservabilityContext,
-    get_current_context,
-    set_current_context,
     clear_current_context,
+    get_current_context,
     with_context,
 )
 

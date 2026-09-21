@@ -10,7 +10,7 @@ def test_conversation_memory_append_and_trim():
     cm.append_message("user", "Hello 1")
     cm.append_message("assistant", "Hi 1")
     cm.append_message("user", "Hello 2")
-    
+
     assert len(cm.messages) == 3
 
     # Add 4th message -> should trim oldest
@@ -28,7 +28,7 @@ def test_conversation_memory_compress():
     cm = ConversationMemory(session_id="sess_456")
     cm.append_message("user", "What is FastAPI?")
     cm.append_message("assistant", "FastAPI is a Python web framework.")
-    
+
     comp = cm.compress()
     assert "Conversation summary" in comp["summary"]
     assert cm.summarize() != ""

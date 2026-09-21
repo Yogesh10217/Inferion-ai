@@ -1,6 +1,5 @@
 """Unit tests for ExecutionCheckpoint persistence."""
 
-import pytest
 from app.orchestration.execution import WorkflowExecutionEngine
 
 

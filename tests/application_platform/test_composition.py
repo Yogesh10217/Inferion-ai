@@ -1,6 +1,5 @@
 """Unit tests for Application Composition Engine."""
 
-import pytest
 from app.application_platform.composition import (
     ApplicationCompositionManager,
     ComponentType,
@@ -23,7 +22,7 @@ def test_create_and_validate_composition():
         sequence_order=1,
     )
 
-    cmp2 = comp_mgr.add_component(
+    comp_mgr.add_component(
         composition_id=comp.composition_id,
         name="Support Agent",
         component_type=ComponentType.AGENT,

@@ -3,8 +3,9 @@ Tests for Agent Integration (Phase 5.1 / Phase 5.5)
 """
 
 import pytest
-from app.multi_agent.agent_team import AgentTeam, TeamType, TeamExecutionContext
+
 from app.multi_agent.agent_coordinator import MultiAgentCoordinator
+from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext, TeamType
 
 
 @pytest.mark.asyncio

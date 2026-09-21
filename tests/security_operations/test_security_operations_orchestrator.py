@@ -2,7 +2,6 @@
 Tests for Security Operations Orchestrator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.security_operations_orchestrator import (
     SecurityOperationsOrchestrator,
     SecurityOperationsResult,

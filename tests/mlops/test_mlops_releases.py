@@ -1,8 +1,9 @@
 """Unit tests for ReleaseManager."""
 
 import pytest
-from app.mlops.releases import ReleaseManager, ReleaseArtifact, ReleaseStatus
+
 from app.mlops.exceptions import GovernanceViolationException
+from app.mlops.releases import ReleaseArtifact, ReleaseManager, ReleaseStatus
 
 
 def test_release_packaging_validation_and_deployment():

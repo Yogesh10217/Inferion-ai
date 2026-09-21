@@ -1,10 +1,9 @@
 """Unit tests for Application Deployment Manager."""
 
-import pytest
 from app.application_platform.deployment import (
     DeploymentManager,
-    DeploymentStrategy,
     DeploymentStatus,
+    DeploymentStrategy,
 )
 from app.approvals.approval_engine import ApprovalEngine
 

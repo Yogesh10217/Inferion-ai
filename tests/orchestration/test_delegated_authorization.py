@@ -1,14 +1,17 @@
 """Unit tests for agent delegated authorization boundary enforcement in orchestration."""
 
 import pytest
-from app.orchestration.agent_orchestration import AgentOrchestrationManager, AgentTask
+
 from app.identity.agent_identity import AgentIdentityManager
 from app.identity.exceptions import AgentBoundaryViolationException
+from app.orchestration.agent_orchestration import AgentOrchestrationManager, AgentTask
 
 
 def test_agent_delegated_boundary_in_orchestration():
     ag_id_mgr = AgentIdentityManager()
-    del_auth = ag_id_mgr.create_delegated_authorization("user_alice", "agent_1", delegated_scopes=["read"], tenant_id="t_del_orch")
+    del_auth = ag_id_mgr.create_delegated_authorization(
+        "user_alice", "agent_1", delegated_scopes=["read"], tenant_id="t_del_orch"
+    )
 
     orch_mgr = AgentOrchestrationManager(agent_identity_manager=ag_id_mgr)
 

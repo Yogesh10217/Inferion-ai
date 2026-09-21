@@ -36,7 +36,7 @@ class GatewayCostAdapter:
     ) -> CostLedgerEntry:
         total_tokens = prompt_tokens + completion_tokens
         unit_price = self.pricing_manager.get_pricing(provider, model_id).input_token_price_per_1k
-        cost = self.pricing_manager.calculate_token_cost(provider, model_id, prompt_tokens, completion_tokens)
+        self.pricing_manager.calculate_token_cost(provider, model_id, prompt_tokens, completion_tokens)
 
         # Update gateway tracker
         gateway_tracker.track_embedding_tokens(total_tokens)

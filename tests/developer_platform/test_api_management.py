@@ -1,7 +1,6 @@
 """Unit tests for APIManagementEngine."""
 
-import pytest
-from app.developer_platform.api_management import APIManagementEngine, APILifecycleState
+from app.developer_platform.api_management import APILifecycleState, APIManagementEngine
 
 
 def test_api_service_lifecycle():

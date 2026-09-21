@@ -1,17 +1,17 @@
 """Mandatory End-to-End Test Suite for Phase 5.26 Enterprise AI Architecture Platform."""
 
 import pytest
-from app.architecture_platform.manager import ArchitecturePlatformManager
-from app.architecture_platform.nodes import ArchitectureNodeType, ArchitectureNodeStatus
-from app.architecture_platform.dependencies import DependencyType, DependencyStrength
-from app.architecture_platform.change_management import ArchitectureChangeType, ArchitectureChangeStatus
-from app.architecture_platform.digital_twin import TwinSynchronizationStatus
+
+from app.architecture_platform.change_management import ArchitectureChangeStatus, ArchitectureChangeType
 from app.architecture_platform.decisions import ArchitectureDecisionOption, ArchitectureDecisionStatus
+from app.architecture_platform.dependencies import DependencyType
+from app.architecture_platform.digital_twin import TwinSynchronizationStatus
 from app.architecture_platform.exceptions import (
     CrossTenantArchitectureAccessException,
-    ImmutableTopologySnapshotException,
     ImmutableArchitectureDecisionException,
 )
+from app.architecture_platform.manager import ArchitecturePlatformManager
+from app.architecture_platform.nodes import ArchitectureNodeType
 
 
 @pytest.fixture
@@ -31,9 +31,9 @@ def test_flow_1_architecture_discovery(arch_mgr):
     data_node = arch_mgr.discover_and_register_node(tenant_id, "User DB", ArchitectureNodeType.DATABASE)
 
     # Add dependencies
-    dep1 = arch_mgr.add_dependency(tenant_id, app_node.node_id, agent_node.node_id, DependencyType.CALLS)
-    dep2 = arch_mgr.add_dependency(tenant_id, agent_node.node_id, wf_node.node_id, DependencyType.ORCHESTRATES)
-    dep3 = arch_mgr.add_dependency(tenant_id, wf_node.node_id, data_node.node_id, DependencyType.READS)
+    arch_mgr.add_dependency(tenant_id, app_node.node_id, agent_node.node_id, DependencyType.CALLS)
+    arch_mgr.add_dependency(tenant_id, agent_node.node_id, wf_node.node_id, DependencyType.ORCHESTRATES)
+    arch_mgr.add_dependency(tenant_id, wf_node.node_id, data_node.node_id, DependencyType.READS)
 
     # Build & Verify Topology
     topology = arch_mgr.topology_manager.build_topology(tenant_id)
@@ -60,7 +60,11 @@ def test_flow_2_change_impact(arch_mgr):
         target_node_ids=[model_node.node_id],
     )
 
-    assert res["change"]["status"] in (ArchitectureChangeStatus.DRAFT.value, ArchitectureChangeStatus.APPROVED.value, ArchitectureChangeStatus.REQUIRES_APPROVAL.value)
+    assert res["change"]["status"] in (
+        ArchitectureChangeStatus.DRAFT.value,
+        ArchitectureChangeStatus.APPROVED.value,
+        ArchitectureChangeStatus.REQUIRES_APPROVAL.value,
+    )
     assert res["impact_analysis"]["blast_radius"]["total_affected_count"] >= 1
     assert res["simulation"]["confidence_score"] > 80.0
 
@@ -69,7 +73,7 @@ def test_flow_3_architecture_drift(arch_mgr):
     """Flow 3: Snapshot -> Introduce Drift -> Detect Drift -> Audit Record."""
     tenant_id = "tenant_drift"
 
-    n1 = arch_mgr.discover_and_register_node(tenant_id, "Auth Service", ArchitectureNodeType.SERVICE)
+    arch_mgr.discover_and_register_node(tenant_id, "Auth Service", ArchitectureNodeType.SERVICE)
     snapshot = arch_mgr.topology_manager.create_snapshot(tenant_id, description="Baseline")
 
     # Introduce unauthorized node
@@ -142,7 +146,9 @@ def test_flow_7_immutable_architecture_decision(arch_mgr):
     opt2 = ArchitectureDecisionOption(title="Use Mongo", description="Document DB")
 
     adr = arch_mgr.decision_manager.create_adr(tenant_id, "Database Standard", "Selecting DB", [opt1, opt2])
-    finalized = arch_mgr.decision_manager.finalize_adr(adr.decision_id, tenant_id, opt1.option_id, "ACID Compliance required")
+    finalized = arch_mgr.decision_manager.finalize_adr(
+        adr.decision_id, tenant_id, opt1.option_id, "ACID Compliance required"
+    )
 
     assert finalized.status == ArchitectureDecisionStatus.FINALIZED
 
@@ -176,9 +182,10 @@ def test_flow_8_high_risk_change(arch_mgr):
     arch_mgr.governance_engine.approval_engine.approve(app_id, approver_id="sec_admin")
     arch_mgr.change_manager.update_status(change["change_id"], tenant_id, ArchitectureChangeStatus.APPROVED)
 
-
     # Delegate execution
-    del_change = arch_mgr.delegate_approved_change(change["change_id"], tenant_id, delegated_subsystem="PlatformOperationsManager")
+    del_change = arch_mgr.delegate_approved_change(
+        change["change_id"], tenant_id, delegated_subsystem="PlatformOperationsManager"
+    )
     assert del_change.status == ArchitectureChangeStatus.VERIFIED
 
 

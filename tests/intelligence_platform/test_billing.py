@@ -1,6 +1,5 @@
 """Unit tests for Intelligence Billing Tracker."""
 
-import pytest
 from app.intelligence_platform.billing import IntelligenceBillingTracker
 
 

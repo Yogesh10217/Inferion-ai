@@ -1,37 +1,37 @@
 """Mandatory 16 E2E Verification Flows for Platform Contracts & Consolidation (Phase 5.30)."""
 
-import pytest
-import os
 import concurrent.futures
-from datetime import datetime, timezone
+import os
 
-from app.platform_contracts.tenant import TenantIsolationValidator, TenantAccessGuard
-from app.platform_contracts.exceptions import (
-    CrossTenantAccessException,
-    ImmutableMutationException,
-    IdempotencyConflictException,
-    InvalidLifecycleTransitionException,
-    ContractVersionException,
-)
-from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
-from app.platform_contracts.fingerprinting import FingerprintGenerator, CanonicalSerializer
-from app.platform_contracts.snapshots import SnapshotFactory, SnapshotValidator
-from app.platform_contracts.idempotency import IdempotencyManager, IdempotencyStatus
-from app.platform_contracts.redaction import SensitiveDataSanitizer
-from app.platform_contracts.trust import TrustAssessment, TrustBand
-from app.platform_contracts.governance import GovernanceDecisionStatus
-from app.platform_contracts.delegation import DelegationRequest, DelegationTarget, DelegationStatus
-from app.platform_contracts.lifecycle import LifecycleMachine, LifecycleTransition
-from app.platform_contracts.adapters import PlatformContractAdapter
-from app.platform_contracts.versioning import ContractVersion, ContractCompatibilityValidator
-from app.platform_contracts.validation import CircularDependencyValidator
+import pytest
+
+from app.architecture_platform.manager import ArchitecturePlatformManager
+from app.compliance_platform.manager import CompliancePlatformManager
 
 # Domain Managers for Integration & Conformance Tests
 from app.data_governance.manager import DataGovernanceManager
-from app.architecture_platform.manager import ArchitecturePlatformManager
-from app.compliance_platform.manager import CompliancePlatformManager
-from app.portfolio_platform.manager import PortfolioPlatformManager
 from app.decision_intelligence.manager import DecisionIntelligenceManager
+from app.platform_contracts.adapters import PlatformContractAdapter
+from app.platform_contracts.delegation import DelegationRequest, DelegationStatus, DelegationTarget
+from app.platform_contracts.exceptions import (
+    ContractVersionException,
+    CrossTenantAccessException,
+    IdempotencyConflictException,
+    ImmutableMutationException,
+    InvalidLifecycleTransitionException,
+)
+from app.platform_contracts.fingerprinting import FingerprintGenerator
+from app.platform_contracts.governance import GovernanceDecisionStatus
+from app.platform_contracts.idempotency import IdempotencyManager, IdempotencyStatus
+from app.platform_contracts.immutability import ImmutableResource, ImmutableResourceState, ImmutableResourceValidator
+from app.platform_contracts.lifecycle import LifecycleMachine, LifecycleTransition
+from app.platform_contracts.redaction import SensitiveDataSanitizer
+from app.platform_contracts.snapshots import SnapshotValidator
+from app.platform_contracts.tenant import TenantAccessGuard
+from app.platform_contracts.trust import TrustBand
+from app.platform_contracts.validation import CircularDependencyValidator
+from app.platform_contracts.versioning import ContractCompatibilityValidator, ContractVersion
+from app.portfolio_platform.manager import PortfolioPlatformManager
 
 
 def test_flow1_cross_tenant_isolation():
@@ -198,7 +198,9 @@ def test_flow10_lifecycle_validation():
 
 def test_flow11_circular_dependency_protection():
     """Flow 11: Automated validation ensures app/platform_contracts has zero domain manager imports."""
-    contracts_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "app", "platform_contracts")
+    contracts_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "app", "platform_contracts"
+    )
     assert CircularDependencyValidator.validate_platform_contracts_isolation(contracts_dir) is True
 
 
@@ -234,23 +236,23 @@ def test_flow13_domain_contract_conformance():
     tenant = "tenant_conf_13"
 
     # Data Governance
-    dg_mgr = DataGovernanceManager()
+    DataGovernanceManager()
     dg_report = adapter.snapshot.from_domain_snapshot(tenant, "DATA_ASSET", "asset_13", {"name": "Customer DB"})
 
     # Architecture
-    arch_mgr = ArchitecturePlatformManager()
+    ArchitecturePlatformManager()
     arch_trust = adapter.trust.from_domain_trust(tenant, "ARCHITECTURE_NODE", "node_13", 88.0)
 
     # Compliance
-    comp_mgr = CompliancePlatformManager()
+    CompliancePlatformManager()
     comp_gov = adapter.governance.from_domain_decision(tenant, "COMPLIANCE_CONTROL", "ctrl_13", "ALLOW")
 
     # Portfolio
-    port_mgr = PortfolioPlatformManager()
+    PortfolioPlatformManager()
     port_risk = adapter.risk.from_domain_risk(tenant, "INVESTMENT", "inv_13", 15.0)
 
     # Decision Intelligence
-    dec_mgr = DecisionIntelligenceManager()
+    DecisionIntelligenceManager()
     dec_evidence = adapter.evidence.from_domain_evidence(tenant, "DECISION", "dec_13", "Lineage evidence")
 
     assert dg_report.metadata.resource_type == "DATA_ASSET"
@@ -266,7 +268,8 @@ def test_flow14_backward_compatibility():
 
     # Data Governance flow
     dg_mgr = DataGovernanceManager()
-    from app.data_governance.assets import DataAssetType, DataAssetOwner
+    from app.data_governance.assets import DataAssetOwner, DataAssetType
+
     owner = DataAssetOwner(owner_id="u1", owner_name="Data Admin", owner_email="data@corp.com")
     asset = dg_mgr.asset_manager.register_asset(
         tenant_id=tenant,
@@ -279,13 +282,13 @@ def test_flow14_backward_compatibility():
     # Architecture flow
     arch_mgr = ArchitecturePlatformManager()
     from app.architecture_platform.nodes import ArchitectureNodeType
+
     node = arch_mgr.node_manager.register_node(
         tenant_id=tenant,
         name="InferenceEngine",
         node_type=ArchitectureNodeType.SERVICE,
     )
     assert node.tenant_id == tenant
-
 
     # Compliance flow
     comp_mgr = CompliancePlatformManager()
@@ -298,7 +301,6 @@ def test_flow14_backward_compatibility():
     )
     assert req.tenant_id == tenant
 
-
     # Portfolio flow
     port_mgr = PortfolioPlatformManager()
     strat = port_mgr.strategy_manager.create_strategy(
@@ -308,21 +310,17 @@ def test_flow14_backward_compatibility():
     )
     assert strat.tenant_id == tenant
 
-
-
     # Decision Intelligence flow
     dec_mgr = DecisionIntelligenceManager()
     dec_res = dec_mgr.run_full_decision_flow(tenant_id=tenant)
     assert dec_res["decision"]["tenant_id"] == tenant
 
 
-
-
 def test_flow15_contract_versioning():
     """Flow 15: Contract semantic versioning, additive vs breaking compatibility, and fingerprint version inclusion."""
-    v1 = ContractVersion.parse("1.0.0")
-    v2 = ContractVersion.parse("1.1.0")
-    v3 = ContractVersion.parse("2.0.0")
+    ContractVersion.parse("1.0.0")
+    ContractVersion.parse("1.1.0")
+    ContractVersion.parse("2.0.0")
 
     assert ContractCompatibilityValidator.validate("1.1.0", "1.0.0") is True
 

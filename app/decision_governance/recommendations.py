@@ -121,7 +121,7 @@ class DecisionRecommendationManager:
 
     def list_recommendations_for_decision(self, decision_id: str, tenant_id: str) -> List[DecisionRecommendation]:
         recs = [r for r in self._recommendations.values() if r.decision_id == decision_id and r.tenant_id == tenant_id]
-        return sorted(recs, key=lambda x: (x.confidence_score * x.expected_impact_score), reverse=True)
+        return sorted(recs, key=lambda x: x.confidence_score * x.expected_impact_score, reverse=True)
 
     def update_status(
         self, recommendation_id: str, tenant_id: str, status: RecommendationStatus

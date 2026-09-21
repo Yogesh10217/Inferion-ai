@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from app.deployment.evidence_audit import RuntimeEvidenceAuditor
 from app.deployment.models import EvidenceLevel
 

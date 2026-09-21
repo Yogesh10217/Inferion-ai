@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.models import RuntimeCertificationStatus
 from app.deployment.production_runtime_certification import ProductionRuntimeCertificationEngine
 

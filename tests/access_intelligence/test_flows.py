@@ -1,31 +1,27 @@
 """Mandatory E2E Integration Flow Tests for Enterprise AI Access Intelligence (Phase 5.39)."""
 
 import pytest
-from app.access_intelligence.manager import AccessIntelligenceManager
-from app.access_intelligence.identities import IdentityType, IdentityRiskLevel, IdentityStatus
-from app.access_intelligence.entitlements import EntitlementType, EntitlementScope, EntitlementCriticality
-from app.access_intelligence.relationships import AccessRelationshipType, RelationshipStrength
+
+from app.access_intelligence.access_reviews import AccessReviewDecision, AccessReviewStatus
+from app.access_intelligence.anomalies import AccessAnomalySeverity, AccessAnomalyType
 from app.access_intelligence.authorization import AuthorizationDecisionOutcome
-from app.access_intelligence.least_privilege import PrivilegeSeverity
-from app.access_intelligence.privileged_access import PrivilegedAccessScope, PrivilegedAccessStatus
-from app.access_intelligence.emergency_access import EmergencyAccessReason, EmergencyAccessStatus
-from app.access_intelligence.toxic_combinations import ToxicCombinationSeverity
-from app.access_intelligence.access_reviews import AccessReviewScope, AccessReviewStatus, AccessReviewDecision
-from app.access_intelligence.certifications import CertificationScope, CertificationStatus, CertificationDecision
-from app.access_intelligence.anomalies import AccessAnomalyType, AccessAnomalySeverity
-from app.access_intelligence.signals import AccessSignalType, AccessSignalSeverity, AccessSignalSource
+from app.access_intelligence.certifications import CertificationDecision
 from app.access_intelligence.correlation import AccessCorrelationType
-from app.access_intelligence.investigations import AccessInvestigationStatus
-from app.access_intelligence.remediation import AccessRemediationAction, AccessRemediationStatus
-from app.access_intelligence.governance import AccessGovernanceStatus
-from app.access_intelligence.verification import VerificationCheck, VerificationStatus
+from app.access_intelligence.emergency_access import EmergencyAccessReason, EmergencyAccessStatus
+from app.access_intelligence.entitlements import EntitlementType
 from app.access_intelligence.exceptions import (
     AccessIntelligenceException,
     CrossTenantAccessIntelligenceException,
     HighRiskAccessRequiresApprovalException,
-    InvalidAccessStateTransitionException,
     ImmutableAccessRecordException,
 )
+from app.access_intelligence.identities import IdentityType
+from app.access_intelligence.manager import AccessIntelligenceManager
+from app.access_intelligence.privileged_access import PrivilegedAccessScope, PrivilegedAccessStatus
+from app.access_intelligence.remediation import AccessRemediationAction
+from app.access_intelligence.signals import AccessSignalType
+from app.access_intelligence.toxic_combinations import ToxicCombinationSeverity
+from app.access_intelligence.verification import VerificationCheck, VerificationStatus
 
 
 @pytest.fixture
@@ -150,7 +146,7 @@ def test_flow6_privileged_production_access_requires_approval(manager):
 def test_flow7_emergency_access_requires_justification_and_time_bounds(manager):
     """Flow 7 — Emergency access requires justification and time bounds."""
     tenant_id = "tenant_a"
-    
+
     # Request without detailed justification fails
     with pytest.raises(AccessIntelligenceException):
         manager.emergency_access_manager.request_emergency_access(
@@ -231,7 +227,9 @@ def test_flow10_access_review_lifecycle(manager):
 
     manager.review_manager.activate_review(tenant_id, rev.review_id)
     manager.review_manager.start_reviewing(tenant_id, rev.review_id)
-    manager.review_manager.record_decision(tenant_id, rev.review_id, AccessReviewDecision.REVOKE, "Role no longer needed")
+    manager.review_manager.record_decision(
+        tenant_id, rev.review_id, AccessReviewDecision.REVOKE, "Role no longer needed"
+    )
     finalized = manager.review_manager.finalize_review(tenant_id, rev.review_id)
 
     assert finalized.status == AccessReviewStatus.FINALIZED
@@ -239,7 +237,9 @@ def test_flow10_access_review_lifecycle(manager):
 
     # Mutating finalized review raises ImmutableAccessRecordException
     with pytest.raises(ImmutableAccessRecordException):
-        manager.review_manager.record_decision(tenant_id, rev.review_id, AccessReviewDecision.MAINTAIN, "Attempt change")
+        manager.review_manager.record_decision(
+            tenant_id, rev.review_id, AccessReviewDecision.MAINTAIN, "Attempt change"
+        )
 
 
 def test_flow11_immutable_finalized_certification(manager):
@@ -259,7 +259,9 @@ def test_flow11_immutable_finalized_certification(manager):
     assert finalized.fingerprint != ""
 
     with pytest.raises(ImmutableAccessRecordException):
-        manager.certification_manager.record_decision(tenant_id, cert.certification_id, CertificationDecision.REVOCATION_REQUIRED)
+        manager.certification_manager.record_decision(
+            tenant_id, cert.certification_id, CertificationDecision.REVOCATION_REQUIRED
+        )
 
 
 def test_flow12_delegation_only_remediation_enforcement(manager):
@@ -284,7 +286,9 @@ def test_flow13_remediation_verification_failure(manager):
         tenant_id=tenant_id,
         remediation_plan_id="rem_plan_100",
         checks=[
-            VerificationCheck(target_resource_id="ent_100", expected_state="REVOKED", observed_state="ACTIVE", passed=False)
+            VerificationCheck(
+                target_resource_id="ent_100", expected_state="REVOKED", observed_state="ACTIVE", passed=False
+            )
         ],
         notes="Permission still active in cloud provider",
     )
@@ -374,7 +378,7 @@ def test_flow18_access_investigation_snapshot_generation(manager):
     inv = manager.investigation_manager.open_investigation(tenant_id, "Breach Risk Investigation", "user_malicious")
     manager.investigation_manager.start_investigating(tenant_id, inv.investigation_id)
     manager.investigation_manager.record_finding(tenant_id, inv.investigation_id, "Unusual data egress", "CRITICAL")
-    
+
     concluded = manager.investigation_manager.conclude_investigation(tenant_id, inv.investigation_id)
     assert concluded.is_concluded is True
     assert concluded.snapshot_id is not None

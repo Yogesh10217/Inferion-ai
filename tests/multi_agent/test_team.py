@@ -2,10 +2,9 @@
 Tests for AgentTeam and Team Lifecycle Subsystem
 """
 
-import pytest
-from app.multi_agent.agent_team import AgentTeam, TeamType, TeamConfiguration
 from app.multi_agent.agent_profile import AgentProfile
 from app.multi_agent.agent_role import AgentRole, RoleType
+from app.multi_agent.agent_team import AgentTeam, TeamConfiguration, TeamType
 
 
 def test_create_preset_teams():

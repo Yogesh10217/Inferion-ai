@@ -2,7 +2,6 @@
 Tests for Blackboard Shared Workspace
 """
 
-import pytest
 from app.multi_agent.agent_blackboard import Blackboard
 
 

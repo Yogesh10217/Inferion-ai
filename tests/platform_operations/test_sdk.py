@@ -1,7 +1,7 @@
 """Unit tests for Python SDK PlatformOperationsClient."""
 
-import pytest
 from unittest.mock import MagicMock
+
 from sdk.python.llm_engine.platform_operations import PlatformOperationsClient
 
 

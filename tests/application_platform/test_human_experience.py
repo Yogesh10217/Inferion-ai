@@ -1,9 +1,8 @@
 """Unit tests for Human Experience & Escalation."""
 
-import pytest
 from app.application_platform.human_experience import (
-    HumanExperienceManager,
     EscalationReason,
+    HumanExperienceManager,
 )
 from app.orchestration.human_tasks import HumanTaskManager
 

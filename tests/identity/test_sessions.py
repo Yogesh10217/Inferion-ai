@@ -1,8 +1,9 @@
 """Unit tests for SessionManager state, restrictions, and forced revocation."""
 
 import pytest
-from app.identity.session import SessionManager, SessionState
+
 from app.identity.exceptions import SessionRevokedException
+from app.identity.session import SessionManager, SessionState
 
 
 def test_session_lifecycle_and_forced_revocation():

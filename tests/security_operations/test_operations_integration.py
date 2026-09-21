@@ -3,12 +3,14 @@ Tests for Integration with Phase 5.68 Incident & Alert Engines (Phase 5.69).
 """
 
 import pytest
+
 from app.security_operations.security_event_detection import SecurityEventDetector
-from app.security_operations.security_threat_classifier import SecurityThreatClassifier
 
 try:
-    from app.operations.incident_management import IncidentManager
     from app.operations.alert_engine import AlertEngine
+
+    from app.operations.incident_management import IncidentManager
+
     SRE_AVAILABLE = True
 except ImportError:
     SRE_AVAILABLE = False

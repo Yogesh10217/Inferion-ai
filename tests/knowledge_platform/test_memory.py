@@ -1,12 +1,17 @@
 """Unit tests for MemoryManager storage and retrieval."""
 
-import pytest
-from app.knowledge_platform.memory import MemoryManager, MemoryType, MemoryScope
+from app.knowledge_platform.memory import MemoryManager, MemoryScope, MemoryType
 
 
 def test_memory_storage_and_retrieval():
     mgr = MemoryManager()
-    mem = mgr.store_memory("user_preference_theme", "dark", memory_type=MemoryType.USER_PREFERENCE, scope=MemoryScope.USER, tenant_id="t_mem")
+    mem = mgr.store_memory(
+        "user_preference_theme",
+        "dark",
+        memory_type=MemoryType.USER_PREFERENCE,
+        scope=MemoryScope.USER,
+        tenant_id="t_mem",
+    )
 
     ret_mem = mgr.get_memory(mem.memory_id)
     assert ret_mem.key == "user_preference_theme"

@@ -1,13 +1,16 @@
 """Unit tests for AI Agent delegated permission boundary enforcement."""
 
 import pytest
+
 from app.identity.agent_identity import AgentIdentityManager
 from app.identity.exceptions import AgentBoundaryViolationException
 
 
 def test_agent_permission_boundary_enforcement():
     mgr = AgentIdentityManager()
-    del_auth = mgr.create_delegated_authorization("user_bob", "agent_executor", delegated_scopes=["read", "execute"], tenant_id="t_del")
+    del_auth = mgr.create_delegated_authorization(
+        "user_bob", "agent_executor", delegated_scopes=["read", "execute"], tenant_id="t_del"
+    )
 
     # 1. Action within delegated scope -> Valid
     assert mgr.validate_agent_action(del_auth.delegation_id, "execute_task", requested_scope="execute") is True

@@ -1,8 +1,6 @@
 import pytest
 
-from app.core.exceptions import ModelNotFoundException, ProviderNotFoundException, RoutingException
-from app.providers.openai_provider import OpenAIProvider
-from app.providers.provider_factory import ProviderFactory
+from app.core.exceptions import ModelNotFoundException
 from app.registry.model_registry import InMemoryModelRegistry
 from app.routing.model_strategy import ModelBasedRoutingStrategy
 from app.routing.request_router import RequestRouter, RoutingRequest

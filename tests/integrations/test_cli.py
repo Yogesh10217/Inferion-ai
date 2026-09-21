@@ -1,7 +1,7 @@
 """Unit tests for `llm-engine integrations` CLI commands."""
 
-import pytest
 from click.testing import CliRunner
+
 from cli.commands.integrations import integrations_cli
 
 

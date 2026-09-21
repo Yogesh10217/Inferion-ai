@@ -21,7 +21,9 @@ class DummyHTTPClient:
     def post(self, url, json=None, params=None):
         if "search" in url:
             return MockHTTPResponse([{"id": "mem_1", "content": "FastAPI fact"}])
-        return MockHTTPResponse({"status": "success", "memory": {"id": "mem_1", "content": json.get("content") if json else ""}})
+        return MockHTTPResponse(
+            {"status": "success", "memory": {"id": "mem_1", "content": json.get("content") if json else ""}}
+        )
 
     def get(self, url, params=None):
         if "profile" in url:

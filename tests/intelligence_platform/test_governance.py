@@ -1,8 +1,7 @@
 """Unit tests for Intelligence Governance & Risk Evaluation."""
 
-import pytest
-from app.intelligence_platform.governance import IntelligenceGovernanceEngine, IntelligencePolicyDecision
 from app.governance_platform.risk import RiskLevel
+from app.intelligence_platform.governance import IntelligenceGovernanceEngine, IntelligencePolicyDecision
 
 
 def test_governance_decision_evaluation():

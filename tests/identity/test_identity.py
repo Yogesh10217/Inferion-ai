@@ -1,7 +1,6 @@
 """Unit tests for IdentityManager creation and lifecycle status transitions."""
 
-import pytest
-from app.identity.identity import IdentityManager, IdentityType, IdentityStatus
+from app.identity.identity import IdentityManager, IdentityStatus, IdentityType
 
 
 def test_identity_creation_and_status_updates():

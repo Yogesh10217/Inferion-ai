@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+
 
 @pytest.mark.asyncio
 async def test_plan_list(get_client, admin_token_headers):
@@ -7,10 +7,11 @@ async def test_plan_list(get_client, admin_token_headers):
     async with get_client() as client:
         response = await client.get("/v1/plans", headers=admin_token_headers)
         assert response.status_code == 200
-        
+
         data = response.json()
         plans = data["plans"] if isinstance(data, dict) and "plans" in data else data
         assert isinstance(plans, list)
+
 
 @pytest.mark.asyncio
 async def test_get_subscription_not_found(get_client, admin_token_headers):

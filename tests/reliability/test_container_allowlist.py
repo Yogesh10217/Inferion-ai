@@ -2,8 +2,8 @@
 Tests for Container Chaos Allowlist Safety.
 """
 
-from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 from app.reliability.failure_injection import FailureInjectionEngine
+from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 
 
 def test_container_allowlist_enforcement():

@@ -2,8 +2,7 @@
 Tests for Security Threat Classifier (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_threat_classifier import SecurityThreatClassifier, SecurityThreat
+from app.security_operations.security_threat_classifier import SecurityThreat, SecurityThreatClassifier
 
 
 def test_threat_classifier_recommendation():

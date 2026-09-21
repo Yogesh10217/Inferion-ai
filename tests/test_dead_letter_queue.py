@@ -1,12 +1,13 @@
 from unittest.mock import AsyncMock, patch
+
 import pytest
+
 from app.core.database import async_session_maker
 from app.events import (
     DeadLetterQueue,
     DeliveryService,
     EventEnvelope,
     EventStorage,
-    WebhookService,
 )
 
 

@@ -1,7 +1,6 @@
 """Unit tests for RunbookManager (DRY_RUN, EXECUTE, VERIFY, ROLLBACK)."""
 
-import pytest
-from app.operations.runbooks import RunbookManager, RunbookStep, RunbookMode
+from app.operations.runbooks import RunbookManager, RunbookMode, RunbookStep
 
 
 def test_runbook_execution_modes():

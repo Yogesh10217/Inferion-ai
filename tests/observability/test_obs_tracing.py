@@ -1,9 +1,10 @@
 """Tests for TracingManager and span parent-child relationships."""
 
 import pytest
-from app.observability.tracing import TracingManager, SPAN_AGENT_EXECUTE, SPAN_TOOL_EXECUTE
+
 from app.observability.context import ObservabilityContext
 from app.observability.exceptions import TraceNotFoundException
+from app.observability.tracing import SPAN_AGENT_EXECUTE, SPAN_TOOL_EXECUTE, TracingManager
 
 
 def test_tracing_manager_start_and_end_trace():
@@ -27,9 +28,9 @@ def test_tracing_manager_spans():
 
     manager.start_trace(name=SPAN_AGENT_EXECUTE, context=ctx)
     child_span = manager.start_span(name=SPAN_TOOL_EXECUTE, context=ctx)
-    
+
     assert child_span.name == SPAN_TOOL_EXECUTE
-    
+
     manager.end_span(child_span, status="OK")
     manager.end_trace(ctx.trace_id)
 

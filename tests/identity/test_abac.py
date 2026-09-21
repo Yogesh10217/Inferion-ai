@@ -1,7 +1,6 @@
 """Unit tests for ABAC risk score and attribute evaluation."""
 
-import pytest
-from app.identity.access_control import AccessControlManager, AccessContext, AccessDecisionType
+from app.identity.access_control import AccessContext, AccessControlManager, AccessDecisionType
 
 
 def test_abac_elevated_risk_approval():

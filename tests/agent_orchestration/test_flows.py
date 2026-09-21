@@ -1,22 +1,22 @@
 """Mandatory E2E Integration Flow Tests for Enterprise AI Agent Orchestration Platform (Phase 5.36)."""
 
 import pytest
-from app.agent_orchestration.manager import AgentOrchestrationManager
-from app.agent_orchestration.agents import AgentType, AgentRole
-from app.agent_orchestration.capabilities import CapabilityScope
+
+from app.agent_orchestration.agents import AgentRole, AgentType
 from app.agent_orchestration.autonomy import AgentAutonomyLevel, AutonomyBoundary
-from app.agent_orchestration.collaboration import CollaborationType, AgentParticipant
+from app.agent_orchestration.capabilities import CapabilityScope
+from app.agent_orchestration.collaboration import AgentParticipant, CollaborationType
 from app.agent_orchestration.exceptions import (
-    CrossTenantAgentAccessException,
-    AgentCapabilityViolationException,
-    AgentAutonomyViolationException,
-    AgentToolAccessDeniedException,
-    HighRiskAgentActionRequiresApprovalException,
-    AgentRuntimeLimitExceededException,
     AgentBudgetExceededException,
+    AgentCapabilityViolationException,
+    AgentRuntimeLimitExceededException,
+    AgentToolAccessDeniedException,
+    CrossTenantAgentAccessException,
+    HighRiskAgentActionRequiresApprovalException,
     ImmutableAgentExecutionException,
 )
-from app.agent_orchestration.failures import AgentFailureType, AgentFailureSeverity
+from app.agent_orchestration.failures import AgentFailureSeverity, AgentFailureType
+from app.agent_orchestration.manager import AgentOrchestrationManager
 
 
 @pytest.fixture
@@ -103,7 +103,7 @@ def test_flow4_task_planning_using_governed_context(manager):
     tenant_id = "tenant_a"
     agent = manager.agent_manager.register_agent(tenant_id=tenant_id, name="Planner Agent")
 
-    ctx = manager.context_manager.assemble_context(
+    manager.context_manager.assemble_context(
         tenant_id=tenant_id,
         agent_id=agent.agent_id,
         task_id="task_plan_demo",
@@ -276,14 +276,18 @@ def test_flow14_immutable_finalized_execution_trace(manager):
     tenant_id = "tenant_a"
     trace = manager.trace_manager.start_trace(tenant_id=tenant_id, agent_id="ag1", task_id="task1")
 
-    manager.trace_manager.record_step(trace.trace_id, tenant_id, action_type="STEP_1", outcome_summary="Step 1 complete")
+    manager.trace_manager.record_step(
+        trace.trace_id, tenant_id, action_type="STEP_1", outcome_summary="Step 1 complete"
+    )
     final = manager.trace_manager.finalize_trace(trace.trace_id, tenant_id)
 
     assert final.fingerprint != ""
     assert final.snapshot_id is not None
 
     with pytest.raises(ImmutableAgentExecutionException):
-        manager.trace_manager.record_step(trace.trace_id, tenant_id, action_type="STEP_2", outcome_summary="Illegal step")
+        manager.trace_manager.record_step(
+            trace.trace_id, tenant_id, action_type="STEP_2", outcome_summary="Illegal step"
+        )
 
 
 def test_flow15_trust_assessment_compatibility(manager):

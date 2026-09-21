@@ -2,13 +2,12 @@
 Tests for Prometheus Metrics Subsystem
 """
 
-import pytest
 from app.tools.tool_metrics import (
-    tool_calls_total,
-    tool_failures_total,
-    tool_duration_seconds,
-    tool_cost_total,
     tool_active_executions,
+    tool_calls_total,
+    tool_cost_total,
+    tool_duration_seconds,
+    tool_failures_total,
 )
 
 

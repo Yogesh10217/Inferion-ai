@@ -2,8 +2,8 @@
 Tests for Recovery Orchestrator Module.
 """
 
-from app.reliability.reliability_models import FailureSeverity, RecoveryStatus
 from app.reliability.recovery_orchestrator import RecoveryOrchestrator
+from app.reliability.reliability_models import FailureSeverity, RecoveryStatus
 
 
 def test_recovery_orchestration_workflow():

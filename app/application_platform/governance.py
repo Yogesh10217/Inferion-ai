@@ -75,7 +75,6 @@ class OutputPolicyEvaluator:
         output_text: str,
         metadata: Optional[Dict[str, Any]] = None,
     ) -> ResponseTransformation:
-        meta = metadata or {}
 
         # Check for harmful/blocked patterns
         lowered = output_text.lower()

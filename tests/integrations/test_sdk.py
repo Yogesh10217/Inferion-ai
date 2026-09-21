@@ -1,6 +1,5 @@
 """Unit tests for Python SDK IntegrationClient."""
 
-import pytest
 from sdk.python.llm_engine.client import LLMEngineClient
 from sdk.python.llm_engine.integrations import IntegrationClient
 

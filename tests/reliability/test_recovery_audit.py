@@ -9,7 +9,7 @@ from app.reliability.reliability_evidence import ReliabilityEvidenceCollector, R
 def test_evidence_tampering_detection():
     collector = ReliabilityEvidenceCollector()
     ev1 = collector.collect_evidence("Comp", "event1", "SUCCESS", ReliabilityEvidenceLevel.SIMULATION_RUNTIME, {"a": 1})
-    ev2 = collector.collect_evidence("Comp", "event2", "SUCCESS", ReliabilityEvidenceLevel.SIMULATION_RUNTIME, {"b": 2})
+    collector.collect_evidence("Comp", "event2", "SUCCESS", ReliabilityEvidenceLevel.SIMULATION_RUNTIME, {"b": 2})
 
     audit_engine = RecoveryAuditEngine()
     res_valid = audit_engine.audit_evidence_records(collector.get_all_evidence())

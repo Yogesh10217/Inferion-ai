@@ -1,25 +1,22 @@
 """Mandatory 20 End-to-End Integration Flow Tests for Operations Intelligence (Phase 5.41)."""
 
 import pytest
-from typing import Dict, Any
 
-from app.operations_intelligence.manager import OperationsIntelligenceManager
-from app.operations_intelligence.services import ServiceCriticality, ServiceOperationalTier, ServiceHealthStatus
-from app.operations_intelligence.incidents import IncidentSeverity, IncidentPriority, IncidentStatus
-from app.operations_intelligence.major_incidents import MajorIncidentImpact, MajorIncidentStatus
 from app.operations_intelligence.alerts import AlertSeverity, AlertStatus
-from app.operations_intelligence.correlation import CorrelationEvidence
-from app.operations_intelligence.root_cause import RootCauseHypothesis, RootCauseEvidence, RootCauseConfidence
-from app.operations_intelligence.remediation import RemediationAction, RemediationPriority, RemediationStatus
-from app.operations_intelligence.dependencies import DependencyImpact
-from app.operations_intelligence.impact import BusinessImpact, TechnicalImpact
 from app.operations_intelligence.communications import CommunicationAudience
+from app.operations_intelligence.correlation import CorrelationEvidence
+from app.operations_intelligence.dependencies import DependencyImpact
 from app.operations_intelligence.exceptions import (
     CrossTenantOperationsAccessException,
     HighRiskOperationRequiresApprovalException,
-    RemediationVerificationException,
     ImmutableOperationsRecordException,
+    RemediationVerificationException,
 )
+from app.operations_intelligence.incidents import IncidentSeverity
+from app.operations_intelligence.major_incidents import MajorIncidentImpact, MajorIncidentStatus
+from app.operations_intelligence.manager import OperationsIntelligenceManager
+from app.operations_intelligence.remediation import RemediationAction, RemediationStatus
+from app.operations_intelligence.root_cause import RootCauseConfidence, RootCauseEvidence, RootCauseHypothesis
 
 
 @pytest.fixture
@@ -111,8 +108,15 @@ def test_flow5_major_incident_declaration(manager):
 def test_flow6_root_cause_hypothesis_generation(manager):
     """Flow 6 — Root Cause Hypothesis Generation."""
     tenant_id = "tenant_a"
-    hypo1 = RootCauseHypothesis(title="DB Connection Pool Exhaustion", component_name="Postgres", likelihood_score=85.0, reasoning="Connections capped at 100")
-    hypo2 = RootCauseHypothesis(title="Slow Query Lock", component_name="UserTable", likelihood_score=60.0, reasoning="Unindexed lookup")
+    hypo1 = RootCauseHypothesis(
+        title="DB Connection Pool Exhaustion",
+        component_name="Postgres",
+        likelihood_score=85.0,
+        reasoning="Connections capped at 100",
+    )
+    hypo2 = RootCauseHypothesis(
+        title="Slow Query Lock", component_name="UserTable", likelihood_score=60.0, reasoning="Unindexed lookup"
+    )
 
     rca = manager.root_cause_manager.analyze_root_cause(
         tenant_id=tenant_id,
@@ -131,7 +135,10 @@ def test_flow7_root_cause_evidence_validation(manager):
     """Flow 7 — Root Cause Evidence Validation."""
     tenant_id = "tenant_a"
     ev1 = RootCauseEvidence(source="PROMETHEUS_METRICS", description="Connection pool utilisation 100% at 14:02:11")
-    ev2 = RootCauseEvidence(source="LOGS", description="FATAL: remaining connection slots reserved for non-replication superuser connections")
+    ev2 = RootCauseEvidence(
+        source="LOGS",
+        description="FATAL: remaining connection slots reserved for non-replication superuser connections",
+    )
 
     rca = manager.root_cause_manager.analyze_root_cause(
         tenant_id=tenant_id,
@@ -218,7 +225,9 @@ def test_flow13_remediation_verification_failure(manager):
     tenant_id = "tenant_a"
 
     with pytest.raises(RemediationVerificationException) as exc_info:
-        manager.verification_manager.verify_remediation(tenant_id, "rem_plan_100", service_recovered=False, notes="Health check endpoint timed out")
+        manager.verification_manager.verify_remediation(
+            tenant_id, "rem_plan_100", service_recovered=False, notes="Health check endpoint timed out"
+        )
 
     assert "rem_plan_100" in str(exc_info.value)
 
@@ -307,7 +316,9 @@ def test_flow19_major_incident_human_escalation(manager):
         manager.major_incident_manager.resolve_major_incident(tenant_id, maj.major_incident_id)
 
     # Approve human escalation
-    manager.major_incident_manager.approve_major_incident_resolution(tenant_id, maj.major_incident_id, "appr_human_exec")
+    manager.major_incident_manager.approve_major_incident_resolution(
+        tenant_id, maj.major_incident_id, "appr_human_exec"
+    )
     resolved_maj = manager.major_incident_manager.resolve_major_incident(tenant_id, maj.major_incident_id)
     assert resolved_maj.status == MajorIncidentStatus.RESOLVED
 

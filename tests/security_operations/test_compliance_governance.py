@@ -2,9 +2,8 @@
 Tests for Compliance Governance Engine (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_posture import SecurityPostureEvaluator
 from app.security_operations.compliance_governance import ComplianceGovernanceEngine, ComplianceResult
+from app.security_operations.security_posture import SecurityPostureEvaluator
 
 
 def test_compliance_governance_evaluation():

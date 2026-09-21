@@ -11,7 +11,7 @@ class PlanService:
         self.session_factory = session_factory
 
     async def get_all_plans(self) -> List[SubscriptionPlan]:
-        stmt = select(SubscriptionPlan).where(SubscriptionPlan.enabled == True)
+        stmt = select(SubscriptionPlan).where(SubscriptionPlan.enabled)
         async with self.session_factory() as db:
             result = await db.execute(stmt)
             return list(result.scalars().all())

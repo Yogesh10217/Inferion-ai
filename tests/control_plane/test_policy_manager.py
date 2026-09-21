@@ -1,6 +1,5 @@
 """Unit tests for PolicyManager."""
 
-import pytest
 from app.control_plane.policy_manager import PolicyManager, PolicyTargetType
 
 

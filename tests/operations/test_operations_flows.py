@@ -1,12 +1,10 @@
 """Mandatory End-to-End Operations Integration Flow Verifications."""
 
-import pytest
-from app.operations.manager import OperationsManager
-from app.operations.telemetry import TelemetryType, TelemetrySeverity, TelemetryContext
-from app.operations.slo import SLOType, SLOStatus
 from app.operations.alerting import AlertSeverity
 from app.operations.incidents import IncidentSeverity, IncidentStatus
+from app.operations.manager import OperationsManager
 from app.operations.remediation import RemediationRisk, RemediationStatus
+from app.operations.telemetry import TelemetryContext, TelemetryType
 
 
 def test_flow_1_dependency_failure_pipeline():
@@ -25,10 +23,18 @@ def test_flow_1_dependency_failure_pipeline():
     mgr.slo_manager.record_measurement(slo.slo_id, 95.0)  # Breached!
 
     # 4. Alert generated
-    alt = mgr.alert_manager.trigger_alert("DBDegraded", "db_primary", "Database health critical", tenant_id="f1", severity=AlertSeverity.CRITICAL)
+    alt = mgr.alert_manager.trigger_alert(
+        "DBDegraded", "db_primary", "Database health critical", tenant_id="f1", severity=AlertSeverity.CRITICAL
+    )
 
     # 5. Incident created
-    inc = mgr.incident_manager.create_incident("DB Failure Cascade", tenant_id="f1", severity=IncidentSeverity.SEV1_CRITICAL, primary_resource_id="db_primary", alert_ids=[alt.alert_id])
+    inc = mgr.incident_manager.create_incident(
+        "DB Failure Cascade",
+        tenant_id="f1",
+        severity=IncidentSeverity.SEV1_CRITICAL,
+        primary_resource_id="db_primary",
+        alert_ids=[alt.alert_id],
+    )
 
     # 6. Topology impact analysis & Root Cause candidate
     rca = mgr.rca_engine.analyze_incident(inc.incident_id, "db_primary", tenant_id="f1")
@@ -42,17 +48,21 @@ def test_flow_2_deployment_regression_and_rollback():
     mgr = OperationsManager()
 
     # 1. New deployment change recorded
-    chg = mgr.change_engine.record_change("DEPLOYMENT", "deploy_v2", "Deploy v2 model gateway", tenant_id="f2")
+    mgr.change_engine.record_change("DEPLOYMENT", "deploy_v2", "Deploy v2 model gateway", tenant_id="f2")
 
     # 2. Incident created
-    inc = mgr.incident_manager.create_incident("Post-Deploy Error Surge", tenant_id="f2", severity=IncidentSeverity.SEV2_HIGH, primary_resource_id="deploy_v2")
+    mgr.incident_manager.create_incident(
+        "Post-Deploy Error Surge", tenant_id="f2", severity=IncidentSeverity.SEV2_HIGH, primary_resource_id="deploy_v2"
+    )
 
     # 3. Change correlation identifies deployment
     recent = mgr.change_engine.find_recent_changes("f2", "deploy_v2")
     assert len(recent) == 1
 
     # 4. Remediation plan & Rollback
-    plan = mgr.remediation_engine.plan_remediation("Rollback v2 Deployment", "deploy_v2", risk_level=RemediationRisk.LOW, tenant_id="f2")
+    plan = mgr.remediation_engine.plan_remediation(
+        "Rollback v2 Deployment", "deploy_v2", risk_level=RemediationRisk.LOW, tenant_id="f2"
+    )
     exec_plan = mgr.remediation_engine.execute_remediation(plan.plan_id)
 
     assert exec_plan.status == RemediationStatus.COMPLETED
@@ -63,11 +73,15 @@ def test_flow_3_autonomous_low_risk_remediation():
     mgr = OperationsManager()
 
     # 1. Capacity risk detected
-    pred = mgr.prediction_engine.predict_capacity_risk("f3", "worker_pool_alpha", current_queue_depth=90, max_capacity=100)
+    pred = mgr.prediction_engine.predict_capacity_risk(
+        "f3", "worker_pool_alpha", current_queue_depth=90, max_capacity=100
+    )
     assert pred is not None
 
     # 2. Remediation plan
-    plan = mgr.remediation_engine.plan_remediation("Scale Worker Concurrency", "worker_pool_alpha", risk_level=RemediationRisk.LOW, tenant_id="f3")
+    plan = mgr.remediation_engine.plan_remediation(
+        "Scale Worker Concurrency", "worker_pool_alpha", risk_level=RemediationRisk.LOW, tenant_id="f3"
+    )
     assert plan.status == RemediationStatus.APPROVED  # Auto approved!
 
     # 3. Automatic execution and health verification
@@ -79,7 +93,9 @@ def test_flow_4_high_risk_remediation_approval_gate():
     mgr = OperationsManager()
 
     # 1. Production model degradation -> Recommendation
-    plan = mgr.remediation_engine.plan_remediation("Switch Model Provider to Fallback", "llm_router", risk_level=RemediationRisk.HIGH, tenant_id="f4")
+    plan = mgr.remediation_engine.plan_remediation(
+        "Switch Model Provider to Fallback", "llm_router", risk_level=RemediationRisk.HIGH, tenant_id="f4"
+    )
 
     # 2. Risk = HIGH -> Requires ApprovalEngine!
     assert plan.status == RemediationStatus.APPROVAL_REQUIRED
@@ -100,12 +116,16 @@ def test_flow_5_root_cause_correlation():
     mgr.topology_manager.add_dependency("search_service", "cache_cluster", "HARD", tenant_id="f5")
 
     mgr.topology_manager.update_node_health("cache_cluster", "DEGRADED")
-    chg = mgr.change_engine.record_change("CONFIG_CHANGE", "cache_cluster", "Updated eviction policy", tenant_id="f5")
+    mgr.change_engine.record_change("CONFIG_CHANGE", "cache_cluster", "Updated eviction policy", tenant_id="f5")
 
-    inc = mgr.incident_manager.create_incident("Search Latency Spike", tenant_id="f5", primary_resource_id="cache_cluster")
+    inc = mgr.incident_manager.create_incident(
+        "Search Latency Spike", tenant_id="f5", primary_resource_id="cache_cluster"
+    )
     recent = mgr.change_engine.find_recent_changes("f5", "cache_cluster")
 
-    rca = mgr.rca_engine.analyze_incident(inc.incident_id, "cache_cluster", recent_changes=[c.model_dump() for c in recent], tenant_id="f5")
+    rca = mgr.rca_engine.analyze_incident(
+        inc.incident_id, "cache_cluster", recent_changes=[c.model_dump() for c in recent], tenant_id="f5"
+    )
 
     assert len(rca.candidates) >= 1
     assert rca.primary_cause_id is not None

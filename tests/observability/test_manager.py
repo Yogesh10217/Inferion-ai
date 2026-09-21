@@ -1,8 +1,6 @@
 """Tests for ObservabilityManager workflow orchestration."""
 
-import pytest
 from app.observability.manager import ObservabilityManager
-from app.observability.context import ObservabilityContext
 
 
 def test_observability_manager_execution_flow():
@@ -17,7 +15,7 @@ def test_observability_manager_execution_flow():
     span_dict = manager.start_execution(component="agent", name="agent.execute", context=ctx)
     assert span_dict["trace_id"] == "tr-mgr-1"
 
-    end_dict = manager.end_execution(
+    manager.end_execution(
         span_or_id=span_dict["span_id"],
         component="agent",
         status="OK",

@@ -3,8 +3,9 @@ Tests for Core Workflow Executor Engine
 """
 
 import pytest
-from app.workflows.executor import WorkflowExecutor
+
 from app.workflows.dag import DAGBuilder
+from app.workflows.executor import WorkflowExecutor
 from app.workflows.state import WorkflowStatus
 
 

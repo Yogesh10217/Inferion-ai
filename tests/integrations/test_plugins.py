@@ -1,6 +1,5 @@
 """Unit tests for PluginManager and plugin registration."""
 
-import pytest
 from app.integrations.plugins import PluginManager, PluginManifest
 
 

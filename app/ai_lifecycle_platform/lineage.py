@@ -30,7 +30,6 @@ class AssetLineage(BaseModel):
 
 
 class LineageNode(BaseModel):
-
     node_id: str
     asset_id: str
     asset_name: str

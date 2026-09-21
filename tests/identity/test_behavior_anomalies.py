@@ -1,7 +1,6 @@
 """Unit tests for critical behavioral anomaly triggers and Operations Incident creation."""
 
-import pytest
-from app.identity.risk import IdentityRiskEngine, AnomalyType, IdentityRiskSeverity
+from app.identity.risk import AnomalyType, IdentityRiskEngine, IdentityRiskSeverity
 
 
 def test_critical_behavioral_anomaly_triggers_incident():

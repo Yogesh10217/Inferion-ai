@@ -3,7 +3,6 @@ Tests for Python SDK Workflows Client
 """
 
 from sdk.python.llm_engine.workflows import WorkflowClient
-import httpx
 
 
 def test_sdk_workflow_client_interface():

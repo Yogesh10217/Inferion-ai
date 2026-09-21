@@ -1,8 +1,7 @@
 """Unit tests for Evidence-Backed Root Cause Analyzer."""
 
-import pytest
-from app.platform_operations.incident_intelligence import IncidentIntelligenceEngine
 from app.platform_operations.diagnosis import RootCauseAnalyzer
+from app.platform_operations.incident_intelligence import IncidentIntelligenceEngine
 
 
 def test_deployment_regression_diagnosis_hypothesis():

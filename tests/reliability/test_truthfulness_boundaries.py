@@ -20,15 +20,21 @@ def test_truthfulness_boundary_preservation():
     assert r_res.production_database_restore_executed is False
 
     # Verify failover engine truthfulness
-    f_res = FailoverEngine().evaluate_failover(FailoverPlan("p", FailoverTrigger.PRIMARY_FAILURE, "s", "d"), real_production_executed=False)
+    f_res = FailoverEngine().evaluate_failover(
+        FailoverPlan("p", FailoverTrigger.PRIMARY_FAILURE, "s", "d"), real_production_executed=False
+    )
     assert f_res.production_failover_executed is False
 
     # Verify business continuity truthfulness
-    c_res = BusinessContinuityEngine().evaluate_continuity(BusinessContinuityPlan("p", "bcp"), real_production_executed=False)
+    c_res = BusinessContinuityEngine().evaluate_continuity(
+        BusinessContinuityPlan("p", "bcp"), real_production_executed=False
+    )
     assert c_res.production_bc_executed is False
 
     # Verify certification engine truthfulness
-    cert_res = ReliabilityCertificationEngine().evaluate_certification(empirical_real_production_recovery_executed=False)
+    cert_res = ReliabilityCertificationEngine().evaluate_certification(
+        empirical_real_production_recovery_executed=False
+    )
     assert cert_res.live_production_recovery_validated is False
 
     # Verify orchestrator truthfulness

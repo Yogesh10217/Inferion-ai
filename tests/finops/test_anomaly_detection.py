@@ -1,8 +1,8 @@
 """Unit tests for CostAnomalyDetector."""
 
 from decimal import Decimal
-import pytest
-from app.finops.anomaly_detection import CostAnomalyDetector, AnomalyType, CostAnomalySeverity
+
+from app.finops.anomaly_detection import AnomalyType, CostAnomalyDetector, CostAnomalySeverity
 
 
 def test_runaway_agent_cost_spike_detection():

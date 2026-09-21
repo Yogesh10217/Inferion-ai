@@ -1,6 +1,5 @@
 """Unit tests for OrchestrationMetricsCollector."""
 
-import pytest
 from app.orchestration.observability import OrchestrationMetricsCollector
 
 

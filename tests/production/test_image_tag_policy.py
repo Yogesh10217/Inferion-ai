@@ -1,4 +1,5 @@
 import pytest
+
 from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.deployment_metadata import DeploymentIdentityBuilder
 from app.deployment.exceptions import ConfigurationValidationError

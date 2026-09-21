@@ -1,6 +1,5 @@
 """Unit tests for KnowledgeGovernanceEngine policy decisions."""
 
-import pytest
 from app.knowledge_platform.governance import KnowledgeGovernanceEngine, PolicyDecisionType
 
 

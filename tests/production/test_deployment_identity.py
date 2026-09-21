@@ -1,4 +1,5 @@
 import pytest
+
 from app.deployment.deployment_metadata import DeploymentIdentityBuilder, DeploymentMetadataProvider
 from app.deployment.exceptions import ConfigurationValidationError
 from app.deployment.models import DeploymentEnvironment, EnvironmentConfig

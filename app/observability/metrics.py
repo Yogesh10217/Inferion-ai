@@ -53,7 +53,10 @@ class ObservabilityMetrics:
             buckets=(0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 30.0, 60.0, float("inf")),
         )
         self.ai_tokens_total = get_or_create(
-            Counter, "ai_tokens_total", "Total AI tokens processed", ["type", "model"]  # type: input or output
+            Counter,
+            "ai_tokens_total",
+            "Total AI tokens processed",
+            ["type", "model"],  # type: input or output
         )
         self.ai_cost_total = get_or_create(
             Counter, "ai_cost_total", "Total AI financial cost accumulated in USD", ["tenant_id", "model"]

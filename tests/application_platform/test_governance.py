@@ -1,11 +1,10 @@
 """Unit tests for Output Policy Checkpointing & Application Governance."""
 
-import pytest
 from app.application_platform.governance import (
     ApplicationGovernanceEngine,
+    ApplicationPolicyDecision,
     OutputPolicyEvaluator,
     OutputSafetyDecision,
-    ApplicationPolicyDecision,
 )
 
 

@@ -1,6 +1,5 @@
 """Unit tests for DataQualityEngine."""
 
-import pytest
 from app.data_fabric.quality import DataQualityEngine
 
 

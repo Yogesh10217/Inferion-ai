@@ -2,8 +2,8 @@
 Tests for Conditional Edge Evaluator & Branch Routing
 """
 
-from app.workflows.edge import Edge
 from app.workflows.conditions import ConditionalExecutor
+from app.workflows.edge import Edge
 
 
 def test_edge_condition_evaluation():

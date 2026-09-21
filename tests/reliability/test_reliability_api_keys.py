@@ -1,6 +1,7 @@
 """Unit tests for APIKeyManager."""
 
 import pytest
+
 from app.security.api_keys import APIKeyManager
 from app.security.exceptions import InvalidAPIKeyError
 

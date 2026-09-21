@@ -1,7 +1,6 @@
 """Unit tests for RootCauseAnalysisEngine."""
 
-import pytest
-from app.operations.root_cause import RootCauseAnalysisEngine, CauseRole
+from app.operations.root_cause import RootCauseAnalysisEngine
 from app.operations.topology import TopologyManager
 
 
@@ -17,7 +16,9 @@ def test_root_cause_analysis_ranking():
     rca = rca_engine.analyze_incident(
         incident_id="inc_100",
         failed_resource_id="db_pool",
-        recent_changes=[{"resource_id": "auth_service", "change_type": "DEPLOYMENT", "timestamp": "2026-08-22T10:00:00Z"}],
+        recent_changes=[
+            {"resource_id": "auth_service", "change_type": "DEPLOYMENT", "timestamp": "2026-08-22T10:00:00Z"}
+        ],
         tenant_id="t_rca",
     )
 

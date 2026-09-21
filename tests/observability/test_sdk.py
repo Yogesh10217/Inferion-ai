@@ -1,7 +1,7 @@
 """SDK unit tests for Python ObservabilityClient."""
 
-import pytest
 import httpx
+
 from sdk.python.llm_engine.observability import ObservabilityClient
 
 

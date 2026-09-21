@@ -2,8 +2,7 @@
 Tests for Event Engine
 """
 
-import pytest
-from app.autonomy.event_engine import EventEngine, AutonomyEvent, AutonomyEventType
+from app.autonomy.event_engine import AutonomyEvent, AutonomyEventType, EventEngine
 
 
 def test_event_engine_subscribe_publish_replay():

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import pytest
-from app.deployment.disaster_recovery import BackupReadinessEvaluator, DisasterRecoveryPlan, RecoveryObjective
+from app.deployment.disaster_recovery import BackupReadinessEvaluator, DisasterRecoveryPlan
 
 
 def test_disaster_recovery_plan_objectives():

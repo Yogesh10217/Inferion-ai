@@ -1,6 +1,5 @@
 """Unit tests for ControlPlaneMetricsCollector."""
 
-import pytest
 from app.control_plane.control_plane_metrics import ControlPlaneMetricsCollector
 
 

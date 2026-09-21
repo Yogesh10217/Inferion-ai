@@ -1,8 +1,7 @@
 """Unit tests for AgentDataFabricAdapter."""
 
-import pytest
-from app.data_fabric.data_source import DataSourceManager, DataSourceType
 from app.data_fabric.agent_integration import AgentDataFabricAdapter
+from app.data_fabric.data_source import DataSourceManager, DataSourceType
 from app.data_fabric.governance import DataClassification
 
 

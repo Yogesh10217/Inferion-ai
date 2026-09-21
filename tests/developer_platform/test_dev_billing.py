@@ -1,6 +1,5 @@
 """Unit tests for DeveloperBillingTracker."""
 
-import pytest
 from app.developer_platform.billing import DeveloperBillingTracker
 
 

@@ -1,7 +1,9 @@
 """Unit tests for JobScheduler."""
 
-import pytest
 import asyncio
+
+import pytest
+
 from app.jobs.job_queue import JobQueue
 from app.jobs.job_scheduler import JobScheduler
 

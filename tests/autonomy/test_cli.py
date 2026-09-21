@@ -2,8 +2,8 @@
 Tests for Autonomy CLI Commands
 """
 
-import pytest
 import argparse
+
 from cli.commands.autonomy import add_autonomy_parser
 from cli.commands.workers import add_workers_parser
 

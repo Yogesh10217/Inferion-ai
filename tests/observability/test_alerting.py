@@ -1,6 +1,7 @@
 """Tests for AlertManager lifecycle."""
 
 import pytest
+
 from app.observability.alerting import AlertManager
 
 

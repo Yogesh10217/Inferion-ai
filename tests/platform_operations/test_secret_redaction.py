@@ -1,6 +1,5 @@
 """Unit tests for Secret Sanitization in Operational Signals."""
 
-import pytest
 from app.platform_operations.signals import SignalManager, SignalSource, SignalType
 from app.security.secrets import SecretManager
 

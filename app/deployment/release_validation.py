@@ -104,7 +104,7 @@ class DeploymentReleaseValidator:
         from app.deployment.deployment_metadata import DeploymentIdentityBuilder
 
         try:
-            identity = DeploymentIdentityBuilder.build_identity(config)
+            DeploymentIdentityBuilder.build_identity(config)
             passed_checks.append("deployment_identity_valid")
             passed_checks.append("production_image_tag_safe")
         except Exception as exc:
@@ -165,7 +165,6 @@ class DeploymentReleaseValidator:
 
         # 9. Empirical Validation Evidence Evaluation
         empirical_staging = False
-        empirical_health = False
         empirical_all_passed = False
 
         if validation_run and validation_run.evidences:
@@ -176,7 +175,6 @@ class DeploymentReleaseValidator:
                 ValidationType.HEALTH_PROBE in ev_map
                 and ev_map[ValidationType.HEALTH_PROBE].status == ValidationStatus.PASSED
             ):
-                empirical_health = True
                 passed_checks.append("health_probes_empirically_validated")
 
             if (

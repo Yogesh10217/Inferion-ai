@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.deployment_execution_evidence import DeploymentExecutionEvidenceCollector
 
 

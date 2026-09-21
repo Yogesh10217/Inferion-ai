@@ -1,8 +1,9 @@
 """Unit tests for OrganizationManager."""
 
 import pytest
-from app.control_plane.organization import OrganizationManager
+
 from app.control_plane.exceptions import OrganizationNotFoundException
+from app.control_plane.organization import OrganizationManager
 
 
 def test_organization_crud_and_members():

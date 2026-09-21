@@ -1,9 +1,8 @@
 """Unit tests for Deterministic Decision Explainability Engine."""
 
-import pytest
 from app.intelligence_platform.decisions import DecisionManager, DecisionOption
-from app.intelligence_platform.recommendations import RecommendationManager, RecommendationType
 from app.intelligence_platform.explainability import ExplainabilityEngine
+from app.intelligence_platform.recommendations import RecommendationManager, RecommendationType
 
 
 def test_deterministic_explanation_generation():
@@ -12,7 +11,9 @@ def test_deterministic_explanation_generation():
     dec = dec_mgr.create_decision("t1", title="Test Decision", options=[opt])
 
     rec_mgr = RecommendationManager()
-    rec = rec_mgr.create_recommendation("t1", RecommendationType.ROLLBACK_DEPLOYMENT, "Title", "Action", "svc_1", "Impact")
+    rec = rec_mgr.create_recommendation(
+        "t1", RecommendationType.ROLLBACK_DEPLOYMENT, "Title", "Action", "svc_1", "Impact"
+    )
 
     engine = ExplainabilityEngine()
     exp = engine.generate_explanation(dec, rec)

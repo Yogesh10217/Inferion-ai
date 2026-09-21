@@ -1,7 +1,6 @@
 """Unit tests for SLOManager measurement, rolling windows, and burn-rates."""
 
-import pytest
-from app.operations.slo import SLOManager, SLOType, SLOStatus
+from app.operations.slo import SLOManager, SLOStatus, SLOType
 
 
 def test_slo_measurement_and_burn_rate():

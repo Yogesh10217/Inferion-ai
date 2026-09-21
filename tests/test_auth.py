@@ -1,19 +1,20 @@
-import pytest
 from datetime import timedelta
 
-from app.auth.jwt_service import JWTService
-from app.auth.password_service import PasswordService
+import pytest
+
 from app.auth.api_key_service import APIKeyService
 from app.auth.exceptions import ExpiredTokenException
-from app.core.database import async_session_maker
+from app.auth.jwt_service import JWTService
 from app.auth.models import User
+from app.auth.password_service import PasswordService
+from app.core.database import async_session_maker
 from app.tenant.models import Membership
 
 
 def test_password_hashing():
     password = "test_user_password_456"
     hashed = PasswordService.get_password_hash(password)
-    
+
     assert password != hashed
     assert PasswordService.verify_password(password, hashed)
     assert not PasswordService.verify_password("wrongpassword", hashed)
@@ -22,7 +23,7 @@ def test_password_hashing():
 def test_jwt_creation_and_verification():
     data = {"sub": "user123"}
     token = JWTService.create_access_token(data)
-    
+
     payload = JWTService.verify_token(token)
     assert payload["sub"] == "user123"
     assert "exp" in payload
@@ -31,7 +32,7 @@ def test_jwt_creation_and_verification():
 def test_jwt_expiry():
     data = {"sub": "user123"}
     token = JWTService.create_access_token(data, expires_delta=timedelta(seconds=-1))
-    
+
     with pytest.raises(ExpiredTokenException):
         JWTService.verify_token(token)
 
@@ -39,7 +40,7 @@ def test_jwt_expiry():
 def test_refresh_token_creation():
     data = {"sub": "user123"}
     token = JWTService.create_refresh_token(data)
-    
+
     payload = JWTService.verify_token(token)
     assert payload["sub"] == "user123"
     assert payload["type"] == "refresh"
@@ -66,13 +67,10 @@ async def test_require_admin_role_enforcement(get_client):
             email="regular@test.com",
             password_hash="hash",
             is_admin=False,
-            is_active=True
+            is_active=True,
         )
         membership = Membership(
-            organization_id="test_org_id",
-            user_id="regular_user_auth_test",
-            role_id="member",
-            status="active"
+            organization_id="test_org_id", user_id="regular_user_auth_test", role_id="member", status="active"
         )
         session.add(non_admin_user)
         session.add(membership)
@@ -89,4 +87,3 @@ async def test_require_admin_role_enforcement(get_client):
         res = await client.get("/v1/admin/users", headers=headers)
         assert res.status_code == 403
         assert "Admin privileges required" in res.json()["detail"]
-

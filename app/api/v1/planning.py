@@ -163,6 +163,6 @@ async def get_plan_billing(id: str):
 async def get_plan_history(id: str):
     if id not in _plans_store:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Plan '{id}' not found")
-    plan = _plans_store[id]
+    _plans_store[id]
     recs = _global_reasoning.reflection_engine.list_recommendations()
     return {"plan_id": id, "history": [r.model_dump() for r in recs]}

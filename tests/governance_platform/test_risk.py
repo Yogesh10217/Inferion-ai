@@ -1,7 +1,6 @@
 """Unit tests for RiskManager assessment and lifecycle management."""
 
-import pytest
-from app.governance_platform.risk import RiskManager, RiskFactor, RiskCategory, RiskSeverity, RiskStatus
+from app.governance_platform.risk import RiskCategory, RiskFactor, RiskManager, RiskSeverity, RiskStatus
 
 
 def test_risk_identification_and_lifecycle():

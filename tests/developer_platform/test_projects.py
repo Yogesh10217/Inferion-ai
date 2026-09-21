@@ -1,6 +1,5 @@
 """Unit tests for ProjectManager."""
 
-import pytest
 from app.developer_platform.project import ProjectManager, ProjectStatus
 
 

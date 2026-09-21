@@ -1,10 +1,9 @@
 """Unit tests for Personalization & Consent Boundaries."""
 
-import pytest
 from app.application_platform.personalization import (
-    PersonalizationEngine,
     ConsentScope,
     ConsentStatus,
+    PersonalizationEngine,
 )
 
 

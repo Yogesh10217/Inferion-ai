@@ -1,9 +1,10 @@
 """Unit tests for AuthenticationManager."""
 
 import pytest
-from app.security.authentication import AuthenticationManager
-from app.security.exceptions import InvalidTokenError, InvalidAPIKeyError, AuthenticationError
+
 from app.auth.jwt_service import JWTService
+from app.security.authentication import AuthenticationManager
+from app.security.exceptions import InvalidTokenError
 
 
 def test_jwt_authentication():

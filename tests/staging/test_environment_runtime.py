@@ -1,8 +1,6 @@
-from app.deployment.environment import EnvironmentManager
+from app.deployment.models import DeploymentEnvironment, EnvironmentConfig
 from app.deployment.profiles import DeploymentProfile
 from app.deployment.secrets import SecretsSanitizer
-from app.deployment.models import DeploymentEnvironment, EnvironmentConfig
-
 
 
 def test_environment_profile_resolution():

@@ -3,9 +3,10 @@ Tests for Model Context Protocol (MCP) Subsystem
 """
 
 import pytest
-from app.tools.mcp.server import MCPServer
+
 from app.tools.mcp.client import MCPClient
 from app.tools.mcp.registry import MCPRegistry
+from app.tools.mcp.server import MCPServer
 from app.tools.mcp.transport import InMemoryTransport
 
 
@@ -55,7 +56,7 @@ async def test_mcp_server_client_in_memory_flow():
 async def test_mcp_registry():
     registry = MCPRegistry()
     server = MCPServer(name="reg-server")
-    client = registry.register_server("srv_1", server)
+    registry.register_server("srv_1", server)
 
     capabilities = await registry.discover_capabilities()
     assert "srv_1" in capabilities

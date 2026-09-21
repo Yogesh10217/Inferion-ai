@@ -1,7 +1,7 @@
 """Integration tests for Operations REST API endpoints."""
 
-import pytest
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
@@ -17,12 +17,15 @@ def test_operations_rest_api_lifecycle():
     assert res_top.status_code == 200
 
     # 3. Create SLO
-    res_slo = client.post("/v1/operations/slos", json={
-        "name": "API Latency SLO",
-        "target_percentage": 99.5,
-        "tenant_id": "t_api_ops",
-        "slo_type": "LATENCY",
-    })
+    res_slo = client.post(
+        "/v1/operations/slos",
+        json={
+            "name": "API Latency SLO",
+            "target_percentage": 99.5,
+            "tenant_id": "t_api_ops",
+            "slo_type": "LATENCY",
+        },
+    )
     assert res_slo.status_code == 201
 
     # 4. List SLOs

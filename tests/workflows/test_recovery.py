@@ -2,7 +2,6 @@
 Tests for Workflow Recovery, Rollback, Replay, and Fork
 """
 
-import pytest
 from app.workflows.checkpoint import CheckpointManager
 from app.workflows.recovery import WorkflowRecoveryManager
 

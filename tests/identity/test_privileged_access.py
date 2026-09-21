@@ -1,7 +1,6 @@
 """Unit tests for Just-In-Time (JIT) privileged access management."""
 
-import pytest
-from app.identity.privileged_access import PrivilegedAccessManager, PrivilegedRole, PrivilegedAccessStatus
+from app.identity.privileged_access import PrivilegedAccessManager, PrivilegedAccessStatus, PrivilegedRole
 
 
 def test_jit_privileged_access_lifecycle():

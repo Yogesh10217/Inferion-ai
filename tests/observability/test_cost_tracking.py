@@ -1,8 +1,7 @@
 """Tests for CostTracker and financial attribution hierarchy."""
 
-import pytest
-from app.observability.cost_tracking import CostTracker
 from app.observability.context import ObservabilityContext
+from app.observability.cost_tracking import CostTracker
 
 
 def test_cost_calculation():

@@ -3,9 +3,10 @@ Tests for DAG Dependency Graph Engine
 """
 
 import pytest
-from app.planning.goals import Task
+
 from app.planning.dependency_graph import DependencyGraph
 from app.planning.exceptions import DependencyResolutionError
+from app.planning.goals import Task
 
 
 def test_dag_topological_sort_and_critical_path():

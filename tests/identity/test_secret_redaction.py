@@ -1,6 +1,5 @@
 """Unit tests for automated SecretManager secret redaction in session & credential metadata."""
 
-import pytest
 from app.security.secrets import SecretManager
 
 

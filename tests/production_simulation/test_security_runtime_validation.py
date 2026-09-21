@@ -1,7 +1,5 @@
-from app.deployment.secrets import SecretsSanitizer
 from app.deployment.deployment_simulation import ProductionSimulationEngine
-
-
+from app.deployment.secrets import SecretsSanitizer
 
 
 def test_security_runtime_headers_and_cors():

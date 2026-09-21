@@ -1,8 +1,9 @@
 """Unit tests for plugin manifest capability boundary enforcement."""
 
 import pytest
-from app.integrations.plugins import PluginManager, PluginManifest
+
 from app.integrations.exceptions import PluginSecurityViolationException
+from app.integrations.plugins import PluginManager, PluginManifest
 
 
 def test_plugin_unauthorized_capability_boundary_violation():

@@ -1,6 +1,5 @@
 """Unit tests for KnowledgeGraphManager nodes and edges."""
 
-import pytest
 from app.knowledge_platform.knowledge_graph import KnowledgeGraphManager, KnowledgeNodeType, KnowledgeRelationship
 
 

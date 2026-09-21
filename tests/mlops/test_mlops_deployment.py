@@ -1,9 +1,10 @@
 """Unit tests for DeploymentManager and approval gating."""
 
 import pytest
-from app.mlops.registry import AIAssetRegistry, AIAssetType
-from app.mlops.deployment import DeploymentManager, DeploymentEnvironment, DeploymentStatus
+
+from app.mlops.deployment import DeploymentEnvironment, DeploymentManager, DeploymentStatus
 from app.mlops.exceptions import GovernanceViolationException
+from app.mlops.registry import AIAssetRegistry, AIAssetType
 
 
 def test_deployment_lifecycle_and_production_approval_gating():

@@ -1,8 +1,8 @@
 import pytest
+
 from app.routing.decision_engine import DecisionEngine
-from app.routing.routing_context import RoutingContext
-from app.routing.routing_policy import RoutingPolicy
 from app.routing.decision_engine_strategy import DecisionEngineRoutingStrategy
+from app.routing.routing_context import RoutingContext
 
 
 def test_decision_engine_pipeline():

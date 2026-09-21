@@ -39,7 +39,7 @@ class PlatformProductionReadinessEngine:
             elif f.severity == PlatformAuditSeverity.MEDIUM:
                 penalty = 8.0
 
-            sub = f.subsystem.lower()
+            f.subsystem.lower()
             rule = f.rule_id.lower()
 
             if "int" in rule or "prov" in rule or "eng" in rule:

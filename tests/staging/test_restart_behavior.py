@@ -1,18 +1,18 @@
-from app.core.container import ServiceContainer
 from app.core.config import get_settings
-from app.deployment.service_registry import PlatformServiceRegistry
+from app.core.container import ServiceContainer
 from app.deployment.manager import DeploymentPlatformManager
+from app.deployment.service_registry import PlatformServiceRegistry
 
 
 def test_service_container_single_instance_invariant():
     """Verifies that ServiceContainer remains the canonical manager container upon re-initialization."""
     settings = get_settings()
     container1 = ServiceContainer(settings)
-    manager1 = DeploymentPlatformManager(container=container1)
+    DeploymentPlatformManager(container=container1)
 
     # Re-initialization simulation
     container2 = ServiceContainer(settings)
-    manager2 = DeploymentPlatformManager(container=container2)
+    DeploymentPlatformManager(container=container2)
 
     registered_names1 = PlatformServiceRegistry.get_registered_manager_names(container1)
     registered_names2 = PlatformServiceRegistry.get_registered_manager_names(container2)
@@ -40,4 +40,3 @@ def test_restart_lifecycles_do_not_duplicate_managers():
 
     assert config1.environment == config2.environment
     assert state1["ready"] == state2["ready"]
-

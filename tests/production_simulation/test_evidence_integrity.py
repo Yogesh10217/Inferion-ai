@@ -1,7 +1,5 @@
-import pytest
 from app.deployment.deployment_simulation import ProductionSimulationEngine
 from app.deployment.secrets import SecretsSanitizer
-
 
 
 def test_evidence_fingerprint_deterministic_and_secret_safe():

@@ -2,7 +2,6 @@
 Tests for Planning Billing Tracker
 """
 
-import pytest
 from app.planning.planning_billing import PlanningBillingTracker
 
 

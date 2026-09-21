@@ -1,6 +1,5 @@
 """Unit tests for Secret Redaction & Sanitization."""
 
-import pytest
 from app.application_platform.interactions import InteractionManager
 
 

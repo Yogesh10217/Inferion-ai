@@ -1,7 +1,6 @@
 """Unit tests for automated secret and sensitive data redaction in telemetry."""
 
-import pytest
-from app.operations.telemetry import TelemetryManager, TelemetryType, TelemetryContext
+from app.operations.telemetry import TelemetryContext, TelemetryManager, TelemetryType
 
 
 def test_secret_redaction_in_telemetry_messages():

@@ -1,4 +1,5 @@
 import logging
+
 from app.core.exceptions import ValidationError
 from app.schemas.request import ChatMessage
 

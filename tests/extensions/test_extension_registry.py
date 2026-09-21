@@ -1,9 +1,7 @@
 """Unit tests for ExtensionRegistry."""
 
-import pytest
 from app.extensions.extension import Extension, ExtensionManifest, ExtensionType
 from app.extensions.extension_registry import ExtensionRegistry
-from app.extensions.exceptions import ExtensionNotFoundException
 
 
 def test_extension_registration_and_tenant_isolation():

@@ -1,8 +1,10 @@
 """Unit tests for Bulkhead."""
 
-import pytest
 import asyncio
-from app.resilience.bulkhead import Bulkhead, BulkheadPolicy, BulkheadFullException
+
+import pytest
+
+from app.resilience.bulkhead import Bulkhead, BulkheadFullException, BulkheadPolicy
 
 
 @pytest.mark.asyncio

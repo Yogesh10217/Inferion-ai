@@ -1,7 +1,6 @@
 """Unit tests for KnowledgeManager creation and versioning."""
 
-import pytest
-from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeType, KnowledgeStatus
+from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeStatus
 
 
 def test_knowledge_item_creation_and_version_update():

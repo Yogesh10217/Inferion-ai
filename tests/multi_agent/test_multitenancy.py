@@ -3,8 +3,9 @@ Tests for Multi-Tenant Isolation & Security Governance
 """
 
 import pytest
-from app.multi_agent.agent_team import AgentTeam, TeamType, TeamExecutionContext
+
 from app.multi_agent.agent_governance import AgentGovernanceEngine
+from app.multi_agent.agent_team import AgentTeam, TeamExecutionContext, TeamType
 from app.multi_agent.exceptions import RolePermissionDenied
 
 

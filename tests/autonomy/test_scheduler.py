@@ -2,8 +2,8 @@
 Tests for Task Scheduler
 """
 
-import pytest
 import time
+
 from app.autonomy.task_scheduler import TaskScheduler
 
 

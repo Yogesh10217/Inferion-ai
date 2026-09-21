@@ -2,7 +2,6 @@
 Tests for Shared Memory Integration (Phase 5.3)
 """
 
-import pytest
 from app.multi_agent.shared_memory import SharedMemoryManager
 
 

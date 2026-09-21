@@ -2,9 +2,8 @@
 Tests for Audit Integrity Engine (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.audit_log import SecurityAuditLogger
 from app.security_operations.audit_integrity import AuditIntegrityEngine, AuditIntegrityResult
+from app.security_operations.audit_log import SecurityAuditLogger
 
 
 def test_audit_integrity_valid_chain():

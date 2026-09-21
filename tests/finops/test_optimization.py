@@ -1,7 +1,7 @@
 """Unit tests for CostOptimizationEngine."""
 
 from decimal import Decimal
-import pytest
+
 from app.finops.optimization import CostOptimizationEngine
 
 

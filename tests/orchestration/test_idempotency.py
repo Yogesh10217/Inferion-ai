@@ -1,8 +1,7 @@
 """Unit tests for execution idempotency keys."""
 
-import pytest
-from app.orchestration.workflow import WorkflowDefinition, WorkflowStep
 from app.orchestration.execution import WorkflowExecutionEngine
+from app.orchestration.workflow import WorkflowDefinition, WorkflowStep
 
 
 def test_idempotent_execution_start():

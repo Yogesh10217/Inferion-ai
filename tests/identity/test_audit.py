@@ -1,6 +1,5 @@
 """Unit tests for IdentityAuditManager event logging."""
 
-import pytest
 from app.identity.audit import IdentityAuditManager
 
 

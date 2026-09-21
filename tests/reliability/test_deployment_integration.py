@@ -2,7 +2,6 @@
 Tests for Integration with Phase 5.67 Deployment Execution.
 """
 
-from app.deployment.rollback import RollbackStrategyEngine
 from app.reliability.recovery_recommendation import RecoveryAction, RecoveryRecommendationEngine
 
 

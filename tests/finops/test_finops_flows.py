@@ -1,9 +1,9 @@
 """Mandatory End-to-End FinOps Integration Flow Verifications."""
 
 from decimal import Decimal
-import pytest
+
+from app.finops.budgets import BudgetAction
 from app.finops.manager import FinOpsManager
-from app.finops.budgets import BudgetAction, BudgetScope, BudgetPeriod
 from app.finops.optimization import OptimizationRiskLevel
 
 
@@ -30,7 +30,9 @@ def test_flow_1_model_cost_e2e_pipeline():
 
 def test_flow_2_budget_block_e2e():
     mgr = FinOpsManager()
-    b = mgr.budget_manager.create_budget("Block Budget", Decimal("1.0"), tenant_id="t_flow2", enforcement_action=BudgetAction.BLOCK)
+    b = mgr.budget_manager.create_budget(
+        "Block Budget", Decimal("1.0"), tenant_id="t_flow2", enforcement_action=BudgetAction.BLOCK
+    )
     mgr.budget_manager.record_usage(b.budget_id, Decimal("1.0"))
 
     dec = mgr.budget_manager.evaluate_execution("t_flow2", Decimal("0.5"))
@@ -40,7 +42,12 @@ def test_flow_2_budget_block_e2e():
 
 def test_flow_3_cheaper_model_fallback_e2e():
     mgr = FinOpsManager()
-    b = mgr.budget_manager.create_budget("Fallback Budget", Decimal("1.0"), tenant_id="t_flow3", enforcement_action=BudgetAction.FALLBACK_TO_CHEAPER_MODEL)
+    b = mgr.budget_manager.create_budget(
+        "Fallback Budget",
+        Decimal("1.0"),
+        tenant_id="t_flow3",
+        enforcement_action=BudgetAction.FALLBACK_TO_CHEAPER_MODEL,
+    )
     mgr.budget_manager.record_usage(b.budget_id, Decimal("1.0"))
 
     dec = mgr.budget_manager.evaluate_execution("t_flow3", Decimal("0.5"))
@@ -85,7 +92,9 @@ def test_flow_5_pricing_version_immutability_e2e():
     cost1 = e1.total_cost
 
     # 2. Update pricing catalog to v2 (Increase prices)
-    mgr.pricing_manager.register_pricing("openai", "gpt-3.5-turbo", input_price=Decimal("0.01"), output_price=Decimal("0.02"), version="2.0.0")
+    mgr.pricing_manager.register_pricing(
+        "openai", "gpt-3.5-turbo", input_price=Decimal("0.01"), output_price=Decimal("0.02"), version="2.0.0"
+    )
 
     # 3. Historical ledger entry remains unchanged!
     assert e1.total_cost == cost1

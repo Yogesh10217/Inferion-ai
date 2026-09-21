@@ -56,7 +56,6 @@ class IntegrationConfiguration(BaseModel):
 
 
 class IntegrationVersion(BaseModel):
-
     version_id: str = Field(default_factory=lambda: f"iver_{uuid.uuid4().hex[:10]}")
     version_number: str = "1.0.0"
     capabilities: List[str] = Field(default_factory=list)

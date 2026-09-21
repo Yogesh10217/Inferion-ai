@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.backup_execution_guard import BackupExecutionGuard
 from app.deployment.models import BackupExecutionStatus
 

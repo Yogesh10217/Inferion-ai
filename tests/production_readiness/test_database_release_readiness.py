@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from app.deployment.configuration import RuntimeConfigurationManager
 from app.deployment.database_readiness import DatabaseReleaseReadinessEvaluator
 

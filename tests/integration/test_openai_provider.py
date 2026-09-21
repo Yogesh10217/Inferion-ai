@@ -1,12 +1,12 @@
-import pytest
-import json
-import httpx
 from unittest.mock import patch
 
-from app.providers.openai_provider import OpenAIProvider
-from app.schemas.request import InferenceRequest, ChatMessage
-from app.schemas.inference_response import InferenceResponse
+import httpx
+import pytest
+
 from app.core.exceptions import ProviderUnavailableException
+from app.providers.openai_provider import OpenAIProvider
+from app.schemas.inference_response import InferenceResponse
+from app.schemas.request import ChatMessage, InferenceRequest
 
 
 @pytest.mark.asyncio
@@ -17,17 +17,10 @@ async def test_openai_provider_real_http_success_parsing():
         "id": "chatcmpl-999",
         "model": "gpt-4o-mini",
         "choices": [
-            {
-                "message": {"role": "assistant", "content": "Hello from mock OpenAI API"},
-                "finish_reason": "stop"
-            }
+            {"message": {"role": "assistant", "content": "Hello from mock OpenAI API"}, "finish_reason": "stop"}
         ],
-        "usage": {
-            "prompt_tokens": 5,
-            "completion_tokens": 6,
-            "total_tokens": 11
-        },
-        "created": 1700000000
+        "usage": {"prompt_tokens": 5, "completion_tokens": 6, "total_tokens": 11},
+        "created": 1700000000,
     }
 
     def custom_handler(request: httpx.Request) -> httpx.Response:
@@ -61,5 +54,5 @@ async def test_openai_provider_error_status_handling():
         req = InferenceRequest(model="gpt-4o-mini", messages=[ChatMessage(role="user", content="Hi")])
         with pytest.raises(ProviderUnavailableException) as exc_info:
             await provider.generate(request=req)
-        
+
         assert "OpenAI error status 401" in str(exc_info.value)

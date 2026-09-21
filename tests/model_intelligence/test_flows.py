@@ -1,38 +1,35 @@
 """Mandatory 20 E2E Integration Flow Tests for Model Intelligence Platform (Phase 5.44)."""
 
 import pytest
+
 from app.model_intelligence import (
-    ModelIntelligenceManager,
-    ModelType,
-    ModelProviderReference,
-    ModelStatus,
-    CrossTenantModelIntelligenceException,
-    EvaluationType,
-    EvaluationMetric,
     BenchmarkResult,
-    ModelDriftType,
+    CrossTenantModelIntelligenceException,
     DriftSeverity,
-    HallucinationType,
+    EvaluationMetric,
+    EvaluationType,
     HallucinationSeverity,
-    SafetyRisk,
-    ModelSecurityRisk,
+    HallucinationType,
+    ModelDriftType,
+    ModelEvidence,
+    ModelGovernanceDecisionStatus,
     ModelIncidentSeverity,
     ModelIncidentStatus,
-    ModelGovernanceDecisionStatus,
-    ModelRemediationPriority,
+    ModelIntelligenceManager,
+    ModelProviderReference,
     ModelRemediationAction,
-    ModelEvidence,
-    QualityScore,
-    QualityDimension,
-    ReliabilityScore,
-    ReliabilityDimension,
-    ModelTrustFactor,
-    ModelTrustDimension,
-    AssuranceDimension,
-    ModelAssuranceScore,
-    CorrelationType,
-    ModelSignalType,
+    ModelRemediationPriority,
+    ModelSecurityRisk,
     ModelSignalSource,
+    ModelSignalType,
+    ModelTrustDimension,
+    ModelTrustFactor,
+    ModelType,
+    QualityDimension,
+    QualityScore,
+    ReliabilityDimension,
+    ReliabilityScore,
+    SafetyRisk,
 )
 
 
@@ -55,7 +52,9 @@ def test_flow_01_model_registration_and_tenant_isolation(manager):
 def test_flow_02_cross_tenant_model_access_blocked(manager):
     """Flow 2: Cross-Tenant Model Access Blocked (ZERO metadata leakage)."""
     prov = ModelProviderReference(provider_id="p-1", provider_name="Anthropic")
-    m1 = manager.registry.register_model(name="Claude-3-5-Sonnet", tenant_id="tenant-alpha", model_type=ModelType.LLM, provider=prov)
+    m1 = manager.registry.register_model(
+        name="Claude-3-5-Sonnet", tenant_id="tenant-alpha", model_type=ModelType.LLM, provider=prov
+    )
 
     with pytest.raises(CrossTenantModelIntelligenceException) as exc_info:
         manager.registry.get_model(m1.model_id, "tenant-beta")
@@ -70,7 +69,9 @@ def test_flow_02_cross_tenant_model_access_blocked(manager):
 def test_flow_03_model_version_comparison(manager):
     """Flow 3: Model Version Comparison."""
     prov = ModelProviderReference(provider_id="p-1", provider_name="Internal")
-    m1 = manager.registry.register_model(name="InternalLLM", tenant_id="tenant-1", model_type=ModelType.LLM, provider=prov)
+    m1 = manager.registry.register_model(
+        name="InternalLLM", tenant_id="tenant-1", model_type=ModelType.LLM, provider=prov
+    )
 
     assessment = manager.version_manager.compare_versions(
         model_id=m1.model_id,
@@ -104,10 +105,14 @@ def test_flow_04_model_evaluation(manager):
 
 def test_flow_05_model_benchmark_comparison(manager):
     """Flow 5: Model Benchmark Comparison."""
-    res1 = BenchmarkResult(model_id="m-1", model_name="Model A", version_tag="1.0.0", suite_name="Reasoning", score=85.0)
-    res2 = BenchmarkResult(model_id="m-2", model_name="Model B", version_tag="1.0.0", suite_name="Reasoning", score=92.0)
+    res1 = BenchmarkResult(
+        model_id="m-1", model_name="Model A", version_tag="1.0.0", suite_name="Reasoning", score=85.0
+    )
+    res2 = BenchmarkResult(
+        model_id="m-2", model_name="Model B", version_tag="1.0.0", suite_name="Reasoning", score=92.0
+    )
 
-    bm = manager.benchmark_manager.run_benchmark(tenant_id="tenant-1", suite_name="Reasoning", results=[res1, res2])
+    manager.benchmark_manager.run_benchmark(tenant_id="tenant-1", suite_name="Reasoning", results=[res1, res2])
     comp = manager.benchmark_manager.compare_models(
         tenant_id="tenant-1",
         suite_name="Reasoning",
@@ -229,7 +234,9 @@ def test_flow_14_high_risk_model_remediation_requires_approval(manager):
 def test_flow_15_delegation_only_enforcement(manager):
     """Flow 15: Delegation-Only Enforcement (No direct model mutation)."""
     act = ModelRemediationAction(action_id="act-1", action_name="rollback_recommendation", target_resource_id="m-1")
-    plan = manager.remediation_manager.create_plan(model_id="m-1", tenant_id="tenant-1", priority=ModelRemediationPriority.HIGH, actions=[act])
+    plan = manager.remediation_manager.create_plan(
+        model_id="m-1", tenant_id="tenant-1", priority=ModelRemediationPriority.HIGH, actions=[act]
+    )
     exec_plan = manager.remediation_manager.execute_plan_via_delegation(plan.plan_id, "tenant-1")
 
     assert len(exec_plan.delegation_requests) == 1

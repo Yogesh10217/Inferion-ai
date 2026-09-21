@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import os
+
 import pytest
 
 from app.core.container import ServiceContainer
 from app.deployment.configuration import RuntimeConfigurationManager
 from app.deployment.configuration_fingerprint import ConfigurationFingerprintEngine
-from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.dependency_validation import DeploymentDependencyValidator
-from app.deployment.diagnostics import DeploymentDiagnosticsEngine
 from app.deployment.environment import EnvironmentManager
 from app.deployment.environment_isolation import EnvironmentIsolationGuard
 from app.deployment.exceptions import (
@@ -18,21 +17,18 @@ from app.deployment.exceptions import (
     StartupLifecycleError,
     UnsafeConfigurationError,
 )
-from app.deployment.health import DeploymentHealthEngine
 from app.deployment.liveness import DeploymentLivenessProbe
 from app.deployment.manager import DeploymentPlatformManager
 from app.deployment.models import (
+    DependencyStatus,
     DeploymentEnvironment,
     DeploymentReleaseStatus,
-    DependencyStatus,
     HealthStatus,
-    PlatformReadinessClassification,
     ShutdownState,
     StartupState,
 )
 from app.deployment.observability_configuration import DeploymentObservabilityValidator
 from app.deployment.profiles import DeploymentProfile
-from app.deployment.readiness import DeploymentReadinessProbe
 from app.deployment.release_validation import DeploymentReleaseValidator
 from app.deployment.runtime_validation import RuntimeConfigurationValidator
 from app.deployment.secrets import EnvironmentSecretProvider
@@ -56,7 +52,7 @@ def test_2_production_configuration_validation():
     os.environ["DEBUG"] = "false"
     os.environ["JWT_SECRET"] = "SuperRandomProductionSecretKey998877665544332211"
     os.environ["DATABASE_URL"] = "postgresql+asyncpg://prod_user:prod_pass@localhost:5432/db"
-    
+
     mgr = EnvironmentManager()
     cfg = mgr.load_environment_config()
     res = RuntimeConfigurationValidator.validate(cfg)
@@ -93,7 +89,7 @@ def test_5_configuration_fingerprint_sanitization():
 def test_6_startup_lifecycle():
     os.environ["DEPLOYMENT_ENV"] = "LOCAL"
     os.environ["DEBUG"] = "true"
-    
+
     startup_mgr = DeploymentStartupManager()
     cfg = startup_mgr.execute_startup()
     assert startup_mgr.state == StartupState.READY
@@ -212,15 +208,15 @@ def test_19_cross_environment_isolation():
 def test_20_full_deployment_lifecycle():
     os.environ["DEPLOYMENT_ENV"] = "LOCAL"
     mgr = DeploymentPlatformManager(environment_override="LOCAL")
-    
+
     config = mgr.startup()
     assert config.environment == DeploymentEnvironment.LOCAL
-    
+
     health = mgr.check_health()
     assert health.status != HealthStatus.UNHEALTHY
-    
+
     readiness = mgr.check_readiness()
     assert readiness["ready"] is True
-    
+
     shutdown = mgr.shutdown()
     assert shutdown == ShutdownState.STOPPED

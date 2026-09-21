@@ -1,16 +1,17 @@
 """Pytest Suite for Production Credentials, Vault, AWS KMS, and LLM Providers."""
 
 import pytest
-from app.security.secrets import (
-    SecretManager,
-    EnvironmentSecretProvider,
-    VaultSecretProvider,
-    AWSSecretsManagerProvider,
-)
-from app.providers.provider_factory import ProviderFactory
-from app.providers.bedrock_provider import BedrockProvider
+
 from app.providers.azure_openai_provider import AzureOpenAIProvider
-from app.schemas.request import InferenceRequest, ChatMessage
+from app.providers.bedrock_provider import BedrockProvider
+from app.providers.provider_factory import ProviderFactory
+from app.schemas.request import ChatMessage, InferenceRequest
+from app.security.secrets import (
+    AWSSecretsManagerProvider,
+    EnvironmentSecretProvider,
+    SecretManager,
+    VaultSecretProvider,
+)
 
 
 def test_environment_secret_provider():
@@ -51,7 +52,7 @@ async def test_bedrock_provider_mock_generate():
     request = InferenceRequest(
         model="anthropic.claude-3-5-sonnet-20240620-v1:0",
         messages=[ChatMessage(role="user", content="Test Bedrock")],
-        metadata={"mock": True}
+        metadata={"mock": True},
     )
     response = await provider.generate(request)
     assert response.provider == "bedrock"
@@ -63,9 +64,7 @@ async def test_bedrock_provider_mock_generate():
 async def test_azure_openai_provider_mock_generate():
     provider = AzureOpenAIProvider()
     request = InferenceRequest(
-        model="gpt-4o",
-        messages=[ChatMessage(role="user", content="Test Azure OpenAI")],
-        metadata={"mock": True}
+        model="gpt-4o", messages=[ChatMessage(role="user", content="Test Azure OpenAI")], metadata={"mock": True}
     )
     response = await provider.generate(request)
     assert response.provider == "azure_openai"

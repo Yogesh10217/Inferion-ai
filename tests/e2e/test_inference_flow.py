@@ -1,6 +1,6 @@
-import pytest
 import json
-from httpx import AsyncClient
+
+import pytest
 
 
 @pytest.mark.asyncio
@@ -9,9 +9,9 @@ async def test_e2e_non_streaming_chat_completion(get_client, admin_token_headers
         "model": "gpt-4o-mini",
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Hello world"}
+            {"role": "user", "content": "Hello world"},
         ],
-        "metadata": {"mock": True}
+        "metadata": {"mock": True},
     }
 
     async with get_client() as client:
@@ -31,11 +31,9 @@ async def test_e2e_non_streaming_chat_completion(get_client, admin_token_headers
 async def test_e2e_streaming_chat_completion(get_client, admin_token_headers):
     payload = {
         "model": "gpt-4o-mini",
-        "messages": [
-            {"role": "user", "content": "Stream test"}
-        ],
+        "messages": [{"role": "user", "content": "Stream test"}],
         "stream": True,
-        "metadata": {"mock": True}
+        "metadata": {"mock": True},
     }
 
     async with get_client() as client:
@@ -67,13 +65,13 @@ async def test_e2e_streaming_chat_completion(get_client, admin_token_headers):
 @pytest.mark.asyncio
 async def test_e2e_inference_service_direct_generation():
     from app.core.container import ServiceContainer
-    from app.schemas.request import InferenceRequest, ChatMessage
+    from app.schemas.request import ChatMessage, InferenceRequest
 
     container = ServiceContainer()
     req = InferenceRequest(
         model="gpt-4o-mini",
         messages=[ChatMessage(role="user", content="Direct generation test")],
-        metadata={"mock": True}
+        metadata={"mock": True},
     )
 
     response = await container.inference_service.generate(req)

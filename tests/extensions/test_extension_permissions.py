@@ -1,9 +1,10 @@
 """Unit tests for ExtensionPermissionEngine capability escalation blocking."""
 
 import pytest
+
+from app.extensions.exceptions import ExtensionSecurityViolationException
 from app.extensions.extension import Extension, ExtensionManifest, ExtensionType
 from app.extensions.extension_permissions import ExtensionPermissionEngine
-from app.extensions.exceptions import ExtensionSecurityViolationException
 
 
 def test_permission_escalation_blocking():

@@ -1,8 +1,7 @@
 """Unit tests for FreshnessEvaluator and Data Fabric CDC event processing."""
 
-import pytest
-from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeStatus
 from app.knowledge_platform.freshness import FreshnessEvaluator, StalenessReason
+from app.knowledge_platform.knowledge import KnowledgeManager, KnowledgeStatus
 
 
 def test_freshness_cdc_event_processing():

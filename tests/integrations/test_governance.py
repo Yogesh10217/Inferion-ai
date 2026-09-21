@@ -1,7 +1,6 @@
 """Unit tests for IntegrationGovernanceEngine and high-risk action approval gating."""
 
-import pytest
-from app.integrations.governance import IntegrationGovernanceEngine, IntegrationDecisionType
+from app.integrations.governance import IntegrationDecisionType, IntegrationGovernanceEngine
 
 
 def test_integration_governance_risk_evaluation():

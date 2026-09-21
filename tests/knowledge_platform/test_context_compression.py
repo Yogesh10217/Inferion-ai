@@ -1,8 +1,7 @@
 """Unit tests for ContextCompressor token reduction."""
 
-import pytest
+from app.knowledge_platform.compression import CompressionStrategy, ContextCompressor
 from app.knowledge_platform.context import ContextWindow
-from app.knowledge_platform.compression import ContextCompressor, CompressionStrategy
 
 
 def test_context_compression_token_savings():

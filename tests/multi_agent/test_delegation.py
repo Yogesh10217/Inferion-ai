@@ -2,9 +2,8 @@
 Tests for Task Delegation Subsystem
 """
 
-import pytest
+from app.multi_agent.agent_delegation import TaskDelegator
 from app.multi_agent.agent_team import AgentTeam, TeamType
-from app.multi_agent.agent_delegation import TaskDelegator, DelegationPolicy, DelegationStrategy
 
 
 def test_task_delegation():

@@ -3,8 +3,9 @@ Tests for Memory Vector Store
 """
 
 import pytest
-from app.memory.memory_vector_store import MemoryVectorStore
+
 from app.memory.exceptions import TenantMemoryIsolationError
+from app.memory.memory_vector_store import MemoryVectorStore
 
 
 def test_memory_vector_store_operations():

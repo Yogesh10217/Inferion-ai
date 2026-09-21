@@ -2,7 +2,6 @@
 Tests for Secret Security Evaluator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.secret_security import SecretSecurityEvaluator, SecretSecurityResult
 
 

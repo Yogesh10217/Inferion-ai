@@ -78,7 +78,7 @@ class JobWorker:
             self.queue.fail(job.job_id, err)
             return
 
-        start_t = time.time()
+        time.time()
         try:
             if asyncio.iscoroutinefunction(handler):
                 res = await handler(**job.payload)

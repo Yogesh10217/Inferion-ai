@@ -1,8 +1,8 @@
 """Unit tests for Unified Cost Ledger and Decimal precision."""
 
 from decimal import Decimal
-import pytest
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
+
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 
 def test_cost_ledger_decimal_precision_and_adjustments():

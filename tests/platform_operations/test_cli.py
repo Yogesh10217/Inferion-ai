@@ -1,7 +1,7 @@
 """Unit tests for CLI Operations commands."""
 
-import pytest
 from click.testing import CliRunner
+
 from cli.commands.operations import operations_cli
 
 

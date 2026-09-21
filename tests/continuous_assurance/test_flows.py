@@ -1,14 +1,15 @@
 """Mandatory 20 End-to-End Test Flows for Continuous Assurance (Phase 5.54)."""
 
 import pytest
-from app.continuous_assurance.manager import ContinuousAssuranceManager
+
 from app.continuous_assurance.exceptions import (
     CrossTenantContinuousAssuranceException,
+    FeedbackLoopException,
     HighRiskContinuousAssuranceActionRequiresApprovalException,
     ImmutableContinuousAssuranceRecordException,
-    FeedbackLoopException,
     InvalidContinuousAssuranceStateTransitionException,
 )
+from app.continuous_assurance.manager import ContinuousAssuranceManager
 from app.continuous_assurance.models import (
     AssuranceLifecycleState,
     ControlEffectivenessStatus,
@@ -51,7 +52,9 @@ def test_flow_02_cross_tenant_access_blocked(manager):
 
 def test_flow_03_observation_normalization(manager):
     """Flow 03: Cross-domain runtime observation normalization."""
-    obs = manager.record_observation("tenant_norm", "identity", "IDENTITY_EVENT", {"token": "secret_abc", "user": "admin"})
+    obs = manager.record_observation(
+        "tenant_norm", "identity", "IDENTITY_EVENT", {"token": "secret_abc", "user": "admin"}
+    )
     normalized = manager.obs_normalizer.normalize(obs)
 
     assert normalized.tenant_id == "tenant_norm"
@@ -75,11 +78,15 @@ def test_flow_05_assurance_lifecycle_transitions(manager):
     from app.continuous_assurance.assurance_lifecycle import AssuranceLifecycleMachine
 
     # Valid transition
-    AssuranceLifecycleMachine.validate_transition(AssuranceLifecycleState.INITIALIZING, AssuranceLifecycleState.MONITORING)
+    AssuranceLifecycleMachine.validate_transition(
+        AssuranceLifecycleState.INITIALIZING, AssuranceLifecycleState.MONITORING
+    )
 
     # Invalid transition raises InvalidContinuousAssuranceStateTransitionException
     with pytest.raises(InvalidContinuousAssuranceStateTransitionException):
-        AssuranceLifecycleMachine.validate_transition(AssuranceLifecycleState.INITIALIZING, AssuranceLifecycleState.RESTORED)
+        AssuranceLifecycleMachine.validate_transition(
+            AssuranceLifecycleState.INITIALIZING, AssuranceLifecycleState.RESTORED
+        )
 
 
 def test_flow_06_control_effectiveness_evaluation(manager):

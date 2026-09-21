@@ -1,6 +1,5 @@
 """Unit tests for refresh token rotation."""
 
-import pytest
 from app.identity.session import SessionManager
 
 

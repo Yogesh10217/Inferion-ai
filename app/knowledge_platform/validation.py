@@ -22,7 +22,6 @@ class ValidationRule(BaseModel):
 
 
 class KnowledgeValidationResult(BaseModel):
-
     validation_id: str = Field(default_factory=lambda: f"val_{uuid.uuid4().hex[:10]}")
     item_id: str
     is_valid: bool = True

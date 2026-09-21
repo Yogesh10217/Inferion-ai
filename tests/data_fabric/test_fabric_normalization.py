@@ -1,6 +1,5 @@
 """Unit tests for DataNormalizer."""
 
-import pytest
 from app.data_fabric.normalization import DataNormalizer, DataTransformation
 
 

@@ -1,8 +1,10 @@
 """Unit tests for TimeoutManager."""
 
-import pytest
 import asyncio
-from app.resilience.timeout import TimeoutManager, TimeoutPolicy, TimeoutException
+
+import pytest
+
+from app.resilience.timeout import TimeoutException, TimeoutManager, TimeoutPolicy
 
 
 @pytest.mark.asyncio

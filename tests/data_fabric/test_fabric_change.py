@@ -1,6 +1,5 @@
 """Unit tests for ChangeDetector."""
 
-import pytest
 from app.data_fabric.change_detection import ChangeDetector, ChangeType
 
 

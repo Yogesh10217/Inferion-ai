@@ -1,9 +1,8 @@
 """Unit tests for Custom Agents, Workflow Templates, and MCP Packages."""
 
-import pytest
-from app.extensions.agent_extension import AgentExtensionAdapter, AgentTemplate, AgentCapabilityManifest
-from app.extensions.workflow_template import WorkflowTemplateEngine, WorkflowTemplate
-from app.extensions.mcp_package import MCPPackageManager, MCPPackage, MCPServerManifest
+from app.extensions.agent_extension import AgentCapabilityManifest, AgentExtensionAdapter, AgentTemplate
+from app.extensions.mcp_package import MCPPackage, MCPPackageManager, MCPServerManifest
+from app.extensions.workflow_template import WorkflowTemplate, WorkflowTemplateEngine
 
 
 def test_agent_workflow_mcp_extensions():
@@ -16,7 +15,6 @@ def test_agent_workflow_mcp_extensions():
     )
     agent = agent_adapter.register_custom_agent_template(tmpl, tenant_id="tenant_ext")
     assert agent.config.name == "Custom Data Agent"
-
 
     # 2. Workflow Template
     wf_engine = WorkflowTemplateEngine()
@@ -34,9 +32,10 @@ def test_agent_workflow_mcp_extensions():
     mcp_mgr = MCPPackageManager()
     mcp_pkg = MCPPackage(
         package_id="mcp_fs",
-        manifest=MCPServerManifest(package_name="filesystem-mcp", command="npx", args=["-y", "@modelcontextprotocol/server-filesystem"]),
+        manifest=MCPServerManifest(
+            package_name="filesystem-mcp", command="npx", args=["-y", "@modelcontextprotocol/server-filesystem"]
+        ),
         tenant_id="tenant_ext",
     )
     mcp_server = mcp_mgr.register_mcp_package(mcp_pkg)
     assert mcp_server.server_info.name == "filesystem-mcp"
-

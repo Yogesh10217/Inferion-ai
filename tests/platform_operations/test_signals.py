@@ -1,7 +1,6 @@
 """Unit tests for Operational Signal Normalization & Ingestion."""
 
-import pytest
-from app.platform_operations.signals import SignalManager, SignalSource, SignalType, SignalSeverity
+from app.platform_operations.signals import SignalManager, SignalSeverity, SignalSource, SignalType
 
 
 def test_signal_ingestion_and_filtering():

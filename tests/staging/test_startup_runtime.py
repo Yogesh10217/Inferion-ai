@@ -1,10 +1,11 @@
 import pytest
-from app.deployment.environment import EnvironmentManager
-from app.deployment.configuration import RuntimeConfigurationManager
-from app.deployment.startup import DeploymentStartupManager
-from app.deployment.models import DeploymentEnvironment, StartupState
-from app.core.container import ServiceContainer
+
 from app.core.config import get_settings
+from app.core.container import ServiceContainer
+from app.deployment.configuration import RuntimeConfigurationManager
+from app.deployment.environment import EnvironmentManager
+from app.deployment.models import DeploymentEnvironment, StartupState
+from app.deployment.startup import DeploymentStartupManager
 
 
 def test_startup_lifecycle_successful():

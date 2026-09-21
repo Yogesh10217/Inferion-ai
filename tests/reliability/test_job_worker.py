@@ -1,7 +1,9 @@
 """Unit tests for JobWorker."""
 
-import pytest
 import asyncio
+
+import pytest
+
 from app.jobs.job import Job
 from app.jobs.job_queue import JobQueue
 from app.jobs.job_worker import JobWorker

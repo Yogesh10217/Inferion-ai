@@ -1,9 +1,8 @@
-import pytest
 from app.tracing.exporter import (
-    ExporterRegistry,
-    ConsoleExporter,
-    OTLPHTTPExporter,
     BatchSpanProcessor,
+    ConsoleExporter,
+    ExporterRegistry,
+    OTLPHTTPExporter,
 )
 
 

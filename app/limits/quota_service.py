@@ -20,7 +20,7 @@ class QuotaService:
         """Evaluate quotas for a specific scope."""
         # Find policy for this scope
         stmt = select(QuotaPolicy).filter(
-            getattr(QuotaPolicy, f"{scope_type}_id") == scope_id, QuotaPolicy.enabled == True
+            getattr(QuotaPolicy, f"{scope_type}_id") == scope_id, QuotaPolicy.enabled
         )
         result = await session.execute(stmt)
         policy = result.scalar_one_or_none()

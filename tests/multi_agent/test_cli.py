@@ -2,8 +2,8 @@
 Tests for CLI Team Commands
 """
 
-import pytest
 import argparse
+
 from cli.commands.teams import add_teams_parser, format_output
 
 

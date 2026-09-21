@@ -1,12 +1,13 @@
 """Unit tests for RateLimiter."""
 
-import pytest
-from app.governance.rate_limiter import RateLimiter, RateLimitPolicy, RateLimitAlgorithm
+from app.governance.rate_limiter import RateLimitAlgorithm, RateLimiter, RateLimitPolicy
 
 
 def test_sliding_window_rate_limiter():
     limiter = RateLimiter()
-    policy = RateLimitPolicy(key_prefix="test_sw", max_requests=2, window_seconds=10, algorithm=RateLimitAlgorithm.SLIDING_WINDOW)
+    policy = RateLimitPolicy(
+        key_prefix="test_sw", max_requests=2, window_seconds=10, algorithm=RateLimitAlgorithm.SLIDING_WINDOW
+    )
 
     res1 = limiter.consume(policy, tenant_id="t1")
     assert res1.allowed is True
@@ -23,7 +24,9 @@ def test_sliding_window_rate_limiter():
 
 def test_token_bucket_rate_limiter():
     limiter = RateLimiter()
-    policy = RateLimitPolicy(key_prefix="test_tb", max_requests=2, window_seconds=60, algorithm=RateLimitAlgorithm.TOKEN_BUCKET)
+    policy = RateLimitPolicy(
+        key_prefix="test_tb", max_requests=2, window_seconds=60, algorithm=RateLimitAlgorithm.TOKEN_BUCKET
+    )
 
     res1 = limiter.consume(policy, tenant_id="t2")
     assert res1.allowed is True

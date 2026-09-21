@@ -1,10 +1,9 @@
 """Unit tests for strict multi-tenant isolation across telemetry, SLOs, alerts, and incidents."""
 
-import pytest
-from app.operations.telemetry import TelemetryManager, TelemetryType, TelemetryContext
-from app.operations.slo import SLOManager
 from app.operations.alerting import AlertManager
 from app.operations.incidents import IncidentManager
+from app.operations.slo import SLOManager
+from app.operations.telemetry import TelemetryContext, TelemetryManager, TelemetryType
 
 
 def test_strict_multi_tenant_isolation():

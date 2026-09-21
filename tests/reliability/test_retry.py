@@ -1,7 +1,7 @@
 """Unit tests for RetryManager."""
 
 import pytest
-import asyncio
+
 from app.resilience.retry import RetryManager, RetryPolicy
 
 

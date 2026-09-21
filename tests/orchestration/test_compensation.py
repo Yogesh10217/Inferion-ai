@@ -1,6 +1,5 @@
 """Unit tests for Saga pattern compensation execution in reverse order."""
 
-import pytest
 from app.orchestration.compensation import CompensationManager, SagaStep, SagaStepStatus
 
 

@@ -1,5 +1,5 @@
-import os
 import pytest
+
 from app.deployment.environment import EnvironmentManager
 from app.deployment.exceptions import UnsafeConfigurationError
 from app.deployment.secrets import EnvironmentSecretProvider, SecretsSanitizer

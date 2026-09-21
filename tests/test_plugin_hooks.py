@@ -1,6 +1,7 @@
 import pytest
-from app.plugins.plugin_manager import PluginManager
+
 from app.plugins.plugin_hooks import PluginHook
+from app.plugins.plugin_manager import PluginManager
 
 
 @pytest.mark.asyncio

@@ -1,8 +1,9 @@
 """Unit tests for SystemHealthManager and GracefulShutdownManager."""
 
 import pytest
-from app.reliability.health import SystemHealthManager
+
 from app.reliability.graceful_shutdown import GracefulShutdownManager
+from app.reliability.health import SystemHealthManager
 
 
 @pytest.mark.asyncio

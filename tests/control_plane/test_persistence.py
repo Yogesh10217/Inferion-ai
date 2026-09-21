@@ -1,7 +1,6 @@
 """Unit tests for Control Plane Database Models."""
 
-import pytest
-from app.control_plane.models import TenantModel, OrganizationModel, WorkspaceModel
+from app.control_plane.models import OrganizationModel, TenantModel, WorkspaceModel
 
 
 def test_control_plane_models_instantiation():
@@ -14,4 +13,3 @@ def test_control_plane_models_instantiation():
 
     w_model = WorkspaceModel(organization_id="o1", tenant_id="t1", name="Model WS", environment="DEVELOPMENT")
     assert w_model.environment == "DEVELOPMENT"
-

@@ -1,7 +1,7 @@
 import pytest
 
-from app.registry.model_registry import InMemoryModelRegistry
 from app.registry.model_metadata import RegisteredModel
+from app.registry.model_registry import InMemoryModelRegistry
 
 
 @pytest.fixture

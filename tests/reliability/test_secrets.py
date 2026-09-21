@@ -1,6 +1,5 @@
 """Unit tests for SecretManager and auto-redaction."""
 
-import pytest
 from app.security.secrets import SecretManager
 
 

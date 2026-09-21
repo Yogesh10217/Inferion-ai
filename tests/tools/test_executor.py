@@ -2,13 +2,15 @@
 Tests for ToolExecutor Subsystem
 """
 
-import pytest
 import asyncio
-from app.tools.tool import BaseTool, ToolMetadata, ToolCategory, RetryPolicy
+
+import pytest
+
+from app.tools.tool import BaseTool, RetryPolicy, ToolMetadata
 from app.tools.tool_context import ToolContext
-from app.tools.tool_result import ToolResult, ToolExecutionStatus
-from app.tools.tool_registry import ToolRegistry
 from app.tools.tool_executor import ToolExecutor
+from app.tools.tool_registry import ToolRegistry
+from app.tools.tool_result import ToolExecutionStatus, ToolResult
 
 
 class SlowTestTool(BaseTool):

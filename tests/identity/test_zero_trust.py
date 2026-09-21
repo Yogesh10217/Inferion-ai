@@ -1,7 +1,6 @@
 """Unit tests for ZeroTrustEngine continuous evaluation."""
 
-import pytest
-from app.identity.zero_trust import ZeroTrustEngine, TrustLevel, ZeroTrustAction
+from app.identity.zero_trust import TrustLevel, ZeroTrustAction, ZeroTrustEngine
 
 
 def test_zero_trust_evaluation_levels():

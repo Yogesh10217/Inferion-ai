@@ -14,7 +14,6 @@ class SecurityTrustDimension(BaseModel):
 
 
 class SecurityTrustScore(BaseModel):
-
     asset_id: str
     tenant_id: str
     score: float  # 0.0 to 100.0

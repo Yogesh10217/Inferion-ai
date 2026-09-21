@@ -2,7 +2,6 @@
 Tests for Critique Engine
 """
 
-import pytest
 from app.reasoning.critique_engine import CritiqueEngine
 
 

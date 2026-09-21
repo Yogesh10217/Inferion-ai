@@ -1,6 +1,7 @@
 import pytest
-from app.plugins.plugin_lifecycle import PluginLifecycleManager, PluginState
+
 from app.plugins.exceptions import PluginLifecycleError
+from app.plugins.plugin_lifecycle import PluginLifecycleManager, PluginState
 
 
 def test_lifecycle_state_machine():

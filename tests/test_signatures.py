@@ -1,7 +1,9 @@
 import time
+
 import pytest
-from app.events.signature_service import SignatureService
+
 from app.events.exceptions import InvalidSignatureException
+from app.events.signature_service import SignatureService
 
 
 def test_signature_generation_and_verification():

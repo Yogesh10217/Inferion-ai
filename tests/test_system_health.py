@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+
 
 @pytest.mark.asyncio
 async def test_system_stats(get_client, admin_token_headers: dict):
@@ -10,6 +10,7 @@ async def test_system_stats(get_client, admin_token_headers: dict):
         assert "organizations" in data
         assert "active" in data["organizations"]
         assert "users" in data
+
 
 @pytest.mark.asyncio
 async def test_health_stats(get_client, admin_token_headers: dict):

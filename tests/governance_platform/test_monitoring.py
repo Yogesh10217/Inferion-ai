@@ -1,6 +1,5 @@
 """Unit tests for GovernanceMonitoringEngine compliance drift scans."""
 
-import pytest
 from app.governance_platform.monitoring import GovernanceMonitoringEngine
 
 

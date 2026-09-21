@@ -1,8 +1,7 @@
 """Tests for StructuredLogger and sensitive secret redaction."""
 
-import pytest
-from app.observability.logging import StructuredLogger, sanitize_value, REDACTED_TEXT
 from app.observability.context import ObservabilityContext, with_context
+from app.observability.logging import REDACTED_TEXT, StructuredLogger, sanitize_value
 
 
 def test_secret_redaction_sanitizer():

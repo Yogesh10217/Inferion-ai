@@ -2,28 +2,24 @@
 
 import pytest
 
-from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
-from app.ai_lifecycle_platform.assets import AIAssetType
+from app.ai_lifecycle_platform.agents import AgentAutonomyLevel
 from app.ai_lifecycle_platform.datasets import DatasetClassification
-from app.ai_lifecycle_platform.models import ModelType, ModelFramework, ModelLifecycleStage
-from app.ai_lifecycle_platform.agents import AgentType, AgentAutonomyLevel
-from app.ai_lifecycle_platform.lineage import LineageRelationshipType
-from app.ai_lifecycle_platform.artifacts import ArtifactType
-from app.ai_lifecycle_platform.gates import GateType, GateStatus
-from app.ai_lifecycle_platform.promotion import PromotionTarget, PromotionStatus
-from app.ai_lifecycle_platform.releases import ReleaseRisk, ReleaseStatus
-from app.ai_lifecycle_platform.deployment import DeploymentTarget
-from app.ai_lifecycle_platform.drift import DriftType, DriftSeverity
-from app.ai_lifecycle_platform.retirement import RetirementReason, RetirementStatus
+from app.ai_lifecycle_platform.drift import DriftSeverity, DriftType
 from app.ai_lifecycle_platform.evidence import LifecycleEvidence
-from app.platform_contracts.governance import GovernanceDecisionStatus
-from app.platform_contracts.delegation import DelegationTarget
 from app.ai_lifecycle_platform.exceptions import (
-    CrossTenantLifecycleAccessException,
-    ImmutableLifecycleRecordException,
-    EvaluationGateFailedException,
     ArtifactIntegrityException,
+    CrossTenantLifecycleAccessException,
+    EvaluationGateFailedException,
+    ImmutableLifecycleRecordException,
 )
+from app.ai_lifecycle_platform.gates import GateType
+from app.ai_lifecycle_platform.lineage import LineageRelationshipType
+from app.ai_lifecycle_platform.manager import AILifecyclePlatformManager
+from app.ai_lifecycle_platform.models import ModelType
+from app.ai_lifecycle_platform.promotion import PromotionStatus, PromotionTarget
+from app.ai_lifecycle_platform.releases import ReleaseStatus
+from app.ai_lifecycle_platform.retirement import RetirementReason, RetirementStatus
+from app.platform_contracts.delegation import DelegationTarget
 
 
 def test_flow1_dataset_to_model_lineage():
@@ -32,8 +28,12 @@ def test_flow1_dataset_to_model_lineage():
     tenant = "tenant_lc_1"
 
     dataset = mgr.dataset_manager.register_dataset(tenant, "Dataset_1", DatasetClassification.INTERNAL)
-    model = mgr.model_manager.register_model(tenant, "Model_1", ModelType.LLM, dataset_version_ids=[dataset.versions[0].version_id])
-    lineage = mgr.lineage_manager.record_lineage(tenant, dataset.dataset_id, model.model_id, LineageRelationshipType.TRAINED_ON)
+    model = mgr.model_manager.register_model(
+        tenant, "Model_1", ModelType.LLM, dataset_version_ids=[dataset.versions[0].version_id]
+    )
+    lineage = mgr.lineage_manager.record_lineage(
+        tenant, dataset.dataset_id, model.model_id, LineageRelationshipType.TRAINED_ON
+    )
 
     assert lineage.edges[0].source_node_id == dataset.dataset_id
     assert lineage.edges[0].target_node_id == model.model_id
@@ -52,7 +52,13 @@ def test_flow2_model_promotion_success():
     gate = mgr.gate_manager.create_gate(tenant, "Gate_2", GateType.SECURITY)
     gate_evals = mgr.gate_manager.evaluate_gates(tenant, [gate.gate_id], gate_override_pass=True)
 
-    prom_req = mgr.promotion_manager.request_promotion(tenant, model.model_id, PromotionTarget.STAGING, evaluations_passed=eval_run.overall_passed, gate_evaluations=gate_evals)
+    prom_req = mgr.promotion_manager.request_promotion(
+        tenant,
+        model.model_id,
+        PromotionTarget.STAGING,
+        evaluations_passed=eval_run.overall_passed,
+        gate_evaluations=gate_evals,
+    )
     release = mgr.release_manager.create_release(tenant, "Release_2", model.model_id)
 
     assert prom_req.status == PromotionStatus.APPROVED
@@ -69,7 +75,9 @@ def test_flow3_hard_gate_blocks_promotion():
     gate_evals = mgr.gate_manager.evaluate_gates(tenant, [gate.gate_id], gate_override_pass=False)
 
     with pytest.raises(EvaluationGateFailedException):
-        mgr.promotion_manager.request_promotion(tenant, model.model_id, PromotionTarget.PRODUCTION, gate_evaluations=gate_evals)
+        mgr.promotion_manager.request_promotion(
+            tenant, model.model_id, PromotionTarget.PRODUCTION, gate_evaluations=gate_evals
+        )
 
 
 def test_flow4_high_risk_production_requires_approval():
@@ -78,7 +86,9 @@ def test_flow4_high_risk_production_requires_approval():
     tenant = "tenant_lc_4"
 
     model = mgr.model_manager.register_model(tenant, "Model_4")
-    prom_req = mgr.promotion_manager.request_promotion(tenant, model.model_id, PromotionTarget.PRODUCTION, is_high_risk=True)
+    prom_req = mgr.promotion_manager.request_promotion(
+        tenant, model.model_id, PromotionTarget.PRODUCTION, is_high_risk=True
+    )
 
     assert prom_req.status == PromotionStatus.REQUIRE_APPROVAL
 
@@ -89,7 +99,9 @@ def test_flow5_agent_autonomy_governance():
     tenant = "tenant_lc_5"
 
     ag1 = mgr.agent_manager.register_agent(tenant, "Assisted_Agent", autonomy_level=AgentAutonomyLevel.ASSISTED)
-    ag2 = mgr.agent_manager.register_agent(tenant, "Autonomous_Agent", autonomy_level=AgentAutonomyLevel.LIMITED_AUTONOMOUS)
+    ag2 = mgr.agent_manager.register_agent(
+        tenant, "Autonomous_Agent", autonomy_level=AgentAutonomyLevel.LIMITED_AUTONOMOUS
+    )
 
     assert not mgr.agent_manager.requires_governance_evaluation(ag1)
     assert mgr.agent_manager.requires_governance_evaluation(ag2)
@@ -194,7 +206,12 @@ def test_flow14_secret_redaction():
     mgr = AILifecyclePlatformManager()
     tenant = "tenant_lc_14"
 
-    ev = LifecycleEvidence(tenant_id=tenant, source="EVALUATOR", content_reference="ref_14", metadata={"api_key": "sk_live_12345", "password": "secret_password"})
+    ev = LifecycleEvidence(
+        tenant_id=tenant,
+        source="EVALUATOR",
+        content_reference="ref_14",
+        metadata={"api_key": "sk_live_12345", "password": "secret_password"},
+    )
     bundle = mgr.evidence_manager.create_evidence_bundle(tenant, "Bundle_14", [ev])
 
     assert bundle.evidences[0].metadata["api_key"] == "[REDACTED]"

@@ -1,6 +1,5 @@
 """Unit tests for KnowledgeValidationEngine."""
 
-import pytest
 from app.knowledge_platform.knowledge import KnowledgeItem, KnowledgeVersion
 from app.knowledge_platform.validation import KnowledgeValidationEngine
 

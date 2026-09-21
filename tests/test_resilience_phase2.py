@@ -1,18 +1,16 @@
-import pytest
-import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
-from app.providers.openai_provider import OpenAIProvider
-from app.providers.ollama_provider import OllamaProvider
-from app.resilience.circuit_breaker import CircuitBreakerRegistry, CircuitBreakerOpenException, CircuitState
-from app.resilience.bulkhead import BulkheadRegistry, BulkheadFullException
-from app.services.dead_letter_queue import DeadLetterQueue, DLQEntry
-from app.services.batching.batch_executor import BatchExecutor
-from app.services.batching.batch_entry import Batch, BatchKey
-from app.services.request_scheduler import QueueEntry
-from app.routing.request_router import RoutingDecision
-from app.schemas.request import InferenceRequest, ChatMessage
+import pytest
+
 from app.core.exceptions import ProviderUnavailableException
+from app.resilience.bulkhead import BulkheadRegistry
+from app.resilience.circuit_breaker import CircuitBreakerRegistry, CircuitState
+from app.routing.request_router import RoutingDecision
+from app.schemas.request import ChatMessage, InferenceRequest
+from app.services.batching.batch_entry import Batch, BatchKey
+from app.services.batching.batch_executor import BatchExecutor
+from app.services.dead_letter_queue import DeadLetterQueue, DLQEntry
+from app.services.request_scheduler import QueueEntry
 
 
 @pytest.mark.asyncio

@@ -1,6 +1,5 @@
 """Unit tests for Application Analytics Engine."""
 
-import pytest
 from app.application_platform.analytics import ApplicationAnalyticsEngine
 
 

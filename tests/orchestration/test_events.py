@@ -1,6 +1,5 @@
 """Unit tests for EventRouter correlation and deduplication."""
 
-import pytest
 from app.orchestration.events import EventRouter
 
 

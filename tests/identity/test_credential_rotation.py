@@ -1,6 +1,5 @@
 """Unit tests for CredentialManager automated credential rotation."""
 
-import pytest
 from app.identity.credentials import CredentialManager, CredentialStatus
 
 

@@ -1,6 +1,5 @@
 """Unit tests for GovernanceReportGenerator audit package generation."""
 
-import pytest
 from app.governance_platform.reporting import GovernanceReportGenerator
 
 

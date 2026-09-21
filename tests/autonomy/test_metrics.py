@@ -2,12 +2,11 @@
 Tests for Autonomy Prometheus Metrics
 """
 
-import pytest
 from app.autonomy.execution_metrics import (
-    autonomous_runs_total,
+    autonomous_checkpoints_total,
     autonomous_runs_active,
     autonomous_runs_completed,
-    autonomous_checkpoints_total,
+    autonomous_runs_total,
 )
 
 

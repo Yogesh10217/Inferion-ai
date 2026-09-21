@@ -1,6 +1,5 @@
 """Unit tests for ExperimentManager and A/B Testing."""
 
-import pytest
 from app.mlops.experiments import ExperimentManager
 
 

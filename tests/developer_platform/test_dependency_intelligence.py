@@ -1,6 +1,7 @@
 """Unit tests for DependencyManager."""
 
 import pytest
+
 from app.developer_platform.dependency_intelligence import DependencyManager
 from app.developer_platform.exceptions import DependencyRiskViolationException
 

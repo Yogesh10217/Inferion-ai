@@ -1,6 +1,5 @@
 """Unit tests for FailurePredictionEngine."""
 
-import pytest
 from app.operations.prediction import FailurePredictionEngine, PredictionRiskLevel
 
 

@@ -1,7 +1,6 @@
 """Unit tests for ComplianceManager assessments and legal disclaimer verification."""
 
-import pytest
-from app.governance_platform.compliance import ComplianceManager, FrameworkType, ComplianceStatus
+from app.governance_platform.compliance import ComplianceManager, FrameworkType
 
 
 def test_compliance_assessment_and_disclaimer():

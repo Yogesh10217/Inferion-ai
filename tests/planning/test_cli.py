@@ -2,8 +2,8 @@
 Tests for CLI Planning Commands
 """
 
-import pytest
 import argparse
+
 from cli.commands.planning import add_planning_parser, format_output
 
 

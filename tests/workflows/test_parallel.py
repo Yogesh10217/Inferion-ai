@@ -3,8 +3,9 @@ Tests for Parallel Path Concurrency Execution Engine
 """
 
 import pytest
+
+from app.workflows.node import AgentNode, NodeStatus, ToolNode
 from app.workflows.parallel import ParallelExecutor
-from app.workflows.node import AgentNode, ToolNode, NodeStatus
 
 
 @pytest.mark.asyncio

@@ -1,9 +1,9 @@
 """Unit tests for CostAnalyticsEngine."""
 
 from decimal import Decimal
-import pytest
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
+
 from app.finops.analytics import CostAnalyticsEngine
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 
 def test_cost_analytics_reporting_and_breakdown():

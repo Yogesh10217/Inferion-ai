@@ -1,8 +1,9 @@
 import pytest
-from app.core.database import async_session_maker
+
+from app.admin.exceptions import ResourceNotFoundException
 from app.admin.organization_service import OrganizationAdminService
 from app.admin.workspace_service import WorkspaceAdminService
-from app.admin.exceptions import ResourceNotFoundException
+from app.core.database import async_session_maker
 
 
 @pytest.mark.asyncio
@@ -19,7 +20,7 @@ async def test_workspace_crud_lifecycle():
             name="Production Workspace",
             organization_id=org.id,
             slug="prod-ws",
-            description="Production environments workspace"
+            description="Production environments workspace",
         )
         assert ws.id is not None
         assert ws.name == "Production Workspace"

@@ -85,7 +85,7 @@ class KnowledgeGapManager:
         tenant_id: str,
         domain: str = "GLOBAL",
     ) -> List[KnowledgeGap]:
-        g1 = self.create_gap(
+        self.create_gap(
             tenant_id=tenant_id,
             gap_type=KnowledgeGapType.MISSING_DOCUMENTATION,
             title=f"Missing SOP for {domain}",

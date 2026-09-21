@@ -2,7 +2,6 @@
 Tests for TeamBillingTracker Usage Accounting
 """
 
-import pytest
 from app.multi_agent.agent_billing import TeamBillingTracker
 
 

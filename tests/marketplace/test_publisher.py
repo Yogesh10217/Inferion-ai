@@ -1,8 +1,6 @@
 """Unit tests for PublisherManager."""
 
-import pytest
 from app.marketplace.publisher import PublisherManager
-from app.marketplace.exceptions import PublisherNotFoundException
 
 
 def test_publisher_registration_and_verification():

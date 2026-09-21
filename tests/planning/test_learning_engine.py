@@ -2,7 +2,6 @@
 Tests for Learning Engine
 """
 
-import pytest
 from app.learning.learning_engine import LearningEngine
 
 

@@ -1,6 +1,6 @@
-import os
 import pytest
 from fastapi.testclient import TestClient
+
 from app.core.config import get_settings
 from app.main import create_app
 
@@ -75,7 +75,7 @@ def test_production_cors_edge_cases(monkeypatch):
 
     # C. Empty origin list
     get_settings.cache_clear()
-    monkeypatch.setenv("CORS_ORIGINS", '[]')
+    monkeypatch.setenv("CORS_ORIGINS", "[]")
     with pytest.raises(ValueError) as exc:
         create_app()
     assert "CORS_POLICY_VIOLATION" in str(exc.value)
@@ -96,9 +96,10 @@ def test_production_cors_edge_cases(monkeypatch):
 
 
 def test_untrusted_proxy_header_safety(monkeypatch):
-    from app.core.middleware import SecurityHeadersMiddleware
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
+
+    from app.core.middleware import SecurityHeadersMiddleware
 
     app = FastAPI()
     app.add_middleware(SecurityHeadersMiddleware, enable_hsts=True, trust_proxies=False)
@@ -111,6 +112,3 @@ def test_untrusted_proxy_header_safety(monkeypatch):
     response = client.get("/test", headers={"X-Forwarded-Proto": "http"})
     assert response.status_code == 200
     assert response.headers.get("Strict-Transport-Security") == "max-age=31536000; includeSubDomains"
-
-
-

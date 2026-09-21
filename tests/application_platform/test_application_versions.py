@@ -1,9 +1,10 @@
 """Unit tests for Application Version Immutability & Fingerprinting."""
 
 import pytest
+
 from app.application_platform.application import (
-    ApplicationRegistry,
     ApplicationConfiguration,
+    ApplicationRegistry,
     ApplicationStatus,
 )
 from app.application_platform.exceptions import ImmutableVersionException

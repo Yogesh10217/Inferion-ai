@@ -32,13 +32,7 @@ class DataSourceKnowledgeAdapter:
         indexed_count = 0
         for rec in records:
             # Construct text document payload for vector embedding
-            doc_text = f"Source: {data_source.name}\n" + "\n".join(f"{k}: {v}" for k, v in rec.payload.items())
-            metadata = {
-                "source_id": data_source.id,
-                "tenant_id": data_source.tenant_id,
-                "record_id": rec.record_id,
-                "source_record_id": rec.source_record_id,
-            }
+            f"Source: {data_source.name}\n" + "\n".join(f"{k}: {v}" for k, v in rec.payload.items())
 
             indexed_count += 1
 

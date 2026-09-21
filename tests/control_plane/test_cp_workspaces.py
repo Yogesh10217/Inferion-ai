@@ -1,8 +1,9 @@
 """Unit tests for WorkspaceManager."""
 
 import pytest
-from app.control_plane.workspace import WorkspaceManager, WorkspaceEnvironment
+
 from app.control_plane.exceptions import WorkspaceNotFoundException
+from app.control_plane.workspace import WorkspaceEnvironment, WorkspaceManager
 
 
 def test_workspace_crud_and_archiving():

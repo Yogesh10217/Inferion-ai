@@ -2,8 +2,8 @@
 Tests for Chaos Experiment Idempotency.
 """
 
-from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 from app.reliability.chaos_engine import ChaosEngineeringEngine, ChaosExperiment
+from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 
 
 def test_chaos_experiment_idempotency():

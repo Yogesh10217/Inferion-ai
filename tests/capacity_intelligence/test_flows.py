@@ -1,15 +1,14 @@
 """Comprehensive End-to-End Test Suite for Phase 5.56 Capacity Intelligence Platform (22 Test Flows)."""
 
 import pytest
-import datetime
-from app.capacity_intelligence.manager import CapacityIntelligenceManager
+
 from app.capacity_intelligence.exceptions import (
     CrossTenantCapacityIntelligenceException,
     HighRiskCapacityActionRequiresApprovalException,
     ImmutableCapacityIntelligenceRecordException,
-    CapacityIntelligenceProviderException,
 )
-from app.capacity_intelligence.models import RiskLevel, DelegationStatus, GovernanceDecision
+from app.capacity_intelligence.manager import CapacityIntelligenceManager
+from app.capacity_intelligence.models import DelegationStatus, GovernanceDecision, RiskLevel
 
 
 @pytest.fixture
@@ -37,7 +36,7 @@ def test_flow_01_resource_registration(manager):
 def test_flow_02_telemetry_ingestion(manager):
     tel1 = manager.ingest_telemetry("tenant_a", "res-gpu-cluster-1", "utilization_percent", 82.5)
     tel2 = manager.ingest_telemetry("tenant_a", "res-gpu-cluster-1", "memory_used_gb", 720.0)
-    
+
     assert tel1.telemetry_id.startswith("tel-")
     assert tel1.value == 82.5
     assert tel2.value == 720.0
@@ -229,7 +228,9 @@ def test_flow_18_delegation_request(manager):
         manager.execute_delegation(tenant_id="tenant_a", delegation_id=del_req.delegation_id)
 
     # Approving delegation enables execution
-    approved_req = manager.approve_delegation(tenant_id="tenant_a", delegation_id=del_req.delegation_id, approver_id="usr_cloud_admin")
+    approved_req = manager.approve_delegation(
+        tenant_id="tenant_a", delegation_id=del_req.delegation_id, approver_id="usr_cloud_admin"
+    )
     assert approved_req.status == DelegationStatus.APPROVED
 
     exec_res = manager.execute_delegation(tenant_id="tenant_a", delegation_id=del_req.delegation_id)
@@ -280,5 +281,5 @@ def test_flow_22_cross_tenant_isolation(manager):
     # Tenant B accessing Tenant A's evidence raises CrossTenantCapacityIntelligenceException with no metadata leakage
     with pytest.raises(CrossTenantCapacityIntelligenceException) as exc_info:
         manager.get_evidence("tenant_b", eb.bundle_id)
-    
+
     assert "Access denied" in str(exc_info.value)

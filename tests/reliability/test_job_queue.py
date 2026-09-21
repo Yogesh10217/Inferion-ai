@@ -1,7 +1,6 @@
 """Unit tests for JobQueue."""
 
-import pytest
-from app.jobs.job import Job, JobStatus, JobPriority
+from app.jobs.job import Job, JobPriority, JobStatus
 from app.jobs.job_queue import JobQueue
 
 

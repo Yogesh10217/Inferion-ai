@@ -54,7 +54,6 @@ class KnowledgeSource(BaseModel):
 
 
 class KnowledgeVersion(BaseModel):
-
     version_id: str = Field(default_factory=lambda: f"kver_{uuid.uuid4().hex[:10]}")
     version_number: int = 1
     content: str

@@ -1,9 +1,10 @@
 """Unit tests for RBAC & Administrative Permission enforcement."""
 
 import pytest
-from app.security.identity import UserIdentity
+
 from app.security.authorization import AuthorizationEngine
 from app.security.exceptions import PermissionDeniedError
+from app.security.identity import UserIdentity
 
 
 def test_administrative_permission_enforcement():

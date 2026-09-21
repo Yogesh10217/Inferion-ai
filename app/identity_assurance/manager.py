@@ -107,7 +107,7 @@ class IdentityAssuranceManager:
         return self.identity_manager.get_identity(tenant_id, identity_id)
 
     def evaluate_identity_assurance(self, tenant_id: str, identity_id: str) -> IdentityAssuranceScore:
-        identity = self.identity_manager.get_identity(tenant_id, identity_id)
+        self.identity_manager.get_identity(tenant_id, identity_id)
         trust = self.trust_engine.assess_trust(tenant_id, identity_id)
         assurance = self.assurance_engine.assess_assurance(
             tenant_id=tenant_id,

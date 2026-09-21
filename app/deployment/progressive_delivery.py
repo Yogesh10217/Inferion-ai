@@ -75,7 +75,7 @@ class ProgressiveDeliveryEngine:
         plan.status = ProgressiveDeliveryState.TRAFFIC_PROMOTING
 
         # 1. Promote traffic
-        promo_res = traffic_promoter_fn(target_pct)
+        traffic_promoter_fn(target_pct)
 
         # 2. Validate traffic health at current step
         val_res = validation_fn(target_pct)

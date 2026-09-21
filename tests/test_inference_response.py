@@ -1,8 +1,8 @@
 import pytest
 
 from app.adapters.openai_response_adapter import OpenAIResponseAdapter
-from app.providers.openai_provider import OpenAIProvider
 from app.providers.ollama_provider import OllamaProvider
+from app.providers.openai_provider import OpenAIProvider
 from app.schemas.inference_response import InferenceResponse, Usage
 
 

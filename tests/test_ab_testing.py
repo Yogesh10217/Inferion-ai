@@ -1,6 +1,5 @@
-import pytest
-from app.routing.routing_rules import RuleEngine, RoutingRule
 from app.routing.routing_context import RoutingContext
+from app.routing.routing_rules import RoutingRule, RuleEngine
 
 
 def test_routing_rules_evaluation():

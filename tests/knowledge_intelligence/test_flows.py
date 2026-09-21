@@ -1,23 +1,21 @@
 """Mandatory 16 E2E Verification Test Flows for Knowledge Intelligence Platform (Phase 5.35)."""
 
-import pytest
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
-from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
-from app.knowledge_intelligence.knowledge import KnowledgeType, KnowledgeClassification, KnowledgeStatus
-from app.knowledge_intelligence.sources import KnowledgeSourceType
-from app.knowledge_intelligence.provenance import ProvenanceType, ProvenanceReference
-from app.knowledge_intelligence.relationships import RelationshipType, RelationshipStrength
-from app.knowledge_intelligence.contradictions import ContradictionType, ContradictionSeverity
-from app.knowledge_intelligence.freshness import FreshnessStatus
-from app.platform_contracts.governance import GovernanceDecisionStatus
-from app.platform_contracts.delegation import DelegationTarget
+import pytest
+
 from app.knowledge_intelligence.exceptions import (
     CrossTenantKnowledgeAccessException,
-    KnowledgeNotFoundException,
     KnowledgeAccessDeniedException,
-    ImmutableKnowledgeRecordException,
 )
+from app.knowledge_intelligence.freshness import FreshnessStatus
+from app.knowledge_intelligence.knowledge import KnowledgeClassification, KnowledgeStatus, KnowledgeType
+from app.knowledge_intelligence.manager import KnowledgeIntelligenceManager
+from app.knowledge_intelligence.provenance import ProvenanceReference, ProvenanceType
+from app.knowledge_intelligence.relationships import RelationshipType
+from app.knowledge_intelligence.sources import KnowledgeSourceType
+from app.platform_contracts.delegation import DelegationTarget
+from app.platform_contracts.governance import GovernanceDecisionStatus
 
 
 def test_flow1_register_cross_platform_knowledge():
@@ -25,11 +23,27 @@ def test_flow1_register_cross_platform_knowledge():
     mgr = KnowledgeIntelligenceManager()
     tenant = "tenant_k1"
 
-    src_dg = mgr.source_manager.register_source(tenant, "DataGovSource", source_type=KnowledgeSourceType.DATA_GOVERNANCE)
-    src_sec = mgr.source_manager.register_source(tenant, "SecuritySource", source_type=KnowledgeSourceType.SECURITY_INTELLIGENCE)
+    src_dg = mgr.source_manager.register_source(
+        tenant, "DataGovSource", source_type=KnowledgeSourceType.DATA_GOVERNANCE
+    )
+    src_sec = mgr.source_manager.register_source(
+        tenant, "SecuritySource", source_type=KnowledgeSourceType.SECURITY_INTELLIGENCE
+    )
 
-    kitem_dg = mgr.knowledge_manager.register_knowledge(tenant, "PII Classification Rule", knowledge_type=KnowledgeType.POLICY, source_system=src_dg.name, external_id=src_dg.source_id)
-    kitem_sec = mgr.knowledge_manager.register_knowledge(tenant, "Vulnerability Finding #402", knowledge_type=KnowledgeType.SECURITY_FINDING, source_system=src_sec.name, external_id=src_sec.source_id)
+    kitem_dg = mgr.knowledge_manager.register_knowledge(
+        tenant,
+        "PII Classification Rule",
+        knowledge_type=KnowledgeType.POLICY,
+        source_system=src_dg.name,
+        external_id=src_dg.source_id,
+    )
+    kitem_sec = mgr.knowledge_manager.register_knowledge(
+        tenant,
+        "Vulnerability Finding #402",
+        knowledge_type=KnowledgeType.SECURITY_FINDING,
+        source_system=src_sec.name,
+        external_id=src_sec.source_id,
+    )
 
     assert kitem_dg.reference.source_system == "DataGovSource"
     assert kitem_sec.reference.source_system == "SecuritySource"
@@ -42,13 +56,13 @@ def test_flow2_provenance_chain():
     mgr = KnowledgeIntelligenceManager()
     tenant = "tenant_k2"
 
-    src = mgr.source_manager.register_source(tenant, "DocStore", source_type=KnowledgeSourceType.KNOWLEDGE_PLATFORM)
+    mgr.source_manager.register_source(tenant, "DocStore", source_type=KnowledgeSourceType.KNOWLEDGE_PLATFORM)
     doc_item = mgr.knowledge_manager.register_knowledge(tenant, "Raw Doc Standard")
 
-    p1 = mgr.provenance_manager.record_provenance(tenant, doc_item.item_id, ProvenanceType.SOURCE)
-    
+    mgr.provenance_manager.record_provenance(tenant, doc_item.item_id, ProvenanceType.SOURCE)
+
     ev_item = mgr.evidence_manager.create_evidence(tenant, doc_item.item_id)
-    p2 = mgr.provenance_manager.record_provenance(
+    mgr.provenance_manager.record_provenance(
         tenant,
         ev_item.evidence_id,
         ProvenanceType.DERIVED,
@@ -75,7 +89,6 @@ def test_flow3_cross_tenant_access_blocked():
         mgr.provenance_manager.get_provenance_chain(item_a.item_id, "tenant_b")
 
 
-
 def test_flow4_deterministic_normalization():
     """Flow 4: Equivalent knowledge metadata produces deterministic normalization."""
     mgr = KnowledgeIntelligenceManager()
@@ -98,7 +111,9 @@ def test_flow5_knowledge_graph_traversal():
     node_a = mgr.knowledge_manager.register_knowledge(tenant, "Node A Architecture")
     node_b = mgr.knowledge_manager.register_knowledge(tenant, "Node B Component")
 
-    rel = mgr.relationship_manager.create_relationship(tenant, node_a.item_id, node_b.item_id, RelationshipType.DEPENDS_ON)
+    rel = mgr.relationship_manager.create_relationship(
+        tenant, node_a.item_id, node_b.item_id, RelationshipType.DEPENDS_ON
+    )
     mgr.graph_manager.add_node(tenant, node_a.item_id, "Node A Architecture")
     mgr.graph_manager.add_node(tenant, node_b.item_id, "Node B Component")
     mgr.graph_manager.add_edge(tenant, rel)
@@ -127,9 +142,9 @@ def test_flow7_stale_knowledge_detection():
 
     old_date = datetime.now(timezone.utc) - timedelta(days=120)
     kitem = mgr.knowledge_manager.register_knowledge(tenant, "Old Legacy Manual")
-    
+
     fresh_eval = mgr.freshness_manager.evaluate_freshness(tenant, kitem.item_id, old_date)
-    trust_score = mgr.trust_engine.evaluate_trust(tenant, kitem.item_id, is_fresh=False)
+    mgr.trust_engine.evaluate_trust(tenant, kitem.item_id, is_fresh=False)
 
     assert fresh_eval.freshness.status == FreshnessStatus.STALE
     assert fresh_eval.trust_reduction_factor < 1.0
@@ -169,7 +184,9 @@ def test_flow9_governed_retrieval():
         query="Secret Policy",
         constraints=RetrievalConstraint(max_classification=KnowledgeClassification.INTERNAL),
     )
-    restricted_item = mgr.knowledge_manager.register_knowledge(tenant, "Top Secret Data", classification=KnowledgeClassification.CRITICAL)
+    restricted_item = mgr.knowledge_manager.register_knowledge(
+        tenant, "Top Secret Data", classification=KnowledgeClassification.CRITICAL
+    )
 
     res = mgr.retrieval_manager.plan_and_retrieve(req, [restricted_item], is_authorized=True)
     assert len(res.items) == 0  # Filtered due to classification constraint
@@ -197,7 +214,9 @@ def test_flow11_high_risk_recommendation_requires_approval():
     tenant = "tenant_k11"
 
     kitem = mgr.knowledge_manager.register_knowledge(tenant, "Core Security Arch")
-    gov_dec = mgr.governance_engine.evaluate_action_governance(tenant, kitem.item_id, "PURGE_KNOWLEDGE", is_high_risk=True)
+    gov_dec = mgr.governance_engine.evaluate_action_governance(
+        tenant, kitem.item_id, "PURGE_KNOWLEDGE", is_high_risk=True
+    )
 
     assert gov_dec.status == GovernanceDecisionStatus.REQUIRE_APPROVAL
     assert gov_dec.approval_request_id is not None
@@ -208,10 +227,14 @@ def test_flow12_delegation_only_enforcement():
     mgr = KnowledgeIntelligenceManager()
     tenant = "tenant_k12"
 
-    gov_dec = mgr.governance_engine.evaluate_action_governance(tenant, "item_12", "MUTATE_DATABASE", attempts_direct_mutation=True)
+    gov_dec = mgr.governance_engine.evaluate_action_governance(
+        tenant, "item_12", "MUTATE_DATABASE", attempts_direct_mutation=True
+    )
     assert gov_dec.status == GovernanceDecisionStatus.BLOCK
 
-    del_plan = mgr.delegation_manager.delegate_action(tenant, "item_12", target_subsystem=DelegationTarget.ORCHESTRATION, action_type="MUTATE_DATABASE")
+    del_plan = mgr.delegation_manager.delegate_action(
+        tenant, "item_12", target_subsystem=DelegationTarget.ORCHESTRATION, action_type="MUTATE_DATABASE"
+    )
     assert del_plan.delegation_request is not None
     assert del_plan.delegation_request.target == DelegationTarget.ORCHESTRATION
 

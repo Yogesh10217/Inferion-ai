@@ -2,8 +2,7 @@
 Tests for Execution State Machine
 """
 
-import pytest
-from app.autonomy.state_machine import ExecutionStateMachine, ExecutionState
+from app.autonomy.state_machine import ExecutionState, ExecutionStateMachine
 
 
 def test_state_machine_transitions():

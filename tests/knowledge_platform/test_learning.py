@@ -1,8 +1,7 @@
 """Unit tests for KnowledgeLearningEngine feedback loop."""
 
-import pytest
 from app.knowledge_platform.knowledge import KnowledgeManager
-from app.knowledge_platform.learning import KnowledgeLearningEngine, KnowledgeFeedbackType
+from app.knowledge_platform.learning import KnowledgeFeedbackType, KnowledgeLearningEngine
 
 
 def test_learning_feedback_confidence_adjustment():

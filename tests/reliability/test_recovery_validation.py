@@ -2,8 +2,8 @@
 Tests for Recovery Validation Engine Module.
 """
 
-from app.reliability.reliability_models import ReliabilityStatus
 from app.reliability.recovery_validation import RecoveryValidationEngine
+from app.reliability.reliability_models import ReliabilityStatus
 
 
 def test_recovery_validation_probes_and_invariants():

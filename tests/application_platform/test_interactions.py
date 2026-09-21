@@ -1,12 +1,11 @@
 """Unit tests for Interactions & Secret Sanitization."""
 
-import pytest
-from app.application_platform.interactions import InteractionManager, InteractionType
+from app.application_platform.interactions import InteractionManager
 
 
 def test_interaction_secret_sanitization():
     mgr = InteractionManager()
-    
+
     raw_input = "My API key is sk-123456789012345678901234567890"
     turn = mgr.add_interaction(
         tenant_id="t1",

@@ -1,6 +1,5 @@
 """Unit tests for automated SecretManager secret redaction in evidence payloads."""
 
-import pytest
 from app.governance_platform.evidence import EvidenceCollector, EvidenceSource
 
 

@@ -2,7 +2,6 @@
 Tests for Container Security Evaluator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.container_security import ContainerSecurityEvaluator, ContainerSecurityResult
 
 

@@ -4,8 +4,9 @@ Tests for Multi-Agent Teams API Endpoints (/v1/teams)
 
 import pytest
 from fastapi.testclient import TestClient
-from app.main import create_app
+
 from app.core.config import get_settings
+from app.main import create_app
 
 settings = get_settings()
 
@@ -54,4 +55,3 @@ def test_teams_api_crud_and_run():
 
     assert res_run.status_code == 200
     assert "result" in res_run.json()
-

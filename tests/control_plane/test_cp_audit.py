@@ -1,6 +1,5 @@
 """Unit tests for AdministrativeAuditLedger."""
 
-import pytest
 from app.control_plane.admin_audit import AdministrativeAuditLedger
 from app.security.secrets import SecretManager
 

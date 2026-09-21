@@ -1,6 +1,5 @@
 """Unit tests for TopologyManager directed dependency graph and health propagation."""
 
-import pytest
 from app.operations.topology import TopologyManager
 
 

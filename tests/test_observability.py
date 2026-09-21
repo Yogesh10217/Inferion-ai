@@ -2,24 +2,23 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
-import pytest
-from fastapi.testclient import TestClient
 
-from app.main import app
-from app.services.metrics_service import MetricsService
-from app.services.health_service import HealthService
-from app.providers.provider_factory import ProviderFactory
-from app.registry.model_registry import InMemoryModelRegistry
+import pytest
+
 from app.core.exceptions import (
+    AppExceptionHandler,
+    ConfigurationException,
+    InferenceException,
     ModelNotFoundException,
     ProviderNotFoundException,
-    RoutingException,
-    InferenceException,
     ProviderUnavailableException,
-    ConfigurationException,
+    RoutingException,
     ValidationException,
-    AppExceptionHandler,
 )
+from app.providers.provider_factory import ProviderFactory
+from app.registry.model_registry import InMemoryModelRegistry
+from app.services.health_service import HealthService
+from app.services.metrics_service import MetricsService
 
 
 def test_metrics_service_direct() -> None:
@@ -94,7 +93,7 @@ async def test_request_id_generation_and_headers(get_client) -> None:
         assert "X-Request-ID" in response.headers
         req_id_1 = response.headers["X-Request-ID"]
         assert len(req_id_1) > 0
-    
+
         # Test custom Request ID
         custom_id = "test-req-id-12345"
         response2 = await client.get("/v1/health", headers={"x-request-id": custom_id})
@@ -104,8 +103,8 @@ async def test_request_id_generation_and_headers(get_client) -> None:
 
 @pytest.mark.anyio
 async def test_exception_handlers_direct() -> None:
-    from starlette.requests import Request
     from starlette.datastructures import Headers
+    from starlette.requests import Request
 
     scope = {"type": "http", "headers": Headers().raw}
     req = Request(scope)

@@ -2,7 +2,6 @@
 Tests for Pattern Detector
 """
 
-import pytest
 from app.learning.pattern_detector import PatternDetector
 
 

@@ -1,11 +1,12 @@
 """Unit tests for Application Registry and status transitions."""
 
 import pytest
+
 from app.application_platform.application import (
-    ApplicationRegistry,
-    ApplicationType,
-    ApplicationStatus,
     ApplicationLifecycle,
+    ApplicationRegistry,
+    ApplicationStatus,
+    ApplicationType,
 )
 from app.application_platform.exceptions import (
     ApplicationNotFoundException,
@@ -34,9 +35,18 @@ def test_application_not_found():
 
 
 def test_valid_lifecycle_transitions():
-    assert ApplicationLifecycle.transition_status(ApplicationStatus.DRAFT, ApplicationStatus.VALIDATED) == ApplicationStatus.VALIDATED
-    assert ApplicationLifecycle.transition_status(ApplicationStatus.APPROVED, ApplicationStatus.DEPLOYED) == ApplicationStatus.DEPLOYED
-    assert ApplicationLifecycle.transition_status(ApplicationStatus.DEPLOYED, ApplicationStatus.ACTIVE) == ApplicationStatus.ACTIVE
+    assert (
+        ApplicationLifecycle.transition_status(ApplicationStatus.DRAFT, ApplicationStatus.VALIDATED)
+        == ApplicationStatus.VALIDATED
+    )
+    assert (
+        ApplicationLifecycle.transition_status(ApplicationStatus.APPROVED, ApplicationStatus.DEPLOYED)
+        == ApplicationStatus.DEPLOYED
+    )
+    assert (
+        ApplicationLifecycle.transition_status(ApplicationStatus.DEPLOYED, ApplicationStatus.ACTIVE)
+        == ApplicationStatus.ACTIVE
+    )
 
 
 def test_invalid_lifecycle_transition():

@@ -1,6 +1,5 @@
-import pytest
-from app.routing.routing_policy import RoutingPolicy
 from app.routing.policy_registry import PolicyRegistry
+from app.routing.routing_policy import RoutingPolicy
 
 
 def test_routing_policy_normalization():

@@ -3,7 +3,7 @@ Tests for Timeout Management Engine Module.
 """
 
 from app.reliability.reliability_models import ReliabilityStatus
-from app.reliability.timeout_management import TimeoutConfig, TimeoutManagementEngine
+from app.reliability.timeout_management import TimeoutManagementEngine
 
 
 def test_timeout_management_evaluation():

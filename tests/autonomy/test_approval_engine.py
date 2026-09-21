@@ -2,10 +2,9 @@
 Tests for Human Approval Engine
 """
 
-import pytest
 from app.approvals.approval_engine import ApprovalEngine
-from app.approvals.approval_request import ApprovalStatus
 from app.approvals.approval_policies import RiskLevel
+from app.approvals.approval_request import ApprovalStatus
 
 
 def test_approval_request_workflow():

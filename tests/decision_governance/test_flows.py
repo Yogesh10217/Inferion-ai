@@ -1,22 +1,22 @@
 """20 Mandatory E2E Integration Test Flows for Decision Governance Platform."""
 
 import pytest
-from app.decision_governance.manager import DecisionGovernanceManager
-from app.decision_governance.decisions import DecisionType, DecisionPriority, DecisionStatus, DecisionOutcome
+
+from app.decision_governance.conflicts import ConflictType
+from app.decision_governance.correlation import CorrelationType
+from app.decision_governance.decisions import DecisionOutcome, DecisionPriority, DecisionStatus, DecisionType
+from app.decision_governance.delegation import DecisionDelegationAction
+from app.decision_governance.evidence import DecisionEvidence
 from app.decision_governance.exceptions import (
     CrossTenantDecisionGovernanceException,
-    DecisionNotFoundException,
     HighRiskDecisionRequiresApprovalException,
     ImmutableDecisionRecordException,
 )
-from app.decision_governance.signals import DecisionSignalSource, DecisionSignalType
-from app.decision_governance.correlation import CorrelationType
-from app.decision_governance.scenarios import ScenarioType
-from app.decision_governance.simulation import SimulationInput
+from app.decision_governance.manager import DecisionGovernanceManager
 from app.decision_governance.optimization import OptimizationObjective
-from app.decision_governance.conflicts import ConflictType, ConflictEvidence, ConflictResolution
-from app.decision_governance.delegation import DecisionDelegationAction
-from app.decision_governance.evidence import DecisionEvidence
+from app.decision_governance.scenarios import ScenarioType
+from app.decision_governance.signals import DecisionSignalSource, DecisionSignalType
+from app.decision_governance.simulation import SimulationInput
 from app.platform_contracts.delegation import DelegationRequest
 
 
@@ -27,7 +27,9 @@ def manager():
 
 def test_flow_01_decision_creation_and_tenant_isolation(manager):
     """Flow 1: Decision Creation and Tenant Isolation."""
-    d1 = manager.create_decision(tenant_id="tenant_a", title="Tenant A Decision", decision_type=DecisionType.OPERATIONAL)
+    d1 = manager.create_decision(
+        tenant_id="tenant_a", title="Tenant A Decision", decision_type=DecisionType.OPERATIONAL
+    )
     assert d1.decision_id is not None
     assert d1.tenant_id == "tenant_a"
     assert d1.status == DecisionStatus.DRAFT
@@ -96,11 +98,15 @@ def test_flow_05_decision_impact_assessment(manager):
 def test_flow_06_alternative_generation(manager):
     """Flow 6: Alternative Generation."""
     d = manager.create_decision(tenant_id="tenant_a", title="Alternatives Decision")
-    alt1 = manager.alternatives.create_alternative(
+    manager.alternatives.create_alternative(
         tenant_id="tenant_a", decision_id=d.decision_id, name="Status Quo", description="Keep current state"
     )
-    alt2 = manager.alternatives.create_alternative(
-        tenant_id="tenant_a", decision_id=d.decision_id, name="Automate Optimization", description="Apply auto-tuning", is_recommended=True
+    manager.alternatives.create_alternative(
+        tenant_id="tenant_a",
+        decision_id=d.decision_id,
+        name="Automate Optimization",
+        description="Apply auto-tuning",
+        is_recommended=True,
     )
     assessment = manager.alternatives.evaluate_alternatives(d.decision_id, tenant_id="tenant_a")
     assert len(assessment.alternatives) == 2
@@ -110,11 +116,14 @@ def test_flow_06_alternative_generation(manager):
 def test_flow_07_scenario_analysis(manager):
     """Flow 7: Scenario Analysis."""
     d = manager.create_decision(tenant_id="tenant_a", title="Scenario Decision")
-    base_sc = manager.scenarios.create_scenario(
+    manager.scenarios.create_scenario(
         tenant_id="tenant_a", decision_id=d.decision_id, name="Baseline Scenario", scenario_type=ScenarioType.BASELINE
     )
-    opt_sc = manager.scenarios.create_scenario(
-        tenant_id="tenant_a", decision_id=d.decision_id, name="Optimistic Scenario", scenario_type=ScenarioType.OPTIMISTIC
+    manager.scenarios.create_scenario(
+        tenant_id="tenant_a",
+        decision_id=d.decision_id,
+        name="Optimistic Scenario",
+        scenario_type=ScenarioType.OPTIMISTIC,
     )
     scenarios = manager.scenarios.list_scenarios_for_decision(d.decision_id, tenant_id="tenant_a")
     assert len(scenarios) == 2
@@ -124,7 +133,9 @@ def test_flow_08_decision_simulation(manager):
     """Flow 8: Decision Simulation."""
     d = manager.create_decision(tenant_id="tenant_a", title="Simulated Decision")
     inp = SimulationInput(decision_id=d.decision_id, iterations=100)
-    sim = manager.simulation.run_simulation(tenant_id="tenant_a", decision_id=d.decision_id, name="Cost/Risk Sim", input_params=inp)
+    sim = manager.simulation.run_simulation(
+        tenant_id="tenant_a", decision_id=d.decision_id, name="Cost/Risk Sim", input_params=inp
+    )
     assert sim.simulation_id is not None
     assert sim.result.reliability_impact_score > 0.90
 
@@ -132,7 +143,7 @@ def test_flow_08_decision_simulation(manager):
 def test_flow_09_recommendation_generation(manager):
     """Flow 9: Recommendation Generation."""
     d = manager.create_decision(tenant_id="tenant_a", title="Recommendation Decision")
-    rec = manager.recommendations.create_recommendation(
+    manager.recommendations.create_recommendation(
         tenant_id="tenant_a",
         decision_id=d.decision_id,
         title="Scale Down Idle Instances",
@@ -149,7 +160,9 @@ def test_flow_10_decision_conflict_detection(manager):
     d = manager.create_decision(tenant_id="tenant_a", title="Conflict Decision")
     policies = [{"name": "P1", "action": "DENY"}]
     recs = [{"title": "R1", "action": "ALLOW"}]
-    conflicts = manager.conflicts.detect_conflicts(tenant_id="tenant_a", decision_id=d.decision_id, policies=policies, recommendations=recs)
+    conflicts = manager.conflicts.detect_conflicts(
+        tenant_id="tenant_a", decision_id=d.decision_id, policies=policies, recommendations=recs
+    )
     assert len(conflicts) == 1
     assert conflicts[0].conflict_type == ConflictType.POLICY
 
@@ -158,13 +171,20 @@ def test_flow_11_priority_evaluation(manager):
     """Flow 11: Priority Evaluation."""
     d = manager.create_decision(tenant_id="tenant_a", title="Priority Decision")
     assessment = manager.priorities.evaluate_priority(tenant_id="tenant_a", decision_id=d.decision_id)
-    assert assessment.score.calculated_priority in [DecisionPriority.LOW, DecisionPriority.MEDIUM, DecisionPriority.HIGH, DecisionPriority.CRITICAL]
+    assert assessment.score.calculated_priority in [
+        DecisionPriority.LOW,
+        DecisionPriority.MEDIUM,
+        DecisionPriority.HIGH,
+        DecisionPriority.CRITICAL,
+    ]
 
 
 def test_flow_12_decision_optimization(manager):
     """Flow 12: Decision Optimization."""
     d = manager.create_decision(tenant_id="tenant_a", title="Optimization Decision")
-    opt = manager.optimization.optimize_decision(tenant_id="tenant_a", decision_id=d.decision_id, primary_objective=OptimizationObjective.MINIMIZE_COST)
+    opt = manager.optimization.optimize_decision(
+        tenant_id="tenant_a", decision_id=d.decision_id, primary_objective=OptimizationObjective.MINIMIZE_COST
+    )
     assert opt.result.score > 0.8
     assert len(opt.result.recommendations) > 0
 
@@ -197,7 +217,9 @@ def test_flow_14_high_risk_decision_requires_approval(manager):
     assert gov_res.outcome == DecisionOutcome.REQUIRE_APPROVAL
 
     # Attempting to delegate without approval MUST raise HighRiskDecisionRequiresApprovalException
-    act = DecisionDelegationAction(target_type="SERVICE", target_id="srv-prod", action_name="MUTATE_INFRASTRUCTURE", requires_approval=True)
+    act = DecisionDelegationAction(
+        target_type="SERVICE", target_id="srv-prod", action_name="MUTATE_INFRASTRUCTURE", requires_approval=True
+    )
     with pytest.raises(HighRiskDecisionRequiresApprovalException):
         manager.delegate_decision(d.decision_id, tenant_id="tenant_a", actions=[act])
 
@@ -211,7 +233,7 @@ def test_flow_15_delegation_only_enforcement(manager):
     """Flow 15: Delegation-Only Enforcement - Actions generate DelegationRequest primitives."""
     d = manager.create_decision(tenant_id="tenant_a", title="Delegated Action Decision")
     manager.analyze_and_governed_evaluate(d.decision_id, tenant_id="tenant_a")
-    
+
     act = DecisionDelegationAction(target_type="WORKFLOW", target_id="wf-123", action_name="RESTART_WORKFLOW")
     plan = manager.delegate_decision(d.decision_id, tenant_id="tenant_a", actions=[act])
 
@@ -244,7 +266,9 @@ def test_flow_16_sensitive_data_sanitization(manager):
 def test_flow_17_immutable_decision_evidence(manager):
     """Flow 17: Immutable Decision Evidence & Record."""
     d = manager.create_decision(tenant_id="tenant_a", title="Finalized Decision")
-    item = DecisionEvidence(tenant_id="tenant_a", decision_id=d.decision_id, evidence_type="TEST", title="Evidence Item")
+    item = DecisionEvidence(
+        tenant_id="tenant_a", decision_id=d.decision_id, evidence_type="TEST", title="Evidence Item"
+    )
     bundle = manager.evidence.create_evidence_bundle("tenant_a", d.decision_id, [item])
     manager.evidence.finalize_bundle(bundle.bundle_id, "tenant_a")
 
@@ -276,7 +300,11 @@ def test_flow_19_learning_does_not_auto_execute(manager):
 def test_flow_20_full_enterprise_decision_governance_lifecycle(manager):
     """Flow 20: Full Enterprise Decision Governance Lifecycle."""
     # 1. Create decision
-    d = manager.create_decision(tenant_id="enterprise_tenant", title="Full Lifecycle Optimization Decision", decision_type=DecisionType.OPERATIONAL)
+    d = manager.create_decision(
+        tenant_id="enterprise_tenant",
+        title="Full Lifecycle Optimization Decision",
+        decision_type=DecisionType.OPERATIONAL,
+    )
     assert d.status == DecisionStatus.DRAFT
 
     # 2. Analyze & Evaluate

@@ -1,7 +1,6 @@
 """Unit tests for MLOpsEvaluationEngine."""
 
-import pytest
-from app.mlops.evaluation import MLOpsEvaluationEngine, EvaluationCase
+from app.mlops.evaluation import EvaluationCase, MLOpsEvaluationEngine
 
 
 def test_evaluation_dataset_and_suite_execution():

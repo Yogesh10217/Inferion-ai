@@ -2,9 +2,8 @@
 Tests for Supervisor Agent
 """
 
-import pytest
-from app.multi_agent.agent_supervisor import SupervisorAgent
 from app.multi_agent.agent_messaging import AgentMessage, MessageType
+from app.multi_agent.agent_supervisor import SupervisorAgent
 
 
 def test_supervisor_failure_monitoring():
@@ -18,7 +17,10 @@ def test_supervisor_failure_monitoring():
 
 def test_supervisor_deadlock_detection():
     sup = SupervisorAgent()
-    msgs = [AgentMessage(sender_id=f"a_{i}", recipient_id="b", message_type=MessageType.QUESTION, content="?") for i in range(6)]
+    msgs = [
+        AgentMessage(sender_id=f"a_{i}", recipient_id="b", message_type=MessageType.QUESTION, content="?")
+        for i in range(6)
+    ]
 
     deadlocked = sup.detect_deadlock(msgs)
     assert deadlocked is True

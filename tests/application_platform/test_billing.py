@@ -1,8 +1,7 @@
 """Unit tests for Event-Driven Billing & UnifiedCostLedger Attribution."""
 
-import pytest
 from app.application_platform.billing import ApplicationBillingTracker
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 
 def test_event_driven_billing_attribution():

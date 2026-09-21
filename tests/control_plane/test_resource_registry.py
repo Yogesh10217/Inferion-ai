@@ -1,8 +1,9 @@
 """Unit tests for ResourceRegistry."""
 
 import pytest
-from app.control_plane.resource_registry import ResourceRegistry, ResourceType
+
 from app.control_plane.exceptions import ResourceNotFoundException
+from app.control_plane.resource_registry import ResourceRegistry, ResourceType
 
 
 def test_resource_registration_and_search():

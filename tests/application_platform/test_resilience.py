@@ -1,6 +1,5 @@
 """Unit tests for Application Resilience & Graceful Degradation."""
 
-import pytest
 from app.application_platform.resilience import (
     ApplicationResilienceManager,
     DegradationStrategy,

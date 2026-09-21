@@ -1,8 +1,9 @@
 """Unit tests for Multi-Tenancy & Strict Tenant Isolation in Intelligence Platform."""
 
 import pytest
-from app.intelligence_platform.signals import IntelligenceSignalManager, SignalSource, SignalType
+
 from app.intelligence_platform.exceptions import SignalValidationException
+from app.intelligence_platform.signals import IntelligenceSignalManager, SignalSource, SignalType
 
 
 def test_cross_tenant_signal_isolation():

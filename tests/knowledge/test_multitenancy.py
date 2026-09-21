@@ -1,4 +1,3 @@
-import pytest
 # multitenancy testing
 def test_tenant_isolation():
     tenant1_data = {"id": "t1"}

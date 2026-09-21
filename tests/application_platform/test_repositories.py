@@ -1,6 +1,5 @@
 """Unit tests for Repository Abstraction Layer."""
 
-import pytest
 from app.application_platform.repositories import InMemoryApplicationRepository, SQLAlchemyApplicationRepository
 
 

@@ -1,6 +1,5 @@
 """Unit tests for workflow versioning."""
 
-import pytest
 from app.orchestration.workflow import WorkflowDefinitionManager, WorkflowStep
 
 

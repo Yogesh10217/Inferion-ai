@@ -2,8 +2,8 @@
 Tests for Production Authorization Guard (7 mandatory conditions).
 """
 
-from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 from app.reliability.failure_injection import FailureInjectionEngine
+from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 
 
 def test_production_authorization_guard_requires_all_seven_conditions():

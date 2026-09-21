@@ -1,30 +1,26 @@
 """Mandatory 20 End-to-End Integration Flow Tests for Integration Intelligence (Phase 5.40)."""
 
 import pytest
-from typing import Dict, Any
 
-from app.integration_intelligence.manager import IntegrationIntelligenceManager
-from app.integration_intelligence.connectors import ConnectorType, ConnectorCapability
-from app.integration_intelligence.endpoints import EndpointType
-from app.integration_intelligence.workflows import WorkflowType, WorkflowTrigger, WorkflowStep, WorkflowStatus
-from app.integration_intelligence.mapping import MappingRule
-from app.integration_intelligence.routing import RoutingStrategy, RouteHealth
-from app.integration_intelligence.dependencies import DependencyImpact
-from app.integration_intelligence.execution import IntegrationExecutionStatus
-from app.integration_intelligence.retries import RetryPolicy
-from app.integration_intelligence.failures import FailureType
-from app.integration_intelligence.recovery import RecoveryStep
 from app.integration_intelligence.compensation import CompensationStep
-from app.integration_intelligence.verification import VerificationCheck
-from app.integration_intelligence.data_governance import IntegrationDataClassification
+from app.integration_intelligence.connectors import ConnectorCapability, ConnectorType
+from app.integration_intelligence.dependencies import DependencyImpact
 from app.integration_intelligence.exceptions import (
     CrossTenantIntegrationAccessException,
-    IntegrationValidationException,
     HighRiskIntegrationRequiresApprovalException,
-    IntegrationRetryException,
-    IntegrationExecutionBlockedException,
     ImmutableIntegrationRecordException,
+    IntegrationRetryException,
+    IntegrationValidationException,
 )
+from app.integration_intelligence.execution import IntegrationExecutionStatus
+from app.integration_intelligence.failures import FailureType
+from app.integration_intelligence.manager import IntegrationIntelligenceManager
+from app.integration_intelligence.mapping import MappingRule
+from app.integration_intelligence.recovery import RecoveryStep
+from app.integration_intelligence.retries import RetryPolicy
+from app.integration_intelligence.routing import RouteHealth, RoutingStrategy
+from app.integration_intelligence.verification import VerificationCheck
+from app.integration_intelligence.workflows import WorkflowStatus, WorkflowTrigger, WorkflowType
 
 
 @pytest.fixture
@@ -80,7 +76,7 @@ def test_flow3_invalid_mapping_blocked(manager):
 
     with pytest.raises(IntegrationValidationException) as exc_info:
         manager.mapping_manager.validate_mapping(tenant_id, mapping.mapping_id, ["first_name", "email_address"])
-    
+
     assert "email_address" in str(exc_info.value)
 
 
@@ -138,7 +134,9 @@ def test_flow7_high_risk_integration_requires_approval(manager):
     """Flow 7 — High-Risk Integration Requires Approval."""
     tenant_id = "tenant_a"
     wf = manager.workflow_manager.create_workflow(tenant_id, "BulkDropDB")
-    exec_obj = manager.execution_manager.request_execution(tenant_id, wf.workflow_id, "idem_drop_1", requires_approval=True)
+    exec_obj = manager.execution_manager.request_execution(
+        tenant_id, wf.workflow_id, "idem_drop_1", requires_approval=True
+    )
 
     with pytest.raises(HighRiskIntegrationRequiresApprovalException):
         manager.execution_manager.delegate_execution(tenant_id, exec_obj.execution_id)
@@ -218,7 +216,12 @@ def test_flow13_compensation_planning_and_escalation(manager):
     """Flow 13 — Compensation Planning & Unsupported Step Escalation."""
     tenant_id = "tenant_a"
     step_supp = CompensationStep(original_step_id="step_1", compensation_action="DELETE_RECORD", is_supported=True)
-    step_unsupp = CompensationStep(original_step_id="step_2", compensation_action="UNSEND_EMAIL", is_supported=False, reason_unsupported="Email cannot be un-sent")
+    step_unsupp = CompensationStep(
+        original_step_id="step_2",
+        compensation_action="UNSEND_EMAIL",
+        is_supported=False,
+        reason_unsupported="Email cannot be un-sent",
+    )
 
     plan = manager.compensation_manager.create_compensation_plan(tenant_id, "exec_100", [step_supp, step_unsupp])
     assert plan.status.value == "UNSUPPORTED_ESCALATED"
@@ -233,7 +236,11 @@ def test_flow14_verification_failure(manager):
     """Flow 14 — Outcome Verification Failure."""
     tenant_id = "tenant_a"
     check_failed = VerificationCheck(
-        target_system_id="sys_ext", expected_status_code=200, observed_status_code=500, passed=False, is_destructive_action=True
+        target_system_id="sys_ext",
+        expected_status_code=200,
+        observed_status_code=500,
+        passed=False,
+        is_destructive_action=True,
     )
     verif = manager.verification_manager.verify_execution(tenant_id, "exec_100", [check_failed])
 
@@ -281,7 +288,11 @@ def test_flow18_trust_assessment_compatibility(manager):
     """Flow 18 — Trust Assessment Compatibility."""
     tenant_id = "tenant_a"
     asm = manager.trust_engine.evaluate_trust(
-        tenant_id, "conn_crm", connector_reliability_score=95.0, verification_success_score=90.0, recent_failures_count=0
+        tenant_id,
+        "conn_crm",
+        connector_reliability_score=95.0,
+        verification_success_score=90.0,
+        recent_failures_count=0,
     )
 
     assert asm.score >= 80.0
@@ -292,8 +303,12 @@ def test_flow19_learning_recommendation_advisory_only(manager):
     """Flow 19 — Learning Recommendation Does Not Auto-Modify Workflow."""
     tenant_id = "tenant_a"
     rec = manager.learning_manager.record_learning_pattern(
-        tenant_id, "FrequentTimeoutPattern", "Endpoint times out during peak hours",
-        "Increase Timeout", "Increase endpoint timeout setting to 60s", target_workflow_id="wf_01"
+        tenant_id,
+        "FrequentTimeoutPattern",
+        "Endpoint times out during peak hours",
+        "Increase Timeout",
+        "Increase endpoint timeout setting to 60s",
+        target_workflow_id="wf_01",
     )
 
     item = rec.recommendations[0]

@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+
 
 @pytest.mark.asyncio
 async def test_create_and_list_reports(get_client, admin_token_headers: dict):
@@ -10,7 +10,7 @@ async def test_create_and_list_reports(get_client, admin_token_headers: dict):
         data = response.json()
         assert "job_id" in data
         assert data["status"] == "pending"
-        
+
         # List reports
         response = await client.get("/v1/admin/reports", headers=admin_token_headers)
         assert response.status_code == 200

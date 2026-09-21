@@ -1,6 +1,5 @@
 """Unit tests for Python SDK ControlPlaneClient."""
 
-import pytest
 from sdk.python.llm_engine.control_plane import ControlPlaneClient
 
 

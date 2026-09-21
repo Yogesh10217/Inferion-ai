@@ -1,10 +1,14 @@
 """Unit tests for Bounded Autonomous Operations Engine."""
 
 import pytest
-from app.platform_operations.remediation import RemediationPlanner, RemediationStep, RemediationStrategy
-from app.platform_operations.autonomous_operations import AutonomousOperationsEngine, AutonomousActionPolicy, AutonomyLevel
-from app.platform_operations.exceptions import AutonomousActionDeniedException
+
 from app.governance_platform.risk import RiskLevel
+from app.platform_operations.autonomous_operations import (
+    AutonomousOperationsEngine,
+    AutonomyLevel,
+)
+from app.platform_operations.exceptions import AutonomousActionDeniedException
+from app.platform_operations.remediation import RemediationPlanner, RemediationStep, RemediationStrategy
 
 
 def test_autonomous_operation_execution():
@@ -20,7 +24,9 @@ def test_autonomous_operation_execution():
     )
     plan = planner.create_remediation_plan("t1", "inc_1", "svc_1", [step])
 
-    op = auto_engine.execute_autonomous_remediation("t1", plan.plan_id, autonomy_level=AutonomyLevel.CONSTRAINED_AUTONOMOUS)
+    op = auto_engine.execute_autonomous_remediation(
+        "t1", plan.plan_id, autonomy_level=AutonomyLevel.CONSTRAINED_AUTONOMOUS
+    )
     assert op.status == "SUCCESSFUL"
 
 

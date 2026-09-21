@@ -1,8 +1,7 @@
 """Unit tests for FinOpsGovernanceEngine and risk approval gating."""
 
-import pytest
-from app.finops.optimization import OptimizationRecommendation, OptimizationRiskLevel
 from app.finops.governance import FinOpsGovernanceEngine
+from app.finops.optimization import OptimizationRecommendation, OptimizationRiskLevel
 
 
 def test_optimization_risk_approval_policy():

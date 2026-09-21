@@ -1,5 +1,4 @@
-import pytest
-from app.deployment.deployment_authorization import DeploymentAuthorizationEngine, DeploymentAuthorizationRecord
+from app.deployment.deployment_authorization import DeploymentAuthorizationEngine
 from app.deployment.models import DeploymentAuthorizationStatus
 
 

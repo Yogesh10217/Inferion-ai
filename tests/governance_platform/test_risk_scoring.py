@@ -1,7 +1,6 @@
 """Unit tests for deterministic, reproducible risk scoring (0-100 scale)."""
 
-import pytest
-from app.governance_platform.risk import RiskManager, RiskFactor, RiskSeverity
+from app.governance_platform.risk import RiskFactor, RiskManager, RiskSeverity
 
 
 def test_deterministic_risk_scoring_and_evidence_breakdown():

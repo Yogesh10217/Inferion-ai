@@ -1,7 +1,8 @@
 """Unit tests for ProductionSettings and ConfigurationValidator."""
 
 import pytest
-from app.config.production_settings import ProductionSettings, EnvironmentName, ConfigurationValidator
+
+from app.config.production_settings import ConfigurationValidator, EnvironmentName, ProductionSettings
 from app.security.exceptions import SecurityPolicyViolation
 
 

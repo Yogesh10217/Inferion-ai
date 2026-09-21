@@ -1,9 +1,12 @@
 import pytest
+
 from app.knowledge.search import SearchEngine
+
 
 class MockSearchEngine(SearchEngine):
     async def search(self, query):
         return {"hits": [{"id": "1", "text": "result"}]}
+
 
 @pytest.mark.asyncio
 async def test_search():

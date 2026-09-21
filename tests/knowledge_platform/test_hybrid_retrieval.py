@@ -1,6 +1,5 @@
 """Unit tests for hybrid retrieval strategy execution."""
 
-import pytest
 from app.knowledge_platform.knowledge import KnowledgeManager
 from app.knowledge_platform.retrieval import RetrievalPipeline, RetrievalRequest, RetrievalStrategy
 

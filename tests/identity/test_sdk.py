@@ -1,8 +1,7 @@
 """Integration tests for Identity Python SDK client."""
 
-import pytest
-from sdk.python.llm_engine.identity import IdentityClient
 from sdk.python.llm_engine.client import LLMEngineClient
+from sdk.python.llm_engine.identity import IdentityClient
 
 
 def test_python_sdk_identity_client():

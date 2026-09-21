@@ -1,8 +1,6 @@
 """Tests for ExecutionTrace tree building and timeline generation."""
 
-import time
-import pytest
-from app.observability.execution_trace import ExecutionTrace, ExecutionSpan
+from app.observability.execution_trace import ExecutionTrace
 
 
 def test_execution_trace_tree_building():

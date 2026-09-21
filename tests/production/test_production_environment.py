@@ -1,5 +1,5 @@
-import os
 import pytest
+
 from app.deployment.environment import EnvironmentManager
 from app.deployment.exceptions import ConfigurationValidationError, UnsafeConfigurationError
 from app.deployment.models import DeploymentEnvironment, EnvironmentConfig
@@ -11,7 +11,7 @@ def test_production_debug_rejected(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5432/db")
     monkeypatch.setenv("REDIS_URL", "redis://localhost:6379")
     monkeypatch.setenv("JWT_SECRET", "valid-complex-production-secret-999")
-    
+
     mgr = EnvironmentManager()
     with pytest.raises(UnsafeConfigurationError) as exc_info:
         mgr.load_environment_config()

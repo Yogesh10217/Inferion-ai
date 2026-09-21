@@ -1,6 +1,7 @@
 """Unit tests for DistributedLockManager."""
 
 import pytest
+
 from app.cache.distributed_lock import DistributedLockManager
 
 

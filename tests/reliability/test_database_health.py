@@ -1,6 +1,7 @@
 """Unit tests for DatabaseHealthMonitor and TransactionManager."""
 
 import pytest
+
 from app.persistence.database_health import DatabaseHealthMonitor
 from app.persistence.transaction import TransactionManager
 

@@ -1,25 +1,25 @@
 """Mandatory E2E Integration Flow Tests for Enterprise AI Platform Resilience (Phase 5.37)."""
 
 import pytest
-from app.platform_resilience.manager import PlatformResilienceManager
-from app.platform_resilience.services import ServiceCriticality
-from app.platform_resilience.dependencies import DependencyType, DependencyCriticality
-from app.platform_resilience.scaling import ScalingDirection
+
+from app.platform_resilience.chaos import ExperimentRisk, ExperimentScenario
 from app.platform_resilience.circuit_breakers import CircuitBreakerState
 from app.platform_resilience.degradation import DegradationLevel
-from app.platform_resilience.failover import FailoverPlan, FailoverStatus
+from app.platform_resilience.dependencies import DependencyCriticality, DependencyType
 from app.platform_resilience.disaster_recovery import DisasterRecoveryScenario, DisasterRecoveryStatus
-from app.platform_resilience.chaos import ExperimentScenario, ExperimentRisk
-from app.platform_resilience.readiness import ReadinessRequirement, ReadinessDimension
-from app.platform_resilience.runbooks import RunbookStep, RunbookTrigger
 from app.platform_resilience.exceptions import (
-    CrossTenantResilienceAccessException,
-    InvalidFailoverTransitionException,
-    HighRiskRecoveryRequiresApprovalException,
-    RecoveryVerificationFailedException,
-    ImmutableResilienceRecordException,
     BulkheadCapacityExceededException,
+    CrossTenantResilienceAccessException,
+    HighRiskRecoveryRequiresApprovalException,
+    ImmutableResilienceRecordException,
+    InvalidFailoverTransitionException,
+    RecoveryVerificationFailedException,
 )
+from app.platform_resilience.failover import FailoverPlan, FailoverStatus
+from app.platform_resilience.manager import PlatformResilienceManager
+from app.platform_resilience.readiness import ReadinessDimension, ReadinessRequirement
+from app.platform_resilience.runbooks import RunbookStep, RunbookTrigger
+from app.platform_resilience.scaling import ScalingDirection
 
 
 @pytest.fixture
@@ -52,9 +52,7 @@ def test_flow2_capacity_saturation(manager):
 def test_flow3_backpressure_protection(manager):
     """Flow 3 — Backpressure Protection."""
     tenant_id = "tenant_a"
-    bp = manager.backpressure_manager.evaluate_backpressure(
-        tenant_id, "InferenceService", current_queue_depth=1200
-    )
+    bp = manager.backpressure_manager.evaluate_backpressure(tenant_id, "InferenceService", current_queue_depth=1200)
     assert bp.level.value == "CRITICAL"
     assert bp.recommended_action.value == "REJECT"
     assert bp.is_protection_active is True
@@ -92,8 +90,10 @@ def test_flow5_circuit_breaker_lifecycle(manager):
 def test_flow6_bulkhead_isolation(manager):
     """Flow 6 — Bulkhead Isolation."""
     tenant_id = "tenant_a"
-    part1 = manager.bulkhead_manager.configure_partition(tenant_id, "WorkloadA", max_concurrent_calls=2, max_queue_capacity=1)
-    part2 = manager.bulkhead_manager.configure_partition(tenant_id, "WorkloadB", max_concurrent_calls=10)
+    manager.bulkhead_manager.configure_partition(
+        tenant_id, "WorkloadA", max_concurrent_calls=2, max_queue_capacity=1
+    )
+    manager.bulkhead_manager.configure_partition(tenant_id, "WorkloadB", max_concurrent_calls=10)
 
     # Exhaust WorkloadA
     manager.bulkhead_manager.acquire_capacity(tenant_id, "WorkloadA")
@@ -122,9 +122,7 @@ def test_flow7_graceful_degradation(manager):
 def test_flow8_scaling_delegation(manager):
     """Flow 8 — Scaling Delegation."""
     tenant_id = "tenant_a"
-    plan = manager.scaling_manager.plan_scaling(
-        tenant_id, "EngineCluster", ScalingDirection.SCALE_OUT, delta_units=4
-    )
+    plan = manager.scaling_manager.plan_scaling(tenant_id, "EngineCluster", ScalingDirection.SCALE_OUT, delta_units=4)
 
     assert plan.delegation_id is not None
     assert plan.status.value == "DELEGATED"
@@ -222,8 +220,12 @@ def test_flow17_production_readiness_hard_failure(manager):
     """Flow 17 — Production Readiness Hard Failure."""
     tenant_id = "tenant_a"
     reqs = [
-        ReadinessRequirement(dimension=ReadinessDimension.SECURITY, name="Security Audit", is_mandatory=True, is_passed=False),
-        ReadinessRequirement(dimension=ReadinessDimension.RELIABILITY, name="SLO Defined", is_mandatory=False, is_passed=True),
+        ReadinessRequirement(
+            dimension=ReadinessDimension.SECURITY, name="Security Audit", is_mandatory=True, is_passed=False
+        ),
+        ReadinessRequirement(
+            dimension=ReadinessDimension.RELIABILITY, name="SLO Defined", is_mandatory=False, is_passed=True
+        ),
     ]
 
     ass = manager.readiness_manager.assess_readiness(tenant_id, "Service_X", requirements=reqs)
@@ -236,7 +238,7 @@ def test_flow18_sensitive_data_redaction(manager):
     """Flow 18 — Sensitive Data Redaction."""
     tenant_id = "tenant_a"
     raw_ev = {"db_password": "supersecretpassword123", "service_name": "Inference_DB"}
-    
+
     ev = manager.evidence_manager.add_evidence("bundle_001", tenant_id, "DB_BACKUP_CHECK", raw_ev)
     assert ev.sanitized_content["db_password"] == "[REDACTED]"
     assert ev.sanitized_content["service_name"] == "Inference_DB"

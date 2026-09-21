@@ -2,8 +2,10 @@
 Tests for Authentication Security Evaluator (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.authentication_security import AuthenticationSecurityEvaluator, AuthenticationSecurityResult
+from app.security_operations.authentication_security import (
+    AuthenticationSecurityEvaluator,
+    AuthenticationSecurityResult,
+)
 
 
 def test_authentication_security_evaluation():

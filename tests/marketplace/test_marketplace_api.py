@@ -1,7 +1,7 @@
 """Integration tests for Marketplace REST API endpoints."""
 
-import pytest
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
@@ -16,13 +16,16 @@ def test_marketplace_item_lifecycle_api():
     }
 
     # 1. Create item
-    res_c = client.post("/v1/marketplace/items", json={
-        "title": "API Extension",
-        "summary": "Extension via REST",
-        "category": "TOOLS",
-        "publisher_id": "pub_api",
-        "manifest": manifest,
-    })
+    res_c = client.post(
+        "/v1/marketplace/items",
+        json={
+            "title": "API Extension",
+            "summary": "Extension via REST",
+            "category": "TOOLS",
+            "publisher_id": "pub_api",
+            "manifest": manifest,
+        },
+    )
     assert res_c.status_code == 201
     item_id = res_c.json()["item"]["item_id"]
 

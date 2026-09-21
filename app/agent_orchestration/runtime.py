@@ -134,7 +134,6 @@ class AgentRuntimeManager:
         sess.duration_sec = int((now - sess.start_time).total_seconds())
 
         # Loop detection (identical repeated action string)
-        action_hash = f"{action_name}_{sess.step_count}"
         sess.recent_action_hashes.append(action_name)
         if len(sess.recent_action_hashes) > 10:
             sess.recent_action_hashes.pop(0)

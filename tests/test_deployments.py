@@ -1,6 +1,6 @@
 import os
+
 import yaml
-import pytest
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 HELM_DIR = os.path.join(PROJECT_ROOT, "deploy", "helm", "llm-engine")

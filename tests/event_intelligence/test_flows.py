@@ -2,20 +2,17 @@
 
 import pytest
 
-from app.event_intelligence.manager import EventIntelligenceManager
-from app.event_intelligence.events import EventType, EventCategory, EventSeverity, EventPriority
-from app.event_intelligence.correlation import CorrelationType
 from app.event_intelligence.causality import CausalRelationship
-from app.event_intelligence.automation import AutomationAction, AutomationStatus
-from app.event_intelligence.response import ResponseTarget
-from app.event_intelligence.resolution import EventResolutionStatus
-from app.platform_contracts.governance import GovernanceDecisionStatus
-from app.platform_contracts.delegation import DelegationTarget
+from app.event_intelligence.correlation import CorrelationType
+from app.event_intelligence.events import EventCategory, EventPriority, EventSeverity, EventType
 from app.event_intelligence.exceptions import (
     CrossTenantEventAccessException,
-    ImmutableEventRecordException,
     EventResolutionException,
 )
+from app.event_intelligence.manager import EventIntelligenceManager
+from app.event_intelligence.resolution import EventResolutionStatus
+from app.platform_contracts.delegation import DelegationTarget
+from app.platform_contracts.governance import GovernanceDecisionStatus
 
 
 def test_flow1_reliability_event_to_incident():
@@ -28,7 +25,9 @@ def test_flow1_reliability_event_to_incident():
     norm = mgr.normalizer.normalize(tenant, raw_evt, source_id=src.source_id, source_name=src.name)
     evt = norm.event
 
-    corr_group = mgr.correlation_manager.correlate_events(tenant, "Reliability Correlation", [evt], CorrelationType.RELIABILITY_CASCADE)
+    corr_group = mgr.correlation_manager.correlate_events(
+        tenant, "Reliability Correlation", [evt], CorrelationType.RELIABILITY_CASCADE
+    )
     ctx = mgr.context_manager.assemble_event_context(evt)
 
     assert evt.severity == EventSeverity.HIGH
@@ -42,7 +41,14 @@ def test_flow2_security_threat_high_severity():
     tenant = "tenant_evt_2"
 
     src = mgr.source_manager.register_source(tenant, "SecurityIntelligence")
-    evt = mgr.event_manager.create_event(tenant, src.source_id, src.name, event_type=EventType.SECURITY_THREAT_DETECTED, category=EventCategory.SECURITY, severity=EventSeverity.CRITICAL)
+    evt = mgr.event_manager.create_event(
+        tenant,
+        src.source_id,
+        src.name,
+        event_type=EventType.SECURITY_THREAT_DETECTED,
+        category=EventCategory.SECURITY,
+        severity=EventSeverity.CRITICAL,
+    )
     cls = mgr.classifier.classify_event(evt)
 
     assert cls.governance_sensitive is True
@@ -95,7 +101,9 @@ def test_flow5_cross_platform_event_correlation():
     evt2 = mgr.event_manager.create_event(tenant, src.source_id, src.name, category=EventCategory.SECURITY)
     evt3 = mgr.event_manager.create_event(tenant, src.source_id, src.name, category=EventCategory.ARCHITECTURE)
 
-    corr = mgr.correlation_manager.correlate_events(tenant, "Cross Platform Cascade", [evt1, evt2, evt3], CorrelationType.CROSS_DOMAIN)
+    corr = mgr.correlation_manager.correlate_events(
+        tenant, "Cross Platform Cascade", [evt1, evt2, evt3], CorrelationType.CROSS_DOMAIN
+    )
 
     assert len(corr.event_ids) == 3
     assert evt1.correlation_reference == corr.group_id
@@ -160,7 +168,9 @@ def test_flow10_delegated_response():
 
     src = mgr.source_manager.register_source(tenant, "Source_10")
     evt = mgr.event_manager.create_event(tenant, src.source_id, src.name)
-    del_plan = mgr.delegation_manager.delegate_event_response(tenant, evt.event_id, DelegationTarget.PLATFORM_OPERATIONS, "EXECUTE_ACTION")
+    del_plan = mgr.delegation_manager.delegate_event_response(
+        tenant, evt.event_id, DelegationTarget.PLATFORM_OPERATIONS, "EXECUTE_ACTION"
+    )
 
     assert del_plan.delegation_request is not None
     assert del_plan.delegation_request.target == DelegationTarget.PLATFORM_OPERATIONS
@@ -201,7 +211,6 @@ def test_flow13_event_investigation_snapshot():
 
     assert concluded.snapshot is not None
     assert concluded.snapshot.metadata.resource_id == inv.investigation_id
-
 
 
 def test_flow14_invalid_resolution_lifecycle():

@@ -1,6 +1,5 @@
 """Unit tests for AgentKnowledgeAdapter integration."""
 
-import pytest
 from app.knowledge_platform.agent_integration import AgentKnowledgeAdapter
 
 

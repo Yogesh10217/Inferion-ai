@@ -3,7 +3,9 @@ Tests for Restricted Shell Tool
 """
 
 import sys
+
 import pytest
+
 from app.tools.builtin.shell_tool import ShellTool
 from app.tools.tool_context import ToolContext
 from app.tools.tool_result import ToolExecutionStatus

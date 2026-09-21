@@ -1,8 +1,7 @@
 """Unit tests for WorkflowExecutionEngine execution lifecycle."""
 
-import pytest
-from app.orchestration.workflow import WorkflowDefinition, WorkflowStep
 from app.orchestration.execution import WorkflowExecutionEngine, WorkflowExecutionStatus
+from app.orchestration.workflow import WorkflowDefinition, WorkflowStep
 
 
 def test_workflow_execution_lifecycle():

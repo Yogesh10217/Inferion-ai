@@ -1,25 +1,21 @@
 """Mandatory 12 E2E Verification Flows for Enterprise AI Compliance Platform (Phase 5.27)."""
 
 import pytest
-from datetime import datetime, timezone, timedelta
 
-from app.compliance_platform.manager import CompliancePlatformManager
-from app.compliance_platform.frameworks import FrameworkType
-from app.compliance_platform.requirements import RequirementScope
-from app.compliance_platform.controls import ControlType, ControlCategory, ControlImplementation, ControlStatus
-from app.compliance_platform.evidence import EvidenceType, EvidenceSource
 from app.compliance_platform.assessments import AssessmentResult
-from app.compliance_platform.findings import FindingSeverity, FindingStatus, FindingCategory
-from app.compliance_platform.remediation import RemediationPriority, RemediationAction, RemediationStatus
-from app.compliance_platform.attestations import AttestationStatus
-from app.compliance_platform.continuous_monitoring import ComplianceSignalType
 from app.compliance_platform.assurance import AssuranceConclusion
-from app.compliance_platform.posture import PostureBand
+from app.compliance_platform.continuous_monitoring import ComplianceSignalType
+from app.compliance_platform.controls import ControlCategory, ControlImplementation, ControlStatus, ControlType
+from app.compliance_platform.evidence import EvidenceSource, EvidenceType
 from app.compliance_platform.exceptions import (
-    CrossTenantComplianceAccessException,
-    ImmutableEvidenceBundleException,
     AttestationExpiredException,
+    CrossTenantComplianceAccessException,
 )
+from app.compliance_platform.findings import FindingCategory, FindingSeverity
+from app.compliance_platform.frameworks import FrameworkType
+from app.compliance_platform.manager import CompliancePlatformManager
+from app.compliance_platform.posture import PostureBand
+from app.compliance_platform.remediation import RemediationAction, RemediationPriority, RemediationStatus
 
 
 @pytest.fixture
@@ -85,11 +81,17 @@ def test_flow3_control_failure(manager):
         category=FindingCategory.CONTROL_FAILURE,
         control_id=ctrl.control_id,
     )
-    action = RemediationAction(target_subsystem="OrchestrationManager", action_type="RESTART_GUARDRAIL", description="Restart guardrails")
-    plan = manager.remediation_manager.create_remediation_plan(tenant, finding.finding_id, [action], priority=RemediationPriority.HIGH, risk_level="HIGH")
+    action = RemediationAction(
+        target_subsystem="OrchestrationManager", action_type="RESTART_GUARDRAIL", description="Restart guardrails"
+    )
+    plan = manager.remediation_manager.create_remediation_plan(
+        tenant, finding.finding_id, [action], priority=RemediationPriority.HIGH, risk_level="HIGH"
+    )
 
     # Posture degradation
-    posture = manager.posture_manager.calculate_posture(tenant, has_critical_finding=True, critical_finding_details=["Control Safety Failed"])
+    posture = manager.posture_manager.calculate_posture(
+        tenant, has_critical_finding=True, critical_finding_details=["Control Safety Failed"]
+    )
     assert posture.overall_score < 50.0
     assert posture.posture_band == PostureBand.NON_COMPLIANT
     assert plan.status == RemediationStatus.REQUIRES_APPROVAL
@@ -98,10 +100,16 @@ def test_flow3_control_failure(manager):
 def test_flow4_high_risk_remediation(manager):
     """Flow 4: High-Risk Remediation requires ApprovalEngine approval and delegates execution after approval."""
     tenant = "tenant_delta"
-    finding = manager.finding_manager.create_finding(tenant, "Critical Breach", "Breach detected", severity=FindingSeverity.CRITICAL)
-    action = RemediationAction(target_subsystem="PlatformOperationsManager", action_type="ISOLATE_POD", description="Isolate pod")
+    finding = manager.finding_manager.create_finding(
+        tenant, "Critical Breach", "Breach detected", severity=FindingSeverity.CRITICAL
+    )
+    action = RemediationAction(
+        target_subsystem="PlatformOperationsManager", action_type="ISOLATE_POD", description="Isolate pod"
+    )
 
-    plan = manager.remediation_manager.create_remediation_plan(tenant, finding.finding_id, [action], priority=RemediationPriority.CRITICAL, risk_level="CRITICAL")
+    plan = manager.remediation_manager.create_remediation_plan(
+        tenant, finding.finding_id, [action], priority=RemediationPriority.CRITICAL, risk_level="CRITICAL"
+    )
     assert plan.status == RemediationStatus.REQUIRES_APPROVAL
 
     # Approve request via ApprovalEngine
@@ -109,7 +117,9 @@ def test_flow4_high_risk_remediation(manager):
 
     # Now delegate execution
     plan.status = RemediationStatus.APPROVED
-    del_plan = manager.remediation_manager.delegate_execution(plan.plan_id, tenant, delegated_subsystem="PlatformOperationsManager")
+    del_plan = manager.remediation_manager.delegate_execution(
+        plan.plan_id, tenant, delegated_subsystem="PlatformOperationsManager"
+    )
     assert del_plan.status == RemediationStatus.COMPLETED
     assert del_plan.delegated_subsystem == "PlatformOperationsManager"
 
@@ -121,7 +131,9 @@ def test_flow5_expired_attestation(manager):
     manager.attestation_manager.expire_attestation_explicitly(att.attestation_id, tenant)
 
     # Continuous monitoring signal
-    sig = manager.monitoring_manager.emit_signal(tenant, ComplianceSignalType.ATTESTATION_EXPIRED, "AttestationManager", att.attestation_id)
+    sig = manager.monitoring_manager.emit_signal(
+        tenant, ComplianceSignalType.ATTESTATION_EXPIRED, "AttestationManager", att.attestation_id
+    )
     assert sig.signal_type == ComplianceSignalType.ATTESTATION_EXPIRED
 
     with pytest.raises(AttestationExpiredException):
@@ -131,7 +143,9 @@ def test_flow5_expired_attestation(manager):
 def test_flow6_compliance_exception_lifecycle(manager):
     """Flow 6: Exception Request -> Approval -> Active -> Expiration (expired exception stops suppressing findings)."""
     tenant = "tenant_zeta"
-    exc = manager.exception_manager.request_exception(tenant, "req_01", "Business exception rationale", duration_days=30)
+    exc = manager.exception_manager.request_exception(
+        tenant, "req_01", "Business exception rationale", duration_days=30
+    )
     assert manager.exception_manager.is_requirement_excepted(tenant, "req_01") is True
 
     # Expire exception explicitly
@@ -232,13 +246,21 @@ def test_flow12_full_continuous_compliance_lifecycle(manager):
     """Flow 12: Complete Continuous Compliance Lifecycle."""
     tenant = "tenant_lambda"
     # 1. Event/Signal
-    sig = manager.monitoring_manager.emit_signal(tenant, ComplianceSignalType.SECURITY_EVENT, "IdentitySecurityManager", "user_123")
+    sig = manager.monitoring_manager.emit_signal(
+        tenant, ComplianceSignalType.SECURITY_EVENT, "IdentitySecurityManager", "user_123"
+    )
     # 2. Evidence
-    ev = manager.evidence_manager.collect_evidence(tenant, "USER", "user_123", EvidenceType.SECURITY_EVENT, EvidenceSource.IDENTITY_SECURITY_MANAGER, sig.signal_id)
+    ev = manager.evidence_manager.collect_evidence(
+        tenant, "USER", "user_123", EvidenceType.SECURITY_EVENT, EvidenceSource.IDENTITY_SECURITY_MANAGER, sig.signal_id
+    )
     # 3. Assessment & Finding
-    finding = manager.finding_manager.create_finding(tenant, "Unauthorized Auth", "Failed auth attempt", severity=FindingSeverity.HIGH, evidence_ids=[ev.evidence_id])
+    finding = manager.finding_manager.create_finding(
+        tenant, "Unauthorized Auth", "Failed auth attempt", severity=FindingSeverity.HIGH, evidence_ids=[ev.evidence_id]
+    )
     # 4. Remediation & Approval
-    action = RemediationAction(target_subsystem="IdentitySecurityManager", action_type="REVOKE_TOKEN", description="Revoke token")
+    action = RemediationAction(
+        target_subsystem="IdentitySecurityManager", action_type="REVOKE_TOKEN", description="Revoke token"
+    )
     plan = manager.remediation_manager.create_remediation_plan(tenant, finding.finding_id, [action], risk_level="HIGH")
     manager.governance_engine.approval_engine.approve(plan.approval_request_id, approver_id="sec_admin")
 
@@ -248,7 +270,9 @@ def test_flow12_full_continuous_compliance_lifecycle(manager):
 
     # 6. Posture & Assurance & Audit Package
     posture = manager.posture_manager.calculate_posture(tenant)
-    assurance = manager.assurance_manager.generate_assurance_report(tenant, "fw_soc2", conclusion=AssuranceConclusion.ASSURED)
+    assurance = manager.assurance_manager.generate_assurance_report(
+        tenant, "fw_soc2", conclusion=AssuranceConclusion.ASSURED
+    )
     audit_pkg = manager.audit_manager.create_audit_package(tenant, "fw_soc2", ev.evidence_id, assurance.report_id)
 
     assert posture.overall_score >= 90.0

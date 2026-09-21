@@ -1,8 +1,6 @@
 """Integration tests for AI Gateway, Agent, Workflow, Tool, Team, Planning, and Autonomy subsystem telemetry."""
 
-import pytest
 from app.observability.manager import ObservabilityManager
-from app.observability.context import ObservabilityContext
 
 
 def test_gateway_telemetry_integration():
@@ -10,7 +8,9 @@ def test_gateway_telemetry_integration():
     ctx = om.create_context(trace_id="tr-gw", model_id="gpt-4o", provider="openai")
 
     om.start_execution("gateway", "gateway.request", context=ctx)
-    om.end_execution("gateway.request", "gateway", status="OK", latency_ms=50.0, input_tokens=500, output_tokens=200, context=ctx)
+    om.end_execution(
+        "gateway.request", "gateway", status="OK", latency_ms=50.0, input_tokens=500, output_tokens=200, context=ctx
+    )
 
     summary = om.performance.get_component_performance("gateway")
     assert summary.count == 1

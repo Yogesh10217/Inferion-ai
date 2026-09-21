@@ -1,6 +1,7 @@
 """Tests for PerformanceMonitor and percentile calculations."""
 
 import pytest
+
 from app.observability.performance import PerformanceMonitor
 
 

@@ -2,7 +2,6 @@
 Tests for Security Posture Evaluator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.security_posture import SecurityPostureEvaluator, SecurityPostureResult
 
 

@@ -1,6 +1,5 @@
 """Unit tests for KnowledgeBillingTracker FinOps cost attribution."""
 
-import pytest
 from app.knowledge_platform.billing import KnowledgeBillingTracker
 
 

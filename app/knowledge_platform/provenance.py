@@ -27,7 +27,6 @@ class CitationReference(BaseModel):
 
 
 class ProvenanceChain(BaseModel):
-
     chain_id: str = Field(default_factory=lambda: f"prov_{uuid.uuid4().hex[:10]}")
     item_id: str
     tenant_id: str = "global"

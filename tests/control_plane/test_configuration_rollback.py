@@ -1,6 +1,5 @@
 """Unit tests for Configuration rollback."""
 
-import pytest
 from app.control_plane.configuration import ConfigurationManager, ConfigurationScope
 
 

@@ -1,13 +1,11 @@
 import pytest
-import asyncio
-from unittest.mock import AsyncMock, MagicMock
 
-from app.registry.db_registry import DatabaseModelRegistry
-from app.registry.model_metadata import ModelMetadata
-from app.mlops.registry import AIAssetRegistry, AIAssetType, AIAssetStatus
 from app.cache.memory_backend import MemoryCacheBackend
 from app.cache.redis_backend import RedisCacheBackend
 from app.knowledge.embedding_service import EmbeddingCache
+from app.mlops.registry import AIAssetRegistry, AIAssetStatus, AIAssetType
+from app.registry.db_registry import DatabaseModelRegistry
+from app.registry.model_metadata import ModelMetadata
 
 
 @pytest.mark.asyncio
@@ -114,7 +112,7 @@ async def test_embedding_cache_lru_eviction():
 async def test_redis_cache_backend_fallback():
     # Invalid Redis URL should act as graceful no-op without raising unhandled exceptions
     redis_backend = RedisCacheBackend(redis_url="redis://invalid_host:6379/0", max_retries=1)
-    
+
     assert await redis_backend.get("test_key") is None
     await redis_backend.set("test_key", "val", ttl_seconds=10)
     assert await redis_backend.exists("test_key") is False

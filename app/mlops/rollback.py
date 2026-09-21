@@ -52,7 +52,7 @@ class RollbackManager:
         return plan
 
     def execute_rollback(self, plan: RollbackPlan) -> RollbackResult:
-        dep = self.deployment_manager.get_deployment(plan.deployment_id)
+        self.deployment_manager.get_deployment(plan.deployment_id)
         self.deployment_manager.rollback(plan.deployment_id, plan.target_version_number)
 
         result = RollbackResult(

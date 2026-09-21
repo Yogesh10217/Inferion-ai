@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.models import ProgressiveDeliveryState, ProgressiveDeliveryStrategy
 from app.deployment.progressive_delivery import ProgressiveDeliveryEngine
 

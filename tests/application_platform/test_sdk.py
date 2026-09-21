@@ -1,7 +1,6 @@
 """Unit tests for Multi-Language SDK integration."""
 
-import pytest
-from sdk.python.llm_engine import LLMEngineClient, ApplicationPlatformClient
+from sdk.python.llm_engine import LLMEngineClient
 
 
 def test_python_sdk_application_client():

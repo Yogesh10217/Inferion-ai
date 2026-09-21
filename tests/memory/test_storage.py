@@ -3,9 +3,10 @@ Tests for Unified Memory Store
 """
 
 import pytest
-from app.memory.memory_store import MemoryStore, MemoryItemRecord
-from app.memory.memory_types import MemoryType, RetentionPolicy, MemoryStatus
-from app.memory.exceptions import MemoryNotFoundError, TenantMemoryIsolationError
+
+from app.memory.exceptions import TenantMemoryIsolationError
+from app.memory.memory_store import MemoryItemRecord, MemoryStore
+from app.memory.memory_types import MemoryStatus, MemoryType
 
 
 def test_memory_store_crud():
@@ -34,7 +35,9 @@ def test_memory_store_crud():
 
 def test_memory_store_tenant_isolation():
     store = MemoryStore()
-    rec = MemoryItemRecord(organization_id="org_1", workspace_id="ws_1", memory_type=MemoryType.PROFILE, content="User prefers Python")
+    rec = MemoryItemRecord(
+        organization_id="org_1", workspace_id="ws_1", memory_type=MemoryType.PROFILE, content="User prefers Python"
+    )
     saved = store.save(rec)
 
     with pytest.raises(TenantMemoryIsolationError):

@@ -123,40 +123,40 @@ class ModelIntelligenceManager:
         bm_res = BenchmarkResult(
             model_id=model_id, model_name=model_name, version_tag="1.0.0", suite_name="ReasoningSuite", score=88.5
         )
-        benchmark = self.benchmark_manager.run_benchmark(
+        self.benchmark_manager.run_benchmark(
             tenant_id=tenant_id, suite_name="ReasoningSuite", results=[bm_res]
         )
 
         # 5. Performance Analysis
-        perf = self.performance_manager.record_performance(
+        self.performance_manager.record_performance(
             model_id=model_id, tenant_id=tenant_id, latency_p95_ms=115.0, error_rate_percentage=0.01
         )
 
         # 6. Quality Assessment
         q_scores = [QualityScore(dimension=QualityDimension.CORRECTNESS, score=0.95)]
-        quality = self.quality_manager.evaluate_quality(model_id=model_id, tenant_id=tenant_id, scores=q_scores)
+        self.quality_manager.evaluate_quality(model_id=model_id, tenant_id=tenant_id, scores=q_scores)
 
         # 7. Hallucination Intelligence
-        hal_assess = self.hallucination_manager.analyze_hallucinations(
+        self.hallucination_manager.analyze_hallucinations(
             model_id=model_id, tenant_id=tenant_id, total_evaluated=100, findings=[]
         )
 
         # 8. Drift Detection
-        drift = self.drift_manager.detect_drift(
+        self.drift_manager.detect_drift(
             model_id=model_id, tenant_id=tenant_id, drift_type=ModelDriftType.BEHAVIORAL_DRIFT, drift_score=0.02
         )
 
         # 9. Reliability Assessment
         rel_scores = [ReliabilityScore(dimension="AVAILABILITY", score=0.99)]
-        reliability = self.reliability_manager.assess_reliability(
+        self.reliability_manager.assess_reliability(
             model_id=model_id, tenant_id=tenant_id, scores=rel_scores
         )
 
         # 10. Safety Assessment
-        safety = self.safety_manager.evaluate_safety(model_id=model_id, tenant_id=tenant_id)
+        self.safety_manager.evaluate_safety(model_id=model_id, tenant_id=tenant_id)
 
         # 11. Security Assessment
-        security = self.security_manager.assess_security(model_id=model_id, tenant_id=tenant_id)
+        self.security_manager.assess_security(model_id=model_id, tenant_id=tenant_id)
 
         # 12. Risk Evaluation
         risk_factors = [
@@ -164,7 +164,7 @@ class ModelIntelligenceManager:
                 dimension=ModelRiskDimension.SAFETY, risk_score=0.1, weight=1.0, description="Low safety risk"
             )
         ]
-        risk = self.risk_manager.assess_risk(model_id=model_id, tenant_id=tenant_id, factors=risk_factors)
+        self.risk_manager.assess_risk(model_id=model_id, tenant_id=tenant_id, factors=risk_factors)
 
         # 13. Trust Evaluation
         trust_factors = [ModelTrustFactor(dimension=ModelTrustDimension.QUALITY, score=92.0, weight=1.0)]
@@ -172,7 +172,7 @@ class ModelIntelligenceManager:
         self.metrics_collector.set_gauge("trust_score", trust.trust_score.overall_score)
 
         # 14. Explainability Analysis
-        explanation = self.explainability_manager.generate_explanation(
+        self.explainability_manager.generate_explanation(
             model_id=model_id,
             tenant_id=tenant_id,
             explanation_type=ExplanationType.EVALUATION_EXPLANATION,
@@ -181,10 +181,10 @@ class ModelIntelligenceManager:
 
         # 15. Monitoring
         self.monitoring_manager.configure_monitoring(model_id=model_id, tenant_id=tenant_id)
-        mon_assess = self.monitoring_manager.assess_monitoring(model_id=model_id, tenant_id=tenant_id)
+        self.monitoring_manager.assess_monitoring(model_id=model_id, tenant_id=tenant_id)
 
         # 16. Anomaly Detection
-        anom = self.anomaly_manager.detect_anomaly(
+        self.anomaly_manager.detect_anomaly(
             model_id=model_id,
             tenant_id=tenant_id,
             anomaly_type=ModelAnomalyType.LATENCY_SPIKE,
@@ -213,7 +213,7 @@ class ModelIntelligenceManager:
             summary="Routine check clean.",
             root_cause="None",
         )
-        inv_concluded = self.investigation_manager.conclude_investigation(
+        self.investigation_manager.conclude_investigation(
             investigation_id=inv.investigation_id, tenant_id=tenant_id
         )
 
@@ -222,7 +222,7 @@ class ModelIntelligenceManager:
         rem_plan = self.remediation_manager.create_plan(
             model_id=model_id, tenant_id=tenant_id, priority=ModelRemediationPriority.LOW, actions=[act]
         )
-        rem_executed = self.remediation_manager.execute_plan_via_delegation(
+        self.remediation_manager.execute_plan_via_delegation(
             plan_id=rem_plan.plan_id, tenant_id=tenant_id
         )
 
@@ -235,13 +235,13 @@ class ModelIntelligenceManager:
         del_act = ModelDelegationAction(
             action_id="dact-1", target_system="model_hosting", action_type="configuration_review"
         )
-        del_plan = self.delegation_manager.create_delegation_plan(
+        self.delegation_manager.create_delegation_plan(
             model_id=model_id, tenant_id=tenant_id, actions=[del_act]
         )
 
         # 22. Verification
         v_check = VerificationCheck(check_name="config_verified", target="configuration_review", passed=True)
-        ver = self.verification_manager.verify_remediation(
+        self.verification_manager.verify_remediation(
             remediation_plan_id=rem_plan.plan_id, model_id=model_id, tenant_id=tenant_id, checks=[v_check]
         )
 
@@ -252,7 +252,7 @@ class ModelIntelligenceManager:
             reference_id=evaluation.evaluation_id,
             data_ref=f"eval:{evaluation.evaluation_id}",
         )
-        ev_bundle = self.evidence_manager.create_evidence_bundle(
+        self.evidence_manager.create_evidence_bundle(
             model_id=model_id, tenant_id=tenant_id, evidences=[ev_item]
         )
 
@@ -264,7 +264,7 @@ class ModelIntelligenceManager:
         self.metrics_collector.set_gauge("assurance_score", assurance.overall_assurance_score * 100.0)
 
         # 25. Correlation
-        corr = self.correlation_manager.correlate_events(
+        self.correlation_manager.correlate_events(
             model_id=model_id,
             tenant_id=tenant_id,
             correlation_type=CorrelationType.MODEL_INCIDENT,
@@ -291,12 +291,12 @@ class ModelIntelligenceManager:
         )
 
         # 28. Analytics
-        report = self.analytics_engine.generate_report(
+        self.analytics_engine.generate_report(
             tenant_id=tenant_id, total_models_monitored=1, active_incidents_count=0, overall_health_score=95.0
         )
 
         # 29. Observability Metrics
-        metrics_summary = self.metrics_collector.collect_metrics()
+        self.metrics_collector.collect_metrics()
 
         # 30. Billing
         cost_event = self.billing_tracker.track_operation_cost(

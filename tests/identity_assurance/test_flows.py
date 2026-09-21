@@ -1,16 +1,17 @@
 """Mandatory 20 End-to-End Test Flows for Phase 5.48 Identity Assurance Platform."""
 
 import pytest
+
+from app.identity_assurance.access_graph import AccessGraphNode
+from app.identity_assurance.anomalies import IdentityAnomalyType
+from app.identity_assurance.evidence import IdentityEvidence
 from app.identity_assurance.exceptions import (
     CrossTenantIdentityAssuranceException,
     ImmutableIdentityRecordException,
 )
-from app.identity_assurance.identities import IdentityType, IdentityCategory
+from app.identity_assurance.governance import IdentityGovernanceOutcome, IdentityGovernanceRequest
+from app.identity_assurance.identities import IdentityCategory, IdentityType
 from app.identity_assurance.manager import IdentityAssuranceManager
-from app.identity_assurance.governance import IdentityGovernanceRequest, IdentityGovernanceOutcome
-from app.identity_assurance.anomalies import IdentityAnomalyType
-from app.identity_assurance.evidence import IdentityEvidence
-from app.identity_assurance.access_graph import AccessGraphNode, AccessRelationship
 from app.identity_assurance.remediation import IdentityRemediationAction
 from app.identity_assurance.signals import IdentitySignalSource, IdentitySignalType
 
@@ -194,9 +195,7 @@ def test_flow_12_toxic_privilege_combination_detection(manager: IdentityAssuranc
         identity_type=IdentityType.HUMAN,
     )
     active_perms = ["data:write", "audit:delete"]
-    toxic = manager.toxic_combination_manager.assess_toxic_combinations(
-        tenant_id, identity.identity_id, active_perms
-    )
+    toxic = manager.toxic_combination_manager.assess_toxic_combinations(tenant_id, identity.identity_id, active_perms)
     assert toxic.risk.has_toxic_combination is True
     assert len(toxic.risk.detected_combinations) > 0
 
@@ -226,9 +225,7 @@ def test_flow_14_access_graph_traversal_and_risky_access_path(manager: IdentityA
     manager.access_graph_manager.add_node(
         tenant_id, AccessGraphNode(node_id=identity.identity_id, node_type="IDENTITY", label=identity.name)
     )
-    traversal = manager.access_graph_manager.traverse_access_path(
-        tenant_id, identity.identity_id, "critical-data"
-    )
+    traversal = manager.access_graph_manager.traverse_access_path(tenant_id, identity.identity_id, "critical-data")
     assert len(traversal.path) > 0
 
     path_assessment = manager.access_path_manager.analyze_paths(tenant_id, identity.identity_id)
@@ -344,24 +341,24 @@ def test_flow_20_full_enterprise_identity_assurance_lifecycle(manager: IdentityA
     assert trust.is_trusted is True
 
     # 3. Assess authentication & authorization
-    auth = manager.auth_manager.assess_authentication(tenant_id, identity.identity_id)
-    authorization = manager.authorization_manager.assess_authorization(tenant_id, identity.identity_id)
+    manager.auth_manager.assess_authentication(tenant_id, identity.identity_id)
+    manager.authorization_manager.assess_authorization(tenant_id, identity.identity_id)
 
     # 4. Privileges & Least privilege
-    privileges = manager.privilege_manager.assess_privileges(tenant_id, identity.identity_id)
-    least_priv = manager.least_privilege_manager.assess_least_privilege(
+    manager.privilege_manager.assess_privileges(tenant_id, identity.identity_id)
+    manager.least_privilege_manager.assess_least_privilege(
         tenant_id, identity.identity_id, ["agent:exec", "data:read"], ["data:read"]
     )
 
     # 5. Access patterns & Anomaly detection
-    patterns = manager.access_pattern_manager.assess_patterns(tenant_id, identity.identity_id)
-    anomaly = manager.anomaly_manager.detect_anomaly(
+    manager.access_pattern_manager.assess_patterns(tenant_id, identity.identity_id)
+    manager.anomaly_manager.detect_anomaly(
         tenant_id, identity.identity_id, IdentityAnomalyType.ABNORMAL_AGENT_ACTIVITY
     )
 
     # 6. Risk & Impact
-    risk = manager.risk_manager.assess_risk(tenant_id, identity.identity_id)
-    impact = manager.impact_manager.assess_impact(tenant_id, identity.identity_id)
+    manager.risk_manager.assess_risk(tenant_id, identity.identity_id)
+    manager.impact_manager.assess_impact(tenant_id, identity.identity_id)
 
     # 7. Governance action evaluation
     gov_req = IdentityGovernanceRequest(
@@ -387,7 +384,7 @@ def test_flow_20_full_enterprise_identity_assurance_lifecycle(manager: IdentityA
 
     # 10. Evidence & Assurance Score
     item = IdentityEvidence(evidence_type="LIFECYCLE_LOG", source="audit", payload={"status": "complete"})
-    bundle = manager.evidence_manager.create_evidence_bundle(tenant_id, identity.identity_id, [item])
+    manager.evidence_manager.create_evidence_bundle(tenant_id, identity.identity_id, [item])
     score = manager.evaluate_identity_assurance(tenant_id, identity.identity_id)
     assert score.overall_assurance_score > 0.0
 

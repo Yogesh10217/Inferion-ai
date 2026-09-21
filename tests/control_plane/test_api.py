@@ -1,11 +1,12 @@
 """Integration tests for Control Plane REST API endpoints."""
 
-import pytest
 from fastapi.testclient import TestClient
-from app.main import app
+
 from app.auth.jwt_service import JWTService
+from app.main import app
 
 client = TestClient(app)
+
 
 def get_auth_headers() -> dict:
     token = JWTService.create_access_token({"sub": "admin_user_id"})

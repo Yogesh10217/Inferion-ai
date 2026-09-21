@@ -1,6 +1,5 @@
 """Unit tests for ControlPlaneUsageManager."""
 
-import pytest
 from app.control_plane.usage_manager import ControlPlaneUsageManager
 
 

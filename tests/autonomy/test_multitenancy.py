@@ -3,8 +3,9 @@ Tests for Multi-Tenant Isolation in Autonomy Engine
 """
 
 import pytest
-from app.autonomy.execution_governance import ExecutionGovernanceEngine
+
 from app.autonomy.exceptions import EmergencyStopException
+from app.autonomy.execution_governance import ExecutionGovernanceEngine
 
 
 def test_tenant_emergency_stop_isolation():

@@ -54,7 +54,7 @@ async def list_api_keys(tenant_id: str = "global", manager: APIKeyManager = Depe
 async def revoke_api_key(id: str, manager: APIKeyManager = Depends(get_key_manager)):
     """Revoke an API key by ID."""
     try:
-        key = manager.revoke_api_key(id)
+        manager.revoke_api_key(id)
         return {"status": "revoked", "key_id": id}
     except InvalidAPIKeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"API key '{id}' not found")

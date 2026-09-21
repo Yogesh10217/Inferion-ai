@@ -2,23 +2,19 @@
 
 import pytest
 
-from app.reliability_platform.manager import ReliabilityPlatformManager
-from app.reliability_platform.services import ServiceTier, ServiceStatus
-from app.reliability_platform.health import HealthState
-from app.reliability_platform.slo import SLIType, SLOBreach
-from app.reliability_platform.signals import SignalSource, SignalSeverity
-from app.reliability_platform.incidents import IncidentSeverity, IncidentStatus
-from app.reliability_platform.correlation import CorrelationStrategy
-from app.reliability_platform.remediation import RemediationAction, RemediationRisk
-from app.reliability_platform.postmortems import PostmortemStatus
 from app.platform_contracts.governance import GovernanceDecisionStatus
-from app.platform_contracts.trust import TrustBand
 from app.platform_contracts.idempotency import IdempotencyConflictException
+from app.reliability_platform.correlation import CorrelationStrategy
 from app.reliability_platform.exceptions import (
     CrossTenantReliabilityAccessException,
     ImmutableReliabilityRecordException,
-    ServiceNotFoundException,
 )
+from app.reliability_platform.health import HealthState
+from app.reliability_platform.incidents import IncidentSeverity, IncidentStatus
+from app.reliability_platform.manager import ReliabilityPlatformManager
+from app.reliability_platform.postmortems import PostmortemStatus
+from app.reliability_platform.remediation import RemediationAction, RemediationRisk
+from app.reliability_platform.services import ServiceTier
 
 
 def test_flow1_service_health_and_slo():
@@ -50,7 +46,9 @@ def test_flow2_slo_breach_incident():
     assert breach is not None
     assert breach.remaining_budget_pct == 0.0
 
-    inc = mgr.incident_manager.create_incident(tenant, svc.service_id, f"SLO Breach: {slo.name}", IncidentSeverity.SEV_1_HIGH)
+    inc = mgr.incident_manager.create_incident(
+        tenant, svc.service_id, f"SLO Breach: {slo.name}", IncidentSeverity.SEV_1_HIGH
+    )
     assert inc.status == IncidentStatus.DETECTED
 
 
@@ -104,7 +102,9 @@ def test_flow6_high_risk_remediation_approval():
     tenant = "tenant_rel_6"
 
     inc = mgr.incident_manager.create_incident(tenant, "svc_6", "Database Corruption Alert")
-    action = RemediationAction(target_manager="PLATFORM_OPERATIONS", action_name="PURGE_DATABASE", risk=RemediationRisk.CRITICAL)
+    action = RemediationAction(
+        target_manager="PLATFORM_OPERATIONS", action_name="PURGE_DATABASE", risk=RemediationRisk.CRITICAL
+    )
 
     plan = mgr.remediation_manager.plan_remediation(tenant, inc.incident_id, "key_risk_6", [action])
     gov_dec = mgr.governance_engine.evaluate_remediation(tenant, plan)

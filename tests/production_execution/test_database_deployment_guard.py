@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.database_deployment_guard import DatabaseDeploymentGuard
 from app.deployment.environment import EnvironmentManager
 

@@ -3,6 +3,7 @@ Tests for Memory CLI Command Parser & Registration
 """
 
 import argparse
+
 from cli.commands.memory import add_memory_parser
 
 

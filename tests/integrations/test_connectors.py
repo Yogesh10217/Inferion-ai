@@ -1,7 +1,6 @@
 """Unit tests for SaaS connectors (Slack, GitHub, Jira, REST)."""
 
-import pytest
-from app.integrations.connector import SlackConnector, GitHubConnector, JiraConnector, RESTConnector
+from app.integrations.connector import GitHubConnector, JiraConnector, SlackConnector
 
 
 def test_saas_connectors_execution():

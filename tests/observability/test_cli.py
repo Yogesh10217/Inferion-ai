@@ -1,7 +1,7 @@
 """CLI Unit tests for Observability parser and output formatters."""
 
-import pytest
 import argparse
+
 from cli.commands.observability import add_observability_parser, format_output
 
 
@@ -13,7 +13,6 @@ def test_cli_parser_registration():
     args = parser.parse_args(["observability", "--format", "json", "traces"])
     assert args.command == "traces"
     assert args.format == "json"
-
 
 
 def test_cli_format_output(capsys):

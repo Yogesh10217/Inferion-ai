@@ -114,21 +114,21 @@ class PlatformResilienceManager:
         )
 
         # 3. Assess Capacity
-        cap_eval = self.capacity_manager.evaluate_capacity(tenant_id, svc.service_id)
+        self.capacity_manager.evaluate_capacity(tenant_id, svc.service_id)
 
         # 4. Overload Protection / Backpressure
-        bp_eval = self.backpressure_manager.evaluate_backpressure(tenant_id, svc.service_id, current_queue_depth=100)
+        self.backpressure_manager.evaluate_backpressure(tenant_id, svc.service_id, current_queue_depth=100)
 
         # 5. Formulate Scaling & Degradation Plans
-        scale_plan = self.scaling_manager.plan_scaling(
+        self.scaling_manager.plan_scaling(
             tenant_id, svc.service_id, ScalingDirection.SCALE_OUT, delta_units=2
         )
-        deg_plan = self.degradation_manager.formulate_degradation_plan(
+        self.degradation_manager.formulate_degradation_plan(
             tenant_id, svc.service_id, DegradationLevel.REDUCED
         )
 
         # 6. Assess Regional Failover Strategy
-        reg_eval = self.regional_manager.evaluate_regional_resilience(
+        self.regional_manager.evaluate_regional_resilience(
             tenant_id, svc.service_id, source_region, target_region
         )
 
@@ -136,13 +136,13 @@ class PlatformResilienceManager:
         rec_plan = self.recovery_manager.formulate_recovery_plan(tenant_id, "inc_001", svc.service_id)
 
         # 8. Assess Resilience Risk & Governance
-        risk_eval = self.risk_manager.assess_resilience_risk(tenant_id, svc.service_id, is_failover_pending=True)
-        gov_dec = self.governance_engine.evaluate_action_governance(
+        self.risk_manager.assess_resilience_risk(tenant_id, svc.service_id, is_failover_pending=True)
+        self.governance_engine.evaluate_action_governance(
             tenant_id, "execute_recovery_plan", svc.service_id, is_high_risk=False
         )
 
         # 9. Execute Recovery (Delegation)
-        exec_plan = self.recovery_manager.execute_recovery(rec_plan.recovery_plan_id, tenant_id)
+        self.recovery_manager.execute_recovery(rec_plan.recovery_plan_id, tenant_id)
 
         # 10. Outcome Verification
         ver = self.verification_manager.verify_resilience_outcome(tenant_id, svc.service_id)
@@ -160,7 +160,7 @@ class PlatformResilienceManager:
         )
 
         # 13. Learning Intelligence
-        learn_rec = self.learning_manager.record_learning(
+        self.learning_manager.record_learning(
             tenant_id, svc.service_id, "Capacity saturation successfully mitigated via governed recovery"
         )
 

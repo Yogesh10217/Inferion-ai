@@ -1,8 +1,7 @@
 """Unit tests for Operational Impact & Blast Radius Analyzer."""
 
-import pytest
-from app.platform_operations.services import ServiceCatalogManager, ServiceTier
 from app.platform_operations.impact import ImpactAnalyzer, ImpactLevel
+from app.platform_operations.services import ServiceCatalogManager, ServiceTier
 
 
 def test_impact_analysis_for_critical_tier_service():

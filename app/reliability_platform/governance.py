@@ -30,7 +30,7 @@ class ReliabilityGovernanceEngine:
 
         if has_high_risk:
             # Trigger approval requirement
-            app_req = self.approval_engine.request_approval(
+            self.approval_engine.request_approval(
                 execution_id=plan.plan_id,
                 action_type="HIGH_RISK_REMEDIATION",
                 tenant_id=tenant_id,

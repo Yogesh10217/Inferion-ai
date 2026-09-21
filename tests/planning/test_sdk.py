@@ -2,7 +2,6 @@
 Tests for Planning SDK Clients
 """
 
-import pytest
 from sdk.python.llm_engine.planning import PlanningClient
 
 

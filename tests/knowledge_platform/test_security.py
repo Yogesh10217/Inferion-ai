@@ -1,6 +1,5 @@
 """Unit tests for secret redaction in knowledge content."""
 
-import pytest
 from app.security.secrets import SecretManager
 
 

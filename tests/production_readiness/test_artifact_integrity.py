@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from app.deployment.container_validation import ContainerValidationEngine
 
 

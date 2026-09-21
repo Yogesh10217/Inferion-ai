@@ -89,7 +89,7 @@ class MLOpsEvaluationEngine:
     ) -> EvaluationResult:
         """Run evaluation suite against asset version and verify quality/safety thresholds."""
         ds = self._datasets.get(dataset_id)
-        num_cases = len(ds.cases) if ds else 1
+        len(ds.cases) if ds else 1
 
         overall_score = 94.5
         safety_score = 98.5

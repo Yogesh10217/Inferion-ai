@@ -99,7 +99,7 @@ class ControlAssuranceManager:
         """Executes complete end-to-end 22-step continuous control assurance lifecycle."""
 
         # 1. Resolve Scope
-        scope_res = self.scope_resolver.resolve_scope(tenant_id, ScopeTarget.SERVICE, service_id)
+        self.scope_resolver.resolve_scope(tenant_id, ScopeTarget.SERVICE, service_id)
 
         # 2. Register Control Definition
         ctrl = self.control_manager.register_control(
@@ -145,7 +145,7 @@ class ControlAssuranceManager:
 
         # 7. Correlate Findings & Analyze Impact
         self.correlation_manager.correlate_controls(tenant_id, ctrl.control_id, "SEC-002")
-        impact = self.impact_analyzer.analyze_impact(tenant_id, ctrl.control_id)
+        self.impact_analyzer.analyze_impact(tenant_id, ctrl.control_id)
 
         # 8. Compose Risk & Calculate Assurance Score
         self.risk_manager.assess_control_risk(tenant_id, ctrl.control_id, is_failed=force_violation)
@@ -204,7 +204,7 @@ class ControlAssuranceManager:
 
         # 11. Trust Engine & Learning Recommendations
         trust = self.trust_engine.calculate_control_trust(tenant_id, ctrl.control_id, is_degraded=force_violation)
-        learn = self.learning_manager.record_learning(tenant_id, ctrl.control_id, "Continuous signal stream validated")
+        self.learning_manager.record_learning(tenant_id, ctrl.control_id, "Continuous signal stream validated")
 
         # 12. Audit, Metrics & FinOps Billing
         self.audit_manager.log_event(tenant_id, "CONTROL_EVALUATED", ctrl.control_id)

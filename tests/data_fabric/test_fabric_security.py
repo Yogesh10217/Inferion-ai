@@ -1,7 +1,6 @@
 """Unit tests for SensitiveDataDetector and RedactionEngine."""
 
-import pytest
-from app.data_fabric.data_security import SensitiveDataDetector, RedactionEngine, SensitiveDataAction
+from app.data_fabric.data_security import RedactionEngine, SensitiveDataAction, SensitiveDataDetector
 
 
 def test_sensitive_data_detection_and_redaction():

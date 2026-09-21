@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.secrets import SecretsSanitizer
 
 

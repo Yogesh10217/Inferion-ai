@@ -1,6 +1,5 @@
 """Unit tests for ResourceGovernanceEngine."""
 
-import pytest
 from app.governance.resource_governance import ResourceGovernanceEngine
 
 

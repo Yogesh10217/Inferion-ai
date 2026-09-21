@@ -106,7 +106,7 @@ class OperationsAssuranceManager:
         return service
 
     def evaluate_assurance(self, tenant_id: str, service_id: str) -> OperationsAssuranceScore:
-        service = self.service_manager.get_service(tenant_id, service_id)
+        self.service_manager.get_service(tenant_id, service_id)
         health = self.health_manager.get_health(tenant_id, service_id)
         reliability = self.reliability_engine.assess_reliability(tenant_id, service_id)
 

@@ -40,7 +40,7 @@ class DeveloperAssistantManager:
     def assist_developer(self, query: str, repository_id: str, tenant_id: str = "global") -> DeveloperRecommendation:
         # Pre-retrieval authorization via KnowledgePlatformManager
         req = RetrievalRequest(query=query, tenant_id=tenant_id)
-        search_res = self.knowledge_platform_manager.retrieval_pipeline.execute_retrieval(req)
+        self.knowledge_platform_manager.retrieval_pipeline.execute_retrieval(req)
         raw_guidance = f"Based on repository '{repository_id}': Use standard error handling pattern"
         sanitized_guidance = self.secret_manager.sanitize_text(raw_guidance)
 

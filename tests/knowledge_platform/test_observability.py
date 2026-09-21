@@ -1,6 +1,5 @@
 """Unit tests for KnowledgeMetricsCollector."""
 
-import pytest
 from app.knowledge_platform.observability import KnowledgeMetricsCollector
 
 

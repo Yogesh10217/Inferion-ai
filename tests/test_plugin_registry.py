@@ -1,8 +1,7 @@
-import pytest
-from app.plugins.plugin_registry import PluginRegistry
 from app.plugins.plugin import Plugin
-from app.plugins.plugin_manifest import PluginManifest
 from app.plugins.plugin_context import PluginContext
+from app.plugins.plugin_manifest import PluginManifest
+from app.plugins.plugin_registry import PluginRegistry
 
 
 def test_plugin_registry_persistence(tmp_path):

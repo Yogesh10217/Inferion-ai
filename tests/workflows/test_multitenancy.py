@@ -3,9 +3,10 @@ Tests for Multi-Tenant Scoping & Tenant Isolation Enforcement
 """
 
 import pytest
-from app.workflows.workflow_manager import WorkflowManager
-from app.workflows.node import AgentNode
+
 from app.workflows.exceptions import TenantIsolationError
+from app.workflows.node import AgentNode
+from app.workflows.workflow_manager import WorkflowManager
 
 
 def test_tenant_isolation_in_workflow_registry():

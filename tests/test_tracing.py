@@ -1,6 +1,5 @@
-import pytest
-from app.tracing.tracer import get_tracer, get_tracer_provider
 from app.tracing.trace_attributes import TraceAttributes
+from app.tracing.tracer import get_tracer, get_tracer_provider
 
 
 def test_tracer_provider_initialization():

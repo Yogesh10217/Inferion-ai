@@ -1,5 +1,5 @@
+from app.deployment.models import DeploymentEnvironment, EnvironmentConfig, ShutdownState
 from app.deployment.shutdown import DeploymentShutdownManager
-from app.deployment.models import ShutdownState, DeploymentEnvironment, EnvironmentConfig
 
 
 def test_shutdown_lifecycle_transitions():

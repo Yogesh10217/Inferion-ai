@@ -94,7 +94,7 @@ class AutonomousOperationsEngine:
                 )
 
         # Execute remediation plan
-        executed_plan = self.remediation_planner.execute_remediation_plan(plan_id=plan_id, tenant_id=tenant_id)
+        self.remediation_planner.execute_remediation_plan(plan_id=plan_id, tenant_id=tenant_id)
 
         op = AutonomousOperation(
             tenant_id=tenant_id,

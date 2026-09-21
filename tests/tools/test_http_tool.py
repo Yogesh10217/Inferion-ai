@@ -3,6 +3,7 @@ Tests for HTTP Request Tool
 """
 
 import pytest
+
 from app.tools.builtin.http_tool import HTTPTool
 from app.tools.tool_context import ToolContext
 from app.tools.tool_result import ToolExecutionStatus

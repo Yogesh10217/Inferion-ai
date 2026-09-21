@@ -1,8 +1,6 @@
 """Unit & Security tests for Tenant Isolation in Control Plane."""
 
-import pytest
 from app.control_plane.manager import ControlPlaneManager
-from app.security.exceptions import TenantAccessDeniedError
 
 
 def test_strict_tenant_isolation():

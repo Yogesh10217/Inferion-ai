@@ -2,7 +2,11 @@
 Tests for Business Continuity Engine Module.
 """
 
-from app.reliability.business_continuity import BusinessContinuityEngine, BusinessContinuityPlan, ContinuityClassification
+from app.reliability.business_continuity import (
+    BusinessContinuityEngine,
+    BusinessContinuityPlan,
+    ContinuityClassification,
+)
 
 
 def test_business_continuity_prioritization():

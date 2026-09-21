@@ -1,6 +1,4 @@
-import pytest
-from app.deployment.deployment_authorization import DeploymentAuthorizationEngine, DeploymentAuthorizationRecord
-from app.deployment.models import DeploymentAuthorizationStatus
+from app.deployment.deployment_authorization import DeploymentAuthorizationEngine
 
 
 def test_authorization_ttl_expiry():

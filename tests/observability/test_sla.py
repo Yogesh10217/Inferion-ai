@@ -1,6 +1,5 @@
 """Tests for SLAEngine and SLOStatus evaluation."""
 
-import pytest
 from app.observability.sla import SLAEngine, SLOStatus
 
 

@@ -1,6 +1,5 @@
 """Unit tests for CapacityPlanner."""
 
-import pytest
 from app.finops.capacity import CapacityPlanner
 
 

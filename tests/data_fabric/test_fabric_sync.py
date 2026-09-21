@@ -1,12 +1,12 @@
 """Unit tests for DataSyncManager, checkpointing, and job lifecycle."""
 
 import pytest
-import asyncio
-from app.data_fabric.data_source import DataSourceManager, DataSourceType
-from app.data_fabric.sync import DataSyncManager, SyncStrategy, SyncStatus
-from app.data_fabric.connector import ConnectorRegistry, ConnectorFactory
+
+from app.data_fabric.connector import ConnectorFactory, ConnectorRegistry
 from app.data_fabric.connectors import register_all_initial_connectors
+from app.data_fabric.data_source import DataSourceManager, DataSourceType
 from app.data_fabric.ingestion import DataIngestionEngine
+from app.data_fabric.sync import DataSyncManager, SyncStatus, SyncStrategy
 
 
 @pytest.mark.asyncio

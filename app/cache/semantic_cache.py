@@ -9,6 +9,7 @@ import math
 import time
 from typing import List, Optional, Tuple
 
+from app.cache.embedding_provider import DummyEmbeddingProvider, EmbeddingProvider
 from app.schemas.inference_response import InferenceResponse
 
 
@@ -39,9 +40,6 @@ class SemanticCacheEntry:
         self.response = response
         self.model_id = model_id
         self.created_at = time.time()
-
-
-from app.cache.embedding_provider import DummyEmbeddingProvider, EmbeddingProvider
 
 
 class SemanticCache:

@@ -1,4 +1,5 @@
 import pytest
+
 from app.events import (
     EventEnvelope,
     EventPublisher,

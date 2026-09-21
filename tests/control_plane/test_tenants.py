@@ -1,8 +1,9 @@
 """Unit tests for TenantManager & Tenant Lifecycle."""
 
 import pytest
+
+from app.control_plane.exceptions import LifecycleException
 from app.control_plane.tenant import TenantManager, TenantStatus
-from app.control_plane.exceptions import TenantNotFoundException, LifecycleException
 
 
 def test_tenant_lifecycle_flow():

@@ -1,13 +1,17 @@
 """Unit tests for IncidentManager lifecycle and timeline tracking."""
 
-import pytest
 from app.operations.incidents import IncidentManager, IncidentSeverity, IncidentStatus
 
 
 def test_incident_lifecycle_and_timeline():
     mgr = IncidentManager()
 
-    inc = mgr.create_incident("Database Latency Spike", tenant_id="t_inc", severity=IncidentSeverity.SEV2_HIGH, primary_resource_id="db_master")
+    inc = mgr.create_incident(
+        "Database Latency Spike",
+        tenant_id="t_inc",
+        severity=IncidentSeverity.SEV2_HIGH,
+        primary_resource_id="db_master",
+    )
     assert inc.status == IncidentStatus.DETECTED
     assert len(inc.timeline) == 1
 

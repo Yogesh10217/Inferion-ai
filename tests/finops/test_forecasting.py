@@ -1,9 +1,9 @@
 """Unit tests for CostForecastingEngine."""
 
 from decimal import Decimal
-import pytest
-from app.finops.cost_ledger import UnifiedCostLedger, CostCategory
-from app.finops.forecasting import CostForecastingEngine, ForecastStrategy
+
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
+from app.finops.forecasting import CostForecastingEngine
 
 
 def test_cost_forecasting_and_budget_exhaustion_prediction():

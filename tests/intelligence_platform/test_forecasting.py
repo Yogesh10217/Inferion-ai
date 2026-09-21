@@ -1,8 +1,7 @@
 """Unit tests for Provider-Based Predictive Analytics & Forecasting Engine."""
 
-import pytest
 from app.intelligence_platform.context import ContextBuilder
-from app.intelligence_platform.forecasting import ForecastEngine, ForecastType, DeterministicForecastProvider
+from app.intelligence_platform.forecasting import DeterministicForecastProvider, ForecastEngine, ForecastType
 
 
 def test_provider_based_forecasting():

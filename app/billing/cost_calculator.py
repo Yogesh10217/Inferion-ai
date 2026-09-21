@@ -4,7 +4,6 @@ from app.limits.models import UsageRecord
 
 
 class CostCalculator:
-
     @staticmethod
     def calculate_cost(
         usage: UsageRecord, rule: PricingRule, discount_pct: float = 0.0, tax_pct: float = 0.0

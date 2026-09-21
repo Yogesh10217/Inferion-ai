@@ -1,7 +1,8 @@
 """Unit tests for Data Source Registry & Management."""
 
 import pytest
-from app.data_fabric.data_source import DataSourceManager, DataSourceType, DataSourceStatus
+
+from app.data_fabric.data_source import DataSourceManager, DataSourceStatus, DataSourceType
 from app.data_fabric.exceptions import DataSourceNotFoundException
 
 

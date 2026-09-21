@@ -1,7 +1,7 @@
 """Integration tests for Orchestration CLI commands."""
 
-import pytest
 from click.testing import CliRunner
+
 from cli.commands.orchestration import orchestration_cli
 
 

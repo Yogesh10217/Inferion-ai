@@ -1,5 +1,3 @@
-import pytest
-
 from app.core.container import ServiceContainer
 from app.deployment.service_registry import PlatformServiceRegistry
 from app.operations.operations_orchestrator import OperationsOrchestrator

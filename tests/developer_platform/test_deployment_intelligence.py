@@ -1,6 +1,5 @@
 """Unit tests for DeploymentIntelligenceEngine."""
 
-import pytest
 from app.developer_platform.deployment_intelligence import DeploymentIntelligenceEngine
 
 

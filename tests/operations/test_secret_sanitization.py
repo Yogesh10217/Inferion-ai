@@ -22,13 +22,19 @@ def test_secret_canaries_zero_exposure():
     pipeline_dict_str = str(res.to_dict())
 
     for canary in canaries:
-        assert canary not in pipeline_dict_str or "[REDACTED:" in pipeline_dict_str, f"Canary '{canary}' exposed unmasked in operational pipeline payload!"
+        assert canary not in pipeline_dict_str or "[REDACTED:" in pipeline_dict_str, (
+            f"Canary '{canary}' exposed unmasked in operational pipeline payload!"
+        )
 
     # Incident postmortem secret sanitization check
     mgr = IncidentManager()
     inc = mgr.create_incident("Canary Incident", IncidentSeverity.P1, summary="Leaked password123 and admin123")
-    report = PostIncidentReportGenerator().generate_report(inc, root_cause="Found canary_secret and secret_key in trace")
+    report = PostIncidentReportGenerator().generate_report(
+        inc, root_cause="Found canary_secret and secret_key in trace"
+    )
     report_str = str(report.to_dict())
 
     for canary in canaries:
-        assert canary not in report_str or "[REDACTED:" in report_str, f"Canary '{canary}' exposed unmasked in post-incident report!"
+        assert canary not in report_str or "[REDACTED:" in report_str, (
+            f"Canary '{canary}' exposed unmasked in post-incident report!"
+        )

@@ -2,12 +2,11 @@
 Tests for Planning Prometheus Metrics
 """
 
-import pytest
 from app.planning.planning_metrics import (
-    plans_created_total,
-    plans_completed_total,
-    simulations_run_total,
     planning_confidence_score,
+    plans_completed_total,
+    plans_created_total,
+    simulations_run_total,
 )
 
 

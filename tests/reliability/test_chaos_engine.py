@@ -2,9 +2,9 @@
 Tests for Chaos Engineering Engine Module.
 """
 
-from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 from app.reliability.chaos_engine import ChaosEngineeringEngine, ChaosExperiment
 from app.reliability.chaos_state_machine import ChaosState
+from app.reliability.reliability_models import ChaosExecutionMode, ChaosFailureType
 
 
 def test_chaos_engine_experiment_lifecycle():

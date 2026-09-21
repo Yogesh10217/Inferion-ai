@@ -1,9 +1,10 @@
 """Unit tests for AuthorizationEngine."""
 
 import pytest
-from app.security.identity import UserIdentity
+
 from app.security.authorization import AuthorizationEngine
-from app.security.exceptions import TenantAccessDeniedError, PermissionDeniedError
+from app.security.exceptions import PermissionDeniedError, TenantAccessDeniedError
+from app.security.identity import UserIdentity
 
 
 def test_tenant_isolation_enforcement():

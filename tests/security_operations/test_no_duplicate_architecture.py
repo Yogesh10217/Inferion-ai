@@ -4,10 +4,9 @@ Ensures ServiceContainer instantiation, 9 registered Intelligence Managers,
 and no duplicate manager registries or sanitizers.
 """
 
-import pytest
 from app.core.container import ServiceContainer
-from app.deployment.service_registry import PlatformServiceRegistry
 from app.deployment.secrets import get_secrets_sanitizer
+from app.deployment.service_registry import PlatformServiceRegistry
 
 
 def test_single_service_container_instantiation():

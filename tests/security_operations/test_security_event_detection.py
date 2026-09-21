@@ -2,8 +2,7 @@
 Tests for Security Event Detection (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_event_detection import SecurityEventDetector, SecurityEvent
+from app.security_operations.security_event_detection import SecurityEvent, SecurityEventDetector
 
 
 def test_security_event_detection_routing():

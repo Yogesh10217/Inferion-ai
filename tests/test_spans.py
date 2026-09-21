@@ -1,4 +1,3 @@
-import pytest
 from app.tracing.span_factory import SpanFactory
 from app.tracing.trace_attributes import TraceAttributes
 

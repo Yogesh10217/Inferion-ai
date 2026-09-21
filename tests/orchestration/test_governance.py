@@ -1,7 +1,6 @@
 """Unit tests for WorkflowGovernanceEngine pre-execution evaluation."""
 
-import pytest
-from app.orchestration.governance import WorkflowGovernanceEngine, GovernanceAction
+from app.orchestration.governance import GovernanceAction, WorkflowGovernanceEngine
 
 
 def test_workflow_governance_risk_evaluation():

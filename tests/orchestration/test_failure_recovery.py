@@ -1,6 +1,5 @@
 """Unit tests for exception recovery strategies."""
 
-import pytest
 from app.orchestration.recovery import RecoveryManager, RecoveryStrategy
 
 

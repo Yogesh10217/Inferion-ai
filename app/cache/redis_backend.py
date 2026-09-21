@@ -41,12 +41,10 @@ class RedisCacheBackend(BaseCacheBackend):
             return None
 
         backoff_delays = [0.1, 0.2, 0.4]
-        last_exc = None
         for attempt in range(self.max_retries):
             try:
                 return await coro_fn(*args, **kwargs)
             except (RedisError, ConnectionError, OSError) as exc:
-                last_exc = exc
                 if attempt < self.max_retries - 1:
                     await asyncio.sleep(backoff_delays[attempt])
                     continue

@@ -2,13 +2,12 @@
 Tests for Secret Sanitization across Phase 5.69 outputs (Phase 5.69).
 """
 
-import pytest
 from app.deployment.secrets import get_secrets_sanitizer
 from app.security_operations.security_operations_orchestrator import SecurityOperationsOrchestrator
 
 
 def test_secret_sanitization_in_orchestrator_results():
-    sanitizer = get_secrets_sanitizer()
+    get_secrets_sanitizer()
     orchestrator = SecurityOperationsOrchestrator()
 
     # Pass environment with secret canary

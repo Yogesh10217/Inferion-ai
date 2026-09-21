@@ -1,11 +1,11 @@
 """Unit tests for Data Ingestion Engine."""
 
 import pytest
-import asyncio
-from app.data_fabric.data_source import DataSource, DataSourceType
-from app.data_fabric.ingestion import DataIngestionEngine, IngestionRequest, IngestionMode
-from app.data_fabric.connector import ConnectorRegistry, ConnectorFactory
+
+from app.data_fabric.connector import ConnectorFactory, ConnectorRegistry
 from app.data_fabric.connectors import register_all_initial_connectors
+from app.data_fabric.data_source import DataSource, DataSourceType
+from app.data_fabric.ingestion import DataIngestionEngine, IngestionMode, IngestionRequest
 
 
 @pytest.mark.asyncio

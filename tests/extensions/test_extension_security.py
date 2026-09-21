@@ -1,9 +1,10 @@
 """Unit tests for ExtensionSecurityEngine SHA-256 verification and approval gating."""
 
 import pytest
+
+from app.extensions.exceptions import ExtensionSecurityViolationException
 from app.extensions.extension import ExtensionManifest, ExtensionType
 from app.extensions.security import ExtensionSecurityEngine
-from app.extensions.exceptions import ExtensionSecurityViolationException
 
 
 def test_sha256_checksum_and_approval_requirement():
@@ -11,7 +12,6 @@ def test_sha256_checksum_and_approval_requirement():
 
     pkg_data = b"extension package binary content"
     expected_hash = "b8178e12049345bc2ae6fbf8ab8b4d885f507d5505d61868a8ff571fb3ca37be"
-
 
     # Valid SHA-256
     assert engine.verify_package_checksum(pkg_data, expected_hash) is True

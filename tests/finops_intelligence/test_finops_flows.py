@@ -1,21 +1,20 @@
 """Mandatory 20 E2E Integration Flow Tests for FinOps Intelligence Platform (Phase 5.42)."""
 
 import pytest
-from app.finops_intelligence.manager import FinOpsIntelligenceManager
+
+from app.finops_intelligence.allocation import AllocationDimension, AllocationRule
+from app.finops_intelligence.anomalies import CostAnomalyType
+from app.finops_intelligence.budgets import BudgetStatus
+from app.finops_intelligence.cost_intelligence import CostCategory
+from app.finops_intelligence.delegation import FinOpsDelegationAction
 from app.finops_intelligence.exceptions import (
     CrossTenantFinOpsIntelligenceException,
     HighRiskOptimizationRequiresApprovalException,
     ImmutableFinOpsRecordException,
 )
-from app.finops_intelligence.cost_intelligence import CostCategory
+from app.finops_intelligence.manager import FinOpsIntelligenceManager
+from app.finops_intelligence.optimization import OptimizationType
 from app.finops_intelligence.usage import UsageMetric
-from app.finops_intelligence.allocation import AllocationRule, AllocationDimension
-from app.finops_intelligence.budgets import BudgetStatus
-from app.finops_intelligence.anomalies import CostAnomalyType
-from app.finops_intelligence.optimization import OptimizationType, OptimizationPriority
-from app.finops_intelligence.commitments import CommitmentRisk
-from app.finops_intelligence.governance import FinOpsGovernanceStatus
-from app.finops_intelligence.delegation import FinOpsDelegationAction
 
 
 @pytest.fixture
@@ -24,8 +23,8 @@ def manager():
 
 
 def test_flow_01_cost_recording_and_aggregation(manager):
-    rec1 = manager.cost_manager.record_cost("tenant_a", CostCategory.MODEL_INFERENCE, 100.0)
-    rec2 = manager.cost_manager.record_cost("tenant_a", CostCategory.MODEL_INFERENCE, 250.0)
+    manager.cost_manager.record_cost("tenant_a", CostCategory.MODEL_INFERENCE, 100.0)
+    manager.cost_manager.record_cost("tenant_a", CostCategory.MODEL_INFERENCE, 250.0)
     agg = manager.cost_manager.aggregate_costs("tenant_a", CostCategory.MODEL_INFERENCE)
     assert agg.total_cost_usd == 350.0
     assert agg.record_count == 2
@@ -64,7 +63,9 @@ def test_flow_04_cost_allocation(manager):
 
 
 def test_flow_05_budget_threshold_warning(manager):
-    bdg = manager.budget_manager.create_budget("tenant_a", "Monthly Budget", amount_usd=1000.0, warning_threshold_pct=75.0)
+    bdg = manager.budget_manager.create_budget(
+        "tenant_a", "Monthly Budget", amount_usd=1000.0, warning_threshold_pct=75.0
+    )
     asm = manager.budget_manager.evaluate_budget("tenant_a", bdg.budget_id, current_spend_usd=800.0)
     assert asm.status == BudgetStatus.WARNING
     assert asm.utilization_pct == 80.0
@@ -72,7 +73,9 @@ def test_flow_05_budget_threshold_warning(manager):
 
 
 def test_flow_06_budget_critical_threshold(manager):
-    bdg = manager.budget_manager.create_budget("tenant_a", "Monthly Budget", amount_usd=1000.0, critical_threshold_pct=90.0)
+    bdg = manager.budget_manager.create_budget(
+        "tenant_a", "Monthly Budget", amount_usd=1000.0, critical_threshold_pct=90.0
+    )
     asm = manager.budget_manager.evaluate_budget("tenant_a", bdg.budget_id, current_spend_usd=950.0)
     assert asm.status == BudgetStatus.CRITICAL
     assert asm.requires_escalation
@@ -85,7 +88,9 @@ def test_flow_07_spending_forecast(manager):
 
 
 def test_flow_08_cost_anomaly_detection(manager):
-    anom = manager.anomaly_manager.detect_anomaly("tenant_a", "res_gpu_1", expected_amount_usd=100.0, actual_amount_usd=350.0)
+    anom = manager.anomaly_manager.detect_anomaly(
+        "tenant_a", "res_gpu_1", expected_amount_usd=100.0, actual_amount_usd=350.0
+    )
     assert anom is not None
     assert anom.anomaly_type == CostAnomalyType.SPENDING_SPIKE
     assert anom.deviation_pct == 250.0
@@ -124,7 +129,9 @@ def test_flow_11_least_cost_efficient_model_recommendation(manager):
 
 
 def test_flow_12_high_risk_optimization_requires_approval(manager):
-    action = FinOpsDelegationAction(action_type="TERMINATE_IDLE_WORKLOAD", target_resource_id="prod_db_primary", is_high_risk=True)
+    action = FinOpsDelegationAction(
+        action_type="TERMINATE_IDLE_WORKLOAD", target_resource_id="prod_db_primary", is_high_risk=True
+    )
     plan = manager.delegation_manager.create_delegation_plan("tenant_a", "opt_123", [action])
     assert plan.requires_approval
 
@@ -133,7 +140,9 @@ def test_flow_12_high_risk_optimization_requires_approval(manager):
 
 
 def test_flow_13_delegation_only_optimization_execution(manager):
-    action = FinOpsDelegationAction(action_type="DOWNSIZE_RESOURCE", target_resource_id="res_node_12", is_high_risk=False)
+    action = FinOpsDelegationAction(
+        action_type="DOWNSIZE_RESOURCE", target_resource_id="res_node_12", is_high_risk=False
+    )
     plan = manager.delegation_manager.create_delegation_plan("tenant_a", "opt_456", [action])
     del_req = manager.delegation_manager.execute_delegation("tenant_a", plan.plan_id)
     assert del_req.delegation_id.startswith("delreq_")
@@ -141,7 +150,9 @@ def test_flow_13_delegation_only_optimization_execution(manager):
 
 
 def test_flow_14_financial_risk_evaluation(manager):
-    risk_asm = manager.risk_manager.evaluate_risk("tenant_a", "dept_engineering", budget_risk_score=90.0, forecast_risk_score=85.0)
+    risk_asm = manager.risk_manager.evaluate_risk(
+        "tenant_a", "dept_engineering", budget_risk_score=90.0, forecast_risk_score=85.0
+    )
     assert risk_asm.profile.overall_risk_score == 61.67
     assert risk_asm.profile.risk_level == "HIGH"
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from app.deployment.production_release_report import ProductionReleaseReportGenerator
 
 

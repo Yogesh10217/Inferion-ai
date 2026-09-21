@@ -1,5 +1,5 @@
-import pytest
-from sdk.python.llm_engine import LLMEngineClient, ChatCompletionRequest
+from sdk.python.llm_engine import ChatCompletionRequest, LLMEngineClient
+
 
 def test_python_sdk_import_and_models():
     client = LLMEngineClient(base_url="http://localhost:8000", api_key="test_key")

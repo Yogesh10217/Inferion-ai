@@ -68,8 +68,9 @@ class ReflectionEngine:
             "final_status": final_status,
             "successes_count": len(successes),
             "failures_count": len(failures),
-            "lessons_generated": [l.model_dump() for l in lessons],
+            "lessons_generated": [lesson.model_dump() for lesson in lessons],
         }
 
     def list_recommendations(self, status: str = "pending_approval") -> List[LessonLearned]:
-        return [l for l in self._lessons_store if l.status == status]
+        return [lesson for lesson in self._lessons_store if lesson.status == status]
+

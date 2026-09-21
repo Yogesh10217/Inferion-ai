@@ -1,13 +1,16 @@
 """Unit tests for Service Catalog Manager."""
 
 import pytest
-from app.platform_operations.services import ServiceCatalogManager, ServiceTier, ServiceHealth, ServiceStatus
+
 from app.platform_operations.exceptions import ServiceNotFoundException
+from app.platform_operations.services import ServiceCatalogManager, ServiceHealth, ServiceTier
 
 
 def test_register_and_get_service():
     mgr = ServiceCatalogManager()
-    svc = mgr.register_service(tenant_id="t1", name="Inference Gateway Service", service_tier=ServiceTier.TIER_0_CRITICAL)
+    svc = mgr.register_service(
+        tenant_id="t1", name="Inference Gateway Service", service_tier=ServiceTier.TIER_0_CRITICAL
+    )
     assert svc.service_id.startswith("svc_")
     assert svc.name == "Inference Gateway Service"
 

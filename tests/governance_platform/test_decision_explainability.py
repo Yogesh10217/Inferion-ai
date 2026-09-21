@@ -1,8 +1,7 @@
 """Unit tests for deterministic, evidence-backed decision explanations."""
 
-import pytest
-from app.governance_platform.explainability import ExplainabilityEngine
 from app.governance_platform.decision import GovernanceDecisionRecord
+from app.governance_platform.explainability import ExplainabilityEngine
 from app.governance_platform.policy_evaluation import GovernanceDecision
 
 

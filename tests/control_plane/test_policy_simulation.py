@@ -1,6 +1,5 @@
 """Unit tests for PolicySimulator."""
 
-import pytest
 from app.control_plane.policy_manager import PolicyManager, PolicyTargetType
 from app.control_plane.policy_simulator import PolicySimulator
 from app.control_plane.resource_registry import ResourceRegistry, ResourceType

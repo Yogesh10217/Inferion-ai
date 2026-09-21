@@ -1,6 +1,5 @@
 """Tests for AnomalyDetector statistical checks."""
 
-import pytest
 from app.observability.anomaly_detection import AnomalyDetector
 
 

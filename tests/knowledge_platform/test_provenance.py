@@ -1,6 +1,5 @@
 """Unit tests for ProvenanceManager chain tracking."""
 
-import pytest
 from app.knowledge_platform.provenance import ProvenanceManager
 
 

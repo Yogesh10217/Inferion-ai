@@ -3,13 +3,14 @@ Tests for Episodic Memory (Tier 6)
 """
 
 import pytest
+
 from app.memory.episodic_memory import EpisodicMemory
 
 
 def test_episodic_memory_record_and_search():
     em = EpisodicMemory()
     ep1 = em.record_episode("agent_run", "agent_1", "Completed code review task successfully", {"duration_ms": 120})
-    ep2 = em.record_episode("workflow_run", "wf_1", "Executed multi-step deployment pipeline", {"status": "success"})
+    em.record_episode("workflow_run", "wf_1", "Executed multi-step deployment pipeline", {"status": "success"})
 
     assert ep1.episode_id is not None
     assert ep1.episode_type == "agent_run"

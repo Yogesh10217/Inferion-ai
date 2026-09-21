@@ -2,7 +2,6 @@
 Tests for Autonomy Billing Integration
 """
 
-import pytest
 from app.autonomy.execution_metrics import autonomous_cost_total
 
 

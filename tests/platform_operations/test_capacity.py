@@ -1,6 +1,5 @@
 """Unit tests for Capacity Manager."""
 
-import pytest
 from app.platform_operations.capacity import CapacityManager, CapacityRisk
 
 

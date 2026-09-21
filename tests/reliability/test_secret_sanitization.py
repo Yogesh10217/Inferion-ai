@@ -2,8 +2,8 @@
 Tests for Secret Sanitization in Phase 5.70.
 """
 
-from app.reliability.reliability_evidence import ReliabilityEvidenceCollector, ReliabilityEvidenceLevel
 from app.reliability.recovery_audit import RecoveryAuditEngine
+from app.reliability.reliability_evidence import ReliabilityEvidenceCollector, ReliabilityEvidenceLevel
 
 
 def test_secret_canary_sanitization():

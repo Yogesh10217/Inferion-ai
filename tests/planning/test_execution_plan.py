@@ -2,7 +2,6 @@
 Tests for Execution Plan Model
 """
 
-import pytest
 from app.planning.execution_plan import ExecutionPlan
 
 

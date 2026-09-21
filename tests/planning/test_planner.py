@@ -2,7 +2,6 @@
 Tests for Planner Engine
 """
 
-import pytest
 from app.planning.planner import Planner
 
 

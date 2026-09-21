@@ -1,16 +1,19 @@
 """Mandatory End-to-End Integration Flows for Platform Operations Platform."""
 
-import pytest
 from datetime import datetime, timezone
 
-from app.platform_operations.manager import PlatformOperationsManager
-from app.platform_operations.services import ServiceTier, ServiceHealth
-from app.platform_operations.signals import SignalSource, SignalType, SignalSeverity
-from app.platform_operations.anomalies import AnomalyType
-from app.platform_operations.remediation import RemediationStep, RemediationStrategy, RemediationStatus
-from app.platform_operations.autonomous_operations import AutonomyLevel
-from app.platform_operations.exceptions import RemediationPlanException, ServiceNotFoundException, OperationalPolicyViolationException
+import pytest
+
 from app.governance_platform.risk import RiskLevel
+from app.platform_operations.autonomous_operations import AutonomyLevel
+from app.platform_operations.exceptions import (
+    OperationalPolicyViolationException,
+    ServiceNotFoundException,
+)
+from app.platform_operations.manager import PlatformOperationsManager
+from app.platform_operations.remediation import RemediationStatus, RemediationStep, RemediationStrategy
+from app.platform_operations.services import ServiceHealth, ServiceTier
+from app.platform_operations.signals import SignalSeverity, SignalSource, SignalType
 
 
 def test_e2e_flow_1_deployment_regression():
@@ -23,8 +26,18 @@ def test_e2e_flow_1_deployment_regression():
     mgr.change_intelligence_engine.record_change(tenant, "DEPLOYMENT", svc.service_id, "v2.1.0")
 
     # 2. Ingest deployment event and error signals
-    mgr.signal_manager.ingest_signal(tenant, SignalSource.DEPLOYMENT, SignalType.DEPLOYMENT_EVENT, "Deployed v2.1.0", service_id=svc.service_id)
-    sig_err = mgr.signal_manager.ingest_signal(tenant, SignalSource.APPLICATION_RUNTIME, SignalType.RUNTIME_DEGRADATION, "Latency spike >3000ms", severity=SignalSeverity.CRITICAL, service_id=svc.service_id, metrics={"latency_ms": 3200.0})
+    mgr.signal_manager.ingest_signal(
+        tenant, SignalSource.DEPLOYMENT, SignalType.DEPLOYMENT_EVENT, "Deployed v2.1.0", service_id=svc.service_id
+    )
+    mgr.signal_manager.ingest_signal(
+        tenant,
+        SignalSource.APPLICATION_RUNTIME,
+        SignalType.RUNTIME_DEGRADATION,
+        "Latency spike >3000ms",
+        severity=SignalSeverity.CRITICAL,
+        service_id=svc.service_id,
+        metrics={"latency_ms": 3200.0},
+    )
 
     # 3. Detect anomaly & correlate signals
     signals = mgr.signal_manager.list_signals(tenant, service_id=svc.service_id)
@@ -45,7 +58,13 @@ def test_e2e_flow_1_deployment_regression():
     assert diag.top_hypothesis.category == "DEPLOYMENT_REGRESSION"
 
     # 5. Remediation plan & execution
-    step = RemediationStep(strategy=RemediationStrategy.ROLLBACK, target_resource_id=svc.service_id, action_description="Rollback to v2.0.9", expected_effect="Restore low latency", risk_level=RiskLevel.MEDIUM)
+    step = RemediationStep(
+        strategy=RemediationStrategy.ROLLBACK,
+        target_resource_id=svc.service_id,
+        action_description="Rollback to v2.0.9",
+        expected_effect="Restore low latency",
+        risk_level=RiskLevel.MEDIUM,
+    )
     plan = mgr.remediation_planner.create_remediation_plan(tenant, ctx.incident_id, svc.service_id, [step])
     executed = mgr.remediation_planner.execute_remediation_plan(plan.plan_id, tenant)
     assert executed.status == RemediationStatus.SUCCESSFUL
@@ -55,7 +74,13 @@ def test_e2e_flow_1_deployment_regression():
     assert verif.is_verified is True
 
     # 7. Post-Incident Learning
-    insight = mgr.operational_learning_manager.generate_post_incident_insight(tenant, ctx.incident_id, "v2.1.0 Deployment Regression", "Latency surge resolved by rollback", "Memory leak in v2.1.0 connection pool")
+    insight = mgr.operational_learning_manager.generate_post_incident_insight(
+        tenant,
+        ctx.incident_id,
+        "v2.1.0 Deployment Regression",
+        "Latency surge resolved by rollback",
+        "Memory leak in v2.1.0 connection pool",
+    )
     assert insight.insight_id.startswith("ins_")
 
 
@@ -65,12 +90,26 @@ def test_e2e_flow_2_autonomous_safe_recovery():
     tenant = "t_flow2"
 
     svc = mgr.service_catalog_manager.register_service(tenant, "Transient Worker", ServiceTier.TIER_2_MEDIUM)
-    sig = mgr.signal_manager.ingest_signal(tenant, SignalSource.WORKFLOW, SignalType.WORKFLOW_FAILURE, "Transient timeout contacting worker", service_id=svc.service_id)
+    mgr.signal_manager.ingest_signal(
+        tenant,
+        SignalSource.WORKFLOW,
+        SignalType.WORKFLOW_FAILURE,
+        "Transient timeout contacting worker",
+        service_id=svc.service_id,
+    )
 
-    step = RemediationStep(strategy=RemediationStrategy.RETRY, target_resource_id=svc.service_id, action_description="Retry worker task", expected_effect="Recovery", risk_level=RiskLevel.LOW)
+    step = RemediationStep(
+        strategy=RemediationStrategy.RETRY,
+        target_resource_id=svc.service_id,
+        action_description="Retry worker task",
+        expected_effect="Recovery",
+        risk_level=RiskLevel.LOW,
+    )
     plan = mgr.remediation_planner.create_remediation_plan(tenant, "inc_transient", svc.service_id, [step])
 
-    auto_op = mgr.autonomous_operations_engine.execute_autonomous_remediation(tenant, plan.plan_id, autonomy_level=AutonomyLevel.CONSTRAINED_AUTONOMOUS)
+    auto_op = mgr.autonomous_operations_engine.execute_autonomous_remediation(
+        tenant, plan.plan_id, autonomy_level=AutonomyLevel.CONSTRAINED_AUTONOMOUS
+    )
     assert auto_op.status == "SUCCESSFUL"
 
 
@@ -80,7 +119,13 @@ def test_e2e_flow_3_high_risk_production_remediation():
     tenant = "t_flow3"
 
     svc = mgr.service_catalog_manager.register_service(tenant, "Core Banking Engine", ServiceTier.TIER_0_CRITICAL)
-    step = RemediationStep(strategy=RemediationStrategy.FAILOVER, target_resource_id=svc.service_id, action_description="Failover primary region", expected_effect="Restore core banking", risk_level=RiskLevel.HIGH)
+    step = RemediationStep(
+        strategy=RemediationStrategy.FAILOVER,
+        target_resource_id=svc.service_id,
+        action_description="Failover primary region",
+        expected_effect="Restore core banking",
+        risk_level=RiskLevel.HIGH,
+    )
     plan = mgr.remediation_planner.create_remediation_plan(tenant, "inc_banking_down", svc.service_id, [step])
 
     assert plan.status == RemediationStatus.AWAITING_APPROVAL
@@ -103,7 +148,13 @@ def test_e2e_flow_4_failed_remediation_rollback():
     svc = mgr.service_catalog_manager.register_service(tenant, "Broken Microservice", ServiceTier.TIER_1_HIGH)
     mgr.service_catalog_manager.update_service_health(svc.service_id, tenant, ServiceHealth.UNHEALTHY)
 
-    step = RemediationStep(strategy=RemediationStrategy.RESTART, target_resource_id=svc.service_id, action_description="Restart service", expected_effect="Health recovery", risk_level=RiskLevel.LOW)
+    step = RemediationStep(
+        strategy=RemediationStrategy.RESTART,
+        target_resource_id=svc.service_id,
+        action_description="Restart service",
+        expected_effect="Health recovery",
+        risk_level=RiskLevel.LOW,
+    )
     plan = mgr.remediation_planner.create_remediation_plan(tenant, "inc_broken", svc.service_id, [step])
     mgr.remediation_planner.execute_remediation_plan(plan.plan_id, tenant)
 
@@ -123,7 +174,9 @@ def test_e2e_flow_5_change_correlation():
     chg = mgr.change_intelligence_engine.record_change(tenant, "CONFIG_CHANGE", svc.service_id, "batch_size=10000")
 
     now = datetime.now(timezone.utc)
-    correlations = mgr.change_intelligence_engine.correlate_incident_with_changes(tenant, "inc_search_slow", now, [svc.service_id])
+    correlations = mgr.change_intelligence_engine.correlate_incident_with_changes(
+        tenant, "inc_search_slow", now, [svc.service_id]
+    )
 
     assert len(correlations) >= 1
     assert correlations[0].suspected_change.change_id == chg.change_id
@@ -135,7 +188,9 @@ def test_e2e_flow_6_capacity_risk():
     tenant = "t_flow6"
 
     svc = mgr.service_catalog_manager.register_service(tenant, "Document Processing Queue", ServiceTier.TIER_1_HIGH)
-    assessment = mgr.capacity_manager.assess_service_capacity(tenant, svc.service_id, cpu_utilization_pct=92.0, queue_backlog_count=850)
+    assessment = mgr.capacity_manager.assess_service_capacity(
+        tenant, svc.service_id, cpu_utilization_pct=92.0, queue_backlog_count=850
+    )
 
     assert assessment.risk.value in ("HIGH", "CRITICAL")
     assert assessment.recommendation == "SCALE_UP"

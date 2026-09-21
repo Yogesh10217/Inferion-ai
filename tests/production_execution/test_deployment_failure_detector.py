@@ -1,6 +1,5 @@
-import pytest
 from app.deployment.deployment_failure_detector import DeploymentFailureDetector
-from app.deployment.models import ProductionDeploymentState, RollbackTrigger
+from app.deployment.models import RollbackTrigger
 
 
 def test_failure_detector_mapping():

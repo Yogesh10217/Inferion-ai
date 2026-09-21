@@ -1,27 +1,25 @@
 """Comprehensive 4-Level End-to-End Test Suite for Phase 5.58 Platform Integration Fabric (40 Tests)."""
 
 import pytest
-import datetime
-from app.platform_integration.manager import PlatformIntegrationManager
-from app.platform_integration.models import (
-    IntegrationPlatform,
-    RiskLevel,
-    GovernanceDecision,
-    CrossPhaseEventType,
-    TraceContext,
-    CausalRelationshipStatus,
-    LineageNodeType,
-)
+
 from app.platform_integration.exceptions import (
     CrossTenantPlatformIntegrationException,
     HighRiskPlatformIntegrationActionRequiresApprovalException,
     ImmutablePlatformIntegrationRecordException,
-    IntegrationProviderNotFoundException,
     IntelligenceLineageException,
+)
+from app.platform_integration.manager import PlatformIntegrationManager
+from app.platform_integration.models import (
+    CausalRelationshipStatus,
+    CrossPhaseEventType,
+    GovernanceDecision,
+    IntegrationPlatform,
+    LineageNodeType,
+    RiskLevel,
+    TraceContext,
 )
 from app.platform_integration.providers import (
     MockPlatformIntegrationProvider,
-    PlatformProviderResult,
 )
 
 
@@ -33,6 +31,7 @@ def manager():
 # ==============================================================================
 # LEVEL 1: UNIT & CORE ENGINE TESTS (Flows 01 - 16)
 # ==============================================================================
+
 
 # Flow 01: Provider Registration and Discovery
 def test_flow_01_provider_registration_and_discovery(manager):
@@ -244,13 +243,16 @@ def test_flow_16_idempotency_deduplication(manager):
 # LEVEL 2: LINEAGE, EVIDENCE & GOVERNANCE TESTS (Flows 17 - 30)
 # ==============================================================================
 
+
 # Flow 17: Unified Lineage Graph Assembly
 def test_flow_17_unified_lineage_graph_assembly(manager):
     from app.platform_integration.lineage.graph import LineageNode, LineageNodeType
 
     n1 = LineageNode(node_id="sig-1", node_type=LineageNodeType.SIGNAL, tenant_id="tenant_a", platform="RUNTIME")
     n2 = LineageNode(node_id="find-1", node_type=LineageNodeType.FINDING, tenant_id="tenant_a", platform="RUNTIME")
-    n3 = LineageNode(node_id="rec-1", node_type=LineageNodeType.RECOMMENDATION, tenant_id="tenant_a", platform="CAPACITY")
+    n3 = LineageNode(
+        node_id="rec-1", node_type=LineageNodeType.RECOMMENDATION, tenant_id="tenant_a", platform="CAPACITY"
+    )
 
     manager.lineage.add_node(n1)
     manager.lineage.add_node(n2)
@@ -269,7 +271,9 @@ def test_flow_18_lineage_root_cause_backtrace(manager):
 
     n1 = LineageNode(node_id="sig-root-1", node_type=LineageNodeType.SIGNAL, tenant_id="tenant_a", platform="RUNTIME")
     n2 = LineageNode(node_id="find-mid-1", node_type=LineageNodeType.FINDING, tenant_id="tenant_a", platform="RUNTIME")
-    n3 = LineageNode(node_id="rec-leaf-1", node_type=LineageNodeType.RECOMMENDATION, tenant_id="tenant_a", platform="CAPACITY")
+    n3 = LineageNode(
+        node_id="rec-leaf-1", node_type=LineageNodeType.RECOMMENDATION, tenant_id="tenant_a", platform="CAPACITY"
+    )
 
     manager.lineage.add_node(n1)
     manager.lineage.add_node(n2)
@@ -406,7 +410,7 @@ def test_flow_28_delegation_only_execution_enforcement(manager):
 # Flow 29: Delegation Lineage Traceability
 def test_flow_29_delegation_lineage_traceability(manager):
     recs = manager.generate_recommendations("tenant_a", ["RUNTIME"])
-    del_req = manager.delegate_action("tenant_a", recs[0].recommendation_id)
+    manager.delegate_action("tenant_a", recs[0].recommendation_id)
 
     # Check that recommendation node is connected to delegation node
     nodes = manager.lineage.nodes
@@ -418,18 +422,22 @@ def test_flow_30_closed_loop_verification_outcome(manager):
     recs = manager.generate_recommendations("tenant_a", ["RUNTIME"])
     del_req = manager.delegate_action("tenant_a", recs[0].recommendation_id)
 
-    v_success = manager.verify_delegation("tenant_a", del_req.delegation_id, pre_score=0.65, post_score=0.88, required_delta=0.10)
+    v_success = manager.verify_delegation(
+        "tenant_a", del_req.delegation_id, pre_score=0.65, post_score=0.88, required_delta=0.10
+    )
     assert v_success.verified is True
     assert v_success.improvement_delta == 0.23
 
-    v_fail = manager.verify_delegation("tenant_a", del_req.delegation_id, pre_score=0.65, post_score=0.68, required_delta=0.10)
+    v_fail = manager.verify_delegation(
+        "tenant_a", del_req.delegation_id, pre_score=0.65, post_score=0.68, required_delta=0.10
+    )
     assert v_fail.verified is False
-
 
 
 # ==============================================================================
 # LEVEL 3: DYNAMIC INVESTIGATION & CROSS-PHASE INTER-PLATFORM TESTS (Flows 31 - 38)
 # ==============================================================================
+
 
 # Flow 31: Graph-Based Investigation from Runtime Root
 def test_flow_31_graph_based_investigation_from_runtime_root(manager):
@@ -500,6 +508,7 @@ def test_flow_38_end_to_end_decision_to_unified_intelligence(manager):
 # LEVEL 4: FULL END-TO-END PLATFORM LIFECYCLE & DEGRADATION TESTS (Flows 39 - 40)
 # ==============================================================================
 
+
 # Flow 39: Full Cross-Phase Intelligence Lifecycle
 def test_flow_39_full_cross_phase_intelligence_lifecycle(manager):
     tenant = "tenant_enterprise_prod"
@@ -509,7 +518,7 @@ def test_flow_39_full_cross_phase_intelligence_lifecycle(manager):
     assert len(ctx.active_platforms) >= 7
 
     # 2. Correlate cross-phase signals
-    corrs = manager.correlate_signals(tenant, ctx.context_id, threshold=0.1)
+    manager.correlate_signals(tenant, ctx.context_id, threshold=0.1)
 
     # 3. Evaluate platform assurance posture
     posture = manager.evaluate_assurance_posture(tenant)

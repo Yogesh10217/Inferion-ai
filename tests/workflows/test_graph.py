@@ -3,11 +3,12 @@ Tests for Workflow Graph & DAG Structure Validation
 """
 
 import pytest
-from app.workflows.graph import WorkflowGraph
+
 from app.workflows.dag import DAGBuilder
-from app.workflows.node import StartNode, EndNode, AgentNode, ToolNode
 from app.workflows.edge import Edge
 from app.workflows.exceptions import GraphValidationError
+from app.workflows.graph import WorkflowGraph
+from app.workflows.node import AgentNode, EndNode, StartNode
 
 
 def test_valid_dag_construction():

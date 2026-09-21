@@ -1,7 +1,8 @@
 import pytest
-from app.core.database import async_session_maker
+
+from app.admin.exceptions import ResourceNotFoundException
 from app.admin.organization_service import OrganizationAdminService
-from app.admin.exceptions import ResourceNotFoundException, InvalidOperationException
+from app.core.database import async_session_maker
 
 
 @pytest.mark.asyncio

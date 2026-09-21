@@ -1,10 +1,14 @@
 """Mandatory End-to-End Integration Flows for Phase 5.20."""
 
 import pytest
-from app.integrations.manager import IntegrationManager
-from app.integrations.exceptions import WebhookSignatureException, DuplicateWebhookException, PluginSecurityViolationException
+
 from app.identity.exceptions import AgentBoundaryViolationException
+from app.integrations.exceptions import (
+    DuplicateWebhookException,
+    PluginSecurityViolationException,
+)
 from app.integrations.governance import IntegrationDecisionType
+from app.integrations.manager import IntegrationManager
 from app.integrations.plugins import PluginManifest
 from app.integrations.transformation import FieldMapping
 
@@ -12,7 +16,9 @@ from app.integrations.transformation import FieldMapping
 def test_flow_1_slack_ai_automation():
     """FLOW 1 — Slack AI Automation"""
     mgr = IntegrationManager()
-    ep = mgr.webhook_manager.create_endpoint(url="https://slack.com/events", secret_token="slack_sec", tenant_id="t_flow1")
+    ep = mgr.webhook_manager.create_endpoint(
+        url="https://slack.com/events", secret_token="slack_sec", tenant_id="t_flow1"
+    )
 
     # Inbound Slack webhook signature validation
     deliv = mgr.webhook_manager.process_inbound_webhook(
@@ -23,10 +29,15 @@ def test_flow_1_slack_ai_automation():
     assert deliv.status == "DELIVERED"
 
     # Route event & execute agent Slack response
-    evt = mgr.event_router.route_event(
-        mgr.event_router.event_dispatcher.dispatch_event if hasattr(mgr.event_router.event_dispatcher, "dispatch_event") else
-        mgr.event_router.route_event.__self__.IntegrationEvent(event_type="slack_mention", tenant_id="t_flow1")
-    ) if False else {"status": "ROUTED"}
+    evt = (
+        mgr.event_router.route_event(
+            mgr.event_router.event_dispatcher.dispatch_event
+            if hasattr(mgr.event_router.event_dispatcher, "dispatch_event")
+            else mgr.event_router.route_event.__self__.IntegrationEvent(event_type="slack_mention", tenant_id="t_flow1")
+        )
+        if False
+        else {"status": "ROUTED"}
+    )
 
     assert evt["status"] == "ROUTED"
 
@@ -36,7 +47,9 @@ def test_flow_2_high_risk_external_action():
     mgr = IntegrationManager()
 
     # Risk evaluation = HIGH -> REQUIRE_APPROVAL
-    dec = mgr.governance_engine.evaluate_external_action("github", action="delete_repository", risk_level="HIGH", tenant_id="t_flow2")
+    dec = mgr.governance_engine.evaluate_external_action(
+        "github", action="delete_repository", risk_level="HIGH", tenant_id="t_flow2"
+    )
     assert dec.decision == IntegrationDecisionType.REQUIRE_APPROVAL
     assert dec.approval_request_id is not None
 
@@ -51,17 +64,23 @@ def test_flow_3_duplicate_webhook_protection():
     ep = mgr.webhook_manager.create_endpoint(url="https://api.example.com/wh", secret_token="sec", tenant_id="t_flow3")
 
     # Delivered twice with same event ID
-    deliv1 = mgr.webhook_manager.process_inbound_webhook(ep.endpoint_id, payload={"data": 1}, signature_header="valid_sig", event_id="evt_flow3")
+    deliv1 = mgr.webhook_manager.process_inbound_webhook(
+        ep.endpoint_id, payload={"data": 1}, signature_header="valid_sig", event_id="evt_flow3"
+    )
     assert deliv1.status == "DELIVERED"
 
     with pytest.raises(DuplicateWebhookException):
-        mgr.webhook_manager.process_inbound_webhook(ep.endpoint_id, payload={"data": 1}, signature_header="valid_sig", event_id="evt_flow3")
+        mgr.webhook_manager.process_inbound_webhook(
+            ep.endpoint_id, payload={"data": 1}, signature_header="valid_sig", event_id="evt_flow3"
+        )
 
 
 def test_flow_4_failed_external_api_recovery():
     """FLOW 4 — Failed External API Recovery via Resilience"""
     mgr = IntegrationManager()
-    exec_state = mgr.resilience_manager.get_or_create_execution(integration_id="rest_api", idempotency_key="idempotent_flow4", tenant_id="t_flow4")
+    exec_state = mgr.resilience_manager.get_or_create_execution(
+        integration_id="rest_api", idempotency_key="idempotent_flow4", tenant_id="t_flow4"
+    )
     assert exec_state.status.value == "RUNNING"
 
 

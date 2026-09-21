@@ -99,7 +99,7 @@ class AutonomousEvidenceManager:
     def seal_evidence(
         self, workflow_id: str, tenant_id: str, execution_trace: Optional[List[str]] = None
     ) -> AutonomousEvidenceBundle:
-        bundle = self.create_evidence_bundle(
+        self.create_evidence_bundle(
             workflow_id, tenant_id, evidence_references=[{"trace": t} for t in (execution_trace or [])]
         )
         return self.seal_evidence_bundle(workflow_id, tenant_id)

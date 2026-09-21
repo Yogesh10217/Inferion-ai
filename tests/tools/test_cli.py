@@ -2,9 +2,9 @@
 Tests for CLI Commands
 """
 
-import pytest
 import argparse
-from cli.commands.tools import add_tools_parser, handle_list, format_output
+
+from cli.commands.tools import add_tools_parser, format_output
 
 
 def test_cli_parser_setup():

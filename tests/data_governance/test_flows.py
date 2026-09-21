@@ -1,20 +1,19 @@
 """Mandatory End-to-End Tests for Enterprise AI Data Governance Platform (Phase 5.25)."""
 
 import pytest
-from datetime import datetime, timezone
-import uuid
 
-from app.data_governance.manager import DataGovernanceManager
-from app.data_governance.assets import DataAssetOwner, DataAssetType, DataDomain, DataAssetStatus
-from app.data_governance.classification import ClassificationLevel, SensitiveDataType
-from app.data_governance.consent import ConsentPurpose, ConsentStatus
+from app.data_governance.access import DataAccessDecisionType, DataAccessRequest, DataAction, PrincipalType
+from app.data_governance.assets import DataAssetOwner, DataAssetType, DataDomain
+from app.data_governance.consent import ConsentPurpose
+from app.data_governance.exceptions import (
+    CrossTenantDataAccessException,
+    RetentionPolicyViolationException,
+)
 from app.data_governance.lineage import LineageNodeType
-from app.data_governance.access import DataAccessRequest, PrincipalType, DataAction, DataAccessDecisionType
-
+from app.data_governance.manager import DataGovernanceManager
+from app.data_governance.retention import LifecycleState, RetentionAction
 from app.data_governance.sharing import DataSharingScope
-from app.data_governance.retention import RetentionAction, RetentionRule, LifecycleState
 from app.data_governance.trust import TrustBand
-from app.data_governance.exceptions import CrossTenantDataAccessException, DataAccessDeniedException, RetentionPolicyViolationException
 
 
 @pytest.fixture
@@ -87,14 +86,15 @@ def test_flow_2_data_contract_violation(gov_mgr):
     asset_id = reg["asset"]["asset_id"]
 
     # Define contract
-    from app.data_governance.contracts import ContractSchema, ContractRule
+    from app.data_governance.contracts import ContractRule, ContractSchema
+
     spec = ContractSchema(
         fields={
             "order_id": ContractRule(field_name="order_id", expected_type="string", required=True),
             "amount": ContractRule(field_name="amount", expected_type="float", required=True),
         }
     )
-    contract = gov_mgr.contract_manager.create_contract(
+    gov_mgr.contract_manager.create_contract(
         tenant_id=tenant_id,
         asset_id=asset_id,
         schema_spec=spec,
@@ -139,7 +139,6 @@ def test_flow_3_low_quality_data(gov_mgr):
 
     assert qual_res.has_critical_violation is True
     assert qual_res.overall_score < 70.0
-
 
     # Trust score drops
     trust = gov_mgr.trust_engine.calculate_trust_score(
@@ -362,7 +361,6 @@ def test_flow_8_low_trust_data(gov_mgr):
     )
     assert trust.overall_score < 50.0
 
-
     # Decision intelligence composite check
     ai_eval = gov_mgr.trust_engine.evaluate_ai_decision_trust(
         data_trust_score=trust.overall_score,
@@ -420,7 +418,7 @@ def test_flow_10_sensitive_data_redaction(gov_mgr):
         asset_id=asset_id,
         context={"request_ip": "10.0.0.1"},
     )
-    decision = gov_mgr.evaluate_access(req)
+    gov_mgr.evaluate_access(req)
 
     # Check logged usage event metadata does NOT contain passwords or raw secret tokens
     events = gov_mgr.usage_manager.list_usage_events(tenant_id=tenant_id, asset_id=asset_id)

@@ -1,7 +1,6 @@
 """Unit tests for IdentityRiskEngine event recording."""
 
-import pytest
-from app.identity.risk import IdentityRiskEngine, AnomalyType, IdentityRiskSeverity
+from app.identity.risk import AnomalyType, IdentityRiskEngine, IdentityRiskSeverity
 
 
 def test_identity_risk_event_recording():

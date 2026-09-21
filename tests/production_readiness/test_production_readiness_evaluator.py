@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import os
-import pytest
 from app.deployment.configuration import RuntimeConfigurationManager
-from app.deployment.models import DeploymentEnvironment, ProductionReleaseDecision
+from app.deployment.models import ProductionReleaseDecision
 from app.deployment.production_readiness import ProductionReadinessEvaluator
 
 

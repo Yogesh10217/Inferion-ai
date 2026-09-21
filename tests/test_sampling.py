@@ -1,9 +1,8 @@
-import pytest
 from app.tracing.sampling import (
-    AlwaysOnSampler,
     AlwaysOffSampler,
-    TraceIdRatioBasedSampler,
+    AlwaysOnSampler,
     OrganizationOverrideSampler,
+    TraceIdRatioBasedSampler,
 )
 
 

@@ -15,9 +15,7 @@ logger = logging.getLogger(__name__)
 class AuthenticationManager:
     """Manages authentication across JWT, API Keys, Service-to-Service, and revocation."""
 
-    def __init__(
-        self, secret_key: str = "super-secret-key-change-in-production", algorithm: str = "HS256"
-    ) -> None:  # nosec B107
+    def __init__(self, secret_key: str = "super-secret-key-change-in-production", algorithm: str = "HS256") -> None:  # nosec B107
         self.secret_key = secret_key
         self.algorithm = algorithm
         self._revoked_tokens: Set[str] = set()

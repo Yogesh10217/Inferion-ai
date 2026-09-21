@@ -1,7 +1,6 @@
 """Unit tests for access review retrieval."""
 
-import pytest
-from app.identity.lifecycle import IdentityLifecycleManager, ReviewStatus
+from app.identity.lifecycle import IdentityLifecycleManager
 
 
 def test_access_review_retrieval():

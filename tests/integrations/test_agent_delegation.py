@@ -1,8 +1,9 @@
 """Unit tests for AgentIntegrationAdapter and agent boundary validation."""
 
 import pytest
-from app.integrations.agent_integration import AgentIntegrationAdapter
+
 from app.identity.exceptions import AgentBoundaryViolationException
+from app.integrations.agent_integration import AgentIntegrationAdapter
 
 
 def test_agent_integration_delegated_scope_enforcement():

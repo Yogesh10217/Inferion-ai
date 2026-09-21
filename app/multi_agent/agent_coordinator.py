@@ -81,13 +81,12 @@ class MultiAgentCoordinator:
         self.lifecycle_manager.set_status(team_id, TeamStatus.RUNNING)
         agent_team_runs_total.labels(team_id=team_id, team_type=team.config.team_type.value, tenant_id=tid).inc()
 
-        router = AgentRouter(team)
+        AgentRouter(team)
         dispatcher = AgentDispatcher(self.message_bus)
         delegator = TaskDelegator(team)
         handoff_mgr = AgentHandoffManager()
-        supervisor = SupervisorAgent(team=team)
+        SupervisorAgent(team=team)
 
-        results = []
 
         try:
             with tracer.start_as_current_span("agent.team.run") as span:
@@ -111,7 +110,7 @@ class MultiAgentCoordinator:
                     agent_delegations_total.labels(strategy="capability_match", team_id=team_id).inc()
 
                 # 3. Message Dispatch
-                msg = await dispatcher.dispatch_task(
+                await dispatcher.dispatch_task(
                     sender_id="coordinator",
                     recipient_id=assignee.profile.agent_id,
                     task_prompt=context.goal,
@@ -136,7 +135,7 @@ class MultiAgentCoordinator:
                 if len(members) >= 2:
                     with tracer.start_as_current_span("agent.consensus"):
                         votes = {m.profile.agent_id: "approve" for m in members}
-                        c_res = ConsensusEngine.evaluate_consensus(votes, strategy=ConsensusStrategy.MAJORITY_VOTE)
+                        ConsensusEngine.evaluate_consensus(votes, strategy=ConsensusStrategy.MAJORITY_VOTE)
                         agent_consensus_total.labels(strategy="majority_vote", result="agreed").inc()
 
                 # 6. Execute step simulation & Blackboard reasoning artifact output

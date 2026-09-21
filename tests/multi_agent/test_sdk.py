@@ -2,7 +2,6 @@
 Tests for SDK Team Clients
 """
 
-import pytest
 from sdk.python.llm_engine.teams import TeamsClient
 
 

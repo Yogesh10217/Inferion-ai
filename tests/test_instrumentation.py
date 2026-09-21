@@ -1,4 +1,3 @@
-import pytest
 from app.tracing.instrumentation import AutoInstrumentor
 
 

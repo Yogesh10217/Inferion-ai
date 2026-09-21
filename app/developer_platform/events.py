@@ -94,7 +94,7 @@ class DeveloperEventEngine:
         return sub
 
     def delete_subscription(self, subscription_id: str) -> bool:
-        sub = self.get_subscription(subscription_id)
+        self.get_subscription(subscription_id)
         del self._subscriptions[subscription_id]
         logger.info(f"[EVENT ENGINE] Deleted subscription '{subscription_id}'")
         return True

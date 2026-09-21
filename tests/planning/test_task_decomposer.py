@@ -2,7 +2,6 @@
 Tests for Task Decomposer
 """
 
-import pytest
 from app.planning.task_decomposer import TaskDecomposer
 
 

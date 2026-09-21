@@ -1,13 +1,17 @@
 """Unit tests for PostmortemManager."""
 
-import pytest
-from app.operations.postmortem import PostmortemManager
 from app.operations.incidents import Incident, IncidentSeverity
+from app.operations.postmortem import PostmortemManager
 
 
 def test_postmortem_generation():
     mgr = PostmortemManager()
-    inc = Incident(title="API Gateway Outage", tenant_id="t_pm", severity=IncidentSeverity.SEV1_CRITICAL, primary_resource_id="gateway_api")
+    inc = Incident(
+        title="API Gateway Outage",
+        tenant_id="t_pm",
+        severity=IncidentSeverity.SEV1_CRITICAL,
+        primary_resource_id="gateway_api",
+    )
 
     pm = mgr.generate_postmortem(
         incident=inc,

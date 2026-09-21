@@ -1,11 +1,12 @@
 """Pytest Suite for High-Concurrency Load Testing & 10k+ RPS Benchmark Suite."""
 
 import os
-import json
+
 import pytest
 from fastapi.testclient import TestClient
-from tests.load.benchmark_server import app as benchmark_app
+
 from scripts.run_benchmarks import generate_benchmark_whitepaper
+from tests.load.benchmark_server import app as benchmark_app
 
 
 @pytest.fixture
@@ -27,12 +28,9 @@ def test_benchmark_server_non_streaming_chat(client):
     payload = {
         "model": "gpt-4o-mini",
         "messages": [{"role": "user", "content": "10k RPS load test"}],
-        "metadata": {"mock": True}
+        "metadata": {"mock": True},
     }
-    headers = {
-        "Authorization": "Bearer sk_live_test_key",
-        "X-Organization-Id": "org-acme-corp"
-    }
+    headers = {"Authorization": "Bearer sk_live_test_key", "X-Organization-Id": "org-acme-corp"}
     response = client.post("/v1/chat/completions", json=payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
@@ -44,11 +42,7 @@ def test_benchmark_server_non_streaming_chat(client):
 
 def test_benchmark_server_streaming_chat(client):
     """Test SSE streaming completion endpoint."""
-    payload = {
-        "model": "gpt-4o-mini",
-        "messages": [{"role": "user", "content": "SSE streaming check"}],
-        "stream": True
-    }
+    payload = {"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "SSE streaming check"}], "stream": True}
     response = client.post("/v1/chat/completions", json=payload)
     assert response.status_code == 200
     assert "text/event-stream" in response.headers["content-type"]
@@ -107,8 +101,8 @@ def test_benchmark_whitepaper_generator(tmp_path):
             "p99_9": 28.5,
             "mean": 2.1,
             "min": 0.4,
-            "max": 35.2
-        }
+            "max": 35.2,
+        },
     }
     generate_benchmark_whitepaper(dummy_metrics, output_file)
     assert os.path.exists(output_file)

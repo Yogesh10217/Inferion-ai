@@ -1,7 +1,5 @@
-import pytest
 from app.deployment.deployment_simulation import ProductionSimulationEngine
 from app.deployment.models import DeploymentIdentity, PlatformReadinessClassification, RollbackTrigger
-from app.deployment.rollback import RollbackStrategyEngine
 
 
 def test_rollback_simulation_execution_with_previous_deployment():

@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.deployment_target import DeploymentTarget
 from app.deployment.models import DeploymentTargetStatus
 

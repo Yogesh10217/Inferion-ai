@@ -1,6 +1,5 @@
 """Unit tests for OperationsAnalyticsEngine (MTTD, MTTA, MTTR, MTBF)."""
 
-import pytest
 from app.operations.analytics import OperationsAnalyticsEngine
 
 

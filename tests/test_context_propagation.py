@@ -1,6 +1,5 @@
-import pytest
-from app.tracing.trace_context import SpanContext
 from app.tracing.context_propagation import ContextPropagator
+from app.tracing.trace_context import SpanContext
 
 
 def test_w3c_context_propagation():

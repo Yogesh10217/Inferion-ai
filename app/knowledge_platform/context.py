@@ -49,7 +49,6 @@ class ContextBudget(BaseModel):
 
 
 class ContextWindow(BaseModel):
-
     window_id: str = Field(default_factory=lambda: f"cwin_{uuid.uuid4().hex[:10]}")
     tenant_id: str = "global"
     strategy: ContextStrategy = ContextStrategy.RELEVANCE_FIRST

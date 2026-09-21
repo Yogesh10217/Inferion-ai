@@ -160,7 +160,7 @@ class DataIntelligenceManager:
         self.metrics_collector.increment("anomalies_total")
 
         # 8. Detect Drift
-        drift = self.drift_manager.detect_drift(
+        self.drift_manager.detect_drift(
             dataset.dataset_id, tenant_id, DriftType.DISTRIBUTION_DRIFT, 0.45, feature_name="age"
         )
         drift_ass = self.drift_manager.evaluate_drift_assessment(dataset.dataset_id, tenant_id)
@@ -193,10 +193,10 @@ class DataIntelligenceManager:
         impact_ass = self.impact_manager.evaluate_impact(dataset.dataset_id, tenant_id, downstream_nodes_count=4)
 
         # 14. Correlate Platform Signals
-        sig = self.signal_manager.emit_signal(
+        self.signal_manager.emit_signal(
             tenant_id, dataset.dataset_id, DataSignalType.ANOMALY_DETECTED, DataSignalSource.EVENT_INTELLIGENCE
         )
-        corr = self.correlation_manager.correlate(
+        self.correlation_manager.correlate(
             tenant_id, CorrelationType.DATA_ANOMALY_TO_PIPELINE_FAILURE, anomaly.anomaly_id, pipeline.pipeline_id
         )
 

@@ -24,4 +24,3 @@ def test_failure_simulation_dependency_failure():
 
     assert res.observation.status.value == "UNHEALTHY"
     assert any(a.anomaly_type.value == "DEPENDENCY_FAILURE" for a in res.anomalies)
-

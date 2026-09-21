@@ -128,7 +128,7 @@ class WorkspaceManager:
 
     def delete_workspace(self, workspace_id: str) -> bool:
         """Delete a workspace."""
-        ws = self.get_workspace(workspace_id)
+        self.get_workspace(workspace_id)
         del self._workspaces[workspace_id]
         logger.error(f"[WORKSPACE MANAGER] Deleted workspace '{workspace_id}'")
         return True

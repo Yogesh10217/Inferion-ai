@@ -1,7 +1,6 @@
 """Unit tests for TransformationPipeline, field mappings, and sensitive data redaction."""
 
-import pytest
-from app.integrations.transformation import TransformationPipeline, FieldMapping
+from app.integrations.transformation import FieldMapping, TransformationPipeline
 
 
 def test_payload_transformation_and_redaction():

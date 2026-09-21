@@ -1,8 +1,7 @@
 """Unit tests for IntegrationRegistry."""
 
-import pytest
-from app.integrations.registry import IntegrationRegistry
 from app.integrations.integration import IntegrationStatus, IntegrationType
+from app.integrations.registry import IntegrationRegistry
 
 
 def test_integration_registration_and_status_update():

@@ -1,9 +1,8 @@
 """Unit tests for strict multi-tenant isolation in knowledge, memory, and graph."""
 
-import pytest
 from app.knowledge_platform.knowledge import KnowledgeManager
-from app.knowledge_platform.memory import MemoryManager
 from app.knowledge_platform.knowledge_graph import KnowledgeGraphManager, KnowledgeNodeType
+from app.knowledge_platform.memory import MemoryManager
 
 
 def test_knowledge_platform_multitenancy():

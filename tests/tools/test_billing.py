@@ -2,10 +2,9 @@
 Tests for ToolBillingTracker Accounting
 """
 
-import pytest
 from app.tools.tool_billing import ToolBillingTracker
 from app.tools.tool_context import ToolContext
-from app.tools.tool_result import ToolResult, ToolExecutionStatus
+from app.tools.tool_result import ToolExecutionStatus, ToolResult
 
 
 def test_billing_tracker_usage_accounting():

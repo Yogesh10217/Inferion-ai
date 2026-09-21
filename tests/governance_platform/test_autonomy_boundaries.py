@@ -1,7 +1,6 @@
 """Unit tests for constrained autonomous agent boundary enforcement."""
 
-import pytest
-from app.governance_platform.human_oversight import HumanOversightEngine, AutonomyLevel, OversightLevel
+from app.governance_platform.human_oversight import AutonomyLevel, HumanOversightEngine
 
 
 def test_autonomy_boundary_enforcement():

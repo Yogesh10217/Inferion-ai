@@ -2,14 +2,13 @@
 Tests for Security Certification Engine (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_posture import SecurityPostureEvaluator
-from app.security_operations.security_policy_engine import SecurityPolicyEngine
-from app.security_operations.compliance_governance import ComplianceGovernanceEngine
-from app.security_operations.security_risk_engine import SecurityRiskEngine
 from app.security_operations.audit_integrity import AuditIntegrityEngine
 from app.security_operations.audit_log import SecurityAuditLogger
+from app.security_operations.compliance_governance import ComplianceGovernanceEngine
 from app.security_operations.security_certification import SecurityCertificationEngine, SecurityCertificationResult
+from app.security_operations.security_policy_engine import SecurityPolicyEngine
+from app.security_operations.security_posture import SecurityPostureEvaluator
+from app.security_operations.security_risk_engine import SecurityRiskEngine
 
 
 def test_security_certification_non_prod():
@@ -26,6 +25,9 @@ def test_security_certification_non_prod():
 
     assert isinstance(result, SecurityCertificationResult)
     assert result.decision in [
-        "SECURITY_CERTIFIED", "SECURITY_BLOCKED", "SECURITY_MANUAL_REVIEW_REQUIRED", "SECURITY_NOT_EXECUTED"
+        "SECURITY_CERTIFIED",
+        "SECURITY_BLOCKED",
+        "SECURITY_MANUAL_REVIEW_REQUIRED",
+        "SECURITY_NOT_EXECUTED",
     ]
     assert result.fingerprint.startswith("sha256:")

@@ -1,9 +1,10 @@
 """Tests for ExecutionReplayManager and safe replay mode."""
 
 import pytest
-from app.observability.replay import ExecutionReplayManager
+
 from app.observability.context import ObservabilityContext
 from app.observability.exceptions import ExecutionNotFoundException, ReplayNotAvailableException
+from app.observability.replay import ExecutionReplayManager
 
 
 @pytest.mark.asyncio

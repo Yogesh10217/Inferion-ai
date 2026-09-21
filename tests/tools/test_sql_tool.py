@@ -3,6 +3,7 @@ Tests for SQL Query Execution Tool
 """
 
 import pytest
+
 from app.tools.builtin.sql_tool import SQLTool
 from app.tools.tool_context import ToolContext
 from app.tools.tool_result import ToolExecutionStatus

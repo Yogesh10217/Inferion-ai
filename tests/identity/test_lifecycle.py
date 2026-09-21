@@ -1,6 +1,5 @@
 """Unit tests for IdentityLifecycleManager access review workflows."""
 
-import pytest
 from app.identity.lifecycle import IdentityLifecycleManager, ReviewStatus
 
 

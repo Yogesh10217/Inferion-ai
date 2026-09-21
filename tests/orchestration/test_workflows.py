@@ -1,7 +1,6 @@
 """Unit tests for WorkflowDefinitionManager creation and lifecycle state."""
 
-import pytest
-from app.orchestration.workflow import WorkflowDefinitionManager, WorkflowStep, DefinitionLifecycleState
+from app.orchestration.workflow import DefinitionLifecycleState, WorkflowDefinitionManager, WorkflowStep
 
 
 def test_workflow_definition_creation_and_publishing():

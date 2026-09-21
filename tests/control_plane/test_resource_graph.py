@@ -1,8 +1,9 @@
 """Unit tests for ResourceGraph."""
 
 import pytest
-from app.control_plane.resource_graph import ResourceGraph
+
 from app.control_plane.exceptions import ConfigurationConflictException, LifecycleException
+from app.control_plane.resource_graph import ResourceGraph
 
 
 def test_dependency_graph_and_impact_analysis():

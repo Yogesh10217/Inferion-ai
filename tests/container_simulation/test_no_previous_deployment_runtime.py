@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.deployment_simulation import ProductionSimulationEngine
 from app.deployment.models import RollbackTrigger
 

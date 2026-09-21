@@ -194,7 +194,7 @@ class PGVectorStore(VectorStore):
         async def _do_delete():
             async with self.session_maker() as session:
                 sql = text("""
-                    DELETE FROM document_embeddings 
+                    DELETE FROM document_embeddings
                     WHERE id = ANY(:ids) AND collection_name = :collection_name
                 """)
                 await session.execute(sql, {"ids": ids, "collection_name": collection_name})

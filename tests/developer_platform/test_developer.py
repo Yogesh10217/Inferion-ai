@@ -1,8 +1,9 @@
 """Unit tests for Developer registration, verification, permissions, and lifecycle."""
 
 import pytest
+
 from app.developer_platform.developer import DeveloperManager, DeveloperStatus
-from app.developer_platform.exceptions import DeveloperNotFoundException, DeveloperPermissionDeniedException
+from app.developer_platform.exceptions import DeveloperPermissionDeniedException
 
 
 def test_developer_registration_and_verification():

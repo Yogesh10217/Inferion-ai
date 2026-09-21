@@ -2,30 +2,27 @@
 
 import pytest
 
-from app.data_intelligence.manager import DataIntelligenceManager
+from app.data_intelligence.anomalies import DataAnomalySeverity, DataAnomalyStatus, DataAnomalyType
+from app.data_intelligence.datasets import DatasetType
+from app.data_intelligence.drift import DriftType
 from app.data_intelligence.exceptions import (
     CrossTenantDataIntelligenceException,
-    DatasetNotFoundException,
     HighRiskDataActionRequiresApprovalException,
     ImmutableDataRecordException,
 )
-from app.data_intelligence.datasets import DatasetType, DatasetClassificationReference
-from app.data_intelligence.sources import DataSourceType
-from app.data_intelligence.quality import DataQualityDimension, DataQualityStatus
-from app.data_intelligence.anomalies import DataAnomalyType, DataAnomalySeverity, DataAnomalyStatus
-from app.data_intelligence.drift import DriftType, DriftSeverity
 from app.data_intelligence.freshness import FreshnessStatus
-from app.data_intelligence.lineage import LineageType
-from app.data_intelligence.lineage_graph import TraversalDirection
-from app.data_intelligence.schema import SchemaField, SchemaCompatibility
 from app.data_intelligence.incidents import DataIncidentSeverity, DataIncidentStatus
 from app.data_intelligence.investigations import InvestigationStatus
+from app.data_intelligence.lineage import LineageType
+from app.data_intelligence.lineage_graph import TraversalDirection
+from app.data_intelligence.manager import DataIntelligenceManager
+from app.data_intelligence.quality import DataQualityDimension, DataQualityStatus
 from app.data_intelligence.remediation import DataRemediationAction, DataRemediationPriority, DataRemediationStatus
+from app.data_intelligence.schema import SchemaCompatibility, SchemaField
+from app.data_intelligence.signals import DataSignalSource, DataSignalType
 from app.data_intelligence.verification import VerificationStatus
-from app.data_intelligence.signals import DataSignalType, DataSignalSource
-from app.data_intelligence.evidence import DataEvidenceBundle
-from app.platform_contracts.trust import TrustBand
 from app.platform_contracts.delegation import DelegationRequest
+from app.platform_contracts.trust import TrustBand
 
 
 @pytest.fixture
@@ -85,8 +82,12 @@ def test_flow_3_data_profiling(manager):
 def test_flow_4_data_quality_evaluation(manager):
     """Flow 4: Data Quality Evaluation across dimensions."""
     ds = manager.dataset_manager.register_dataset(name="order_items", tenant_id="tenant-1")
-    manager.quality_manager.create_rule(ds.dataset_id, "tenant-1", "Rule 1", DataQualityDimension.COMPLETENESS, min_threshold=0.85)
-    manager.quality_manager.create_rule(ds.dataset_id, "tenant-1", "Rule 2", DataQualityDimension.ACCURACY, min_threshold=0.90)
+    manager.quality_manager.create_rule(
+        ds.dataset_id, "tenant-1", "Rule 1", DataQualityDimension.COMPLETENESS, min_threshold=0.85
+    )
+    manager.quality_manager.create_rule(
+        ds.dataset_id, "tenant-1", "Rule 2", DataQualityDimension.ACCURACY, min_threshold=0.90
+    )
 
     result = manager.quality_manager.evaluate_quality(ds.dataset_id, "tenant-1")
     assert result.status == DataQualityStatus.PASSED
@@ -102,7 +103,8 @@ def test_flow_5_data_validation_failure(manager):
         dataset_id=ds.dataset_id,
         tenant_id="tenant-1",
         name="Age Constraint",
-        validation_type=manager.validation_manager._rules.get("test") or __import__("app.data_intelligence.validation", fromlist=["ValidationType"]).ValidationType.RANGE,
+        validation_type=manager.validation_manager._rules.get("test")
+        or __import__("app.data_intelligence.validation", fromlist=["ValidationType"]).ValidationType.RANGE,
         target_field="age",
         validation_spec={"min": 18, "max": 100},
     )
@@ -119,9 +121,12 @@ def test_flow_5_data_validation_failure(manager):
 def test_flow_6_data_freshness_detection(manager):
     """Flow 6: Data Freshness Detection identifies stale datasets."""
     ds = manager.dataset_manager.register_dataset(name="realtime_stream", tenant_id="tenant-1")
-    manager.freshness_manager.set_policy(ds.dataset_id, "tenant-1", expected_interval_minutes=15, max_allowed_delay_minutes=30)
+    manager.freshness_manager.set_policy(
+        ds.dataset_id, "tenant-1", expected_interval_minutes=15, max_allowed_delay_minutes=30
+    )
 
-    from datetime import datetime, timezone, timedelta
+    from datetime import datetime, timedelta, timezone
+
     stale_time = datetime.now(timezone.utc) - timedelta(hours=5)
 
     ass = manager.freshness_manager.evaluate_freshness(ds.dataset_id, "tenant-1", last_updated_at=stale_time)
@@ -151,7 +156,9 @@ def test_flow_7_data_anomaly_detection(manager):
 def test_flow_8_data_drift_detection(manager):
     """Flow 8: Data Drift Detection evaluates distribution/schema drift."""
     ds = manager.dataset_manager.register_dataset(name="model_features", tenant_id="tenant-1")
-    manager.drift_manager.detect_drift(ds.dataset_id, "tenant-1", DriftType.DISTRIBUTION_DRIFT, 0.65, feature_name="income")
+    manager.drift_manager.detect_drift(
+        ds.dataset_id, "tenant-1", DriftType.DISTRIBUTION_DRIFT, 0.65, feature_name="income"
+    )
 
     ass = manager.drift_manager.evaluate_drift_assessment(ds.dataset_id, "tenant-1")
     assert ass.overall_drift_detected is True
@@ -200,7 +207,9 @@ def test_flow_11_pipeline_reliability_failure(manager):
 def test_flow_12_downstream_impact_analysis(manager):
     """Flow 12: Downstream Impact Analysis identifies affected models & pipelines."""
     ds = manager.dataset_manager.register_dataset(name="core_users", tenant_id="tenant-1")
-    impact = manager.impact_manager.evaluate_impact(ds.dataset_id, "tenant-1", downstream_nodes_count=6, is_sensitive=True)
+    impact = manager.impact_manager.evaluate_impact(
+        ds.dataset_id, "tenant-1", downstream_nodes_count=6, is_sensitive=True
+    )
 
     assert impact.overall_impact_score > 30.0
     assert impact.impacted_models_count > 0
@@ -210,7 +219,9 @@ def test_flow_12_downstream_impact_analysis(manager):
 def test_flow_13_data_incident_creation(manager):
     """Flow 13: Data Incident Creation from severe anomaly."""
     ds = manager.dataset_manager.register_dataset(name="orders", tenant_id="tenant-1")
-    anom = manager.anomaly_manager.detect_anomaly(ds.dataset_id, "tenant-1", DataAnomalyType.MISSING_RECORDS, DataAnomalySeverity.CRITICAL, "rows", 1000, 0)
+    anom = manager.anomaly_manager.detect_anomaly(
+        ds.dataset_id, "tenant-1", DataAnomalyType.MISSING_RECORDS, DataAnomalySeverity.CRITICAL, "rows", 1000, 0
+    )
 
     inc = manager.incident_manager.create_incident(
         ds.dataset_id,
@@ -228,9 +239,13 @@ def test_flow_13_data_incident_creation(manager):
 def test_flow_14_high_risk_remediation_requires_approval(manager):
     """Flow 14: High-Risk Remediation Requires Approval."""
     ds = manager.dataset_manager.register_dataset(name="prod_logs", tenant_id="tenant-1")
-    inc = manager.incident_manager.create_incident(ds.dataset_id, "tenant-1", "Data corruption", DataIncidentSeverity.P1_CRITICAL)
+    inc = manager.incident_manager.create_incident(
+        ds.dataset_id, "tenant-1", "Data corruption", DataIncidentSeverity.P1_CRITICAL
+    )
 
-    action = DataRemediationAction(action_id="a1", action_type="DATASET_ROLLBACK", target_subsystem="data_fabric", is_high_risk=True)
+    action = DataRemediationAction(
+        action_id="a1", action_type="DATASET_ROLLBACK", target_subsystem="data_fabric", is_high_risk=True
+    )
 
     with pytest.raises(HighRiskDataActionRequiresApprovalException) as exc_info:
         manager.remediation_manager.create_remediation_plan(
@@ -249,7 +264,9 @@ def test_flow_15_delegation_only_enforcement(manager):
     ds = manager.dataset_manager.register_dataset(name="sales", tenant_id="tenant-1")
     action = DataRemediationAction(action_id="a1", action_type="PIPELINE_RESTART", target_subsystem="orchestration")
 
-    plan = manager.remediation_manager.create_remediation_plan("inc-123", ds.dataset_id, "tenant-1", DataRemediationPriority.P3_MEDIUM, actions=[action])
+    plan = manager.remediation_manager.create_remediation_plan(
+        "inc-123", ds.dataset_id, "tenant-1", DataRemediationPriority.P3_MEDIUM, actions=[action]
+    )
     plan = manager.remediation_manager.execute_remediation(plan.plan_id, "tenant-1", approved=False)
 
     assert plan.status == DataRemediationStatus.DELEGATED

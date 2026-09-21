@@ -1,6 +1,5 @@
 """Unit tests for WorkspaceManager."""
 
-import pytest
 from app.developer_platform.development_workspaces import WorkspaceManager
 
 

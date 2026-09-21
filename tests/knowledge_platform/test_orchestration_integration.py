@@ -1,8 +1,7 @@
 """Unit tests for OrchestrationKnowledgeAdapter context strategy selection."""
 
-import pytest
-from app.knowledge_platform.orchestration_integration import OrchestrationKnowledgeAdapter
 from app.knowledge_platform.context import ContextStrategy
+from app.knowledge_platform.orchestration_integration import OrchestrationKnowledgeAdapter
 
 
 def test_orchestration_context_strategy_selection():

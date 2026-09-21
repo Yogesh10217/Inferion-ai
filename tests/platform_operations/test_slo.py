@@ -1,12 +1,17 @@
 """Unit tests for SLO & Error Budget Tracking Manager."""
 
-import pytest
-from app.platform_operations.slo import SLOManager, SLOType, SLOStatus
+from app.platform_operations.slo import SLOManager, SLOStatus, SLOType
 
 
 def test_slo_creation_and_indicator_update():
     mgr = SLOManager()
-    slo = mgr.create_slo(tenant_id="t1", service_id="svc_api", name="API Availability", slo_type=SLOType.AVAILABILITY, target_threshold=99.9)
+    slo = mgr.create_slo(
+        tenant_id="t1",
+        service_id="svc_api",
+        name="API Availability",
+        slo_type=SLOType.AVAILABILITY,
+        target_threshold=99.9,
+    )
 
     assert slo.status == SLOStatus.HEALTHY
     assert slo.error_budget.remaining_budget > 0

@@ -1,6 +1,5 @@
 """Unit tests for DataLineageManager."""
 
-import pytest
 from app.data_fabric.lineage import DataLineageManager
 
 

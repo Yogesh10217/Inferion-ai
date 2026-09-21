@@ -1,4 +1,3 @@
-import pytest
 from app.deployment.models import ProductionDeploymentState
 from app.deployment.production_deployment_state_machine import ProductionDeploymentStateMachine
 

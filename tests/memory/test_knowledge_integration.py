@@ -3,6 +3,7 @@ Tests for Knowledge & RAG (Phase 5.0) & Memory Integration
 """
 
 import pytest
+
 from app.memory.memory_manager import MemoryManager
 
 

@@ -1,7 +1,6 @@
 """Unit tests for GovernanceViolation recording and lifecycle management."""
 
-import pytest
-from app.governance_platform.violations import ViolationManager, ViolationType, ViolationSeverity, ViolationStatus
+from app.governance_platform.violations import ViolationManager, ViolationSeverity, ViolationStatus, ViolationType
 
 
 def test_violation_recording_and_status_update():

@@ -2,8 +2,7 @@
 Tests for Goal and Hierarchy Models
 """
 
-import pytest
-from app.planning.goals import Goal, Task, SubTask, Priority, Status
+from app.planning.goals import Goal, Status
 
 
 def test_goal_creation():

@@ -2,24 +2,22 @@
 
 import pytest
 
-from app.security_intelligence.manager import SecurityIntelligenceManager
-from app.security_intelligence.assets import SecurityAssetType, SecurityAssetCriticality
-from app.security_intelligence.signals import SecuritySignalType, SecuritySignalSeverity
-from app.security_intelligence.threats import ThreatType, ThreatSeverity
-from app.security_intelligence.ai_threats import AIThreatType, AIThreatSeverity
-from app.security_intelligence.vulnerabilities import VulnerabilitySeverity, VulnerabilityStatus
-from app.security_intelligence.correlation import CorrelationType
-from app.security_intelligence.incidents import SecurityIncidentSeverity, SecurityIncidentStatus
-from app.security_intelligence.remediation import SecurityRemediationPriority, SecurityRemediationAction
-from app.security_intelligence.evidence import SecurityEvidence
-from app.security_intelligence.investigations import InvestigationFinding
-from app.platform_contracts.governance import GovernanceDecisionStatus
 from app.platform_contracts.delegation import DelegationTarget
-from app.platform_contracts.trust import TrustBand
+from app.platform_contracts.governance import GovernanceDecisionStatus
+from app.security_intelligence.ai_threats import AIThreatType
+from app.security_intelligence.assets import SecurityAssetCriticality, SecurityAssetType
+from app.security_intelligence.evidence import SecurityEvidence
 from app.security_intelligence.exceptions import (
     CrossTenantSecurityAccessException,
     ImmutableSecurityRecordException,
 )
+from app.security_intelligence.incidents import SecurityIncidentStatus
+from app.security_intelligence.investigations import InvestigationFinding
+from app.security_intelligence.manager import SecurityIntelligenceManager
+from app.security_intelligence.remediation import SecurityRemediationAction, SecurityRemediationPriority
+from app.security_intelligence.signals import SecuritySignalSeverity, SecuritySignalType
+from app.security_intelligence.threats import ThreatSeverity, ThreatType
+from app.security_intelligence.vulnerabilities import VulnerabilitySeverity, VulnerabilityStatus
 
 
 def test_flow1_security_signal_to_threat():
@@ -27,9 +25,15 @@ def test_flow1_security_signal_to_threat():
     mgr = SecurityIntelligenceManager()
     tenant = "tenant_sec_1"
 
-    asset = mgr.asset_manager.register_asset(tenant, "Auth_Server", SecurityAssetType.SERVICE, SecurityAssetCriticality.HIGH)
-    sig = mgr.signal_manager.ingest_signal(tenant, asset.asset_id, SecuritySignalType.AUTHORIZATION_FAILURE, SecuritySignalSeverity.HIGH)
-    thrt = mgr.threat_manager.create_threat(tenant, asset.asset_id, ThreatType.IDENTITY_THREAT, ThreatSeverity.HIGH, evidence_references=[sig.signal_id])
+    asset = mgr.asset_manager.register_asset(
+        tenant, "Auth_Server", SecurityAssetType.SERVICE, SecurityAssetCriticality.HIGH
+    )
+    sig = mgr.signal_manager.ingest_signal(
+        tenant, asset.asset_id, SecuritySignalType.AUTHORIZATION_FAILURE, SecuritySignalSeverity.HIGH
+    )
+    thrt = mgr.threat_manager.create_threat(
+        tenant, asset.asset_id, ThreatType.IDENTITY_THREAT, ThreatSeverity.HIGH, evidence_references=[sig.signal_id]
+    )
     risk = mgr.risk_manager.assess_security_risk(tenant, asset.asset_id, "HIGH")
 
     assert sig.asset_id == asset.asset_id
@@ -43,12 +47,25 @@ def test_flow2_ai_prompt_injection_detection():
     tenant = "tenant_sec_2"
 
     asset = mgr.asset_manager.register_asset(tenant, "LLM_Agent", SecurityAssetType.AGENT)
-    sig = mgr.signal_manager.ingest_signal(tenant, asset.asset_id, SecuritySignalType.PROMPT_INJECTION_ATTEMPT, payload={"user_prompt": "Ignore previous instructions"})
-    aithrt = mgr.ai_threat_manager.analyze_ai_threat(tenant, asset.asset_id, AIThreatType.PROMPT_INJECTION, signal_id=sig.signal_id)
+    sig = mgr.signal_manager.ingest_signal(
+        tenant,
+        asset.asset_id,
+        SecuritySignalType.PROMPT_INJECTION_ATTEMPT,
+        payload={"user_prompt": "Ignore previous instructions"},
+    )
+    aithrt = mgr.ai_threat_manager.analyze_ai_threat(
+        tenant, asset.asset_id, AIThreatType.PROMPT_INJECTION, signal_id=sig.signal_id
+    )
 
-    action = SecurityRemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="REVOKE_KEY", priority=SecurityRemediationPriority.HIGH)
+    action = SecurityRemediationAction(
+        target_manager=DelegationTarget.PLATFORM_OPERATIONS,
+        action_name="REVOKE_KEY",
+        priority=SecurityRemediationPriority.HIGH,
+    )
 
-    plan = mgr.remediation_manager.plan_remediation(tenant, "inc_2", "idemp_2", [action], priority=SecurityRemediationPriority.HIGH)
+    plan = mgr.remediation_manager.plan_remediation(
+        tenant, "inc_2", "idemp_2", [action], priority=SecurityRemediationPriority.HIGH
+    )
     gov_dec = mgr.governance_engine.evaluate_remediation_governance(tenant, plan)
 
     assert aithrt.threat_type == AIThreatType.PROMPT_INJECTION
@@ -60,14 +77,26 @@ def test_flow3_vulnerability_lifecycle():
     mgr = SecurityIntelligenceManager()
     tenant = "tenant_sec_3"
 
-    vuln = mgr.vulnerability_manager.create_vulnerability(tenant, "asset_3", "SQL Injection", VulnerabilitySeverity.HIGH)
+    vuln = mgr.vulnerability_manager.create_vulnerability(
+        tenant, "asset_3", "SQL Injection", VulnerabilitySeverity.HIGH
+    )
     assert vuln.status == VulnerabilityStatus.DISCOVERED
 
-    v1 = mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.VALIDATING)
-    v2 = mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.CONFIRMED)
-    v3 = mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.RISK_ASSESSED)
-    v4 = mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.REMEDIATION_PLANNED)
-    v5 = mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.REMEDIATION_IN_PROGRESS)
+    mgr.vulnerability_manager.transition_vulnerability(
+        vuln.vulnerability_id, tenant, VulnerabilityStatus.VALIDATING
+    )
+    mgr.vulnerability_manager.transition_vulnerability(
+        vuln.vulnerability_id, tenant, VulnerabilityStatus.CONFIRMED
+    )
+    mgr.vulnerability_manager.transition_vulnerability(
+        vuln.vulnerability_id, tenant, VulnerabilityStatus.RISK_ASSESSED
+    )
+    mgr.vulnerability_manager.transition_vulnerability(
+        vuln.vulnerability_id, tenant, VulnerabilityStatus.REMEDIATION_PLANNED
+    )
+    mgr.vulnerability_manager.transition_vulnerability(
+        vuln.vulnerability_id, tenant, VulnerabilityStatus.REMEDIATION_IN_PROGRESS
+    )
     v6 = mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.VERIFIED)
 
     assert v6.status == VulnerabilityStatus.VERIFIED
@@ -107,8 +136,14 @@ def test_flow6_high_risk_remediation_approval():
     mgr = SecurityIntelligenceManager()
     tenant = "tenant_sec_6"
 
-    action = SecurityRemediationAction(target_manager=DelegationTarget.PLATFORM_OPERATIONS, action_name="ISOLATE_HOST", priority=SecurityRemediationPriority.CRITICAL)
-    plan = mgr.remediation_manager.plan_remediation(tenant, "inc_6", "idemp_6", [action], priority=SecurityRemediationPriority.CRITICAL)
+    action = SecurityRemediationAction(
+        target_manager=DelegationTarget.PLATFORM_OPERATIONS,
+        action_name="ISOLATE_HOST",
+        priority=SecurityRemediationPriority.CRITICAL,
+    )
+    plan = mgr.remediation_manager.plan_remediation(
+        tenant, "inc_6", "idemp_6", [action], priority=SecurityRemediationPriority.CRITICAL
+    )
     gov_dec = mgr.governance_engine.evaluate_remediation_governance(tenant, plan)
 
     assert gov_dec.status == GovernanceDecisionStatus.REQUIRE_APPROVAL
@@ -174,7 +209,6 @@ def test_flow11_trust_compatibility():
     assert contract_assessment.subject_id == "asset_11"
 
 
-
 def test_flow12_secret_redaction():
     """Flow 12: Secrets and sensitive values redacted from signals, evidence, metrics, analytics, and audit events."""
     mgr = SecurityIntelligenceManager()
@@ -198,7 +232,9 @@ def test_flow13_full_security_incident_lifecycle():
 
     inc = mgr.incident_manager.create_incident(tenant, "asset_13", "Exfiltration Alert")
     inv = mgr.investigation_manager.create_investigation(tenant, inc.incident_id, "Exfiltration Investigation")
-    concluded = mgr.investigation_manager.conclude_investigation(inv.investigation_id, tenant, [InvestigationFinding(description="Exfiltration confirmed")])
+    concluded = mgr.investigation_manager.conclude_investigation(
+        inv.investigation_id, tenant, [InvestigationFinding(description="Exfiltration confirmed")]
+    )
 
     assert concluded.status.value == "CONCLUDED"
     assert concluded.snapshot is not None

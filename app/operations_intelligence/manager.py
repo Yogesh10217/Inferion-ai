@@ -109,7 +109,7 @@ class OperationsIntelligenceManager:
 
         # 4. Correlate Events
         corr_ev = CorrelationEvidence(event_source="ALERTS", event_id=alert.alert_id, summary="High latency detected")
-        corr = self.correlation_manager.correlate_events(tenant_id, inc.incident_id, [corr_ev])
+        self.correlation_manager.correlate_events(tenant_id, inc.incident_id, [corr_ev])
 
         # 5. Open Investigation
         inv = self.investigation_manager.open_investigation(
@@ -152,7 +152,7 @@ class OperationsIntelligenceManager:
         self.metrics_collector.increment("remediations_delegated_total")
 
         # 9. Verification & Resolution
-        verif = self.verification_manager.verify_remediation(tenant_id, rem_plan.plan_id, service_recovered=True)
+        self.verification_manager.verify_remediation(tenant_id, rem_plan.plan_id, service_recovered=True)
         self.incident_manager.resolve_incident(tenant_id, inc.incident_id)
 
         # 10. Conclude Investigation & Capture Snapshot
@@ -184,7 +184,7 @@ class OperationsIntelligenceManager:
 
         # 13. Billing & Analytics
         self.billing_tracker.record_cost(tenant_id, "FULL_LIFECYCLE_TRIAGE", 0.05)
-        report = self.analytics_engine.generate_report(
+        self.analytics_engine.generate_report(
             tenant_id, active_services_count=1, open_incidents_count=0, mttr_minutes=12.0
         )
 

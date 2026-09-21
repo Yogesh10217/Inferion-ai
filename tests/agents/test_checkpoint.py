@@ -2,9 +2,8 @@
 Checkpoint Unit Tests
 """
 
-import pytest
-from app.agents.checkpoint import CheckpointManager
 from app.agents.agent_state import AgentState, AgentStatus
+from app.agents.checkpoint import CheckpointManager
 
 
 def test_checkpoint_save_and_load():

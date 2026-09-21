@@ -16,7 +16,7 @@ class BudgetService:
         self._current_spend: dict[str, float] = {}
 
     async def get_budget(self, org_id: str, workspace_id: Optional[str] = None) -> Optional[Budget]:
-        stmt = select(Budget).where(Budget.organization_id == org_id, Budget.enabled == True)
+        stmt = select(Budget).where(Budget.organization_id == org_id, Budget.enabled)
         if workspace_id:
             stmt = stmt.where(Budget.workspace_id == workspace_id)
         else:
@@ -30,7 +30,7 @@ class BudgetService:
         self, org_id: str, workspace_id: Optional[str], hard_limit: float, warning: float = 0.0, critical: float = 0.0
     ) -> Budget:
         async with self.session_factory() as db:
-            stmt = select(Budget).where(Budget.organization_id == org_id, Budget.enabled == True)
+            stmt = select(Budget).where(Budget.organization_id == org_id, Budget.enabled)
             if workspace_id:
                 stmt = stmt.where(Budget.workspace_id == workspace_id)
             else:

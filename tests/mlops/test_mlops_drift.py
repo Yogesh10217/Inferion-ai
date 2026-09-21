@@ -1,9 +1,8 @@
 """Unit tests for DriftDetector."""
 
-import pytest
-from app.mlops.registry import AIAssetRegistry, AIAssetType
 from app.mlops.deployment import DeploymentManager, DeploymentStatus
 from app.mlops.drift import DriftDetector, DriftType
+from app.mlops.registry import AIAssetRegistry, AIAssetType
 
 
 def test_drift_detection_and_degraded_state_trigger():

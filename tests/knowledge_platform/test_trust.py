@@ -1,6 +1,5 @@
 """Unit tests for KnowledgeTrustEngine evaluation."""
 
-import pytest
 from app.knowledge_platform.knowledge import KnowledgeItem, KnowledgeVersion
 from app.knowledge_platform.trust import KnowledgeTrustEngine, TrustDimension
 

@@ -1,7 +1,6 @@
 """Unit tests for HumanTaskManager creation, completion, and escalation."""
 
-import pytest
-from app.orchestration.human_tasks import HumanTaskManager, TaskStatus, TaskPriority
+from app.orchestration.human_tasks import HumanTaskManager, TaskPriority, TaskStatus
 
 
 def test_human_task_lifecycle():

@@ -81,7 +81,7 @@ class ComplianceAssessmentManager:
         self._assessments: Dict[str, ComplianceAssessment] = {}
 
     def run_assessment(self, tenant_id: str, framework_id: str, subject_id: str = "global") -> ComplianceAssessment:
-        fw = self.framework_manager.get_framework(framework_id, tenant_id)
+        self.framework_manager.get_framework(framework_id, tenant_id)
         reqs = self.requirement_manager.list_requirements(tenant_id, framework_id)
         ctrls = self.control_manager.list_controls(tenant_id)
         evidence_list = self.evidence_manager.list_evidence_for_subject(tenant_id, subject_id)

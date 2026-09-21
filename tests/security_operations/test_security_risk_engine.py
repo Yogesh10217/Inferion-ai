@@ -2,8 +2,7 @@
 Tests for Security Risk Engine (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_risk_engine import SecurityRiskEngine, RiskAssessment
+from app.security_operations.security_risk_engine import RiskAssessment, SecurityRiskEngine
 
 
 def test_security_risk_assessment():

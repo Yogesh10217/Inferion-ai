@@ -1,7 +1,6 @@
 """Unit tests for identity security validation."""
 
-import pytest
-from app.identity.access_control import AccessControlManager, AccessContext, AccessDecisionType
+from app.identity.access_control import AccessContext, AccessControlManager, AccessDecisionType
 
 
 def test_cross_tenant_denial_check():

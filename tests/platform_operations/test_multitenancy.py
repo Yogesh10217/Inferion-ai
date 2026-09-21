@@ -1,8 +1,9 @@
 """Unit tests for Multi-Tenancy & Tenant Isolation in Platform Operations."""
 
 import pytest
-from app.platform_operations.services import ServiceCatalogManager
+
 from app.platform_operations.exceptions import ServiceNotFoundException
+from app.platform_operations.services import ServiceCatalogManager
 
 
 def test_cross_tenant_service_access_blocked():

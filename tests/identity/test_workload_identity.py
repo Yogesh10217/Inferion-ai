@@ -1,6 +1,5 @@
 """Unit tests for WorkloadIdentity short-lived credential issuance."""
 
-import pytest
 from app.identity.workload_identity import WorkloadIdentityManager, WorkloadType
 
 

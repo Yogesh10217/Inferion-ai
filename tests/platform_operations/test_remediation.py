@@ -1,9 +1,15 @@
 """Unit tests for Remediation Planning & Approval Risk Gating."""
 
 import pytest
-from app.platform_operations.remediation import RemediationPlanner, RemediationStep, RemediationStrategy, RemediationStatus
-from app.platform_operations.exceptions import OperationalPolicyViolationException
+
 from app.governance_platform.risk import RiskLevel
+from app.platform_operations.exceptions import OperationalPolicyViolationException
+from app.platform_operations.remediation import (
+    RemediationPlanner,
+    RemediationStatus,
+    RemediationStep,
+    RemediationStrategy,
+)
 
 
 def test_high_risk_remediation_gated_by_approval():

@@ -1,7 +1,8 @@
 """Unit tests for FallbackManager."""
 
 import pytest
-from app.resilience.fallback import FallbackManager, FallbackStrategy
+
+from app.resilience.fallback import FallbackManager
 
 
 @pytest.mark.asyncio

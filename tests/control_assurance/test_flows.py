@@ -1,21 +1,22 @@
 """Mandatory E2E Integration Flow Tests for Enterprise AI Control Assurance (Phase 5.38)."""
 
 import pytest
-from app.control_assurance.manager import ControlAssuranceManager
-from app.control_assurance.controls import ControlCategory, ControlType, ControlCriticality
-from app.control_assurance.signals import ControlSignalType, ControlSignalSource, ControlSignalSeverity
-from app.control_assurance.evaluation import ControlEvaluationStatus
-from app.control_assurance.violations import ViolationSeverity, ViolationStatus
-from app.control_assurance.assurance import AssuranceFinding, AssuranceDimension, AssuranceBand
+
+from app.control_assurance.assurance import AssuranceBand, AssuranceDimension, AssuranceFinding
+from app.control_assurance.controls import ControlCategory
 from app.control_assurance.delegation import DelegationTarget
+from app.control_assurance.evaluation import ControlEvaluationStatus
 from app.control_assurance.exceptions import (
-    CrossTenantControlAssuranceAccessException,
-    InvalidControlTransitionException,
     ControlIntegrityException,
-    HighRiskControlOverrideRequiresApprovalException,
     ControlRemediationBlockedException,
+    CrossTenantControlAssuranceAccessException,
+    HighRiskControlOverrideRequiresApprovalException,
     ImmutableAssuranceRecordException,
+    InvalidControlTransitionException,
 )
+from app.control_assurance.manager import ControlAssuranceManager
+from app.control_assurance.signals import ControlSignalSeverity, ControlSignalSource, ControlSignalType
+from app.control_assurance.violations import ViolationSeverity, ViolationStatus
 
 
 @pytest.fixture
@@ -120,7 +121,7 @@ def test_flow8_sensitive_data_redaction_in_evidence(manager):
     """Flow 8 — Sensitive data redaction in evidence."""
     tenant_id = "tenant_a"
     raw_ev = {"api_key": "secret_key_12345", "control_name": "AuthControl"}
-    
+
     ev = manager.evidence_manager.add_evidence("bundle_001", tenant_id, "AUTH_CHECK", "srv_001", raw_ev)
     assert ev.sanitized_payload["api_key"] == "[REDACTED]"
     assert ev.sanitized_payload["control_name"] == "AuthControl"
@@ -161,9 +162,7 @@ def test_flow12_delegation_only_remediation_enforcement(manager):
     tenant_id = "tenant_a"
 
     with pytest.raises(ControlRemediationBlockedException):
-        manager.delegation_manager.delegate_action(
-            tenant_id, "ctrl_100", "REMEDIATE", direct_mutation_attempted=True
-        )
+        manager.delegation_manager.delegate_action(tenant_id, "ctrl_100", "REMEDIATE", direct_mutation_attempted=True)
 
     plan = manager.delegation_manager.delegate_action(
         tenant_id, "ctrl_100", "REMEDIATE", target_system=DelegationTarget.PLATFORM_OPERATIONS
@@ -184,9 +183,7 @@ def test_flow13_idempotent_remediation_replay(manager):
 def test_flow14_remediation_verification_failure_prevents_resolution(manager):
     """Flow 14 — Remediation verification failure prevents resolution."""
     tenant_id = "tenant_a"
-    verif = manager.verification_manager.verify_remediation(
-        tenant_id, "plan_001", "ctrl_001", force_failure=True
-    )
+    verif = manager.verification_manager.verify_remediation(tenant_id, "plan_001", "ctrl_001", force_failure=True)
     assert verif.result.value == "FAILED"
 
 

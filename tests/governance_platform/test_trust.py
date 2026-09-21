@@ -1,7 +1,6 @@
 """Unit tests for TrustEngine score calculation across 9 dimensions."""
 
-import pytest
-from app.governance_platform.trust import TrustEngine, TrustDimension, TrustFactor
+from app.governance_platform.trust import TrustEngine
 
 
 def test_trust_score_calculation_and_disclaimer():

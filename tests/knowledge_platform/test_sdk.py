@@ -1,8 +1,7 @@
 """Integration tests for Knowledge Platform Python SDK client."""
 
-import pytest
-from sdk.python.llm_engine.knowledge_platform import KnowledgePlatformClient
 from sdk.python.llm_engine.client import LLMEngineClient
+from sdk.python.llm_engine.knowledge_platform import KnowledgePlatformClient
 
 
 def test_python_sdk_knowledge_platform_client():

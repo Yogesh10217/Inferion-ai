@@ -1,22 +1,17 @@
 """Mandatory 12 E2E Verification Flows for Enterprise AI Portfolio Platform (Phase 5.28)."""
 
 import pytest
-from datetime import datetime, timezone
 
-from app.portfolio_platform.manager import PortfolioPlatformManager
-from app.portfolio_platform.strategy import StrategyHorizon
-from app.portfolio_platform.initiatives import InitiativeType, InitiativePriority, InitiativeStatus
-from app.portfolio_platform.business_cases import CostEstimate, BenefitEstimate
-from app.portfolio_platform.investment import InvestmentRisk, InvestmentStatus
-from app.portfolio_platform.funding import FundingSource
-from app.portfolio_platform.value import ValueDimension
 from app.portfolio_platform.benefits import BenefitStatus
-from app.portfolio_platform.optimization import PortfolioConstraint, OptimizationGoal
+from app.portfolio_platform.business_cases import BenefitEstimate, CostEstimate
 from app.portfolio_platform.exceptions import (
     CrossTenantPortfolioAccessException,
-    ImmutableInvestmentDecisionException,
     FundingDecisionException,
+    ImmutableInvestmentDecisionException,
 )
+from app.portfolio_platform.investment import InvestmentRisk, InvestmentStatus
+from app.portfolio_platform.manager import PortfolioPlatformManager
+from app.portfolio_platform.optimization import PortfolioConstraint
 
 
 @pytest.fixture
@@ -30,7 +25,9 @@ def test_flow1_strategy_to_initiative(manager):
     strat = manager.strategy_manager.create_strategy(tenant, "AI First Strategy", "Drive AI Innovation")
     obj = manager.strategy_manager.add_objective(strat.strategy_id, tenant, "Automate Support", "Reduce response time")
     opp = manager.opportunity_manager.discover_opportunity(tenant, "Support Agent Opportunity", "Build agent")
-    init = manager.initiative_manager.create_initiative(tenant, "Support Agent Initiative", "Deploy agent", opp.opportunity_id, obj.objective_id)
+    init = manager.initiative_manager.create_initiative(
+        tenant, "Support Agent Initiative", "Deploy agent", opp.opportunity_id, obj.objective_id
+    )
     bc = manager.business_case_manager.create_business_case(tenant, init.initiative_id, "Problem description")
 
     prio = manager.prioritization_engine.score_initiatives(tenant, [init], [bc])
@@ -45,8 +42,12 @@ def test_flow2_portfolio_optimization(manager):
     init1 = manager.initiative_manager.create_initiative(tenant, "Initiative 1", "Desc 1")
     init2 = manager.initiative_manager.create_initiative(tenant, "Initiative 2", "Desc 2")
 
-    bc1 = manager.business_case_manager.create_business_case(tenant, init1.initiative_id, "Prob 1", CostEstimate(implementation_cost_usd=100000.0))
-    bc2 = manager.business_case_manager.create_business_case(tenant, init2.initiative_id, "Prob 2", CostEstimate(implementation_cost_usd=200000.0))
+    bc1 = manager.business_case_manager.create_business_case(
+        tenant, init1.initiative_id, "Prob 1", CostEstimate(implementation_cost_usd=100000.0)
+    )
+    bc2 = manager.business_case_manager.create_business_case(
+        tenant, init2.initiative_id, "Prob 2", CostEstimate(implementation_cost_usd=200000.0)
+    )
 
     prio = manager.prioritization_engine.score_initiatives(tenant, [init1, init2], [bc1, bc2])
     constraint = PortfolioConstraint(max_budget_usd=150000.0)
@@ -62,7 +63,9 @@ def test_flow3_high_risk_investment(manager):
     tenant = "tenant_risk_3"
     init = manager.initiative_manager.create_initiative(tenant, "High Risk Core AI", "Desc")
 
-    proposal = manager.investment_manager.propose_investment(tenant, init.initiative_id, 200000.0, risk_level=InvestmentRisk.HIGH)
+    proposal = manager.investment_manager.propose_investment(
+        tenant, init.initiative_id, 200000.0, risk_level=InvestmentRisk.HIGH
+    )
     assert proposal.status == InvestmentStatus.REQUIRES_APPROVAL
     assert proposal.approval_request_id is not None
 
@@ -98,7 +101,7 @@ def test_flow5_value_realization(manager):
     """Flow 5: Expected Benefit -> Delegated execution -> Realized Benefit & ROI comparison."""
     tenant = "tenant_val_5"
     init = manager.initiative_manager.create_initiative(tenant, "Value Initiative", "Desc")
-    bc = manager.business_case_manager.create_business_case(
+    manager.business_case_manager.create_business_case(
         tenant,
         init.initiative_id,
         "Problem",
@@ -110,7 +113,9 @@ def test_flow5_value_realization(manager):
     benefit = manager.benefits_manager.create_benefit_plan(tenant, init.initiative_id, "Cost Savings", 100000.0)
     manager.benefits_manager.record_realized_benefit(benefit.benefit_id, tenant, 110000.0)
 
-    outcome = manager.outcome_evaluator.evaluate_outcome(tenant, init.initiative_id, 60000.0, 55000.0, 100000.0, 110000.0)
+    outcome = manager.outcome_evaluator.evaluate_outcome(
+        tenant, init.initiative_id, 60000.0, 55000.0, 100000.0, 110000.0
+    )
     assert outcome.actual_roi_pct > outcome.expected_roi_pct
     assert benefit.status == BenefitStatus.REALIZED
 
@@ -146,11 +151,15 @@ def test_flow8_scenario_simulation(manager):
     """Flow 8: Scenario Simulation (20% budget reduction) evaluates without mutating production state."""
     tenant = "tenant_scen_8"
     init = manager.initiative_manager.create_initiative(tenant, "Sim Initiative", "Desc")
-    bc = manager.business_case_manager.create_business_case(tenant, init.initiative_id, "Prob", CostEstimate(implementation_cost_usd=200000.0))
+    bc = manager.business_case_manager.create_business_case(
+        tenant, init.initiative_id, "Prob", CostEstimate(implementation_cost_usd=200000.0)
+    )
     prio = manager.prioritization_engine.score_initiatives(tenant, [init], [bc])
 
     # Run non-mutating simulation
-    scen = manager.scenario_manager.simulate_budget_reduction(tenant, prio, [bc], baseline_budget_usd=250000.0, reduction_percentage=20.0)
+    scen = manager.scenario_manager.simulate_budget_reduction(
+        tenant, prio, [bc], baseline_budget_usd=250000.0, reduction_percentage=20.0
+    )
     assert scen.simulated_result.constraint_used.max_budget_usd == 200000.0
     # Baseline budget envelope remains unchanged
     env = manager.funding_manager.get_budget_envelope(tenant)
@@ -160,7 +169,9 @@ def test_flow8_scenario_simulation(manager):
 def test_flow9_immutable_investment_decision(manager):
     """Flow 9: Finalized Investment Decision immutability verification."""
     tenant = "tenant_immut_9"
-    proposal = manager.investment_manager.propose_investment(tenant, "init_immut", 40000.0, risk_level=InvestmentRisk.LOW)
+    proposal = manager.investment_manager.propose_investment(
+        tenant, "init_immut", 40000.0, risk_level=InvestmentRisk.LOW
+    )
     decision = manager.investment_manager.finalize_decision(proposal.proposal_id, tenant)
 
     assert decision.is_finalized is True

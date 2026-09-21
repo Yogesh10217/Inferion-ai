@@ -1,11 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
 from app.deployment.liveness import DeploymentLivenessProbe
-from app.deployment.readiness import DeploymentReadinessProbe
-from app.deployment.health import DeploymentHealthEngine
-from app.deployment.models import StartupState
+from app.main import app
 
 
 @pytest.fixture

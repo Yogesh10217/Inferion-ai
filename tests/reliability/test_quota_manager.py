@@ -1,7 +1,8 @@
 """Unit tests for QuotaManager."""
 
 import pytest
-from app.governance.quota_manager import QuotaManager, QuotaDefinition
+
+from app.governance.quota_manager import QuotaDefinition, QuotaManager
 from app.security.exceptions import QuotaExceededError
 
 

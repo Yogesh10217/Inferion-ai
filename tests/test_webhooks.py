@@ -1,11 +1,4 @@
 import pytest
-from app.events import (
-    DeadLetterQueue,
-    DeliveryService,
-    EventEnvelope,
-    EventStorage,
-    WebhookService,
-)
 
 
 @pytest.mark.asyncio

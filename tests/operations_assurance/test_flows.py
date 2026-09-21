@@ -1,29 +1,22 @@
 """E2E Flow Tests for Phase 5.49 Enterprise AI Operations Assurance Platform."""
 
 import pytest
-from typing import Dict, Any
 
-from app.operations_assurance.exceptions import (
-    OperationsAssuranceException,
-    CrossTenantOperationsAssuranceException,
-    ServiceNotFoundException,
-    ServiceHealthNotFoundException,
-    OperationalIncidentNotFoundException,
-    ImmutableOperationalRecordException,
-    HighRiskOperationalActionRequiresApprovalException,
-)
-from app.operations_assurance.services import ServiceType, ServiceTier, ServiceCriticality
-from app.operations_assurance.service_health import ServiceHealthStatus
-from app.operations_assurance.service_dependencies import DependencyType, DependencyCriticality
-from app.operations_assurance.events import OperationalEventType, OperationalSeverity
 from app.operations_assurance.anomalies import AnomalyCategory
 from app.operations_assurance.capacity import CapacityResourceType, CapacityRiskLevel
+from app.operations_assurance.events import OperationalEventType, OperationalSeverity
+from app.operations_assurance.exceptions import (
+    CrossTenantOperationsAssuranceException,
+    ImmutableOperationalRecordException,
+)
 from app.operations_assurance.forecasting import ForecastScenario
-from app.operations_assurance.incidents import OperationalIncidentState, OperationalIncidentSeverity
-from app.operations_assurance.root_cause import RootCauseCategory
 from app.operations_assurance.governance import OperationsGovernanceOutcome, OperationsGovernanceRequest
-from app.operations_assurance.verification import VerificationType
+from app.operations_assurance.incidents import OperationalIncidentSeverity, OperationalIncidentState
 from app.operations_assurance.manager import OperationsAssuranceManager
+from app.operations_assurance.root_cause import RootCauseCategory
+from app.operations_assurance.service_dependencies import DependencyCriticality, DependencyType
+from app.operations_assurance.service_health import ServiceHealthStatus
+from app.operations_assurance.services import ServiceType
 
 
 @pytest.fixture
@@ -86,7 +79,7 @@ def test_flow_04_service_dependency_mapping(manager: OperationsAssuranceManager)
         dependency_type=DependencyType.MODEL,
         criticality=DependencyCriticality.CRITICAL,
     )
-    dep2 = manager.dependency_manager.add_dependency(
+    manager.dependency_manager.add_dependency(
         tenant_id="tenant_a",
         source_service_id=svc.service_id,
         target_id="redis-cache-cluster",
@@ -121,7 +114,7 @@ def test_flow_06_operational_event_correlation(manager: OperationsAssuranceManag
     """Flow 6: Operational event correlation."""
     svc = manager.register_service("tenant_a", "PaymentProcessor", ServiceType.MICROSERVICE)
 
-    evt = manager.event_manager.record_event(
+    manager.event_manager.record_event(
         tenant_id="tenant_a",
         service_id=svc.service_id,
         event_type=OperationalEventType.LATENCY_SPIKE,

@@ -4,16 +4,16 @@ Unit tests for Phase 6 — Enterprise & AI/ML Platform.
 
 import pytest
 
-from app.sso.oidc import get_oidc_manager
-from app.providers.provider_factory import ProviderFactory
-from app.mlops.experiments import ExperimentManager
 from app.cache.semantic_cache import SemanticCache
-from app.compliance_platform.phi_detector import PHIDetector
 from app.compliance_platform.gdpr import GDPRService
-from app.mlops.fine_tuning.job_service import FineTuningService
+from app.compliance_platform.phi_detector import PHIDetector
 from app.mlops.drift import DriftDetector
+from app.mlops.experiments import ExperimentManager
+from app.mlops.fine_tuning.job_service import FineTuningService
+from app.providers.provider_factory import ProviderFactory
 from app.schemas.inference_response import InferenceResponse, Usage
-from app.schemas.request import InferenceRequest, ChatMessage
+from app.schemas.request import ChatMessage, InferenceRequest
+from app.sso.oidc import get_oidc_manager
 
 
 def test_oidc_sso_manager():
@@ -60,20 +60,12 @@ async def test_all_llm_providers_instantiation_and_generation():
 def test_ab_testing_deterministic_traffic_splitting():
     exp_mgr = ExperimentManager()
     exp = exp_mgr.create_experiment("Headline Test")
-    exp_mgr.add_variant(
-        exp.experiment_id, "V1", "asset_1", "1.0", traffic_weight=50.0
-    )
-    exp_mgr.add_variant(
-        exp.experiment_id, "V2", "asset_1", "2.0", traffic_weight=50.0
-    )
+    exp_mgr.add_variant(exp.experiment_id, "V1", "asset_1", "1.0", traffic_weight=50.0)
+    exp_mgr.add_variant(exp.experiment_id, "V2", "asset_1", "2.0", traffic_weight=50.0)
     exp_mgr.start_experiment(exp.experiment_id)
 
-    selected_1 = exp_mgr.select_variant_for_request(
-        exp.experiment_id, "user-123"
-    )
-    selected_2 = exp_mgr.select_variant_for_request(
-        exp.experiment_id, "user-123"
-    )
+    selected_1 = exp_mgr.select_variant_for_request(exp.experiment_id, "user-123")
+    selected_2 = exp_mgr.select_variant_for_request(exp.experiment_id, "user-123")
     assert selected_1 is not None
     assert selected_1.variant_id == selected_2.variant_id  # Deterministic
 
@@ -127,9 +119,7 @@ def test_fine_tuning_service_lifecycle():
     job = ft.create_job("llama3.1", "s3://dataset/train.jsonl")
     assert job.status == "PENDING"
 
-    updated = ft.update_job_status(
-        job.job_id, "COMPLETED", fine_tuned_model_id="ft-llama3.1-v1"
-    )
+    updated = ft.update_job_status(job.job_id, "COMPLETED", fine_tuned_model_id="ft-llama3.1-v1")
     assert updated.status == "COMPLETED"
     assert updated.fine_tuned_model_id == "ft-llama3.1-v1"
 

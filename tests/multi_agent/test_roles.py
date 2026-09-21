@@ -2,7 +2,6 @@
 Tests for Agent Roles & Presets
 """
 
-import pytest
 from app.multi_agent.agent_role import AgentRole, RoleType
 
 

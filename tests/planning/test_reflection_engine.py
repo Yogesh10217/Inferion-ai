@@ -2,7 +2,6 @@
 Tests for Reflection Engine
 """
 
-import pytest
 from app.reasoning.reflection_engine import ReflectionEngine
 
 

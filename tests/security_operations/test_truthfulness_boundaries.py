@@ -2,9 +2,7 @@
 Tests for Truthfulness Contract & Unexecuted Production Claims (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.security_certification import (
-    SecurityCertificationEngine,
     UNEXECUTED_PRODUCTION_CLAIMS,
 )
 from app.security_operations.security_operations_orchestrator import SecurityOperationsOrchestrator

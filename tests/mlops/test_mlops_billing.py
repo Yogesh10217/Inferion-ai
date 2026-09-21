@@ -1,6 +1,7 @@
 """Unit tests for MLOpsBillingTracker."""
 
 import pytest
+
 from app.mlops.billing import MLOpsBillingTracker
 
 

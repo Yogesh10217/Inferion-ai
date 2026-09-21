@@ -1,7 +1,6 @@
 """Unit tests for TelemetryManager ingestion and trace/request/execution correlation."""
 
-import pytest
-from app.operations.telemetry import TelemetryManager, TelemetryType, TelemetrySeverity, TelemetryContext
+from app.operations.telemetry import TelemetryContext, TelemetryManager, TelemetrySeverity, TelemetryType
 
 
 def test_telemetry_recording_and_correlation():

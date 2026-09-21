@@ -133,7 +133,7 @@ class ContextAssemblyManager:
             )
 
         # Sort by relevance * trust
-        filtered.sort(key=lambda x: (x.get("relevance_score", 0.0) * x.get("trust_score", 0.0)), reverse=True)
+        filtered.sort(key=lambda x: x.get("relevance_score", 0.0) * x.get("trust_score", 0.0), reverse=True)
         selected = filtered[: request.max_items]
 
         text_blocks = [f"[{r.get('title')}]\n{r.get('summary')}" for r in selected]

@@ -3,6 +3,7 @@ Tests for Worker Manager
 """
 
 import pytest
+
 from app.workers.worker_manager import WorkerManager
 
 

@@ -2,7 +2,6 @@
 Tests for Autonomy & Workers SDK Clients
 """
 
-import pytest
 from sdk.python.llm_engine.autonomy import AutonomyClient, WorkersClient
 
 

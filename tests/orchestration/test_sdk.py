@@ -1,8 +1,7 @@
 """Integration tests for Orchestration Python SDK client."""
 
-import pytest
-from sdk.python.llm_engine.orchestration import OrchestrationClient
 from sdk.python.llm_engine.client import LLMEngineClient
+from sdk.python.llm_engine.orchestration import OrchestrationClient
 
 
 def test_python_sdk_orchestration_client():

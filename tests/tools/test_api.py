@@ -4,8 +4,9 @@ Tests for FastAPI Tool Endpoints (/v1/tools)
 
 import pytest
 from fastapi.testclient import TestClient
-from app.main import create_app
+
 from app.core.config import get_settings
+from app.main import create_app
 
 settings = get_settings()
 

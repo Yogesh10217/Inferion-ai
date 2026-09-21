@@ -1,7 +1,8 @@
 """Unit tests for APIContractValidator and breaking change detection."""
 
 import pytest
-from app.developer_platform.api_contracts import APIContractValidator, APIContract
+
+from app.developer_platform.api_contracts import APIContract, APIContractValidator
 from app.developer_platform.exceptions import APIContractBreakingChangeException
 
 

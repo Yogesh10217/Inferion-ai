@@ -3,6 +3,7 @@ Tests for Workflow Integration (Phase 5.2)
 """
 
 import pytest
+
 from app.workflows.node import AgentNode
 
 

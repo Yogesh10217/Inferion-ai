@@ -1,4 +1,3 @@
-import pytest
 from app.core.container import ServiceContainer
 from app.deployment.service_registry import PlatformServiceRegistry
 

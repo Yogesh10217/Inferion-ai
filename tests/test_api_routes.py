@@ -1,5 +1,7 @@
+from unittest.mock import AsyncMock, patch
+
 import pytest
-from unittest.mock import patch, AsyncMock
+
 
 @pytest.mark.asyncio
 async def test_health_routes(get_client) -> None:
@@ -7,6 +9,7 @@ async def test_health_routes(get_client) -> None:
         assert (await client.get("/v1/health")).status_code == 200
         assert (await client.get("/v1/ready")).status_code == 200
         assert (await client.get("/v1/live")).status_code == 200
+
 
 @pytest.mark.asyncio
 async def test_models_route_returns_openai_shape(get_client, admin_token_headers) -> None:
@@ -16,6 +19,7 @@ async def test_models_route_returns_openai_shape(get_client, admin_token_headers
         payload = response.json()
         assert payload["object"] == "list"
         assert isinstance(payload["data"], list)
+
 
 @pytest.mark.asyncio
 async def test_chat_completion_route_returns_openai_shape(get_client, admin_token_headers) -> None:
@@ -32,6 +36,7 @@ async def test_chat_completion_route_returns_openai_shape(get_client, admin_toke
         assert body["model"] == "gpt-4o-mini"
         assert body["choices"][0]["message"]["content"]
 
+
 @pytest.mark.asyncio
 async def test_chat_completion_streaming_route_returns_sse_events(get_client, admin_token_headers) -> None:
     payload = {
@@ -47,9 +52,12 @@ async def test_chat_completion_streaming_route_returns_sse_events(get_client, ad
         assert "data:" in text
         assert "[DONE]" in text
 
+
 @pytest.mark.asyncio
 async def test_chat_completion_route_uses_mocked_openai_provider(get_client, admin_token_headers) -> None:
-    with patch("app.services.inference_service.DefaultInferenceService.complete", new_callable=AsyncMock) as mocked_complete:
+    with patch(
+        "app.services.inference_service.DefaultInferenceService.complete", new_callable=AsyncMock
+    ) as mocked_complete:
         mocked_complete.return_value = type(
             "Response",
             (),

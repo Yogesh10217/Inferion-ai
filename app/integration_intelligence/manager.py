@@ -120,15 +120,15 @@ class IntegrationIntelligenceManager:
 
         # 6. Evaluate routing
         self.routing_manager.register_route(tenant_id, conn.connector_id, ep.endpoint_id, RoutingStrategy.PRIMARY)
-        route_dec = self.routing_manager.resolve_route(tenant_id, conn.connector_id)
+        self.routing_manager.resolve_route(tenant_id, conn.connector_id)
 
         # 7. Evaluate data governance
-        data_asm = self.data_governance_manager.evaluate_data_flow(
+        self.data_governance_manager.evaluate_data_flow(
             tenant_id, wf.workflow_id, IntegrationDataClassification.INTERNAL
         )
 
         # 8. Evaluate security
-        sec_asm = self.security_manager.evaluate_connector_security(
+        self.security_manager.evaluate_connector_security(
             tenant_id, conn.connector_id, conn.reference.base_endpoint_url, conn.reference.auth_type
         )
 
@@ -150,7 +150,7 @@ class IntegrationIntelligenceManager:
             target_endpoint_id=ep.endpoint_id,
             action_type="SYNC_RECORDS",
         )
-        plan = self.orchestration_manager.create_plan(tenant_id, wf.workflow_id, f"{workflow_name}_plan", [plan_step])
+        self.orchestration_manager.create_plan(tenant_id, wf.workflow_id, f"{workflow_name}_plan", [plan_step])
 
         # 12. Execution & Delegation
         idem_key = f"idem_full_{workflow_name}"
@@ -162,7 +162,7 @@ class IntegrationIntelligenceManager:
         check = VerificationCheck(
             target_system_id="sys_ext_01", expected_status_code=200, observed_status_code=200, passed=True
         )
-        verif = self.verification_manager.verify_execution(tenant_id, exec_obj.execution_id, [check])
+        self.verification_manager.verify_execution(tenant_id, exec_obj.execution_id, [check])
 
         # 14. Evidence & Snapshot
         bundle = self.evidence_manager.create_bundle(tenant_id, f"Evidence {workflow_name}")
@@ -180,11 +180,11 @@ class IntegrationIntelligenceManager:
         # 16. Metrics, Analytics, Billing
         self.metrics_collector.increment("workflow_requests_total")
         self.metrics_collector.increment("delegated_executions_total")
-        report = self.analytics_engine.generate_report(tenant_id, 1, 1, 100.0, 0, 0, 0)
-        cost_evt = self.billing_tracker.record_cost(tenant_id, wf.workflow_id, "WORKFLOW_EXECUTION", 0.005)
+        self.analytics_engine.generate_report(tenant_id, 1, 1, 100.0, 0, 0, 0)
+        self.billing_tracker.record_cost(tenant_id, wf.workflow_id, "WORKFLOW_EXECUTION", 0.005)
 
         # 17. Learning
-        lrn = self.learning_manager.record_learning_pattern(
+        self.learning_manager.record_learning_pattern(
             tenant_id,
             "SuccessfulSyncPattern",
             "Optimized sync workflow execution",

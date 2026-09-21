@@ -45,8 +45,9 @@ class RuleEngine:
         enterprise_rule = RoutingRule(
             name="enterprise_tier",
             priority=100,
-            condition=lambda ctx: ctx.request_metadata.get("tier") == "enterprise"
-            or ctx.request_metadata.get("org_tier") == "enterprise",
+            condition=lambda ctx: (
+                ctx.request_metadata.get("tier") == "enterprise" or ctx.request_metadata.get("org_tier") == "enterprise"
+            ),
             target_policy="latency_optimized",
             description="Route enterprise tier requests to latency optimized policy",
         )

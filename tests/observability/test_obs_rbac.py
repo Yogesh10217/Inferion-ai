@@ -1,9 +1,10 @@
 """Tests for RBAC permission enforcement in Observability Replay."""
 
 import pytest
-from app.observability.replay import ExecutionReplayManager
+
 from app.observability.context import ObservabilityContext
 from app.observability.exceptions import ReplayNotAvailableException
+from app.observability.replay import ExecutionReplayManager
 
 
 @pytest.mark.asyncio

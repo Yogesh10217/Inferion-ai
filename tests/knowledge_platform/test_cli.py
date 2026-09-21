@@ -1,7 +1,7 @@
 """Integration tests for Knowledge Platform CLI commands."""
 
-import pytest
 from click.testing import CliRunner
+
 from cli.commands.knowledge_platform import knowledge_cli
 
 

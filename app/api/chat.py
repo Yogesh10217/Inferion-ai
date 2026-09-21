@@ -5,12 +5,11 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 
 from app.adapters.openai_response_adapter import OpenAIResponseAdapter, format_sse_event
+from app.knowledge.context_builder import ContextBuilder
+from app.knowledge.retriever import KnowledgeRetriever
 from app.schemas.request import ChatCompletionRequest
 from app.schemas.response import ChatCompletionChoiceMessage, ChatCompletionResponse, Choice, Usage
 from app.services.inference_service import InferenceService, build_inference_service
-
-from app.knowledge.context_builder import ContextBuilder
-from app.knowledge.retriever import KnowledgeRetriever
 from app.validation.prompt_validator import PromptValidator
 
 logger = logging.getLogger(__name__)

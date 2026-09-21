@@ -1,9 +1,10 @@
 """Tests for multi-tenant isolation in Observability subsystem."""
 
 import pytest
-from app.observability.manager import ObservabilityManager
+
 from app.observability.context import ObservabilityContext
 from app.observability.exceptions import ExecutionNotFoundException
+from app.observability.manager import ObservabilityManager
 
 
 def test_multitenant_cost_isolation():

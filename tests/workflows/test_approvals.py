@@ -2,8 +2,7 @@
 Tests for Human Approval Queue & Audit Log System
 """
 
-import pytest
-from app.workflows.approvals import ApprovalManager, ApprovalDecision
+from app.workflows.approvals import ApprovalDecision, ApprovalManager
 
 
 def test_approval_manager_lifecycle():

@@ -1,7 +1,6 @@
 """Unit tests for Enterprise Identity models."""
 
-import pytest
-from app.security.identity import UserIdentity, ServiceIdentity, APIKeyIdentity, SystemIdentity, AuthenticationMethod
+from app.security.identity import SystemIdentity, UserIdentity
 
 
 def test_user_identity_creation_and_permissions():

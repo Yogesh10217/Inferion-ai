@@ -2,16 +2,15 @@
 Tests for Security Dashboard (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_posture import SecurityPostureEvaluator
-from app.security_operations.security_policy_engine import SecurityPolicyEngine
-from app.security_operations.compliance_governance import ComplianceGovernanceEngine
-from app.security_operations.security_risk_engine import SecurityRiskEngine
-from app.security_operations.security_certification import SecurityCertificationEngine
 from app.security_operations.audit_integrity import AuditIntegrityEngine
 from app.security_operations.audit_log import SecurityAuditLogger
-from app.security_operations.security_metrics import SecurityMetricsCalculator
+from app.security_operations.compliance_governance import ComplianceGovernanceEngine
+from app.security_operations.security_certification import SecurityCertificationEngine
 from app.security_operations.security_dashboard import SecurityDashboard, SecurityDashboardSnapshot
+from app.security_operations.security_metrics import SecurityMetricsCalculator
+from app.security_operations.security_policy_engine import SecurityPolicyEngine
+from app.security_operations.security_posture import SecurityPostureEvaluator
+from app.security_operations.security_risk_engine import SecurityRiskEngine
 
 
 def test_security_dashboard_snapshot_generation():

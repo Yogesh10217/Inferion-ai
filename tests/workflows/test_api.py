@@ -12,8 +12,8 @@ async def test_create_and_list_workflows_api(get_client, admin_token_headers):
         "description": "Integration testing for REST API",
         "spec": {
             "nodes": [{"id": "a1", "type": "AGENT", "agent_id": "test_agent"}],
-            "edges": [{"source": "START", "target": "a1"}, {"source": "a1", "target": "END"}]
-        }
+            "edges": [{"source": "START", "target": "a1"}, {"source": "a1", "target": "END"}],
+        },
     }
 
     async with get_client() as async_client:
@@ -41,15 +41,17 @@ async def test_run_workflow_api(get_client, admin_token_headers):
         "name": "API Execution Workflow",
         "spec": {
             "nodes": [{"id": "a1", "type": "AGENT", "agent_id": "agent_x"}],
-            "edges": [{"source": "START", "target": "a1"}, {"source": "a1", "target": "END"}]
-        }
+            "edges": [{"source": "START", "target": "a1"}, {"source": "a1", "target": "END"}],
+        },
     }
 
     async with get_client() as async_client:
         create_res = await async_client.post("/v1/workflows", json=req_payload, headers=admin_token_headers)
         wf_id = create_res.json()["workflow"]["id"]
 
-        run_res = await async_client.post(f"/v1/workflows/{wf_id}/run", json={"inputs": {"q": "hello"}}, headers=admin_token_headers)
+        run_res = await async_client.post(
+            f"/v1/workflows/{wf_id}/run", json={"inputs": {"q": "hello"}}, headers=admin_token_headers
+        )
         assert run_res.status_code == 200
         exec_data = run_res.json()["execution"]
         assert exec_data["status"] == "COMPLETED"

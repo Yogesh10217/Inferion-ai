@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from unittest.mock import AsyncMock, patch
+
 import pytest
 from fastapi import FastAPI
+
 from app.core.config import Settings
 from app.core.container import ServiceContainer
 from app.core.initializer import InfrastructureInitializer
 from app.main import lifespan
-
 
 
 def test_service_container_init() -> None:

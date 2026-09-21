@@ -3,6 +3,7 @@ Tests for Semantic Memory (Tier 3)
 """
 
 import pytest
+
 from app.memory.semantic_memory import SemanticMemory
 
 

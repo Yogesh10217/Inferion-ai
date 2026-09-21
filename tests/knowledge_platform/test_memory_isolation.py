@@ -1,8 +1,9 @@
 """Unit tests for agent private memory scope isolation."""
 
 import pytest
-from app.knowledge_platform.memory import MemoryManager, MemoryType, MemoryScope
+
 from app.knowledge_platform.exceptions import KnowledgeAccessDeniedException
+from app.knowledge_platform.memory import MemoryManager, MemoryScope, MemoryType
 
 
 def test_agent_private_memory_isolation():

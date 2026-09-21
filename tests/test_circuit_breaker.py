@@ -1,9 +1,12 @@
-import pytest
-import asyncio
 import time
+
+import pytest
+
 from app.resilience.circuit_breaker import (
-    CircuitBreaker, CircuitBreakerPolicy, CircuitState,
-    CircuitBreakerRegistry, CircuitBreakerOpenException
+    CircuitBreaker,
+    CircuitBreakerOpenException,
+    CircuitBreakerPolicy,
+    CircuitState,
 )
 
 
@@ -87,5 +90,5 @@ async def test_circuit_breaker_call_async_wrapper():
     # Circuit should now be open -> subsequent call raises CircuitBreakerOpenException
     with pytest.raises(CircuitBreakerOpenException) as exc_info:
         await cb.call_async(successful_fn, 5)
-    
+
     assert "test-cb" in str(exc_info.value)

@@ -1,6 +1,7 @@
-import os
 import shutil
+
 import pytest
+
 from app.deployment.container_validation import ContainerValidationEngine
 from app.deployment.runtime_validation import RuntimeValidationEngine, ValidationStatus, ValidationType
 

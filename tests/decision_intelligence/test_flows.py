@@ -3,20 +3,16 @@ Mandatory 20 E2E Verification Test Flows for Phase 5.52 Enterprise AI Decision I
 """
 
 import pytest
-from datetime import datetime, timezone
 
-from app.decision_intelligence.manager import DecisionIntelligenceManager
-from app.decision_intelligence.context import DecisionContextType, DecisionScope, DecisionPriority
-from app.decision_intelligence.evidence import EvidenceReference, EvidenceStrength
-from app.decision_intelligence.decisions import DecisionLifecycleState, DecisionType
-from app.decision_intelligence.uncertainty import UncertaintyDimension, UncertaintyLevel
+from app.decision_intelligence.context import DecisionContextType
+from app.decision_intelligence.decisions import DecisionLifecycleState
 from app.decision_intelligence.exceptions import (
     CrossTenantDecisionIntelligenceException,
-    InvalidDecisionStateTransitionException,
     HighRiskDecisionRequiresApprovalException,
     ImmutableDecisionRecordException,
-    DecisionNotFoundException,
 )
+from app.decision_intelligence.manager import DecisionIntelligenceManager
+from app.decision_intelligence.uncertainty import UncertaintyDimension
 
 
 @pytest.fixture
@@ -60,14 +56,14 @@ def test_04_decision_option_identification(manager):
     """04: Decision option identification and candidate enumeration."""
     tenant = "tenant_gamma"
     dec = manager.decision_manager.create_decision(tenant, "Option Analysis")
-    opt1 = manager.options_registry.add_option(
+    manager.options_registry.add_option(
         decision_id=dec.decision_id,
         tenant_id=tenant,
         title="Managed Cloud Migration",
         action_type="DELEGATE",
         target_system="OPERATIONS",
     )
-    opt2 = manager.options_registry.add_option(
+    manager.options_registry.add_option(
         decision_id=dec.decision_id,
         tenant_id=tenant,
         title="In-Place Refactoring",
@@ -83,22 +79,27 @@ def test_04_decision_option_identification(manager):
 def test_05_deterministic_decision_scoring(manager):
     """05: Deterministic decision scoring (Same Input + Same Model = Same Score)."""
     tenant = "tenant_delta"
-    score1 = manager.scoring_engine.calculate_score(tenant_id=tenant, context_id="ctx_001", risk_score=20.0, trust_score=90.0)
-    score2 = manager.scoring_engine.calculate_score(tenant_id=tenant, context_id="ctx_001", risk_score=20.0, trust_score=90.0)
+    score1 = manager.scoring_engine.calculate_score(
+        tenant_id=tenant, context_id="ctx_001", risk_score=20.0, trust_score=90.0
+    )
+    score2 = manager.scoring_engine.calculate_score(
+        tenant_id=tenant, context_id="ctx_001", risk_score=20.0, trust_score=90.0
+    )
     assert score1.overall_score == score2.overall_score
 
 
 def test_06_tradeoff_analysis(manager):
     """06: Tradeoff analysis identifying gains and sacrifices."""
     tenant = "tenant_epsilon"
-    analysis = manager.tradeoff_analyzer.analyze_tradeoffs(tenant_id=tenant, context_id="ctx_002", alternative_id="opt_001")
+    analysis = manager.tradeoff_analyzer.analyze_tradeoffs(
+        tenant_id=tenant, context_id="ctx_002", alternative_id="opt_001"
+    )
     assert analysis.context_id == "ctx_002"
     assert len(analysis.tradeoffs) > 0
 
 
 def test_07_decision_confidence_assessment(manager):
     """07: Decision confidence assessment."""
-    tenant = "tenant_zeta"
     conf = manager.scoring_engine.calculate_confidence(evidence_quality=95.0, signal_coherence=0.9)
     assert conf >= 0.85
 
@@ -132,10 +133,11 @@ def test_09_multidimensional_impact_assessment(manager):
 def test_10_decision_risk_assessment(manager):
     """10: Decision risk assessment."""
     tenant = "tenant_iota"
-    risk_prof = manager.risk_manager.evaluate_decision_risk(tenant, "ctx_iota", architecture_risk=15.0, compliance_risk=10.0)
+    risk_prof = manager.risk_manager.evaluate_decision_risk(
+        tenant, "ctx_iota", architecture_risk=15.0, compliance_risk=10.0
+    )
     assert risk_prof.overall_risk_score == 14.0
     assert risk_prof.overall_risk_level == "LOW"
-
 
 
 def test_11_policy_evaluation(manager):
@@ -195,7 +197,9 @@ def test_16_human_review_lifecycle(manager):
     tenant = "tenant_omikron"
     ticket = manager.human_review_engine.create_review_ticket("dec_rev_1", tenant, reviewer="sec_auditor")
     assert ticket.status == "PENDING_REVIEW"
-    completed = manager.human_review_engine.complete_review("dec_rev_1", tenant, reviewer="sec_auditor", review_notes="Verified compliance")
+    completed = manager.human_review_engine.complete_review(
+        "dec_rev_1", tenant, reviewer="sec_auditor", review_notes="Verified compliance"
+    )
     assert completed.status == "COMPLETED"
 
 

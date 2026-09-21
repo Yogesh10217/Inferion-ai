@@ -1,8 +1,6 @@
 """Unit tests for DataGovernanceEngine and approval gating."""
 
-import pytest
-from app.data_fabric.governance import DataGovernanceEngine, DataClassification
-from app.data_fabric.exceptions import DataAccessDenied
+from app.data_fabric.governance import DataClassification, DataGovernanceEngine
 
 
 def test_data_governance_policy_evaluation():

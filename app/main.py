@@ -154,6 +154,7 @@ async def lifespan(app: FastAPI):
         await container.request_scheduler.shutdown()
 
         from app.core.database import engine
+
         await engine.dispose()
 
 
@@ -179,13 +180,9 @@ def create_app() -> FastAPI:
         for origin in cors_origins:
             clean_o = str(origin).strip().lower()
             if not clean_o or clean_o == "*" or clean_o == "null" or clean_o.startswith("file:"):
-                raise ValueError(
-                    f"CORS_POLICY_VIOLATION: Origin '{origin}' rejected in PRODUCTION environment"
-                )
+                raise ValueError(f"CORS_POLICY_VIOLATION: Origin '{origin}' rejected in PRODUCTION environment")
             if not (clean_o.startswith("http://") or clean_o.startswith("https://")):
-                raise ValueError(
-                    f"CORS_POLICY_VIOLATION: Invalid origin format '{origin}' in PRODUCTION environment"
-                )
+                raise ValueError(f"CORS_POLICY_VIOLATION: Invalid origin format '{origin}' in PRODUCTION environment")
             if clean_o.startswith("http://") and not (
                 clean_o.startswith("http://localhost") or clean_o.startswith("http://127.0.0.1")
             ):

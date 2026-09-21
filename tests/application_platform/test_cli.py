@@ -1,7 +1,7 @@
 """Unit tests for CLI integration."""
 
-import pytest
 from click.testing import CliRunner
+
 from cli.commands.applications import applications_cli
 
 

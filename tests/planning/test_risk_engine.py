@@ -2,7 +2,6 @@
 Tests for Risk Analysis Engine
 """
 
-import pytest
 from app.planning.execution_plan import ExecutionPlan
 from app.simulation.risk_engine import RiskEngine
 

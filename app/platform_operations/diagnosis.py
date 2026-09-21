@@ -31,9 +31,7 @@ class RootCauseHypothesis(BaseModel):
     title: str
     description: str
     confidence_score: float = 0.5  # 0.0 to 1.0 (labeled clearly as hypothesis)
-    category: str = (
-        "DEPLOYMENT_REGRESSION"  # DEPLOYMENT_REGRESSION, DEPENDENCY_FAILURE, CAPACITY_EXHAUSTION, CONFIG_CHANGE, CODE_BUG
-    )
+    category: str = "DEPLOYMENT_REGRESSION"  # DEPLOYMENT_REGRESSION, DEPENDENCY_FAILURE, CAPACITY_EXHAUSTION, CONFIG_CHANGE, CODE_BUG
     evidences: List[DiagnosisEvidence] = Field(default_factory=list)
     suggested_remediations: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=_now)

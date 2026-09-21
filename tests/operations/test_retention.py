@@ -1,6 +1,5 @@
 """Unit tests for TelemetryRetentionManager."""
 
-import pytest
 from app.operations.storage import TelemetryRetentionManager
 
 

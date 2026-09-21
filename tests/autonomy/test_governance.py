@@ -3,8 +3,9 @@ Tests for Execution Governance
 """
 
 import pytest
+
+from app.autonomy.exceptions import EmergencyStopException
 from app.autonomy.execution_governance import ExecutionGovernanceEngine
-from app.autonomy.exceptions import EmergencyStopException, AutonomyException
 
 
 def test_governance_emergency_stops():

@@ -1,13 +1,12 @@
 """Tests for FailureAnalyzer and root cause classification."""
 
-import pytest
 from app.observability.failure_analysis import (
-    FailureAnalyzer,
-    TIMEOUT,
-    RATE_LIMIT,
-    TOOL_FAILURE,
-    MODEL_FAILURE,
     BUDGET_EXCEEDED,
+    MODEL_FAILURE,
+    RATE_LIMIT,
+    TIMEOUT,
+    TOOL_FAILURE,
+    FailureAnalyzer,
 )
 
 
@@ -24,7 +23,13 @@ def test_failure_analysis_report():
     fa = FailureAnalyzer()
     spans = [
         {"span_id": "sp-1", "name": "agent.execute", "status": "OK", "start_time": 1.0},
-        {"span_id": "sp-2", "name": "tool.execute", "status": "ERROR", "status_description": "Connection timed out", "start_time": 2.0},
+        {
+            "span_id": "sp-2",
+            "name": "tool.execute",
+            "status": "ERROR",
+            "status_description": "Connection timed out",
+            "start_time": 2.0,
+        },
     ]
 
     report = fa.analyze_failure("exec-f1", spans)

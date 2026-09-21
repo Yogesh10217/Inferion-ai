@@ -2,7 +2,6 @@
 Tests for SDK Clients (Python, TypeScript, Go, Java)
 """
 
-import pytest
 from sdk.python.llm_engine.tools import ToolsClient
 
 

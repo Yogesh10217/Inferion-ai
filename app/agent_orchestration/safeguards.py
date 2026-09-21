@@ -88,8 +88,6 @@ class AgentSafeguardManager:
         # Default standard thresholds
         max_steps = 25
         max_cost = 100.0
-        max_duration = 300
-        max_tool_calls = 50
         max_recursion = 5
 
         # Check tenant overrides if present
@@ -101,7 +99,7 @@ class AgentSafeguardManager:
             elif sg.safeguard_type == SafeguardType.MAX_COST:
                 max_cost = float(sg.threshold_value)
             elif sg.safeguard_type == SafeguardType.MAX_DURATION:
-                max_duration = int(sg.threshold_value)
+                int(sg.threshold_value)
 
         # 1. Step safeguard
         if current_steps >= max_steps:

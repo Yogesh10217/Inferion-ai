@@ -3,7 +3,8 @@ Tests for Workflow Integration with Agent Teams (Phase 5.2)
 """
 
 import pytest
-from app.workflows.node import AgentNode, NodeType
+
+from app.workflows.node import AgentNode
 
 
 @pytest.mark.asyncio

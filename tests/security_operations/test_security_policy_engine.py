@@ -2,9 +2,8 @@
 Tests for Security Policy Engine (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.security_posture import SecurityPostureEvaluator
 from app.security_operations.security_policy_engine import SecurityPolicyEngine, SecurityPolicyResult
+from app.security_operations.security_posture import SecurityPostureEvaluator
 
 
 def test_policy_engine_allow():

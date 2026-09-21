@@ -1,11 +1,14 @@
-import pytest
-from fastapi.testclient import TestClient
 # Use mocked app if actual app is too complex to load in unit test context
 from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
 app = FastAPI()
 
+
 @app.get("/health")
-def health(): return {"status": "ok"}
+def health():
+    return {"status": "ok"}
+
 
 def test_api_health():
     client = TestClient(app)

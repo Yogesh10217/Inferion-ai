@@ -3,8 +3,9 @@ Tests for Memory Security Policy Engine & RBAC Enforcement
 """
 
 import pytest
+
+from app.memory.exceptions import MemoryRBACPermissionDeniedError, TenantMemoryIsolationError
 from app.memory.memory_policies import MemoryPolicyEngine
-from app.memory.exceptions import TenantMemoryIsolationError, MemoryRBACPermissionDeniedError
 
 
 def test_memory_policy_engine_validation():

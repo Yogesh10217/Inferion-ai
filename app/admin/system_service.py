@@ -20,8 +20,8 @@ class SystemAdminService:
         )
 
         # Count users
-        users_active = await self.db.scalar(select(func.count(User.id)).where(User.is_active == True))
-        users_disabled = await self.db.scalar(select(func.count(User.id)).where(User.is_active == False))
+        users_active = await self.db.scalar(select(func.count(User.id)).where(User.is_active))
+        users_disabled = await self.db.scalar(select(func.count(User.id)).where(not User.is_active))
 
         # Count workspaces
         workspaces_total = await self.db.scalar(select(func.count(Workspace.id)))

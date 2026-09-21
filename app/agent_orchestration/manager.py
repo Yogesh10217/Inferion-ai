@@ -132,7 +132,7 @@ class AgentOrchestrationManager:
         self.task_manager.transition_task_status(task.task_id, tenant_id, AgentTaskStatus.VALIDATING)
 
         # 4. Context Assembly & Knowledge Retrieval
-        context = self.context_manager.assemble_context(
+        self.context_manager.assemble_context(
             tenant_id=tenant_id,
             agent_id=agent_id,
             task_id=task.task_id,
@@ -233,7 +233,7 @@ class AgentOrchestrationManager:
 
         # 11. Verification: EXECUTING -> VERIFYING
         self.task_manager.transition_task_status(task.task_id, tenant_id, AgentTaskStatus.VERIFYING)
-        verif = self.verification_manager.verify_execution(
+        self.verification_manager.verify_execution(
             tenant_id=tenant_id,
             execution_id=execution.execution_id,
             task_id=task.task_id,

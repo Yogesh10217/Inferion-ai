@@ -1,6 +1,5 @@
 """Unit tests for ProvisioningEngine."""
 
-import pytest
 from app.control_plane.provisioning import ProvisioningEngine
 
 

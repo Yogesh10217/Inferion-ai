@@ -2,9 +2,8 @@
 Tests for Security Metrics Calculator (Phase 5.69).
 """
 
-import pytest
-from app.security_operations.vulnerability_management import VulnerabilityManager
 from app.security_operations.security_metrics import SecurityMetricsCalculator, SecurityMetricsResult
+from app.security_operations.vulnerability_management import VulnerabilityManager
 
 
 def test_security_metrics_calculation():

@@ -1,6 +1,5 @@
 """Unit tests for DeveloperAssistantManager."""
 
-import pytest
 from app.developer_platform.developer_assistant import DeveloperAssistantManager
 
 

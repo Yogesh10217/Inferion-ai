@@ -2,7 +2,6 @@
 Tests for Tree of Thoughts Engine
 """
 
-import pytest
 from app.reasoning.tree_of_thoughts import TreeOfThoughtsEngine
 
 

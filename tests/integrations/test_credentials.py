@@ -1,6 +1,5 @@
 """Unit tests for CredentialBroker and SecretManager integration."""
 
-import pytest
 from app.integrations.credentials import CredentialBroker
 
 

@@ -147,7 +147,7 @@ class DecisionGovernanceManager:
         return gov_res
 
     def approve_decision(self, decision_id: str, tenant_id: str, approver_id: str = "human_admin") -> Decision:
-        decision = self.get_decision(decision_id, tenant_id)
+        self.get_decision(decision_id, tenant_id)
         approved = self.decisions.update_status(
             decision_id, tenant_id, DecisionStatus.APPROVED, outcome=DecisionOutcome.ALLOW
         )

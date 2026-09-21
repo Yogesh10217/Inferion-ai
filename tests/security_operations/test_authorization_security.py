@@ -2,7 +2,6 @@
 Tests for Authorization Security Evaluator (Phase 5.69).
 """
 
-import pytest
 from app.security_operations.authorization_security import AuthorizationSecurityEvaluator, AuthorizationSecurityResult
 
 

@@ -58,7 +58,7 @@ class CommunicationManager:
             sanitized_msg,
             flags=re.IGNORECASE,
         )
-        sanitized_dict = self.sanitizer.sanitize({"password": raw_message})
+        self.sanitizer.sanitize({"password": raw_message})
 
         comm = OperationalCommunication(
             tenant_id=tenant_id,

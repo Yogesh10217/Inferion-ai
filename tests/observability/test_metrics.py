@@ -1,7 +1,7 @@
 """Tests for Observability Prometheus Metrics registry."""
 
-import pytest
 from prometheus_client import CollectorRegistry
+
 from app.observability.metrics import ObservabilityMetrics
 
 

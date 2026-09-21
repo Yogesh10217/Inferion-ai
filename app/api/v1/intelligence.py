@@ -152,7 +152,7 @@ def create_decision(tenant_id: str = "global", title: str = "Sample Decision"):
 
 @router.post("/decisions/{decision_id}/approve")
 def approve_decision(decision_id: str, req: DecisionApproveRequest):
-    dec = mgr.decision_manager.get_decision(decision_id, req.tenant_id)
+    mgr.decision_manager.get_decision(decision_id, req.tenant_id)
     updated = mgr.decision_manager.update_status(decision_id, req.tenant_id, "APPROVED")
     return updated.model_dump(mode="json")
 

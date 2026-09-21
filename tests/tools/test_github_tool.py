@@ -3,6 +3,7 @@ Tests for GitHub Tool
 """
 
 import pytest
+
 from app.tools.integrations.github_tool import GitHubTool
 from app.tools.tool_context import ToolContext
 from app.tools.tool_result import ToolExecutionStatus

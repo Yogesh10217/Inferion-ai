@@ -1,10 +1,11 @@
 """Pytest Suite for Kubernetes Helm Chart Validation & HA Cluster Failover."""
 
 import os
+
 import yaml
-import pytest
-from scripts.validate_helm_k8s import validate_helm_chart
+
 from deploy.scripts.dr.pg_redis_failover import HAFailoverOrchestrator
+from scripts.validate_helm_k8s import validate_helm_chart
 
 
 def test_helm_chart_validation():
@@ -31,7 +32,7 @@ def test_pg_cluster_failover_orchestrator():
     orchestrator = HAFailoverOrchestrator(
         pg_primary="pg-primary-01",
         pg_replicas=["pg-replica-01", "pg-replica-02"],
-        redis_sentinels=["redis-sentinel-01:26379", "redis-sentinel-02:26379"]
+        redis_sentinels=["redis-sentinel-01:26379", "redis-sentinel-02:26379"],
     )
 
     health = orchestrator.check_pg_cluster_health()
@@ -48,7 +49,7 @@ def test_redis_sentinel_failover_orchestrator():
     orchestrator = HAFailoverOrchestrator(
         pg_primary="pg-primary-01",
         pg_replicas=["pg-replica-01"],
-        redis_sentinels=["redis-sentinel-01:26379", "redis-sentinel-02:26379"]
+        redis_sentinels=["redis-sentinel-01:26379", "redis-sentinel-02:26379"],
     )
 
     health = orchestrator.check_redis_sentinel_health()

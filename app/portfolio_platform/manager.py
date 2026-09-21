@@ -126,10 +126,10 @@ class PortfolioPlatformManager:
         )
 
         # 7. Value & Outcomes & Benefits
-        vm = self.value_manager.record_expected_value(
+        self.value_manager.record_expected_value(
             tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 80000.0
         )
-        vm_act = self.value_manager.record_realized_value(
+        self.value_manager.record_realized_value(
             tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 85000.0
         )
 

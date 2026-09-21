@@ -2,7 +2,6 @@
 Tests for Reasoning Engine
 """
 
-import pytest
 from app.reasoning.reasoning_engine import ReasoningEngine
 
 

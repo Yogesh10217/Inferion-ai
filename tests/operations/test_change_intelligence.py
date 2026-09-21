@@ -1,6 +1,5 @@
 """Unit tests for ChangeCorrelationEngine."""
 
-import pytest
 from app.operations.change_intelligence import ChangeCorrelationEngine
 
 

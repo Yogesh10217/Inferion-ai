@@ -1,7 +1,8 @@
 import pytest
+
 from app.deployment.deployment_simulation import (
-    DeploymentStateMachine,
     DeploymentLifecycleState,
+    DeploymentStateMachine,
     IllegalStateTransitionError,
 )
 from app.deployment.models import DeploymentIdentity, DeploymentState

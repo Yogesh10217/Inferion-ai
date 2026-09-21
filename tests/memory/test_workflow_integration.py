@@ -7,7 +7,9 @@ from app.memory.memory_manager import MemoryManager
 
 def test_workflow_memory_checkpoint_and_session():
     mm = MemoryManager()
-    sess = mm.service.session_tier.create_session("wf_run_101", {"workflow_id": "wf_code_review", "current_step": "analyze"})
+    sess = mm.service.session_tier.create_session(
+        "wf_run_101", {"workflow_id": "wf_code_review", "current_step": "analyze"}
+    )
 
     assert sess.context_data["current_step"] == "analyze"
 
@@ -15,7 +17,7 @@ def test_workflow_memory_checkpoint_and_session():
         episode_type="workflow_run",
         source_id="wf_run_101",
         summary="Completed code review workflow step analyze",
-        details={"completed_nodes": ["start", "analyze"]}
+        details={"completed_nodes": ["start", "analyze"]},
     )
 
     episodes = mm.service.episodic_tier.search_episodes("code review", episode_type="workflow_run")

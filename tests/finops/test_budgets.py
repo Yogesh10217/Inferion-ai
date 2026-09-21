@@ -1,8 +1,8 @@
 """Unit tests for BudgetManager and usage tracking."""
 
 from decimal import Decimal
-import pytest
-from app.finops.budgets import BudgetManager, BudgetScope, BudgetAction, BudgetStatus
+
+from app.finops.budgets import BudgetAction, BudgetManager, BudgetStatus
 
 
 def test_budget_creation_and_status_evaluation():

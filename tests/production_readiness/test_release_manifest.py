@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from app.deployment.models import DeploymentIdentity
 from app.deployment.release_manifest import ProductionReleaseManifest
 

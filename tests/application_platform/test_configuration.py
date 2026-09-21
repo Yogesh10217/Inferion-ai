@@ -1,9 +1,8 @@
 """Unit tests for Application Configuration & Environment Management."""
 
-import pytest
 from app.application_platform.configuration import (
-    ConfigurationManager,
     ApplicationEnvironment,
+    ConfigurationManager,
 )
 from app.security.secrets import SecretManager
 
@@ -13,7 +12,7 @@ def test_configuration_environment_isolation_and_secrets():
     sec_mgr.set_secret("API_KEY_SEC", "super_secret_value_123")
 
     cfg_mgr = ConfigurationManager(secret_manager=sec_mgr)
-    
+
     cfg = cfg_mgr.set_environment_config(
         tenant_id="t1",
         application_id="app_1",

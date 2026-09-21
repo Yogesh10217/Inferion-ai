@@ -19,7 +19,7 @@ def test_valid_recovery_state_transitions():
     assert sm.current_state == RecoveryState.INCIDENT_DETECTED
     assert t1.evidence_fingerprint.startswith("sha256:")
 
-    t2 = sm.transition_to(RecoveryState.RECOVERY_ANALYSIS, reason="Analyzing failure cause")
+    sm.transition_to(RecoveryState.RECOVERY_ANALYSIS, reason="Analyzing failure cause")
     assert sm.current_state == RecoveryState.RECOVERY_ANALYSIS
     assert len(sm.history) == 2
 

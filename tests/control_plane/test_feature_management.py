@@ -1,8 +1,7 @@
 """Unit tests for FeatureManager & FeatureEvaluator."""
 
-import pytest
-from app.control_plane.feature_management import FeatureManager
 from app.control_plane.feature_evaluation import FeatureEvaluator
+from app.control_plane.feature_management import FeatureManager
 
 
 def test_feature_rollout_and_evaluation():

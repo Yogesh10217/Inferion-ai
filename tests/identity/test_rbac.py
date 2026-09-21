@@ -1,7 +1,6 @@
 """Unit tests for RBAC role-based access checks."""
 
-import pytest
-from app.identity.access_control import AccessControlManager, AccessContext, AccessDecisionType
+from app.identity.access_control import AccessContext, AccessControlManager, AccessDecisionType
 
 
 def test_rbac_guest_denial():

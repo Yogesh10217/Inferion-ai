@@ -1,10 +1,9 @@
 """Unit tests for strict multi-tenant isolation across identity resources."""
 
-import pytest
-from app.identity.identity import IdentityManager
-from app.identity.session import SessionManager
 from app.identity.credentials import CredentialManager
+from app.identity.identity import IdentityManager
 from app.identity.privileged_access import PrivilegedAccessManager, PrivilegedRole
+from app.identity.session import SessionManager
 
 
 def test_strict_multi_tenant_isolation():

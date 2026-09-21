@@ -1,9 +1,10 @@
 import pytest
-from app.auth.jwt_service import JWTService
-from app.core.database import async_session_maker
-from app.tenant.models import Organization, Membership
-from app.auth.models import User, Role, APIKey
+
 from app.auth.api_key_service import APIKeyService
+from app.auth.jwt_service import JWTService
+from app.auth.models import APIKey, Role, User
+from app.core.database import async_session_maker
+from app.tenant.models import Membership, Organization
 
 
 @pytest.mark.asyncio

@@ -1,7 +1,7 @@
 """Integration tests for Phase 5.9 REST API Routers."""
 
-import pytest
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
