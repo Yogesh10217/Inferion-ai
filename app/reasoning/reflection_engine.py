@@ -73,4 +73,3 @@ class ReflectionEngine:
 
     def list_recommendations(self, status: str = "pending_approval") -> List[LessonLearned]:
         return [lesson for lesson in self._lessons_store if lesson.status == status]
-

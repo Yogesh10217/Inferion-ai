@@ -352,9 +352,7 @@ def test_flow_20_full_enterprise_identity_assurance_lifecycle(manager: IdentityA
 
     # 5. Access patterns & Anomaly detection
     manager.access_pattern_manager.assess_patterns(tenant_id, identity.identity_id)
-    manager.anomaly_manager.detect_anomaly(
-        tenant_id, identity.identity_id, IdentityAnomalyType.ABNORMAL_AGENT_ACTIVITY
-    )
+    manager.anomaly_manager.detect_anomaly(tenant_id, identity.identity_id, IdentityAnomalyType.ABNORMAL_AGENT_ACTIVITY)
 
     # 6. Risk & Impact
     manager.risk_manager.assess_risk(tenant_id, identity.identity_id)

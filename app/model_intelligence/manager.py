@@ -123,9 +123,7 @@ class ModelIntelligenceManager:
         bm_res = BenchmarkResult(
             model_id=model_id, model_name=model_name, version_tag="1.0.0", suite_name="ReasoningSuite", score=88.5
         )
-        self.benchmark_manager.run_benchmark(
-            tenant_id=tenant_id, suite_name="ReasoningSuite", results=[bm_res]
-        )
+        self.benchmark_manager.run_benchmark(tenant_id=tenant_id, suite_name="ReasoningSuite", results=[bm_res])
 
         # 5. Performance Analysis
         self.performance_manager.record_performance(
@@ -148,9 +146,7 @@ class ModelIntelligenceManager:
 
         # 9. Reliability Assessment
         rel_scores = [ReliabilityScore(dimension="AVAILABILITY", score=0.99)]
-        self.reliability_manager.assess_reliability(
-            model_id=model_id, tenant_id=tenant_id, scores=rel_scores
-        )
+        self.reliability_manager.assess_reliability(model_id=model_id, tenant_id=tenant_id, scores=rel_scores)
 
         # 10. Safety Assessment
         self.safety_manager.evaluate_safety(model_id=model_id, tenant_id=tenant_id)
@@ -213,18 +209,14 @@ class ModelIntelligenceManager:
             summary="Routine check clean.",
             root_cause="None",
         )
-        self.investigation_manager.conclude_investigation(
-            investigation_id=inv.investigation_id, tenant_id=tenant_id
-        )
+        self.investigation_manager.conclude_investigation(investigation_id=inv.investigation_id, tenant_id=tenant_id)
 
         # 19. Remediation Planning
         act = ModelRemediationAction(action_id="act-1", action_name="configuration_review", target_resource_id=model_id)
         rem_plan = self.remediation_manager.create_plan(
             model_id=model_id, tenant_id=tenant_id, priority=ModelRemediationPriority.LOW, actions=[act]
         )
-        self.remediation_manager.execute_plan_via_delegation(
-            plan_id=rem_plan.plan_id, tenant_id=tenant_id
-        )
+        self.remediation_manager.execute_plan_via_delegation(plan_id=rem_plan.plan_id, tenant_id=tenant_id)
 
         # 20. Governance Decision
         gov_dec = self.governance_engine.evaluate_action(
@@ -235,9 +227,7 @@ class ModelIntelligenceManager:
         del_act = ModelDelegationAction(
             action_id="dact-1", target_system="model_hosting", action_type="configuration_review"
         )
-        self.delegation_manager.create_delegation_plan(
-            model_id=model_id, tenant_id=tenant_id, actions=[del_act]
-        )
+        self.delegation_manager.create_delegation_plan(model_id=model_id, tenant_id=tenant_id, actions=[del_act])
 
         # 22. Verification
         v_check = VerificationCheck(check_name="config_verified", target="configuration_review", passed=True)
@@ -252,9 +242,7 @@ class ModelIntelligenceManager:
             reference_id=evaluation.evaluation_id,
             data_ref=f"eval:{evaluation.evaluation_id}",
         )
-        self.evidence_manager.create_evidence_bundle(
-            model_id=model_id, tenant_id=tenant_id, evidences=[ev_item]
-        )
+        self.evidence_manager.create_evidence_bundle(model_id=model_id, tenant_id=tenant_id, evidences=[ev_item])
 
         # 24. Assurance
         assr_scores = [

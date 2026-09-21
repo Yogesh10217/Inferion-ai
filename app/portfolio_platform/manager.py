@@ -126,12 +126,8 @@ class PortfolioPlatformManager:
         )
 
         # 7. Value & Outcomes & Benefits
-        self.value_manager.record_expected_value(
-            tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 80000.0
-        )
-        self.value_manager.record_realized_value(
-            tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 85000.0
-        )
+        self.value_manager.record_expected_value(tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 80000.0)
+        self.value_manager.record_realized_value(tenant_id, init.initiative_id, ValueDimension.COST_SAVINGS, 85000.0)
 
         outcome = self.outcome_evaluator.evaluate_outcome(
             tenant_id, init.initiative_id, 60000.0, 58000.0, 120000.0, 125000.0

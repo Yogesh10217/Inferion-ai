@@ -120,17 +120,11 @@ class PlatformResilienceManager:
         self.backpressure_manager.evaluate_backpressure(tenant_id, svc.service_id, current_queue_depth=100)
 
         # 5. Formulate Scaling & Degradation Plans
-        self.scaling_manager.plan_scaling(
-            tenant_id, svc.service_id, ScalingDirection.SCALE_OUT, delta_units=2
-        )
-        self.degradation_manager.formulate_degradation_plan(
-            tenant_id, svc.service_id, DegradationLevel.REDUCED
-        )
+        self.scaling_manager.plan_scaling(tenant_id, svc.service_id, ScalingDirection.SCALE_OUT, delta_units=2)
+        self.degradation_manager.formulate_degradation_plan(tenant_id, svc.service_id, DegradationLevel.REDUCED)
 
         # 6. Assess Regional Failover Strategy
-        self.regional_manager.evaluate_regional_resilience(
-            tenant_id, svc.service_id, source_region, target_region
-        )
+        self.regional_manager.evaluate_regional_resilience(tenant_id, svc.service_id, source_region, target_region)
 
         # 7. Formulate Recovery Plan
         rec_plan = self.recovery_manager.formulate_recovery_plan(tenant_id, "inc_001", svc.service_id)

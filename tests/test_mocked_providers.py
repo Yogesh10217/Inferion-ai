@@ -61,4 +61,3 @@ async def test_inference_service_uses_mock_provider() -> None:
     response = await service.complete(model_id="gpt-4o-mini", prompt="Hello")
     assert response.text == "mocked"
     provider.generate.assert_awaited_once()
-

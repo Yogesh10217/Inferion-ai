@@ -19,9 +19,7 @@ class QuotaService:
     async def _check_scope_quota(self, session: AsyncSession, scope_type: str, scope_id: str, date_str: str) -> None:
         """Evaluate quotas for a specific scope."""
         # Find policy for this scope
-        stmt = select(QuotaPolicy).filter(
-            getattr(QuotaPolicy, f"{scope_type}_id") == scope_id, QuotaPolicy.enabled
-        )
+        stmt = select(QuotaPolicy).filter(getattr(QuotaPolicy, f"{scope_type}_id") == scope_id, QuotaPolicy.enabled)
         result = await session.execute(stmt)
         policy = result.scalar_one_or_none()
 

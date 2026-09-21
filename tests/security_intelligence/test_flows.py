@@ -82,15 +82,9 @@ def test_flow3_vulnerability_lifecycle():
     )
     assert vuln.status == VulnerabilityStatus.DISCOVERED
 
-    mgr.vulnerability_manager.transition_vulnerability(
-        vuln.vulnerability_id, tenant, VulnerabilityStatus.VALIDATING
-    )
-    mgr.vulnerability_manager.transition_vulnerability(
-        vuln.vulnerability_id, tenant, VulnerabilityStatus.CONFIRMED
-    )
-    mgr.vulnerability_manager.transition_vulnerability(
-        vuln.vulnerability_id, tenant, VulnerabilityStatus.RISK_ASSESSED
-    )
+    mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.VALIDATING)
+    mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.CONFIRMED)
+    mgr.vulnerability_manager.transition_vulnerability(vuln.vulnerability_id, tenant, VulnerabilityStatus.RISK_ASSESSED)
     mgr.vulnerability_manager.transition_vulnerability(
         vuln.vulnerability_id, tenant, VulnerabilityStatus.REMEDIATION_PLANNED
     )

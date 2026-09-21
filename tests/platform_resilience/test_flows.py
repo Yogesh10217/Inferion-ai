@@ -90,9 +90,7 @@ def test_flow5_circuit_breaker_lifecycle(manager):
 def test_flow6_bulkhead_isolation(manager):
     """Flow 6 — Bulkhead Isolation."""
     tenant_id = "tenant_a"
-    manager.bulkhead_manager.configure_partition(
-        tenant_id, "WorkloadA", max_concurrent_calls=2, max_queue_capacity=1
-    )
+    manager.bulkhead_manager.configure_partition(tenant_id, "WorkloadA", max_concurrent_calls=2, max_queue_capacity=1)
     manager.bulkhead_manager.configure_partition(tenant_id, "WorkloadB", max_concurrent_calls=10)
 
     # Exhaust WorkloadA

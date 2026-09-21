@@ -87,7 +87,6 @@ class MultiAgentCoordinator:
         handoff_mgr = AgentHandoffManager()
         SupervisorAgent(team=team)
 
-
         try:
             with tracer.start_as_current_span("agent.team.run") as span:
                 span.set_attribute("team.id", team_id)
