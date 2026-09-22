@@ -2,6 +2,10 @@ import asyncio
 import logging
 from typing import Any, Dict, List, Optional
 
+from qdrant_client import AsyncQdrantClient
+from qdrant_client.http.exceptions import UnexpectedResponse
+from qdrant_client.http.models import Distance, FieldCondition, Filter, MatchValue, PointIdsList, PointStruct, VectorParams
+
 from ..vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
@@ -16,7 +20,7 @@ class QdrantStore(VectorStore):
         api_key: Optional[str] = None,
         max_retries: int = 3,
         base_backoff: float = 1.0,
-        timeout: float = 10.0,
+        timeout: int = 10,
     ):
         """Initialize the Qdrant store.
 
@@ -27,16 +31,13 @@ class QdrantStore(VectorStore):
             base_backoff: Base backoff time for retries.
             timeout: Timeout for Qdrant client operations.
         """
-        from qdrant_client import AsyncQdrantClient
-
         self.url = url
         self.api_key = api_key
         self.max_retries = max_retries
         self.base_backoff = base_backoff
         self.client = AsyncQdrantClient(url=url, api_key=api_key, timeout=timeout)
-        # Connection pooling is handled internally by AsyncQdrantClient (which uses httpx client)
 
-    async def _execute_with_retry(self, operation, *args, **kwargs):
+    async def _execute_with_retry(self, operation: Any, *args: Any, **kwargs: Any) -> Any:
         for attempt in range(self.max_retries):
             try:
                 return await operation(*args, **kwargs)
@@ -48,14 +49,11 @@ class QdrantStore(VectorStore):
                 logger.warning(f"Qdrant database operation failed: {e}. Retrying in {wait_time}s...")
                 await asyncio.sleep(wait_time)
 
-    async def _ensure_collection(self, collection_name: str, dim: int):
-        from qdrant_client.http.exceptions import UnexpectedResponse
-        from qdrant_client.http.models import Distance, VectorParams
-
+    async def _ensure_collection(self, collection_name: str, dim: int) -> None:
         try:
             await self.client.get_collection(collection_name)
         except UnexpectedResponse as e:
-            if e.status_code == 404:
+            if getattr(e, "status_code", None) == 404:
                 await self.client.create_collection(
                     collection_name=collection_name, vectors_config=VectorParams(size=dim, distance=Distance.COSINE)
                 )
@@ -68,19 +66,14 @@ class QdrantStore(VectorStore):
             return
 
         logger.info(f"Adding {len(embeddings)} embeddings to Qdrant collection '{collection_name}'")
-        from qdrant_client.http.models import PointStruct
-
         dim = len(embeddings[0].get("embedding", []))
 
-        async def _do_add():
+        async def _do_add() -> None:
             await self._ensure_collection(collection_name, dim)
 
             points = []
             for item in embeddings:
-                # Qdrant accepts UUID or unsigned integer as ID. If item["id"] is string, it must be UUID.
-                # In real apps, map string ID to UUID if necessary.
                 points.append(PointStruct(id=item["id"], vector=item["embedding"], payload=item.get("metadata", {})))
-            # Batch upsert
             await self.client.upsert(collection_name=collection_name, points=points)
 
         await self._execute_with_retry(_do_add)
@@ -94,9 +87,6 @@ class QdrantStore(VectorStore):
     ) -> List[Dict[str, Any]]:
         """Search Qdrant for similar vectors."""
         logger.info(f"Searching Qdrant collection '{collection_name}' for top {top_k} results")
-        from qdrant_client.http.models import FieldCondition, Filter, MatchValue
-
-        # Simple metadata filtering mapping from dict to Qdrant Filter
         query_filter = None
         if filter_expr:
             must_conditions = []
@@ -104,18 +94,19 @@ class QdrantStore(VectorStore):
                 must_conditions.append(FieldCondition(key=key, match=MatchValue(value=value)))
             query_filter = Filter(must=must_conditions)
 
-        async def _do_search():
-            results = await self.client.search(
+        async def _do_search() -> List[Dict[str, Any]]:
+            response = await self.client.query_points(
                 collection_name=collection_name,
-                query_vector=query_vector,
+                query=query_vector,
                 query_filter=query_filter,
                 limit=top_k,
                 with_payload=True,
             )
 
-            return [{"id": str(res.id), "score": res.score, "metadata": res.payload} for res in results]
+            return [{"id": str(res.id), "score": res.score, "metadata": res.payload or {}} for res in response.points]
 
-        return await self._execute_with_retry(_do_search)
+        result = await self._execute_with_retry(_do_search)
+        return result or []
 
     async def delete(self, ids: List[str], collection_name: str) -> None:
         """Delete embeddings from Qdrant by ID."""
@@ -123,9 +114,8 @@ class QdrantStore(VectorStore):
             return
 
         logger.info(f"Deleting {len(ids)} embeddings from Qdrant collection '{collection_name}'")
-        from qdrant_client.http.models import PointIdsList
 
-        async def _do_delete():
+        async def _do_delete() -> None:
             await self.client.delete(collection_name=collection_name, points_selector=PointIdsList(points=ids))
 
         await self._execute_with_retry(_do_delete)
@@ -136,14 +126,10 @@ class QdrantStore(VectorStore):
             return
 
         logger.info(f"Updating {len(embeddings)} embeddings in Qdrant collection '{collection_name}'")
-        from qdrant_client.http.models import PointStruct, PointVectors
 
-        async def _do_update():
-            # Qdrant supports separate payload update and vector update or full upsert
-            # We'll check what is provided and perform accordingly.
+        async def _do_update() -> None:
             points_to_upsert = []
             for item in embeddings:
-                # If both embedding and metadata are given, we can just upsert
                 if "embedding" in item and "metadata" in item:
                     points_to_upsert.append(
                         PointStruct(id=item["id"], vector=item["embedding"], payload=item["metadata"])
@@ -153,6 +139,7 @@ class QdrantStore(VectorStore):
                         collection_name=collection_name, payload=item["metadata"], points=[item["id"]]
                     )
                 elif "embedding" in item:
+                    from qdrant_client.http.models import PointVectors
                     await self.client.update_vectors(
                         collection_name=collection_name, points=[PointVectors(id=item["id"], vector=item["embedding"])]
                     )
@@ -169,23 +156,25 @@ class QdrantStore(VectorStore):
 
         logger.info(f"Retrieving {len(ids)} embeddings from Qdrant collection '{collection_name}'")
 
-        async def _do_get():
+        async def _do_get() -> List[Dict[str, Any]]:
             records = await self.client.retrieve(
                 collection_name=collection_name, ids=ids, with_payload=True, with_vectors=False
             )
-            return [{"id": str(record.id), "metadata": record.payload} for record in records]
+            return [{"id": str(record.id), "metadata": record.payload or {}} for record in records]
 
-        return await self._execute_with_retry(_do_get)
+        result = await self._execute_with_retry(_do_get)
+        return result or []
 
     async def health(self) -> bool:
         """Check the health of the Qdrant connection."""
         try:
 
-            async def _do_health():
+            async def _do_health() -> bool:
                 await self.client.get_collections()
                 return True
 
-            return await self._execute_with_retry(_do_health)
+            result = await self._execute_with_retry(_do_health)
+            return bool(result)
         except Exception as e:
             logger.error(f"Qdrant health check failed: {e}")
             return False

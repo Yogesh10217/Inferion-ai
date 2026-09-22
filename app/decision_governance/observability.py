@@ -1,5 +1,6 @@
 """Prometheus observability exporter using ai_decision_* metric prefix."""
 
+from typing import Optional
 from prometheus_client import CollectorRegistry, Counter, Gauge
 
 
@@ -8,13 +9,13 @@ class DecisionGovernanceMetrics:
 
     _instance = None
 
-    def __new__(cls, registry: CollectorRegistry = None):
+    def __new__(cls, registry: Optional[CollectorRegistry] = None):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._init_metrics(registry)
         return cls._instance
 
-    def _init_metrics(self, registry: CollectorRegistry = None):
+    def _init_metrics(self, registry: Optional[CollectorRegistry] = None):
         reg = registry
 
         self.decisions_created = Counter(

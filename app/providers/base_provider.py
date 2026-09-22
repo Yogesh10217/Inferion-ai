@@ -44,7 +44,7 @@ class BaseProvider(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def stream(
+    def stream(
         self,
         request: InferenceRequest | None = None,
         model: str | None = None,
@@ -53,6 +53,7 @@ class BaseProvider(ABC):
     ) -> AsyncIterator[InferenceResponse]:
         """Stream normalized InferenceResponse chunks from the provider."""
         raise NotImplementedError
+
 
     @abstractmethod
     async def health_check(self) -> bool:

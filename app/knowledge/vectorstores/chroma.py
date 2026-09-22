@@ -4,6 +4,11 @@ from typing import Any, Dict, List, Optional
 
 from ..vector_store import VectorStore
 
+try:
+    import chromadb
+except ImportError:
+    chromadb = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,7 +32,8 @@ class ChromaStore(VectorStore):
             max_retries: Max retries for operations.
             base_backoff: Base backoff time for retries.
         """
-        import chromadb
+        if chromadb is None:
+            raise ImportError("chromadb package is required for ChromaStore.")
 
         self.persist_directory = persist_directory
         self.host = host

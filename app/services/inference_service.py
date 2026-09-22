@@ -39,14 +39,15 @@ class InferenceService(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
+    def stream_completion(self, *, model_id: str, prompt: str, **kwargs: Any) -> AsyncIterator[str]:
         """Stream a completion for the given model and prompt."""
         raise NotImplementedError
 
     @abstractmethod
-    async def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
+    def stream(self, request: InferenceRequest) -> AsyncIterator[InferenceResponse]:
         """Stream a completion returning InferenceResponse chunks."""
         raise NotImplementedError
+
 
 
 class DefaultInferenceService(InferenceService):
@@ -286,7 +287,7 @@ class DefaultInferenceService(InferenceService):
             metadata=kwargs.get("metadata"),
         )
 
-    async def _resolve_provider(self, *, model_id: str) -> BaseProvider:
+    async def _resolve_provider(self, *, model_id: str) -> BaseProvider | Any:
         if self._request_router is not None:
             return await self._request_router.route(RoutingRequest(model_id=model_id))
         if self._provider is None:

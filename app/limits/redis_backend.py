@@ -31,10 +31,10 @@ class RedisCounterBackend(CounterBackend):
         self.fallback_duration = 30.0  # Retry Redis after 30s
 
         # Pre-loaded scripts
-        self._script_sliding: Optional[aioredis.client.Script] = None
-        self._script_token: Optional[aioredis.client.Script] = None
-        self._script_fixed: Optional[aioredis.client.Script] = None
-        self._script_lease: Optional[aioredis.client.Script] = None
+        self._script_sliding: Optional[Any] = None
+        self._script_token: Optional[Any] = None
+        self._script_fixed: Optional[Any] = None
+        self._script_lease: Optional[Any] = None
 
     async def _get_redis(self) -> Optional[aioredis.Redis]:
         if self.fallback_active:
@@ -71,7 +71,7 @@ class RedisCounterBackend(CounterBackend):
 
     async def check_and_increment_sliding_window(self, key: str, limit: int, window_seconds: int) -> Tuple[bool, int]:
         redis_client = await self._get_redis()
-        if redis_client is None:
+        if redis_client is None or self._script_sliding is None:
             return await self.fallback.check_and_increment_sliding_window(key, limit, window_seconds)
 
         try:
@@ -85,7 +85,7 @@ class RedisCounterBackend(CounterBackend):
         self, key: str, capacity: int, refill_time_seconds: int
     ) -> Tuple[bool, int]:
         redis_client = await self._get_redis()
-        if redis_client is None:
+        if redis_client is None or self._script_token is None:
             return await self.fallback.check_and_decrement_token_bucket(key, capacity, refill_time_seconds)
 
         try:
@@ -101,7 +101,7 @@ class RedisCounterBackend(CounterBackend):
 
     async def check_and_increment_fixed_window(self, key: str, limit: int, window_seconds: int) -> Tuple[bool, int]:
         redis_client = await self._get_redis()
-        if redis_client is None:
+        if redis_client is None or self._script_fixed is None:
             return await self.fallback.check_and_increment_fixed_window(key, limit, window_seconds)
 
         try:
@@ -113,13 +113,15 @@ class RedisCounterBackend(CounterBackend):
 
     async def acquire_lease(self, scope_key: str, limit: int, ttl_seconds: int) -> Tuple[bool, str]:
         redis_client = await self._get_redis()
-        if redis_client is None:
+        if redis_client is None or self._script_lease is None:
             return await self.fallback.acquire_lease(scope_key, limit, ttl_seconds)
 
         try:
             lease_id = str(uuid.uuid4())
-            res = await self._script_lease(keys=[scope_key], args=[limit, ttl_seconds, lease_id, self._now_ms()])
-            return res[0] == 1, res[1]
+            res = await self._script_lease(
+                keys=[f"{scope_key}:lease"], args=[limit, ttl_seconds * 1000, lease_id, self._now_ms()]
+            )
+            return res[0] == 1, lease_id
         except RedisError as e:
             self._trigger_fallback(e)
             return await self.fallback.acquire_lease(scope_key, limit, ttl_seconds)

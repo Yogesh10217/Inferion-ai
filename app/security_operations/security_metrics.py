@@ -24,7 +24,7 @@ class SecurityMetricsResult:
     audit_integrity_rate: float
     security_certification_rate: float
     fingerprint: str = ""
-    details: Dict[str, Any] = None
+    details: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         if self.details is None:

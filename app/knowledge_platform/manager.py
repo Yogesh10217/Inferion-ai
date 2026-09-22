@@ -73,3 +73,26 @@ class KnowledgePlatformManager:
         )
         self.provenance_manager.create_chain(item.item_id, tenant_id=tenant_id, source_system=source_system)
         return item
+
+    def list_knowledge_items(self, tenant_id: str = "global") -> list[KnowledgeItem]:
+        return [item for item in self.knowledge_manager._items.values() if item.tenant_id in (tenant_id, "global")]
+
+    def create_knowledge_item(
+        self,
+        title: str,
+        content: str,
+        knowledge_type: KnowledgeType = KnowledgeType.DOCUMENT,
+        tenant_id: str = "global",
+        classification: str = "INTERNAL",
+        source_system: str = "DataFabric",
+        **kwargs: Any,
+    ) -> KnowledgeItem:
+        return self.create_and_index_knowledge(
+            title=title,
+            content=content,
+            knowledge_type=knowledge_type,
+            tenant_id=tenant_id,
+            classification=classification,
+            source_system=source_system,
+        )
+

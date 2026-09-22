@@ -6,6 +6,11 @@ import re
 from abc import ABC, abstractmethod
 from typing import Dict, Optional, Set
 
+try:
+    import boto3
+except ImportError:
+    boto3 = None
+
 logger = logging.getLogger(__name__)
 
 # Patterns for sensitive tokens, keys, credentials
@@ -134,7 +139,8 @@ class AWSSecretsManagerProvider(SecretProvider):
             return self._cache[key]
 
         try:
-            import boto3
+            if boto3 is None:
+                raise ImportError("boto3 package is required for AWS Secrets Manager.")
 
             client = boto3.client("secretsmanager", region_name=self.region_name)
             response = client.get_secret_value(SecretId=key)
@@ -150,7 +156,8 @@ class AWSSecretsManagerProvider(SecretProvider):
     def set_secret(self, key: str, value: str) -> None:
         self._cache[key] = value
         try:
-            import boto3
+            if boto3 is None:
+                raise ImportError("boto3 package is required for AWS Secrets Manager.")
 
             client = boto3.client("secretsmanager", region_name=self.region_name)
             client.put_secret_value(SecretId=key, SecretString=value)

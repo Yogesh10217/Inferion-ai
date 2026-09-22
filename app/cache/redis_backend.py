@@ -14,6 +14,7 @@ try:
 except ImportError:
     REDIS_AVAILABLE = False
     redis = None  # type: ignore
+    RedisError = Exception
 
 
 class RedisCacheBackend(BaseCacheBackend):

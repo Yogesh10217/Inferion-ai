@@ -8,6 +8,11 @@ from fastapi import APIRouter, Depends, Header, HTTPException, status
 
 from app.platform_hardening.exceptions import CrossTenantPlatformHardeningException
 from app.platform_hardening.manager import PlatformHardeningManager
+from app.platform_hardening.models import (
+    IntegrationHealthStatus,
+    PlatformCertificationStatus,
+    ReleaseReadinessDecision,
+)
 from app.platform_hardening.schemas import (
     CertificationRequest,
     CertificationResponse,
@@ -27,12 +32,11 @@ from app.platform_hardening.schemas import (
 
 router = APIRouter(prefix="/platform-hardening", tags=["Platform Hardening"])
 
+_global_hardening_manager = PlatformHardeningManager()
+
 
 def get_hardening_manager() -> PlatformHardeningManager:
-    # Factory dependency fetching container instance
-    from app.core.container import container
-
-    return container.platform_hardening_manager
+    return _global_hardening_manager
 
 
 def extract_tenant_id(x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID")) -> str:
@@ -109,8 +113,8 @@ def trigger_platform_audit(
             findings_count=len(res.findings),
             critical_findings_count=critical_count,
             readiness_score=res.readiness_score,
-            release_decision=res.release_gate.decision if res.release_gate else "BLOCKED",
-            certification_status=res.certification.status if res.certification else "FAILED",
+            release_decision=res.release_gate.decision if res.release_gate else ReleaseReadinessDecision.BLOCKED,
+            certification_status=res.certification.status if res.certification else PlatformCertificationStatus.FAILED,
             findings=findings_schemas,
             remediations=rem_schemas,
             certification=cert_schema,
@@ -142,8 +146,8 @@ def get_audit_by_id(
             findings_count=len(res.findings),
             critical_findings_count=critical_count,
             readiness_score=res.readiness_score,
-            release_decision=res.release_gate.decision if res.release_gate else "BLOCKED",
-            certification_status=res.certification.status if res.certification else "FAILED",
+            release_decision=res.release_gate.decision if res.release_gate else ReleaseReadinessDecision.BLOCKED,
+            certification_status=res.certification.status if res.certification else PlatformCertificationStatus.FAILED,
             findings=[],
             remediations=[],
             started_at=res.started_at,
@@ -208,7 +212,7 @@ def get_integration_health(
     if not health:
         subsystems = mgr.subsystem_registry.list_all_subsystems()
         return IntegrationHealthResponse(
-            overall_health="HEALTHY",
+            overall_health=IntegrationHealthStatus.HEALTHY,
             overall_health_score=100.0,
             subsystems=[
                 SubsystemHealthSchema(
@@ -250,6 +254,8 @@ def certify_platform(
     try:
         audit = mgr.run_platform_audit(tenant_id=req.tenant_id)
         cert = audit.certification
+        if not cert:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Audit certification missing")
         return CertificationResponse(
             certification_id=cert.certification_id,
             tenant_id=cert.tenant_id,
@@ -298,7 +304,7 @@ def get_readiness_report(
     return ReadinessResponse(
         tenant_id=tenant_id,
         readiness_score=scores["overall"],
-        release_decision=cert.release_decision if cert else "BLOCKED",
+        release_decision=cert.release_decision if cert else ReleaseReadinessDecision.BLOCKED,
         architecture_score=scores["architecture"],
         integration_score=scores["integration"],
         reliability_score=scores["reliability"],

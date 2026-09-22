@@ -2,12 +2,9 @@
 
 import logging
 
-try:
-    from prometheus_client import Counter
+from prometheus_client import Counter
 
-    PROMETHEUS_AVAILABLE = True
-except ImportError:
-    PROMETHEUS_AVAILABLE = False
+PROMETHEUS_AVAILABLE = True
 
 logger = logging.getLogger(__name__)
 

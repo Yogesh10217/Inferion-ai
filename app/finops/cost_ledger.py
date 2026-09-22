@@ -150,6 +150,42 @@ class UnifiedCostLedger:
         )
         return entry
 
+    def record_cost_event(
+        self,
+        tenant_id: str = "global",
+        service: str = "general",
+        action: str = "usage",
+        cost_usd: float = 0.0,
+        **kwargs: Any,
+    ) -> CostLedgerEntry:
+        return self.record_cost(
+            component=service,
+            cost_category=CostCategory.OTHER,
+            quantity=Decimal("1.0"),
+            unit_price=Decimal(str(cost_usd)),
+            tenant_id=tenant_id,
+            metadata={"action": action, **kwargs},
+        )
+
+    def record_entry(
+        self,
+        tenant_id: str = "global",
+        resource_id: Optional[str] = None,
+        amount: float = 0.0,
+        category: str = "OTHER",
+        **kwargs: Any,
+    ) -> CostLedgerEntry:
+        return self.record_cost(
+            component="PLATFORM",
+            cost_category=CostCategory.OTHER,
+            quantity=Decimal("1.0"),
+            unit_price=Decimal(str(amount)),
+            tenant_id=tenant_id,
+            resource_id=resource_id,
+            metadata={"category": category, **kwargs},
+        )
+
+
     def record_adjustment(
         self, original_cost_id: str, adjustment_amount: Decimal, reason: str, tenant_id: str = "global"
     ) -> CostAdjustment:

@@ -246,6 +246,7 @@ class CapacityOptimization:
     resource_id: str = ""
     objective: str = "COST_PERFORMANCE"
     recommendations: List[Any] = field(default_factory=list)
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     @property
     def plan_id(self) -> str:
@@ -339,3 +340,15 @@ class CapacitySnapshot:
     snapshot_id: str = field(default_factory=lambda: f"csnap-{uuid.uuid4().hex[:12]}")
     snapshot_fingerprint: str = ""
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    @property
+    def captured_at(self) -> datetime:
+        return self.created_at
+
+    @property
+    def records_count(self) -> int:
+        return 1
+
+    @property
+    def integrity_hash(self) -> str:
+        return self.snapshot_fingerprint or "hash-csnap"

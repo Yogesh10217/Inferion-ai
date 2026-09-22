@@ -60,13 +60,13 @@ class IdentityAssuranceAnalyticsEngine:
 
     def to_platform_report(self, report: IdentityAssuranceReport) -> PlatformReport:
         metrics = [
-            AnalyticsMetric(name="total_identities", value=float(report.total_identities_assessed)),
-            AnalyticsMetric(name="avg_trust_score", value=report.avg_trust_score),
-            AnalyticsMetric(name="anomalies_count", value=float(report.total_anomalies_detected)),
+            AnalyticsMetric(metric_name="total_identities", metric_value=float(report.total_identities_assessed)),
+            AnalyticsMetric(metric_name="avg_trust_score", metric_value=report.avg_trust_score),
+            AnalyticsMetric(metric_name="anomalies_count", metric_value=float(report.total_anomalies_detected)),
         ]
         return PlatformReport(
             tenant_id=report.tenant_id,
-            title=f"Identity Assurance Report - {report.period}",
-            period=AnalyticsPeriod.LAST_30_DAYS,
+            report_type="IDENTITY_ASSURANCE",
+            period=AnalyticsPeriod.MONTHLY,
             metrics=metrics,
         )

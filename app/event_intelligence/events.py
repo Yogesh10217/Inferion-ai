@@ -124,6 +124,21 @@ class EventManager:
         self._events[evt.event_id] = evt
         return evt
 
+    def ingest_event(
+        self,
+        tenant_id: str,
+        title: str,
+        source_system: str = "GENERIC",
+        payload: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> EnterpriseEvent:
+        return self.create_event(
+            tenant_id=tenant_id,
+            source_id=f"src_{uuid.uuid4().hex[:8]}",
+            source_name=source_system,
+            payload={"title": title, **(payload or {})},
+        )
+
     def get_event(self, event_id: str, tenant_id: str) -> EnterpriseEvent:
         evt = self._events.get(event_id)
         if not evt:

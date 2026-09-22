@@ -9,6 +9,11 @@ from app.providers.base_provider import BaseProvider, ProviderModel
 from app.schemas.inference_response import InferenceResponse, Usage
 from app.schemas.request import InferenceRequest
 
+try:
+    import boto3
+except ImportError:
+    boto3 = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -52,7 +57,8 @@ class BedrockProvider(BaseProvider):
         try:
             import json
 
-            import boto3
+            if boto3 is None:
+                raise ImportError("boto3 package is required for BedrockProvider execution.")
 
             client = boto3.client(
                 "bedrock-runtime",

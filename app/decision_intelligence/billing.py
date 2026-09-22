@@ -29,7 +29,7 @@ class DecisionBillingTracker:
             action=action,
             cost_usd=amount_usd,
         )
-        self.cost_ledger.record_cost(
+        self.cost_ledger.record_cost_event(
             tenant_id=tenant_id,
             service="decision_intelligence",
             action=action,

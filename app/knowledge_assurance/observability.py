@@ -3,12 +3,9 @@
 Provides Prometheus metrics with mandatory ai_knowledge_* prefix.
 """
 
-try:
-    from prometheus_client import REGISTRY, Counter, Gauge
+from prometheus_client import REGISTRY, Counter, Gauge
 
-    PROMETHEUS_AVAILABLE = True
-except ImportError:
-    PROMETHEUS_AVAILABLE = False
+PROMETHEUS_AVAILABLE = True
 
 
 def _get_or_create_metric(metric_type, name, description, labelnames=None):

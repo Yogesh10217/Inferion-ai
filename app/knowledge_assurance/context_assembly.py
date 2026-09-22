@@ -73,19 +73,18 @@ class ContextAssemblyManager:
 
     def assemble_context(
         self,
-        tenant_id_or_request: Any,
+        tenant_id: Optional[str] = None,
+        request: Optional[ContextAssemblyRequest] = None,
+        tenant_id_or_request: Any = None,
         request_or_candidates: Any = None,
         candidate_references: Optional[List[Dict[str, Any]]] = None,
     ) -> ContextAssemblyResult:
-        if isinstance(tenant_id_or_request, ContextAssemblyRequest):
-            request = tenant_id_or_request
-            candidate_references = request_or_candidates or candidate_references
-        else:
-            tenant_id = tenant_id_or_request
-            if isinstance(request_or_candidates, ContextAssemblyRequest):
-                request = request_or_candidates
-            else:
-                request = ContextAssemblyRequest(tenant_id=tenant_id)
+        req = request or (tenant_id_or_request if isinstance(tenant_id_or_request, ContextAssemblyRequest) else None)
+        if req is None and isinstance(request_or_candidates, ContextAssemblyRequest):
+            req = request_or_candidates
+        if req is None:
+            t_id = tenant_id or (tenant_id_or_request if isinstance(tenant_id_or_request, str) else "default")
+            req = ContextAssemblyRequest(tenant_id=t_id)
 
         if not candidate_references:
             candidate_references = [

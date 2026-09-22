@@ -73,7 +73,15 @@ class KnowledgeIntelligenceManager:
 
         # Immutable snapshot registry
         self._finalized_snapshots: Dict[str, PlatformSnapshot] = {}
-        logger.info("[KNOWLEDGE INTELLIGENCE MASTER] KnowledgeIntelligenceManager initialized with 24 subsystems.")
+    def retrieve_knowledge(
+        self,
+        tenant_id: str,
+        query: str,
+        max_results: int = 10,
+    ) -> Any:
+        req = KnowledgeRetrievalRequest(tenant_id=tenant_id, query=query, max_results=max_results)
+        items = self.knowledge_manager.list_knowledge(tenant_id)
+        return self.retrieval_manager.plan_and_retrieve(req, items)
 
     def run_full_knowledge_lifecycle(
         self,

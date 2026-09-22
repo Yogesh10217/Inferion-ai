@@ -3,6 +3,16 @@ from typing import Protocol
 
 from app.knowledge.pipeline import DocumentContext, PipelineStage
 
+try:
+    import fitz
+except ImportError:
+    fitz = None
+
+try:
+    import docx
+except ImportError:
+    docx = None
+
 
 class StorageProvider(Protocol):
     """Protocol for fetching documents from storage."""
@@ -29,7 +39,8 @@ class DocumentIngestionStage(PipelineStage):
             full_text = ""
 
             if "pdf" in mime_type or file_name.endswith(".pdf"):
-                import fitz
+                if fitz is None:
+                    raise ImportError("PyMuPDF (fitz) is required for PDF parsing.")
 
                 doc = fitz.open(stream=raw_data, filetype="pdf")
                 global_offset = 0
@@ -60,7 +71,8 @@ class DocumentIngestionStage(PipelineStage):
                             )
                 context.metadata["mime_type"] = "application/pdf"
             elif "wordprocessingml" in mime_type or file_name.endswith(".docx"):
-                import docx
+                if docx is None:
+                    raise ImportError("python-docx (docx) is required for DOCX parsing.")
 
                 doc = docx.Document(io.BytesIO(raw_data))
                 global_offset = 0

@@ -1,6 +1,7 @@
 """FastAPI REST API Router for Capacity Intelligence (Phase 5.56)."""
 
 import logging
+from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
@@ -74,7 +75,7 @@ def register_resource(
         resource_type=res.resource_type,
         total_capacity=res.total_capacity,
         capacity_unit=res.capacity_unit,
-        registered_at=res.registered_at,
+        registered_at=res.registered_at or datetime.now(timezone.utc),
     )
 
 
@@ -101,7 +102,7 @@ def ingest_telemetry(
     )
 
 
-# Assessment & Forecasting
+# Assessments & Forecasts
 @router.post("/assessments", response_model=CapacityAssessmentResponse)
 def assess_capacity(
     req: CapacityAssessmentRequest,
@@ -111,7 +112,6 @@ def assess_capacity(
     ass = mgr.assess_capacity(
         tenant_id=x_tenant_id,
         resource_id=req.resource_id,
-        scope=req.scope,
     )
     return CapacityAssessmentResponse(
         assessment_id=ass.assessment_id,
@@ -119,7 +119,7 @@ def assess_capacity(
         resource_id=ass.resource_id,
         utilization_rate=ass.utilization_rate,
         health_status=ass.health_status,
-        assessed_at=ass.assessed_at,
+        assessed_at=ass.assessed_at or datetime.now(timezone.utc),
     )
 
 
@@ -163,7 +163,7 @@ def predict_demand(
         workload_type=dp.workload_type,
         predicted_growth_rate=dp.predicted_growth_rate,
         confidence_score=dp.confidence_score,
-        predicted_at=dp.predicted_at,
+        predicted_at=dp.predicted_at or datetime.now(timezone.utc),
     )
 
 
@@ -183,7 +183,7 @@ def analyze_saturation(
         resource_id=sa.resource_id,
         saturation_level=sa.saturation_level,
         headroom_percent=sa.headroom_percent,
-        analyzed_at=sa.analyzed_at,
+        analyzed_at=sa.analyzed_at or datetime.now(timezone.utc),
     )
 
 

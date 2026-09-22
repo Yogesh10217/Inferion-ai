@@ -5,7 +5,7 @@ import json
 import logging
 from typing import Any, Dict
 
-from app.platform_contracts.sanitizer import SensitiveDataSanitizer
+from app.platform_contracts.redaction import SensitiveDataSanitizer
 from app.runtime_intelligence.limits import RuntimeLimitsManager
 
 logger = logging.getLogger(__name__)

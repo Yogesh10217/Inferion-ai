@@ -58,6 +58,20 @@ class FinOpsManager:
             "[FINOPS MANAGER] Master FinOpsManager initialized with all 15 financial intelligence domain subsystems and adapters"
         )
 
+    def record_usage_cost(
+        self,
+        tenant_id: str,
+        resource_id: str,
+        cost_amount: float,
+        category: str = "MODEL_USAGE",
+    ) -> Any:
+        return self.cost_ledger.record_entry(
+            tenant_id=tenant_id,
+            resource_id=resource_id,
+            amount=cost_amount,
+            category=category,
+        )
+
     def get_summary(self) -> Dict[str, Any]:
         total_cost = self.cost_ledger.get_total_cost()
         return {

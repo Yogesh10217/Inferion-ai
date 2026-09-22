@@ -538,10 +538,13 @@ class CapacityIntelligenceManager:
         self._evidence_bundles[eb.bundle_id] = eb
         return eb
 
-    def get_evidence(self, tenant_id: str, bundle_id: str) -> Optional[CapacityEvidenceBundle]:
-        eb = self._evidence_bundles.get(bundle_id)
+    def get_evidence(
+        self, tenant_id: str, bundle_id: Optional[str] = None, evidence_id: Optional[str] = None
+    ) -> Optional[CapacityEvidenceBundle]:
+        target_id = bundle_id or evidence_id or ""
+        eb = self._evidence_bundles.get(target_id)
         if not eb:
-            eb = self.evidence_repo.get_by_id(tenant_id, bundle_id)
+            eb = self.evidence_repo.get_by_id(tenant_id, target_id)
         if eb and eb.tenant_id != tenant_id:
             raise CrossTenantCapacityIntelligenceException()
         return eb

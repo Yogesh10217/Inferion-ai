@@ -58,22 +58,16 @@ class KnowledgeAssuranceAnalyticsEngine:
         # Create base platform report primitive
         metrics = [
             AnalyticsMetric(
-                metric_id=f"met-trust-{uuid.uuid4().hex[:4]}",
-                name="knowledge_trust_score",
-                value=0.91,
-                unit="score",
+                metric_name="knowledge_trust_score",
+                metric_value=0.91,
             ),
             AnalyticsMetric(
-                metric_id=f"met-fresh-{uuid.uuid4().hex[:4]}",
-                name="knowledge_freshness_ratio",
-                value=0.88,
-                unit="ratio",
+                metric_name="knowledge_freshness_ratio",
+                metric_value=0.88,
             ),
             AnalyticsMetric(
-                metric_id=f"met-conflict-{uuid.uuid4().hex[:4]}",
-                name="active_conflicts",
-                value=2.0,
-                unit="count",
+                metric_name="active_conflicts",
+                metric_value=2.0,
             ),
         ]
 
@@ -82,15 +76,14 @@ class KnowledgeAssuranceAnalyticsEngine:
                 insight_id=f"pins-{uuid.uuid4().hex[:4]}",
                 title="High Knowledge Trust Observed",
                 description="Enterprise knowledge sources display robust authority and low conflict rates.",
-                category="KNOWLEDGE_ASSURANCE",
-                severity="INFO",
+                impact_level="LOW",
             )
         ]
 
         prep = PlatformReport(
             tenant_id=tenant_id,
-            title=title,
-            period=AnalyticsPeriod.LAST_30_DAYS,
+            report_type="KNOWLEDGE_ASSURANCE",
+            period=AnalyticsPeriod.MONTHLY,
             metrics=metrics,
             insights=platform_insights,
         )

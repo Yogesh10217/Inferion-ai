@@ -29,7 +29,7 @@ class ComplianceBillingTracker:
             action=action,
             cost_usd=amount_usd,
         )
-        self.cost_ledger.record_cost(
+        self.cost_ledger.record_cost_event(
             tenant_id=tenant_id,
             service="compliance_platform",
             action=action,

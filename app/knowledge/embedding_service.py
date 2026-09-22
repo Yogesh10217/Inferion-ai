@@ -5,6 +5,16 @@ from typing import List, Optional, Protocol
 
 from app.knowledge.pipeline import DocumentContext, PipelineStage
 
+try:
+    import openai
+except ImportError:
+    openai = None
+
+try:
+    import cohere
+except ImportError:
+    cohere = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,7 +26,8 @@ class ProviderFactory(Protocol):
 
 class OpenAIProvider:
     def __init__(self, api_key: str, model: str = "text-embedding-ada-002"):
-        import openai
+        if openai is None:
+            raise ImportError("openai package is required for OpenAIProvider.")
 
         self.client = openai.AsyncOpenAI(api_key=api_key)
         self.model = model
@@ -45,7 +56,8 @@ class OllamaProvider:
 
 class CohereProvider:
     def __init__(self, api_key: str, model: str = "embed-english-v3.0"):
-        import cohere
+        if cohere is None:
+            raise ImportError("cohere package is required for CohereProvider.")
 
         self.client = cohere.AsyncClient(api_key=api_key)
         self.model = model

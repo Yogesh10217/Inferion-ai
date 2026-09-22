@@ -48,7 +48,7 @@ class KnowledgeDuplicationManager:
     def detect_duplicates(
         self,
         tenant_id: str,
-        reference_ids: Any,
+        reference_ids: Optional[Any] = None,
         items: Optional[Any] = None,
     ) -> List[KnowledgeDuplicate]:
         raw_items = items or reference_ids or []

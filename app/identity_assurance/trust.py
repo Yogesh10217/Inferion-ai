@@ -135,7 +135,6 @@ class IdentityTrustEngine:
         return TrustAssessment(
             target_resource_id=assessment.identity_id,
             tenant_id=assessment.tenant_id,
-            overall_score=assessment.trust_score.overall_trust_score * 100.0,
-            overall_trust_level="HIGH" if assessment.is_trusted else "LOW",
+            overall_trust_score=assessment.trust_score.overall_trust_score * 100.0,
             factors=factors,
         )

@@ -145,19 +145,19 @@ class KnowledgeReferenceManager:
         )
 
     def get_reference(
-        self, tenant_id_or_ref_id: str, reference_id_or_tenant_id: Optional[str] = None
+        self,
+        tenant_id: Optional[str] = None,
+        reference_id: Optional[str] = None,
+        tenant_id_or_ref_id: Optional[str] = None,
+        reference_id_or_tenant_id: Optional[str] = None,
     ) -> KnowledgeReference:
-        if reference_id_or_tenant_id is None:
-            reference_id = tenant_id_or_ref_id
-            tenant_id = None
-        else:
-            # Check which order: if tenant_id_or_ref_id in self._references
-            if tenant_id_or_ref_id in self._references:
-                reference_id = tenant_id_or_ref_id
-                tenant_id = reference_id_or_tenant_id
-            else:
-                tenant_id = tenant_id_or_ref_id
-                reference_id = reference_id_or_tenant_id
+        ref_id = reference_id or tenant_id_or_ref_id
+        t_id = tenant_id or reference_id_or_tenant_id
+        if ref_id in self._references:
+            return self._references[ref_id]
+        if t_id in self._references:
+            return self._references[t_id]
+        raise KnowledgeReferenceNotFoundException(ref_id or "unknown")
 
         ref = self._references.get(reference_id)
         if not ref:

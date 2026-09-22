@@ -5,8 +5,12 @@ from typing import Any, Dict
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
+from app.model_intelligence.assurance import AssuranceDimension, ModelAssuranceScore
+from app.model_intelligence.evaluation import EvaluationMetric, EvaluationType
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ModelIntelligenceException
 from app.model_intelligence.manager import ModelIntelligenceManager
+from app.model_intelligence.models import ModelProviderReference, ModelType
+from app.model_intelligence.trust import ModelTrustDimension, ModelTrustFactor
 
 router = APIRouter(prefix="/models", tags=["model-intelligence"])
 model_intel_manager = ModelIntelligenceManager()
@@ -29,8 +33,8 @@ def register_model(req: ModelRegistrationRequest, x_tenant_id: str = Header(defa
     ref = model_intel_manager.registry.register_model(
         name=req.name,
         tenant_id=x_tenant_id,
-        model_type=req.model_type,
-        provider={"provider_id": "p-1", "provider_name": req.provider_name},
+        model_type=ModelType(req.model_type),
+        provider=ModelProviderReference(provider_id="p-1", provider_name=req.provider_name),
     )
     return {"status": "SUCCESS", "model": ref.dict()}
 
@@ -58,8 +62,8 @@ def evaluate_model(req: EvaluationRequest, x_tenant_id: str = Header(default="gl
         model_id=req.model_id,
         tenant_id=x_tenant_id,
         version_tag=req.version_tag,
-        eval_type=req.eval_type,
-        metrics=[{"name": "accuracy", "score": 0.92, "passed": True}],
+        eval_type=EvaluationType(req.eval_type),
+        metrics=[EvaluationMetric(name="accuracy", score=0.92, passed=True)],
     )
     return {"evaluation": eval_res.dict()}
 
@@ -70,7 +74,7 @@ def assess_trust(model_id: str, x_tenant_id: str = Header(default="global")):
         trust = model_intel_manager.trust_engine.calculate_trust(
             model_id=model_id,
             tenant_id=x_tenant_id,
-            factors=[{"dimension": "QUALITY", "score": 90.0, "weight": 1.0}],
+            factors=[ModelTrustFactor(dimension=ModelTrustDimension.QUALITY, score=90.0, weight=1.0)],
         )
         return {"trust_assessment": trust.dict()}
     except CrossTenantModelIntelligenceException as e:
@@ -83,7 +87,7 @@ def assess_assurance(model_id: str, x_tenant_id: str = Header(default="global"))
         assurance = model_intel_manager.assurance_manager.compute_assurance(
             model_id=model_id,
             tenant_id=x_tenant_id,
-            scores=[{"dimension": "PERFORMANCE", "score": 0.95, "weight": 1.0, "passed": True}],
+            scores=[ModelAssuranceScore(dimension=AssuranceDimension.PERFORMANCE, score=0.95, weight=1.0, passed=True)],
         )
         return {"assurance": assurance.dict()}
     except CrossTenantModelIntelligenceException as e:

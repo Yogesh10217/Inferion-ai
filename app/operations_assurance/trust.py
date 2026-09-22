@@ -2,7 +2,7 @@
 
 from typing import Dict, Optional
 
-from app.governance_platform.trust import TrustAssessment, TrustFactor
+from app.governance_platform.trust import TrustAssessment, TrustDimension, TrustFactor
 
 
 class OperationsTrustEngine:
@@ -20,17 +20,17 @@ class OperationsTrustEngine:
         governance_passed: bool = True,
     ) -> TrustAssessment:
         factors = [
-            TrustFactor(name="Availability", weight=0.4, score=availability),
-            TrustFactor(name="Reliability", weight=0.4, score=reliability),
-            TrustFactor(name="Governance", weight=0.2, score=1.0 if governance_passed else 0.0),
+            TrustFactor(dimension=TrustDimension.RELIABILITY, weight=0.4, score=availability * 100.0, description="Availability"),
+            TrustFactor(dimension=TrustDimension.RELIABILITY, weight=0.4, score=reliability * 100.0, description="Reliability"),
+            TrustFactor(dimension=TrustDimension.COMPLIANCE, weight=0.2, score=100.0 if governance_passed else 0.0, description="Governance"),
         ]
-        overall = sum(f.weight * f.score for f in factors)
+        total_weight = sum(f.weight for f in factors)
+        weighted_score = sum(f.score * f.weight for f in factors) / total_weight if total_weight > 0 else 100.0
 
         assessment = TrustAssessment(
             tenant_id=tenant_id,
-            entity_id=service_id,
-            entity_type="SERVICE",
-            trust_score=round(overall, 4),
+            target_resource_id=service_id,
+            overall_trust_score=round(weighted_score, 2),
             factors=factors,
         )
 
