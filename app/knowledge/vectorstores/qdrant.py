@@ -124,7 +124,9 @@ class QdrantStore(VectorStore):
         logger.info(f"Deleting {len(ids)} embeddings from Qdrant collection '{collection_name}'")
 
         async def _do_delete() -> None:
-            await self.client.delete(collection_name=collection_name, points_selector=PointIdsList(points=cast(Any, ids)))
+            await self.client.delete(
+                collection_name=collection_name, points_selector=PointIdsList(points=cast(Any, ids))
+            )
 
         await self._execute_with_retry(_do_delete)
 
@@ -148,6 +150,7 @@ class QdrantStore(VectorStore):
                     )
                 elif "embedding" in item:
                     from qdrant_client.http.models import PointVectors
+
                     await self.client.update_vectors(
                         collection_name=collection_name, points=[PointVectors(id=item["id"], vector=item["embedding"])]
                     )

@@ -49,7 +49,6 @@ class InferenceService(ABC):
         raise NotImplementedError
 
 
-
 class DefaultInferenceService(InferenceService):
     """Concrete inference service with provider selection and validation logic."""
 

@@ -96,4 +96,3 @@ class KnowledgePlatformManager:
             classification=classification,
             source_system=source_system,
         )
-

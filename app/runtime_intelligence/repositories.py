@@ -216,9 +216,7 @@ class RuntimeGovernanceRepository:
 
     def save(self, decision: Any) -> None:
         key = (
-            decision.get("evaluation_id")
-            if isinstance(decision, dict)
-            else getattr(decision, "evaluation_id", None)
+            decision.get("evaluation_id") if isinstance(decision, dict) else getattr(decision, "evaluation_id", None)
         ) or str(id(decision))
         with self._lock:
             self._storage[str(key)] = decision

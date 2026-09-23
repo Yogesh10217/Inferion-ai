@@ -54,7 +54,6 @@ class BaseProvider(ABC):
         """Stream normalized InferenceResponse chunks from the provider."""
         raise NotImplementedError
 
-
     @abstractmethod
     async def health_check(self) -> bool:
         """Check whether the provider is healthy."""

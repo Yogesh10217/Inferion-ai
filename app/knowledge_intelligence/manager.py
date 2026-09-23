@@ -73,6 +73,7 @@ class KnowledgeIntelligenceManager:
 
         # Immutable snapshot registry
         self._finalized_snapshots: Dict[str, PlatformSnapshot] = {}
+
     def retrieve_knowledge(
         self,
         tenant_id: str,

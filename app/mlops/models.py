@@ -24,9 +24,7 @@ class AIAssetModel(Base):
     current_version: Mapped[str] = mapped_column(String, default="1.0.0")
     status: Mapped[str] = mapped_column(String, default="DRAFT", index=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
@@ -62,9 +60,7 @@ class AIAssetVersionModel(Base):
 
     status: Mapped[str] = mapped_column(String, default="DRAFT")
     approval_status: Mapped[str] = mapped_column(String, default="NOT_REQUESTED")
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     is_immutable: Mapped[bool] = mapped_column(Boolean, default=False)
 
     asset: Mapped[Optional["AIAssetModel"]] = relationship("AIAssetModel", back_populates="versions")

@@ -20,9 +20,18 @@ class OperationsTrustEngine:
         governance_passed: bool = True,
     ) -> TrustAssessment:
         factors = [
-            TrustFactor(dimension=TrustDimension.RELIABILITY, weight=0.4, score=availability * 100.0, description="Availability"),
-            TrustFactor(dimension=TrustDimension.RELIABILITY, weight=0.4, score=reliability * 100.0, description="Reliability"),
-            TrustFactor(dimension=TrustDimension.COMPLIANCE, weight=0.2, score=100.0 if governance_passed else 0.0, description="Governance"),
+            TrustFactor(
+                dimension=TrustDimension.RELIABILITY, weight=0.4, score=availability * 100.0, description="Availability"
+            ),
+            TrustFactor(
+                dimension=TrustDimension.RELIABILITY, weight=0.4, score=reliability * 100.0, description="Reliability"
+            ),
+            TrustFactor(
+                dimension=TrustDimension.COMPLIANCE,
+                weight=0.2,
+                score=100.0 if governance_passed else 0.0,
+                description="Governance",
+            ),
         ]
         total_weight = sum(f.weight for f in factors)
         weighted_score = sum(f.score * f.weight for f in factors) / total_weight if total_weight > 0 else 100.0

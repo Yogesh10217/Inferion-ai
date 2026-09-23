@@ -210,7 +210,9 @@ class SecurityOperationsOrchestrator:
         )
 
         # Step 5: Risk Evaluation
-        vulnerabilities = posture_res.vulnerability_assessment.vulnerabilities if posture_res.vulnerability_assessment else []
+        vulnerabilities = (
+            posture_res.vulnerability_assessment.vulnerabilities if posture_res.vulnerability_assessment else []
+        )
 
         active_exceptions = self.exception_manager.get_active_exceptions()
         risk_res = self.risk_engine.assess_risk(

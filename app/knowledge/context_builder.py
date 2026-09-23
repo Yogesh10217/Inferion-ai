@@ -17,7 +17,10 @@ class ContextBuilder:
     """Builds optimized context for LLM consumption."""
 
     def __init__(
-        self, max_tokens: int = 4000, citation_engine: Optional[CitationEngine] = None, similarity_threshold: float = 0.85
+        self,
+        max_tokens: int = 4000,
+        citation_engine: Optional[CitationEngine] = None,
+        similarity_threshold: float = 0.85,
     ):
         self.max_tokens = max_tokens
         self.citation_engine = citation_engine or CitationEngine()

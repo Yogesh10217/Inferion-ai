@@ -185,7 +185,6 @@ class UnifiedCostLedger:
             metadata={"category": category, **kwargs},
         )
 
-
     def record_adjustment(
         self, original_cost_id: str, adjustment_amount: Decimal, reason: str, tenant_id: str = "global"
     ) -> CostAdjustment:

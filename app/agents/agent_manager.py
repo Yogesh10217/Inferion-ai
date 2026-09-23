@@ -34,9 +34,7 @@ class AgentManager:
         self.registry.register_agent(agent_id, config)
         return config
 
-    async def run_agent(
-        self, agent_id: str, prompt: str, context: Optional[AgentContext] = None
-    ) -> AgentState:
+    async def run_agent(self, agent_id: str, prompt: str, context: Optional[AgentContext] = None) -> AgentState:
         ctx = context or AgentContext()
         config = self.registry.get_agent(agent_id)
         state = self.session_manager.create_session(agent_id, max_iterations=config.max_iterations)
@@ -50,9 +48,7 @@ class AgentManager:
             res_state = await agent_driver.run(prompt, ctx, state)
             self.session_manager.update_session(res_state)
             if res_state.status == AgentStatus.COMPLETED:
-                await emit_agent_event(
-                    "agent.completed", ctx, {"agent_id": agent_id, "session_id": state.session_id}
-                )
+                await emit_agent_event("agent.completed", ctx, {"agent_id": agent_id, "session_id": state.session_id})
             return res_state
         except Exception as e:
             state.status = AgentStatus.FAILED
