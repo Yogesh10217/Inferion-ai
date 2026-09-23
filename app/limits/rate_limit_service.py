@@ -1,10 +1,9 @@
 import logging
+from typing import Optional
 
 from app.limits.counter_backend import CounterBackend
 from app.limits.exceptions import RateLimitExceededException
 from app.services.metrics_service import MetricsService
-
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

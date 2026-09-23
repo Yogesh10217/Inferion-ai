@@ -1,6 +1,7 @@
 """Prometheus observability exporter using ai_decision_* metric prefix."""
 
 from typing import Optional
+
 from prometheus_client import CollectorRegistry, Counter, Gauge
 
 

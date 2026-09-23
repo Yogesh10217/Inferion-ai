@@ -6,9 +6,9 @@ from fastapi import APIRouter, status
 from pydantic import BaseModel
 
 from app.intelligence_platform.decisions import DecisionStatus
-from app.intelligence_platform.insights import InsightType
 from app.intelligence_platform.execution import ExecutionTarget
 from app.intelligence_platform.forecasting import ForecastHorizon, ForecastType
+from app.intelligence_platform.insights import InsightType
 from app.intelligence_platform.manager import EnterpriseIntelligenceManager
 from app.intelligence_platform.optimization import OptimizationCandidate, OptimizationObjective
 from app.intelligence_platform.recommendations import RecommendationType

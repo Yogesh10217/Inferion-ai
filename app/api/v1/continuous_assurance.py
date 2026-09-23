@@ -1,9 +1,8 @@
 """FastAPI REST API Router for Continuous Assurance (Phase 5.54)."""
 
 import logging
-from typing import Dict, Optional
-
 from datetime import datetime, timezone
+from typing import Dict, Optional
 
 from fastapi import APIRouter, Depends, Header, status
 

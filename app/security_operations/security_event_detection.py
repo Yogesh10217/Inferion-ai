@@ -14,10 +14,9 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from app.deployment.secrets import SecretsSanitizer
-
 from app.operations.alert_deduplication import AlertDeduplicationEngine
 from app.operations.alerting import Alert, AlertEngine, AlertSeverity, AlertStatus
-from app.operations.incident_management import Incident, IncidentManager, IncidentSeverity
+from app.operations.incident_management import IncidentManager, IncidentSeverity
 
 SRE_AVAILABLE = True
 

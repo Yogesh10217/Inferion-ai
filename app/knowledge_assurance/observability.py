@@ -4,6 +4,7 @@ Provides Prometheus metrics with mandatory ai_knowledge_* prefix.
 """
 
 from typing import Any, Optional
+
 from prometheus_client import REGISTRY, Counter, Gauge
 
 PROMETHEUS_AVAILABLE = True

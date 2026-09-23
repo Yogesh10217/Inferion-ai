@@ -3,11 +3,10 @@
 import logging
 import uuid
 from datetime import datetime, timezone
+from decimal import Decimal
 from typing import Dict, Optional
 
 from pydantic import BaseModel, Field
-
-from decimal import Decimal
 
 from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 

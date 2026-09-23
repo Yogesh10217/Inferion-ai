@@ -4,12 +4,12 @@ from typing import Dict, List, Optional
 
 from .capability_registry import CapabilityRegistry
 from .policy_registry import PolicyRegistry
-from .routing_policy import RoutingPolicy
 from .provider_ranker import ProviderRanker
 from .provider_selector import ProviderSelector
 from .routing_cache import RoutingCache
 from .routing_context import RoutingContext
 from .routing_metrics import RoutingMetrics
+from .routing_policy import RoutingPolicy
 from .routing_rules import RuleEngine
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 import asyncio
 import hashlib
 import logging
-from typing import Any, List, Optional, Protocol, cast
+from typing import List, Optional, Protocol, cast
 
 from app.knowledge.pipeline import DocumentContext, PipelineStage
 
