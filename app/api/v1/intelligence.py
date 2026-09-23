@@ -5,6 +5,8 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, status
 from pydantic import BaseModel
 
+from app.intelligence_platform.decisions import DecisionStatus
+from app.intelligence_platform.insights import InsightType
 from app.intelligence_platform.execution import ExecutionTarget
 from app.intelligence_platform.forecasting import ForecastHorizon, ForecastType
 from app.intelligence_platform.manager import EnterpriseIntelligenceManager
@@ -90,7 +92,7 @@ def run_analysis(tenant_id: str = "global", resource_id: str = "res_1"):
     ctx = mgr.context_builder.assemble_context(tenant_id, primary_resource_id=resource_id, signals=signals)
     insight = mgr.insight_manager.generate_insight_from_context(
         tenant_id=tenant_id,
-        insight_type="OPERATIONAL",
+        insight_type=InsightType.OPERATIONAL,
         observation=f"Resource '{resource_id}' evaluated.",
         recommended_next_step="Maintain operational parameters",
         context=ctx,
@@ -153,7 +155,7 @@ def create_decision(tenant_id: str = "global", title: str = "Sample Decision"):
 @router.post("/decisions/{decision_id}/approve")
 def approve_decision(decision_id: str, req: DecisionApproveRequest):
     mgr.decision_manager.get_decision(decision_id, req.tenant_id)
-    updated = mgr.decision_manager.update_status(decision_id, req.tenant_id, "APPROVED")
+    updated = mgr.decision_manager.update_status(decision_id, req.tenant_id, DecisionStatus.APPROVED)
     return updated.model_dump(mode="json")
 
 

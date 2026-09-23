@@ -45,11 +45,11 @@ class ResilienceBillingTracker:
         )
 
         try:
-            self.finops_manager.record_cost(
+            self.finops_manager.record_usage_cost(
                 tenant_id=tenant_id,
-                amount=cost_dollars,
+                resource_id=resource_id,
+                cost_amount=cost_dollars,
                 category="RESILIENCE_OPERATIONS",
-                description=f"Resilience {operation_type} for {resource_id}",
             )
         except Exception:  # nosec B110
             pass

@@ -41,6 +41,23 @@ class ApprovalEngine:
         )
         return req
 
+    def create_approval_request(
+        self,
+        requester: str = "autonomous_agent",
+        action: str = "action",
+        context: Optional[Dict[str, Any]] = None,
+        tenant_id: str = "default_tenant",
+        risk_level: RiskLevel = RiskLevel.HIGH,
+    ) -> ApprovalRequest:
+        return self.request_approval(
+            execution_id=f"exec_{time.time()}",
+            action_type=action,
+            risk_level=risk_level,
+            requester=requester,
+            tenant_id=tenant_id,
+            payload=context,
+        )
+
     def approve(self, request_id: str, approver_id: str) -> ApprovalRequest:
         if request_id not in self._requests:
             raise ValueError(f"Approval request '{request_id}' not found")

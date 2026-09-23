@@ -1,7 +1,7 @@
 import asyncio
 import hashlib
 import logging
-from typing import List, Optional, Protocol
+from typing import Any, List, Optional, Protocol, cast
 
 from app.knowledge.pipeline import DocumentContext, PipelineStage
 
@@ -64,7 +64,10 @@ class CohereProvider:
 
     async def get_embeddings(self, texts: List[str]) -> List[List[float]]:
         response = await self.client.embed(texts=texts, model=self.model, input_type="search_document")
-        return response.embeddings
+        embeddings = response.embeddings
+        if hasattr(embeddings, "float_") and getattr(embeddings, "float_", None) is not None:
+            return cast(List[List[float]], getattr(embeddings, "float_"))
+        return cast(List[List[float]], embeddings)
 
 
 class EmbeddingCache:
@@ -134,6 +137,9 @@ class EmbeddingStage(PipelineStage):
 
     async def process(self, context: DocumentContext) -> DocumentContext:
         """Generates embeddings for all document chunks."""
+        if context.errors is None:
+            context.errors = []
+
         if not context.chunks:
             context.errors.append("No chunks available for embedding.")
             return context
@@ -148,7 +154,7 @@ class EmbeddingStage(PipelineStage):
                 unique_texts.append(text)
             text_to_idx[text].append(idx)
 
-        all_embeddings = [None] * len(context.chunks)
+        all_embeddings: List[Optional[List[float]]] = [None] * len(context.chunks)
         texts_to_embed = []
         texts_to_embed_indices = []
 
@@ -200,7 +206,8 @@ class EmbeddingStage(PipelineStage):
                 context.errors.append(f"Failed to generate embeddings for batch {i // self.batch_size}: {e}")
                 return context
 
-        context.embeddings = all_embeddings
+        final_embeddings: List[List[float]] = [e if e is not None else [] for e in all_embeddings]
+        context.embeddings = final_embeddings
 
         # Assign embeddings back to chunks
         for chunk, embedding in zip(context.chunks, context.embeddings):

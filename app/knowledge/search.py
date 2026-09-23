@@ -85,7 +85,7 @@ class SearchEngine:
 
         return [
             DocumentInfo(
-                id=res.get("id"),
+                id=str(res.get("id") or ""),
                 text=res.get("metadata", {}).get("text", ""),
                 metadata=res.get("metadata", {}),
                 score=res.get("score", 0.0),
@@ -105,7 +105,7 @@ class SearchEngine:
 
         return [
             DocumentInfo(
-                id=res.get("id"),
+                id=str(res.get("id") or ""),
                 text=res.get("metadata", {}).get("text", ""),
                 metadata=res.get("metadata", {}),
                 score=res.get("score", 0.0),

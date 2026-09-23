@@ -60,6 +60,9 @@ class DependencyGraph:
 class WorkflowDependencyResolver:
     """Resolves workflow step execution order and rejects circular dependencies."""
 
+    def __init__(self, manager: Optional[Any] = None) -> None:
+        self.manager = manager
+
     def resolve_dependencies(self, dependencies: List[WorkflowDependency]) -> List[str]:
         graph = DependencyGraph()
         for dep in dependencies:

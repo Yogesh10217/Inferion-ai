@@ -31,7 +31,7 @@ class KnowledgeAdapter:
                 {"id": doc.id, "text": doc.text, "metadata": doc.metadata, "score": doc.score} for doc in results
             ]
 
-            formatted_context = self.context_builder.build_context(results)
+            formatted_context, _ = self.context_builder.build_context(results)
             citations = self.citation_engine.generate_citations(results)
             cited_text = self.citation_engine.format_inline_citations(formatted_context, citations)
 

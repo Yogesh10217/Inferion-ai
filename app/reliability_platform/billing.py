@@ -23,4 +23,4 @@ class ReliabilityBillingTracker:
             cost_usd=cost_usd,
             category="RELIABILITY_OPERATIONS",
             metadata={"service_id": service_id, "description": description},
-        )
+        ).model_dump()

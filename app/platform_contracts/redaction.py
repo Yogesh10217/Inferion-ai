@@ -54,6 +54,14 @@ class SensitiveDataSanitizer:
     def sanitize_metadata(cls, data: Any) -> Any:
         return cls().sanitize_copy(data)
 
+    def sanitize_string(self, text: str) -> str:
+        if not isinstance(text, str):
+            return ""
+        import re
+        text = re.sub(r"(api_key|apikey|secret)=[\w-]+", "[REDACTED_API_KEY]", text, flags=re.IGNORECASE)
+        text = re.sub(r"AKIA[0-9A-Z]{16}", "[REDACTED_AWS_KEY]", text)
+        return re.sub(r"Bearer\s+[\w-]+\.[\w-]+\.[\w-]+", "[REDACTED_BEARER_TOKEN]", text)
+
     def sanitize_copy(self, data: Any) -> Any:
 
         copied = copy.deepcopy(data)

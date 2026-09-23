@@ -3,6 +3,9 @@ Workflow Subsystem Exception Definitions
 """
 
 
+from typing import Optional
+
+
 class WorkflowError(Exception):
     """Base exception for all workflow engine errors."""
 
@@ -18,7 +21,7 @@ class InvalidStateTransitionError(WorkflowError):
 class NodeExecutionError(WorkflowError):
     """Raised when node execution fails."""
 
-    def __init__(self, node_id: str, message: str, cause: Exception = None):
+    def __init__(self, node_id: str, message: str, cause: Optional[Exception] = None):
         super().__init__(f"Node '{node_id}' failed: {message}")
         self.node_id = node_id
         self.cause = cause

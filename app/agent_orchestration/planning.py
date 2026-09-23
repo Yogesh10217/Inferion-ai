@@ -158,13 +158,17 @@ class AgentPlanningEngine:
         # Use DecisionIntelligenceManager for structured trade-off evaluation if available
         decision_ref_id = None
         try:
-            dec_res = self.decision_manager.formulate_decision(
-                tenant_id=tenant_id,
-                context_id=task_id,
-                problem_statement=f"Plan formulation for goal: {goal}",
-                options=[{"option_name": s.action, "target": s.target_system} for s in steps],
-            )
-            decision_ref_id = getattr(dec_res, "decision_id", f"dec_{uuid.uuid4().hex[:8]}")
+            formulate_fn = getattr(self.decision_manager, "formulate_decision", None)
+            if callable(formulate_fn):
+                dec_res = formulate_fn(
+                    tenant_id=tenant_id,
+                    context_id=task_id,
+                    problem_statement=f"Plan formulation for goal: {goal}",
+                    options=[{"option_name": s.action, "target": s.target_system} for s in steps],
+                )
+                decision_ref_id = getattr(dec_res, "decision_id", f"dec_{uuid.uuid4().hex[:8]}")
+            else:
+                decision_ref_id = f"dec_{uuid.uuid4().hex[:8]}"
         except Exception:
             decision_ref_id = f"dec_{uuid.uuid4().hex[:8]}"
 

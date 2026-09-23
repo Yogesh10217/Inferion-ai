@@ -203,7 +203,7 @@ def delegate_workflow(
             tenant_id=del_plan.tenant_id,
             target_subsystem=del_plan.target_subsystem,
             action_type=del_plan.action_type,
-            delegation_request=del_plan.delegation_request.model_dump(),
+            delegation_request=del_plan.delegation_request.model_dump() if del_plan.delegation_request else {},
             created_at=del_plan.created_at.isoformat(),
         )
     except HighRiskAutonomousActionRequiresApprovalException as e:

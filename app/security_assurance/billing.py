@@ -48,10 +48,9 @@ class SecurityBillingTracker:
         self._records[rec.record_id] = rec
         if self.cost_ledger and hasattr(self.cost_ledger, "record_cost"):
             try:
-                self.cost_ledger.record_cost(
+                self.cost_ledger.record_entry(
                     tenant_id=tenant_id,
                     resource_id=resource_id,
-                    operation=operation,
                     amount=amount,
                     category="SECURITY_ASSURANCE",
                 )

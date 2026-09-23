@@ -149,6 +149,11 @@ class ChunkingStage(PipelineStage):
 
     async def process(self, context: DocumentContext) -> DocumentContext:
         """Chunks the document content."""
+        if context.errors is None:
+            context.errors = []
+        if context.metadata is None:
+            context.metadata = {}
+
         if not context.parsed_content:
             context.errors.append("No parsed content to chunk.")
             return context

@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from app.developer_platform.exceptions import EventSubscriptionNotFoundException
+from app.jobs.job import JobMetadata
 from app.jobs.job_queue import Job, JobQueue
 from app.resilience.circuit_breaker import CircuitBreakerRegistry
 
@@ -172,9 +173,10 @@ class DeveloperEventEngine:
     def _route_to_dlq(self, sub: WebhookSubscription, event: DeveloperEvent, reason: str) -> None:
         """Route failed webhook delivery to Dead-Letter Queue (DLQ)."""
         job = Job(
-            job_type="webhook_dlq",
-            tenant_id=sub.tenant_id,
+            name="webhook_dlq",
+            handler_name="webhook_dlq_handler",
             payload={"subscription_id": sub.subscription_id, "event": event.model_dump(), "reason": reason},
+            metadata=JobMetadata(tenant_id=sub.tenant_id),
             max_attempts=sub.max_retries,
         )
         self.job_queue.enqueue(job)

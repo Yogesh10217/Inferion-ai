@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from app.data_intelligence.exceptions import CrossTenantDataIntelligenceException
-from app.platform_contracts.delegation import DelegationRequest
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 
 class DataDelegationStatus(str, Enum):
@@ -66,7 +66,7 @@ class DataDelegationManager:
                 DelegationRequest(
                     delegation_id=f"del-req-{uuid.uuid4().hex[:8]}",
                     tenant_id=tenant_id,
-                    target=target_name,
+                    target=DelegationTarget(target_name),
                     action=a.action_name,
                     payload=a.params,
                 )

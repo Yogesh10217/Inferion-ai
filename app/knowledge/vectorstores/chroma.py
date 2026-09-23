@@ -2,12 +2,9 @@ import asyncio
 import logging
 from typing import Any, Dict, List, Optional
 
-from ..vector_store import VectorStore
+import chromadb
 
-try:
-    import chromadb
-except ImportError:
-    chromadb = None
+from ..vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
@@ -32,26 +29,22 @@ class ChromaStore(VectorStore):
             max_retries: Max retries for operations.
             base_backoff: Base backoff time for retries.
         """
-        if chromadb is None:
-            raise ImportError("chromadb package is required for ChromaStore.")
-
         self.persist_directory = persist_directory
         self.host = host
         self.port = port
         self.max_retries = max_retries
         self.base_backoff = base_backoff
 
+        self.client: Any = None
         if host and port:
             self.client = chromadb.AsyncHttpClient(host=host, port=port)
         elif persist_directory:
-            # Persistent client in chroma is synchronous in core, but HttpClient is async.
-            # We assume HttpClient since the prompt asks for async chromadb.
             self.client = chromadb.AsyncHttpClient(host="localhost", port=8000)
             logger.warning("persist_directory not fully supported in pure async Chroma. Using AsyncHttpClient instead.")
         else:
             self.client = chromadb.AsyncHttpClient(host="localhost", port=8000)
 
-    async def _execute_with_retry(self, operation, *args, **kwargs):
+    async def _execute_with_retry(self, operation: Any, *args: Any, **kwargs: Any) -> Any:
         for attempt in range(self.max_retries):
             try:
                 return await operation(*args, **kwargs)
@@ -63,7 +56,7 @@ class ChromaStore(VectorStore):
                 logger.warning(f"Chroma database operation failed: {e}. Retrying in {wait_time}s...")
                 await asyncio.sleep(wait_time)
 
-    async def _get_collection(self, collection_name: str):
+    async def _get_collection(self, collection_name: str) -> Any:
         return await self.client.get_or_create_collection(name=collection_name)
 
     async def add(self, embeddings: List[Dict[str, Any]], collection_name: str) -> None:
@@ -73,7 +66,7 @@ class ChromaStore(VectorStore):
 
         logger.info(f"Adding {len(embeddings)} embeddings to Chroma collection '{collection_name}'")
 
-        async def _do_add():
+        async def _do_add() -> None:
             collection = await self._get_collection(collection_name)
 
             ids = [item["id"] for item in embeddings]
@@ -95,10 +88,9 @@ class ChromaStore(VectorStore):
         """Search Chroma for similar vectors."""
         logger.info(f"Searching Chroma collection '{collection_name}' for top {top_k} results")
 
-        async def _do_search():
+        async def _do_search() -> List[Dict[str, Any]]:
             collection = await self._get_collection(collection_name)
 
-            # Simple where filter mapping
             where_filter = None
             if filter_expr:
                 if len(filter_expr) == 1:
@@ -108,21 +100,27 @@ class ChromaStore(VectorStore):
 
             results = await collection.query(query_embeddings=[query_vector], n_results=top_k, where=where_filter)
 
-            # Formatting results
             formatted_results = []
-            if results and results["ids"] and len(results["ids"]) > 0:
-                for idx in range(len(results["ids"][0])):
+            if results and results.get("ids") and len(results["ids"]) > 0:
+                ids_list = results["ids"][0]
+                distances_list = results.get("distances", [[]])[0] if results.get("distances") else []
+                metadatas_list = results.get("metadatas", [[]])[0] if results.get("metadatas") else []
+
+                for idx in range(len(ids_list)):
+                    dist = distances_list[idx] if idx < len(distances_list) else 0.0
+                    meta = metadatas_list[idx] if idx < len(metadatas_list) else {}
                     formatted_results.append(
                         {
-                            "id": results["ids"][0][idx],
-                            "score": 1.0 - results["distances"][0][idx] if results["distances"] else 0.0,
-                            "metadata": results["metadatas"][0][idx] if results["metadatas"] else {},
+                            "id": ids_list[idx],
+                            "score": 1.0 - dist if dist is not None else 0.0,
+                            "metadata": meta or {},
                         }
                     )
 
             return formatted_results
 
-        return await self._execute_with_retry(_do_search)
+        result = await self._execute_with_retry(_do_search)
+        return result or []
 
     async def delete(self, ids: List[str], collection_name: str) -> None:
         """Delete embeddings from Chroma by ID."""
@@ -131,7 +129,7 @@ class ChromaStore(VectorStore):
 
         logger.info(f"Deleting {len(ids)} embeddings from Chroma collection '{collection_name}'")
 
-        async def _do_delete():
+        async def _do_delete() -> None:
             collection = await self._get_collection(collection_name)
             await collection.delete(ids=ids)
 
@@ -144,7 +142,7 @@ class ChromaStore(VectorStore):
 
         logger.info(f"Updating {len(embeddings)} embeddings in Chroma collection '{collection_name}'")
 
-        async def _do_update():
+        async def _do_update() -> None:
             collection = await self._get_collection(collection_name)
 
             ids = [item["id"] for item in embeddings]
@@ -154,9 +152,7 @@ class ChromaStore(VectorStore):
                 item.get("metadata", {}).get("text", "") if item.get("metadata") else None for item in embeddings
             ]
 
-            # Chroma allows partial updates with `update` if the keys are passed, else they remain unchanged
-            # Remove None values to avoid overriding existing data with Nones
-            update_kwargs = {"ids": ids}
+            update_kwargs: Dict[str, Any] = {"ids": ids}
             if any(e is not None for e in embs):
                 update_kwargs["embeddings"] = embs
             if any(m is not None for m in metadatas):
@@ -175,30 +171,33 @@ class ChromaStore(VectorStore):
 
         logger.info(f"Retrieving {len(ids)} embeddings from Chroma collection '{collection_name}'")
 
-        async def _do_get():
+        async def _do_get() -> List[Dict[str, Any]]:
             collection = await self._get_collection(collection_name)
             results = await collection.get(ids=ids)
 
             formatted_results = []
-            if results and results["ids"]:
-                for idx, record_id in enumerate(results["ids"]):
-                    formatted_results.append(
-                        {"id": record_id, "metadata": results["metadatas"][idx] if results["metadatas"] else {}}
-                    )
+            if results and results.get("ids"):
+                ids_list = results["ids"]
+                metadatas_list = results.get("metadatas") or []
+                for idx, record_id in enumerate(ids_list):
+                    meta = metadatas_list[idx] if idx < len(metadatas_list) else {}
+                    formatted_results.append({"id": record_id, "metadata": meta or {}})
 
             return formatted_results
 
-        return await self._execute_with_retry(_do_get)
+        result = await self._execute_with_retry(_do_get)
+        return result or []
 
     async def health(self) -> bool:
         """Check the health of the Chroma connection."""
         try:
 
-            async def _do_health():
+            async def _do_health() -> bool:
                 await self.client.heartbeat()
                 return True
 
-            return await self._execute_with_retry(_do_health)
+            result = await self._execute_with_retry(_do_health)
+            return bool(result)
         except Exception as e:
             logger.error(f"Chroma health check failed: {e}")
             return False

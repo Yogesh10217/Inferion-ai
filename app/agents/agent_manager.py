@@ -34,21 +34,24 @@ class AgentManager:
         self.registry.register_agent(agent_id, config)
         return config
 
-    async def run_agent(self, agent_id: str, prompt: str, context: AgentContext) -> AgentState:
+    async def run_agent(
+        self, agent_id: str, prompt: str, context: Optional[AgentContext] = None
+    ) -> AgentState:
+        ctx = context or AgentContext()
         config = self.registry.get_agent(agent_id)
         state = self.session_manager.create_session(agent_id, max_iterations=config.max_iterations)
 
         await emit_agent_event(
-            "agent.started", context, {"agent_id": agent_id, "session_id": state.session_id, "prompt": prompt}
+            "agent.started", ctx, {"agent_id": agent_id, "session_id": state.session_id, "prompt": prompt}
         )
 
         agent_driver = Agent(agent_id=agent_id, config=config)
         try:
-            res_state = await agent_driver.run(prompt, context, state)
+            res_state = await agent_driver.run(prompt, ctx, state)
             self.session_manager.update_session(res_state)
             if res_state.status == AgentStatus.COMPLETED:
                 await emit_agent_event(
-                    "agent.completed", context, {"agent_id": agent_id, "session_id": state.session_id}
+                    "agent.completed", ctx, {"agent_id": agent_id, "session_id": state.session_id}
                 )
             return res_state
         except Exception as e:
@@ -56,7 +59,7 @@ class AgentManager:
             state.error_message = str(e)
             self.session_manager.update_session(state)
             await emit_agent_event(
-                "agent.failed", context, {"agent_id": agent_id, "session_id": state.session_id, "error": str(e)}
+                "agent.failed", ctx, {"agent_id": agent_id, "session_id": state.session_id, "error": str(e)}
             )
             raise
 

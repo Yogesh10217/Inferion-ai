@@ -63,11 +63,11 @@ class ChangeIntelligenceEngine:
         # Also record in ControlPlane ChangeHistoryTracker
         try:
             self.change_history_tracker.record_change(
-                resource_id=resource_id,
-                resource_type=change_type,
+                category=change_type,
+                target_id=resource_id,
+                version_label=version_or_value,
+                actor_id=actor,
                 tenant_id=tenant_id,
-                change_type="UPDATE",
-                changed_by=actor,
                 previous_state=None,
                 new_state={"version_or_value": version_or_value},
             )

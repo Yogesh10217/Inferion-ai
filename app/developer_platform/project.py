@@ -81,3 +81,9 @@ class ProjectManager:
         if tenant_id:
             res = [r for r in res if r.tenant_id == tenant_id]
         return res
+
+    def transition_lifecycle(self, project_id: str, new_status: str) -> DeveloperProject:
+        proj = self.get_project(project_id)
+        proj.status = ProjectStatus(new_status)
+        proj.updated_at = _now()
+        return proj

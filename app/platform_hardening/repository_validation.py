@@ -3,7 +3,7 @@ Repository Isolation Validation Engine.
 Validates thread safety, tenant isolation, cross-tenant data leakage protection, and record immutability.
 """
 
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 from app.platform_hardening.exceptions import CrossTenantPlatformHardeningException
 from app.platform_hardening.models import (
@@ -17,7 +17,7 @@ class RepositoryIsolationValidationEngine:
     """Tests repositories for tenant isolation, thread lock contention, and cross-tenant leakage."""
 
     def validate_repository_isolation(
-        self, repositories: List[object], tenant_id: str = "tenant-a"
+        self, repositories: List[Any], tenant_id: str = "tenant-a"
     ) -> Tuple[RepositoryValidationResult, List[PlatformAuditFinding]]:
         leaks_detected = 0
         findings: List[PlatformAuditFinding] = []

@@ -17,7 +17,7 @@ class TransactionManager:
 
     async def execute_in_transaction(
         self,
-        func: Callable[[AsyncSession], Any],
+        func: Callable[[Optional[AsyncSession]], Any],
         session: Optional[AsyncSession] = None,
         max_retries: int = 3,
     ) -> Any:

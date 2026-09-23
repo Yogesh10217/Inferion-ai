@@ -93,7 +93,7 @@ class AgentFailureAnalyzer:
                     service_id=agent_id,
                     metric_name=f"agent_failure_{failure_type.value.lower()}",
                     observed_value=1.0,
-                    threshold_value=0.0,
+                    threshold=0.0,
                 )
             fail.reliability_signal_emitted = True
         except Exception:

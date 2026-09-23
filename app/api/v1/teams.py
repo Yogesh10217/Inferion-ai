@@ -56,7 +56,7 @@ async def create_team(data: TeamCreateSchema):
     team.config.budget_dollars = data.budget_dollars
     team.config.description = data.description
     _teams_store[team.team_id] = team
-    return {"status": "created", "team_id": team.team_id, "name": team.name if hasattr(team, "name") else data.name}
+    return {"status": "created", "team_id": team.team_id, "name": getattr(team, "name", data.name)}
 
 
 @router.get("")

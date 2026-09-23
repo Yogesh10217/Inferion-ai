@@ -172,6 +172,7 @@ class RuntimeAnomaly:
     metric_name: str
     observed_value: float
     expected_value: float
+    confidence: float = 0.90
     anomaly_id: str = field(default_factory=lambda: f"anom_{uuid.uuid4().hex[:12]}")
     detected_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 

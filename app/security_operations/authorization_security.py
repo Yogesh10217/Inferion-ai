@@ -26,7 +26,7 @@ class AuthorizationSecurityResult:
     least_privilege_enforced: bool = True
     score: float = 100.0
     fingerprint: str = ""
-    details: Dict[str, Any] = None
+    details: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         if self.details is None:

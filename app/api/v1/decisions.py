@@ -92,7 +92,7 @@ async def finalize_decision(
         dec = mgr.decision_manager.finalize_decision(decision_id, tenant_id)
         return dec.model_dump()
     except ImmutableDecisionException as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.get("/analytics")

@@ -51,7 +51,8 @@ class AutonomousPlan(BaseModel):
 class AutonomousPlanner:
     """Constructs structured autonomous workflow plans."""
 
-    def __init__(self) -> None:
+    def __init__(self, manager: Optional[Any] = None) -> None:
+        self.manager = manager
         self._plans: Dict[str, AutonomousPlan] = {}
 
     def create_plan(

@@ -5,7 +5,7 @@ Parses production codebase files with AST analysis to detect and classify stubs.
 
 import ast
 import os
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from app.platform_hardening.ast_analysis import ASTNodeFinding, PlatformASTAnalysisEngine
 from app.platform_hardening.code_analysis import PlatformCodeAnalysisEngine
@@ -66,7 +66,7 @@ class ProductionStubDetectionEngine:
             classifications=classifications,
         )
 
-    def classify_finding(self, file_path: str, finding: ASTNodeFinding, tree: ast.AST) -> StubClassification:
+    def classify_finding(self, file_path: str, finding: ASTNodeFinding, tree: Any) -> StubClassification:
         # Check 1: Test path
         norm_path = os.path.normpath(file_path)
         if "tests" in norm_path.split(os.sep) or os.path.basename(file_path).startswith("test_"):

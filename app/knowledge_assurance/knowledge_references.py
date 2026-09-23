@@ -148,22 +148,21 @@ class KnowledgeReferenceManager:
         self,
         tenant_id: Optional[str] = None,
         reference_id: Optional[str] = None,
-        tenant_id_or_ref_id: Optional[str] = None,
-        reference_id_or_tenant_id: Optional[str] = None,
     ) -> KnowledgeReference:
-        ref_id = reference_id or tenant_id_or_ref_id
-        t_id = tenant_id or reference_id_or_tenant_id
-        if ref_id in self._references:
-            return self._references[ref_id]
-        if t_id in self._references:
-            return self._references[t_id]
-        raise KnowledgeReferenceNotFoundException(ref_id or "unknown")
+        ref_id = reference_id
+        t_id = tenant_id
+        # Handle positional args if passed as (tenant_id, reference_id) or (reference_id)
+        if not ref_id and t_id and t_id in self._references:
+            ref_id = t_id
+            t_id = None
 
-        ref = self._references.get(reference_id)
-        if not ref:
-            raise KnowledgeReferenceNotFoundException(f"Reference '{reference_id}' not found")
-        if tenant_id and ref.tenant_id != tenant_id:
-            raise CrossTenantKnowledgeAssuranceException()
+        if not ref_id or ref_id not in self._references:
+            raise KnowledgeReferenceNotFoundException(f"Reference '{ref_id or 'unknown'}' not found")
+
+        ref = self._references[ref_id]
+        if t_id and ref.tenant_id != t_id:
+            raise CrossTenantKnowledgeAssuranceException("Access denied: Tenant boundary violation.")
+
         return ref
 
     def list_references(self, tenant_id: str) -> List[KnowledgeReference]:

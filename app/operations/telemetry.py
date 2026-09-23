@@ -91,8 +91,11 @@ class TelemetryManager:
         ctx = context or TelemetryContext()
         # Redact payload if secret_manager supports masking
         clean_payload = payload or {}
-        if hasattr(self.secret_manager, "redact_dict"):
-            clean_payload = self.secret_manager.redact_dict(clean_payload)
+        redact_fn = getattr(self.secret_manager, "redact_dict", None)
+        if callable(redact_fn):
+            res = redact_fn(clean_payload)
+            if isinstance(res, dict):
+                clean_payload = res
 
         evt = TelemetryEvent(
             source_service=source_service,

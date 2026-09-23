@@ -34,6 +34,7 @@ from app.capacity_intelligence.impact import CapacityImpactEngine
 from app.capacity_intelligence.learning import CapacityLearningEngine
 from app.capacity_intelligence.models import (
     Bottleneck,
+    BottleneckType,
     CapacityAssessment,
     CapacityEvidenceBundle,
     CapacityForecast,
@@ -365,7 +366,7 @@ class CapacityIntelligenceManager:
         bot = Bottleneck(
             tenant_id=tenant_id,
             resource_id="res-gpu-cluster-1",
-            bottleneck_type="GPU",
+            bottleneck_type=BottleneckType.CPU,
             severity="MEDIUM",
             impact_description="Memory bandwidth saturation potential",
         )
@@ -534,8 +535,10 @@ class CapacityIntelligenceManager:
 
     # Evidence & Snapshots
     def create_evidence_bundle(self, tenant_id: str, records: List[Dict[str, Any]]) -> CapacityEvidenceBundle:
-        eb = self.evidence_manager.create_evidence_bundle(tenant_id, records)
-        self._evidence_bundles[eb.bundle_id] = eb
+        eb = self.evidence_manager.create_evidence_bundle(
+            tenant_id, assessment_id=f"ass-{uuid.uuid4().hex[:8]}", raw_evidence={"records": records}
+        )
+        self._evidence_bundles[eb.evidence_id] = eb
         return eb
 
     def get_evidence(

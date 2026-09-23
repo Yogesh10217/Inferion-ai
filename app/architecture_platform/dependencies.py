@@ -99,6 +99,17 @@ class DependencyManager:
 
         return dep
 
+    def register_dependency(
+        self,
+        tenant_id: str,
+        source_node_id: str,
+        target_node_id: str,
+        dependency_type: DependencyType = DependencyType.DEPENDS_ON,
+        strength: DependencyStrength = DependencyStrength.STRONG,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> ArchitectureDependency:
+        return self.add_dependency(tenant_id, source_node_id, target_node_id, dependency_type, strength, metadata)
+
     def list_dependencies(self, tenant_id: str, node_id: Optional[str] = None) -> List[ArchitectureDependency]:
         graph = self._get_or_create_graph(tenant_id)
         deps = list(graph.dependencies.values())

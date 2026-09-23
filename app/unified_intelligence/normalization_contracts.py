@@ -25,6 +25,7 @@ class UnifiedDomainInput(BaseModel):
     snapshot_reference: Optional[str] = None
     sanitized: bool = True
     idempotency_key: Optional[str] = None
+    metadata: Dict[str, Any] = Field(default_factory=dict)
     raw_metadata: Dict[str, Any] = Field(default_factory=dict)
 
     @property

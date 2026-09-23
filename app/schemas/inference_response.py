@@ -31,7 +31,7 @@ class InferenceResponse(BaseModel):
     model: str = Field(..., description="Model identifier used for inference.")
     text: str = Field(..., description="The generated text content.")
     usage: Usage = Field(default_factory=Usage, description="Token usage statistics.")
-    finish_reason: str = Field(default="stop", description="Reason generation stopped.")
+    finish_reason: str | None = Field(default="stop", description="Reason generation stopped.")
     latency_ms: float = Field(default=0.0, ge=0.0, description="Provider latency in milliseconds.")
     created: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), description="Timestamp of response creation."

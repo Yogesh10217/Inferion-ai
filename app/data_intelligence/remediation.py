@@ -11,7 +11,7 @@ from app.data_intelligence.exceptions import (
     CrossTenantDataIntelligenceException,
     HighRiskDataActionRequiresApprovalException,
 )
-from app.platform_contracts.delegation import DelegationRequest
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 
 class DataRemediationPriority(str, Enum):
@@ -127,7 +127,7 @@ class DataRemediationManager:
             del_req = DelegationRequest(
                 delegation_id=f"del-rem-{uuid.uuid4().hex[:8]}",
                 tenant_id=tenant_id,
-                target=target_name,
+                target=DelegationTarget(target_name),
                 action=action.action_type.lower(),
                 payload={
                     "dataset_id": plan.dataset_id,

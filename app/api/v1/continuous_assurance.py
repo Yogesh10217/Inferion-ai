@@ -3,6 +3,8 @@
 import logging
 from typing import Dict, Optional
 
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, Header, status
 
 from app.continuous_assurance.manager import ContinuousAssuranceManager
@@ -237,7 +239,7 @@ def create_delegation(
         tenant_id=res["tenant_id"],
         action_name=res["action_name"],
         status=res["status"],
-        created_at="ISO-8601",
+        created_at=datetime.now(timezone.utc),
     )
 
 

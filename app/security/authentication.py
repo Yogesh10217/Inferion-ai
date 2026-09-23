@@ -160,7 +160,7 @@ class AuthenticationManager:
     def authenticate(self, credentials: Dict[str, Any]) -> Identity:
         """Universal authentication router."""
         if "token" in credentials or "jwt" in credentials:
-            token = credentials.get("token") or credentials.get("jwt")
+            token = str(credentials.get("token") or credentials.get("jwt") or "")
             return self.authenticate_jwt(token)
         elif "api_key" in credentials:
             return self.authenticate_api_key(credentials["api_key"])

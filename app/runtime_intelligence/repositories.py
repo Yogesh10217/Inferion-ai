@@ -218,10 +218,10 @@ class RuntimeGovernanceRepository:
         key = (
             decision.get("evaluation_id")
             if isinstance(decision, dict)
-            else getattr(decision, "evaluation_id", str(id(decision)))
-        )
+            else getattr(decision, "evaluation_id", None)
+        ) or str(id(decision))
         with self._lock:
-            self._storage[key] = decision
+            self._storage[str(key)] = decision
 
     def get_by_id(self, tenant_id: str, evaluation_id: str) -> Any:
         with self._lock:
@@ -252,10 +252,10 @@ class RuntimeDelegationRepository:
         del_id = (
             delegation.get("delegation_id")
             if isinstance(delegation, dict)
-            else getattr(delegation, "delegation_id", str(id(delegation)))
-        )
+            else getattr(delegation, "delegation_id", None)
+        ) or str(id(delegation))
         with self._lock:
-            self._storage[del_id] = delegation
+            self._storage[str(del_id)] = delegation
 
     def get_by_id(self, tenant_id: str, delegation_id: str) -> Any:
         with self._lock:
@@ -286,10 +286,10 @@ class RuntimeVerificationRepository:
         v_id = (
             verification.get("verification_id")
             if isinstance(verification, dict)
-            else getattr(verification, "verification_id", str(id(verification)))
-        )
+            else getattr(verification, "verification_id", None)
+        ) or str(id(verification))
         with self._lock:
-            self._storage[v_id] = verification
+            self._storage[str(v_id)] = verification
 
     def get_by_id(self, tenant_id: str, verification_id: str) -> Any:
         with self._lock:

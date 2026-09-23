@@ -3,18 +3,19 @@
 Provides Prometheus metrics with mandatory ai_knowledge_* prefix.
 """
 
+from typing import Any, Optional
 from prometheus_client import REGISTRY, Counter, Gauge
 
 PROMETHEUS_AVAILABLE = True
 
 
-def _get_or_create_metric(metric_type, name, description, labelnames=None):
+def _get_or_create_metric(metric_type: Any, name: str, description: str, labelnames: Optional[list] = None) -> Any:
     if not PROMETHEUS_AVAILABLE:
         return None
     try:
         # Check if already registered
-        if name in REGISTRY._names_to_collectors:
-            return REGISTRY._names_to_collectors[name]
+        if hasattr(REGISTRY, "_names_to_collectors") and name in getattr(REGISTRY, "_names_to_collectors"):
+            return getattr(REGISTRY, "_names_to_collectors")[name]
         return metric_type(name, description, labelnames=labelnames or [])
     except Exception:
         return None
@@ -22,6 +23,12 @@ def _get_or_create_metric(metric_type, name, description, labelnames=None):
 
 class KnowledgeAssuranceMetrics:
     """Prometheus metrics collector for Knowledge Assurance with ai_knowledge_* prefix."""
+
+    context_assemblies_total: Any
+    conflicts_total: Any
+    trust_score: Any
+    stale_sources_total: Any
+    assurance_score: Any
 
     def __init__(self) -> None:
         self.context_assemblies_total = _get_or_create_metric(

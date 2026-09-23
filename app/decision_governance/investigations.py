@@ -103,14 +103,15 @@ class DecisionInvestigationManager:
         # Generate PlatformSnapshot upon conclusion
         snap = SnapshotFactory.create_snapshot(
             tenant_id=tenant_id,
-            snapshot_type="DECISION_INVESTIGATION_SNAPSHOT",
-            state_data={
+            resource_type="DECISION_INVESTIGATION_SNAPSHOT",
+            resource_id=inv.investigation_id,
+            domain_payload={
                 "investigation_id": inv.investigation_id,
                 "decision_id": inv.decision_id,
                 "status": inv.status.value,
                 "findings_count": len(inv.findings),
             },
-            metadata={"source": "DecisionInvestigationManager"},
+            extra_metadata={"source": "DecisionInvestigationManager"},
         )
         inv.snapshot_reference_id = snap.snapshot_id
         return inv

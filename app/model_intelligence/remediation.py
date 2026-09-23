@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 from pydantic import BaseModel, Field
 
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException, ModelRemediationBlockedException
-from app.platform_contracts.delegation import DelegationRequest
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class ModelRemediationManager:
         for act in plan.actions:
             del_req = DelegationRequest(
                 tenant_id=tenant_id,
-                target="APPLICATION_PLATFORM",
+                target=DelegationTarget.APPLICATION_PLATFORM,
                 action=act.action_name,
                 payload=act.payload,
             )

@@ -103,10 +103,10 @@ class SecurityCertificationEngine:
         self,
         posture_result: SecurityPostureResult,
         policy_result: SecurityPolicyResult,
-        vulnerability_assessment: VulnerabilityAssessment,
-        container_security: ContainerSecurityResult,
         audit_integrity: AuditIntegrityResult,
         risk_assessment: RiskAssessment,
+        vulnerability_assessment: Optional[VulnerabilityAssessment] = None,
+        container_security: Optional[ContainerSecurityResult] = None,
         evidence: Optional[SecurityEvidence] = None,
         is_production: bool = False,
     ) -> SecurityCertificationResult:
@@ -151,11 +151,14 @@ class SecurityCertificationEngine:
                 unexecuted_claims=unexecuted,
             )
 
+        crit_vuln_count = vulnerability_assessment.critical_count if vulnerability_assessment else 0
+        high_vuln_count = vulnerability_assessment.high_count if vulnerability_assessment else 0
+
         # Certification Requirements
         has_blocking_policy = (
             policy_result.is_blocking if hasattr(policy_result, "is_blocking") else (policy_result.action == "BLOCK")
         )
-        has_crit_vulns = vulnerability_assessment.critical_count > 0
+        has_crit_vulns = crit_vuln_count > 0
         has_audit_tampering = not audit_integrity.is_valid
         has_blocking_risk = (
             risk_assessment.is_blocking
@@ -178,7 +181,7 @@ class SecurityCertificationEngine:
             summary = "Security manual review required prior to release candidate signoff."
         elif (
             getattr(policy_result, "overall_action", policy_result.action) == SecurityPolicyAction.WARN
-            or vulnerability_assessment.high_count > 0
+            or high_vuln_count > 0
         ):
             decision = SecurityCertificationDecision.SECURITY_CERTIFIED_WITH_WARNINGS.value
             is_certified = True
@@ -203,7 +206,7 @@ class SecurityCertificationEngine:
                     if hasattr(posture_result, "score")
                     else getattr(posture_result, "security_score", 0)
                 ),
-                "critical_vuln_count": vulnerability_assessment.critical_count,
+                "critical_vuln_count": crit_vuln_count,
                 "audit_integrity_valid": audit_integrity.is_valid,
             },
             unexecuted_claims=unexecuted,

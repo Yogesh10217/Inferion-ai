@@ -18,11 +18,11 @@ class DocumentContext:
     document_id: str
     raw_content: Optional[bytes] = None
     parsed_content: Optional[str] = None
-    metadata: Dict[str, Any] = None
-    chunks: List[Dict[str, Any]] = None
-    embeddings: List[List[float]] = None
+    metadata: Optional[Dict[str, Any]] = None
+    chunks: Optional[List[Dict[str, Any]]] = None
+    embeddings: Optional[List[List[float]]] = None
     status: PipelineStatus = PipelineStatus.PENDING
-    errors: List[str] = None
+    errors: Optional[List[str]] = None
 
     def __post_init__(self):
         if self.metadata is None:

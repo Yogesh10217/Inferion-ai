@@ -136,6 +136,9 @@ class IncidentManager:
         self.active_incidents[inc_id] = inc
         return inc
 
+    def get_active_incidents(self) -> Dict[str, Incident]:
+        return self.active_incidents
+
     def get_incident(self, incident_id: str) -> Optional[Incident]:
         return self.active_incidents.get(incident_id) or self.closed_incidents.get(incident_id)
 

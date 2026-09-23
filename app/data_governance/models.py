@@ -118,4 +118,4 @@ class DataTrustScoreModel(Base):
     asset_id: Mapped[str] = mapped_column(String, index=True, nullable=False)
     overall_score: Mapped[float] = mapped_column(Float, default=100.0)
     trust_band: Mapped[str] = mapped_column(String, default="HIGH_TRUST")
-    calculated_at: mapped_column(DateTime(timezone=True), default=_now)
+    calculated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

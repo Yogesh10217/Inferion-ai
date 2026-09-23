@@ -37,14 +37,17 @@ class BaseRepository(Generic[T]):
 
     async def update(self, entity_id: Any, values: Dict[str, Any]) -> Optional[T]:
         """Update entity by ID with dictionary values."""
-        stmt = update(self.model_cls).where(self.model_cls.id == entity_id).values(**values)
+        id_attr = getattr(self.model_cls, "id")
+        stmt = update(self.model_cls).where(id_attr == entity_id).values(**values)
         await self.session.execute(stmt)
         await self.session.commit()
         return await self.get_by_id(entity_id)
 
     async def delete(self, entity_id: Any) -> bool:
         """Delete entity by ID."""
-        stmt = delete(self.model_cls).where(self.model_cls.id == entity_id)
+        id_attr = getattr(self.model_cls, "id")
+        stmt = delete(self.model_cls).where(id_attr == entity_id)
         res = await self.session.execute(stmt)
         await self.session.commit()
-        return res.rowcount > 0
+        rowcount = getattr(res, "rowcount", 0)
+        return int(rowcount or 0) > 0

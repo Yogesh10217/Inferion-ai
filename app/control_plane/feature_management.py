@@ -109,7 +109,7 @@ class FeatureManager:
         logger.info(f"[FEATURE MANAGER] Updated rollout for feature '{name}' ({percentage}%)")
         return flag
 
-    def rollback_feature(self, name: str) -> FeatureFlagConfiguration:
+    def rollback_feature(self, name: str) -> Optional[FeatureFlagConfiguration]:
         """Rollback feature rollout to completely disabled state."""
         flag = self.get_feature(name)
         if flag:

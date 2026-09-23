@@ -48,12 +48,12 @@ class DecisionGovernanceAnalyticsEngine:
 
         for d in decisions:
             st = getattr(d, "status", "UNKNOWN")
-            st_val = st.value if hasattr(st, "value") else str(st)
+            st_val = str(getattr(st, "value", st))
             status_counts[st_val] = status_counts.get(st_val, 0) + 1
 
             oc = getattr(d, "outcome", None)
             if oc:
-                oc_val = oc.value if hasattr(oc, "value") else str(oc)
+                oc_val = str(getattr(oc, "value", oc))
                 outcome_counts[oc_val] = outcome_counts.get(oc_val, 0) + 1
 
             total_conf += getattr(d, "confidence", 0.85)

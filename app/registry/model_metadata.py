@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Literal
 
-ModelStatus = Literal["available", "loading", "degraded", "unavailable"]
+ModelStatus = str
 
 
 @dataclass

@@ -17,6 +17,7 @@ from app.developer_platform.developer_assistant import DeveloperAssistantManager
 from app.developer_platform.developer_portal import DeveloperPortalManager
 from app.developer_platform.development_workspaces import WorkspaceManager
 from app.developer_platform.environments import EnvironmentManager
+from app.developer_platform.events import DeveloperEventEngine
 from app.developer_platform.governance import DeveloperGovernanceEngine
 from app.developer_platform.observability import DeveloperMetricsCollector
 from app.developer_platform.productivity import DeveloperProductivityEngine
@@ -37,6 +38,7 @@ class DeveloperPlatformManager:
         self.developer_manager = DeveloperManager()
         self.project_manager = ProjectManager()
         self.repository_manager = RepositoryManager()
+        self.event_engine = DeveloperEventEngine()
 
         self.api_management_engine = APIManagementEngine()
         self.contract_validator = APIContractValidator()

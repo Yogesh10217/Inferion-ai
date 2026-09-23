@@ -1,6 +1,7 @@
 """Master KnowledgePlatformManager Orchestrator Subsystem."""
 
 import logging
+from typing import Any
 
 from app.knowledge_platform.agent_integration import AgentKnowledgeAdapter
 from app.knowledge_platform.analytics import KnowledgeAnalyticsEngine

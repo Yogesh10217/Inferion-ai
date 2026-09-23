@@ -24,7 +24,7 @@ class RuntimeDegradationEngine:
             initial = scores[0]
             latest = scores[-1]
             delta = initial - latest
-            delta / max(1, len(scores) - 1)
+            _rate = delta / max(1, len(scores) - 1)
         else:
             delta = 0.10
             latest = scores[0] if scores else 0.85

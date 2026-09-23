@@ -29,7 +29,7 @@ class PortfolioBillingTracker:
             action=action,
             cost_usd=amount_usd,
         )
-        self.cost_ledger.record_cost(
+        self.cost_ledger.record_cost_event(
             tenant_id=tenant_id,
             service="portfolio_platform",
             action=action,

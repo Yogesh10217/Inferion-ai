@@ -3,7 +3,7 @@
 import logging
 import uuid
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -97,3 +97,15 @@ class AgentIdentityManager:
         if not del_auth:
             raise KeyError(f"Delegated authorization '{delegation_id}' not found")
         return del_auth
+
+    def get_delegated_authorization(self, delegation_id: str) -> DelegatedAuthorization:
+        return self.get_delegation(delegation_id)
+
+    def validate_agent_boundary(
+        self,
+        delegation: Any,
+        requested_action: str,
+        requested_scope: str = "read",
+    ) -> bool:
+        del_id = delegation.delegation_id if hasattr(delegation, "delegation_id") else str(delegation)
+        return self.validate_agent_action(del_id, requested_action, requested_scope)

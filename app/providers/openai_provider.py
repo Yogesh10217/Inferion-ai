@@ -155,6 +155,7 @@ class OpenAIProvider(BaseProvider):
                     raise ProviderUnavailableException(f"OpenAI connection error: {exc}") from exc
             if last_exc:
                 raise ProviderUnavailableException(f"OpenAI retries exhausted: {last_exc}") from last_exc
+            raise ProviderUnavailableException("OpenAI request failed after retries")
 
     async def stream(
         self,

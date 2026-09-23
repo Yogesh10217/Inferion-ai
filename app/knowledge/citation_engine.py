@@ -85,10 +85,11 @@ class CitationEngine:
         for doc in documents:
             meta = doc.metadata or {}
 
-            # Extract real page/source safely
-            page = meta.get("page", 1)
-            if isinstance(page, str) and page.isdigit():
-                page = int(page)
+            raw_page = meta.get("page", 1)
+            try:
+                page = int(raw_page)
+            except (ValueError, TypeError):
+                page = 1
 
             confidence = self._calculate_confidence(doc.score, min_score, max_score)
 

@@ -28,6 +28,9 @@ class VectorStoreStage(PipelineStage):
         self.collection_name = collection_name
 
     async def process(self, context: DocumentContext) -> DocumentContext:
+        if context.errors is None:
+            context.errors = []
+
         if not context.chunks:
             context.errors.append("No chunks to store.")
             return context
@@ -68,6 +71,9 @@ class PipelineRunner:
 
     async def run(self, context: DocumentContext) -> DocumentContext:
         """Runs the document context through all configured stages."""
+        if context.errors is None:
+            context.errors = []
+
         context.status = PipelineStatus.IN_PROGRESS
         start_time = time.time()
 
@@ -88,6 +94,8 @@ class PipelineRunner:
 
         except Exception as e:
             logger.exception(f"Pipeline failed for document {context.document_id}")
+            if context.errors is None:
+                context.errors = []
             context.errors.append(str(e))
             context.status = PipelineStatus.FAILED
 

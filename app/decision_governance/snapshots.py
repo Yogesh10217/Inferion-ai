@@ -39,9 +39,10 @@ class DecisionSnapshotManager:
     ) -> DecisionGovernanceSnapshot:
         p_snap = SnapshotFactory.create_snapshot(
             tenant_id=tenant_id,
-            snapshot_type="DECISION_GOVERNANCE_SNAPSHOT",
-            state_data={"decision_id": decision_id, **state_data},
-            metadata={"source": "DecisionSnapshotManager"},
+            resource_type="DECISION_GOVERNANCE_SNAPSHOT",
+            resource_id=decision_id,
+            domain_payload={"decision_id": decision_id, **state_data},
+            extra_metadata={"source": "DecisionSnapshotManager"},
         )
 
         snap = DecisionGovernanceSnapshot(

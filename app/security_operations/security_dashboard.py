@@ -97,16 +97,17 @@ class SecurityDashboard:
         fp_hash = hashlib.sha256(json.dumps(payload_for_fp, sort_keys=True).encode("utf-8")).hexdigest()
         fingerprint = f"sha256:{fp_hash}"
 
+        vuln_ass = posture_result.vulnerability_assessment
         snapshot = SecurityDashboardSnapshot(
             timestamp=now_str,
             overall_posture_score=posture_result.score,
             overall_posture_status=posture_result.status,
             certification_decision=certification_result.decision,
             risk_level=risk_assessment.overall_risk_level,
-            total_vulnerabilities=posture_result.vulnerability_assessment.total_vulnerabilities,
-            critical_vulnerabilities=posture_result.vulnerability_assessment.critical_count,
-            high_vulnerabilities=posture_result.vulnerability_assessment.high_count,
-            open_vulnerabilities=posture_result.vulnerability_assessment.open_count,
+            total_vulnerabilities=vuln_ass.total_vulnerabilities if vuln_ass else 0,
+            critical_vulnerabilities=vuln_ass.critical_count if vuln_ass else 0,
+            high_vulnerabilities=vuln_ass.high_count if vuln_ass else 0,
+            open_vulnerabilities=vuln_ass.open_count if vuln_ass else 0,
             active_exceptions_count=active_exceptions_count,
             compliance_score=compliance_result.overall_compliance_score,
             audit_tamper_detected=audit_integrity.tampering_detected,

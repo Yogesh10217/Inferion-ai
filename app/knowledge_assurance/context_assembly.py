@@ -114,11 +114,11 @@ class ContextAssemblyManager:
         filtered = []
         evidence_list = []
         for ref in candidate_references:
-            if ref.get("trust_score", 0.0) < request.min_trust_score:
+            if ref.get("trust_score", 0.0) < req.min_trust_score:
                 continue
-            if ref.get("freshness_score", 0.0) < request.min_freshness_score:
+            if ref.get("freshness_score", 0.0) < req.min_freshness_score:
                 continue
-            if request.exclude_conflicted and ref.get("has_conflict", False):
+            if req.exclude_conflicted and ref.get("has_conflict", False):
                 continue
             filtered.append(ref)
             evidence_list.append(
@@ -133,7 +133,7 @@ class ContextAssemblyManager:
 
         # Sort by relevance * trust
         filtered.sort(key=lambda x: x.get("relevance_score", 0.0) * x.get("trust_score", 0.0), reverse=True)
-        selected = filtered[: request.max_items]
+        selected = filtered[: req.max_items]
 
         text_blocks = [f"[{r.get('title')}]\n{r.get('summary')}" for r in selected]
         assembled_text = "\n\n".join(text_blocks)
@@ -141,7 +141,7 @@ class ContextAssemblyManager:
         avg_trust = sum(r.get("trust_score", 0.9) for r in selected) / len(selected) if selected else 0.90
 
         result = ContextAssemblyResult(
-            tenant_id=request.tenant_id,
+            tenant_id=req.tenant_id,
             assembled_context_text=assembled_text,
             assembled_reference_ids=[r.get("reference_id") for r in selected],
             overall_trust_score=avg_trust,

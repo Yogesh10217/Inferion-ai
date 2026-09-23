@@ -2,19 +2,12 @@ import asyncio
 import logging
 from typing import Any, Optional
 
+import redis.asyncio as redis
+from redis.exceptions import RedisError
+
 from app.cache.cache_backend import BaseCacheBackend
 
 logger = logging.getLogger("app.cache.redis_backend")
-
-try:
-    import redis.asyncio as redis
-    from redis.exceptions import RedisError
-
-    REDIS_AVAILABLE = True
-except ImportError:
-    REDIS_AVAILABLE = False
-    redis = None  # type: ignore
-    RedisError = Exception
 
 
 class RedisCacheBackend(BaseCacheBackend):
@@ -22,22 +15,17 @@ class RedisCacheBackend(BaseCacheBackend):
 
     def __init__(self, redis_url: str, max_connections: int = 20, max_retries: int = 3):
         self.max_retries = max_retries
-        if not REDIS_AVAILABLE:
-            logger.warning("Redis is not installed. RedisCacheBackend will act as a no-op.")
+        try:
+            self._pool: Optional[redis.ConnectionPool] = redis.ConnectionPool.from_url(
+                redis_url, max_connections=max_connections, decode_responses=True
+            )
+            self._client: Optional[redis.Redis] = redis.Redis(connection_pool=self._pool)
+        except Exception as exc:
+            logger.error(f"Failed to initialize Redis connection pool: {exc}")
             self._pool = None
             self._client = None
-        else:
-            try:
-                self._pool = redis.ConnectionPool.from_url(
-                    redis_url, max_connections=max_connections, decode_responses=True
-                )
-                self._client = redis.Redis(connection_pool=self._pool)
-            except Exception as exc:
-                logger.error(f"Failed to initialize Redis connection pool: {exc}")
-                self._pool = None
-                self._client = None
 
-    async def _execute_with_retry(self, coro_fn, *args, **kwargs) -> Any:
+    async def _execute_with_retry(self, coro_fn: Any, *args: Any, **kwargs: Any) -> Any:
         if not self._client:
             return None
 
@@ -45,9 +33,10 @@ class RedisCacheBackend(BaseCacheBackend):
         for attempt in range(self.max_retries):
             try:
                 return await coro_fn(*args, **kwargs)
-            except (RedisError, ConnectionError, OSError) as exc:
+            except RedisError as exc:
                 if attempt < self.max_retries - 1:
-                    await asyncio.sleep(backoff_delays[attempt])
+                    delay = backoff_delays[attempt] if attempt < len(backoff_delays) else 0.4
+                    await asyncio.sleep(delay)
                     continue
                 logger.error(f"Redis operation failed after {self.max_retries} attempts: {exc}")
                 return None

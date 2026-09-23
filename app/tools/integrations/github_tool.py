@@ -78,8 +78,9 @@ class GitHubTool(BaseTool):
                             json={"title": parameters.get("title", ""), "body": parameters.get("body", "")},
                         )
                     else:
+                        action_target = str(action or "").replace("list_", "")
                         resp = await client.get(
-                            f"https://api.github.com/repos/{owner}/{repo}/{action.replace('list_', '')}",
+                            f"https://api.github.com/repos/{owner}/{repo}/{action_target}",
                             headers=headers,
                         )
 

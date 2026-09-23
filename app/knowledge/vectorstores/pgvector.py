@@ -60,7 +60,7 @@ class PGVectorStore(VectorStore):
         self.max_retries = max_retries
         self.base_backoff = base_backoff
 
-    async def _execute_with_retry(self, operation, *args, **kwargs):
+    async def _execute_with_retry(self, operation: Any, *args: Any, **kwargs: Any) -> Any:
         for attempt in range(self.max_retries):
             try:
                 return await operation(*args, **kwargs)
@@ -182,7 +182,8 @@ class PGVectorStore(VectorStore):
                     for row in rows
                 ]
 
-        return await self._execute_with_retry(_do_search)
+        res = await self._execute_with_retry(_do_search)
+        return res or []
 
     async def delete(self, ids: List[str], collection_name: str) -> None:
         """Delete embeddings from the PGVector store by ID in batches."""
@@ -220,8 +221,6 @@ class PGVectorStore(VectorStore):
                         params["embedding"] = "[" + ",".join(map(str, item["embedding"])) + "]"
 
                     if "metadata" in item:
-                        # For partial update, we could merge JSONB, but we will replace for simplicity here,
-                        # or we can use JSONB concatenation
                         updates.append("metadata = metadata || :metadata")
                         params["metadata"] = json.dumps(item["metadata"])
 
@@ -257,7 +256,8 @@ class PGVectorStore(VectorStore):
 
                 return [{"id": row.id, "metadata": row.metadata} for row in rows]
 
-        return await self._execute_with_retry(_do_get)
+        res = await self._execute_with_retry(_do_get)
+        return res or []
 
     async def health(self) -> bool:
         """Check the health of the PGVector connection."""
@@ -268,7 +268,8 @@ class PGVectorStore(VectorStore):
                     await session.execute(text("SELECT 1"))
                     return True
 
-            return await self._execute_with_retry(_do_health)
+            res = await self._execute_with_retry(_do_health)
+            return bool(res)
         except Exception as e:
             logger.error(f"Health check failed: {e}")
             return False

@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field
 
@@ -34,6 +34,7 @@ class DelegationRequest(BaseModel):
     tenant_id: str
     target: DelegationTarget
     action: str
+    requester_id: Optional[str] = None
     status: DelegationStatus = DelegationStatus.CREATED
     payload: Dict[str, Any] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -41,6 +42,9 @@ class DelegationRequest(BaseModel):
     @property
     def request_id(self) -> str:
         return self.delegation_id
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump(mode="json")
 
 
 class DelegationResult(BaseModel):

@@ -17,6 +17,7 @@ class MetadataExtractionStage(PipelineStage):
             "classification": "general",
         }
 
-        # Merge with existing metadata
+        if context.metadata is None:
+            context.metadata = {}
         context.metadata.update(extracted_metadata)
         return context

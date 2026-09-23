@@ -139,6 +139,7 @@ class OllamaProvider(BaseProvider):
                     raise ProviderUnavailableException(f"Ollama connection error: {exc}") from exc
             if last_exc:
                 raise ProviderUnavailableException(f"Ollama retries exhausted: {last_exc}") from last_exc
+            raise ProviderUnavailableException("Ollama request failed after retries")
 
     async def stream(
         self,

@@ -23,4 +23,4 @@ class SecurityBillingTracker:
             cost_usd=cost_usd,
             category="SECURITY_OPERATIONS",
             metadata={"asset_id": asset_id, "description": description},
-        )
+        ).model_dump()

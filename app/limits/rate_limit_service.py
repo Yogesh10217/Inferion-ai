@@ -4,6 +4,8 @@ from app.limits.counter_backend import CounterBackend
 from app.limits.exceptions import RateLimitExceededException
 from app.services.metrics_service import MetricsService
 
+from typing import Optional
+
 logger = logging.getLogger(__name__)
 
 
@@ -13,7 +15,7 @@ class RateLimitService:
         self.metrics = metrics
         self.default_strategy = default_strategy
 
-    async def check_rate_limit(self, scope_id: str, limit: int, window_seconds: int, strategy: str = None) -> None:
+    async def check_rate_limit(self, scope_id: str, limit: int, window_seconds: int, strategy: Optional[str] = None) -> None:
         """
         Check rate limit and raise RateLimitExceededException if exceeded.
         scope_id: identifier (e.g., org:123 or api_key:456)

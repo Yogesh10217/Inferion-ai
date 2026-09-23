@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 from pydantic import BaseModel, Field
 
 from app.model_intelligence.exceptions import CrossTenantModelIntelligenceException
-from app.platform_contracts.delegation import DelegationRequest
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ class ModelDelegationManager:
         del_reqs = [
             DelegationRequest(
                 tenant_id=tenant_id,
-                target="APPLICATION_PLATFORM",
+                target=DelegationTarget.APPLICATION_PLATFORM,
                 action=a.action_type,
                 payload=a.payload,
             )

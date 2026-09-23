@@ -28,7 +28,7 @@ from app.model_intelligence.monitoring import ModelMonitoringManager
 from app.model_intelligence.observability import ModelIntelligenceMetricsCollector
 from app.model_intelligence.performance import ModelPerformanceManager
 from app.model_intelligence.quality import ModelQualityManager, QualityDimension, QualityScore
-from app.model_intelligence.reliability import ModelReliabilityManager, ReliabilityScore
+from app.model_intelligence.reliability import ModelReliabilityManager, ReliabilityDimension, ReliabilityScore
 from app.model_intelligence.remediation import ModelRemediationAction, ModelRemediationManager, ModelRemediationPriority
 from app.model_intelligence.repositories import (
     ModelEvidenceRepository,
@@ -145,7 +145,7 @@ class ModelIntelligenceManager:
         )
 
         # 9. Reliability Assessment
-        rel_scores = [ReliabilityScore(dimension="AVAILABILITY", score=0.99)]
+        rel_scores = [ReliabilityScore(dimension=ReliabilityDimension.AVAILABILITY, score=0.99)]
         self.reliability_manager.assess_reliability(model_id=model_id, tenant_id=tenant_id, scores=rel_scores)
 
         # 10. Safety Assessment

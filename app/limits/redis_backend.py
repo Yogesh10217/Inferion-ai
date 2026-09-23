@@ -1,7 +1,7 @@
 import logging
 import time
 import uuid
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import redis.asyncio as aioredis
 from redis.exceptions import RedisError

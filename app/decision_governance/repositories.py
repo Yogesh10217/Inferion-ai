@@ -20,9 +20,9 @@ class DecisionGovernanceRepository(Generic[T]):
 
     def save(self, tenant_id: str, entity_id: str, entity: T) -> T:
         with self._lock:
-            # Sanitize metadata if present on model
-            if hasattr(entity, "metadata") and isinstance(entity.metadata, dict):
-                entity.metadata = SensitiveDataSanitizer.sanitize_metadata(entity.metadata)
+            meta = getattr(entity, "metadata", None)
+            if isinstance(meta, dict):
+                setattr(entity, "metadata", SensitiveDataSanitizer.sanitize_metadata(meta))
 
             if tenant_id not in self._store:
                 self._store[tenant_id] = {}

@@ -82,7 +82,7 @@ class StdioTransport(MCPTransport):
         self._connected = False
 
     async def send_request(self, request: MCPJsonRpcRequest) -> MCPJsonRpcResponse:
-        if not self._connected or not self.process:
+        if not self._connected or not self.process or not self.process.stdin or not self.process.stdout:
             raise MCPConnectionError("StdioTransport is not connected")
 
         payload = json.dumps(request.model_dump()) + "\n"

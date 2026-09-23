@@ -1,17 +1,10 @@
 import io
-from typing import Protocol
+from typing import Any, Dict, List, Protocol
+
+import docx
+import fitz
 
 from app.knowledge.pipeline import DocumentContext, PipelineStage
-
-try:
-    import fitz
-except ImportError:
-    fitz = None
-
-try:
-    import docx
-except ImportError:
-    docx = None
 
 
 class StorageProvider(Protocol):
@@ -28,6 +21,11 @@ class DocumentIngestionStage(PipelineStage):
 
     async def process(self, context: DocumentContext) -> DocumentContext:
         """Fetches and parses the document."""
+        if context.metadata is None:
+            context.metadata = {}
+        if context.errors is None:
+            context.errors = []
+
         try:
             raw_data = await self.storage_provider.get_document(context.document_id)
             context.raw_content = raw_data
@@ -35,17 +33,15 @@ class DocumentIngestionStage(PipelineStage):
             mime_type = context.metadata.get("mime_type", "")
             file_name = context.metadata.get("file_name", "").lower()
 
-            blocks = []
+            blocks: List[Dict[str, Any]] = []
             full_text = ""
 
             if "pdf" in mime_type or file_name.endswith(".pdf"):
-                if fitz is None:
-                    raise ImportError("PyMuPDF (fitz) is required for PDF parsing.")
-
                 doc = fitz.open(stream=raw_data, filetype="pdf")
                 global_offset = 0
-                for page_num, page in enumerate(doc):
-                    page_dict = page.get_text("dict")
+                for page_num in range(len(doc)):
+                    page = doc[page_num]
+                    page_dict: Dict[str, Any] = getattr(page, "get_text")("dict")
                     for block in page_dict.get("blocks", []):
                         if "lines" in block:
                             block_text = ""
@@ -71,9 +67,6 @@ class DocumentIngestionStage(PipelineStage):
                             )
                 context.metadata["mime_type"] = "application/pdf"
             elif "wordprocessingml" in mime_type or file_name.endswith(".docx"):
-                if docx is None:
-                    raise ImportError("python-docx (docx) is required for DOCX parsing.")
-
                 doc = docx.Document(io.BytesIO(raw_data))
                 global_offset = 0
                 for para in doc.paragraphs:
@@ -87,7 +80,8 @@ class DocumentIngestionStage(PipelineStage):
                     full_text += block_text
 
                     heading = None
-                    if para.style and para.style.name.startswith("Heading"):
+                    style_name = getattr(para.style, "name", "") if para.style else ""
+                    if style_name and style_name.startswith("Heading"):
                         heading = para.text.strip()
 
                     blocks.append(

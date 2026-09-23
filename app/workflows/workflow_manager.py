@@ -118,6 +118,18 @@ class WorkflowManager:
         self._runs_history[run_id] = result
         return result
 
+    async def execute_workflow(
+        self,
+        workflow_id: str,
+        inputs: Optional[Dict[str, Any]] = None,
+        organization_id: str = "default_org",
+        workspace_id: str = "default_workspace",
+    ) -> Dict[str, Any]:
+        return await self.run_workflow(workflow_id, inputs or {}, organization_id, workspace_id)
+
+    def get_execution(self, execution_id: str) -> Optional[Dict[str, Any]]:
+        return self._runs_history.get(execution_id)
+
     async def resume_workflow(
         self,
         run_id: str,

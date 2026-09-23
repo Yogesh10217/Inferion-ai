@@ -7,7 +7,9 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel, Field
 
-from app.finops.cost_ledger import UnifiedCostLedger
+from decimal import Decimal
+
+from app.finops.cost_ledger import CostCategory, UnifiedCostLedger
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +51,9 @@ class IntelligenceBillingTracker:
         try:
             self.cost_ledger.record_cost(
                 component="INTELLIGENCE_PLATFORM",
-                cost_category=operation_type,
-                quantity=1.0,
-                unit_price=amount_usd,
+                cost_category=CostCategory.OTHER,
+                quantity=Decimal("1.0"),
+                unit_price=Decimal(str(amount_usd)),
                 tenant_id=tenant_id,
                 resource_id=resource_id or "global",
             )

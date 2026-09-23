@@ -13,7 +13,7 @@ from app.data_intelligence.exceptions import (
     SchemaEvolutionException,
 )
 from app.data_intelligence.schema import SchemaField, SchemaManager
-from app.platform_contracts.delegation import DelegationRequest
+from app.platform_contracts.delegation import DelegationRequest, DelegationTarget
 
 
 class SchemaEvolutionRisk(str, Enum):
@@ -119,7 +119,7 @@ class SchemaEvolutionManager:
         del_req = DelegationRequest(
             delegation_id=f"del-se-{uuid.uuid4().hex[:8]}",
             tenant_id=tenant_id,
-            target="ORCHESTRATION",
+            target=DelegationTarget.ORCHESTRATION,
             action="apply_schema_migration",
             payload={
                 "dataset_id": req.dataset_id,

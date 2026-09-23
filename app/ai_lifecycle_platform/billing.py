@@ -23,4 +23,4 @@ class LifecycleBillingTracker:
             cost_usd=cost_usd,
             category="AI_LIFECYCLE_OPERATIONS",
             metadata={"asset_id": asset_id, "description": description},
-        )
+        ).model_dump()

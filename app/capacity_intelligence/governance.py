@@ -1,7 +1,7 @@
 """Capacity governance engine for Capacity Intelligence (Phase 5.56)."""
 
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from app.capacity_intelligence.exceptions import HighRiskCapacityActionRequiresApprovalException
 from app.capacity_intelligence.models import CapacityGovernanceOutcome
@@ -24,7 +24,7 @@ class CapacityGovernanceEngine:
     """Evaluates policy, risk, cost, reliability, and reversibility outcomes for capacity operations."""
 
     def evaluate_governance(
-        self, tenant_id: str, action_name: str, parameters: Dict[str, Any] = None
+        self, tenant_id: str, action_name: str, parameters: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         act_upper = action_name.upper()
         if act_upper in HIGH_RISK_CAPACITY_ACTIONS:

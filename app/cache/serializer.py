@@ -11,7 +11,7 @@ class CacheSerializer:
         return response.model_dump_json()
 
     @staticmethod
-    def deserialize(data: str) -> InferenceResponse:
+    def deserialize(data: str | bytes) -> InferenceResponse:
         """Deserialize a string back to an InferenceResponse."""
         # model_validate_json is available in Pydantic v2
         return InferenceResponse.model_validate_json(data)

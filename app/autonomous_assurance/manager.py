@@ -242,7 +242,7 @@ class AutonomousAssuranceManager:
         self, workflow_id: str, tenant_id: str, action_name: str = "RESTART_SERVICE"
     ) -> DelegationPlan:
         wf = self.get_workflow(workflow_id, tenant_id)
-        self.planner.get_plan(workflow_id) or self.create_plan(workflow_id, tenant_id)
+        plan = self.planner.get_plan(workflow_id) or self.create_plan(workflow_id, tenant_id)
 
         is_approved = self.approval_engine.is_approved(workflow_id, tenant_id) or (wf.status == WorkflowStatus.APPROVED)
 

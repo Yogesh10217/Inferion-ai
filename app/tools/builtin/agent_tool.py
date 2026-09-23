@@ -48,7 +48,7 @@ class AgentTool(BaseTool):
             am = self.agent_manager or AgentManager()
 
             if action == "run":
-                state = await am.run_agent(agent_id=agent_id, user_request=prompt)
+                state = await am.run_agent(agent_id=agent_id, prompt=prompt)
                 output = {
                     "status": "completed",
                     "agent_id": agent_id,

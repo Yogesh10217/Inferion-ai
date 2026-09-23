@@ -75,6 +75,23 @@ class AdministrativeAuditLedger:
         )
         return event
 
+    def record_entry(
+        self,
+        action: str,
+        actor: str,
+        target: str,
+        details: Optional[Dict[str, Any]] = None,
+        tenant_id: str = "global",
+    ) -> AdministrativeAuditEvent:
+        """Alias for record_action to support identity and governance ledger entries."""
+        return self.record_action(
+            actor_id=actor,
+            action=action,
+            target_resource_id=target,
+            tenant_id=tenant_id,
+            new_state=details,
+        )
+
     def _sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Redact sensitive fields from state dictionary."""
         sanitized = {}

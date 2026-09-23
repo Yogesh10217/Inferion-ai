@@ -89,10 +89,18 @@ class HumanTaskManager:
         )
         return task
 
-    def complete_task(self, task_id: str, outputs: Optional[Dict[str, Any]] = None) -> HumanTask:
+    def complete_task(
+        self,
+        task_id: str,
+        outputs: Optional[Dict[str, Any]] = None,
+        completed_by: Optional[str] = None,
+        result: Optional[Dict[str, Any]] = None,
+    ) -> HumanTask:
         task = self.get_task(task_id)
         task.status = TaskStatus.COMPLETED
-        task.outputs = outputs or {}
+        task.outputs = outputs or result or {}
+        if completed_by:
+            task.assigned_user_id = completed_by
         task.completed_at = _now()
         logger.info(f"[HUMAN TASK MANAGER] Task '{task_id}' COMPLETED")
         return task

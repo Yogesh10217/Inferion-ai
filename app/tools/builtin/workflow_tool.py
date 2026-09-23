@@ -49,7 +49,11 @@ class WorkflowTool(BaseTool):
 
             if action == "run":
                 exec_state = await wm.execute_workflow(workflow_id, inputs=inputs)
-                output = {"status": "completed", "workflow_id": workflow_id, "state": exec_state.to_dict()}
+                output = {
+                    "status": "completed",
+                    "workflow_id": workflow_id,
+                    "state": exec_state if isinstance(exec_state, dict) else (exec_state.to_dict() if hasattr(exec_state, "to_dict") else str(exec_state)),
+                }
             elif action == "status":
                 w_status = wm.get_execution(workflow_id)
                 output = {"workflow_id": workflow_id, "status": w_status}

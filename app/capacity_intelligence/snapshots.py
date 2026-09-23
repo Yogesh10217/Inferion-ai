@@ -3,8 +3,9 @@
 import hashlib
 import json
 import logging
+from typing import Optional
 
-from app.capacity_intelligence.models import CapacityAssessment, CapacitySnapshot
+from app.capacity_intelligence.models import CapacityAssessment, CapacitySnapshot, CapacityStatus
 
 logger = logging.getLogger(__name__)
 
@@ -28,3 +29,15 @@ class CapacitySnapshotManager:
             f"Captured CapacitySnapshot '{snapshot.snapshot_id}' for tenant '{tenant_id}' (Fingerprint: {fp[:12]}...)"
         )
         return snapshot
+
+    def capture_snapshot(self, tenant_id: str, assessment: Optional[CapacityAssessment] = None) -> CapacitySnapshot:
+        if assessment is None:
+            assessment = CapacityAssessment(
+                tenant_id=tenant_id,
+                resource_id="res-global",
+                consumed_percentage=50.0,
+                status=CapacityStatus.HEALTHY,
+                headroom_percentage=50.0,
+                saturation_risk_score=0.1,
+            )
+        return self.create_snapshot(tenant_id, assessment)

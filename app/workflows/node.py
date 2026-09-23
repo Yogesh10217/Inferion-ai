@@ -111,12 +111,12 @@ class StartNode(BaseNode):
     async def execute(self, context: Dict[str, Any]) -> Dict[str, Any]:
         self.started_at = datetime.now(timezone.utc).isoformat()
         self.status = NodeStatus.RUNNING
-        inputs = context.get("initial_inputs", {})
+        inputs = context.get("initial_inputs", {}) or {}
         self.input_data = inputs
         self.output_data = inputs
         self.status = NodeStatus.COMPLETED
         self.completed_at = datetime.now(timezone.utc).isoformat()
-        return self.output_data
+        return self.output_data or {}
 
 
 class EndNode(BaseNode):
@@ -165,7 +165,7 @@ class AgentNode(BaseNode):
         if agent_manager and hasattr(agent_manager, "run_agent"):
             agent_context = context.get("agent_context")
             state = await agent_manager.run_agent(self.agent_id, prompt, agent_context)
-            result = state.model_dump() if hasattr(state, "model_dump") else str(state)
+            result = state.model_dump() if hasattr(state, "model_dump") else {"output": str(state)}
         else:
             # Direct agent execution fallback simulation with real structured response
             result = {
@@ -180,7 +180,7 @@ class AgentNode(BaseNode):
         self.output_data = result
         self.status = NodeStatus.COMPLETED
         self.completed_at = datetime.now(timezone.utc).isoformat()
-        return self.output_data
+        return self.output_data or {}
 
 
 class ToolNode(BaseNode):

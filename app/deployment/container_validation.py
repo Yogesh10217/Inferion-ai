@@ -95,7 +95,7 @@ class ContainerValidationEngine:
         cls, image_tag: str = "enterprise-ai-platform:5.61", is_production: bool = False
     ) -> Dict[str, Any]:
         in_container = os.path.exists("/.dockerenv") or os.getenv("CONTAINERIZED", "false").lower() in ("true", "1")
-        user_id = os.getuid() if hasattr(os, "getuid") else 10001
+        user_id = getattr(os, "getuid", lambda: 10001)()
         is_non_root = user_id != 0
 
         # Check Dockerfile existence

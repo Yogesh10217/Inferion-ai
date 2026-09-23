@@ -74,9 +74,10 @@ class ContextFusionEngine:
 
         if signals is None:
             if self.signal_store:
-                signals = self.signal_store.list_signals(tenant_id)
+                signals = self.signal_store.list_signals(tenant_id) or []
             else:
                 signals = []
+        signals = signals or []
 
         if target_domains:
             signals = [s for s in signals if getattr(s, "domain", None) in target_domains]

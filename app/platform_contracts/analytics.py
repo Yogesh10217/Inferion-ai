@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -41,4 +41,5 @@ class PlatformReport(BaseModel):
     generated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     metrics: List[AnalyticsMetric] = Field(default_factory=list)
     insights: List[PlatformInsight] = Field(default_factory=list)
+    summary: Dict[str, Any] = Field(default_factory=dict)
     fingerprint: Optional[str] = None

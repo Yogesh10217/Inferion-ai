@@ -5,7 +5,7 @@ Assembles context for the LLM (ordering chunks, removing duplicates, semantic de
 
 import difflib
 import logging
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from .citation_engine import Citation, CitationEngine
 from .reranker import DocumentInfo
@@ -17,7 +17,7 @@ class ContextBuilder:
     """Builds optimized context for LLM consumption."""
 
     def __init__(
-        self, max_tokens: int = 4000, citation_engine: CitationEngine = None, similarity_threshold: float = 0.85
+        self, max_tokens: int = 4000, citation_engine: Optional[CitationEngine] = None, similarity_threshold: float = 0.85
     ):
         self.max_tokens = max_tokens
         self.citation_engine = citation_engine or CitationEngine()

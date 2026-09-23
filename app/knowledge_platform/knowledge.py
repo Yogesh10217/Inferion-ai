@@ -79,6 +79,10 @@ class KnowledgeItem(BaseModel):
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
 
+    @property
+    def content(self) -> str:
+        return self.current_version.content
+
 
 class KnowledgeManager:
     """Manages organizational knowledge items, controlled versioning, freshness status, and classification metadata."""

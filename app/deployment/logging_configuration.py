@@ -30,8 +30,9 @@ class DeploymentStructuredFormatter(logging.Formatter):
             "tenant_id": getattr(record, "tenant_id", None),
         }
 
-        if hasattr(record, "extra_data") and isinstance(record.extra_data, dict):
-            log_entry["extra"] = ConfigurationFingerprintEngine.sanitize_dict(record.extra_data)
+        extra_data = getattr(record, "extra_data", None)
+        if isinstance(extra_data, dict):
+            log_entry["extra"] = ConfigurationFingerprintEngine.sanitize_dict(extra_data)
 
         if record.exc_info:
             log_entry["exception"] = self.formatException(record.exc_info)

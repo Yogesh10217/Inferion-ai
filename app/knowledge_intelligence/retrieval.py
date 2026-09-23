@@ -41,6 +41,7 @@ class KnowledgeRetrievalRequest(BaseModel):
     tenant_id: str
     user_id: str = "system"
     query: str
+    max_results: int = 10
     strategy: RetrievalStrategy = RetrievalStrategy.HYBRID
     constraints: RetrievalConstraint = Field(default_factory=RetrievalConstraint)
 

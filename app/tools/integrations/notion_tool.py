@@ -46,7 +46,7 @@ class NotionTool(BaseTool):
             output = {
                 "action": action,
                 "status": "success",
-                "object": "page" if "page" in action else "list",
+                "object": "page" if action and "page" in str(action) else "list",
                 "id": parameters.get("page_id") or "notion_page_01",
             }
             return ToolResult(

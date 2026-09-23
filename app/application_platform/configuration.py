@@ -40,6 +40,7 @@ class EnvironmentConfiguration(BaseModel):
     runtime_limits: Dict[str, Any] = Field(default_factory=dict)
     updated_by: str = "system"
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
 class ConfigurationVersion(BaseModel):

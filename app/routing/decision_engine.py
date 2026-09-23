@@ -4,6 +4,7 @@ from typing import Dict, List, Optional
 
 from .capability_registry import CapabilityRegistry
 from .policy_registry import PolicyRegistry
+from .routing_policy import RoutingPolicy
 from .provider_ranker import ProviderRanker
 from .provider_selector import ProviderSelector
 from .routing_cache import RoutingCache
@@ -96,9 +97,10 @@ class DecisionEngine:
         ctx.record_trace("rule_evaluation", {"remaining": stage1_candidates})
 
         # Stage 3: Policy Evaluation
+        policy: Optional[RoutingPolicy] = None
         if target_policy_name:
             policy = self.policy_registry.get_policy(target_policy_name)
-        else:
+        if policy is None:
             policy = self.policy_registry.get_policy_for_organization(ctx.organization_id)
         ctx.record_trace("policy_evaluation", {"applied_policy": policy.name})
 

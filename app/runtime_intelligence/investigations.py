@@ -41,9 +41,10 @@ class RuntimeInvestigationManager:
         self, tenant_id: str, investigation_id: str, findings: List[str], evidence_ids: List[str]
     ) -> RuntimeInvestigation:
         inv = self._investigations.get(investigation_id)
-        if inv and inv.tenant_id == tenant_id:
-            inv.status = "CONCLUDED"
-            inv.findings = findings
-            inv.evidence_ids = evidence_ids
-            logger.info(f"Concluded investigation '{investigation_id}' with {len(findings)} findings")
+        if not inv or inv.tenant_id != tenant_id:
+            raise ValueError(f"Investigation '{investigation_id}' not found.")
+        inv.status = "CONCLUDED"
+        inv.findings = findings
+        inv.evidence_ids = evidence_ids
+        logger.info(f"Concluded investigation '{investigation_id}' with {len(findings)} findings")
         return inv

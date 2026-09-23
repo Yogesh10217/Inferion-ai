@@ -26,7 +26,7 @@ class SecretSecurityResult:
     canary_leaks_detected: int = 0
     score: float = 100.0
     fingerprint: str = ""
-    details: Dict[str, Any] = None
+    details: Optional[Dict[str, Any]] = None
 
     def __post_init__(self):
         if self.details is None:
