@@ -1,7 +1,7 @@
 import logging
 import time
 import uuid
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, cast
 
 import redis.asyncio as aioredis
 from redis.exceptions import RedisError
@@ -133,6 +133,7 @@ class RedisCounterBackend(CounterBackend):
             return
 
         try:
-            await redis_client.hdel(scope_key, lease_id)
+            hdel_fn = cast(Any, redis_client.hdel)
+            await hdel_fn(scope_key, lease_id)
         except RedisError:
             pass  # It will expire automatically anyway
