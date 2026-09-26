@@ -32,7 +32,7 @@ class CostLedgerEntryModel(Base):
     total_cost = Column(Numeric(18, 6), nullable=False)
     currency = Column(String(8), default="USD")
 
-    metadata = Column(JSON, nullable=True)
+    extra_metadata = Column("metadata", JSON, nullable=True)
     timestamp = Column(DateTime(timezone=True), default=_now, index=True)
 
 

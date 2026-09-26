@@ -112,6 +112,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        render_as_batch=True,
     )
     with context.begin_transaction():
         context.run_migrations()
@@ -121,37 +122,40 @@ def run_migrations_offline() -> None:
 # Online migration (async — requires a live DB connection)
 # ---------------------------------------------------------------------------
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(connection=connection, target_metadata=target_metadata, render_as_batch=True)
     with context.begin_transaction():
         context.run_migrations()
 
 
 async def run_async_migrations() -> None:
     """Create an async engine and run migrations."""
-    # asyncpg does not accept `sslmode` as a URL query param — pass ssl via connect_args
-    import ssl as ssl_module
-    from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+    if "sqlite" in db_url:
+        connectable = create_async_engine(db_url, poolclass=pool.NullPool)
+    else:
+        # asyncpg does not accept `sslmode` as a URL query param — pass ssl via connect_args
+        import ssl as ssl_module
+        from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-    parsed = urlparse(db_url)
-    query_params = parse_qs(parsed.query, keep_blank_values=True)
-    needs_ssl = "sslmode" in query_params or "ssl" in query_params
-    # Strip SSL params from URL — we'll pass them via connect_args instead
-    clean_params = {k: v for k, v in query_params.items() if k not in ("sslmode", "ssl", "channel_binding")}
-    clean_query = urlencode(clean_params, doseq=True)
-    clean_url = urlunparse(parsed._replace(query=clean_query))
+        parsed = urlparse(db_url)
+        query_params = parse_qs(parsed.query, keep_blank_values=True)
+        needs_ssl = "sslmode" in query_params or "ssl" in query_params
+        # Strip SSL params from URL — we'll pass them via connect_args instead
+        clean_params = {k: v for k, v in query_params.items() if k not in ("sslmode", "ssl", "channel_binding")}
+        clean_query = urlencode(clean_params, doseq=True)
+        clean_url = urlunparse(parsed._replace(query=clean_query))
 
-    connect_args = {}
-    if needs_ssl:
-        ssl_ctx = ssl_module.create_default_context()
-        ssl_ctx.check_hostname = False
-        ssl_ctx.verify_mode = ssl_module.CERT_NONE
-        connect_args["ssl"] = ssl_ctx
+        connect_args = {}
+        if needs_ssl:
+            ssl_ctx = ssl_module.create_default_context()
+            ssl_ctx.check_hostname = False
+            ssl_ctx.verify_mode = ssl_module.CERT_NONE
+            connect_args["ssl"] = ssl_ctx
 
-    connectable = create_async_engine(
-        clean_url,
-        poolclass=pool.NullPool,
-        connect_args=connect_args,
-    )
+        connectable = create_async_engine(
+            clean_url,
+            poolclass=pool.NullPool,
+            connect_args=connect_args,
+        )
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
     await connectable.dispose()

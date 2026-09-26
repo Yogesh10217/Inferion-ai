@@ -66,6 +66,6 @@ class CaseModel(Base):
     tenant_id = Column(String(64), index=True, nullable=False, default="global")
     status = Column(String(32), nullable=False)
     priority = Column(String(32), nullable=False)
-    metadata = Column(JSON, nullable=False, default=dict)
+    extra_metadata = Column("metadata", JSON, nullable=False, default=dict)
     timeline = Column(JSON, nullable=False, default=list)
     created_at = Column(DateTime(timezone=True), default=_now, nullable=False)
