@@ -21,4 +21,6 @@ opentelemetry-sdk>=1.24.0
 opentelemetry-exporter-otlp>=1.24.0
 psutil>=5.9.0
 nest-asyncio>=1.6.0
+greenlet>=3.0.0
+
 
